@@ -87,7 +87,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                             {
                                                 AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
                                                 List<Point> path = pathfinder.FindPath(position.p,
-                                                    route[(route.Count)], worldProvider, true);
+                                                    route[(route.Count-1)], worldProvider, true);
                                                 if (path == null)
                                                 {
                                                     path = pathfinder.FindPath(position.p,

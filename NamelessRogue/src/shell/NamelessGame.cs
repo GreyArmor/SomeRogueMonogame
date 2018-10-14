@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GeonBit.UI;
+using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,7 +22,6 @@ namespace NamelessRogue.shell
         List<IEntity> Entities;
         List<ISystem> Systems;
         InputSystem inputsystem;
-        private long startTime;
 
         public static GraphicsDevice DebugDevice;
 
@@ -59,20 +60,16 @@ namespace NamelessRogue.shell
 
         private GameSettings settings;
 
-        //private Viewport currentScene;
-        private bool started = false;
         RenderingSystem renderingSystem;
 
         public NamelessGame()
         {
-
             graphics = new GraphicsDeviceManager(this);
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Content.RootDirectory = "Content";
-
-
-
         }
+
+
 
         public int getActualWidth()
         {
@@ -82,32 +79,6 @@ namespace NamelessRogue.shell
         public int getActualHeight()
         {
             return settings.getHeight() * settings.getFontSize();
-        }
-
-        //public void keyPressed(KeyEvent e) {
-        // inputsystem.keyPressed(e);
-        //}
-
-        //@Override
-        //public void keyReleased(KeyEvent e) {
-        // inputsystem.keyReleased(e);
-        //}
-
-
-        // @Override
-        //   public void display(GLAutoDrawable drawable) {
-
-        //}
-
-
-        public void play()
-        {
-            started = true;
-            startTime = DateTime.Now.Millisecond;
-            while (true)
-            {
-
-            }
         }
 
 
@@ -240,7 +211,7 @@ namespace NamelessRogue.shell
             Systems.Add(new InitializationSystem());
             Systems.Add(inputsystem);
             Systems.Add(new IntentSystem());
-            //  Systems.add(new AiSystem());
+           // Systems.Add(new AiSystem());
             Systems.Add(new MovementSystem());
             Systems.Add(new CombatSystem());
             Systems.Add(new SwitchSystem());
@@ -251,7 +222,29 @@ namespace NamelessRogue.shell
             renderingSystem = new RenderingSystem(settings);
 
             this.IsMouseVisible = true;
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            // create and init the UI manager
+            UserInterface.Initialize(Content, BuiltinThemes.hd);
+            UserInterface.Active.UseRenderTarget = true;
+
+            // draw cursor outside the render target
+            UserInterface.Active.IncludeCursorInRenderTarget = false;
+
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            Panel panel = new Panel(new Vector2(400, 400), PanelSkin.Default, Anchor.Center);
+            UserInterface.Active.AddEntity(panel);
+
+            // add title and text
+            panel.AddChild(new Header("Example Panel"));
+            panel.AddChild(new HorizontalLine());
+            panel.AddChild(new Paragraph("This is a simple panel with a button."));
+
+            // add a button at the bottom
+            panel.AddChild(new Button("Click Me!", ButtonSkin.Default, Anchor.BottomCenter));
+
+
         }
 
         public RenderTarget2D RenderTarget { get; set; }
@@ -265,13 +258,7 @@ namespace NamelessRogue.shell
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        protected override void LoadContent()
-        {
-            // Create a new SpriteBatch, which can be used to draw textures.
-         
-
-            // TODO: use this.Content to load your game content here
-        }
+        protected override void LoadContent() { }
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -279,7 +266,7 @@ namespace NamelessRogue.shell
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+           
         }
 
         /// <summary>
@@ -297,9 +284,8 @@ namespace NamelessRogue.shell
             {
                 system.Update((long) gameTime.TotalGameTime.TotalMilliseconds, this);
             }
+            UserInterface.Active.Update(gameTime);
 
-
-         //   base.Update(gameTime);
         }
 
         SamplerState sampler = new SamplerState()
@@ -307,11 +293,6 @@ namespace NamelessRogue.shell
             AddressU = TextureAddressMode.Clamp,
             AddressV = TextureAddressMode.Clamp,
             AddressW = TextureAddressMode.Clamp,
-            // MIN_MAG_MIP_POINT
-            //Filter = TextureFilter.MinPointMagLinearMipLinear,
-            // Filter = TextureFilter.MinPointMagLinearMipPoint,
-            //Filter = TextureFilter.LinearMipPoint,
-            // Filter = TextureFilter.MinLinearMagPointMipLinear,
             Filter = TextureFilter.Point,
             FilterMode = TextureFilterMode.Default,
             MaxMipLevel = 0,
@@ -325,28 +306,23 @@ namespace NamelessRogue.shell
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
-
-
-
-          //  GraphicsDevice.SetRenderTarget(RenderTarget);
             GraphicsDevice.Clear(Color.Black);
+
+           
+
+            UserInterface.Active.Draw(spriteBatch);
+
+            // clear buffer
+           // GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            // finalize ui rendering
+            UserInterface.Active.DrawMainRenderTarget(spriteBatch);
+
             this.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             this.GraphicsDevice.SamplerStates[0] = sampler;
             this.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             renderingSystem.Update((long)gameTime.TotalGameTime.TotalMilliseconds, this);
-         //   GraphicsDevice.SetRenderTarget(null);
 
-
-            //  GraphicsDevice.Clear(Color.Black);
-
-            //spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
-            //    SamplerState.PointWrap, DepthStencilState.Default,
-            //    RasterizerState.CullNone);
-            //var tileAtlas = Content.Load<Texture2D>("DFfont");
-            //spriteBatch.Draw(tileAtlas, new Rectangle(0, 0, 16,16), Color.White);
-
-            //spriteBatch.End();
         }
 
 
