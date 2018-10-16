@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components;
+using NamelessRogue.Engine.Engine.Context;
 using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Systems;
@@ -20,7 +21,6 @@ namespace NamelessRogue.shell
         private static long serialVersionUID = 1L;
 
         List<IEntity> Entities;
-        List<ISystem> Systems;
         InputSystem inputsystem;
 
         public static GraphicsDevice DebugDevice;
@@ -52,15 +52,11 @@ namespace NamelessRogue.shell
             return GetEntitiesByComponentClass<T>().FirstOrDefault();
         }
 
-        public List<ISystem> GetSystems()
-        {
-            return Systems;
-        }
+        public GameContext CurrentContext { get; private set; }
 
 
         private GameSettings settings;
 
-        RenderingSystem renderingSystem;
 
         public NamelessGame()
         {
@@ -71,12 +67,12 @@ namespace NamelessRogue.shell
 
 
 
-        public int getActualWidth()
+        public int GetActualWidth()
         {
             return settings.getWidth() * settings.getFontSize();
         }
 
-        public int getActualHeight()
+        public int GetActualHeight()
         {
             return settings.getHeight() * settings.getFontSize();
         }
@@ -85,14 +81,14 @@ namespace NamelessRogue.shell
 
 
 
-        public GameSettings getSettings()
+        public GameSettings GetSettings()
         {
             return settings;
         }
 
 
 
-        void setSettings(GameSettings settings)
+        void SetSettings(GameSettings settings)
         {
             this.settings = settings;
         }
@@ -140,8 +136,8 @@ namespace NamelessRogue.shell
             int width = 60;
             int height = 40;
             settings = new GameSettings(width, height);
-            graphics.PreferredBackBufferWidth = getActualWidth();
-            graphics.PreferredBackBufferHeight = getActualHeight();
+            graphics.PreferredBackBufferWidth = GetActualWidth();
+            graphics.PreferredBackBufferHeight = GetActualHeight();
            
             graphics.IsFullScreen = false;
             graphics.PreferMultiSampling = false;
@@ -166,7 +162,7 @@ namespace NamelessRogue.shell
             inputsystem = new InputSystem();
 
             Entities = new List<IEntity>();
-            Systems = new List<ISystem>();
+            var systems = new List<ISystem>();
 
             int xoffset = 280;
             int yoffset = 110;
@@ -208,18 +204,20 @@ namespace NamelessRogue.shell
             //initialize reality bubble
             chunkManagementSystem.Update(0, this);
             //
-            Systems.Add(new InitializationSystem());
-            Systems.Add(inputsystem);
-            Systems.Add(new IntentSystem());
-           // Systems.Add(new AiSystem());
-            Systems.Add(new MovementSystem());
-            Systems.Add(new CombatSystem());
-            Systems.Add(new SwitchSystem());
-            Systems.Add(new DamageHandlingSystem());
-            Systems.Add(new DeathSystem());
-            Systems.Add(chunkManagementSystem);
+            systems.Add(new InitializationSystem());
+            systems.Add(inputsystem);
+            systems.Add(new IntentSystem());
+            // Systems.Add(new AiSystem());
+            systems.Add(new MovementSystem());
+            systems.Add(new CombatSystem());
+            systems.Add(new SwitchSystem());
+            systems.Add(new DamageHandlingSystem());
+            systems.Add(new DeathSystem());
+            systems.Add(chunkManagementSystem);
 
-            renderingSystem = new RenderingSystem(settings);
+            var renderingSystem = new RenderingSystem(settings);
+
+            CurrentContext = new GameContext(systems,new List<ISystem>(){ renderingSystem });
 
             this.IsMouseVisible = true;
 
@@ -233,16 +231,16 @@ namespace NamelessRogue.shell
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Panel panel = new Panel(new Vector2(400, 400), PanelSkin.Default, Anchor.Center);
-            UserInterface.Active.AddEntity(panel);
+            //Panel panel = new Panel(new Vector2(400, 400), PanelSkin.Default, Anchor.Center);
+            //UserInterface.Active.AddEntity(panel);
 
-            // add title and text
-            panel.AddChild(new Header("Example Panel"));
-            panel.AddChild(new HorizontalLine());
-            panel.AddChild(new Paragraph("This is a simple panel with a button."));
+            //// add title and text
+            //panel.AddChild(new Header("Example Panel"));
+            //panel.AddChild(new HorizontalLine());
+            //panel.AddChild(new Paragraph("This is a simple panel with a button."));
 
-            // add a button at the bottom
-            panel.AddChild(new Button("Click Me!", ButtonSkin.Default, Anchor.BottomCenter));
+            //// add a button at the bottom
+            //panel.AddChild(new Button("Click Me!", ButtonSkin.Default, Anchor.BottomCenter));
 
 
         }
@@ -276,29 +274,19 @@ namespace NamelessRogue.shell
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            //TODO dont forget to move game exit logic somewhere
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
  
-            foreach (ISystem system in this.Systems)
+            foreach (ISystem system in CurrentContext.Systems)
             {
                 system.Update((long) gameTime.TotalGameTime.TotalMilliseconds, this);
             }
             UserInterface.Active.Update(gameTime);
-
         }
 
-        SamplerState sampler = new SamplerState()
-        {
-            AddressU = TextureAddressMode.Clamp,
-            AddressV = TextureAddressMode.Clamp,
-            AddressW = TextureAddressMode.Clamp,
-            Filter = TextureFilter.Point,
-            FilterMode = TextureFilterMode.Default,
-            MaxMipLevel = 0,
-            MaxAnisotropy = 0,
-            
-        };
+
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -308,24 +296,13 @@ namespace NamelessRogue.shell
         {
             GraphicsDevice.Clear(Color.Black);
 
-           
-
             UserInterface.Active.Draw(spriteBatch);
-
-            // clear buffer
-           // GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // finalize ui rendering
             UserInterface.Active.DrawMainRenderTarget(spriteBatch);
 
-            this.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            this.GraphicsDevice.SamplerStates[0] = sampler;
-            this.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            renderingSystem.Update((long)gameTime.TotalGameTime.TotalMilliseconds, this);
-
+            foreach (var renderingSystem in CurrentContext.RenderingSystems)
+            {
+                renderingSystem.Update((long)gameTime.TotalGameTime.TotalMilliseconds, this);
+            }
         }
-
-
-
     }
 }

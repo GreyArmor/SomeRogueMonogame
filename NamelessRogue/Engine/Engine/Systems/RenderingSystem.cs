@@ -61,6 +61,18 @@ namespace NamelessRogue.Engine.Engine.Systems
         private VertexBuffer vertexBuffer;
         private IndexBuffer indexBuffer;
 
+        SamplerState sampler = new SamplerState()
+        {
+            AddressU = TextureAddressMode.Clamp,
+            AddressV = TextureAddressMode.Clamp,
+            AddressW = TextureAddressMode.Clamp,
+            Filter = TextureFilter.Point,
+            FilterMode = TextureFilterMode.Default,
+            MaxMipLevel = 0,
+            MaxAnisotropy = 0,
+
+        };
+
         public RenderingSystem(GameSettings settings)
         {
 
@@ -141,6 +153,11 @@ namespace NamelessRogue.Engine.Engine.Systems
         {
 
             this.gameTime = gameTime;
+
+            game.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            game.GraphicsDevice.SamplerStates[0] = sampler;
+            game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
             //todo move to constructor or some other place better suited for initialization
             if (tileAtlas == null)
             {
@@ -162,11 +179,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                 if (camera != null && screen != null && worldProvider != null)
                 {
                     MoveCamera(game, camera);
-                    fillcharacterBufferVisibility(game, screen, camera, game.getSettings(), worldProvider);
-                    fillcharacterBuffersWithWorld(screen, camera, game.getSettings(), worldProvider);
-                    fillcharacterBuffersWithWorldObjects(screen, camera, game.getSettings(), game);
+                    fillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
+                    fillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
+                    fillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
 
-                    renderScreen(game, screen, game.getSettings());
+                    renderScreen(game, screen, game.GetSettings());
                     break;
                 }
             }
@@ -181,8 +198,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                     .GetComponentOfType<Position>();
 
                 Point p = camera.getPosition();
-                p.X = (playerPosition.p.X - game.getSettings().getWidth() / 2);
-                p.Y = (playerPosition.p.Y - game.getSettings().getHeight() / 2);
+                p.X = (playerPosition.p.X - game.GetSettings().getWidth() / 2);
+                p.Y = (playerPosition.p.Y - game.GetSettings().getHeight() / 2);
                 camera.setPosition(p);
             }
         }
@@ -437,8 +454,8 @@ namespace NamelessRogue.Engine.Engine.Systems
             }
 
 
-            int tileHeight = game.getSettings().getFontSize();
-            int tileWidth = game.getSettings().getFontSize();
+            int tileHeight = game.GetSettings().getFontSize();
+            int tileWidth = game.GetSettings().getFontSize();
 
 
             float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float) tileAtlas.Width);
@@ -449,10 +466,10 @@ namespace NamelessRogue.Engine.Engine.Systems
             float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float) tileAtlas.Height);
 
 
-            var settings = game.getSettings();
+            var settings = game.GetSettings();
             var projectionMatrix = //Matrix.CreateOrthographic(game.getActualWidth(),game.getActualHeight(),0,1);
-                Matrix.CreateOrthographicOffCenter(0, game.getActualWidth(),
-                    0, game.getActualHeight(), 0, 2);
+                Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(),
+                    0, game.GetActualHeight(), 0, 2);
 
             effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
             var indices = new int[6] { 0, 1, 2, 2, 3, 0 };
