@@ -31,10 +31,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
                     if (receiver != null && inputComponent != null)
                     {
-                        foreach (var keyEvent in Keyboard.GetState().GetPressedKeys())
-                        {
-                            inputComponent.Intents.AddRange(KeyIntentTraslator.Translate(keyEvent));
-                        }
+                            inputComponent.Intents.AddRange(KeyIntentTraslator.Translate(Keyboard.GetState().GetPressedKeys()));
                     }
                 }
             }

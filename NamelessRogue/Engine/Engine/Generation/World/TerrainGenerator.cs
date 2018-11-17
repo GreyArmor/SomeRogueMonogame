@@ -20,17 +20,15 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         int resolution=1000;
         int layer1 = 300, layer2 = 600, layer3 = 900;
 
-        public TerrainGenerator(int seed)
+        public TerrainGenerator(Random random)
         {
-            Seed = seed;
-            Random forestsRandom = new Random(seed);
             TerrainNoises =  new List<SimplexNoise>();
             // Constants.
             //Const.
 
-            SimplexNoise noise1 = new SimplexNoise( layer1,0.5, Seed);
-            SimplexNoise noise2 = new SimplexNoise( layer2,0.5, Seed);
-            SimplexNoise noise3 = new SimplexNoise( layer3,0.5, Seed);
+            SimplexNoise noise1 = new SimplexNoise( layer1,0.5, random);
+            SimplexNoise noise2 = new SimplexNoise( layer2,0.5, random);
+            SimplexNoise noise3 = new SimplexNoise( layer3,0.5, random);
 
 
             TerrainNoises.Add(noise1);
@@ -96,12 +94,12 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
         }
 
-        public Tile GetTile(int x, int y)
+        public Tile GetTile(int x, int y, float scale)
         {
-            double dX = (double)x/Constants.ChunkSize;
-            double dY = (double)y/Constants.ChunkSize;
+            double dX = (double)x/ scale;
+            double dY = (double)y/ scale;
             // System.out.print("X ="+dX+"Y =" +dY +"\n");
-            int resolutionZoomed = resolution * Constants.ChunkSize;
+            int resolutionZoomed = (int) (resolution * scale);
             int borderthickness = resolutionZoomed/10;
 
             double noise = 0;

@@ -5,6 +5,7 @@ using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Components.Stats;
 using NamelessRogue.Engine.Engine.Components.UI;
+using NamelessRogue.Engine.Engine.Components.WorldBoardComponents;
 using NamelessRogue.Engine.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Engine.Factories
@@ -29,14 +30,27 @@ namespace NamelessRogue.Engine.Engine.Factories
             playerCharacter.AddComponent(new Stamina(100,0,100));
             playerCharacter.AddComponent(new Strength(10,0,100));
             playerCharacter.AddComponent(new Agility(10,0,10));
-            playerCharacter.AddComponent(new Dexterity(10,0,10));
+            playerCharacter.AddComponent(new Endurance(10, 0, 100));
             playerCharacter.AddComponent(new Imagination(10,0,10));
             playerCharacter.AddComponent(new Willpower(10,0,10));
             playerCharacter.AddComponent(new Wit(10,0,10));
 
             return playerCharacter;
         }
-	
+
+        public static Entity CreateWorldBoardPlayer(int x, int y)
+        {
+            Entity playerCharacter = new Entity();
+            playerCharacter.AddComponent(new Player());
+            playerCharacter.AddComponent(new InputReceiver());
+            playerCharacter.AddComponent(new FollowedByCamera());
+            playerCharacter.AddComponent(new InputComponent());
+            playerCharacter.AddComponent(new Position(x, y));
+            playerCharacter.AddComponent(new WorldBoardPlayer());
+            return playerCharacter;
+        }
+
+
         public static Entity CreateBlankNpc(int x,int y) {
             Entity npc = new Entity();
             npc.AddComponent(new Character());
@@ -53,7 +67,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             npc.AddComponent(new Stamina(100, 0, 100));
             npc.AddComponent(new Strength(10, 0, 100));
             npc.AddComponent(new Agility(10, 0, 10));
-            npc.AddComponent(new Dexterity(10, 0, 10));
+            npc.AddComponent(new Endurance(10, 0, 100));
             npc.AddComponent(new Imagination(10, 0, 10));
             npc.AddComponent(new Willpower(10, 0, 10));
             npc.AddComponent(new Wit(10, 0, 10));

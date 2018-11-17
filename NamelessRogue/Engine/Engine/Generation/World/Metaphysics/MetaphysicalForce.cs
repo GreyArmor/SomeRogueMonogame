@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NamelessRogue.Engine.Engine.Systems
+namespace NamelessRogue.Engine.Engine.Generation.World
 {
-    public class UISystem
+    public class MetaphysicalForce
     {
     }
 }

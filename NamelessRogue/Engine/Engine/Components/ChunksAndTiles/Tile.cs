@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Infrastructure;
+using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
@@ -32,16 +34,34 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             return entitiesOnTile;
         }
 
-        public void setPassable(bool passable) {
-            isPassable = passable;
+
+        public bool GetPassable(NamelessGame namelessGame) {
+            foreach (var entity in entitiesOnTile)
+            {
+                var occupiesTile = entity.GetComponentOfType<OccupiesTile>();
+                if (occupiesTile != null)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
-        public bool getPassable() {
-            return isPassable;
+        public bool GetBlocksVision(NamelessGame namelessGame)
+        {
+            foreach (var entity in entitiesOnTile)
+            {
+                var blocksVision = entity.GetComponentOfType<BlocksVision>();
+                if (blocksVision != null)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
 
-        public Point getCoordinate() {
+        public Point GetCoordinate() {
             return coordinate;
         }
     }

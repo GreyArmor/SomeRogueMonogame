@@ -31,7 +31,6 @@ namespace NamelessRogue.Engine.Engine.Systems
                     {
                         Tile tile = worldProvider.getTile(position.p.X, position.p.Y);
                         tile.getEntitiesOnTile().Add((Entity) entity);
-                        tile.setPassable(false);
                     }
 
                     entity.RemoveComponentOfType<JustCreated>();

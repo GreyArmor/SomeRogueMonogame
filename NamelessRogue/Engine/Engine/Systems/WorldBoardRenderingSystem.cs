@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +10,8 @@ using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
+using NamelessRogue.Engine.Engine.Generation;
+using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.FieldOfView;
@@ -21,29 +23,9 @@ using Color = NamelessRogue.Engine.Engine.Utility.Color;
 namespace NamelessRogue.Engine.Engine.Systems
 {
 
-    public struct Vertex
+  
+    public class WorldBoardRenderingSystem : ISystem
     {
-        // ReSharper disable NotAccessedField.Local
-        private Vector3 position;
-        private Vector4 color;
-        private Vector4 backgroundColor;
-        private Vector2 textureCoordinate;
-
-        public Vertex(Vector3 position, Vector4 color, Vector4 backgroundColor, Vector2 textureCoordinate)
-        {
-            this.position = position;
-            this.color = color;
-            this.backgroundColor = backgroundColor;
-            this.textureCoordinate = textureCoordinate;
-        }
-    }
-
-
-
-    public class RenderingSystem : ISystem
-    {
-
-
         public readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
         (
             new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
@@ -73,7 +55,7 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         };
 
-        public RenderingSystem(GameSettings settings)
+        public WorldBoardRenderingSystem(GameSettings settings)
         {
 
             InitializeCharacterTileDictionary();
@@ -164,11 +146,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                 InitializeTexture(game);
             }
 
-            IEntity worldEntity = game.GetEntityByComponentClass<ChunkData>();
-            IChunkProvider worldProvider = null;
+            IEntity worldEntity = game.GetEntityByComponentClass<WorldBoard>();
+            WorldBoard worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+                worldProvider = worldEntity.GetComponentOfType<WorldBoard>();
             }
 
             foreach (IEntity entity in game.GetEntities())
@@ -179,10 +161,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                 if (camera != null && screen != null && worldProvider != null)
                 {
                     MoveCamera(game, camera);
-                    FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
                     FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
-                    FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
-
                     RenderScreen(game, screen, game.GetSettings());
                     break;
                 }
@@ -194,7 +173,7 @@ namespace NamelessRogue.Engine.Engine.Systems
             IEntity input = game.GetEntityByComponentClass<InputComponent>();
             if (input != null)
             {
-                Position playerPosition = game.GetEntityByComponentClass<FollowedByCamera>()
+                Position playerPosition = game.GetEntityByComponentClass<Cursor>()
                     .GetComponentOfType<Position>();
 
                 Point p = camera.getPosition();
@@ -203,45 +182,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                 camera.setPosition(p);
             }
         }
-        PermissiveVisibility fov;
-        private void FillcharacterBufferVisibility(NamelessGame game, Screen screen, ConsoleCamera camera,
-            GameSettings settings, IChunkProvider world)
-        {
-            int camX = camera.getPosition().X;
-            int camY = camera.getPosition().Y;
-            Position playerPosition = game.GetEntityByComponentClass<Player>().GetComponentOfType<Position>();
-            BoundingBox b = new BoundingBox(camera.getPosition(),
-                new Point(settings.getWidth() + camX, settings.getHeight() + camY));
-
-            for (int x = 0; x < settings.getWidth(); x++)
-            {
-                for (int y = 0; y < settings.getHeight(); y++)
-                {
-                    screen.ScreenBuffer[x, y].isVisible = false;
-                }
-            }
-
-
-            if (fov == null)
-            {
-                fov = new PermissiveVisibility((x, y) => { return !world.getTile(x, y).GetBlocksVision(game); },
-                    (x, y) =>
-                    {
-                        Point screenPoint = camera.PointToScreen(x, y);
-                        if (screenPoint.X >= 0 && screenPoint.X < settings.getWidth() && screenPoint.Y >= 0 &&
-                            screenPoint.Y < settings.getHeight())
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible = true;
-                        }
-                    }, (x, y) => { return Math.Abs(x) + Math.Abs(y); }
-                );
-            }
-
-            fov.Compute(playerPosition.p,60);
-        }
-
         private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings,
-            IChunkProvider world)
+            WorldBoard world)
         {
             int camX = camera.getPosition().X;
             int camY = camera.getPosition().Y;
@@ -252,82 +194,91 @@ namespace NamelessRogue.Engine.Engine.Systems
 
             angle += step;
 
+
+
+            for (int x = 0; x < settings.getWidth(); x++)
+            {
+                for (int y = 0; y < settings.getHeight(); y++)
+                {
+                    screen.ScreenBuffer[x, y].Char = ' ';
+                    screen.ScreenBuffer[x, y].CharColor = new Color();
+                    screen.ScreenBuffer[x, y].BackGroundColor = new Color();
+                }
+            }
+
             for (int x = camX; x < settings.getWidth() + camX; x++)
             {
                 for (int y = camY; y < settings.getHeight() + camY; y++)
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
-                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
+
+                    if (screenPoint.X < 0 || screenPoint.Y < 0 || x < 0 || x >= 100 || y < 0 || y >= 100)
                     {
-                        Tile tileToDraw = world.getTile(x, y);
+                        continue;
+                    }
 
-                        if (tileToDraw.getTerrainType() == TerrainTypes.Water)
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '~';
+                    TerrainTypes terrain = world.WorldTiles[x, y].Terrain;
 
-                            //float waveValue1 = (float) ((Math.Sin(((x + y) / 1.5) + angle)) + 1) / 2;
-                            //float waveValue2 = (float) ((Math.Sin(((x + y)) + angle)) / 2 + 1) / 2;
-                            //float waveValue3 = (float) ((Math.Sin(((x + y) / 3) + angle)) + 1) / 2;
-                            //float resultingColor = 0.3f + (0.5f * (waveValue1 + waveValue2 + waveValue3) / 3);
+                    if (terrain == TerrainTypes.Water)
+                    {
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '~';
 
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0, 0, 255);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor =
-                                new Color(0, 1, 1);
-                        }
-                        else if (tileToDraw.getTerrainType() == TerrainTypes.Road)
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '.';
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.5, 0.5, 0.5);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                        }
-                        else if (tileToDraw.getTerrainType() == TerrainTypes.Dirt)
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '&';
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 0);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                        }
-                        else if (tileToDraw.getTerrainType() == TerrainTypes.Grass)
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '.';
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0, 0.8f, 0);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                        }
-                        else if (tileToDraw.getTerrainType() == TerrainTypes.HardRocks)
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '.';
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.2, 0.2, 0.2);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                        }
-                        else if (tileToDraw.getTerrainType() == TerrainTypes.Rocks)
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '.';
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.5, 0.5, 0.5);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                        }
-                        else if (tileToDraw.getTerrainType() == TerrainTypes.LightRocks)
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '.';
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.8, 0.8, 0.8);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                        }
-                        else if (tileToDraw.getTerrainType() == TerrainTypes.Sand)
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '~';
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 0);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                        }
-                        else if (tileToDraw.getTerrainType() == TerrainTypes.Snow)
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 's';
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                        }
-                        else
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = ' ';
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                        }
+                        //float waveValue1 = (float) ((Math.Sin(((x + y) / 1.5) + angle)) + 1) / 2;
+                        //float waveValue2 = (float) ((Math.Sin(((x + y)) + angle)) / 2 + 1) / 2;
+                        //float waveValue3 = (float) ((Math.Sin(((x + y) / 3) + angle)) + 1) / 2;
+                        //float resultingColor = 0.3f + (0.5f * (waveValue1 + waveValue2 + waveValue3) / 3);
+
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0, 0, 255);
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor =
+                            new Color(0, 1, 1);
+                    }
+                    else if (terrain == TerrainTypes.Road)
+                    {
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '.';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.5, 0.5, 0.5);
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                    }
+                    else if (terrain == TerrainTypes.Dirt)
+                    {
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '&';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 0);
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                    }
+                    else if (terrain == TerrainTypes.Grass)
+                    {
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '.';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0, 0.8f, 0);
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                    }
+                    else if (terrain == TerrainTypes.HardRocks)
+                    {
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'A';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.2, 0.2, 0.2);
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                    }
+                    else if (terrain == TerrainTypes.Rocks)
+                    {
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'A';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.8, 0.8, 0.8);
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                    }
+                    else if (terrain == TerrainTypes.LightRocks)
+                    {
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'A';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.5, 0.5, 0.5);
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                    }
+                    else if (terrain == TerrainTypes.Sand)
+                    {
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '~';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 0);
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                    }
+                    else if (terrain == TerrainTypes.Snow)
+                    {
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 's';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f);
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
                     }
                     else
                     {
@@ -458,12 +409,12 @@ namespace NamelessRogue.Engine.Engine.Systems
             int tileWidth = game.GetSettings().getFontSize();
 
 
-            float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float) tileAtlas.Width);
-            float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float) tileAtlas.Height);
+            float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
+            float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
 
-            float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float) tileAtlas.Width);
+            float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
 
-            float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float) tileAtlas.Height);
+            float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
 
 
             var settings = game.GetSettings();
@@ -505,7 +456,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                 backGroundColor.ToVector4(), new Vector2(textureXend, textureY));
 
 
-         
+
             effect.CurrentTechnique = effect.Techniques["Point"];
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {

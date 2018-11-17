@@ -29,14 +29,12 @@ namespace NamelessRogue.Engine.Engine.Systems
                             worldProvider = worldEntity.GetComponentOfType<ChunkData>();
                         }
 
-                        Tile oldTile = worldProvider.getTile(position.p.Y, position.p.X);
-                        Tile newTile = worldProvider.getTile(moveCommand.p.Y, moveCommand.p.X);
+                        Tile oldTile = worldProvider.getTile(position.p.X, position.p.Y);
+                        Tile newTile = worldProvider.getTile(moveCommand.p.X, moveCommand.p.Y);
 
                         oldTile.getEntitiesOnTile().Remove((Entity) entity);
                         newTile.getEntitiesOnTile().Add((Entity) entity);
 
-                        oldTile.setPassable(true);
-                        newTile.setPassable(false);
 
                         position.p.X = (moveCommand.p.X);
                         position.p.Y = (moveCommand.p.Y);

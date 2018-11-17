@@ -19,6 +19,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             door.AddComponent(new Door());
             door.AddComponent(new SimpleSwitch(true));
             door.AddComponent(new OccupiesTile());
+            door.AddComponent(new BlocksVision());
             return door;
         }
 
@@ -29,6 +30,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             wall.AddComponent(new Drawable('#', new Engine.Utility.Color(0.9,0.9,0.9)));
             wall.AddComponent(new Description("Wall",""));
             wall.AddComponent(new OccupiesTile());
+            wall.AddComponent(new BlocksVision());
             return wall;
         }
 

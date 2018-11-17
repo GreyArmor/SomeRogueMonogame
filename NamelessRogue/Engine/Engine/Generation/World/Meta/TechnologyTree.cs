@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NamelessRogue.UI
+namespace NamelessRogue.Engine.Engine.Generation.World.Meta
 {
-    public abstract class UIScreen
+    public class TechnologyTree
     {
-
     }
 }

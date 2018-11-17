@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NamelessRogue.UI
+namespace NamelessRogue.Engine.Engine.Components.WorldBoardComponents
 {
-    class Hud
+    public class WorldBoardPlayer : Component
     {
     }
 }

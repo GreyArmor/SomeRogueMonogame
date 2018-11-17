@@ -83,7 +83,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                             Point nextPosition = route[0];
                                             Tile tileToMoveTo = worldProvider.getTile(nextPosition.Y, nextPosition.X);
 
-                                            if (!tileToMoveTo.getPassable())
+                                            if (!tileToMoveTo.GetPassable(namelessGame))
                                             {
                                                 AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
                                                 List<Point> path = pathfinder.FindPath(position.p,

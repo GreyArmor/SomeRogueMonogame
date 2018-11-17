@@ -14,7 +14,7 @@ namespace NamelessRogue.Engine.Engine.Generation.Noise
         double persistence;
         int seed;
 
-        public SimplexNoise(int largestFeature,double persistence, int seed){
+        public SimplexNoise(int largestFeature,double persistence, Random rnd){
             this.largestFeature=largestFeature;
             this.persistence=persistence;
             this.seed=seed;
@@ -26,7 +26,6 @@ namespace NamelessRogue.Engine.Engine.Generation.Noise
             frequencys=new double[numberOfOctaves];
             amplitudes=new double[numberOfOctaves];
 
-            Random rnd=new Random(seed);
 
             for(int i=0;i<numberOfOctaves;i++){
                 octaves[i]=new SimplexNoise_octave(rnd.Next());

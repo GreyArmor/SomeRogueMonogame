@@ -56,24 +56,24 @@ namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
 
         private void AddNeighborsToOpenList(SearchNode node, IChunkProvider world, Point destination)
         {
-            for (int x = node.NodePosition.Y - 1; x<=node.NodePosition.Y+1; x++)
-            {
-                for (int y = node.NodePosition.X - 1; y<=node.NodePosition.X+1; y++) {
-                    Point currentposition = new Point(x,y);
-                    bool isInClosed = closedList.Any(n => n.NodePosition.Equals(currentposition));
-                    bool isInOpen = openList.Any(n => n.NodePosition.Equals(currentposition));
-                    if (!isInClosed && !isInOpen) {
-                        Tile t = world.getTile(x,y);
-                        if(t.getPassable()) {
-                            openList.Add(new SearchNode(node, currentposition, destination));
-                        }
-                        else
-                        {
-                            closedList.Add(new SearchNode(node, currentposition, destination));
-                        }
-                    }
-                }
-            }
+            //for (int x = node.NodePosition.Y - 1; x<=node.NodePosition.Y+1; x++)
+            //{
+            //    for (int y = node.NodePosition.X - 1; y<=node.NodePosition.X+1; y++) {
+            //        Point currentposition = new Point(x,y);
+            //        bool isInClosed = closedList.Any(n => n.NodePosition.Equals(currentposition));
+            //        bool isInOpen = openList.Any(n => n.NodePosition.Equals(currentposition));
+            //        if (!isInClosed && !isInOpen) {
+            //            Tile t = world.getTile(x,y);
+            //            if(t.GetPassable()) {
+            //                openList.Add(new SearchNode(node, currentposition, destination));
+            //            }
+            //            else
+            //            {
+            //                closedList.Add(new SearchNode(node, currentposition, destination));
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         List<SearchNode> openList;

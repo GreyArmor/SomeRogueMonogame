@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Engine.Generation;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 
@@ -14,15 +15,14 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
         private Dictionary<Point, Chunk> realityBubbleChunks;
 
-        TerrainGenerator terrainGenerator;
+        private WorldSettings worldSEttings;
 
-        public ChunkData()
+        public ChunkData(WorldSettings settings)
         {
             Id = Guid.NewGuid();
             chunks = new Dictionary<Point, Chunk>();
-
-            terrainGenerator = new TerrainGenerator(5);
             realityBubbleChunks = new Dictionary<Point, Chunk>();
+            worldSEttings = settings;
             initWorld();
         }
 
@@ -76,7 +76,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                 return new Tile(TerrainTypes.Nothingness, new Point(-1, -1));
             }
 
-            return chunkOfPoint.getTile(x, y);
+            return chunkOfPoint.GetTile(x, y);
         }
 
         //TODO: we need to implement quick iteration by using bounding box trees;
@@ -102,9 +102,9 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         }
 
 
-        public TerrainGenerator getWorldGenerator()
+        public TerrainGenerator GetWorldGenerator()
         {
-            return terrainGenerator;
+            return worldSEttings.TerrainGen;
         }
 
         public Dictionary<Point, Chunk> getRealityBubbleChunks()

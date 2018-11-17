@@ -82,7 +82,7 @@ namespace NamelessRogue.Engine.Engine.Generation.Noise
 
             Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
             tex.SetData(arrBytes);
-            using (var str = File.OpenWrite("C:\\terrain.png"))
+            using (var str = File.OpenWrite("C:\\11\\terrain.png"))
             {
                 tex.SaveAsPng(str,resolution,resolution);
             }

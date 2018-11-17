@@ -5,17 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Engine.UiScreens;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Context
 {
     public class GameContext
     {
-
+        public BaseGuiScreen ContextScreen { get; }
         public HashSet<ISystem> Systems { get; } = new HashSet<ISystem>();
         public HashSet<ISystem> RenderingSystems { get; } = new HashSet<ISystem>();
 
-        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems)
+        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, BaseGuiScreen contextScreen)
         {
             if (systems != null && systems.Any())
             {
@@ -31,6 +32,8 @@ namespace NamelessRogue.Engine.Engine.Context
                     RenderingSystems.Add(system);
                 }
             }
+
+            ContextScreen = contextScreen;
         }
 
         public void Update(long gameTime, NamelessGame namelessGame)

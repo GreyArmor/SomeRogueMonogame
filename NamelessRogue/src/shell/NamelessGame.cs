@@ -10,6 +10,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components;
 using NamelessRogue.Engine.Engine.Context;
 using NamelessRogue.Engine.Engine.Factories;
+using NamelessRogue.Engine.Engine.Generation;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Systems;
 using NamelessRogue.Storage.data;
@@ -21,7 +22,7 @@ namespace NamelessRogue.shell
         private static long serialVersionUID = 1L;
 
         List<IEntity> Entities;
-        InputSystem inputsystem;
+        //InputSystem inputsystem;
 
         public static GraphicsDevice DebugDevice;
 
@@ -53,7 +54,7 @@ namespace NamelessRogue.shell
         }
 
         public GameContext CurrentContext { get; private set; }
-
+        public GameContext ContextToSwitch { get; set; } = null;
 
         private GameSettings settings;
 
@@ -67,14 +68,24 @@ namespace NamelessRogue.shell
 
 
 
-        public int GetActualWidth()
+        public int GetActualCharacterWidth()
         {
             return settings.getWidth() * settings.getFontSize();
         }
 
-        public int GetActualHeight()
+        public int GetActualCharacterHeight()
         {
             return settings.getHeight() * settings.getFontSize();
+        }
+
+        public int GetActualWidth()
+        {
+            return graphics.PreferredBackBufferWidth;
+        }
+
+        public int GetActualHeight()
+        {
+            return graphics.PreferredBackBufferHeight;
         }
 
 
@@ -120,7 +131,7 @@ namespace NamelessRogue.shell
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        WorldSettings worldSettings;
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -136,13 +147,12 @@ namespace NamelessRogue.shell
             int width = 60;
             int height = 40;
             settings = new GameSettings(width, height);
-            graphics.PreferredBackBufferWidth = GetActualWidth();
-            graphics.PreferredBackBufferHeight = GetActualHeight();
-           
+            graphics.PreferredBackBufferWidth = GetActualCharacterWidth() + 200;
+            graphics.PreferredBackBufferHeight = GetActualCharacterHeight();
+
             graphics.IsFullScreen = false;
             graphics.PreferMultiSampling = false;
             graphics.SynchronizeWithVerticalRetrace = true;
-
 
 
             RenderTarget = new RenderTarget2D(
@@ -153,23 +163,24 @@ namespace NamelessRogue.shell
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24, 4, RenderTargetUsage.PlatformContents);
 
-       
+
             graphics.ApplyChanges();
 
 
+            worldSettings = new WorldSettings(5);
 
-
-            inputsystem = new InputSystem();
 
             Entities = new List<IEntity>();
-            var systems = new List<ISystem>();
 
-            int xoffset = 280;
-            int yoffset = 110;
+
+
+            int xoffset = 215;
+            int yoffset = 200;
 
             //TODO: for test
             Entities.Add(RenderFactory.CreateViewport(settings));
-            Entities.Add(TerrainFactory.CreateWorld());
+            Entities.Add(WorldBoardFactory.CreateWorldBoard(this));
+            Entities.Add(TerrainFactory.CreateWorld(worldSettings));
             Entities.Add(InputHandlingFactory.CreateInput());
 
             Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1,
@@ -198,50 +209,14 @@ namespace NamelessRogue.shell
             Entities.Add(ItemFactory.CreateItem());
             Entities.Add(GameInitializer.CreateCursor());
 
-            //
 
-            ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
-            //initialize reality bubble
-            chunkManagementSystem.Update(0, this);
-            //
-            systems.Add(new InitializationSystem());
-            systems.Add(inputsystem);
-            systems.Add(new IntentSystem());
-            // Systems.Add(new AiSystem());
-            systems.Add(new MovementSystem());
-            systems.Add(new CombatSystem());
-            systems.Add(new SwitchSystem());
-            systems.Add(new DamageHandlingSystem());
-            systems.Add(new DeathSystem());
-            systems.Add(chunkManagementSystem);
-
-            var renderingSystem = new RenderingSystem(settings);
-
-            CurrentContext = new GameContext(systems,new List<ISystem>(){ renderingSystem });
-
-            this.IsMouseVisible = true;
-
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            // create and init the UI manager
             UserInterface.Initialize(Content, BuiltinThemes.hd);
             UserInterface.Active.UseRenderTarget = true;
-
-            // draw cursor outside the render target
-            UserInterface.Active.IncludeCursorInRenderTarget = false;
-
-            // Create a new SpriteBatch, which can be used to draw textures.
+            CurrentContext = ContextFactory.GetIngameContext(this);
+            CurrentContext.ContextScreen.Show();
+            this.IsMouseVisible = true;
+            UserInterface.Active.ShowCursor = false;
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            //Panel panel = new Panel(new Vector2(400, 400), PanelSkin.Default, Anchor.Center);
-            //UserInterface.Active.AddEntity(panel);
-
-            //// add title and text
-            //panel.AddChild(new Header("Example Panel"));
-            //panel.AddChild(new HorizontalLine());
-            //panel.AddChild(new Paragraph("This is a simple panel with a button."));
-
-            //// add a button at the bottom
-            //panel.AddChild(new Button("Click Me!", ButtonSkin.Default, Anchor.BottomCenter));
-
 
         }
 
@@ -250,6 +225,12 @@ namespace NamelessRogue.shell
         public SpriteBatch Batch
         {
             get { return spriteBatch; }
+        }
+
+        public WorldSettings WorldSettings
+        {
+            get { return worldSettings; }
+            set { worldSettings = value; }
         }
 
         /// <summary>
@@ -274,15 +255,15 @@ namespace NamelessRogue.shell
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            //TODO dont forget to move game exit logic somewhere
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
- 
-            foreach (ISystem system in CurrentContext.Systems)
+            if (ContextToSwitch != null)
             {
-                system.Update((long) gameTime.TotalGameTime.TotalMilliseconds, this);
+                CurrentContext.ContextScreen.Hide();
+                CurrentContext = ContextToSwitch;
+                CurrentContext.ContextScreen.Show();
+                ContextToSwitch = null;
             }
+
+            CurrentContext.Update((long) gameTime.TotalGameTime.TotalMilliseconds, this);
             UserInterface.Active.Update(gameTime);
         }
 
@@ -295,14 +276,7 @@ namespace NamelessRogue.shell
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            UserInterface.Active.Draw(spriteBatch);
-            UserInterface.Active.DrawMainRenderTarget(spriteBatch);
-
-            foreach (var renderingSystem in CurrentContext.RenderingSystems)
-            {
-                renderingSystem.Update((long)gameTime.TotalGameTime.TotalMilliseconds, this);
-            }
+            CurrentContext.RenderingUpdate((long) gameTime.TotalGameTime.TotalMilliseconds, this);
         }
     }
 }

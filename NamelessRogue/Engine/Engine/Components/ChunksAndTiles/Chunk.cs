@@ -60,7 +60,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
                     chunkTiles[x,y] = generator.GetTile(x + worldPositionBottomLeftCorner.X,
-                        y + worldPositionBottomLeftCorner.Y);
+                        y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             }
         }
 
-        public Tile[,] getChunkTiles()
+        public Tile[,] GetChunkTiles()
         {
             return chunkTiles;
         }
@@ -98,12 +98,12 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             return boundingBox.isPointInside(x, y);
         }
 
-        public Tile getTile(Point p)
+        public Tile GetTile(Point p)
         {
-            return getTile(p.X, p.Y);
+            return GetTile(p.X, p.Y);
         }
 
-        public Tile getTile(int x, int y)
+        public Tile GetTile(int x, int y)
         {
 
             if (!isActive)
@@ -129,7 +129,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                 chunkTiles = new Tile[Constants.ChunkSize,Constants.ChunkSize];
                 if (!LoadFromDisk())
                 {
-                    FillWithTiles(chunkContainer.getWorldGenerator());
+                    FillWithTiles(chunkContainer.GetWorldGenerator());
                 }
 
                 loaded = true;
