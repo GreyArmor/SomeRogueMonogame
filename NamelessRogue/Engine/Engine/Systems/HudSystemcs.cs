@@ -9,6 +9,7 @@ using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Stats;
 using NamelessRogue.Engine.Engine.Factories;
+using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.UiScreens;
 using NamelessRogue.shell;
 
@@ -48,13 +49,16 @@ namespace NamelessRogue.Engine.Engine.Systems
                     UiFactory.HudInstance.EndLabel.Text = $"End: {end.getValue()}";
                     UiFactory.HudInstance.WitLabel.Text = $"Wit: {wit.getValue()}";
 
-
                     foreach (var hudAction in UiFactory.HudInstance.ActionsThisTick)
                     {
                         switch (hudAction)
                         {
                             case HudAction.OpenWorldMap:
+                                var playerPosition = entity.GetComponentOfType<Position>();
                                 namelessGame.ContextToSwitch = ContextFactory.GetWorldBoardContext(namelessGame);
+                                var cursorPosition = namelessGame.GetEntityByComponentClass<Cursor>().GetComponentOfType<Position>();
+                                cursorPosition.p.X = (int) (playerPosition.p.X / Constants.ChunkSize * 0.1f);
+                                cursorPosition.p.Y = (int) (playerPosition.p.Y / Constants.ChunkSize * 0.1f);
                                 break;
                             default:
                                 break;

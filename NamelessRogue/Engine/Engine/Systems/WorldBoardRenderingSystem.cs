@@ -162,6 +162,18 @@ namespace NamelessRogue.Engine.Engine.Systems
                 {
                     MoveCamera(game, camera);
                     FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
+
+                    Position playerPosition = game.GetEntityByComponentClass<Cursor>()
+                        .GetComponentOfType<Position>();
+
+                    var screenPoint = camera.PointToScreen(playerPosition.p);
+
+                    if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().getWidth() && screenPoint.X > 0 &&
+                        screenPoint.Y < game.GetSettings().getWidth())
+                    {
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
+
+                    }
                     RenderScreen(game, screen, game.GetSettings());
                     break;
                 }
@@ -170,9 +182,6 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         private void MoveCamera(NamelessGame game, ConsoleCamera camera)
         {
-            IEntity input = game.GetEntityByComponentClass<InputComponent>();
-            if (input != null)
-            {
                 Position playerPosition = game.GetEntityByComponentClass<Cursor>()
                     .GetComponentOfType<Position>();
 
@@ -180,7 +189,6 @@ namespace NamelessRogue.Engine.Engine.Systems
                 p.X = (playerPosition.p.X - game.GetSettings().getWidth() / 2);
                 p.Y = (playerPosition.p.Y - game.GetSettings().getHeight() / 2);
                 camera.setPosition(p);
-            }
         }
         private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings,
             WorldBoard world)
@@ -288,6 +296,9 @@ namespace NamelessRogue.Engine.Engine.Systems
                     }
                 }
             }
+
+
+
         }
 
         private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
