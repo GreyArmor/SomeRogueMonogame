@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -147,6 +148,9 @@ namespace NamelessRogue.Engine.Engine.Systems
             characterToTileDictionary.Add('x', new AtlasTileData(8, 8));
             characterToTileDictionary.Add('y', new AtlasTileData(9, 8));
             characterToTileDictionary.Add('z', new AtlasTileData(10, 8));
+
+            characterToTileDictionary.Add('★', new AtlasTileData(15, 0));
+               
         }
 
         public void Update(long gameTime, NamelessGame game)
@@ -207,6 +211,7 @@ namespace NamelessRogue.Engine.Engine.Systems
         private void FillcharacterBufferVisibility(NamelessGame game, Screen screen, ConsoleCamera camera,
             GameSettings settings, IChunkProvider world)
         {
+
             int camX = camera.getPosition().X;
             int camY = camera.getPosition().Y;
             Position playerPosition = game.GetEntityByComponentClass<Player>().GetComponentOfType<Position>();
@@ -347,11 +352,26 @@ namespace NamelessRogue.Engine.Engine.Systems
         private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
             NamelessGame game)
         {
+           var s = Stopwatch.StartNew();
             foreach (IEntity entity in game.GetEntities())
             {
+                Position position = entity.GetComponentOfType<Position>();
+            }
+            s.Stop();
+            Debug.WriteLine($"entities = {game.GetEntities().Count}" );
+            Debug.WriteLine(s.ElapsedMilliseconds);
+
+            foreach (IEntity entity in game.GetEntities())
+            {
+                Drawable drawable = entity.GetComponentOfType<Drawable>();
+
+                if (drawable == null)
+                {
+                    continue;
+                }
 
                 Position position = entity.GetComponentOfType<Position>();
-                Drawable drawable = entity.GetComponentOfType<Drawable>();
+                
                 LineToPlayer lineToPlayer = entity.GetComponentOfType<LineToPlayer>();
                 if (drawable != null && position != null)
                 {

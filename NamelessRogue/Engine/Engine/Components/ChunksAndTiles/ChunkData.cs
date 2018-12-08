@@ -76,6 +76,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                 return new Tile(TerrainTypes.Nothingness,Biomes.None, new Point(-1, -1));
             }
 
+
             return chunkOfPoint.GetTile(x, y);
         }
 
@@ -105,6 +106,11 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         public TerrainGenerator GetWorldGenerator()
         {
             return worldSEttings.TerrainGen;
+        }
+
+        public Random GetGlobalRandom()
+        {
+            return worldSEttings.GlobalRandom;
         }
 
         public Dictionary<Point, Chunk> getRealityBubbleChunks()

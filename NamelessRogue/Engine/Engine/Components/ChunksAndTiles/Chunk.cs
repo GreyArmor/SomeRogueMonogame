@@ -130,12 +130,14 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                 if (!LoadFromDisk())
                 {
                     FillWithTiles(chunkContainer.GetWorldGenerator());
+                    this.JustCreated = true;
                 }
-
                 loaded = true;
             }
 
         }
+
+        public bool JustCreated { get; set; }
 
 //TODO: serialization
         private bool LoadFromDisk()

@@ -112,6 +112,7 @@
     <Compile Include="Engine\Engine\Factories\ItemFactory.cs" />
     <Compile Include="Engine\Engine\Factories\RenderFactory.cs" />
     <Compile Include="Engine\Engine\Factories\TerrainFactory.cs" />
+    <Compile Include="Engine\Engine\Factories\TerrainItemsFactory.cs" />
     <Compile Include="Engine\Engine\Factories\UiFactory.cs" />
     <Compile Include="Engine\Engine\Factories\TimelineFactory.cs" />
     <Compile Include="Engine\Engine\GameInstance\GameInstance.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Engine\Engine\Utility\BoundingBox.cs" />
     <Compile Include="Engine\Engine\Utility\Color.cs" />
     <Compile Include="Engine\Engine\Utility\DamageHelper.cs" />
+    <Compile Include="Engine\Engine\Utility\FrameCounter.cs" />
     <Compile Include="Engine\Engine\Utility\PointUtil.cs" />
     <Compile Include="FieldOfView\PermissiveVisibility.cs" />
     <Compile Include="Program.cs" />

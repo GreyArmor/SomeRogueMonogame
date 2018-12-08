@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
+using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
 
@@ -97,6 +99,19 @@ namespace NamelessRogue.Engine.Engine.Systems
                 }
             }
 
+            foreach (var realityBubbleChunk in worldProvider.getRealityBubbleChunks().Where(x=>x.Value.JustCreated))
+            {
+                foreach (var tile in realityBubbleChunk.Value.GetChunkTiles())
+                {
+                    var entity = TerrainItemsFactory.CreateExteriorEntity(namelessGame, tile);
+                    if (entity != null)
+                    {
+                        namelessGame.GetEntities().Add(entity);
+                    }
+                }
+
+                realityBubbleChunk.Value.JustCreated = false;
+            }
 
 
 

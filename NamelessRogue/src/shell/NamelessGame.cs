@@ -13,7 +13,9 @@ using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Generation;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Systems;
+using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.Storage.data;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace NamelessRogue.shell
 {
@@ -183,17 +185,26 @@ namespace NamelessRogue.shell
             Entities.Add(TerrainFactory.CreateWorld(worldSettings));
             Entities.Add(InputHandlingFactory.CreateInput());
 
-            Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1,
-                yoffset * Constants.ChunkSize, 10,
-                this));
-            Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13,
-                yoffset * Constants.ChunkSize, 10,
-                this));
-            Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1,
-                yoffset * Constants.ChunkSize + 13,
-                10, this));
-            Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13,
-                yoffset * Constants.ChunkSize + 13, 10, this));
+
+            for (int i = 0; i < 1; i++)
+            {
+                Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i*10),
+                    yoffset * Constants.ChunkSize, 10,
+                    this));
+                Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13 + (i*10),
+                    yoffset * Constants.ChunkSize, 10,
+                    this));
+                Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
+                    yoffset * Constants.ChunkSize + 13,
+                    10, this));
+                Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
+                    yoffset * Constants.ChunkSize + 13, 10, this));
+            }
+
+          
+
+
+
 
             Entities.Add(
                 CharacterFactory.CreateSimplePlayerCharacter(xoffset * Constants.ChunkSize,
@@ -217,7 +228,8 @@ namespace NamelessRogue.shell
             this.IsMouseVisible = true;
             UserInterface.Active.ShowCursor = false;
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            fpsLabel = new Label("1111", Anchor.TopLeft, new Vector2(1000, 50), new Vector2());
+            UserInterface.Active.AddEntity(fpsLabel);
         }
 
         public RenderTarget2D RenderTarget { get; set; }
@@ -269,16 +281,24 @@ namespace NamelessRogue.shell
             UserInterface.Active.Update(gameTime);
         }
 
-
-
+        private FrameCounter _frameCounter = new FrameCounter();
+        Label fpsLabel;
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _frameCounter.Update(deltaTime);
+            fpsLabel.Text = _frameCounter.AverageFramesPerSecond.ToString();
+
             GraphicsDevice.Clear(Color.Black);
             CurrentContext.RenderingUpdate((long) gameTime.TotalGameTime.TotalMilliseconds, this);
+
+            
+
         }
     }
 }

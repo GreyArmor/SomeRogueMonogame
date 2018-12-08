@@ -43,7 +43,7 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
         {
             if (Components.TryGetValue(typeof(ComponentType), out var dict))
             {
-                var component = dict.FirstOrDefault(x => x.Key == componentId).Value;
+                dict.TryGetValue(componentId, out var component);
                 if (component != null)
                 {
                     return (ComponentType) component;
