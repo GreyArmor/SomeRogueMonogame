@@ -57,8 +57,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                                 var playerPosition = entity.GetComponentOfType<Position>();
                                 namelessGame.ContextToSwitch = ContextFactory.GetWorldBoardContext(namelessGame);
                                 var cursorPosition = namelessGame.GetEntityByComponentClass<Cursor>().GetComponentOfType<Position>();
-                                cursorPosition.p.X = (int) (playerPosition.p.X / Constants.ChunkSize * 0.1f);
-                                cursorPosition.p.Y = (int) (playerPosition.p.Y / Constants.ChunkSize * 0.1f);
+                                cursorPosition.p.X = (int) (playerPosition.p.X / Constants.ChunkSize);
+                                cursorPosition.p.Y = (int) (playerPosition.p.Y / Constants.ChunkSize);
                                 break;
                             default:
                                 break;

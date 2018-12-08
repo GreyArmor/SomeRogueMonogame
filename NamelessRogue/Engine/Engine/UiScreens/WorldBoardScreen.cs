@@ -21,11 +21,17 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public WorldBoardScreen(NamelessGame game)
         {
             Panel = new Panel(new Vector2(200, game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.BottomRight);
-            ReturnToGame = new Button("Back", size: new Vector2(150, 50), anchor: Anchor.BottomCenter);
-            ReturnToGame.ButtonParagraph.Scale = 0.7f;
+            ReturnToGame = CreateButton("Back");
             ReturnToGame.OnClick += ReturnToGameOnClick;
             Panel.AddChild(ReturnToGame);
             UserInterface.Active.AddEntity(Panel);
+        }
+
+        private Button CreateButton(string Text)
+        {
+            var result = new Button(Text, size: new Vector2(150, 50), anchor: Anchor.BottomCenter);
+            result.ButtonParagraph.Scale = 0.7f;
+            return result;
         }
 
         private void ReturnToGameOnClick(Entity entity)

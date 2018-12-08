@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NamelessRogue.Engine.Engine.Generation.World.Meta
+namespace NamelessRogue.Engine.Engine.Generation
 {
-    public class TechnologyTree
+    public class CivilizationMachine
     {
+
     }
 }

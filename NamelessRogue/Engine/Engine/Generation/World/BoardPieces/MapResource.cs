@@ -1,11 +1,15 @@
  
 
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Engine.Generation.World.Meta;
+using NamelessRogue.Engine.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Engine.Generation.World.BoardPieces
 {
-    public class MapResource
+    public class MapResource : BoardPiece
     {
-        public ObjectInfo Info { get; set; }
+        public int Level { get; set; }
+        public List<TerrainTypes> AppearsOn { get; set; } = new List<TerrainTypes>();
     }
 }

@@ -166,8 +166,8 @@ namespace NamelessRogue.shell
 
             graphics.ApplyChanges();
 
-
-            worldSettings = new WorldSettings(5);
+            //5 for testing
+            worldSettings = new WorldSettings(5,1000,1000);
 
 
             Entities = new List<IEntity>();
@@ -179,7 +179,7 @@ namespace NamelessRogue.shell
 
             //TODO: for test
             Entities.Add(RenderFactory.CreateViewport(settings));
-            Entities.Add(WorldBoardFactory.CreateWorldBoard(this));
+            Entities.Add(TimelineFactory.CreateTimeline(this));
             Entities.Add(TerrainFactory.CreateWorld(worldSettings));
             Entities.Add(InputHandlingFactory.CreateInput());
 
@@ -232,6 +232,8 @@ namespace NamelessRogue.shell
             get { return worldSettings; }
             set { worldSettings = value; }
         }
+
+ 
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load

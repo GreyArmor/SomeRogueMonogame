@@ -9,17 +9,37 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 {
     public class WorldBoardGenerator
     {
-        public static void PopulateWithData(WorldBoard board, NamelessGame game)
+        public static void PopulateWithInitialData(WorldBoard board, NamelessGame game)
         {
-            for (int x = 0; x < 100; x++)
+            for (int x = 0; x < game.WorldSettings.WorldBoardWidth; x++)
             {
-                for (int y = 0; y < 100; y++)
+                for (int y = 0; y < game.WorldSettings.WorldBoardHeight; y++)
                 {
                     var worldTile = new WorldTile();
-                    worldTile.Terrain = game.WorldSettings.TerrainGen.GetTile(x, y, 0.1f).getTerrainType();
+                    var tile = game.WorldSettings.TerrainGen.GetTile(x, y, 1);
+                    worldTile.Terrain = tile.getTerrainType();
+                    worldTile.Biome = tile.Biome;
                     board.WorldTiles[x, y] = worldTile;
                 }
             }
+        }
+
+        public static void PlaceResources(WorldBoard worldBoard, NamelessGame game)
+        {
+            
+        }
+
+        public static void PlaceInitialArtifacts(WorldBoard worldBoard, NamelessGame game)
+        {
+
+        }
+
+        public static void DistributeMetaphysics(WorldBoard worldBoard, NamelessGame game)
+        {
+        }
+
+        public static void PlaceInitialCivilizations(WorldBoard worldBoard, NamelessGame game)
+        {
         }
     }
 }

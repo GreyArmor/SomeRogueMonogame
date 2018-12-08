@@ -10,16 +10,15 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Factories
 {
-    public class WorldBoardFactory
+    public class TimelineFactory
     {
-        public static Entity CreateWorldBoard(NamelessGame game)
+        public static Entity CreateTimeline(NamelessGame game)
         {
-            Entity worldBoard = new Entity();
-            var wb = new WorldBoard(100, 100);
-            worldBoard.AddComponent(wb);
+            Entity timepline = new Entity();
 
-            WorldBoardGenerator.PopulateWithData(wb, game);
-            return worldBoard;
+            timepline.AddComponent(HistoryGenerator.BuildTimeline(game,new HistoryGenerator.HistoryGenerationSettings()));
+
+            return timepline;
         }
     }
 }

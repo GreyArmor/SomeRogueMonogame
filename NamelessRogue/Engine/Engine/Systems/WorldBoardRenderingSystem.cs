@@ -146,11 +146,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                 InitializeTexture(game);
             }
 
-            IEntity worldEntity = game.GetEntityByComponentClass<WorldBoard>();
+            IEntity timeline = game.GetEntityByComponentClass<TimeLine>();
             WorldBoard worldProvider = null;
-            if (worldEntity != null)
+            if (timeline != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<WorldBoard>();
+                worldProvider = timeline.GetComponentOfType<TimeLine>().CurrentWorldBoard;
             }
 
             foreach (IEntity entity in game.GetEntities())
@@ -161,7 +161,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                 if (camera != null && screen != null && worldProvider != null)
                 {
                     MoveCamera(game, camera);
-                    FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
+                    FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), game.WorldSettings, worldProvider);
 
                     Position playerPosition = game.GetEntityByComponentClass<Cursor>()
                         .GetComponentOfType<Position>();
@@ -172,6 +172,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                         screenPoint.Y < game.GetSettings().getWidth())
                     {
                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
 
                     }
                     RenderScreen(game, screen, game.GetSettings());
@@ -190,7 +191,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                 p.Y = (playerPosition.p.Y - game.GetSettings().getHeight() / 2);
                 camera.setPosition(p);
         }
-        private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings,
+        private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings, WorldSettings worldSEttings,
             WorldBoard world)
         {
             int camX = camera.getPosition().X;
@@ -220,80 +221,13 @@ namespace NamelessRogue.Engine.Engine.Systems
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
 
-                    if (screenPoint.X < 0 || screenPoint.Y < 0 || x < 0 || x >= 100 || y < 0 || y >= 100)
+                    if (screenPoint.X < 0 || screenPoint.Y < 0 || x < 0 || x >= worldSEttings.WorldBoardWidth || y < 0 || y >= worldSEttings.WorldBoardHeight)
                     {
                         continue;
                     }
 
-                    TerrainTypes terrain = world.WorldTiles[x, y].Terrain;
-
-                    if (terrain == TerrainTypes.Water)
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '~';
-
-                        //float waveValue1 = (float) ((Math.Sin(((x + y) / 1.5) + angle)) + 1) / 2;
-                        //float waveValue2 = (float) ((Math.Sin(((x + y)) + angle)) / 2 + 1) / 2;
-                        //float waveValue3 = (float) ((Math.Sin(((x + y) / 3) + angle)) + 1) / 2;
-                        //float resultingColor = 0.3f + (0.5f * (waveValue1 + waveValue2 + waveValue3) / 3);
-
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0, 0, 255);
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor =
-                            new Color(0, 1, 1);
-                    }
-                    else if (terrain == TerrainTypes.Road)
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '.';
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.5, 0.5, 0.5);
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                    }
-                    else if (terrain == TerrainTypes.Dirt)
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '&';
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 0);
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                    }
-                    else if (terrain == TerrainTypes.Grass)
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '.';
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0, 0.8f, 0);
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                    }
-                    else if (terrain == TerrainTypes.HardRocks)
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'A';
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.2, 0.2, 0.2);
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                    }
-                    else if (terrain == TerrainTypes.Rocks)
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'A';
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.8, 0.8, 0.8);
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                    }
-                    else if (terrain == TerrainTypes.LightRocks)
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'A';
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(0.5, 0.5, 0.5);
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                    }
-                    else if (terrain == TerrainTypes.Sand)
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = '~';
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 0);
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                    }
-                    else if (terrain == TerrainTypes.Snow)
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 's';
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f);
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                    }
-                    else
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = ' ';
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                    }
+                    Biomes biome = world.WorldTiles[x, y].Biome;
+                    GetTerrainTile(screen, biome, screenPoint);
                 }
             }
 
@@ -301,64 +235,78 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         }
 
-        private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
-            NamelessGame game)
+        void GetTerrainTile(Screen screen, Biomes biome, Point point)
         {
-            foreach (IEntity entity in game.GetEntities())
+            if ((biome == Biomes.Sea) || biome == Biomes.Lake)
             {
+                screen.ScreenBuffer[point.X, point.Y].Char = '~';
 
-                Position position = entity.GetComponentOfType<Position>();
-                Drawable drawable = entity.GetComponentOfType<Drawable>();
-                LineToPlayer lineToPlayer = entity.GetComponentOfType<LineToPlayer>();
-                if (drawable != null && position != null)
-                {
-                    if (true) //drawable.isVisible())
-                    {
-                        Point screenPoint = camera.PointToScreen(position.p.X, position.p.Y);
-                        int x = screenPoint.X;
-                        int y = screenPoint.Y;
-                        if (x >= 0 && x < settings.getWidth() && y >= 0 && y < settings.getHeight())
-                        {
-                            if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
-                            {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = drawable.getRepresentation();
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.getCharColor();
-                            }
-                            else
-                            {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = ' ';
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                            }
-                        }
+                //float waveValue1 = (float) ((Math.Sin(((x + y) / 1.5) + angle)) + 1) / 2;
+                //float waveValue2 = (float) ((Math.Sin(((x + y)) + angle)) / 2 + 1) / 2;
+                //float waveValue3 = (float) ((Math.Sin(((x + y) / 3) + angle)) + 1) / 2;
+                //float resultingColor = 0.3f + (0.5f * (waveValue1 + waveValue2 + waveValue3) / 3);
 
-                    }
-                }
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0, 255);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor =
+                    new Color(0, 1, 1);
+            }
+            else if (biome == Biomes.Plains)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = '.';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0.8f, 0);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
+            else if (biome == Biomes.Mountain)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = 'A';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.2, 0.2, 0.2);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
+            else if (biome == Biomes.Hills)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = 'A';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.8, 0.8, 0.8);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
+            else if (biome == Biomes.Beach)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = '~';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.5f, 0.5f, 0);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
+            else if (biome == Biomes.Desert)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = '~';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1f, 1f, 0);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
+            else if (biome==Biomes.SnowDesert)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = 's';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1f, 1f, 1f);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
+            else if (biome == Biomes.Forest)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = 'f';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0f, 0.5f, 0f);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
 
-                if (drawable != null && position != null && lineToPlayer != null)
-                {
-                    if (drawable.isVisible())
-                    {
-                        Position playerPosition =
-                            game.GetEntityByComponentClass<Player>().GetComponentOfType<Position>();
-                        List<Point> line = PointUtil.getLine(playerPosition.p, position.p);
-                        for (int i = 1; i < line.Count - 1; i++)
-                        {
-                            Point p = line[i];
-                            Point screenPoint = camera.PointToScreen(p.X, p.Y);
-                            int x = screenPoint.X;
-                            int y = screenPoint.Y;
-                            if (x >= 0 && x < settings.getWidth() && y >= 0 && y < settings.getHeight())
-                            {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'x';
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.getCharColor();
-                            }
-                        }
-                    }
-                }
+
+            else if (biome == Biomes.Swamp)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = 'S';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.5f, 0.5f, 0.5f);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
+            else
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = ' ';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color();
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
             }
         }
-
 
         private void RenderScreen(NamelessGame gameInstance, Screen screen, GameSettings settings)
         {

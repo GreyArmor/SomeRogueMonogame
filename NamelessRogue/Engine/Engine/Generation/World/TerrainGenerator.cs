@@ -15,8 +15,10 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
 
         public List<SimplexNoise> TerrainNoises;
-        public int Seed;
-        private int forestSeed;
+        public SimplexNoise ForestsNoise;
+        public SimplexNoise LakesNoise;
+        public SimplexNoise SwampNoise;
+        public SimplexNoise DesertNoise;
         int resolution=1000;
         int layer1 = 300, layer2 = 600, layer3 = 900;
 
@@ -31,67 +33,78 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             SimplexNoise noise3 = new SimplexNoise( layer3,0.5, random);
 
 
+            ForestsNoise = new SimplexNoise(200, 0.75, random);
+            LakesNoise = new SimplexNoise(200, 0.75, random);
+            SwampNoise = new SimplexNoise(200, 0.75, random);
+            DesertNoise = new SimplexNoise(200, 0.75, random);
+
+
             TerrainNoises.Add(noise1);
             TerrainNoises.Add(noise2);
             TerrainNoises.Add(noise3);
 
 
 
-            double xStart=0;
-            double XEnd=1000;
-            double yStart=0;
-            double yEnd=1000;
+            //double xStart=0;
+            //double XEnd=1000;
+            //double yStart=0;
+            //double yEnd=1000;
 
 
-            int borderthickness = resolution/10;
+           // int borderthickness = resolution/10;
 
 
 
-            double[,] result=new double[resolution,resolution];
+            //double[,] result=new double[resolution,resolution];
 
-            for(int i=0;i<resolution;i++){
-                for(int j=0;j<resolution;j++) {
+            //for(int i=0;i<resolution;i++){
+            //    for(int j=0;j<resolution;j++) {
 
-                    int x = (int) (xStart + i * ((XEnd - xStart) / resolution));
-                    int y = (int) (yStart + j * ((yEnd - yStart) / resolution));
-                    double noise = 0;
-                    foreach (SimplexNoise s in TerrainNoises) {
-                        noise += s.getNoise(x, y);
-                    }
-                    noise /= TerrainNoises.Count;
-                    result[i,j] = 1d - (0.5d * (1d + noise));
+            //        int x = (int) (xStart + i * ((XEnd - xStart) / resolution));
+            //        int y = (int) (yStart + j * ((yEnd - yStart) / resolution));
+            //        double noise = 0;
+            //        noise = ForestsNoise.getNoise(x, y);
 
-                }
-            }
+            //        result[i,j] = 1d - (0.5d * (1d + noise));
 
-            for(int i=0;i<resolution;i++) {
-                for (int j = 0; j < resolution; j++) {
-                    if (i < borderthickness || j < borderthickness || i > resolution - borderthickness || j > resolution - borderthickness) {
+            //    }
+            //}
 
-                        int iDist = i > resolution - borderthickness ? resolution - i : i;
-                        int jDist = j >  resolution - borderthickness ? resolution - j : j;
-                        int edgePosition = iDist > jDist ? jDist : iDist;
-                        result[i,j] *= (float) edgePosition / (resolution/10);
-                    }
-                    if (result[i,j] <= 0.5) {
-                        result[i,j] = 0;
-                    }
-                }
-            }
 
             //for (int i = 0; i < resolution; i++)
             //{
             //    for (int j = 0; j < resolution; j++)
             //    {
-            //        if (result[i, j] > 0.6f)
-            //        {
-            //            result[i, j].ToString();
+            //        result[i, j] = result[i, j] - result[j, i] / 2;
+            //    }
+            //}
+
+            //for(int i=0;i<resolution;i++) {
+            //    for (int j = 0; j < resolution; j++) {
+            //        if (i < borderthickness || j < borderthickness || i > resolution - borderthickness || j > resolution - borderthickness) {
+
+            //            int iDist = i > resolution - borderthickness ? resolution - i : i;
+            //            int jDist = j >  resolution - borderthickness ? resolution - j : j;
+            //            int edgePosition = iDist > jDist ? jDist : iDist;
+            //            result[i,j] *= (float) edgePosition / (resolution/10);
+            //        }
+            //        if (result[i,j] <= 0.5) {
+            //            result[i,j] = 0;
             //        }
             //    }
             //}
-            
-          // ImageWriter.greyWriteImage(result, resolution);
 
+
+
+            //ImageWriter.TerrainWriteImage(result, resolution, "C:\\11\\terrain.png");
+            //ImageWriter.BiomesWriteImage(result, resolution, "C:\\11\\biomes.png");
+
+        }
+
+        public int Resolution
+        {
+            get { return resolution; }
+            set { resolution = value; }
         }
 
         public Tile GetTile(int x, int y, float scale)
@@ -108,6 +121,8 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             }
 
             noise /= TerrainNoises.Count;
+
+
             double result = 1 - (0.5 * (1 + noise));
 
             if (x < borderthickness || y < borderthickness || x > resolutionZoomed - borderthickness || y > resolutionZoomed - borderthickness) {
@@ -121,7 +136,14 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             if (result <= 0.5) {
                 result = 0;
             }
-            return new Tile(TileNoiseInterpreter.GetTerrain(result), new Point(x,y));
+
+            double forest = 1 - (0.5 * (1 + ForestsNoise.getNoise(dX,dY)));
+            double swamp = 1 - (0.5 * (1 + SwampNoise.getNoise(dX, dY)));
+            double lake = 1 - (0.5 * (1 + LakesNoise.getNoise(dX, dY)));
+            double desert = 1 - (0.5 * (1 + DesertNoise.getNoise(dX, dY)));
+            Tuple<TerrainTypes, Biomes> terrinBiome =
+                TileNoiseInterpreter.GetTerrain(result, forest, swamp, lake, desert);
+            return new Tile(terrinBiome.Item1, terrinBiome.Item2, new Point(x,y));
         }
     }
 }

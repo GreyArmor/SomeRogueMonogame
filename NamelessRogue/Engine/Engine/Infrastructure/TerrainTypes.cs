@@ -12,6 +12,5 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
         Sand,
         Rocks,
         LightRocks, HardRocks,
-
     }
 }

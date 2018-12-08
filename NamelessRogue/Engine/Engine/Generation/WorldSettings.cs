@@ -9,16 +9,24 @@ namespace NamelessRogue.Engine.Engine.Generation
 {
     public class WorldSettings
     {
-        public WorldSettings(int seed)
+        public WorldSettings(int seed, int worldBoardWidth, int worldBoardHeight)
         {
             Seed = seed;
+            WorldBoardWidth = worldBoardWidth;
+            WorldBoardHeight = worldBoardHeight;
             GlobalRandom = new Random(seed);
             TerrainGenerator terrainGenerator;
             TerrainGen = new TerrainGenerator(GlobalRandom);
+            WorldMapScale = 1;
         }
+
+        //TODO: not implemented currently
+        public float WorldMapScale { get; set; }
 
         public TerrainGenerator TerrainGen { get; }
         public int Seed { get; }
+        public int WorldBoardWidth { get; }
+        public int WorldBoardHeight { get; }
         public Random GlobalRandom { get; }
     }
 }
