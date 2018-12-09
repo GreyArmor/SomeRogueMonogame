@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
@@ -19,7 +20,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         }
         private TerrainTypes terrainType;
         private Point coordinate;
-        private List<Entity> entitiesOnTile = new List<Entity>();
+        private List<IEntity> entitiesOnTile = new List<IEntity>();
 
         public TerrainTypes getTerrainType() {
             return terrainType;
@@ -31,7 +32,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
 
 
-        public List<Entity> getEntitiesOnTile() {
+        public List<IEntity> getEntitiesOnTile() {
             return entitiesOnTile;
         }
 

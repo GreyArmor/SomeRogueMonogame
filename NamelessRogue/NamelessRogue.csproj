@@ -114,7 +114,7 @@
     <Compile Include="Engine\Engine\Factories\ItemFactory.cs" />
     <Compile Include="Engine\Engine\Factories\RenderFactory.cs" />
     <Compile Include="Engine\Engine\Factories\TerrainFactory.cs" />
-    <Compile Include="Engine\Engine\Factories\TerrainItemsFactory.cs" />
+    <Compile Include="Engine\Engine\Factories\TerrainFurnitureFactory.cs" />
     <Compile Include="Engine\Engine\Factories\UiFactory.cs" />
     <Compile Include="Engine\Engine\Factories\TimelineFactory.cs" />
     <Compile Include="Engine\Engine\GameInstance\GameInstance.cs" />

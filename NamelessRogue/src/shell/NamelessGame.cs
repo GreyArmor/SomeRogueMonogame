@@ -188,22 +188,11 @@ namespace NamelessRogue.shell
             ActiveEntities.Add(TerrainFactory.CreateWorld(worldSettings));
             ActiveEntities.Add(InputHandlingFactory.CreateInput());
 
-
-            for (int i = 0; i < 1; i++)
+            var furnitureEntities = TerrainFurnitureFactory.CreateInstancedFurnitureEntities(this);
+            foreach (var furnitureEntity in furnitureEntities)
             {
-                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i*10),
-                    yoffset * Constants.ChunkSize, 10,
-                    this));
-                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13 + (i*10),
-                    yoffset * Constants.ChunkSize, 10,
-                    this));
-                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
-                    yoffset * Constants.ChunkSize + 13,
-                    10, this));
-                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
-                    yoffset * Constants.ChunkSize + 13, 10, this));
+                ActiveEntities.Add(furnitureEntity);
             }
-            
 
 
             ActiveEntities.Add(
@@ -220,12 +209,7 @@ namespace NamelessRogue.shell
             ActiveEntities.Add(ItemFactory.CreateItem());
             ActiveEntities.Add(GameInitializer.CreateCursor());
 
-            var furnitureEntities = TerrainFurnitureFactory.CreateInstancedFurnitureEntities(this);
-
-            foreach (var furnitureEntity in furnitureEntities)
-            {
-                ActiveEntities.Add(furnitureEntity);
-            }
+           
 
             UserInterface.Initialize(Content, BuiltinThemes.hd);
             UserInterface.Active.UseRenderTarget = true;
@@ -236,6 +220,22 @@ namespace NamelessRogue.shell
             spriteBatch = new SpriteBatch(GraphicsDevice);
             fpsLabel = new Label("1111", Anchor.TopLeft, new Vector2(1000, 50), new Vector2());
             UserInterface.Active.AddEntity(fpsLabel);
+
+            for (int i = 0; i < 1; i++)
+            {
+                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
+                    yoffset * Constants.ChunkSize, 10,
+                    this));
+                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13 + (i * 10),
+                    yoffset * Constants.ChunkSize, 10,
+                    this));
+                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
+                    yoffset * Constants.ChunkSize + 13,
+                    10, this));
+                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
+                    yoffset * Constants.ChunkSize + 13, 10, this));
+            }
+
         }
 
         public RenderTarget2D RenderTarget { get; set; }

@@ -138,17 +138,17 @@ namespace NamelessRogue.Engine.Engine.Systems
             characterToTileDictionary.Add('n', new AtlasTileData(14, 6));
             characterToTileDictionary.Add('o', new AtlasTileData(15, 6));
             //row change              Add
-            characterToTileDictionary.Add('p', new AtlasTileData(0, 8));
-            characterToTileDictionary.Add('q', new AtlasTileData(1, 8));
-            characterToTileDictionary.Add('r', new AtlasTileData(2, 8));
-            characterToTileDictionary.Add('s', new AtlasTileData(3, 8));
-            characterToTileDictionary.Add('t', new AtlasTileData(4, 8));
-            characterToTileDictionary.Add('u', new AtlasTileData(5, 8));
-            characterToTileDictionary.Add('v', new AtlasTileData(6, 8));
-            characterToTileDictionary.Add('w', new AtlasTileData(7, 8));
-            characterToTileDictionary.Add('x', new AtlasTileData(8, 8));
-            characterToTileDictionary.Add('y', new AtlasTileData(9, 8));
-            characterToTileDictionary.Add('z', new AtlasTileData(10, 8));
+            characterToTileDictionary.Add('p', new AtlasTileData(0, 7));
+            characterToTileDictionary.Add('q', new AtlasTileData(1, 7));
+            characterToTileDictionary.Add('r', new AtlasTileData(2, 7));
+            characterToTileDictionary.Add('s', new AtlasTileData(3, 7));
+            characterToTileDictionary.Add('t', new AtlasTileData(4, 7));
+            characterToTileDictionary.Add('u', new AtlasTileData(5, 7));
+            characterToTileDictionary.Add('v', new AtlasTileData(6, 7));
+            characterToTileDictionary.Add('w', new AtlasTileData(7, 7));
+            characterToTileDictionary.Add('x', new AtlasTileData(8, 7));
+            characterToTileDictionary.Add('y', new AtlasTileData(9, 7));
+            characterToTileDictionary.Add('z', new AtlasTileData(10, 7));
 
             characterToTileDictionary.Add('★', new AtlasTileData(15, 0));
                
@@ -186,9 +186,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                     MoveCamera(game, camera);
                     FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
                     FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
-                    FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
                     FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
-
+                    FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
                     RenderScreen(game, screen, game.GetSettings());
                     break;
                 }
@@ -391,15 +390,6 @@ namespace NamelessRogue.Engine.Engine.Systems
         private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
             NamelessGame game)
         {
-           var s = Stopwatch.StartNew();
-            foreach (IEntity entity in game.GetEntities())
-            {
-                Position position = entity.GetComponentOfType<Position>();
-            }
-            s.Stop();
-            Debug.WriteLine($"entities = {game.GetEntities().Count}" );
-            Debug.WriteLine(s.ElapsedMilliseconds);
-
             foreach (IEntity entity in game.GetEntities())
             {
                 Drawable drawable = entity.GetComponentOfType<Drawable>();

@@ -21,23 +21,24 @@ namespace NamelessRogue.Engine.Engine.Factories
 {
     public static class TerrainFurnitureFactory
     {
-        //not sure how clear it is
-        public static Entity TreeEntity;
-        public static Entity RockEntity;
-        public static Entity StarfishEntity;
-        public static Entity ShellEntity;
+        //not sure how clear this is
+        public static Entity TreeEntity = new Entity();
+        public static Entity SmallTreeEntity = new Entity();
+        public static Entity RockEntity = new Entity();
+        public static Entity StarfishEntity = new Entity();
+        public static Entity ShellEntity = new Entity();
+        public static Entity TreeStumpEntity = new Entity();
+        public static Entity WallEntity = new Entity();
         public static List<Entity> CreateInstancedFurnitureEntities(NamelessGame game)
         {
             var result = new List<Entity>();
-            TreeEntity = new Entity();
-            RockEntity = new Entity();
-            StarfishEntity = new Entity();
-            ShellEntity = new Entity();
-
             result.Add(TreeEntity);
+            result.Add(SmallTreeEntity);
             result.Add(RockEntity);
             result.Add(StarfishEntity);
             result.Add(ShellEntity);
+            result.Add(TreeStumpEntity);
+            result.Add(WallEntity);
 
             StarfishEntity.AddComponent(new Description("A starfish", ""));
             StarfishEntity.AddComponent(new Drawable('★', new Color(1f, 0, 0)));
@@ -51,8 +52,18 @@ namespace NamelessRogue.Engine.Engine.Factories
             TreeEntity.AddComponent(new Description("A tree", ""));
             TreeEntity.AddComponent(new BlocksVision());
             TreeEntity.AddComponent(new OccupiesTile());
-            TreeEntity.AddComponent(new Drawable('T', new Color(0f, 0.8f, 0f)));
+            TreeEntity.AddComponent(new Drawable('T', new Color(0f, 0.5f, 0f)));
 
+            SmallTreeEntity.AddComponent(new Description("A small tree", ""));
+            SmallTreeEntity.AddComponent(new Drawable('t', new Color(0f, 0.5f, 0f)));
+
+            TreeStumpEntity.AddComponent(new Description("A tree stumo", ""));
+            TreeStumpEntity.AddComponent(new Drawable('u', new Color(0.5f, 0.5f, 0f)));
+            
+            WallEntity.AddComponent(new Drawable('#', new Engine.Utility.Color(0.9, 0.9, 0.9)));
+            WallEntity.AddComponent(new Description("Wall", ""));
+            WallEntity.AddComponent(new OccupiesTile());
+            WallEntity.AddComponent(new BlocksVision());
 
             foreach (var entity in result)
             {
@@ -73,7 +84,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                 {
                     result = new Entity();
                     var randomValue = random.NextDouble();
-                    if (randomValue > 0.999)
+                    if (randomValue > 0.997)
                     {
                         result = StarfishEntity;
                     }
@@ -94,8 +105,16 @@ namespace NamelessRogue.Engine.Engine.Factories
                     if (randomValue > 0.95)
                     {
                         result = TreeEntity;
+                    }else if (randomValue > 0.90)
+                    {
+                        result = SmallTreeEntity;
                     }
-                    break;
+                    else if (randomValue > 0.89)
+                    {
+                        result = TreeStumpEntity;
+                    }
+
+                        break;
                 }
                 default:
                     break;;

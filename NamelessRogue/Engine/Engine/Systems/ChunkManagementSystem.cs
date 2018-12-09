@@ -113,7 +113,10 @@ namespace NamelessRogue.Engine.Engine.Systems
                     var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
                     if (entity != null)
                     {
-                        tile.getEntitiesOnTile().Add(entity);
+                        if (tile.getEntitiesOnTile().Count == 0)
+                        {
+                            tile.getEntitiesOnTile().Add(entity);
+                        }
                     }
                 }
                 realityBubbleChunk.Value.JustCreated = false;

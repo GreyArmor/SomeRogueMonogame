@@ -1,4 +1,5 @@
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Environment;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
@@ -23,17 +24,6 @@ namespace NamelessRogue.Engine.Engine.Factories
             return door;
         }
 
-        public static IEntity CreateWall(int x, int y)
-        {
-            IEntity wall  = new Entity();
-            wall.AddComponent(new Position(x, y));
-            wall.AddComponent(new Drawable('#', new Engine.Utility.Color(0.9,0.9,0.9)));
-            wall.AddComponent(new Description("Wall",""));
-            wall.AddComponent(new OccupiesTile());
-            wall.AddComponent(new BlocksVision());
-            return wall;
-        }
-
         public static IEntity CreateWindow(int x, int y, NamelessGame namelessGame)
         {
             IEntity window  = new Entity();
@@ -46,6 +36,14 @@ namespace NamelessRogue.Engine.Engine.Factories
 
         public static IEntity CreateDummyBuilding(int x, int y, int widthHeight, NamelessGame namelessGame)
         {
+
+            IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
+            IChunkProvider worldProvider = null;
+            if (worldEntity != null)
+            {
+                worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+            }
+
             IEntity building = new Entity();
 
             building.AddComponent(new Description("Window",""));
@@ -57,15 +55,20 @@ namespace NamelessRogue.Engine.Engine.Factories
             {
                 for (int j = 0;j<widthHeight; j++)
                 {
-                    if(i==0 || j==0 || i==widthHeight-1 || j==widthHeight-1) {
-                        if (i == widthHeight / 2) {
+                    var tile = worldProvider.GetTile(x + i, y + j);
+                    tile.SetTerrainType(TerrainTypes.Nothingness);
+                    if (i == 0 || j == 0 || i == widthHeight - 1 || j == widthHeight - 1)
+                    {
+                        if (i == widthHeight / 2)
+                        {
                             IEntity door = CreateDoor(x + i, y + j);
                             buildingComponent.getBuildingParts().Add(door);
                             namelessGame.GetEntities().Add(door);
-                        } else {
-                            IEntity wall = CreateWall(x + i, y + j);
-                            buildingComponent.getBuildingParts().Add(wall);
-                            namelessGame.GetEntities().Add(wall);
+                            tile.getEntitiesOnTile().Add(door);
+                        }
+                        else
+                        {
+                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WallEntity);
                         }
                     }
                 }
