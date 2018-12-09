@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Engine.Components.Environment;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
@@ -186,6 +187,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
                     FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
                     FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
+                    FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
 
                     RenderScreen(game, screen, game.GetSettings());
                     break;
@@ -229,7 +231,7 @@ namespace NamelessRogue.Engine.Engine.Systems
 
             if (fov == null)
             {
-                fov = new PermissiveVisibility((x, y) => { return !world.getTile(x, y).GetBlocksVision(game); },
+                fov = new PermissiveVisibility((x, y) => { return !world.GetTile(x, y).GetBlocksVision(game); },
                     (x, y) =>
                     {
                         Point screenPoint = camera.PointToScreen(x, y);
@@ -243,6 +245,43 @@ namespace NamelessRogue.Engine.Engine.Systems
             }
 
             fov.Compute(playerPosition.p,60);
+        }
+
+
+        private void FillcharacterBuffersWithTileObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
+            NamelessGame game, IChunkProvider world)
+        {
+            int camX = camera.getPosition().X;
+            int camY = camera.getPosition().Y;
+            if (angle > 360)
+            {
+                angle = 0;
+            }
+
+            angle += step;
+
+            for (int x = camX; x < settings.getWidth() + camX; x++)
+            {
+                for (int y = camY; y < settings.getHeight() + camY; y++)
+                {
+                    Point screenPoint = camera.PointToScreen(x, y);
+                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
+                    {
+                        Tile tileToDraw = world.GetTile(x, y);
+
+                        foreach (var entity in tileToDraw.getEntitiesOnTile())
+                        {
+                            var furniture = entity.GetComponentOfType<Furniture>();
+                            var drawable = entity.GetComponentOfType<Drawable>();
+                            if (furniture != null && drawable != null)
+                            {
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = drawable.getRepresentation();
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.getCharColor();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings,
@@ -264,7 +303,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     Point screenPoint = camera.PointToScreen(x, y);
                     if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                     {
-                        Tile tileToDraw = world.getTile(x, y);
+                        Tile tileToDraw = world.GetTile(x, y);
                         GetTerrainTile(screen, tileToDraw.getTerrainType(), screenPoint);
                     }
                     else

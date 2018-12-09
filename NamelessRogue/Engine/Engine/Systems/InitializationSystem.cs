@@ -29,7 +29,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     OccupiesTile occupiesTile = entity.GetComponentOfType<OccupiesTile>();
                     if (occupiesTile != null && position != null)
                     {
-                        Tile tile = worldProvider.getTile(position.p.X, position.p.Y);
+                        Tile tile = worldProvider.GetTile(position.p.X, position.p.Y);
                         tile.getEntitiesOnTile().Add((Entity) entity);
                     }
 

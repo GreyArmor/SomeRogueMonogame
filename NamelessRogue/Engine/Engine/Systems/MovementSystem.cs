@@ -29,8 +29,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                             worldProvider = worldEntity.GetComponentOfType<ChunkData>();
                         }
 
-                        Tile oldTile = worldProvider.getTile(position.p.X, position.p.Y);
-                        Tile newTile = worldProvider.getTile(moveCommand.p.X, moveCommand.p.Y);
+                        Tile oldTile = worldProvider.GetTile(position.p.X, position.p.Y);
+                        Tile newTile = worldProvider.GetTile(moveCommand.p.X, moveCommand.p.Y);
 
                         oldTile.getEntitiesOnTile().Remove((Entity) entity);
                         newTile.getEntitiesOnTile().Add((Entity) entity);

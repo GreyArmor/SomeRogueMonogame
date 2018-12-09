@@ -16,12 +16,10 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             Biome = biome;
             this.terrainType = terrainType;
             this.coordinate = coordinate;
-            this.isPassable = true;
         }
         private TerrainTypes terrainType;
         private Point coordinate;
-        private bool isPassable;
-        private   List<Entity> entitiesOnTile = new List<Entity>();
+        private List<Entity> entitiesOnTile = new List<Entity>();
 
         public TerrainTypes getTerrainType() {
             return terrainType;

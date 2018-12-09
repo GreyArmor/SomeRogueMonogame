@@ -9,9 +9,9 @@ namespace NamelessRogue.Engine.Abstraction
 {
     public interface IChunkProvider : IComponent
     {
-        Tile getTile(int x, int y);
-        bool setTile(int x, int y, Tile tile);
-        Dictionary<Point, Chunk> getRealityBubbleChunks();
-        Dictionary<Point, Chunk> getChunks();
+        Tile GetTile(int x, int y);
+        bool SetTile(int x, int y, Tile tile);
+        Dictionary<Point, Chunk> GetRealityBubbleChunks();
+        Dictionary<Point, Chunk> GetChunks();
     }
 }

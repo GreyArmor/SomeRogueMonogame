@@ -26,14 +26,15 @@ namespace NamelessRogue.Engine.Engine.Systems
             }
 
             IEntity playerentity = namelessGame.GetEntityByComponentClass<Player>();
-              if (playerentity != null)
+            if (playerentity != null)
             {
                 Chunk currentChunk = null;
                 Point? currentChunkKey = null;
                 Position playerPosition = playerentity.GetComponentOfType<Position>();
                 //look for current chunk
-                foreach (Point key in worldProvider.getRealityBubbleChunks().Keys) {
-                    Chunk ch = worldProvider.getRealityBubbleChunks()[key];
+                foreach (Point key in worldProvider.GetRealityBubbleChunks().Keys)
+                {
+                    Chunk ch = worldProvider.GetRealityBubbleChunks()[key];
                     if (ch.IsPointInside(playerPosition.p))
                     {
                         currentChunk = ch;
@@ -41,12 +42,13 @@ namespace NamelessRogue.Engine.Engine.Systems
                         break;
                     }
                 }
+
                 //if there is none, that means we just loaded the namelessGame, look for current in all chunks
                 if (currentChunk == null)
                 {
-                    foreach (Point key in worldProvider.getChunks().Keys)
+                    foreach (Point key in worldProvider.GetChunks().Keys)
                     {
-                        Chunk ch = worldProvider.getChunks()[key];
+                        Chunk ch = worldProvider.GetChunks()[key];
                         if (ch.IsPointInside(playerPosition.p))
                         {
                             currentChunk = ch;
@@ -67,11 +69,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                             y++)
                         {
                             Point p = new Point(x, y);
-                            if (!worldProvider.getRealityBubbleChunks().ContainsKey(p))
+                            if (!worldProvider.GetRealityBubbleChunks().ContainsKey(p))
                             {
-                                if (worldProvider.getChunks().ContainsKey(p))
+                                if (worldProvider.GetChunks().ContainsKey(p))
                                 {
-                                    worldProvider.getRealityBubbleChunks().Add(p, worldProvider.getChunks()[p]);
+                                    worldProvider.GetRealityBubbleChunks().Add(p, worldProvider.GetChunks()[p]);
                                 }
                             }
                         }
@@ -79,42 +81,43 @@ namespace NamelessRogue.Engine.Engine.Systems
 
                     List<Point> keysToRemove = new List<Point>();
                     foreach (Point key in
-                    worldProvider.getRealityBubbleChunks().Keys) {
-                        double dist = Math.Abs(key.Y - currentChunkKey.Value.Y) + Math.Abs(key.X - currentChunkKey.Value.X);
-                        if (dist > Constants.RealityBubbleRangeInChunks)
+                        worldProvider.GetRealityBubbleChunks().Keys)
+                    {
+                        double distX = Math.Abs(key.X - currentChunkKey.Value.X);
+                        double distY = Math.Abs(key.Y - currentChunkKey.Value.Y);
+                        if (distX > Constants.RealityBubbleRangeInChunks || distY > Constants.RealityBubbleRangeInChunks)
                         {
                             keysToRemove.Add(key);
                         }
                     }
+
                     foreach (Point key in
-                    keysToRemove)
+                        keysToRemove)
                     {
-                        if (worldProvider.getRealityBubbleChunks()[key].IsActive())
+                        if (worldProvider.GetRealityBubbleChunks()[key].IsActive())
                         {
-                            worldProvider.getRealityBubbleChunks()[key].Deactivate();
-                            worldProvider.getRealityBubbleChunks().Remove(key);
+                            worldProvider.GetRealityBubbleChunks()[key].Deactivate();
+
+                            worldProvider.GetRealityBubbleChunks().Remove(key);
                         }
                     }
 
                 }
             }
 
-            foreach (var realityBubbleChunk in worldProvider.getRealityBubbleChunks().Where(x=>x.Value.JustCreated))
+            var justcreated = worldProvider.GetRealityBubbleChunks().Where(x => x.Value.JustCreated);
+            foreach (var realityBubbleChunk in justcreated)
             {
                 foreach (var tile in realityBubbleChunk.Value.GetChunkTiles())
                 {
-                    var entity = TerrainItemsFactory.CreateExteriorEntity(namelessGame, tile);
+                    var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
                     if (entity != null)
                     {
-                        namelessGame.GetEntities().Add(entity);
+                        tile.getEntitiesOnTile().Add(entity);
                     }
                 }
-
                 realityBubbleChunk.Value.JustCreated = false;
             }
-
-
-
         }
     }
 }

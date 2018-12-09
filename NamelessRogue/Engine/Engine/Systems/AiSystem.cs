@@ -81,7 +81,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                         if (route.Count > 0 && position != null)
                                         {
                                             Point nextPosition = route[0];
-                                            Tile tileToMoveTo = worldProvider.getTile(nextPosition.Y, nextPosition.X);
+                                            Tile tileToMoveTo = worldProvider.GetTile(nextPosition.Y, nextPosition.X);
 
                                             if (!tileToMoveTo.GetPassable(namelessGame))
                                             {

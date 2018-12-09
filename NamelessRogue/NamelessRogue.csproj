@@ -64,6 +64,8 @@
     <Compile Include="Engine\Engine\Components\EngineInfrastructure\ToRemove.cs" />
     <Compile Include="Engine\Engine\Components\Environment\Building.cs" />
     <Compile Include="Engine\Engine\Components\Environment\Door.cs" />
+    <Compile Include="Engine\Engine\Components\Environment\Furniture.cs" />
+    <Compile Include="Engine\Engine\Components\Interaction\Instanced.cs" />
     <Compile Include="Engine\Engine\Components\IComponent.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\AttackCommand.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\CameraFollowCursorCommand.cs" />

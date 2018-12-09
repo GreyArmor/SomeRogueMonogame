@@ -67,7 +67,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                         worldProvider = worldEntity.GetComponentOfType<ChunkData>();
                                     }
 
-                                    Tile tileToMoveTo = worldProvider.getTile(newX, newY);
+                                    Tile tileToMoveTo = worldProvider.GetTile(newX, newY);
 
 
                                     IEntity entityThatOccupiedTile = null;

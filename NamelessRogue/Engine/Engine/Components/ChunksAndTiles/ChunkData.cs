@@ -54,11 +54,11 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
         public Tile GetTileAt(Point p)
         {
-            return getTile(p.X, p.Y);
+            return GetTile(p.X, p.Y);
         }
 
         //TODO: we need to implement quick iteration by using bounding box trees;
-        public Tile getTile(int x, int y)
+        public Tile GetTile(int x, int y)
         {
             Chunk chunkOfPoint = null;
             foreach (Chunk ch in realityBubbleChunks.Values)
@@ -81,7 +81,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         }
 
         //TODO: we need to implement quick iteration by using bounding box trees;
-        public bool setTile(int x, int y, Tile tile)
+        public bool SetTile(int x, int y, Tile tile)
         {
             Chunk chunkOfPoint = null;
             foreach (Chunk ch in realityBubbleChunks.Values)
@@ -113,12 +113,12 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             return worldSEttings.GlobalRandom;
         }
 
-        public Dictionary<Point, Chunk> getRealityBubbleChunks()
+        public Dictionary<Point, Chunk> GetRealityBubbleChunks()
         {
             return realityBubbleChunks;
         }
 
-        public Dictionary<Point, Chunk> getChunks()
+        public Dictionary<Point, Chunk> GetChunks()
         {
             return chunks;
         }

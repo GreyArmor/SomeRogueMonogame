@@ -23,30 +23,33 @@ namespace NamelessRogue.shell
     {
         private static long serialVersionUID = 1L;
 
-        List<IEntity> Entities;
+        List<IEntity> ActiveEntities;
+
+        List<IEntity> OfflineEntities;
+
         //InputSystem inputsystem;
 
         public static GraphicsDevice DebugDevice;
 
         public List<IEntity> GetEntities()
         {
-            return Entities;
+            return ActiveEntities;
         }
 
         public IEntity GetEntity(Guid id)
         {
-            return Entities.FirstOrDefault(x => x.GetId() == id);
+            return ActiveEntities.FirstOrDefault(x => x.GetId() == id);
         }
 
         public void RemoveEntity(IEntity entity)
         {
-            Entities.Remove(entity);
+            ActiveEntities.Remove(entity);
             EntityManager.RemoveEntity(entity.GetId());
         }
 
         public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
         {
-            List<IEntity> results = Entities.Where(v => v.GetComponentOfType<T>() != null).ToList();
+            List<IEntity> results = ActiveEntities.Where(v => v.GetComponentOfType<T>() != null).ToList();
             return results;
         }
 
@@ -172,7 +175,7 @@ namespace NamelessRogue.shell
             worldSettings = new WorldSettings(5,1000,1000);
 
 
-            Entities = new List<IEntity>();
+            ActiveEntities = new List<IEntity>();
 
 
 
@@ -180,46 +183,49 @@ namespace NamelessRogue.shell
             int yoffset = 200;
 
             //TODO: for test
-            Entities.Add(RenderFactory.CreateViewport(settings));
-            Entities.Add(TimelineFactory.CreateTimeline(this));
-            Entities.Add(TerrainFactory.CreateWorld(worldSettings));
-            Entities.Add(InputHandlingFactory.CreateInput());
+            ActiveEntities.Add(RenderFactory.CreateViewport(settings));
+            ActiveEntities.Add(TimelineFactory.CreateTimeline(this));
+            ActiveEntities.Add(TerrainFactory.CreateWorld(worldSettings));
+            ActiveEntities.Add(InputHandlingFactory.CreateInput());
 
 
             for (int i = 0; i < 1; i++)
             {
-                Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i*10),
+                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i*10),
                     yoffset * Constants.ChunkSize, 10,
                     this));
-                Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13 + (i*10),
+                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13 + (i*10),
                     yoffset * Constants.ChunkSize, 10,
                     this));
-                Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
+                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
                     yoffset * Constants.ChunkSize + 13,
                     10, this));
-                Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
+                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
                     yoffset * Constants.ChunkSize + 13, 10, this));
             }
-
-          
-
+            
 
 
-
-            Entities.Add(
+            ActiveEntities.Add(
                 CharacterFactory.CreateSimplePlayerCharacter(xoffset * Constants.ChunkSize,
                     yoffset * Constants.ChunkSize));
-            Entities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 1,
+            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 1,
                 yoffset * Constants.ChunkSize));
-            Entities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 3,
+            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 3,
                 yoffset * Constants.ChunkSize));
-            Entities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 5,
+            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 5,
                 yoffset * Constants.ChunkSize));
-            Entities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 7,
+            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 7,
                 yoffset * Constants.ChunkSize));
-            Entities.Add(ItemFactory.CreateItem());
-            Entities.Add(GameInitializer.CreateCursor());
+            ActiveEntities.Add(ItemFactory.CreateItem());
+            ActiveEntities.Add(GameInitializer.CreateCursor());
 
+            var furnitureEntities = TerrainFurnitureFactory.CreateInstancedFurnitureEntities(this);
+
+            foreach (var furnitureEntity in furnitureEntities)
+            {
+                ActiveEntities.Add(furnitureEntity);
+            }
 
             UserInterface.Initialize(Content, BuiltinThemes.hd);
             UserInterface.Active.UseRenderTarget = true;

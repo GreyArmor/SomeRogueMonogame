@@ -37,8 +37,9 @@ namespace NamelessRogue.Engine.Engine.Factories
                 systems.Add(new SwitchSystem());
                 systems.Add(new DamageHandlingSystem());
                 systems.Add(new DeathSystem());
-                systems.Add(chunkManagementSystem);
                 systems.Add(new HudSystem());
+                systems.Add(chunkManagementSystem);
+              
                 var renderingSystem = new RenderingSystem(game.GetSettings());
                 var uiSystem = new UIRenderSystem();
 
