@@ -23,9 +23,17 @@ using Color = NamelessRogue.Engine.Engine.Utility.Color;
 namespace NamelessRogue.Engine.Engine.Systems
 {
 
-  
+    public enum WorldBoardRenderingSystemMode
+    {
+        Terrain,
+        Regions,
+    }
+
     public class WorldBoardRenderingSystem : ISystem
     {
+
+        public WorldBoardRenderingSystemMode Mode { get; set; } = WorldBoardRenderingSystemMode.Regions;
+
         public readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
         (
             new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
@@ -227,7 +235,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     }
 
                     Biomes biome = world.WorldTiles[x, y].Biome;
-                    GetTerrainTile(screen, biome, screenPoint);
+                    GetTerrainTile(screen, biome, screenPoint, world.WorldTiles[x, y].RegionsOfTile.FirstOrDefault());
                 }
             }
 
@@ -235,7 +243,7 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         }
 
-        void GetTerrainTile(Screen screen, Biomes biome, Point point)
+        void GetTerrainTile(Screen screen, Biomes biome, Point point, Region region)
         {
             if ((biome == Biomes.Sea) || biome == Biomes.Lake)
             {
@@ -305,6 +313,19 @@ namespace NamelessRogue.Engine.Engine.Systems
                 screen.ScreenBuffer[point.X, point.Y].Char = ' ';
                 screen.ScreenBuffer[point.X, point.Y].CharColor = new Color();
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
+
+
+            if (Mode == WorldBoardRenderingSystemMode.Regions)
+            {
+                if (region != null)
+                {
+                    screen.ScreenBuffer[point.X, point.Y].BackGroundColor = region.Color;
+                }
+                else
+                {
+                    screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+                }
             }
         }
 

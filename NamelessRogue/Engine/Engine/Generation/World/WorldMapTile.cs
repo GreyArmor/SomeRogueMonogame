@@ -1,5 +1,7 @@
- 
 
+
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Engine.Generation.World.BoardPieces;
 using NamelessRogue.Engine.Engine.Infrastructure;
 
@@ -13,5 +15,18 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         public MapArtifact Artifact;
         public MetaphysicalForce Affinity;
         public Civilization Owner;
+        public List<Region> RegionsOfTile = new List<Region>();
+        private Point point;
+
+        public WorldTile(Point point)
+        {
+            this.point = point;
+        }
+
+        public Point WorldBoardPosiiton
+        {
+            get { return point; }
+            set { point = value; }
+        }
     }
 }

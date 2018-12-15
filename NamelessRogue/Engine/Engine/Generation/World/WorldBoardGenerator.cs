@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Engine.Infrastructure;
+using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.shell;
+using Color = NamelessRogue.Engine.Engine.Utility.Color;
 
 namespace NamelessRogue.Engine.Engine.Generation.World
 {
@@ -15,7 +21,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             {
                 for (int y = 0; y < game.WorldSettings.WorldBoardHeight; y++)
                 {
-                    var worldTile = new WorldTile();
+                    var worldTile = new WorldTile(new Point(x,y));
                     var tile = game.WorldSettings.TerrainGen.GetTile(x, y, 1);
                     worldTile.Terrain = tile.getTerrainType();
                     worldTile.Biome = tile.Biome;
@@ -40,6 +46,65 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
         public static void PlaceInitialCivilizations(WorldBoard worldBoard, NamelessGame game)
         {
+        }
+
+        public static void AnalizeLandmasses(WorldBoard worldBoard, NamelessGame game)
+        {
+            var s = Stopwatch.StartNew();
+            List<WorldTile> unsortedTiles = new List<WorldTile>();
+
+            foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
+            {
+                unsortedTiles.Add(worldBoardWorldTile);
+            }
+            List<Region> regions = new List<Region>();
+            Random rand = new Random();
+            var searchPoint = new Point();
+
+            for (; searchPoint.X < game.WorldSettings.WorldBoardWidth; searchPoint.X++)
+            {
+               
+                for (searchPoint.Y = 0; searchPoint.Y < game.WorldSettings.WorldBoardHeight; searchPoint.Y++)
+                {
+                    if (worldBoard.WorldTiles[searchPoint.X, searchPoint.Y].Terrain != TerrainTypes.Water/* &&
+                        !worldBoard.WorldTiles[searchPoint.X, searchPoint.Y].RegionsOfTile.Any()*/)
+                    {
+                        Region r = new Region();
+                        r.Name = "region" + regions.Count;
+                        r.Color = new Color(rand.NextDouble(), rand.NextDouble(), rand.NextDouble(), 1f);
+
+                        regions.Add(r);
+
+                        var firstNode = worldBoard.WorldTiles[searchPoint.X, searchPoint.Y];
+
+                        var floodList = new Queue<WorldTile>();
+                        floodList.Enqueue(firstNode);
+                        firstNode.RegionsOfTile.Add(r);
+                        r.SizeInTiles++;
+
+                        void AddToFloodList(int x, int y, Region region)
+                        {
+                            if (worldBoard.WorldTiles[x, y].Terrain !=
+                                TerrainTypes.Water && !worldBoard.WorldTiles[x, y].RegionsOfTile.Any())
+                            {
+                                floodList.Enqueue(worldBoard.WorldTiles[x, y]);
+                                worldBoard.WorldTiles[x, y].RegionsOfTile.Add(region);
+                                region.SizeInTiles++;
+                            }
+                        }
+
+                        while (floodList.Any())
+                        {
+                            var elem = floodList.Dequeue();
+                            AddToFloodList(elem.WorldBoardPosiiton.X - 1, elem.WorldBoardPosiiton.Y, r);
+                            AddToFloodList(elem.WorldBoardPosiiton.X + 1, elem.WorldBoardPosiiton.Y, r);
+                            AddToFloodList(elem.WorldBoardPosiiton.X, elem.WorldBoardPosiiton.Y - 1, r);
+                            AddToFloodList(elem.WorldBoardPosiiton.X, elem.WorldBoardPosiiton.Y + 1, r);
+                        }
+                    }
+                }
+            }
+            s.Stop();
         }
     }
 }

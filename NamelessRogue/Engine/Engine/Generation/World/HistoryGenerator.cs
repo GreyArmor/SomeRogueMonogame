@@ -101,11 +101,11 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         {
             var worldBoard = new WorldBoard(game.WorldSettings.WorldBoardWidth, game.WorldSettings.WorldBoardWidth, 0);
             WorldBoardGenerator.PopulateWithInitialData(worldBoard, game);
-
+            WorldBoardGenerator.AnalizeLandmasses(worldBoard, game);
             Stack<MapResource> resources = GenerateResourcePoolBasedONTerrain(worldBoard);
 
-          //   WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
-          WorldBoardGenerator.PlaceInitialArtifacts(worldBoard, game);
+            //   WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
+            WorldBoardGenerator.PlaceInitialArtifacts(worldBoard, game);
             WorldBoardGenerator.PlaceResources(worldBoard, game);
             WorldBoardGenerator.PlaceInitialCivilizations(worldBoard, game);
             return worldBoard;

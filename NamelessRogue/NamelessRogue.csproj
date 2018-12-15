@@ -142,6 +142,7 @@
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\MapResource.cs" />
     <Compile Include="Engine\Engine\Generation\World\Meta\ProductionValue.cs" />
     <Compile Include="Engine\Engine\Generation\World\Metaphysics\MetaphysicalForce.cs" />
+    <Compile Include="Engine\Engine\Generation\World\Regions.cs" />
     <Compile Include="Engine\Engine\Generation\World\Settlement.cs" />
     <Compile Include="Engine\Engine\Generation\World\Technology.cs" />
     <Compile Include="Engine\Engine\Generation\World\TerrainGenerator.cs" />
