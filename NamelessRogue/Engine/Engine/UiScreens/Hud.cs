@@ -54,25 +54,31 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             WillLabel = new Label("Wil");
             WitLabel = new Label("Wit");
 
-            EventLog = new SelectList(size: new Vector2(-1, 100));
-            EventLog.ExtraSpaceBetweenLines = - 20;
-            EventLog.ItemsScale = 0.5f;
-            EventLog.Locked = false;
+            SelectList list = new SelectList(new Vector2(0, 150));
+            list.Locked = true;
+            list.ItemsScale = 0.5f;
+            list.ExtraSpaceBetweenLines = -10;
+            EventLog = list;
+
             EventLog.OnListChange = (Entity entity) =>
             {
-                SelectList list = (SelectList)entity;
-                if (list.Count > 100)
+                SelectList list1 = (SelectList)entity;
+                if (list1.Count > 100)
                 {
-                    list.RemoveItem(0);
+                    list1.RemoveItem(0);
                 }
                 EventLog.scrollToEnd();
             };
-            
-            EventLog.ClearItems();
 
 
 
-            float labelScale = 0.7f;
+
+
+            //  EventLog.ClearItems();
+
+
+
+            float labelScale = 0.5f;
             StrLabel.Scale = labelScale;
             EndLabel.Scale = labelScale;
             AgiLabel.Scale = labelScale;
@@ -80,7 +86,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             WillLabel.Scale = labelScale;
             WitLabel.Scale = labelScale;
 
-            WorldMapButton = new Button("World map", size:new Vector2(200, 50), anchor:Anchor.BottomRight);
+            WorldMapButton = new Button("World map", size: new Vector2(200, 50), anchor: Anchor.BottomRight);
             WorldMapButton.ButtonParagraph.Scale = 0.7f;
             WorldMapButton.OnClick += OnClickWorldMap;
 
@@ -109,7 +115,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         }
 
         public HashSet<HudAction> _actionsThisTick = new HashSet<HudAction>();
-        
+
         private void OnClickWorldMap(Entity entity)
         {
             _actionsThisTick.Add(HudAction.OpenWorldMap);

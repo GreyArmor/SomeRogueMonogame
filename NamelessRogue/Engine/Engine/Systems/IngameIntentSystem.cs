@@ -191,7 +191,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                             var desc = entity1.GetComponentOfType<Description>();
                                             if (desc != null)
                                             {
-                                                builder.AppendLine($"Picked up: {desc.Name}");
+                                                builder.Append($"Picked up: {desc.Name}");
                                             }
                                         }
 
