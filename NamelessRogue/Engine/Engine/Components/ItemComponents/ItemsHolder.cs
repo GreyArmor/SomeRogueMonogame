@@ -1,20 +1,22 @@
 using System.Collections.Generic;
+using GeonBit.UI.Entities;
+using NamelessRogue.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Engine.Components.ItemComponents
 {
     public class ItemsHolder : Component {
 
-        private List<Item> items;
+        private List<IEntity> items;
         public ItemsHolder()
         {
-            items = new List<Item>();
+            items = new List<IEntity>();
         }
 
-        public void setItems(List<Item> items) {
+        public void SetItems(List<IEntity> items) {
             this.items = items;
         }
 
-        public List<Item> getItems() {
+        public List<IEntity> GetItems() {
             return items;
         }
     }

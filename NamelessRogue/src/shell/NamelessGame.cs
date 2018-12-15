@@ -152,7 +152,7 @@ namespace NamelessRogue.shell
             int width = 60;
             int height = 40;
             settings = new GameSettings(width, height);
-            graphics.PreferredBackBufferWidth = GetActualCharacterWidth() + 200;
+            graphics.PreferredBackBufferWidth = (int) (GetActualCharacterWidth() + settings.HudWidth());
             graphics.PreferredBackBufferHeight = GetActualCharacterHeight();
 
             graphics.IsFullScreen = false;
@@ -172,7 +172,8 @@ namespace NamelessRogue.shell
             graphics.ApplyChanges();
 
             //5 for testing
-            worldSettings = new WorldSettings(5,1000,1000);
+            //1489 for desert
+            worldSettings = new WorldSettings(1489,1000,1000);
 
 
             ActiveEntities = new List<IEntity>();

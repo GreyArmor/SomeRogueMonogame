@@ -49,6 +49,10 @@ namespace NamelessRogue.Engine.Engine.Input
                     case Keys.X:
                         result.Add(Intent.LookAtMode);
                         break;
+                    case Keys.OemComma:
+                        result.Add(Intent.PickUpItem);
+                        break;;
+
                 }
             }
 

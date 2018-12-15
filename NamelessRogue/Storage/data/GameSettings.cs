@@ -36,6 +36,10 @@ namespace NamelessRogue.Storage.data
         public void setFontSize(int fontSize) {
             this.fontSize = fontSize;
         }
-	
+
+        public float HudWidth()
+        {
+            return 500;
+        }
     }
 }

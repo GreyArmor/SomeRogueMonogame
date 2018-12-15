@@ -34,6 +34,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                 // Systems.Add(new AiSystem());
                 systems.Add(new MovementSystem());
                 systems.Add(new CombatSystem());
+                systems.Add(new InventorySystem());
                 systems.Add(new SwitchSystem());
                 systems.Add(new DamageHandlingSystem());
                 systems.Add(new DeathSystem());

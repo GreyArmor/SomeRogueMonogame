@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Environment;
 using NamelessRogue.Engine.Engine.Components.Interaction;
+using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Components.UI;
@@ -48,6 +49,7 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             RockEntity.AddComponent(new Description("A rock", ""));
             RockEntity.AddComponent(new Drawable('o', new Color(0.5f, 0.5f, 0.5f)));
+            RockEntity.AddComponent(new Item());
 
             TreeEntity.AddComponent(new Description("A tree", ""));
             TreeEntity.AddComponent(new BlocksVision());
@@ -116,6 +118,16 @@ namespace NamelessRogue.Engine.Engine.Factories
 
                         break;
                 }
+                case Biomes.Desert:
+                {
+                    var randomValue = random.NextDouble();
+                    if (randomValue > 0.98)
+                    {
+                        result = RockEntity;
+                    }
+
+                }
+                    break;
                 default:
                     break;;
             }

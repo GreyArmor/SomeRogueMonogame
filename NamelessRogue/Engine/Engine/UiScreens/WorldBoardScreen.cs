@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public WorldBoardScreen(NamelessGame game)
         {
-            Panel = new Panel(new Vector2(200, game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.BottomRight);
+            Panel = new Panel(new Vector2(game.GetSettings().HudWidth(), game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.BottomRight);
             ReturnToGame = CreateButton("Back");
             ReturnToGame.OnClick += ReturnToGameOnClick;
             Panel.AddChild(ReturnToGame);

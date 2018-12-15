@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
@@ -27,6 +28,9 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public Label WitLabel { get; private set; }
 
         public Button WorldMapButton { get; private set; }
+        public Button InventoryButton { get; private set; }
+
+        public SelectList EventLog { get; private set; }
 
         public HashSet<HudAction> ActionsThisTick
         {
@@ -35,8 +39,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public Hud(NamelessGame game)
         {
-            Panel = new Panel(new Vector2(200, game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.BottomRight);
-            
+            Panel = new Panel(new Vector2(game.GetSettings().HudWidth(), game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.BottomRight);
             HealthBar = new ProgressBar(0, 100);
             HealthBar.Size = new Vector2(100, 10);
             HealthBar.ProgressFill.FillColor = Color.Red;
@@ -48,8 +51,25 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             EndLabel = new Label("End");
             AgiLabel = new Label("Agi");
             ImgLabel = new Label("Img");
-            WillLabel = new Label("Will");
+            WillLabel = new Label("Wil");
             WitLabel = new Label("Wit");
+
+            EventLog = new SelectList(size: new Vector2(-1, 100));
+            EventLog.ExtraSpaceBetweenLines = - 20;
+            EventLog.ItemsScale = 0.5f;
+            EventLog.Locked = false;
+            EventLog.OnListChange = (Entity entity) =>
+            {
+                SelectList list = (SelectList)entity;
+                if (list.Count > 100)
+                {
+                    list.RemoveItem(0);
+                }
+                EventLog.scrollToEnd();
+            };
+            
+            EventLog.ClearItems();
+
 
 
             float labelScale = 0.7f;
@@ -60,9 +80,15 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             WillLabel.Scale = labelScale;
             WitLabel.Scale = labelScale;
 
-            WorldMapButton = new Button("World map", size:new Vector2(150, 50), anchor:Anchor.BottomCenter);
+            WorldMapButton = new Button("World map", size:new Vector2(200, 50), anchor:Anchor.BottomRight);
             WorldMapButton.ButtonParagraph.Scale = 0.7f;
             WorldMapButton.OnClick += OnClickWorldMap;
+
+            InventoryButton = new Button("Inventory", size: new Vector2(200, 50), anchor: Anchor.BottomLeft);
+            InventoryButton.ButtonParagraph.Scale = 0.7f;
+            InventoryButton.OnClick += OnClickWorldMap;
+
+
 
             Panel.AddChild(HealthBar);
             Panel.AddChild(StaminaBar);
@@ -72,7 +98,13 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             Panel.AddChild(ImgLabel);
             Panel.AddChild(WillLabel);
             Panel.AddChild(WitLabel);
+
+            Panel.AddChild(EventLog);
+
+            Panel.AddChild(InventoryButton);
             Panel.AddChild(WorldMapButton);
+
+
             UserInterface.Active.AddEntity(Panel);
         }
 

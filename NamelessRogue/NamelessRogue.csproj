@@ -65,6 +65,8 @@
     <Compile Include="Engine\Engine\Components\Environment\Building.cs" />
     <Compile Include="Engine\Engine\Components\Environment\Door.cs" />
     <Compile Include="Engine\Engine\Components\Environment\Furniture.cs" />
+    <Compile Include="Engine\Engine\Components\Interaction\DropItemCommand.cs" />
+    <Compile Include="Engine\Engine\Components\Interaction\HudLOgMessageCommand.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\Instanced.cs" />
     <Compile Include="Engine\Engine\Components\IComponent.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\AttackCommand.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Engine\Engine\Components\Interaction\InputReceiver.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\Movable.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\MoveToCommand.cs" />
+    <Compile Include="Engine\Engine\Components\Interaction\PickUpItemCommand.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\Player.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\SimpleSwitch.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\Item.cs" />
@@ -179,6 +182,7 @@
     <Compile Include="Engine\Engine\Systems\WorldBoardScreenSystem.cs" />
     <Compile Include="Engine\Engine\UiScreens\BaseGuiScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\Hud.cs" />
+    <Compile Include="Engine\Engine\UiScreens\InventoryScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\WorldBoardScreen.cs" />
     <Compile Include="Engine\Engine\Utility\BoundingBox.cs" />
     <Compile Include="Engine\Engine\Utility\Color.cs" />

@@ -45,7 +45,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     UiFactory.HudInstance.StrLabel.Text = $"Str: {str.getValue()}";
                     UiFactory.HudInstance.ImgLabel.Text = $"Img: {img.getValue()}";
                     UiFactory.HudInstance.AgiLabel.Text = $"Agi: {agi.getValue()}";
-                    UiFactory.HudInstance.WillLabel.Text = $"Will: {will.getValue()}";
+                    UiFactory.HudInstance.WillLabel.Text = $"Wil: {will.getValue()}";
                     UiFactory.HudInstance.EndLabel.Text = $"End: {end.getValue()}";
                     UiFactory.HudInstance.WitLabel.Text = $"Wit: {wit.getValue()}";
 
@@ -67,6 +67,15 @@ namespace NamelessRogue.Engine.Engine.Systems
                     UiFactory.HudInstance.ActionsThisTick.Clear();
 
                 }
+
+
+                HudLogMessageCommand logMEssgae = entity.GetComponentOfType<HudLogMessageCommand>();
+                if (logMEssgae != null)
+                {
+                    UiFactory.HudInstance.EventLog.AddItem(logMEssgae.LogMessage);
+                    entity.RemoveComponentOfType<HudLogMessageCommand>();
+                }
+
             }
         }
     }

@@ -1,13 +1,17 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Environment;
 using NamelessRogue.Engine.Engine.Components.Interaction;
+using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
+using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.Input;
 using NamelessRogue.shell;
 using SharpDX.DirectWrite;
@@ -151,7 +155,55 @@ namespace NamelessRogue.Engine.Engine.Systems
                                 //}
 
                                 break;
+                            case Intent.PickUpItem:
+                            {
+                                Player player = entity.GetComponentOfType<Player>();
+                                if (player != null)
+                                {
+                                    IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
+                                    IChunkProvider worldProvider = null;
+                                    if (worldEntity != null)
+                                    {
+                                        worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+                                    }
+                                    var position = entity.GetComponentOfType<Position>();
+                                    var itemHolder = entity.GetComponentOfType<ItemsHolder>();
+                                        var tile = worldProvider.GetTile(position.p.X, position.p.Y);
+                                       
+                                    List<IEntity> itemsToPickUp = new List<IEntity>();
+                                    foreach (var entityOnTIle in tile.getEntitiesOnTile())
+                                    {
+                                        var itemComponent = entityOnTIle.GetComponentOfType<Item>();
+                                        if (itemComponent != null)
+                                        {
+                                            itemsToPickUp.Add(entityOnTIle);
+                                        }
+                                    }
 
+                                    if (itemsToPickUp.Any())
+                                    {
+                                        StringBuilder builder = new StringBuilder();
+                                        var itemsCommand = new PickUpItemCommand(itemsToPickUp, itemHolder, position.p);
+                                        entity.AddComponent(itemsCommand);
+
+                                        foreach (var entity1 in itemsToPickUp)
+                                        {
+                                            var desc = entity1.GetComponentOfType<Description>();
+                                            if (desc != null)
+                                            {
+                                                builder.AppendLine($"Picked up: {desc.Name}");
+                                            }
+                                        }
+
+                                        var logCommand = new HudLogMessageCommand(builder.ToString());
+                                        entity.AddComponent(logCommand);
+
+
+                                    }
+                                }
+
+                                break;
+                            }
                             default:
                                 break;
                         }

@@ -11,7 +11,7 @@ namespace NamelessRogue.Engine.Engine.Input
         MoveBottomLeft,
         MoveBottomRight,
         MoveRight,
-        PlaceItem,
+        PickUpItem,
         LookAtMode, DropItem,
     }
 }

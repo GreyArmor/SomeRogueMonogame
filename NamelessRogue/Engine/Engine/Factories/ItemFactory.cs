@@ -11,7 +11,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity CreateItem()
         {
             Entity item = new Entity();
-            item.AddComponent(new Item(item.GetId()));
+            item.AddComponent(new Item());
             item.AddComponent(new Drawable('I',new Color(1f,0,0)));
             //for debug;
             item.AddComponent(new Position(109* Constants.ChunkSize + 3,307*Constants.ChunkSize + 3));
