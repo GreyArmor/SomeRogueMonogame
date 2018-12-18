@@ -107,6 +107,7 @@
     <Compile Include="Engine\Engine\Components\Status\Damage.cs" />
     <Compile Include="Engine\Engine\Components\Status\Dead.cs" />
     <Compile Include="Engine\Engine\Components\UI\Description.cs" />
+    <Compile Include="Engine\Engine\Components\UI\WorldMapMode.cs" />
     <Compile Include="Engine\Engine\Components\WorldBoardComponents\WorldBoardPlayer.cs" />
     <Compile Include="Engine\Engine\Context\GameContext.cs" />
     <Compile Include="Engine\Engine\Factories\BuildingFactory.cs" />

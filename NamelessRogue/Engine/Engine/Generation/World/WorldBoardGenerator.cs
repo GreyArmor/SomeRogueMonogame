@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Engine.Generation.Noise;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.shell;
@@ -57,17 +58,18 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             {
                 unsortedTiles.Add(worldBoardWorldTile);
             }
+
             List<Region> regions = new List<Region>();
-            Random rand = new Random();
+            Random rand = game.WorldSettings.GlobalRandom;
             var searchPoint = new Point();
 
             for (; searchPoint.X < game.WorldSettings.WorldBoardWidth; searchPoint.X++)
             {
-               
+
                 for (searchPoint.Y = 0; searchPoint.Y < game.WorldSettings.WorldBoardHeight; searchPoint.Y++)
                 {
-                    if (worldBoard.WorldTiles[searchPoint.X, searchPoint.Y].Terrain != TerrainTypes.Water/* &&
-                        !worldBoard.WorldTiles[searchPoint.X, searchPoint.Y].RegionsOfTile.Any()*/)
+                    if (worldBoard.WorldTiles[searchPoint.X, searchPoint.Y].Terrain != TerrainTypes.Water &&
+                        worldBoard.WorldTiles[searchPoint.X, searchPoint.Y].Continent == null)
                     {
                         Region r = new Region();
                         r.Name = "region" + regions.Count;
@@ -79,16 +81,16 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
                         var floodList = new Queue<WorldTile>();
                         floodList.Enqueue(firstNode);
-                        firstNode.RegionsOfTile.Add(r);
+                        firstNode.Continent = r;
                         r.SizeInTiles++;
 
                         void AddToFloodList(int x, int y, Region region)
                         {
                             if (worldBoard.WorldTiles[x, y].Terrain !=
-                                TerrainTypes.Water && !worldBoard.WorldTiles[x, y].RegionsOfTile.Any())
+                                TerrainTypes.Water && worldBoard.WorldTiles[x, y].Continent == null)
                             {
                                 floodList.Enqueue(worldBoard.WorldTiles[x, y]);
-                                worldBoard.WorldTiles[x, y].RegionsOfTile.Add(region);
+                                worldBoard.WorldTiles[x, y].Continent = region;
                                 region.SizeInTiles++;
                             }
                         }
@@ -104,7 +106,10 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                     }
                 }
             }
+
             s.Stop();
+            worldBoard.Continents = regions.Where(x => x.SizeInTiles >= 2000).ToList();
+            worldBoard.Islands = regions.Where(x => x.SizeInTiles >= 2000).ToList();
         }
     }
 }

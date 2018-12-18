@@ -10,6 +10,7 @@ using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
+using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.Generation;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
@@ -32,7 +33,7 @@ namespace NamelessRogue.Engine.Engine.Systems
     public class WorldBoardRenderingSystem : ISystem
     {
 
-        public WorldBoardRenderingSystemMode Mode { get; set; } = WorldBoardRenderingSystemMode.Regions;
+        public WorldBoardRenderingSystemMode Mode { get; set; } = WorldBoardRenderingSystemMode.Terrain;
 
         public readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
         (
@@ -161,6 +162,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                 worldProvider = timeline.GetComponentOfType<TimeLine>().CurrentWorldBoard;
             }
 
+            IEntity worldModeEntity = game.GetEntityByComponentClass<WorldMapMode>();
+            WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
+            Mode = worldMode.Mode;
+
+
             foreach (IEntity entity in game.GetEntities())
             {
 
@@ -235,7 +241,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     }
 
                     Biomes biome = world.WorldTiles[x, y].Biome;
-                    GetTerrainTile(screen, biome, screenPoint, world.WorldTiles[x, y].RegionsOfTile.FirstOrDefault());
+                    GetTerrainTile(screen, biome, screenPoint, world.WorldTiles[x, y].Continent);
                 }
             }
 

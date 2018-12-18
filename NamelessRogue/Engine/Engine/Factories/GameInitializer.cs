@@ -2,7 +2,9 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
+using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.Infrastructure;
+using NamelessRogue.Engine.Engine.Systems;
 
 namespace NamelessRogue.Engine.Engine.Factories
 {
@@ -19,6 +21,14 @@ namespace NamelessRogue.Engine.Engine.Factories
             cursor.AddComponent(new InputComponent());
             cursor.AddComponent(new LineToPlayer());
             return cursor;
+        }
+
+
+        public static IEntity CreateWorldMapMode()
+        {
+            Entity worldMode = new Entity();
+            worldMode.AddComponent(new WorldMapMode(){Mode = WorldBoardRenderingSystemMode.Terrain});
+            return worldMode;
         }
     }
 }

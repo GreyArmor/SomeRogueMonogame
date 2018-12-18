@@ -173,7 +173,7 @@ namespace NamelessRogue.shell
 
             //5 for testing
             //1489 for desert
-            worldSettings = new WorldSettings(1489,1000,1000);
+            worldSettings = new WorldSettings(5,1000,1000);
 
 
             ActiveEntities = new List<IEntity>();
@@ -209,7 +209,7 @@ namespace NamelessRogue.shell
                 yoffset * Constants.ChunkSize));
             ActiveEntities.Add(ItemFactory.CreateItem());
             ActiveEntities.Add(GameInitializer.CreateCursor());
-
+            ActiveEntities.Add(GameInitializer.CreateWorldMapMode());
            
 
             UserInterface.Initialize(Content, BuiltinThemes.hd);

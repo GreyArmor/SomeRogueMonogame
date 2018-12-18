@@ -15,7 +15,8 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         public MapArtifact Artifact;
         public MetaphysicalForce Affinity;
         public Civilization Owner;
-        public List<Region> RegionsOfTile = new List<Region>();
+        public Region Continent;
+        public Region LandmarkRegion;
         private Point point;
 
         public WorldTile(Point point)

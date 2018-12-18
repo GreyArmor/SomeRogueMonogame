@@ -1,6 +1,8 @@
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.shell;
 using SharpDX.Direct2D1;
 using SharpDX.WIC;
@@ -146,6 +148,62 @@ namespace NamelessRogue.Engine.Engine.Generation.Noise
                 tex.SaveAsPng(str, resolution, resolution);
             }
             tex.Dispose();
+        }
+
+
+        public static void RegionsWriteImage(WorldTile[,] data, int resolution, string path)
+        {
+
+            var arr = new Vector4[resolution, resolution];
+
+            for (int i = 0; i < resolution; i++)
+            {
+                for (int j = 0; j < resolution; j++)
+                {
+                    if (data[i, j].Continent!=null)
+                    {
+                        var color = data[i, j].Continent.Color;
+                        
+                        var vector = new Vector4(color.getRed(), color.getGreen(), color.getBlue(), 1);
+                        arr[i, j] = vector;
+                    }
+                    else
+                    {
+                        arr[i, j] = new Vector4(0, 0, 0, 1);
+                    }
+                }
+            }
+           
+
+            byte[] arrBytes = new byte[resolution * resolution * 4];
+            for (int y = 0; y < resolution; y++)
+            {
+                for (int x = 0; x < resolution; x++)
+                {
+                    float x1, y1, z1;
+                    x1= arr[x, y].X * 255f;
+                    y1 = arr[x, y].Y * 255f;
+                    z1 = arr[x, y].Z * 255f;
+                    arrBytes[y * resolution * 4 + x * 4] = (byte)x1;
+                    arrBytes[y * resolution * 4 + x * 4 + 1] = (byte)y1;
+                    arrBytes[y * resolution * 4 + x * 4 + 2] = (byte)z1;
+                    arrBytes[y * resolution * 4 + x * 4 + 3] = 255;
+                }
+            }
+
+            Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
+            tex.SetData(arrBytes);
+            using (var str = File.OpenWrite(path))
+            {
+                tex.SaveAsPng(str, resolution, resolution);
+            }
+            tex.Dispose();
+
+
+
+
+
+
         }
 
 

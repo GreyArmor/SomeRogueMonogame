@@ -15,7 +15,6 @@ namespace NamelessRogue.Engine.Engine.Generation
             WorldBoardWidth = worldBoardWidth;
             WorldBoardHeight = worldBoardHeight;
             GlobalRandom = new Random(seed);
-            TerrainGenerator terrainGenerator;
             TerrainGen = new TerrainGenerator(GlobalRandom);
             WorldMapScale = 1;
         }

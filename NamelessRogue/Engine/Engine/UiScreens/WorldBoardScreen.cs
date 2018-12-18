@@ -12,7 +12,9 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 {
     public enum WorldBoardScreenAction
     {
-        ReturnToGame
+        ReturnToGame,
+        TerrainMode,
+        RegionsMode
     }
     public class WorldBoardScreen : BaseGuiScreen
     {
@@ -21,15 +23,34 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public WorldBoardScreen(NamelessGame game)
         {
             Panel = new Panel(new Vector2(game.GetSettings().HudWidth(), game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.BottomRight);
-            ReturnToGame = CreateButton("Back");
+            ReturnToGame = CreateButton("Back", game.GetSettings().HudWidth()-50);
             ReturnToGame.OnClick += ReturnToGameOnClick;
+
+            ModeTerrain = CreateButton("Terrain", game.GetSettings().HudWidth()-50);
+            ModeTerrain.OnClick += OnClickModeTerrain;
+
+            ModeRegions = CreateButton("Regions", game.GetSettings().HudWidth()-50);
+            ModeRegions.OnClick += OnClickLandmasses;
+
+            Panel.AddChild(ModeTerrain);
+            Panel.AddChild(ModeRegions);
             Panel.AddChild(ReturnToGame);
             UserInterface.Active.AddEntity(Panel);
         }
 
-        private Button CreateButton(string Text)
+        private void OnClickLandmasses(Entity entity)
         {
-            var result = new Button(Text, size: new Vector2(150, 50), anchor: Anchor.BottomCenter);
+            Actions.Add(WorldBoardScreenAction.RegionsMode);
+        }
+
+        private void OnClickModeTerrain(Entity entity)
+        {
+            Actions.Add(WorldBoardScreenAction.TerrainMode);
+        }
+
+        private Button CreateButton(string Text, float width)
+        {
+            var result = new Button(Text, size: new Vector2(width, 50), anchor: Anchor.Auto);
             result.ButtonParagraph.Scale = 0.7f;
             return result;
         }
@@ -39,7 +60,12 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             Actions.Add(WorldBoardScreenAction.ReturnToGame);
         }
 
+
+        public Button ModeTerrain { get; set; }
+        public Button ModeRegions { get; set; }
         public Button ReturnToGame { get; set; }
+
+       
 
     }
 }

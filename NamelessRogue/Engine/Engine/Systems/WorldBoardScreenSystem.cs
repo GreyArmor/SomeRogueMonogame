@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.UiScreens;
 using NamelessRogue.shell;
@@ -21,6 +22,20 @@ namespace NamelessRogue.Engine.Engine.Systems
                     case WorldBoardScreenAction.ReturnToGame:
 
                         namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
+                        break;
+                    case WorldBoardScreenAction.RegionsMode:
+                    {
+                        IEntity worldModeEntity = namelessGame.GetEntityByComponentClass<WorldMapMode>();
+                        WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
+                        worldMode.Mode = WorldBoardRenderingSystemMode.Regions;
+                    }
+                        break;
+                    case WorldBoardScreenAction.TerrainMode:
+                    {
+                        IEntity worldModeEntity = namelessGame.GetEntityByComponentClass<WorldMapMode>();
+                        WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
+                        worldMode.Mode = WorldBoardRenderingSystemMode.Terrain;
+                        }
                         break;
                     default:
                         break;
