@@ -30,6 +30,13 @@ namespace NamelessRogue.Engine.Engine.Systems
                         worldMode.Mode = WorldBoardRenderingSystemMode.Regions;
                     }
                         break;
+                    case WorldBoardScreenAction.PoliticalMode:
+                    {
+                        IEntity worldModeEntity = namelessGame.GetEntityByComponentClass<WorldMapMode>();
+                        WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
+                        worldMode.Mode = WorldBoardRenderingSystemMode.Political;
+                    }
+                        break;
                     case WorldBoardScreenAction.TerrainMode:
                     {
                         IEntity worldModeEntity = namelessGame.GetEntityByComponentClass<WorldMapMode>();

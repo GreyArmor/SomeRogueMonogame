@@ -11,6 +11,7 @@ using NamelessRogue.Engine.Engine.Components;
 using NamelessRogue.Engine.Engine.Context;
 using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Generation;
+using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Systems;
 using NamelessRogue.Engine.Engine.Utility;
@@ -173,7 +174,7 @@ namespace NamelessRogue.shell
 
             //5 for testing
             //1489 for desert
-            worldSettings = new WorldSettings(5,1000,1000);
+            worldSettings = new WorldSettings(14891,1000,1000);
 
 
             ActiveEntities = new List<IEntity>();

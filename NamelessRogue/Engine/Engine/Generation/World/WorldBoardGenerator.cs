@@ -54,19 +54,92 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             {
                 var civNumber = worldBoardContinent.SizeInTiles / worldSettingsContinentTilesPerCivilization;
 
-                List<Civilization> civilizations = new List<Civilization>();
+                var continentTiles = new Queue<WorldTile>();
+
+                foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
+                {
+                    if (worldBoardWorldTile.Continent == worldBoardContinent && worldBoardWorldTile.Owner == null)
+                    {
+                        continentTiles.Enqueue(worldBoardWorldTile);
+                    }
+                }
+                //randomize list
+                continentTiles = new Queue<WorldTile>(continentTiles.OrderBy(
+                    (o) =>
+                {
+                    return (game.WorldSettings.GlobalRandom.Next() % continentTiles.Count);
+                }));
+
                 var random = game.WorldSettings.GlobalRandom;
 
                 for (int i = 0; i < civNumber; i++)
                 {
-                    var civName = game.WorldSettings.NamesGenerator.GetCountryName(random).FirstCharToUpper();
+                    bool civNameUnique = false;
+                    string civName = "";
+                    while (!civNameUnique)
+                    {
+                        civName = game.WorldSettings.NamesGenerator.GetCountryName(random).FirstCharToUpper();
+                        civNameUnique = worldBoard.Civilizations.All(x => x.Name != civName);
+                    }
+
+                    CultureTemplate culture = game.WorldSettings.CultureTemplates[
+                        game.WorldSettings.GlobalRandom.Next(game.WorldSettings.CultureTemplates.Count)];
+
                     var civilization = new Civilization(civName, new Microsoft.Xna.Framework.Color(
-                        new Vector4((float) game.WorldSettings.GlobalRandom.NextDouble(), (float) game.WorldSettings.GlobalRandom.NextDouble(), (float) game.WorldSettings.GlobalRandom.NextDouble(),1)));
+                            new Vector4((float) game.WorldSettings.GlobalRandom.NextDouble(),
+                                (float) game.WorldSettings.GlobalRandom.NextDouble(),
+                                (float) game.WorldSettings.GlobalRandom.NextDouble(), 1)),
+                        culture);
                     worldBoard.Civilizations.Add(civilization);
+
+
+                    var firstSettlement = new Settlement()
+                    {
+                        Info = new ObjectInfo()
+                        {
+                            Name = civilization.CultureTemplate.GetTownName(random)
+                        }
+                    };
+
+                    civilization.Settlements.Add(firstSettlement);
+
+
+
+                    WorldTile tile = null;
+                    bool noNeighbooringCivs = false;
+                    while (!noNeighbooringCivs)
+                    {
+
+                        tile = continentTiles.Dequeue();
+                        noNeighbooringCivs = true;
+                        for (int x = tile.WorldBoardPosiiton.X - 1; x <= tile.WorldBoardPosiiton.X + 1; x++)
+                        {
+                            for (int y = tile.WorldBoardPosiiton.Y - 1; y <= tile.WorldBoardPosiiton.Y + 1; y++)
+                            {
+                                if (worldBoard.WorldTiles[x, y].Owner != null)
+                                {
+                                    noNeighbooringCivs = false;
+                                }
+                            }
+                        }
+                    }
+
+
+                    tile.Building = firstSettlement;
+
+
+
+
+                    for (int x = tile.WorldBoardPosiiton.X - 1; x <= tile.WorldBoardPosiiton.X + 1; x++)
+                    {
+                        for (int y = tile.WorldBoardPosiiton.Y - 1; y <= tile.WorldBoardPosiiton.Y + 1; y++)
+                        {
+                            worldBoard.WorldTiles[x, y].Owner = civilization;
+                        }
+                    }
                 }
 
-                worldBoard.Civilizations.ToString();
-
+               // var names = worldBoard.Civilizations.Select(x => x.Name).Aggregate((s1, s2) => s1 + ", " + s2);
             }
 
         }

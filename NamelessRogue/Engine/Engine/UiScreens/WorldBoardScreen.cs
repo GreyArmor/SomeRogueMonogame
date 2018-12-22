@@ -14,7 +14,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
     {
         ReturnToGame,
         TerrainMode,
-        RegionsMode
+        RegionsMode,
+        PoliticalMode,
     }
     public class WorldBoardScreen : BaseGuiScreen
     {
@@ -32,10 +33,20 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             ModeRegions = CreateButton("Regions", game.GetSettings().HudWidth()-50);
             ModeRegions.OnClick += OnClickLandmasses;
 
+            ModePolitical = CreateButton("Political", game.GetSettings().HudWidth() - 50);
+            ModePolitical.OnClick += OnClickPolitical;
+
+
             Panel.AddChild(ModeTerrain);
             Panel.AddChild(ModeRegions);
+            Panel.AddChild(ModePolitical);
             Panel.AddChild(ReturnToGame);
             UserInterface.Active.AddEntity(Panel);
+        }
+
+        private void OnClickPolitical(Entity entity)
+        {
+            Actions.Add(WorldBoardScreenAction.PoliticalMode);
         }
 
         private void OnClickLandmasses(Entity entity)
@@ -63,6 +74,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public Button ModeTerrain { get; set; }
         public Button ModeRegions { get; set; }
+        public Button ModePolitical { get; set; }
+
         public Button ReturnToGame { get; set; }
 
        

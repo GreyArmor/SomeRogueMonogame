@@ -42,6 +42,11 @@ namespace NamelessRogue.Engine.Engine.Utility
             Init(red, green, blue, alpha);
         }
 
+        public Color(Microsoft.Xna.Framework.Color color)
+        {
+            Init((float)color.R/255, (float)color.G/255, (float)color.B/255, (float)color.A/255);
+        }
+
         private void Init(float red, float green, float blue, float alpha)
         {
             Red = red;

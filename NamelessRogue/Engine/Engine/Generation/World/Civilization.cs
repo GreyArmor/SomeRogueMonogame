@@ -11,10 +11,11 @@ namespace NamelessRogue.Engine.Engine.Generation.World
     public class Civilization {
 
 
-        public Civilization(string name, Color civColor)
+        public Civilization(string name, Color civColor,CultureTemplate cultureTemplate)
         {
             Name = name;
             CivColor = civColor;
+            CultureTemplate = cultureTemplate;
             Settlements = new List<Settlement>();
             Units = new List<MapUnit>();
             Buildings = new List<MapBuilding>();
@@ -38,6 +39,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             }
         }
         public Color CivColor { get; }
+        public CultureTemplate CultureTemplate { get; }
         public List<Settlement> Settlements { get; }
         public List<MapUnit> Units { get; }
         public List<MapBuilding> Buildings { get; }

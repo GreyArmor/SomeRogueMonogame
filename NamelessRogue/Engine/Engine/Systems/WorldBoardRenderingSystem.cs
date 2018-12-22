@@ -28,6 +28,7 @@ namespace NamelessRogue.Engine.Engine.Systems
     {
         Terrain,
         Regions,
+        Political
     }
 
     public class WorldBoardRenderingSystem : ISystem
@@ -241,7 +242,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     }
 
                     Biomes biome = world.WorldTiles[x, y].Biome;
-                    GetTerrainTile(screen, biome, screenPoint, world.WorldTiles[x, y].Continent);
+                    GetTerrainTile(screen, screenPoint, world.WorldTiles[x, y]);
                 }
             }
 
@@ -249,8 +250,11 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         }
 
-        void GetTerrainTile(Screen screen, Biomes biome, Point point, Region region)
+        void GetTerrainTile(Screen screen, Point point, WorldTile tile)
         {
+            var biome = tile.Biome;
+            var owner = tile.Owner;
+            var region = tile.Continent;
             if ((biome == Biomes.Sea) || biome == Biomes.Lake)
             {
                 screen.ScreenBuffer[point.X, point.Y].Char = '~';
@@ -331,6 +335,17 @@ namespace NamelessRogue.Engine.Engine.Systems
                 else
                 {
                     screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+                }
+            }
+            else if(Mode == WorldBoardRenderingSystemMode.Political)
+            {
+                if (tile.Owner != null)
+                {
+                    if (tile.Building is Settlement)
+                    {
+                        screen.ScreenBuffer[point.X, point.Y].Char = 'S';
+                    }
+                    screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color(tile.Owner.CivColor);
                 }
             }
         }
