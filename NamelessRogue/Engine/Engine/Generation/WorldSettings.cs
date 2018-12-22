@@ -17,7 +17,12 @@ namespace NamelessRogue.Engine.Engine.Generation
             GlobalRandom = new Random(seed);
             TerrainGen = new TerrainGenerator(GlobalRandom);
             WorldMapScale = 1;
+            ContinentTilesPerCivilization = 1500;
+            NamesGenerator = new NamesGenerator();
         }
+
+        public int ContinentTilesPerCivilization { get; set; }
+        public NamesGenerator NamesGenerator { get; }
 
         //TODO: not implemented currently
         public float WorldMapScale { get; set; }

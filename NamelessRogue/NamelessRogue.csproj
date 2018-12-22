@@ -123,6 +123,7 @@
     <Compile Include="Engine\Engine\Factories\TimelineFactory.cs" />
     <Compile Include="Engine\Engine\GameInstance\GameInstance.cs" />
     <Compile Include="Engine\Engine\Generation\CivilizationMachine.cs" />
+    <Compile Include="Engine\Engine\Generation\NamesGenerator.cs" />
     <Compile Include="Engine\Engine\Generation\Noise\ImageWriter.cs" />
     <Compile Include="Engine\Engine\Generation\Noise\SimplexNoise.cs" />
     <Compile Include="Engine\Engine\Generation\Noise\SimplexNoise_octave.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\BoardPiece.cs" />
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\MapUnit.cs" />
     <Compile Include="Engine\Engine\Generation\World\Civilization.cs" />
+    <Compile Include="Engine\Engine\Generation\World\CultureTemplate.cs" />
     <Compile Include="Engine\Engine\Generation\World\HistoryGenerator.cs" />
     <Compile Include="Engine\Engine\Generation\World\HistoryLayers.cs" />
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\MapArtifact.cs" />
@@ -191,6 +193,7 @@
     <Compile Include="Engine\Engine\Utility\DamageHelper.cs" />
     <Compile Include="Engine\Engine\Utility\FrameCounter.cs" />
     <Compile Include="Engine\Engine\Utility\PointUtil.cs" />
+    <Compile Include="Engine\Engine\Utility\StringExtensions.cs" />
     <Compile Include="FieldOfView\PermissiveVisibility.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -202,6 +205,9 @@
     </Reference>
     <Reference Include="GeonBit.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GeonBit.UI.3.2.0\lib\geonbitui\GeonBit.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Markov, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Markov.2.0.0\lib\net35\Markov.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MonoGame.Framework">

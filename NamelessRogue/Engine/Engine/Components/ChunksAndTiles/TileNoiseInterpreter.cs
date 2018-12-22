@@ -32,11 +32,11 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
             else if(noiseValue>0.7) {
                 t  = TerrainTypes.Rocks;
-                b = Biomes.Hills;
+                b = Biomes.Mountain;
             }
             else if(noiseValue>0.65) {
                 t  = TerrainTypes.LightRocks;
-                b = Biomes.Hills;
+                b = Biomes.Mountain;
             }
             else if(noiseValue>0.51) {
                 t  = TerrainTypes.Grass;

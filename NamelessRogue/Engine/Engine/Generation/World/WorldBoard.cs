@@ -14,7 +14,10 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         public List<Civilization> Civilizations { get; }
         public List<Region> Continents { set; get; }
         public List<Region> Islands { set; get; }
-        public List<Region> Mountains { get; }
+        public List<Region> Mountains { set; get; }
+        public List<Region> Forests { get; set; }
+        public List<Region> Deserts { get; set; }
+        public List<Region> Swamps { get; set; }
 
         public WorldBoard(int width, int height, int age)
         {
