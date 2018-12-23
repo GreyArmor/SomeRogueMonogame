@@ -107,14 +107,16 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
                     WorldTile tile = null;
                     bool noNeighbooringCivs = false;
+                    const int squareToCheck = 10;
+                    const int radiusToClaim = 7;
                     while (!noNeighbooringCivs)
                     {
 
                         tile = continentTiles.Dequeue();
                         noNeighbooringCivs = true;
-                        for (int x = tile.WorldBoardPosiiton.X - 1; x <= tile.WorldBoardPosiiton.X + 1; x++)
+                        for (int x = tile.WorldBoardPosiiton.X - squareToCheck; x <= tile.WorldBoardPosiiton.X + squareToCheck; x++)
                         {
-                            for (int y = tile.WorldBoardPosiiton.Y - 1; y <= tile.WorldBoardPosiiton.Y + 1; y++)
+                            for (int y = tile.WorldBoardPosiiton.Y - squareToCheck; y <= tile.WorldBoardPosiiton.Y + squareToCheck; y++)
                             {
                                 if (worldBoard.WorldTiles[x, y].Owner != null)
                                 {
@@ -125,16 +127,29 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                     }
 
 
+                   
+
+
+
                     tile.Building = firstSettlement;
 
 
 
 
-                    for (int x = tile.WorldBoardPosiiton.X - 1; x <= tile.WorldBoardPosiiton.X + 1; x++)
+                    for (int x = tile.WorldBoardPosiiton.X - radiusToClaim; x <= tile.WorldBoardPosiiton.X + radiusToClaim; x++)
                     {
-                        for (int y = tile.WorldBoardPosiiton.Y - 1; y <= tile.WorldBoardPosiiton.Y + 1; y++)
+                        for (int y = tile.WorldBoardPosiiton.Y - radiusToClaim; y <= tile.WorldBoardPosiiton.Y + radiusToClaim; y++)
                         {
-                            worldBoard.WorldTiles[x, y].Owner = civilization;
+
+                            var dX = x - tile.WorldBoardPosiiton.X;
+                            var dY = y - tile.WorldBoardPosiiton.Y;
+
+                            if (dX * dX + dY * dY <= (radiusToClaim))
+                            {
+                                worldBoard.WorldTiles[x, y].Owner = civilization;
+                            }
+
+                           
                         }
                     }
                 }

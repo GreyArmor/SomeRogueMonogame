@@ -174,7 +174,7 @@ namespace NamelessRogue.shell
 
             //5 for testing
             //1489 for desert
-            worldSettings = new WorldSettings(14891,1000,1000);
+            worldSettings = new WorldSettings(1489,1000,1000);
 
 
             ActiveEntities = new List<IEntity>();
