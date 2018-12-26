@@ -181,13 +181,15 @@ namespace NamelessRogue.shell
 
 
 
-            int xoffset = 215;
-            int yoffset = 200;
+           
 
             //TODO: for test
             ActiveEntities.Add(RenderFactory.CreateViewport(settings));
-            ActiveEntities.Add(TimelineFactory.CreateTimeline(this));
+   
             ActiveEntities.Add(TerrainFactory.CreateWorld(worldSettings));
+
+            ActiveEntities.Add(TimelineFactory.CreateTimeline(this));
+
             ActiveEntities.Add(InputHandlingFactory.CreateInput());
 
             var furnitureEntities = TerrainFurnitureFactory.CreateInstancedFurnitureEntities(this);
@@ -196,18 +198,36 @@ namespace NamelessRogue.shell
                 ActiveEntities.Add(furnitureEntity);
             }
 
+            var timelinEntity = GetEntityByComponentClass<TimeLine>();
+            var  timeline = timelinEntity.GetComponentOfType<TimeLine>();
 
+            WorldTile firsTile = null;
+            foreach (var worldBoardWorldTile in timeline.CurrentWorldBoard.WorldTiles)
+            {
+                if (worldBoardWorldTile.Settlement != null)
+                {
+                    firsTile = worldBoardWorldTile;
+                    break;
+
+                }
+            }
+
+
+
+            //place everything at the center of newly generated settlement;
+            int x = firsTile.Settlement.Concrete.Center.X;
+            int y = firsTile.Settlement.Concrete.Center.Y;
             ActiveEntities.Add(
-                CharacterFactory.CreateSimplePlayerCharacter(xoffset * Constants.ChunkSize,
-                    yoffset * Constants.ChunkSize));
-            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 1,
-                yoffset * Constants.ChunkSize));
-            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 3,
-                yoffset * Constants.ChunkSize));
-            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 5,
-                yoffset * Constants.ChunkSize));
-            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(xoffset * Constants.ChunkSize - 7,
-                yoffset * Constants.ChunkSize));
+                CharacterFactory.CreateSimplePlayerCharacter(x,y));
+            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 1,
+            //    y));
+            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 3,
+            //    y));
+            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 5,
+            //    y));
+            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 7,
+            //    y));
+
             ActiveEntities.Add(ItemFactory.CreateItem());
             ActiveEntities.Add(GameInitializer.CreateCursor());
             ActiveEntities.Add(GameInitializer.CreateWorldMapMode());
@@ -223,20 +243,20 @@ namespace NamelessRogue.shell
             fpsLabel = new Label("1111", Anchor.TopLeft, new Vector2(1000, 50), new Vector2());
             UserInterface.Active.AddEntity(fpsLabel);
 
-            for (int i = 0; i < 1; i++)
-            {
-                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
-                    yoffset * Constants.ChunkSize, 10,
-                    this));
-                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13 + (i * 10),
-                    yoffset * Constants.ChunkSize, 10,
-                    this));
-                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
-                    yoffset * Constants.ChunkSize + 13,
-                    10, this));
-                ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
-                    yoffset * Constants.ChunkSize + 13, 10, this));
-            }
+            //for (int i = 0; i < 1; i++)
+            //{
+            //    ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
+            //        yoffset * Constants.ChunkSize, 10, 10,
+            //        this));
+            //    ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13 + (i * 10),
+            //        yoffset * Constants.ChunkSize, 10,10,
+            //        this));
+            //    ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
+            //        yoffset * Constants.ChunkSize + 13,10,
+            //        10, this));
+            //    ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
+            //        yoffset * Constants.ChunkSize + 13, 10,10, this));
+            //}
 
         }
 

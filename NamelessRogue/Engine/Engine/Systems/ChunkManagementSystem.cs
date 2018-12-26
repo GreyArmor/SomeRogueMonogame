@@ -7,6 +7,7 @@ using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Factories;
+using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
 
@@ -17,13 +18,8 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         public void Update(long gameTime, NamelessGame namelessGame)
         {
-            //not elegant TODO: think of better way
             IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
-            IChunkProvider worldProvider = null;
-            if (worldEntity != null)
-            {
-                worldProvider = worldEntity.GetComponentOfType<ChunkData>();
-            }
+            IChunkProvider worldProvider = worldEntity.GetComponentOfType<ChunkData>();
 
             IEntity playerentity = namelessGame.GetEntityByComponentClass<Player>();
             if (playerentity != null)
@@ -73,7 +69,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                             {
                                 if (worldProvider.GetChunks().ContainsKey(p))
                                 {
-                                    worldProvider.GetRealityBubbleChunks().Add(p, worldProvider.GetChunks()[p]);
+                                    Chunk chunk = worldProvider.GetChunks()[p];
+
+                                    
+
+                                    worldProvider.GetRealityBubbleChunks().Add(p, chunk);
                                 }
                             }
                         }

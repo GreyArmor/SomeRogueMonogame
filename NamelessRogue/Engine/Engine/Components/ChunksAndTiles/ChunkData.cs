@@ -28,11 +28,10 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
         void initWorld()
         {
-            int testWorldSize = 1000;
             int offfset = 0;
-            for (int x = offfset; x <= testWorldSize + offfset; x++)
+            for (int x = offfset; x <= ChunkResolution + offfset; x++)
             {
-                for (int y = offfset; y <= testWorldSize + offfset; y++)
+                for (int y = offfset; y <= ChunkResolution + offfset; y++)
                 {
                     CreateChunk(x, y);
                 }
@@ -58,6 +57,8 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         }
 
         //TODO: we need to implement quick iteration by using bounding box trees;
+        public int ChunkResolution { get; } = 1000;
+
         public Tile GetTile(int x, int y)
         {
             Chunk chunkOfPoint = null;
@@ -79,8 +80,6 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
             return chunkOfPoint.GetTile(x, y);
         }
-
-        //TODO: we need to implement quick iteration by using bounding box trees;
         public bool SetTile(int x, int y, Tile tile)
         {
             Chunk chunkOfPoint = null;

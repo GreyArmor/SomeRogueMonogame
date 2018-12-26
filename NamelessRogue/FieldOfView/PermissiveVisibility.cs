@@ -27,8 +27,8 @@ namespace NamelessRogue.FieldOfView
             this.rangeLimit = rangeLimit;
             for (int q = 0; q < 4; q++)
             {
-                quadrant.x = (short)(q == 0 || q == 3 ? 1 : -1);
-                quadrant.y = (short)(q < 2 ? 1 : -1);
+                quadrant.x = q == 0 || q == 3 ? 1 : -1;
+                quadrant.y = q < 2 ? 1 : -1;
                 ComputeQuadrant();
             }
         }
@@ -87,8 +87,8 @@ namespace NamelessRogue.FieldOfView
 
         struct Offset
         {
-            public Offset(int x, int y) { this.x = (short)x; this.y = (short)y; }
-            public short x, y;
+            public Offset(int x, int y) { this.x = x; this.y = y; }
+            public int x, y;
         }
 
         void ComputeQuadrant()
@@ -105,8 +105,8 @@ namespace NamelessRogue.FieldOfView
                 LinkedListNode<Field> current = activeFields.First;
                 for (int j = 0; j <= i; j++)
                 {
-                    dest.x = (short)(i - j);
-                    dest.y = (short)j;
+                    dest.x = i - j;
+                    dest.y = j;
                     current = visitSquare(dest, current, steepBumps, shallowBumps, activeFields);
                 }
             }

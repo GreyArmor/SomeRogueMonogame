@@ -17,6 +17,9 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         public Civilization Owner;
         public Region Continent;
         public Region LandmarkRegion;
+        public Settlement Settlement;
+
+
         private Point point;
 
         public WorldTile(Point point)

@@ -13,6 +13,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
     {
         private Point WorldBoardPosition { get; set; }
         public ProductionValue Levels { get; set; }
+        public ConcreteSettlement Concrete { get; set; }
     }
 
 

@@ -131,7 +131,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
 
 
-                    tile.Building = firstSettlement;
+                    tile.Settlement = firstSettlement;
 
 
 

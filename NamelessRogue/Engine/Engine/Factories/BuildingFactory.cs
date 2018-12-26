@@ -34,7 +34,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             return window;
         }
 
-        public static IEntity CreateDummyBuilding(int x, int y, int widthHeight, NamelessGame namelessGame)
+        public static IEntity CreateDummyBuilding(int x, int y, int width ,int height, NamelessGame namelessGame)
         {
 
             IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
@@ -46,20 +46,20 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             IEntity building = new Entity();
 
-            building.AddComponent(new Description("Window",""));
+            building.AddComponent(new Description("",""));
             building.AddComponent(new Position(x,y));
 
             Building buildingComponent = new Building();
 
-            for (int i = 0;i<widthHeight; i++)
+            for (int i = 0;i< width; i++)
             {
-                for (int j = 0;j<widthHeight; j++)
+                for (int j = 0;j< height; j++)
                 {
                     var tile = worldProvider.GetTile(x + i, y + j);
                     tile.SetTerrainType(TerrainTypes.Nothingness);
-                    if (i == 0 || j == 0 || i == widthHeight - 1 || j == widthHeight - 1)
+                    if (i == 0 || j == 0 || i == width - 1 || j == height - 1)
                     {
-                        if (i == widthHeight / 2)
+                        if (i == width / 2)
                         {
                             IEntity door = CreateDoor(x + i, y + j);
                             buildingComponent.getBuildingParts().Add(door);

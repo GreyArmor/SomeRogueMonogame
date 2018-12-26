@@ -176,7 +176,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                 if (camera != null && screen != null && worldProvider != null)
                 {
                     MoveCamera(game, camera);
-                    FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), game.WorldSettings, worldProvider);
+                    FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), game.WorldSettings,
+                        worldProvider);
 
                     Position playerPosition = game.GetEntityByComponentClass<Cursor>()
                         .GetComponentOfType<Position>();
@@ -190,6 +191,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
 
                     }
+
                     RenderScreen(game, screen, game.GetSettings());
                     break;
                 }
@@ -198,15 +200,17 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         private void MoveCamera(NamelessGame game, ConsoleCamera camera)
         {
-                Position playerPosition = game.GetEntityByComponentClass<Cursor>()
-                    .GetComponentOfType<Position>();
+            Position playerPosition = game.GetEntityByComponentClass<Cursor>()
+                .GetComponentOfType<Position>();
 
-                Point p = camera.getPosition();
-                p.X = (playerPosition.p.X - game.GetSettings().getWidth() / 2);
-                p.Y = (playerPosition.p.Y - game.GetSettings().getHeight() / 2);
-                camera.setPosition(p);
+            Point p = camera.getPosition();
+            p.X = (playerPosition.p.X - game.GetSettings().getWidth() / 2);
+            p.Y = (playerPosition.p.Y - game.GetSettings().getHeight() / 2);
+            camera.setPosition(p);
         }
-        private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings, WorldSettings worldSEttings,
+
+        private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings,
+            WorldSettings worldSEttings,
             WorldBoard world)
         {
             int camX = camera.getPosition().X;
@@ -236,7 +240,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
 
-                    if (screenPoint.X < 0 || screenPoint.Y < 0 || x < 0 || x >= worldSEttings.WorldBoardWidth || y < 0 || y >= worldSEttings.WorldBoardHeight)
+                    if (screenPoint.X < 0 || screenPoint.Y < 0 || x < 0 || x >= worldSEttings.WorldBoardWidth ||
+                        y < 0 || y >= worldSEttings.WorldBoardHeight)
                     {
                         continue;
                     }
@@ -298,7 +303,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                 screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1f, 1f, 0);
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
             }
-            else if (biome==Biomes.SnowDesert)
+            else if (biome == Biomes.SnowDesert)
             {
                 screen.ScreenBuffer[point.X, point.Y].Char = 's';
                 screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1f, 1f, 1f);
@@ -337,14 +342,16 @@ namespace NamelessRogue.Engine.Engine.Systems
                     screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
                 }
             }
-            else if(Mode == WorldBoardRenderingSystemMode.Political)
+            else if (Mode == WorldBoardRenderingSystemMode.Political)
             {
                 if (tile.Owner != null)
                 {
-                    if (tile.Building is Settlement)
+                    if (tile.Settlement != null)
                     {
-                        screen.ScreenBuffer[point.X, point.Y].Char = 'S';
+                        screen.ScreenBuffer[point.X, point.Y].Char = 'T';
+                        screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1,1,1,1);
                     }
+
                     screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color(tile.Owner.CivColor);
                 }
             }
@@ -364,7 +371,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                         characterToTileDictionary[screen.ScreenBuffer[x, y].Char],
                         screen.ScreenBuffer[x, y].CharColor,
                         screen.ScreenBuffer[x, y].BackGroundColor
-                        );
+                    );
                 }
             }
 
@@ -410,12 +417,12 @@ namespace NamelessRogue.Engine.Engine.Systems
             int tileWidth = game.GetSettings().getFontSize();
 
 
-            float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
-            float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
+            float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float) tileAtlas.Width);
+            float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float) tileAtlas.Height);
 
-            float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
+            float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float) tileAtlas.Width);
 
-            float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
+            float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float) tileAtlas.Height);
 
 
             var settings = game.GetSettings();
@@ -424,7 +431,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     0, game.GetActualHeight(), 0, 2);
 
             effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
-            var indices = new int[6] { 0, 1, 2, 2, 3, 0 };
+            var indices = new int[6] {0, 1, 2, 2, 3, 0};
             effect.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
             effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             var vertices = new Vertex[4];

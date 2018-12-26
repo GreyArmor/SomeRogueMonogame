@@ -4,11 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using GeonBit.UI;
+using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Generation.World.BoardPieces;
 using NamelessRogue.Engine.Engine.Generation.World.Meta;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
 using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
 
 namespace NamelessRogue.Engine.Engine.Generation.World
 {
@@ -103,6 +107,26 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             WorldBoardGenerator.PopulateWithInitialData(worldBoard, game);
             WorldBoardGenerator.AnalizeLandmasses(worldBoard, game);
             WorldBoardGenerator.PlaceInitialCivilizations(worldBoard, game);
+
+
+
+            WorldTile firsTile = null;
+            foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
+            {
+                if (worldBoardWorldTile.Settlement != null)
+                {
+                    firsTile = worldBoardWorldTile;
+                    break;
+
+                }
+            }
+
+            IEntity worldEntity = game.GetEntityByComponentClass<ChunkData>();
+            IChunkProvider worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+
+            var concreteSettlment = SettlementFactory.GenerateSettlement(game, firsTile, worldBoard, worldProvider);
+
+            firsTile.Settlement.Concrete = concreteSettlment;
 
             Stack<MapResource> resources = GenerateResourcePoolBasedONTerrain(worldBoard);
 

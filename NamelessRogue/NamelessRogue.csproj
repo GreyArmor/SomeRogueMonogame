@@ -117,6 +117,7 @@
     <Compile Include="Engine\Engine\Factories\InputHandlingFactory.cs" />
     <Compile Include="Engine\Engine\Factories\ItemFactory.cs" />
     <Compile Include="Engine\Engine\Factories\RenderFactory.cs" />
+    <Compile Include="Engine\Engine\Factories\SettlementFactory.cs" />
     <Compile Include="Engine\Engine\Factories\TerrainFactory.cs" />
     <Compile Include="Engine\Engine\Factories\TerrainFurnitureFactory.cs" />
     <Compile Include="Engine\Engine\Factories\UiFactory.cs" />
@@ -131,7 +132,9 @@
     <Compile Include="Engine\Engine\Generation\World\Biomes.cs" />
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\BoardPiece.cs" />
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\MapUnit.cs" />
+    <Compile Include="Engine\Engine\Generation\World\CitySlot.cs" />
     <Compile Include="Engine\Engine\Generation\World\Civilization.cs" />
+    <Compile Include="Engine\Engine\Generation\World\ConcreteSettlement.cs" />
     <Compile Include="Engine\Engine\Generation\World\CultureTemplate.cs" />
     <Compile Include="Engine\Engine\Generation\World\HistoryGenerator.cs" />
     <Compile Include="Engine\Engine\Generation\World\HistoryLayers.cs" />
