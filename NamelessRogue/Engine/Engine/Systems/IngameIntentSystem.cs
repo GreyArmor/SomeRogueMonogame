@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Components.UI;
+using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Input;
 using NamelessRogue.shell;
 using SharpDX.DirectWrite;
@@ -31,6 +32,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)
                 {
+                    var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
                     foreach (Intent intent in inputComponent.Intents)
                     {
 
@@ -46,9 +48,9 @@ namespace NamelessRogue.Engine.Engine.Systems
                             case Intent.MoveBottomLeft:
                             case Intent.MoveBottomRight:
                             {
-                                var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
                                 Position position = playerEntity.GetComponentOfType<Position>();
-                                if (position != null)
+                                HasTurn hasTurn = playerEntity.GetComponentOfType<HasTurn>();
+                                if (position != null && hasTurn != null)
                                 {
 
                                     int newX =
@@ -101,13 +103,21 @@ namespace NamelessRogue.Engine.Engine.Systems
                                                 entityThatOccupiedTile.GetComponentOfType<Drawable>()
                                                     .setRepresentation('o');
                                                 entityThatOccupiedTile.RemoveComponentOfType<BlocksVision>();
-                                                    entityThatOccupiedTile.RemoveComponentOfType<OccupiesTile>();
+                                                entityThatOccupiedTile.RemoveComponentOfType<OccupiesTile>();
                                                 entityThatOccupiedTile.AddComponent(
                                                     new ChangeSwitchStateCommand(simpleSwitch, false));
+                                                var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                                                ap.Points -= Constants.ActionsMovementCost/2;
+                                             //   playerEntity.RemoveComponentOfType<HasTurn>();
+
                                             }
                                             else
                                             {
                                                 playerEntity.AddComponent(new MoveToCommand(newX, newY, playerEntity));
+                                                var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                                                ap.Points -= Constants.ActionsMovementCost/2;
+                                             //   playerEntity.RemoveComponentOfType<HasTurn>();
+
                                             }
                                         }
 
@@ -116,6 +126,10 @@ namespace NamelessRogue.Engine.Engine.Systems
                                             //TODO: if hostile
                                             playerEntity.AddComponent(new AttackCommand(playerEntity,
                                                 entityThatOccupiedTile));
+                                            var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                                            ap.Points -= Constants.ActionsAttackCost;
+                                           // playerEntity.RemoveComponentOfType<HasTurn>();
+
                                             //TODO: do something else if friendly: chat, trade, etc
 
                                         }
@@ -123,6 +137,9 @@ namespace NamelessRogue.Engine.Engine.Systems
                                     else
                                     {
                                         playerEntity.AddComponent(new MoveToCommand(newX, newY, playerEntity));
+                                      //  playerEntity.RemoveComponentOfType<HasTurn>();
+                                        var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                                        ap.Points -= Constants.ActionsMovementCost/2;
                                     }
                                 }
                             }
@@ -157,8 +174,9 @@ namespace NamelessRogue.Engine.Engine.Systems
                                 break;
                             case Intent.PickUpItem:
                             {
-                                Player player = entity.GetComponentOfType<Player>();
-                                if (player != null)
+                                HasTurn hasTurn = playerEntity.GetComponentOfType<HasTurn>();
+
+                                if (hasTurn != null)
                                 {
                                     IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
                                     IChunkProvider worldProvider = null;
@@ -166,10 +184,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                                     {
                                         worldProvider = worldEntity.GetComponentOfType<ChunkData>();
                                     }
-                                    var position = entity.GetComponentOfType<Position>();
-                                    var itemHolder = entity.GetComponentOfType<ItemsHolder>();
-                                        var tile = worldProvider.GetTile(position.p.X, position.p.Y);
-                                       
+
+                                    var position = playerEntity.GetComponentOfType<Position>();
+                                    var itemHolder = playerEntity.GetComponentOfType<ItemsHolder>();
+                                    var tile = worldProvider.GetTile(position.p.X, position.p.Y);
+
                                     List<IEntity> itemsToPickUp = new List<IEntity>();
                                     foreach (var entityOnTIle in tile.getEntitiesOnTile())
                                     {
@@ -184,7 +203,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                     {
                                         StringBuilder builder = new StringBuilder();
                                         var itemsCommand = new PickUpItemCommand(itemsToPickUp, itemHolder, position.p);
-                                        entity.AddComponent(itemsCommand);
+                                        playerEntity.AddComponent(itemsCommand);
 
                                         foreach (var entity1 in itemsToPickUp)
                                         {
@@ -196,14 +215,23 @@ namespace NamelessRogue.Engine.Engine.Systems
                                         }
 
                                         var logCommand = new HudLogMessageCommand(builder.ToString());
-                                        entity.AddComponent(logCommand);
-
-
+                                        playerEntity.AddComponent(logCommand);
+                                        var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                                        ap.Points -= Constants.ActionsPickUpCost;
+                                        //playerEntity.RemoveComponentOfType<HasTurn>();
                                     }
+
                                 }
 
                                 break;
                             }
+                            case Intent.SkipTurn:
+                            {
+                                var ap = entity.GetComponentOfType<ActionPoints>();
+                                ap.Points = 0;
+                             //   playerEntity.RemoveComponentOfType<HasTurn>();
+                            }
+                                break;
                             default:
                                 break;
                         }

@@ -1,45 +1,55 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.ServiceModel.Security;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
+using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Systems
 {
     public class AiSystem : ISystem
     {
-        private long previousGametimeForMove = 0;
 
 
         public void Update(long gameTime, NamelessGame namelessGame)
         {
-            if (gameTime - previousGametimeForMove > 150)
+
+            //var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
+            //HasTurn playerHasTurn = playerEntity.GetComponentOfType<HasTurn>();
+            //if (playerHasTurn != null)
+            //{
+            //    return;
+            //}
+
+            IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
+            IChunkProvider worldProvider = null;
+            if (worldEntity != null)
             {
-                previousGametimeForMove = gameTime;
-                IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
-                IChunkProvider worldProvider = null;
-                if (worldEntity != null)
-                {
-                    worldProvider = worldEntity.GetComponentOfType<ChunkData>();
-                }
+                worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+            }
 
-                if (worldProvider != null)
+            if (worldProvider != null)
+            {
+                foreach (IEntity entity in namelessGame.GetEntities())
                 {
-                    foreach (IEntity entity in namelessGame.GetEntities())
+                    AIControlled ac = entity.GetComponentOfType<AIControlled>();
+                    HasTurn hasTurn = entity.GetComponentOfType<HasTurn>();
+                    if (ac != null && hasTurn != null)
                     {
-                        AIControlled ac = entity.GetComponentOfType<AIControlled>();
-                        if (ac != null)
-                        {
-                            BasicAi basicAi = entity.GetComponentOfType<BasicAi>();
+                        BasicAi basicAi = entity.GetComponentOfType<BasicAi>();
 
-                            if (basicAi != null)
+                        if (basicAi != null)
+                        {
+                            switch (basicAi.State)
                             {
-                                switch (basicAi.getState())
-                                {
-                                    case BasicAiStates.Idle:
+                                case BasicAiStates.Idle:
+                                case BasicAiStates.Moving:
+                                    if (basicAi.State == BasicAiStates.Idle)
                                     {
 
                                         Position playerPosition = namelessGame.GetEntityByComponentClass<Player>()
@@ -52,79 +62,81 @@ namespace NamelessRogue.Engine.Engine.Systems
 
 
                                             List<Point> path = pathfinder.FindPath(position.p,
-                                                new Point(playerPosition.p.Y, playerPosition.p.X), worldProvider, true);
-                                            if (path == null)
-                                            {
-                                                path = pathfinder.FindPath(position.p,
-                                                    new Point(playerPosition.p.Y, playerPosition.p.X), worldProvider,
-                                                    true);
-                                            }
-
+                                                new Point(playerPosition.p.X, playerPosition.p.Y), worldProvider,
+                                                namelessGame);
                                             if (path != null)
                                             {
-                                                basicAi.setRoute(path);
-                                                basicAi.setState(BasicAiStates.Moving);
+                                                basicAi.Route = new Queue<Point>(path.Take(path.Count - 1));
+                                                basicAi.State = (BasicAiStates.Moving);
                                             }
                                             else
                                             {
-                                                basicAi.setState(BasicAiStates.Idle);
+                                                basicAi.State = (BasicAiStates.Idle);
                                             }
                                         }
                                     }
-                                        break;
-                                    case BasicAiStates.Moving:
+                                {
+                                    Position position = entity.GetComponentOfType<Position>();
+                                    //       namelessGame.WriteLineToConsole("moving position = " + position.p.toString());
+
+                                    var route = basicAi.Route;
+                                    if (route.Count > 0 && position != null)
                                     {
-                                        Position position = entity.GetComponentOfType<Position>();
-                                        //       namelessGame.WriteLineToConsole("moving position = " + position.p.toString());
-
-                                        List<Point> route = basicAi.getRoute();
-                                        if (route.Count > 0 && position != null)
+                                        Point nextPosition = route.Dequeue();
+                                        Tile tileToMoveTo = worldProvider.GetTile(nextPosition.X, nextPosition.Y);
+                                        bool canMove = true;
+                                        if (!tileToMoveTo.GetPassable(namelessGame))
                                         {
-                                            Point nextPosition = route[0];
-                                            Tile tileToMoveTo = worldProvider.GetTile(nextPosition.Y, nextPosition.X);
-
-                                            if (!tileToMoveTo.GetPassable(namelessGame))
-                                            {
+                                            canMove = false;
                                                 AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
-                                                List<Point> path = pathfinder.FindPath(position.p,
-                                                    route[(route.Count-1)], worldProvider, true);
-                                                if (path == null)
-                                                {
-                                                    path = pathfinder.FindPath(position.p,
-                                                        route[route.Count], worldProvider, true);
-                                                }
-
-                                                if (path != null)
-                                                {
-                                                    basicAi.setRoute(path);
-                                                }
-                                                else
-                                                {
-                                                    route.Clear();
-                                                }
-                                            }
-
-                                            // namelessGame.WriteLineToConsole("moving to nextPosition  = " + nextPosition.toString());
-                                            MoveToCommand mc = new MoveToCommand(nextPosition.Y, nextPosition.X,
-                                                entity);
-                                            entity.AddComponent(mc);
-                                            if (route.Count > 0)
+                                            Point p;
+                                            if (route.Any())
                                             {
-                                                route.RemoveAt(0);
+                                                p = route.ToArray().Last();
+                                            }
+                                            else
+                                            {
+                                                p = position.p;
+                                            }
+
+                                            List<Point> path = pathfinder.FindPath(position.p,
+                                                p, worldProvider, namelessGame);
+
+                                            if (path != null && path.Any())
+                                            {
+                                                basicAi.Route = new Queue<Point>(path);
+                                                nextPosition = basicAi.Route.Dequeue();
+                                                canMove = true;
+                                            }
+                                            else
+                                            {
+                                                basicAi.Route.Clear();
+                                                nextPosition = position.p;
+                                                canMove = false;
                                             }
                                         }
 
-                                        if (route.Count == 0)
-                                        {
-                                            basicAi.setState(BasicAiStates.Idle);
-                                        }
-
-                                       
+                                        // namelessGame.WriteLineToConsole("moving to nextPosition  = " + nextPosition.toString());
+                                        MoveToCommand mc = new MoveToCommand(nextPosition.X, nextPosition.Y,
+                                            entity);
+                                        var ap = entity.GetComponentOfType<ActionPoints>();
+                                        ap.Points -= Constants.ActionsMovementCost;
+                                        entity.AddComponent(mc);
                                     }
-                                        break;
-                                    default:
-                                        break;
+
+                                    if (route.Count == 0)
+                                    {
+                                        basicAi.State = (BasicAiStates.Idle);
+                                        var ap = entity.GetComponentOfType<ActionPoints>();
+                                        ap.Points = 0;
+                                    }
+
+
                                 }
+                                    break;
+                                default:
+                                    break;
+
                             }
                         }
                     }

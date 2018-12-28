@@ -15,23 +15,23 @@ namespace NamelessRogue.Engine.Engine.Components.Stats
             this.maxValue = maxValue;
         }
 
-        public int getValue() {
+        public int GetValue() {
             return value;
         }
 
-        public void setValue(int value) {
+        public void SetValue(int value) {
             this.value = value;
         }
 
-        public int getMinValue() {
+        public int GetMinValue() {
             return minValue;
         }
 
-        public void setMaxValue(int maxValue) {
+        public void SetMaxValue(int maxValue) {
             this.maxValue = maxValue;
         }
 
-        public int getMaxValue() {
+        public int GetMaxValue() {
             return maxValue;
         }
     }

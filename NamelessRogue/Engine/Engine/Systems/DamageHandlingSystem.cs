@@ -19,8 +19,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                     Health health = entity.GetComponentOfType<Health>();
                     if (health != null)
                     {
-                        health.setValue(health.getValue() - damage.getDamage());
-                        if (health.getValue() < health.getMinValue())
+                        health.SetValue(health.GetValue() - damage.getDamage());
+                        if (health.GetValue() < health.GetMinValue())
                         {
                             entity.AddComponent(new DeathCommand(entity));
                         }

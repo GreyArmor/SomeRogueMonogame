@@ -35,19 +35,19 @@ namespace NamelessRogue.Engine.Engine.Systems
                     var end = entity.GetComponentOfType<Endurance>();
                     var wit = entity.GetComponentOfType<Wit>();
 
-                    float healthValue = (float)health.getValue() / health.getMaxValue();
+                    float healthValue = (float)health.GetValue() / health.GetMaxValue();
                     UiFactory.HudInstance.HealthBar.Value = (int) (healthValue * 100f);
 
-                    float staminaValue = (float)stamina.getValue() / stamina.getMaxValue();
+                    float staminaValue = (float)stamina.GetValue() / stamina.GetMaxValue();
                     UiFactory.HudInstance.StaminaBar.Value = (int)(staminaValue * 100f);
 
 
-                    UiFactory.HudInstance.StrLabel.Text = $"Str: {str.getValue()}";
-                    UiFactory.HudInstance.ImgLabel.Text = $"Img: {img.getValue()}";
-                    UiFactory.HudInstance.AgiLabel.Text = $"Agi: {agi.getValue()}";
-                    UiFactory.HudInstance.WillLabel.Text = $"Wil: {will.getValue()}";
-                    UiFactory.HudInstance.EndLabel.Text = $"End: {end.getValue()}";
-                    UiFactory.HudInstance.WitLabel.Text = $"Wit: {wit.getValue()}";
+                    UiFactory.HudInstance.StrLabel.Text = $"Str: {str.GetValue()}";
+                    UiFactory.HudInstance.ImgLabel.Text = $"Img: {img.GetValue()}";
+                    UiFactory.HudInstance.AgiLabel.Text = $"Agi: {agi.GetValue()}";
+                    UiFactory.HudInstance.WillLabel.Text = $"Wil: {will.GetValue()}";
+                    UiFactory.HudInstance.EndLabel.Text = $"End: {end.GetValue()}";
+                    UiFactory.HudInstance.WitLabel.Text = $"Wit: {wit.GetValue()}";
 
                     foreach (var hudAction in UiFactory.HudInstance.ActionsThisTick)
                     {

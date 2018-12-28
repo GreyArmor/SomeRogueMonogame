@@ -49,6 +49,9 @@ namespace NamelessRogue.Engine.Engine.Input
                     case Keys.X:
                         result.Add(Intent.LookAtMode);
                         break;
+                    case Keys.NumPad5:
+                        result.Add(Intent.SkipTurn);
+                        break;
                     case Keys.OemComma:
                         result.Add(Intent.PickUpItem);
                         break;;

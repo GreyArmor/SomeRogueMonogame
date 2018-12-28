@@ -219,14 +219,14 @@ namespace NamelessRogue.shell
             int y = firsTile.Settlement.Concrete.Center.Y;
             ActiveEntities.Add(
                 CharacterFactory.CreateSimplePlayerCharacter(x,y));
-            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 1,
-            //    y));
-            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 3,
-            //    y));
-            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 5,
-            //    y));
-            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 7,
-            //    y));
+            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 1,
+                y));
+            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 3,
+                y));
+            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 5,
+                y));
+            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 7,
+                y));
 
             ActiveEntities.Add(ItemFactory.CreateItem());
             ActiveEntities.Add(GameInitializer.CreateCursor());

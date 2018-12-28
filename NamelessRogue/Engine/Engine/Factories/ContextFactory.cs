@@ -30,8 +30,9 @@ namespace NamelessRogue.Engine.Engine.Factories
                 var systems = new List<ISystem>();
                 systems.Add(new InitializationSystem());
                 systems.Add(new InputSystem());
+                systems.Add(new TurnManagementSystem());
                 systems.Add(new IngameIntentSystem());
-                // Systems.Add(new AiSystem());
+                systems.Add(new AiSystem());
                 systems.Add(new MovementSystem());
                 systems.Add(new CombatSystem());
                 systems.Add(new InventorySystem());

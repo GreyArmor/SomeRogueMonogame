@@ -112,12 +112,6 @@ namespace NamelessRogue.Engine.Engine.Factories
                     BuildingFactory.CreateDummyBuilding((int) (x+center.X-citySize/2), (int) (y + center.Y - citySize / 2), 10, 10, game);
                 }
             }
-
-           
-
-           
-
-
         }
     }
 }

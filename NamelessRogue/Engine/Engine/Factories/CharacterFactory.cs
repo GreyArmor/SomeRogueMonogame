@@ -35,6 +35,8 @@ namespace NamelessRogue.Engine.Engine.Factories
             playerCharacter.AddComponent(new Willpower(10,0,10));
             playerCharacter.AddComponent(new Wit(10,0,10));
 
+            playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
+
             return playerCharacter;
         }
 
@@ -71,6 +73,9 @@ namespace NamelessRogue.Engine.Engine.Factories
             npc.AddComponent(new Imagination(10, 0, 10));
             npc.AddComponent(new Willpower(10, 0, 10));
             npc.AddComponent(new Wit(10, 0, 10));
+
+            npc.AddComponent(new ActionPoints());
+
             return npc;
         }
 

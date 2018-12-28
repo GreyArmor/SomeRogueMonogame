@@ -4,28 +4,24 @@ using Microsoft.Xna.Framework;
 namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
 {
     public class BasicAi : Component {
-        private List<Point> route;
+        private Queue<Point> route;
 
         private BasicAiStates state;
         public BasicAi() {
-            route = new List<Point>();
+            route = new Queue<Point>();
             state = BasicAiStates.Idle;
         }
 
-        public void setRoute(List<Point> route) {
-            this.route = route;
+        public Queue<Point> Route
+        {
+            get { return route; }
+            set { route = value; }
         }
 
-        public List<Point> getRoute() {
-            return route;
-        }
-
-        public void setState(BasicAiStates state) {
-            this.state = state;
-        }
-
-        public BasicAiStates getState() {
-            return state;
+        public BasicAiStates State
+        {
+            get { return state; }
+            set { state = value; }
         }
     }
 }

@@ -1,125 +1,96 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Engine.Components.Rendering;
+using NamelessRogue.shell;
+using RoyT.AStar;
 
 namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
 {
     public class AStarPathfinderSimple {
 
-        public class SearchNode
+        public static Grid grid = new Grid(100, 100);
+        public List<Point> FindPath(Point start, Point destination, IChunkProvider world, NamelessGame game)
         {
-            public SearchNode Parent;
-            public Point NodePosition;
-            public int DinstanceToStartingNode;
-            public int DinstanceToDestinationNode;
 
-            public SearchNode(SearchNode parent, Point nodePosition, Point destination) {
-                Parent = parent;
-                NodePosition = nodePosition;
-                if(parent==null) {
-                    DinstanceToStartingNode = 0;
-                }
-                else
-                {
-                    DinstanceToStartingNode = parent.DinstanceToStartingNode+1;
-                }
+            var gridOffset = new Point(start.X-50,start.Y-50);
 
-                DinstanceToDestinationNode = CalculateManhattanDistance(nodePosition, destination);
+            var gridStart = WorldToGrid(gridOffset, start);
+            var gridEnd = WorldToGrid(gridOffset, destination);
 
-            }
-
-            private int CalculateManhattanDistance(Point a, Point b)
+            if (gridEnd.X < 0 || gridEnd.Y < 0)
             {
-                return Math.Abs(a.Y - b.Y) + Math.Abs(a.X - b.X);
+                return new List<Point>();
             }
 
-        }
-
-
-
-        private SearchNode FindClosest(){
-            SearchNode closest = openList.First();
-            int distanceToClosest = closest.DinstanceToDestinationNode + closest.DinstanceToStartingNode;
-            foreach (SearchNode node in openList){
-                int distanceToCurrent = node.DinstanceToDestinationNode + node.DinstanceToStartingNode;
-                if(distanceToClosest > distanceToCurrent)
+            for (int x = 0; x < 100; x++)
+            {
+                for (int y = 0; y < 100; y++)
                 {
-                    closest = node;
-                    distanceToClosest = distanceToCurrent;
+                    var point = GridToWorld(gridOffset, new Point(x, y));
+                    var tile = world.GetTile(point.X, point.Y);
+                    grid.UnblockCell(new Position(x, y));
+                    if (!tile.GetPassable(game))
+                    {
+                        grid.BlockCell(new Position(x, y));
+                    }
                 }
             }
-            return closest;
+           
+            
+            //unblock start and end
+            grid.UnblockCell(new Position(gridStart.X, gridStart.Y));
+            grid.UnblockCell(new Position(gridEnd.X, gridEnd.Y));
+
+           var path = grid.GetPath(new Position(gridStart.X, gridStart.Y), new Position(gridEnd.X, gridEnd.Y));
+
+            List<Point> resultPoints = new List<Point>();
+            foreach (var position in path)
+            {
+
+                var point = new Point(position.X, position.Y);
+                resultPoints.Add(GridToWorld(gridOffset,point));
+            }
+
+            return resultPoints;
+
         }
 
-        private void AddNeighborsToOpenList(SearchNode node, IChunkProvider world, Point destination)
+        public Point GridToWorld(Point position, Point world)
         {
-            //for (int x = node.NodePosition.Y - 1; x<=node.NodePosition.Y+1; x++)
-            //{
-            //    for (int y = node.NodePosition.X - 1; y<=node.NodePosition.X+1; y++) {
-            //        Point currentposition = new Point(x,y);
-            //        bool isInClosed = closedList.Any(n => n.NodePosition.Equals(currentposition));
-            //        bool isInOpen = openList.Any(n => n.NodePosition.Equals(currentposition));
-            //        if (!isInClosed && !isInOpen) {
-            //            Tile t = world.getTile(x,y);
-            //            if(t.GetPassable()) {
-            //                openList.Add(new SearchNode(node, currentposition, destination));
-            //            }
-            //            else
-            //            {
-            //                closedList.Add(new SearchNode(node, currentposition, destination));
-            //            }
-            //        }
-            //    }
-            //}
+            Point result = new Point();
+
+            int cameraX = position.X;
+            int cameraY = position.Y;
+            int worldX = world.X;
+            int worldY = world.Y;
+            int screenX = worldX + cameraX;
+            int screenY = worldY + cameraY;
+
+            result.X = (screenX);
+            result.Y = (screenY);
+            return result;
         }
 
-        List<SearchNode> openList;
-        List<SearchNode> closedList;
-        bool seachNearPosiiton;
-        public List<Point> FindPath(Point start, Point destination, IChunkProvider world, bool positionNear){
-            seachNearPosiiton = positionNear;
-            openList = new List<SearchNode>();
-            closedList = new List<SearchNode>();
+        public Point WorldToGrid(Point position, Point world)
+        {
+            Point result = new Point();
 
-            openList.Add(new SearchNode(null, start,destination));
+            int cameraX = position.X;
+            int cameraY = position.Y;
+            int worldX = world.X;
+            int worldY = world.Y;
+            int screenX = worldX - cameraX;
+            int screenY = worldY - cameraY;
 
-            while (openList.Count>0)
-            {
-                SearchNode closestNode = FindClosest();
-                openList.Remove(closestNode);
-                closedList.Add(closestNode);
-                if(closestNode.NodePosition.Equals(destination))
-                {
-                    return ConstructPath(closestNode);
-                }
-
-                if(seachNearPosiiton && closestNode.DinstanceToDestinationNode==1)
-                {
-                    return ConstructPath(closestNode);
-                }
-                AddNeighborsToOpenList(closestNode, world, destination);
-                if (closedList.Count>500)
-                {
-                    return null;
-                }
-            }
-            return null;
-
+            result.X = (screenX);
+            result.Y = (screenY);
+            return result;
         }
 
-        //excluding the start point
-        private List<Point> ConstructPath(SearchNode closestNode) {
-            List<Point> path = new List<Point>();
-            SearchNode node = closestNode;
-            while (node.Parent!=null){
-                path.Add(node.NodePosition);
-                node = node.Parent;
-            }
-            path.Reverse();
-            return path;
-        }
     }
 }

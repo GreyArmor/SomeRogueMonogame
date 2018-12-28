@@ -6,5 +6,9 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
         public static int tileAtlasTileSize = 64;
         public static int ChunkSize = 64;
         public static int RealityBubbleRangeInChunks = 1;
+        public static int ActionsPickUpCost { get; set; } = 100;
+        public static int ActionsMovementCost { get; set; } = 100;
+        public static int ActionsAttackCost { get; set; } = 100;
+        public static int ActionsOpenDoorCost { get; set; } = 100;
     }
 }
