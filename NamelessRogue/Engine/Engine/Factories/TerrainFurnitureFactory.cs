@@ -30,6 +30,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity ShellEntity = new Entity();
         public static Entity TreeStumpEntity = new Entity();
         public static Entity WallEntity = new Entity();
+        public static Entity BlockerEntity = new Entity();
         public static List<Entity> CreateInstancedFurnitureEntities(NamelessGame game)
         {
             var result = new List<Entity>();
@@ -40,7 +41,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             result.Add(ShellEntity);
             result.Add(TreeStumpEntity);
             result.Add(WallEntity);
-
+         
             StarfishEntity.AddComponent(new Description("A starfish", ""));
             StarfishEntity.AddComponent(new Drawable('★', new Color(1f, 0, 0)));
 
@@ -72,7 +73,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                 entity.AddComponent(new Instanced());
                 entity.AddComponent(new Furniture());
             }
-
+           
             return result;
         }
 

@@ -25,19 +25,10 @@ namespace NamelessRogue.Engine.Engine.Utility
             this.min = min;
             this.max = max;
         }
-	
-        public bool isPointInside(int x, int y) {
-            int bottomLeftX = min.X;
-            int bottomLeftY = min.Y;
-            int topRightX = max.X;
-            int topRightY = max.Y;
-		
-            if(x>=bottomLeftX && x<topRightX&&y>=bottomLeftY&&y<topRightY){
-                return true;
-            }
-            else{
-                return false;
-            }
+
+        public bool IsPointInside(int x, int y)
+        {
+            return x >= min.X && x < max.X && y >= min.Y && y < max.Y;
         }
     }
 }

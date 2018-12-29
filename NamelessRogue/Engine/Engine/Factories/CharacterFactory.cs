@@ -11,6 +11,7 @@ using NamelessRogue.Engine.Engine.Infrastructure;
 namespace NamelessRogue.Engine.Engine.Factories
 {
     public class CharacterFactory {
+        
         public static Entity CreateSimplePlayerCharacter(int x,int y)
         {
             Entity playerCharacter = new Entity();

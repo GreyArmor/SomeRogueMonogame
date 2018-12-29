@@ -23,5 +23,7 @@ namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
             get { return state; }
             set { state = value; }
         }
+
+        public Point DestinationPoint { get; set; }
     }
 }

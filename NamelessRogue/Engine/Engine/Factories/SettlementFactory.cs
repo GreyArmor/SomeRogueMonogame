@@ -50,6 +50,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                     {
                         //place them into reality buuble for convenience
                         worldProvider.GetRealityBubbleChunks().Add(keyValuePair.Key, keyValuePair.Value);
+                        worldProvider.RealityChunks.Add(keyValuePair.Value);
                         allChunksToWorkWith.Add(keyValuePair);
                     }
                 }

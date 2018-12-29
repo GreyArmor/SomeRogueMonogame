@@ -14,7 +14,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         private Dictionary<Point, Chunk> chunks;
 
         private Dictionary<Point, Chunk> realityBubbleChunks;
-
+        public List<Chunk> RealityChunks { get; set; } = new List<Chunk>();
         private WorldSettings worldSEttings;
 
         public ChunkData(WorldSettings settings)
@@ -62,15 +62,12 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         public Tile GetTile(int x, int y)
         {
             Chunk chunkOfPoint = null;
-            foreach (Chunk ch in realityBubbleChunks.Values)
-            {
 
-                if (ch.IsPointInside(x, y))
-                {
-                    chunkOfPoint = ch;
-                    break;
-                }
-            }
+            int chunkX = x / Constants.ChunkSize;
+            int chunkY = y / Constants.ChunkSize;
+
+
+            realityBubbleChunks.TryGetValue(new Point(chunkX, chunkY),out chunkOfPoint);
 
             if (chunkOfPoint == null)
             {

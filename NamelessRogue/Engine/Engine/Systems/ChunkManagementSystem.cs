@@ -74,6 +74,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                     
 
                                     worldProvider.GetRealityBubbleChunks().Add(p, chunk);
+                                    worldProvider.RealityChunks.Add(chunk);
                                 }
                             }
                         }
@@ -97,8 +98,9 @@ namespace NamelessRogue.Engine.Engine.Systems
                         if (worldProvider.GetRealityBubbleChunks()[key].IsActive())
                         {
                             worldProvider.GetRealityBubbleChunks()[key].Deactivate();
-
+                            worldProvider.RealityChunks.Remove(worldProvider.GetRealityBubbleChunks()[key]);
                             worldProvider.GetRealityBubbleChunks().Remove(key);
+
                         }
                     }
 

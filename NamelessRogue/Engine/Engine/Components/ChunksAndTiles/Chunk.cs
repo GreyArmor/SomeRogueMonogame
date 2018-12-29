@@ -95,7 +95,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
         public bool IsPointInside(int x, int y)
         {
-            return boundingBox.isPointInside(x, y);
+            return boundingBox.IsPointInside(x, y);
         }
 
         public Tile GetTile(Point p)

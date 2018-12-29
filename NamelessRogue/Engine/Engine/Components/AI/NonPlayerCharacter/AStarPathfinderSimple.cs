@@ -11,18 +11,19 @@ using RoyT.AStar;
 
 namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
 {
-    public class AStarPathfinderSimple {
-
-        public static Grid grid = new Grid(100, 100);
+    public class AStarPathfinderSimple
+    {
+        public const int gridSize = 100;
+        public static Grid grid = new Grid(gridSize, gridSize);
         public List<Point> FindPath(Point start, Point destination, IChunkProvider world, NamelessGame game)
         {
 
-            var gridOffset = new Point(start.X-50,start.Y-50);
+            var gridOffset = new Point(start.X- (gridSize/2), start.Y- (gridSize/2));
 
             var gridStart = WorldToGrid(gridOffset, start);
             var gridEnd = WorldToGrid(gridOffset, destination);
 
-            if (gridEnd.X < 0 || gridEnd.Y < 0)
+            if (gridEnd.X < 0 || gridEnd.Y < 0 || gridEnd.X >= gridSize || gridEnd.Y >= gridSize)
             {
                 return new List<Point>();
             }
@@ -46,7 +47,7 @@ namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
             grid.UnblockCell(new Position(gridStart.X, gridStart.Y));
             grid.UnblockCell(new Position(gridEnd.X, gridEnd.Y));
 
-           var path = grid.GetPath(new Position(gridStart.X, gridStart.Y), new Position(gridEnd.X, gridEnd.Y));
+            var path = grid.GetPath(new Position(gridStart.X, gridStart.Y), new Position(gridEnd.X, gridEnd.Y));
 
             List<Point> resultPoints = new List<Point>();
             foreach (var position in path)

@@ -14,5 +14,6 @@ namespace NamelessRogue.Engine.Abstraction
         bool SetTile(int x, int y, Tile tile);
         Dictionary<Point, Chunk> GetRealityBubbleChunks();
         Dictionary<Point, Chunk> GetChunks();
+        List<Chunk> RealityChunks { get; }
     }
 }
