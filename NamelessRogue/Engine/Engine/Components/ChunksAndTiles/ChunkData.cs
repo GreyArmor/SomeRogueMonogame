@@ -81,14 +81,13 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         public bool SetTile(int x, int y, Tile tile)
         {
             Chunk chunkOfPoint = null;
-            foreach (Chunk ch in realityBubbleChunks.Values)
-            {
-                if (ch.IsPointInside(x, y))
-                {
-                    chunkOfPoint = ch;
-                    break;
-                }
-            }
+
+            int chunkX = x / Constants.ChunkSize;
+            int chunkY = y / Constants.ChunkSize;
+
+
+            realityBubbleChunks.TryGetValue(new Point(chunkX, chunkY), out chunkOfPoint);
+
 
             if (chunkOfPoint == null)
             {
