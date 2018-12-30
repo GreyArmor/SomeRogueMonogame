@@ -12,6 +12,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
     public class Chunk : IBoundsProvider
     {
+        public Point ChunkLocationPoint { get; }
         private Point worldPositionBottomLeftCorner;
         private ChunkData chunkContainer;
 
@@ -40,8 +41,9 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         }
 
 
-        public Chunk(Point bottomLeftCornerWorld, ChunkData chunkContainer)
+        public Chunk(Point bottomLeftCornerWorld, Point chunkLocationPoint, ChunkData chunkContainer)
         {
+            ChunkLocationPoint = chunkLocationPoint;
             boundingBox = new BoundingBox(bottomLeftCornerWorld,
                 new Point(bottomLeftCornerWorld.X + Constants.ChunkSize,
                     bottomLeftCornerWorld.Y + Constants.ChunkSize));

@@ -220,9 +220,9 @@ namespace NamelessRogue.shell
             ActiveEntities.Add(
                 CharacterFactory.CreateSimplePlayerCharacter(x,y));
 
-            for (int i = 1; i < 3; i++)
+            for (int i = 1; i < 10; i++)
             {
-                for (int j = 1; j < 3; j++)
+                for (int j = 1; j < 10; j++)
                 {
                     ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - i,
                         y - j));

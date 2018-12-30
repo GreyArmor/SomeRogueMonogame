@@ -40,7 +40,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
         public void CreateChunk(int x, int y)
         {
-            Chunk newChunk = new Chunk(new Point(x * Constants.ChunkSize, y * Constants.ChunkSize), this);
+            Chunk newChunk = new Chunk(new Point(x * Constants.ChunkSize, y * Constants.ChunkSize), new Point(x,y), this);
             //newChunk.FillWithTiles(terrainGenerator);
             chunks.Add(new Point(x, y), newChunk);
         }
@@ -66,6 +66,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             int chunkX = x / Constants.ChunkSize;
             int chunkY = y / Constants.ChunkSize;
 
+            
 
             realityBubbleChunks.TryGetValue(new Point(chunkX, chunkY),out chunkOfPoint);
 
