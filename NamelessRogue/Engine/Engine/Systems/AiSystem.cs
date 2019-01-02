@@ -96,29 +96,23 @@ namespace NamelessRogue.Engine.Engine.Systems
             {
                 Point nextPosition = route.Dequeue();
                 Tile tileToMoveTo = worldProvider.GetTile(nextPosition.X, nextPosition.Y);
-                if (!tileToMoveTo.GetPassable(namelessGame) || destination != basicAi.DestinationPoint)
+                if (!tileToMoveTo.IsPassable() || destination != basicAi.DestinationPoint)
                 {
                     AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
                     List<Point> path = pathfinder.FindPath(position.p,
                         destination, worldProvider, namelessGame);
+
                     if (path.Any())
                     {
+                        basicAi.Route = new Queue<Point>(path);
+
                         if (moveBesides)
                         {
-                            basicAi.Route = new Queue<Point>(path.Take(path.Count - 1).Skip(1));
+                            basicAi.Route = new Queue<Point>(path.Take(path.Count - 1));
                         }
                         else
                         {
-                            basicAi.Route = new Queue<Point>(path.Skip(1));
-                        }
-
-                        if (basicAi.Route.Any())
-                        {
-                            nextPosition = basicAi.Route.Dequeue();
-                        }
-                        else
-                        {
-                            nextPosition = position.p;
+                            basicAi.Route = new Queue<Point>(path);
                         }
                     }
                     else
@@ -153,11 +147,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                     namelessGame);
                 if (moveBesides)
                 {
-                    basicAi.Route = new Queue<Point>(path.Take(path.Count - 1).Skip(1));
+                    basicAi.Route = new Queue<Point>(path.Take(path.Count - 1));
                 }
                 else
                 {
-                    basicAi.Route = new Queue<Point>(path.Skip(1));
+                    basicAi.Route = new Queue<Point>(path);
                 }
 
                 basicAi.DestinationPoint = destination;

@@ -179,10 +179,6 @@ namespace NamelessRogue.shell
 
             ActiveEntities = new List<IEntity>();
 
-
-
-           
-
             //TODO: for test
             ActiveEntities.Add(RenderFactory.CreateViewport(settings));
    

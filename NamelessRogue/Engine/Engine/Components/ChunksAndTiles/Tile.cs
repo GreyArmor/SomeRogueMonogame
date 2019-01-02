@@ -37,7 +37,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         }
 
 
-        public bool GetPassable(NamelessGame namelessGame) {
+        public bool IsPassable() {
             foreach (var entity in entitiesOnTile)
             {
                 var occupiesTile = entity.GetComponentOfType<OccupiesTile>();
