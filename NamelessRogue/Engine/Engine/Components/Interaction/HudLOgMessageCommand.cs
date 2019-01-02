@@ -8,11 +8,11 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
 {
     public class HudLogMessageCommand : Component
     {
-        public HudLogMessageCommand(string logMessage)
+        public HudLogMessageCommand(string logMessage = "")
         {
             LogMessage = logMessage;
         }
 
-        public string LogMessage { get; }
+        public string LogMessage { get; set; }
     }
 }

@@ -35,6 +35,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                     var end = entity.GetComponentOfType<Endurance>();
                     var wit = entity.GetComponentOfType<Wit>();
 
+                    var turn = namelessGame.CurrentGame.Turn;
+
                     float healthValue = (float)health.GetValue() / health.GetMaxValue();
                     UiFactory.HudInstance.HealthBar.Value = (int) (healthValue * 100f);
 
@@ -48,6 +50,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     UiFactory.HudInstance.WillLabel.Text = $"Wil: {will.GetValue()}";
                     UiFactory.HudInstance.EndLabel.Text = $"End: {end.GetValue()}";
                     UiFactory.HudInstance.WitLabel.Text = $"Wit: {wit.GetValue()}";
+                    UiFactory.HudInstance.TurnLabel.Text = $"Turn  {turn}";
 
                     foreach (var hudAction in UiFactory.HudInstance.ActionsThisTick)
                     {

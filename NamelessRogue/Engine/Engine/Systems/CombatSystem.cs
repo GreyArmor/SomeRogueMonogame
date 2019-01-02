@@ -14,6 +14,7 @@ namespace NamelessRogue.Engine.Engine.Systems
         public void Update(long gameTime, NamelessGame namelessGame)
         {
             foreach (IEntity entity in namelessGame.GetEntities()){
+
                 AttackCommand ac = entity.GetComponentOfType<AttackCommand>();
                 if (ac != null)
                 {
@@ -26,8 +27,16 @@ namespace NamelessRogue.Engine.Engine.Systems
                     Description sourceDescription = ac.getSource().GetComponentOfType<Description>();
                     if (targetDescription != null && sourceDescription != null)
                     {
-                        //namelessGame.WriteLineToConsole(sourceDescription.Name + " deals " + String.valueOf(damage) +
-                        //                        " damage to " + targetDescription.Name);
+                        var logCommand = entity.GetComponentOfType<HudLogMessageCommand>();
+                        if (logCommand == null)
+                        {
+                            logCommand = new HudLogMessageCommand();
+                            entity.AddComponent(logCommand);
+                        }
+
+                        logCommand.LogMessage += (sourceDescription.Name + " deals " + (damage) +
+                                              " damage to " + targetDescription.Name);
+                        //namelessGame.WriteLineToConsole;
                     }
 
                     entity.RemoveComponentOfType<AttackCommand>();

@@ -19,6 +19,16 @@ namespace NamelessRogue.Engine.Engine.Systems
             var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
             HasTurn hasTurn = playerEntity.GetComponentOfType<HasTurn>();
 
+            if (hasTurn != null)
+            {
+                var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                if (ap.Points < 100)
+                {
+                    namelessGame.CurrentGame.Turn++;
+                }
+
+            }
+
             foreach (var entity in namelessGame.GetEntities())
             {
                 var ap = entity.GetComponentOfType<ActionPoints>();
@@ -31,21 +41,13 @@ namespace NamelessRogue.Engine.Engine.Systems
                 }
             }
 
-            if (hasTurn != null)
-            {
-                var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                if (ap.Points < 100)
-                {
-                    playerEntity.RemoveComponentOfType<HasTurn>();
-                }
-
-                return;
-            }
+           
 
             foreach (var entity in namelessGame.GetEntities())
             {
                 var ap = entity.GetComponentOfType<ActionPoints>();
-                if (ap != null)
+                HasTurn entityTurn = entity.GetComponentOfType<HasTurn>();
+                if (ap != null && entityTurn==null)
                 {
                     if (ap.Points < 200)
                     {
@@ -59,7 +61,6 @@ namespace NamelessRogue.Engine.Engine.Systems
 
                     if (ap.Points >= 100)
                     {
-                        HasTurn entityTurn = entity.GetComponentOfType<HasTurn>();
                         if (entityTurn == null)
                         {
                             entity.AddComponent(new HasTurn());

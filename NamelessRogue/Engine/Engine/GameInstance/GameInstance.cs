@@ -6,5 +6,9 @@ namespace NamelessRogue.Engine.Engine.GameInstance
         int seed;
         TerrainGenerator terrainGen;
         HistoryGenerator historyGen;
+
+        public int Turn { get; set; }
+
+
     }
 }

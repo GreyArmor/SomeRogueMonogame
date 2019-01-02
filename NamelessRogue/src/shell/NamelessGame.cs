@@ -10,6 +10,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components;
 using NamelessRogue.Engine.Engine.Context;
 using NamelessRogue.Engine.Engine.Factories;
+using NamelessRogue.Engine.Engine.GameInstance;
 using NamelessRogue.Engine.Engine.Generation;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
@@ -28,7 +29,9 @@ namespace NamelessRogue.shell
 
         List<IEntity> OfflineEntities;
 
-        //InputSystem inputsystem;
+
+        public GameInstance CurrentGame { get; set; }
+
 
         public static GraphicsDevice DebugDevice;
 
@@ -147,7 +150,7 @@ namespace NamelessRogue.shell
         protected override void Initialize()
         {
 
-
+            CurrentGame = new GameInstance();
             DebugDevice = this.GraphicsDevice;
             //TODO: move to config later
             int width = 60;
@@ -216,17 +219,17 @@ namespace NamelessRogue.shell
             ActiveEntities.Add(
                 CharacterFactory.CreateSimplePlayerCharacter(x,y));
 
-            for (int i = 1; i < 10; i++)
-            {
-                for (int j = 1; j < 10; j++)
-                {
-                    ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - i,
-                        y - j));
-                }
-            }
+            //for (int i = 1; i < 10; i++)
+            //{
+            //    for (int j = 1; j < 10; j++)
+            //    {
+            //        ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - i,
+            //            y - j));
+            //    }
+            //}
 
-            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 1,
-            //    y));
+            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 1,
+                y));
             //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 3,
             //    y));
             //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 5,

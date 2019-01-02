@@ -27,6 +27,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public Label WillLabel { get; private set; }
         public Label WitLabel { get; private set; }
 
+        public Label TurnLabel { get; private set; }
+
         public Button WorldMapButton { get; private set; }
         public Button InventoryButton { get; private set; }
 
@@ -53,7 +55,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             ImgLabel = new Label("Img");
             WillLabel = new Label("Wil");
             WitLabel = new Label("Wit");
-
+            TurnLabel = new Label("Turn");
             SelectList list = new SelectList(new Vector2(0, 150));
             list.Locked = true;
             list.ItemsScale = 0.5f;
@@ -85,6 +87,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             ImgLabel.Scale = labelScale;
             WillLabel.Scale = labelScale;
             WitLabel.Scale = labelScale;
+            TurnLabel.Scale = labelScale;
 
             WorldMapButton = new Button("World map", size: new Vector2(200, 50), anchor: Anchor.BottomRight);
             WorldMapButton.ButtonParagraph.Scale = 0.7f;
@@ -95,7 +98,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             InventoryButton.OnClick += OnClickWorldMap;
 
 
-
+            Panel.AddChild(TurnLabel);
             Panel.AddChild(HealthBar);
             Panel.AddChild(StaminaBar);
             Panel.AddChild(StrLabel);

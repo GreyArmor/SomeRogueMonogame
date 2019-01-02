@@ -107,7 +107,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                                 entityThatOccupiedTile.AddComponent(
                                                     new ChangeSwitchStateCommand(simpleSwitch, false));
                                                 var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                                                ap.Points -= Constants.ActionsMovementCost/2;
+                                                ap.Points -= Constants.ActionsMovementCost;
                                              //   playerEntity.RemoveComponentOfType<HasTurn>();
 
                                             }
@@ -115,7 +115,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                             {
                                                 playerEntity.AddComponent(new MoveToCommand(newX, newY, playerEntity));
                                                 var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                                                ap.Points -= Constants.ActionsMovementCost/2;
+                                                ap.Points -= Constants.ActionsMovementCost;
                                              //   playerEntity.RemoveComponentOfType<HasTurn>();
 
                                             }
@@ -139,7 +139,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                         playerEntity.AddComponent(new MoveToCommand(newX, newY, playerEntity));
                                       //  playerEntity.RemoveComponentOfType<HasTurn>();
                                         var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                                        ap.Points -= Constants.ActionsMovementCost/2;
+                                        ap.Points -= Constants.ActionsMovementCost;
                                     }
                                 }
                             }
@@ -214,8 +214,15 @@ namespace NamelessRogue.Engine.Engine.Systems
                                             }
                                         }
 
-                                        var logCommand = new HudLogMessageCommand(builder.ToString());
-                                        playerEntity.AddComponent(logCommand);
+                                        var logCommand = playerEntity.GetComponentOfType<HudLogMessageCommand>();
+                                        if (logCommand == null)
+                                        {
+                                            logCommand = new HudLogMessageCommand();
+                                            playerEntity.AddComponent(logCommand);
+                                        }
+
+                                        logCommand.LogMessage += builder.ToString();
+
                                         var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                         ap.Points -= Constants.ActionsPickUpCost;
                                         //playerEntity.RemoveComponentOfType<HasTurn>();
@@ -227,9 +234,24 @@ namespace NamelessRogue.Engine.Engine.Systems
                             }
                             case Intent.SkipTurn:
                             {
-                                var ap = entity.GetComponentOfType<ActionPoints>();
-                                ap.Points = 0;
-                             //   playerEntity.RemoveComponentOfType<HasTurn>();
+                                HasTurn hasTurn = playerEntity.GetComponentOfType<HasTurn>();
+
+                                if (hasTurn != null)
+                                {
+                                    var ap = entity.GetComponentOfType<ActionPoints>();
+                                    ap.Points = 0;
+
+                                    var logCommand = playerEntity.GetComponentOfType<HudLogMessageCommand>();
+                                    if (logCommand == null)
+                                    {
+                                        logCommand = new HudLogMessageCommand();
+                                        playerEntity.AddComponent(logCommand);
+                                    }
+
+                                    logCommand.LogMessage += "Skipped a turn";
+
+                                    //   playerEntity.RemoveComponentOfType<HasTurn>();
+                                }
                             }
                                 break;
                             default:
