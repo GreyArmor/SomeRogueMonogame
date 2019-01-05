@@ -2,7 +2,7 @@
 
 namespace NamelessRogue.Engine.Engine.Components.Stats
 {
-    public abstract class SimpleStat : Component {
+    public abstract class SimpleStat {
         private int value;
         private int minValue;
         private int maxValue;
@@ -15,24 +15,22 @@ namespace NamelessRogue.Engine.Engine.Components.Stats
             this.maxValue = maxValue;
         }
 
-        public int GetValue() {
-            return value;
+        public int Value
+        {
+            get { return value; }
+            set { this.value = value; }
         }
 
-        public void SetValue(int value) {
-            this.value = value;
+        public int MinValue
+        {
+            get { return minValue; }
+            set { minValue = value; }
         }
 
-        public int GetMinValue() {
-            return minValue;
-        }
-
-        public void SetMaxValue(int maxValue) {
-            this.maxValue = maxValue;
-        }
-
-        public int GetMaxValue() {
-            return maxValue;
+        public int MaxValue
+        {
+            get { return maxValue; }
+            set { maxValue = value; }
         }
     }
 }

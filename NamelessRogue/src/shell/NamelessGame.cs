@@ -25,9 +25,8 @@ namespace NamelessRogue.shell
     {
         private static long serialVersionUID = 1L;
 
-        List<IEntity> ActiveEntities;
+        List<IEntity> Entities;
 
-        List<IEntity> OfflineEntities;
 
 
         public GameInstance CurrentGame { get; set; }
@@ -37,23 +36,23 @@ namespace NamelessRogue.shell
 
         public List<IEntity> GetEntities()
         {
-            return ActiveEntities;
+            return Entities;
         }
 
         public IEntity GetEntity(Guid id)
         {
-            return ActiveEntities.FirstOrDefault(x => x.GetId() == id);
+            return Entities.FirstOrDefault(x => x.GetId() == id);
         }
 
         public void RemoveEntity(IEntity entity)
         {
-            ActiveEntities.Remove(entity);
+            Entities.Remove(entity);
             EntityManager.RemoveEntity(entity.GetId());
         }
 
         public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
         {
-            List<IEntity> results = ActiveEntities.Where(v => v.GetComponentOfType<T>() != null).ToList();
+            List<IEntity> results = Entities.Where(v => v.GetComponentOfType<T>() != null).ToList();
             return results;
         }
 
@@ -180,21 +179,21 @@ namespace NamelessRogue.shell
             worldSettings = new WorldSettings(1489,1000,1000);
 
 
-            ActiveEntities = new List<IEntity>();
+            Entities = new List<IEntity>();
 
             //TODO: for test
-            ActiveEntities.Add(RenderFactory.CreateViewport(settings));
+            Entities.Add(RenderFactory.CreateViewport(settings));
    
-            ActiveEntities.Add(TerrainFactory.CreateWorld(worldSettings));
+            Entities.Add(TerrainFactory.CreateWorld(worldSettings));
 
-            ActiveEntities.Add(TimelineFactory.CreateTimeline(this));
+            Entities.Add(TimelineFactory.CreateTimeline(this));
 
-            ActiveEntities.Add(InputHandlingFactory.CreateInput());
+            Entities.Add(InputHandlingFactory.CreateInput());
 
             var furnitureEntities = TerrainFurnitureFactory.CreateInstancedFurnitureEntities(this);
             foreach (var furnitureEntity in furnitureEntities)
             {
-                ActiveEntities.Add(furnitureEntity);
+                Entities.Add(furnitureEntity);
             }
 
             var timelinEntity = GetEntityByComponentClass<TimeLine>();
@@ -216,30 +215,30 @@ namespace NamelessRogue.shell
             //place everything at the center of newly generated settlement;
             int x = firsTile.Settlement.Concrete.Center.X;
             int y = firsTile.Settlement.Concrete.Center.Y;
-            ActiveEntities.Add(
+            Entities.Add(
                 CharacterFactory.CreateSimplePlayerCharacter(x,y));
 
             //for (int i = 1; i < 10; i++)
             //{
             //    for (int j = 1; j < 10; j++)
             //    {
-            //        ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - i,
+            //        Entities.Add(CharacterFactory.CreateBlankNpc(x - i,
             //            y - j));
             //    }
             //}
 
-            ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 1,
+            Entities.Add(CharacterFactory.CreateBlankNpc(x - 1,
                 y));
-            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 3,
+            //Entities.Add(CharacterFactory.CreateBlankNpc(x - 3,
             //    y));
-            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 5,
+            //Entities.Add(CharacterFactory.CreateBlankNpc(x - 5,
             //    y));
-            //ActiveEntities.Add(CharacterFactory.CreateBlankNpc(x - 7,
+            //Entities.Add(CharacterFactory.CreateBlankNpc(x - 7,
             //    y));
 
-            ActiveEntities.Add(ItemFactory.CreateItem());
-            ActiveEntities.Add(GameInitializer.CreateCursor());
-            ActiveEntities.Add(GameInitializer.CreateWorldMapMode());
+            Entities.Add(ItemFactory.CreateItem());
+            Entities.Add(GameInitializer.CreateCursor());
+            Entities.Add(GameInitializer.CreateWorldMapMode());
            
 
             UserInterface.Initialize(Content, BuiltinThemes.hd);
@@ -254,16 +253,16 @@ namespace NamelessRogue.shell
 
             //for (int i = 0; i < 1; i++)
             //{
-            //    ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
+            //    Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
             //        yoffset * Constants.ChunkSize, 10, 10,
             //        this));
-            //    ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13 + (i * 10),
+            //    Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13 + (i * 10),
             //        yoffset * Constants.ChunkSize, 10,10,
             //        this));
-            //    ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
+            //    Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
             //        yoffset * Constants.ChunkSize + 13,10,
             //        10, this));
-            //    ActiveEntities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
+            //    Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
             //        yoffset * Constants.ChunkSize + 13, 10,10, this));
             //}
 

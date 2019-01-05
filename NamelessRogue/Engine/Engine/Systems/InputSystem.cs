@@ -23,7 +23,7 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         public void Update(long gameTime, NamelessGame namelessGame)
         {
-            if (gameTime - previousGametimeForMove > 60)
+            if (gameTime - previousGametimeForMove > 90)
             {
                 previousGametimeForMove = gameTime;
                 foreach (IEntity entity in namelessGame.GetEntities()) {

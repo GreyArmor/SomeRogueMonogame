@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
+using NamelessRogue.Engine.Engine.Components.Stats;
 using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.shell;
@@ -19,8 +20,12 @@ namespace NamelessRogue.Engine.Engine.Systems
                 if (ac != null)
                 {
                     Random r = new Random();
+
+                    var source = ac.getSource();
+                    var stats = source.GetComponentOfType<Stats>();
+
                     //TODO: attack damage based on stats, equipment etc.
-                    int damage = r.Next(5) + 5;
+                    int damage = stats.Attack.Value;
                     DamageHelper.ApplyDamage(ac.getTarget(), ac.getSource(), damage);
 
                     Description targetDescription = ac.getTarget().GetComponentOfType<Description>();
@@ -35,7 +40,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                         }
 
                         logCommand.LogMessage += (sourceDescription.Name + " deals " + (damage) +
-                                              " damage to " + targetDescription.Name);
+                                                  " damage to " + targetDescription.Name);
                         //namelessGame.WriteLineToConsole;
                     }
 

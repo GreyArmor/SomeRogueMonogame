@@ -24,32 +24,24 @@ namespace NamelessRogue.Engine.Engine.Systems
                 Player player = entity.GetComponentOfType<Player>();
                 if (player != null)
                 {
-                    var health = entity.GetComponentOfType<Health>();
-                    var stamina = entity.GetComponentOfType<Stamina>();
-
-
-                    var str = entity.GetComponentOfType<Strength>();
-                    var img = entity.GetComponentOfType<Imagination>();
-                    var agi = entity.GetComponentOfType<Agility>();
-                    var will = entity.GetComponentOfType<Willpower>();
-                    var end = entity.GetComponentOfType<Endurance>();
-                    var wit = entity.GetComponentOfType<Wit>();
+                    var stats = entity.GetComponentOfType<Stats>();
+    
 
                     var turn = namelessGame.CurrentGame.Turn;
 
-                    float healthValue = (float)health.GetValue() / health.GetMaxValue();
+                    float healthValue = (float)stats.Health.Value / stats.Health.MaxValue;
                     UiFactory.HudInstance.HealthBar.Value = (int) (healthValue * 100f);
 
-                    float staminaValue = (float)stamina.GetValue() / stamina.GetMaxValue();
+                    float staminaValue = (float)stats.Stamina.Value / stats.Stamina.MaxValue;
                     UiFactory.HudInstance.StaminaBar.Value = (int)(staminaValue * 100f);
 
 
-                    UiFactory.HudInstance.StrLabel.Text = $"Str: {str.GetValue()}";
-                    UiFactory.HudInstance.ImgLabel.Text = $"Img: {img.GetValue()}";
-                    UiFactory.HudInstance.AgiLabel.Text = $"Agi: {agi.GetValue()}";
-                    UiFactory.HudInstance.WillLabel.Text = $"Wil: {will.GetValue()}";
-                    UiFactory.HudInstance.EndLabel.Text = $"End: {end.GetValue()}";
-                    UiFactory.HudInstance.WitLabel.Text = $"Wit: {wit.GetValue()}";
+                    UiFactory.HudInstance.StrLabel.Text = $"Str: {stats.Strength.Value}";
+                    UiFactory.HudInstance.ImgLabel.Text = $"Img: {stats.Imagination.Value}";
+                    UiFactory.HudInstance.AgiLabel.Text = $"Agi: {stats.Agility.Value}";
+                    UiFactory.HudInstance.WillLabel.Text = $"Wil: {stats.Willpower}";
+                    UiFactory.HudInstance.EndLabel.Text = $"End: {stats.Endurance.Value}";
+                    UiFactory.HudInstance.WitLabel.Text = $"Wit: {stats.Wit.Value}";
                     UiFactory.HudInstance.TurnLabel.Text = $"Turn  {turn}";
 
                     foreach (var hudAction in UiFactory.HudInstance.ActionsThisTick)

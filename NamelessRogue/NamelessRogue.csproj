@@ -85,8 +85,10 @@
     <Compile Include="Engine\Engine\Components\Interaction\PickUpItemCommand.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\Player.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\SimpleSwitch.cs" />
+    <Compile Include="Engine\Engine\Components\ItemComponents\Equipment.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\Item.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\ItemsHolder.cs" />
+    <Compile Include="Engine\Engine\Components\ItemComponents\EquipmentSlots.cs" />
     <Compile Include="Engine\Engine\Components\JustCreated.cs" />
     <Compile Include="Engine\Engine\Components\Physical\BlocksVision.cs" />
     <Compile Include="Engine\Engine\Components\Physical\OccupiesTile.cs" />
@@ -99,11 +101,15 @@
     <Compile Include="Engine\Engine\Components\Rendering\Screen.cs" />
     <Compile Include="Engine\Engine\Components\Rendering\ScreenTile.cs" />
     <Compile Include="Engine\Engine\Components\Stats\Agility.cs" />
+    <Compile Include="Engine\Engine\Components\Stats\Attack.cs" />
+    <Compile Include="Engine\Engine\Components\Stats\Defence.cs" />
     <Compile Include="Engine\Engine\Components\Stats\Endurance.cs" />
     <Compile Include="Engine\Engine\Components\Stats\Health.cs" />
     <Compile Include="Engine\Engine\Components\Stats\Imagination.cs" />
     <Compile Include="Engine\Engine\Components\Stats\SimpleStat.cs" />
+    <Compile Include="Engine\Engine\Components\Stats\Speed.cs" />
     <Compile Include="Engine\Engine\Components\Stats\Stamina.cs" />
+    <Compile Include="Engine\Engine\Components\Stats\Stats.cs" />
     <Compile Include="Engine\Engine\Components\Stats\Strength.cs" />
     <Compile Include="Engine\Engine\Components\Stats\Willpower.cs" />
     <Compile Include="Engine\Engine\Components\Stats\Wit.cs" />

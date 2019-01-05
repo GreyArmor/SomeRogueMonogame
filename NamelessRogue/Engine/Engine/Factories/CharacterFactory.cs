@@ -25,16 +25,27 @@ namespace NamelessRogue.Engine.Engine.Factories
             playerCharacter.AddComponent(new Description("Player",""));
             playerCharacter.AddComponent(new ItemsHolder());
             playerCharacter.AddComponent(new OccupiesTile());
+            
+            var stats = new Stats();
+            stats.Health.Value = 100;
+            stats.Health.MaxValue = 100;
 
+            stats.Stamina.Value = 100;
+            stats.Stamina.MaxValue = 100;
 
-            playerCharacter.AddComponent(new Health(100,0,100));
-            playerCharacter.AddComponent(new Stamina(100,0,100));
-            playerCharacter.AddComponent(new Strength(10,0,100));
-            playerCharacter.AddComponent(new Agility(10,0,10));
-            playerCharacter.AddComponent(new Endurance(10, 0, 100));
-            playerCharacter.AddComponent(new Imagination(10,0,10));
-            playerCharacter.AddComponent(new Willpower(10,0,10));
-            playerCharacter.AddComponent(new Wit(10,0,10));
+          
+            stats.Attack.Value = 25;
+            stats.Defence.Value = 10;
+            stats.Speed.Value = 100;
+
+            stats.Strength.Value = 10;
+            stats.Agility.Value = 10;
+            stats.Endurance.Value = 10;
+            stats.Willpower.Value = 10;
+            stats.Imagination.Value = 10;
+            stats.Wit.Value = 10;
+
+            playerCharacter.AddComponent(stats);
 
             playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
 
@@ -66,15 +77,26 @@ namespace NamelessRogue.Engine.Engine.Factories
             npc.AddComponent(new AIControlled());
             npc.AddComponent(new BasicAi());
 
-            npc.AddComponent(new Health(100, 0, 100));
-            npc.AddComponent(new Stamina(100, 0, 100));
-            npc.AddComponent(new Strength(10, 0, 100));
-            npc.AddComponent(new Agility(10, 0, 10));
-            npc.AddComponent(new Endurance(10, 0, 100));
-            npc.AddComponent(new Imagination(10, 0, 10));
-            npc.AddComponent(new Willpower(10, 0, 10));
-            npc.AddComponent(new Wit(10, 0, 10));
+            var stats = new Stats();
+            stats.Health.Value = 100;
+            stats.Health.MaxValue = 100;
 
+            stats.Stamina.Value = 100;
+            stats.Stamina.MaxValue = 100;
+
+
+            stats.Attack.Value = 25;
+            stats.Defence.Value = 10;
+            stats.Speed.Value = 100;
+
+            stats.Strength.Value = 10;
+            stats.Agility.Value = 10;
+            stats.Endurance.Value = 10;
+            stats.Willpower.Value = 10;
+            stats.Imagination.Value = 10;
+            stats.Wit.Value = 10;
+
+            npc.AddComponent(stats);
             npc.AddComponent(new ActionPoints());
 
             return npc;
