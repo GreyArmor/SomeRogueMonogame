@@ -17,7 +17,7 @@ namespace NamelessRogue.Engine.Engine.Generation
             GlobalRandom = new Random(seed);
             TerrainGen = new TerrainGenerator(GlobalRandom);
             WorldMapScale = 1;
-            ContinentTilesPerCivilization = 750;
+            ContinentTilesPerCivilization = 2000;
             NamesGenerator = new NamesGenerator();
 
             //TODO move to files

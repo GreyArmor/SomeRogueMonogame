@@ -7,6 +7,7 @@ using NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
+using NamelessRogue.Engine.Engine.Components.Status;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
 
@@ -35,7 +36,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                 {
                     AIControlled ac = entity.GetComponentOfType<AIControlled>();
                     HasTurn hasTurn = entity.GetComponentOfType<HasTurn>();
-                    if (ac != null && hasTurn != null)
+                    Dead dead = entity.GetComponentOfType<Dead>();
+                    if (ac != null && hasTurn != null && dead==null)
                     {
                         BasicAi basicAi = entity.GetComponentOfType<BasicAi>();
 

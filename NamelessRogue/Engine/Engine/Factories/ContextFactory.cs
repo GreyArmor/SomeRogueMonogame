@@ -80,5 +80,27 @@ namespace NamelessRogue.Engine.Engine.Factories
             }
         }
 
+
+        private static GameContext mainMenuContext;
+        public static GameContext GetMainMenuContext(NamelessGame game)
+        {
+
+            if (WorldBoardContext != null)
+            {
+                return WorldBoardContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem());
+                var uiSystem = new UIRenderSystem();
+
+                // create and init the UI manager
+                UiFactory.CreateWorldBoardScreen(game);
+                WorldBoardContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UiFactory.WorldBoardScreen);
+                return WorldBoardContext;
+            }
+        }
+
     }
 }

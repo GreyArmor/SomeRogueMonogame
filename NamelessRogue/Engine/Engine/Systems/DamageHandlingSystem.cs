@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                 Damage damage = entity.GetComponentOfType<Damage>();
                 if (damage != null)
                 {
-                    Health health = entity.GetComponentOfType<Stats>().Health;
+                    SimpleStat health = entity.GetComponentOfType<Stats>().Health;
                     if (health != null)
                     {
                         health.Value -= damage.getDamage();

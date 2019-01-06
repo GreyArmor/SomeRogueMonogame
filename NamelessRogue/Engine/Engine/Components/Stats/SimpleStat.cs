@@ -2,7 +2,7 @@
 
 namespace NamelessRogue.Engine.Engine.Components.Stats
 {
-    public abstract class SimpleStat {
+    public class SimpleStat {
         private int value;
         private int minValue;
         private int maxValue;

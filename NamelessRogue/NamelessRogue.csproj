@@ -100,19 +100,8 @@
     <Compile Include="Engine\Engine\Components\Rendering\LineToPlayer.cs" />
     <Compile Include="Engine\Engine\Components\Rendering\Screen.cs" />
     <Compile Include="Engine\Engine\Components\Rendering\ScreenTile.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Agility.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Attack.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Defence.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Endurance.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Health.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Imagination.cs" />
     <Compile Include="Engine\Engine\Components\Stats\SimpleStat.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Speed.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Stamina.cs" />
     <Compile Include="Engine\Engine\Components\Stats\Stats.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Strength.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Willpower.cs" />
-    <Compile Include="Engine\Engine\Components\Stats\Wit.cs" />
     <Compile Include="Engine\Engine\Components\Status\Damage.cs" />
     <Compile Include="Engine\Engine\Components\Status\Dead.cs" />
     <Compile Include="Engine\Engine\Components\UI\Description.cs" />
@@ -199,6 +188,7 @@
     <Compile Include="Engine\Engine\UiScreens\BaseGuiScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\Hud.cs" />
     <Compile Include="Engine\Engine\UiScreens\InventoryScreen.cs" />
+    <Compile Include="Engine\Engine\UiScreens\MainMenuScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\WorldBoardScreen.cs" />
     <Compile Include="Engine\Engine\Utility\BoundingBox.cs" />
     <Compile Include="Engine\Engine\Utility\Color.cs" />
