@@ -196,6 +196,7 @@
     <Compile Include="Engine\Engine\Utility\FrameCounter.cs" />
     <Compile Include="Engine\Engine\Utility\PointUtil.cs" />
     <Compile Include="Engine\Engine\Utility\StringExtensions.cs" />
+    <Compile Include="Engine\Engine\Utility\WorldLineDrawer.cs" />
     <Compile Include="FieldOfView\PermissiveVisibility.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -818,9 +819,6 @@
     <Content Include="Content\GeonBit.UI\themes\lowres\textures\white_texture.png" />
     <Content Include="Content\GeonBit.UI\themes\lowres\ThemeData.xml" />
     <Content Include="Content\Shader.fx" />
-    <Content Include="DataTypes.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Icon.ico" />
     <Content Include="Content\DFfont.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

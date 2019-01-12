@@ -239,16 +239,16 @@ namespace NamelessRogue.Engine.Engine.Systems
                                 if (hasTurn != null)
                                 {
                                     var ap = entity.GetComponentOfType<ActionPoints>();
-                                    ap.Points = 0;
+                                    ap.Points -= Constants.ActionsMovementCost;
 
-                                    var logCommand = playerEntity.GetComponentOfType<HudLogMessageCommand>();
+                                        var logCommand = playerEntity.GetComponentOfType<HudLogMessageCommand>();
                                     if (logCommand == null)
                                     {
                                         logCommand = new HudLogMessageCommand();
                                         playerEntity.AddComponent(logCommand);
                                     }
 
-                                    logCommand.LogMessage += "Skipped a turn";
+                                    logCommand.LogMessage += "Waiting";
 
                                     //   playerEntity.RemoveComponentOfType<HasTurn>();
                                 }

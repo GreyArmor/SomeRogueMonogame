@@ -9,7 +9,7 @@ using NamelessRogue.shell;
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
     public class Tile {
-        public Biomes Biome { get; }
+        public Biomes Biome { get; set; }
 
         public Tile(){}
 	

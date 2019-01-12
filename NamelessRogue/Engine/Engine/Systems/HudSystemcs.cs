@@ -38,9 +38,9 @@ namespace NamelessRogue.Engine.Engine.Systems
 
                     UiFactory.HudInstance.StrLabel.Text = $"Str: {stats.Strength.Value}";
                     UiFactory.HudInstance.ImgLabel.Text = $"Img: {stats.Imagination.Value}";
-                    UiFactory.HudInstance.AgiLabel.Text = $"Agi: {stats.Agility.Value}";
-                    UiFactory.HudInstance.WillLabel.Text = $"Wil: {stats.Willpower}";
-                    UiFactory.HudInstance.EndLabel.Text = $"End: {stats.Endurance.Value}";
+                    UiFactory.HudInstance.RefLabel.Text = $"Ref: {stats.Reflexes.Value}";
+                    UiFactory.HudInstance.WillLabel.Text = $"Wil: {stats.Willpower.Value}";
+                    UiFactory.HudInstance.PerLabel.Text = $"Per: {stats.Perception.Value}";
                     UiFactory.HudInstance.WitLabel.Text = $"Wit: {stats.Wit.Value}";
                     UiFactory.HudInstance.TurnLabel.Text = $"Turn  {turn}";
 

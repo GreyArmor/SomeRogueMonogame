@@ -21,8 +21,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public ProgressBar StaminaBar { get; private set; }
 
         public Label StrLabel { get; private set; }
-        public Label EndLabel { get; private set; }
-        public Label AgiLabel { get; private set; }
+        public Label PerLabel { get; private set; }
+        public Label RefLabel { get; private set; }
         public Label ImgLabel { get; private set; }
         public Label WillLabel { get; private set; }
         public Label WitLabel { get; private set; }
@@ -50,8 +50,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             StaminaBar.Size = new Vector2(100, 10);
 
             StrLabel = new Label("Str");
-            EndLabel = new Label("End");
-            AgiLabel = new Label("Agi");
+            PerLabel = new Label("Per");
+            RefLabel = new Label("Ref");
             ImgLabel = new Label("Img");
             WillLabel = new Label("Wil");
             WitLabel = new Label("Wit");
@@ -82,8 +82,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             float labelScale = 0.5f;
             StrLabel.Scale = labelScale;
-            EndLabel.Scale = labelScale;
-            AgiLabel.Scale = labelScale;
+            PerLabel.Scale = labelScale;
+            RefLabel.Scale = labelScale;
             ImgLabel.Scale = labelScale;
             WillLabel.Scale = labelScale;
             WitLabel.Scale = labelScale;
@@ -102,8 +102,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             Panel.AddChild(HealthBar);
             Panel.AddChild(StaminaBar);
             Panel.AddChild(StrLabel);
-            Panel.AddChild(EndLabel);
-            Panel.AddChild(AgiLabel);
+            Panel.AddChild(PerLabel);
+            Panel.AddChild(RefLabel);
             Panel.AddChild(ImgLabel);
             Panel.AddChild(WillLabel);
             Panel.AddChild(WitLabel);

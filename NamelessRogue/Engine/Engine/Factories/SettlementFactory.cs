@@ -48,7 +48,7 @@ namespace NamelessRogue.Engine.Engine.Factories
 
                     foreach (var keyValuePair in chunks)
                     {
-                        //place them into reality buuble for convenience
+                        //place them into reality bubble for convenience
                         worldProvider.GetRealityBubbleChunks().Add(keyValuePair.Key, keyValuePair.Value);
                         worldProvider.RealityChunks.Add(keyValuePair.Value);
                         allChunksToWorkWith.Add(keyValuePair);
@@ -85,12 +85,19 @@ namespace NamelessRogue.Engine.Engine.Factories
             var center = (minVector + maxVector) / 2;
 
             GenerateCityBuildingForTest(center,namelessGame);
+
+
+
             result.Center = center.ToPoint();
 
             foreach (var keyValuePair in allChunksToWorkWith)
             {
                 worldProvider.GetRealityBubbleChunks().Remove(keyValuePair.Key);
             }
+
+            
+
+
 
             return result;
         }
@@ -101,16 +108,15 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             var citySize = 100;
             //TODO streets
-            var verticalStreets = 5;
-            var horizontalStrtreets = 5;
 
-            var buildingNumber = citySize / 15;
 
-            for (int x = 0; x < citySize; x+=15)
+            var buildingNumber = (citySize) / 15 * (citySize) / 15;
+
+            for (int x = 0; x < citySize; x+=30)
             {
-                for (int y = 0; y < citySize; y+=15)
+                for (int y = 0; y < citySize; y+=30)
                 {
-                    BuildingFactory.CreateDummyBuilding((int) (x+center.X-citySize/2), (int) (y + center.Y - citySize / 2), 10, 10, game);
+                    BuildingFactory.CreateTiltedBuilding((int) (x+center.X-citySize/2), (int) (y + center.Y - citySize / 2), 10, 10, game);
                 }
             }
         }

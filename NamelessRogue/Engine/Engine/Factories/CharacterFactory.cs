@@ -36,11 +36,12 @@ namespace NamelessRogue.Engine.Engine.Factories
           
             stats.Attack.Value = 25;
             stats.Defence.Value = 10;
-            stats.Speed.Value = 100;
+            stats.AttackSpeed.Value = 100;
+            stats.MoveSpeed.Value = 100;
 
             stats.Strength.Value = 10;
-            stats.Agility.Value = 10;
-            stats.Endurance.Value = 10;
+            stats.Reflexes.Value = 10;
+            stats.Perception.Value = 10;
             stats.Willpower.Value = 10;
             stats.Imagination.Value = 10;
             stats.Wit.Value = 10;
@@ -87,11 +88,12 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             stats.Attack.Value = 25;
             stats.Defence.Value = 10;
-            stats.Speed.Value = 100;
+            stats.AttackSpeed.Value = 100;
+            stats.MoveSpeed.Value = 100;
 
             stats.Strength.Value = 10;
-            stats.Agility.Value = 10;
-            stats.Endurance.Value = 10;
+            stats.Reflexes.Value = 10;
+            stats.Perception.Value = 10;
             stats.Willpower.Value = 10;
             stats.Imagination.Value = 10;
             stats.Wit.Value = 10;

@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     if (health != null)
                     {
                         health.Value -= damage.getDamage();
-                        if (health.Value < health.MinValue)
+                        if (health.Value <= health.MinValue)
                         {
                             entity.AddComponent(new DeathCommand(entity));
                         }
