@@ -9,6 +9,8 @@ namespace NamelessRogue.Engine.Engine.Generation.World.BoardPieces
 {
     public class BoardPiece
     {
-        public ObjectInfo Info { get; set; }
+        public ObjectInfo Info { get; set; } = new ObjectInfo();
+        public char Representation { get; set; }
+        public Engine.Utility.Color CharColor { get; set; }
     }
 }

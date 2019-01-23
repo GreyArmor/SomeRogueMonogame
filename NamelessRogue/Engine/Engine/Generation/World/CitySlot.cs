@@ -8,6 +8,11 @@ using NamelessRogue.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Engine.Generation.World
 {
+    public enum SlotType
+    {
+        Street,
+        Building
+    }
     public class CitySlot
     {
         public CitySlot(BoundingBox placement)

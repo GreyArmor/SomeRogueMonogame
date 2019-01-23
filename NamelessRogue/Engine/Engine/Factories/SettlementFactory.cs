@@ -66,10 +66,11 @@ namespace NamelessRogue.Engine.Engine.Factories
             foreach (var keyValuePair in allChunksToWorkWith)
             {
                 var currentPoint = keyValuePair.Value.GetWorldPosition();
-                if (currentPoint.X>maxPoint.X || currentPoint.Y>maxPoint.Y)
+                if (currentPoint.X > maxPoint.X || currentPoint.Y > maxPoint.Y)
                 {
                     maxPoint = currentPoint;
                 }
+
                 if (currentPoint.X < minPoint.X || currentPoint.Y < minPoint.Y)
                 {
                     minPoint = currentPoint;
@@ -84,7 +85,14 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             var center = (minVector + maxVector) / 2;
 
-            GenerateCityBuildingForTest(center,namelessGame);
+            var citySize = 100;
+            var streetWidth = 10;
+
+            var slots = new CitySlot[citySize / streetWidth, citySize / streetWidth];
+            
+
+
+            GenerateCityBuildingForTest(center, namelessGame);
 
 
 
@@ -95,7 +103,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                 worldProvider.GetRealityBubbleChunks().Remove(keyValuePair.Key);
             }
 
-            
+
 
 
 
@@ -112,13 +120,18 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             var buildingNumber = (citySize) / 15 * (citySize) / 15;
 
-            for (int x = 0; x < citySize; x+=30)
+            for (int x = 0; x < citySize; x += 15)
             {
-                for (int y = 0; y < citySize; y+=30)
+                for (int y = 0; y < citySize; y += 15)
                 {
-                    BuildingFactory.CreateTiltedBuilding((int) (x+center.X-citySize/2), (int) (y + center.Y - citySize / 2), 10, 10, game);
+                    BuildingFactory.CreateTiltedBuilding((int) (x + center.X - citySize / 2),
+                        (int) (y + center.Y - citySize / 2), 10, 10, game);
                 }
             }
         }
+
     }
+
+
 }
+

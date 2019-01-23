@@ -18,6 +18,9 @@ namespace NamelessRogue.Engine.Engine.Generation
             TerrainGen = new TerrainGenerator(GlobalRandom);
             WorldMapScale = 1;
             ContinentTilesPerCivilization = 2000;
+
+            ContinentTilesPerArtifact = 100;
+
             NamesGenerator = new NamesGenerator();
 
             //TODO move to files
@@ -58,6 +61,7 @@ namespace NamelessRogue.Engine.Engine.Generation
         public List<CultureTemplate> CultureTemplates { get; } = new List<CultureTemplate>();
 
         public int ContinentTilesPerCivilization { get; set; }
+        public int ContinentTilesPerArtifact { get; set; }
         public NamesGenerator NamesGenerator { get; }
 
         //TODO: not implemented currently

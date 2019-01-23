@@ -108,6 +108,7 @@
     <Compile Include="Engine\Engine\Components\UI\WorldMapMode.cs" />
     <Compile Include="Engine\Engine\Components\WorldBoardComponents\WorldBoardPlayer.cs" />
     <Compile Include="Engine\Engine\Context\GameContext.cs" />
+    <Compile Include="Engine\Engine\Factories\ArtifactLibrary.cs" />
     <Compile Include="Engine\Engine\Factories\BuildingFactory.cs" />
     <Compile Include="Engine\Engine\Factories\CharacterFactory.cs" />
     <Compile Include="Engine\Engine\Factories\ContextFactory.cs" />

@@ -16,11 +16,12 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         TerrainMode,
         RegionsMode,
         PoliticalMode,
+        ArtifactMode
     }
     public class WorldBoardScreen : BaseGuiScreen
     {
         public List<WorldBoardScreenAction> Actions { get; private set; } = new List<WorldBoardScreenAction>();
-
+        public WorldBoardScreenAction Mode { get; set; }
         public WorldBoardScreen(NamelessGame game)
         {
             Panel = new Panel(new Vector2(game.GetSettings().HudWidth(), game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.BottomRight);
@@ -36,27 +37,48 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             ModePolitical = CreateButton("Political", game.GetSettings().HudWidth() - 50);
             ModePolitical.OnClick += OnClickPolitical;
 
+            ModeArtifacts = CreateButton("Artifacts", game.GetSettings().HudWidth() - 50);
+            ModeArtifacts.OnClick += OnClickArtifacts;
+
+            SelectList list = new SelectList(new Vector2(0, 150));
+            list.Locked = true;
+            list.ItemsScale = 0.5f;
+            list.ExtraSpaceBetweenLines = -10;
+            DescriptionLog = list;
+
+            Panel.AddChild(DescriptionLog);
 
             Panel.AddChild(ModeTerrain);
             Panel.AddChild(ModeRegions);
             Panel.AddChild(ModePolitical);
+            Panel.AddChild(ModeArtifacts);
             Panel.AddChild(ReturnToGame);
+            
             UserInterface.Active.AddEntity(Panel);
+        }
+
+        private void OnClickArtifacts(Entity entity)
+        {
+            Actions.Add(WorldBoardScreenAction.ArtifactMode);
+            Mode = WorldBoardScreenAction.ArtifactMode;
         }
 
         private void OnClickPolitical(Entity entity)
         {
             Actions.Add(WorldBoardScreenAction.PoliticalMode);
+            Mode = WorldBoardScreenAction.PoliticalMode;
         }
 
         private void OnClickLandmasses(Entity entity)
         {
             Actions.Add(WorldBoardScreenAction.RegionsMode);
+            Mode = WorldBoardScreenAction.RegionsMode;
         }
 
         private void OnClickModeTerrain(Entity entity)
         {
             Actions.Add(WorldBoardScreenAction.TerrainMode);
+            Mode = WorldBoardScreenAction.TerrainMode;
         }
 
         private Button CreateButton(string Text, float width)
@@ -70,12 +92,12 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         {
             Actions.Add(WorldBoardScreenAction.ReturnToGame);
         }
-
+        public SelectList DescriptionLog { get; private set; }
 
         public Button ModeTerrain { get; set; }
         public Button ModeRegions { get; set; }
         public Button ModePolitical { get; set; }
-
+        public Button ModeArtifacts { get; set; }
         public Button ReturnToGame { get; set; }
 
        

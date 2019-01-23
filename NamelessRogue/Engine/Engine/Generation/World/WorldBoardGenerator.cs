@@ -5,7 +5,9 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Markov;
 using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Generation.Noise;
 using NamelessRogue.Engine.Engine.Generation.World.Meta;
 using NamelessRogue.Engine.Engine.Infrastructure;
@@ -17,6 +19,22 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 {
     public class WorldBoardGenerator
     {
+        static Markov.MarkovChain<char> continentNamesChain = new MarkovChain<char>(2);
+
+        static WorldBoardGenerator()
+        {
+            string continentNames =
+                "Africa Europa Asia America Australia Antarctica Atlantis? Lemuria? Hyboria Westeros Mu Middleearth Essos Assail Genabackis Jacuruku Oceania Khorvaire Valinor Neverland Ingas Mist Faerun Everice Crimea Absolom Alcatraz Atuan Banoi Britannula Caereon Caspiar Crusoeland Carlotta Dargenk Dressrosa Esme Eureka Ember Felimath Fraxos Flyspeck Gaea Ganae Galuga Gristol Havnor Hoenn Iwako Kokovoko Kiloran Kalimdor Lea Monde Maple Myst Navarone Nibelia Numenor Okishima Orange Pharmaul Paradise Skira Skypiea Summerisle Tolaria Innistrad Dominaria Unova Utopia Vanutu Warbler Yew Yin Zandia Zolon Zou";
+            foreach (var s in continentNames.Split(' '))
+            {
+                continentNamesChain.Add(s);
+            }
+            
+
+        }
+
+
+
         public static void PopulateWithInitialData(WorldBoard board, NamelessGame game)
         {
             for (int x = 0; x < game.WorldSettings.WorldBoardWidth; x++)
@@ -39,6 +57,65 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
         public static void PlaceInitialArtifacts(WorldBoard worldBoard, NamelessGame game)
         {
+
+            var artifactsPerContinentTiles = game.WorldSettings.ContinentTilesPerArtifact;
+
+            foreach (var worldBoardContinent in worldBoard.Continents)
+            {
+                var continentTiles = new Queue<WorldTile>();
+                var artifactNumber = worldBoardContinent.SizeInTiles / artifactsPerContinentTiles;
+                foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
+                {
+                    if (worldBoardWorldTile.Continent == worldBoardContinent && worldBoardWorldTile.Owner == null)
+                    {
+                        continentTiles.Enqueue(worldBoardWorldTile);
+                    }
+                }
+
+                //randomize list
+                continentTiles = new Queue<WorldTile>(continentTiles.OrderBy(
+                    (o) => { return (game.WorldSettings.GlobalRandom.Next() % continentTiles.Count); }));
+
+                var random = game.WorldSettings.GlobalRandom;
+
+
+                for (int i = 0; i < artifactNumber; i++)
+                {
+
+
+
+                    WorldTile tile = null;
+                    bool noNeighbooringArtifacts = false;
+                    const int squareToCheck = 3;
+                    while (!noNeighbooringArtifacts)
+                    {
+
+                        tile = continentTiles.Dequeue();
+                        noNeighbooringArtifacts = true;
+                        for (int x = tile.WorldBoardPosiiton.X - squareToCheck;
+                            x <= tile.WorldBoardPosiiton.X + squareToCheck;
+                            x++)
+                        {
+                            for (int y = tile.WorldBoardPosiiton.Y - squareToCheck;
+                                y <= tile.WorldBoardPosiiton.Y + squareToCheck;
+                                y++)
+                            {
+                                if (worldBoard.WorldTiles[x, y].Artifact != null)
+                                {
+                                    noNeighbooringArtifacts = false;
+                                }
+                            }
+                        }
+                    }
+
+                    //ArtifactLibrary.Artifacts.ToArray();
+                    var artifact = ArtifactLibrary.GetRandomArtifact(random);
+                    artifact.Info.MapPosition = tile.WorldBoardPosiiton;
+                    tile.Artifact = artifact;
+
+
+                }
+            }
 
         }
 
@@ -164,12 +241,12 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             var s = Stopwatch.StartNew();
             Random rand = game.WorldSettings.GlobalRandom;
             List<Region> regions =  GetRegions(worldBoard, game, rand, (tile => tile.Terrain != TerrainTypes.Water &&
-                                                        tile.Continent == null), (tile, region) => tile.Continent = region);
+                                                        tile.Continent == null), (tile, region) => tile.Continent = region,() => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper(); });
 
-            List<Region> forests = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Forest && tile.LandmarkRegion==null), (tile, region) => tile.LandmarkRegion = region);
-            List<Region> deserts = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Desert && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region);
-            List<Region> mountains = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Mountain && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region);
-            List<Region> swamps = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Swamp && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region);
+            List<Region> forests = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Forest && tile.LandmarkRegion==null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " forest"; });
+            List<Region> deserts = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Desert && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " desert"; });
+            List<Region> mountains = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Mountain && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " mountain"; });
+            List<Region> swamps = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Swamp && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " swamp"; });
             s.Stop();
             worldBoard.Continents = regions.Where(x => x.SizeInTiles >= 2000).ToList();
             worldBoard.Islands = regions.Where(x => x.SizeInTiles < 2000).ToList();
@@ -179,7 +256,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             worldBoard.Swamps = swamps.ToList();
         }
 
-        private static List<Region> GetRegions(WorldBoard worldBoard, NamelessGame game, Random rand, Func<WorldTile,bool> searchCriterion, Action<WorldTile,Region> onFoundRegion)
+        private static List<Region> GetRegions(WorldBoard worldBoard, NamelessGame game, Random rand, Func<WorldTile,bool> searchCriterion, Action<WorldTile,Region> onFoundRegion, Func<string> nameGenerator)
         {
             List<Region> regions = new List<Region>();
             var searchPoint = new Point();
@@ -191,6 +268,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                     if (searchCriterion(worldBoard.WorldTiles[searchPoint.X, searchPoint.Y]))
                     {
                         Region r = new Region();
+                        r.Name = nameGenerator();
                         r.Color = new Color(rand.NextDouble(), rand.NextDouble(), rand.NextDouble(), 1f);
                         regions.Add(r);
 

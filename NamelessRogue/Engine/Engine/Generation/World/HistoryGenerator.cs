@@ -27,20 +27,9 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
         }
 
-     
-
-        public static List<MapResource> FoodResources{ get; set; }
-        public static List<MapResource> ManufactoringResources { get; set; }
-        public static List<MapResource> ScienceResources { get; set; }
-        public static List<MapResource> CultureResources { get; set; }
-        public static List<MapResource> ManaResources { get; set; }
-        public static List<MapResource> HeaäthResources { get; set; }
-
         public static List<MapArtifact> Artifacts { get; private set; }
         public static TimeLine BuildTimeline(NamelessGame game, HistoryGenerationSettings settings)
         {
-
-            CreateBasicPieces();
 
             var timeline = new TimeLine();
             var worldBoard = InitialiseFirstBoard(game,settings);
@@ -57,48 +46,6 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         private static void CreateBasicPieces()
         {
             Artifacts = new List<MapArtifact>();
-
-            CreateFoods();
-
-
-        }
-
-        private static void CreateFoods()
-        {
-            FoodResources = new List<MapResource>();
-            FoodResources.Add(new MapResource()
-            {
-                Info = new ObjectInfo()
-                {
-                    Name = "Game",
-                    ProductionModifier = new ProductionValue(1, 0, 0, 0, 0, 0)
-                },
-                AppearsOn = new List<TerrainTypes>() { TerrainTypes.Dirt, TerrainTypes.Grass, },
-                Level = 1
-            });
-
-            FoodResources.Add(new MapResource()
-            {
-                Info = new ObjectInfo()
-                {
-                    Name = "Wheat",
-                    ProductionModifier = new ProductionValue(2, 0, 0, 0, 0, 0)
-                },
-                AppearsOn = new List<TerrainTypes>() { TerrainTypes.Dirt, TerrainTypes.Grass },
-                Level = 2
-            });
-
-
-            FoodResources.Add(new MapResource()
-            {
-                Info = new ObjectInfo()
-                {
-                    Name = "Salt",
-                    ProductionModifier = new ProductionValue(3, 0, 0, 0, 0, 0)
-                },
-                AppearsOn = new List<TerrainTypes>() { TerrainTypes.Dirt, TerrainTypes.Grass },
-                Level = 3
-            });
         }
 
         private static WorldBoard InitialiseFirstBoard(NamelessGame game, HistoryGenerationSettings settings)
@@ -107,8 +54,8 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             WorldBoardGenerator.PopulateWithInitialData(worldBoard, game);
             WorldBoardGenerator.AnalizeLandmasses(worldBoard, game);
             WorldBoardGenerator.PlaceInitialCivilizations(worldBoard, game);
-
-
+            WorldBoardGenerator.PlaceInitialArtifacts(worldBoard, game);
+            WorldBoardGenerator.PlaceResources(worldBoard, game);
 
             WorldTile firsTile = null;
             foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
@@ -131,8 +78,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             Stack<MapResource> resources = GenerateResourcePoolBasedONTerrain(worldBoard);
 
             //   WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
-            WorldBoardGenerator.PlaceInitialArtifacts(worldBoard, game);
-            WorldBoardGenerator.PlaceResources(worldBoard, game);
+           
 
             return worldBoard;
         }

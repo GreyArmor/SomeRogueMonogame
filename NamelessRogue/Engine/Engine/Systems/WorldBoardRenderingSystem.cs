@@ -28,7 +28,8 @@ namespace NamelessRogue.Engine.Engine.Systems
     {
         Terrain,
         Regions,
-        Political
+        Political,
+        Artifact
     }
 
     public class WorldBoardRenderingSystem : ISystem
@@ -189,7 +190,6 @@ namespace NamelessRogue.Engine.Engine.Systems
                     {
                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
-
                     }
 
                     RenderScreen(game, screen, game.GetSettings());
@@ -353,6 +353,14 @@ namespace NamelessRogue.Engine.Engine.Systems
                     }
 
                     screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color(tile.Owner.CivColor);
+                }
+            }
+            else if (Mode == WorldBoardRenderingSystemMode.Artifact)
+            {
+                if (tile.Artifact != null)
+                {
+                    screen.ScreenBuffer[point.X, point.Y].Char = tile.Artifact.Representation;
+                    screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Artifact.CharColor;
                 }
             }
         }

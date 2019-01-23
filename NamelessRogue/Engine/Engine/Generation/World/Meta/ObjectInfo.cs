@@ -6,6 +6,6 @@ namespace NamelessRogue.Engine.Engine.Generation.World.Meta
     {
         public string Name { get; set; }
         public ProductionValue ProductionModifier { get; set; }
-        public Point MapPosition { get; }
+        public Point MapPosition { get; set; }
     }
 }
