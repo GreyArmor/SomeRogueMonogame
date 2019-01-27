@@ -116,6 +116,7 @@
     <Compile Include="Engine\Engine\Factories\InputHandlingFactory.cs" />
     <Compile Include="Engine\Engine\Factories\ItemFactory.cs" />
     <Compile Include="Engine\Engine\Factories\RenderFactory.cs" />
+    <Compile Include="Engine\Engine\Factories\ResourceLibrary.cs" />
     <Compile Include="Engine\Engine\Factories\SettlementFactory.cs" />
     <Compile Include="Engine\Engine\Factories\TerrainFactory.cs" />
     <Compile Include="Engine\Engine\Factories\TerrainFurnitureFactory.cs" />

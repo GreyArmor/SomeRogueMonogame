@@ -3,6 +3,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
+using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
 
@@ -22,11 +23,12 @@ namespace NamelessRogue.Engine.Engine.Systems
                     if (position != null)
                     {
 
-                        IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
+
+                        IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
                         IChunkProvider worldProvider = null;
                         if (worldEntity != null)
                         {
-                            worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+                            worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
                         }
 
                         Tile oldTile = worldProvider.GetTile(position.p.X, position.p.Y);

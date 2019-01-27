@@ -183,8 +183,6 @@ namespace NamelessRogue.shell
 
             //TODO: for test
             Entities.Add(RenderFactory.CreateViewport(settings));
-   
-            Entities.Add(TerrainFactory.CreateWorld(worldSettings));
 
             Entities.Add(TimelineFactory.CreateTimeline(this));
 

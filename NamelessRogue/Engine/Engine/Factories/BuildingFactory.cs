@@ -42,11 +42,11 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static IEntity CreateDummyBuilding(int x, int y, int width ,int height, NamelessGame namelessGame)
         {
 
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
+            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
             IChunkProvider worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
             }
 
             IEntity building = new Entity();
@@ -88,16 +88,8 @@ namespace NamelessRogue.Engine.Engine.Factories
         }
 
 
-        public static IEntity CreateTiltedBuilding(int x, int y, int width, int height, NamelessGame namelessGame)
+        public static IEntity CreateTiltedBuilding(int x, int y, int width, int height, NamelessGame namelessGame, IChunkProvider worldProvider)
         {
-
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
-            IChunkProvider worldProvider = null;
-            if (worldEntity != null)
-            {
-                worldProvider = worldEntity.GetComponentOfType<ChunkData>();
-            }
-
             IEntity building = new Entity();
 
             building.AddComponent(new Description("", ""));

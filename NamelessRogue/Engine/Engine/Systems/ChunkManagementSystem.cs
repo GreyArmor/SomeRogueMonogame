@@ -18,8 +18,13 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         public void Update(long gameTime, NamelessGame namelessGame)
         {
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
-            IChunkProvider worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+            IChunkProvider worldProvider = null;
+            if (worldEntity != null)
+            {
+                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
+            }
+
 
             IEntity playerentity = namelessGame.GetEntityByComponentClass<Player>();
             if (playerentity != null)

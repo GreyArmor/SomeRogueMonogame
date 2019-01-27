@@ -51,6 +51,10 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         private static WorldBoard InitialiseFirstBoard(NamelessGame game, HistoryGenerationSettings settings)
         {
             var worldBoard = new WorldBoard(game.WorldSettings.WorldBoardWidth, game.WorldSettings.WorldBoardWidth, 0);
+            ChunkData chunkData = new ChunkData(game.WorldSettings);
+
+            worldBoard.Chunks = chunkData;
+
             WorldBoardGenerator.PopulateWithInitialData(worldBoard, game);
             WorldBoardGenerator.AnalizeLandmasses(worldBoard, game);
             WorldBoardGenerator.PlaceInitialCivilizations(worldBoard, game);
@@ -68,26 +72,15 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                 }
             }
 
-            IEntity worldEntity = game.GetEntityByComponentClass<ChunkData>();
-            IChunkProvider worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+            IChunkProvider worldProvider = chunkData;
 
             var concreteSettlment = SettlementFactory.GenerateSettlement(game, firsTile, worldBoard, worldProvider);
 
             firsTile.Settlement.Concrete = concreteSettlment;
-
-            Stack<MapResource> resources = GenerateResourcePoolBasedONTerrain(worldBoard);
-
-            //   WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
-           
-
+            WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
             return worldBoard;
         }
 
-        private static Stack<MapResource> GenerateResourcePoolBasedONTerrain(WorldBoard worldBoard)
-        {
-            var result = new Stack<MapResource>();
-            return result;
-        }
 
         private static WorldBoard ProgressWorldBoard(WorldBoard previousState)
         {

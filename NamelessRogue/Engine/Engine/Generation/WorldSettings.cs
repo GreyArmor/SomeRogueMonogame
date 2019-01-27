@@ -19,8 +19,8 @@ namespace NamelessRogue.Engine.Engine.Generation
             WorldMapScale = 1;
             ContinentTilesPerCivilization = 2000;
 
-            ContinentTilesPerArtifact = 100;
-
+            ContinentTilesPerArtifact = 1500;
+            ContinentTilesPerResource = 100;
             NamesGenerator = new NamesGenerator();
 
             //TODO move to files
@@ -62,6 +62,7 @@ namespace NamelessRogue.Engine.Engine.Generation
 
         public int ContinentTilesPerCivilization { get; set; }
         public int ContinentTilesPerArtifact { get; set; }
+        public int ContinentTilesPerResource { get; set; }
         public NamesGenerator NamesGenerator { get; }
 
         //TODO: not implemented currently

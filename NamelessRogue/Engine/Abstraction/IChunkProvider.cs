@@ -7,7 +7,7 @@ using Tile = NamelessRogue.Engine.Engine.Components.ChunksAndTiles.Tile;
 
 namespace NamelessRogue.Engine.Abstraction
 {
-    public interface IChunkProvider : IComponent
+    public interface IChunkProvider
     {
         int ChunkResolution { get; }
         Tile GetTile(int x, int y);

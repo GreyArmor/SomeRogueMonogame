@@ -32,6 +32,16 @@ namespace NamelessRogue.Engine.Engine.Systems
 
                 switch (UiFactory.WorldBoardScreen.Mode)
                 {
+
+                    case WorldBoardScreenAction.ResourceMode:
+                    {
+                        UiFactory.WorldBoardScreen.DescriptionLog.ClearItems();
+                        if (tile.Resource != null)
+                        {
+                            UiFactory.WorldBoardScreen.DescriptionLog.AddItem(tile.Resource.Info.Name);
+                        }
+                    }
+                        break;
                     case WorldBoardScreenAction.ArtifactMode:
                     {
                         UiFactory.WorldBoardScreen.DescriptionLog.ClearItems();
@@ -113,6 +123,14 @@ namespace NamelessRogue.Engine.Engine.Systems
                         WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
                         worldMode.Mode = WorldBoardRenderingSystemMode.Artifact;
                     }
+                        break;
+                    case WorldBoardScreenAction.ResourceMode:
+                    {
+                        IEntity worldModeEntity = namelessGame.GetEntityByComponentClass<WorldMapMode>();
+                        WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
+                        worldMode.Mode = WorldBoardRenderingSystemMode.Resources;
+                    }
+
                         break;
                     default:
                         break;

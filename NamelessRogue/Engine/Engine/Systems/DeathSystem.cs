@@ -6,6 +6,7 @@ using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Components.Status;
 using NamelessRogue.Engine.Engine.Components.UI;
+using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
 
@@ -29,12 +30,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                         drawable.setRepresentation('%');
                         entityToKill.RemoveComponentOfType<DeathCommand>();
                     }
-
-                    IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
+                    IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
                     IChunkProvider worldProvider = null;
                     if (worldEntity != null)
                     {
-                        worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+                        worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
                     }
 
                     Position position = entityToKill.GetComponentOfType<Position>();

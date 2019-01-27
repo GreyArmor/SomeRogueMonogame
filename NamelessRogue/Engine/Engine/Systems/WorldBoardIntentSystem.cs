@@ -73,9 +73,10 @@ namespace NamelessRogue.Engine.Engine.Systems
 
 
                     }
+
                     inputComponent.Intents.Clear();
                 }
             }
+        }
     }
-}
 }

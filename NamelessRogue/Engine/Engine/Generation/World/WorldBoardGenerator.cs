@@ -52,7 +52,58 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
         public static void PlaceResources(WorldBoard worldBoard, NamelessGame game)
         {
-            
+            var continentTilesPerResource = game.WorldSettings.ContinentTilesPerResource;
+
+            foreach (var worldBoardContinent in worldBoard.Continents)
+            {
+                var continentTiles = new Queue<WorldTile>();
+                var resNumber = worldBoardContinent.SizeInTiles / continentTilesPerResource;
+                foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
+                {
+                    if (worldBoardWorldTile.Continent == worldBoardContinent && worldBoardWorldTile.Owner == null)
+                    {
+                        continentTiles.Enqueue(worldBoardWorldTile);
+                    }
+                }
+
+                //randomize list
+                continentTiles = new Queue<WorldTile>(continentTiles.OrderBy(
+                    (o) => { return (game.WorldSettings.GlobalRandom.Next() % continentTiles.Count); }));
+
+                var random = game.WorldSettings.GlobalRandom;
+
+
+                for (int i = 0; i < resNumber; i++)
+                {
+                    WorldTile tile = null;
+                    bool noNeighbooringResources = false;
+                    const int squareToCheck = 3;
+                    while (!noNeighbooringResources)
+                    {
+
+                        tile = continentTiles.Dequeue();
+                        noNeighbooringResources = true;
+                        for (int x = tile.WorldBoardPosiiton.X - squareToCheck;
+                            x <= tile.WorldBoardPosiiton.X + squareToCheck;
+                            x++)
+                        {
+                            for (int y = tile.WorldBoardPosiiton.Y - squareToCheck;
+                                y <= tile.WorldBoardPosiiton.Y + squareToCheck;
+                                y++)
+                            {
+                                if (worldBoard.WorldTiles[x, y].Artifact != null)
+                                {
+                                    noNeighbooringResources = false;
+                                }
+                            }
+                        }
+                    }
+
+                    var resource = ResourceLibrary.GetRandomResource(tile.Biome, random);
+                    resource.Info.MapPosition = tile.WorldBoardPosiiton;
+                    tile.Resource = resource;
+                }
+            }
         }
 
         public static void PlaceInitialArtifacts(WorldBoard worldBoard, NamelessGame game)

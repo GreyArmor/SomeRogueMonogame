@@ -16,7 +16,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         TerrainMode,
         RegionsMode,
         PoliticalMode,
-        ArtifactMode
+        ArtifactMode,
+        ResourceMode
     }
     public class WorldBoardScreen : BaseGuiScreen
     {
@@ -39,6 +40,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             ModeArtifacts = CreateButton("Artifacts", game.GetSettings().HudWidth() - 50);
             ModeArtifacts.OnClick += OnClickArtifacts;
+            ModeResource = CreateButton("Resources", game.GetSettings().HudWidth() - 50);
+            ModeResource.OnClick += OnClickResource;
 
             SelectList list = new SelectList(new Vector2(0, 150));
             list.Locked = true;
@@ -52,10 +55,19 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             Panel.AddChild(ModeRegions);
             Panel.AddChild(ModePolitical);
             Panel.AddChild(ModeArtifacts);
+            Panel.AddChild(ModeResource);
             Panel.AddChild(ReturnToGame);
             
             UserInterface.Active.AddEntity(Panel);
         }
+
+        private void OnClickResource(Entity entity)
+        {
+            Actions.Add(WorldBoardScreenAction.ResourceMode);
+            Mode = WorldBoardScreenAction.ResourceMode;
+        }
+
+        public Button ModeResource { get; set; }
 
         private void OnClickArtifacts(Entity entity)
         {

@@ -4,6 +4,7 @@ using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.Physical;
+using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Input;
 using NamelessRogue.shell;
 
@@ -14,11 +15,11 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         public void Update(long gameTime, NamelessGame namelessGame)
         {
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
+            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
             IChunkProvider worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
                 foreach (IEntity entity in namelessGame.GetEntities())
                 {
                     DropItemCommand dropCommand = entity.GetComponentOfType<DropItemCommand>();

@@ -29,7 +29,8 @@ namespace NamelessRogue.Engine.Engine.Systems
         Terrain,
         Regions,
         Political,
-        Artifact
+        Artifact,
+        Resources
     }
 
     public class WorldBoardRenderingSystem : ISystem
@@ -129,18 +130,22 @@ namespace NamelessRogue.Engine.Engine.Systems
             characterToTileDictionary.Add('n', new AtlasTileData(14, 6));
             characterToTileDictionary.Add('o', new AtlasTileData(15, 6));
             //row change              Add
-            characterToTileDictionary.Add('p', new AtlasTileData(0, 8));
-            characterToTileDictionary.Add('q', new AtlasTileData(1, 8));
-            characterToTileDictionary.Add('r', new AtlasTileData(2, 8));
-            characterToTileDictionary.Add('s', new AtlasTileData(3, 8));
-            characterToTileDictionary.Add('t', new AtlasTileData(4, 8));
-            characterToTileDictionary.Add('u', new AtlasTileData(5, 8));
-            characterToTileDictionary.Add('v', new AtlasTileData(6, 8));
-            characterToTileDictionary.Add('w', new AtlasTileData(7, 8));
-            characterToTileDictionary.Add('x', new AtlasTileData(8, 8));
-            characterToTileDictionary.Add('y', new AtlasTileData(9, 8));
-            characterToTileDictionary.Add('z', new AtlasTileData(10, 8));
+            characterToTileDictionary.Add('p', new AtlasTileData(0, 7));
+            characterToTileDictionary.Add('q', new AtlasTileData(1, 7));
+            characterToTileDictionary.Add('r', new AtlasTileData(2, 7));
+            characterToTileDictionary.Add('s', new AtlasTileData(3, 7));
+            characterToTileDictionary.Add('t', new AtlasTileData(4, 7));
+            characterToTileDictionary.Add('u', new AtlasTileData(5, 7));
+            characterToTileDictionary.Add('v', new AtlasTileData(6, 7));
+            characterToTileDictionary.Add('w', new AtlasTileData(7, 7));
+            characterToTileDictionary.Add('x', new AtlasTileData(8, 7));
+            characterToTileDictionary.Add('y', new AtlasTileData(9, 7));
+            characterToTileDictionary.Add('z', new AtlasTileData(10, 7));
+
+            characterToTileDictionary.Add('★', new AtlasTileData(15, 0));
+
         }
+
 
         public void Update(long gameTime, NamelessGame game)
         {
@@ -287,8 +292,8 @@ namespace NamelessRogue.Engine.Engine.Systems
             }
             else if (biome == Biomes.Hills)
             {
-                screen.ScreenBuffer[point.X, point.Y].Char = 'A';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.8, 0.8, 0.8);
+                screen.ScreenBuffer[point.X, point.Y].Char = 'h';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0.8, 0);
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
             }
             else if (biome == Biomes.Beach)
@@ -361,6 +366,14 @@ namespace NamelessRogue.Engine.Engine.Systems
                 {
                     screen.ScreenBuffer[point.X, point.Y].Char = tile.Artifact.Representation;
                     screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Artifact.CharColor;
+                }
+            }
+            else if (Mode == WorldBoardRenderingSystemMode.Resources)
+            {
+                if (tile.Resource != null)
+                {
+                    screen.ScreenBuffer[point.X, point.Y].Char = tile.Resource.Representation;
+                    screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Resource.CharColor;
                 }
             }
         }

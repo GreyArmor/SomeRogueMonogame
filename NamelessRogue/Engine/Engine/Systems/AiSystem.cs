@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Status;
+using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
 
@@ -27,8 +28,13 @@ namespace NamelessRogue.Engine.Engine.Systems
             //    return;
             //}
 
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
-            IChunkProvider worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+            IChunkProvider worldProvider = null;
+            if (worldEntity != null)
+            {
+                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
+            }
+
 
             if (worldProvider != null)
             {
@@ -89,8 +95,13 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides)
         {
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
-            IChunkProvider worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+            IChunkProvider worldProvider = null;
+            if (worldEntity != null)
+            {
+                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
+            }
+
             Position position = movableEntity.GetComponentOfType<Position>();
             BasicAi basicAi = movableEntity.GetComponentOfType<BasicAi>();
             var route = basicAi.Route;

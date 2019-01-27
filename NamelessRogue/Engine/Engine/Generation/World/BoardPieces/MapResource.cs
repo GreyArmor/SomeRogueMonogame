@@ -10,6 +10,6 @@ namespace NamelessRogue.Engine.Engine.Generation.World.BoardPieces
     public class MapResource : BoardPiece
     {
         public int Level { get; set; }
-        public List<TerrainTypes> AppearsOn { get; set; } = new List<TerrainTypes>();
+        public List<Biomes> AppearsOn { get; set; } = new List<Biomes>();
     }
 }

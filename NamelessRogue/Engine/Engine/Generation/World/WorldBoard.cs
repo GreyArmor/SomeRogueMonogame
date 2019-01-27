@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using NamelessRogue.Engine.Engine.Components;
+using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 
 namespace NamelessRogue.Engine.Engine.Generation.World
 {
@@ -18,6 +19,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         public List<Region> Forests { get; set; }
         public List<Region> Deserts { get; set; }
         public List<Region> Swamps { get; set; }
+        public ChunkData Chunks { get; set; }
 
         public WorldBoard(int width, int height, int age)
         {

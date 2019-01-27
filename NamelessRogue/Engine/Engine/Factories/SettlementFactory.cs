@@ -92,7 +92,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             
 
 
-            GenerateCityBuildingForTest(center, namelessGame);
+            GenerateCityBuildingForTest(center, namelessGame, worldProvider);
 
 
 
@@ -111,7 +111,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         }
 
 
-        private static void GenerateCityBuildingForTest(Vector2 center, NamelessGame game)
+        private static void GenerateCityBuildingForTest(Vector2 center, NamelessGame game, IChunkProvider chunks)
         {
 
             var citySize = 100;
@@ -125,7 +125,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                 for (int y = 0; y < citySize; y += 15)
                 {
                     BuildingFactory.CreateTiltedBuilding((int) (x + center.X - citySize / 2),
-                        (int) (y + center.Y - citySize / 2), 10, 10, game);
+                        (int) (y + center.Y - citySize / 2), 10, 10, game, chunks);
                 }
             }
         }

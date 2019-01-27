@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Engine.Components.Environment;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
+using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.FieldOfView;
@@ -169,11 +170,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                 InitializeTexture(game);
             }
 
-            IEntity worldEntity = game.GetEntityByComponentClass<ChunkData>();
+            IEntity worldEntity = game.GetEntityByComponentClass<TimeLine>();
             IChunkProvider worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
             }
 
             foreach (IEntity entity in game.GetEntities())
@@ -349,19 +350,19 @@ namespace NamelessRogue.Engine.Engine.Systems
             }
             else if (terrainTypes == TerrainTypes.HardRocks)
             {
-                screen.ScreenBuffer[point.X, point.Y].Char = 'A';
+                screen.ScreenBuffer[point.X, point.Y].Char = '.';
                 screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.2, 0.2, 0.2);
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
             }
             else if (terrainTypes == TerrainTypes.Rocks)
             {
-                screen.ScreenBuffer[point.X, point.Y].Char = 'A';
+                screen.ScreenBuffer[point.X, point.Y].Char = '.';
                 screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.8, 0.8, 0.8);
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
             }
             else if (terrainTypes == TerrainTypes.LightRocks)
             {
-                screen.ScreenBuffer[point.X, point.Y].Char = 'A';
+                screen.ScreenBuffer[point.X, point.Y].Char = '.';
                 screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.5, 0.5, 0.5);
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
             }

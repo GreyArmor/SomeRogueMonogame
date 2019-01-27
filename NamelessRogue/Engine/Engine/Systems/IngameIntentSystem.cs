@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Components.UI;
+using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Input;
 using NamelessRogue.shell;
@@ -66,14 +67,14 @@ namespace NamelessRogue.Engine.Engine.Systems
                                         intent == Intent.MoveTopRight ? position.p.Y + 1 :
                                         position.p.Y;
 
-                                    IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
+                                    IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
                                     IChunkProvider worldProvider = null;
                                     if (worldEntity != null)
                                     {
-                                        worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+                                        worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
                                     }
 
-                                    Tile tileToMoveTo = worldProvider.GetTile(newX, newY);
+                                        Tile tileToMoveTo = worldProvider.GetTile(newX, newY);
 
 
                                     IEntity entityThatOccupiedTile = null;
@@ -178,14 +179,15 @@ namespace NamelessRogue.Engine.Engine.Systems
 
                                 if (hasTurn != null)
                                 {
-                                    IEntity worldEntity = namelessGame.GetEntityByComponentClass<ChunkData>();
+                                    IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
                                     IChunkProvider worldProvider = null;
                                     if (worldEntity != null)
                                     {
-                                        worldProvider = worldEntity.GetComponentOfType<ChunkData>();
+                                        worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
                                     }
 
-                                    var position = playerEntity.GetComponentOfType<Position>();
+
+                                        var position = playerEntity.GetComponentOfType<Position>();
                                     var itemHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                                     var tile = worldProvider.GetTile(position.p.X, position.p.Y);
 
