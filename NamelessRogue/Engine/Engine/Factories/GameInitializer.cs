@@ -22,13 +22,5 @@ namespace NamelessRogue.Engine.Engine.Factories
             cursor.AddComponent(new LineToPlayer());
             return cursor;
         }
-
-
-        public static IEntity CreateWorldMapMode()
-        {
-            Entity worldMode = new Entity();
-            worldMode.AddComponent(new WorldMapMode(){Mode = WorldBoardRenderingSystemMode.Terrain});
-            return worldMode;
-        }
     }
 }

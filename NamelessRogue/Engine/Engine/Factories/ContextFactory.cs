@@ -65,12 +65,13 @@ namespace NamelessRogue.Engine.Engine.Factories
             }
             else
             {
+                var renderingSystem = new MapRenderingSystem(game.GetSettings(), game.WorldSettings);
                 var systems = new List<ISystem>();
                 systems.Add(new InputSystem());
                 systems.Add(new WorldBoardIntentSystem());
                 systems.Add(new MovementSystem());
-                systems.Add(new WorldBoardScreenSystem());
-                var renderingSystem = new WorldBoardRenderingSystem(game.GetSettings());
+                systems.Add(new WorldBoardScreenSystem(renderingSystem));
+              
                 var uiSystem = new UIRenderSystem();
 
                 // create and init the UI manager

@@ -63,7 +63,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             MapResource oasis = new MapResource();
             oasis.Info.Name = "Oasis";
             oasis.Info.ProductionModifier = new ProductionValue(2, 1, 0, 0, 0, 1);
-            oasis.AppearsOn.AddRange(new[] {Biomes.Desert});
+            oasis.AppearsOn.AddRange(new[] {Biomes.Desert, Biomes.Savannah});
             oasis.Level = 1;
             oasis.Representation = 'O';
             oasis.CharColor = new Color(Microsoft.Xna.Framework.Color.Green);
@@ -82,7 +82,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             MapResource stone = new MapResource();
             stone.Info.Name = "Stone";
             stone.Info.ProductionModifier = new ProductionValue(0, 2, 0, 1, 0, 0);
-            stone.AppearsOn.AddRange(new[] {Biomes.Plains, Biomes.Beach, Biomes.Desert, Biomes.Mountain, Biomes.Swamp});
+            stone.AppearsOn.AddRange(new[] {Biomes.Plains, Biomes.Beach, Biomes.Desert, Biomes.Mountain, Biomes.Swamp, Biomes.Savannah});
             stone.Level = 1;
             stone.Representation = 'S';
             stone.CharColor = new Color(Microsoft.Xna.Framework.Color.Gray);
@@ -91,7 +91,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             bronze.Info.Name = "Bronze";
             bronze.Info.ProductionModifier = new ProductionValue(0, 2, 0, 1, 0, 0);
             bronze.AppearsOn.AddRange(new[]
-                {Biomes.Plains, Biomes.Hills, Biomes.Desert, Biomes.Mountain, Biomes.Swamp});
+                {Biomes.Plains, Biomes.Hills, Biomes.Desert, Biomes.Mountain, Biomes.Swamp, Biomes.Savannah});
             bronze.Level = 1;
             bronze.Representation = 'B';
             bronze.CharColor = new Color(Microsoft.Xna.Framework.Color.SandyBrown);
@@ -100,7 +100,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             silver.Info.Name = "Silver";
             silver.Info.ProductionModifier = new ProductionValue(0, 2, 0, 1, 0, 0);
             silver.AppearsOn.AddRange(new[]
-                {Biomes.Plains, Biomes.Hills, Biomes.Desert, Biomes.Mountain, Biomes.Swamp});
+                {Biomes.Plains, Biomes.Hills, Biomes.Desert, Biomes.Mountain, Biomes.Swamp,Biomes.Savannah});
             silver.Level = 1;
             silver.Representation = 'S';
             silver.CharColor = new Color(Microsoft.Xna.Framework.Color.Silver);
@@ -108,7 +108,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             MapResource gold = new MapResource();
             gold.Info.Name = "Gold";
             gold.Info.ProductionModifier = new ProductionValue(0, 2, 0, 1, 0, 0);
-            gold.AppearsOn.AddRange(new[] {Biomes.Plains, Biomes.Hills, Biomes.Desert, Biomes.Mountain, Biomes.Swamp});
+            gold.AppearsOn.AddRange(new[] {Biomes.Plains, Biomes.Hills, Biomes.Desert, Biomes.Mountain, Biomes.Swamp, Biomes.Savannah });
             gold.Level = 1;
             gold.Representation = 'G';
             gold.CharColor = new Color(Microsoft.Xna.Framework.Color.Gold);
@@ -117,7 +117,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             copper.Info.Name = "Copper";
             copper.Info.ProductionModifier = new ProductionValue(0, 2, 0, 1, 0, 0);
             copper.AppearsOn.AddRange(new[]
-                {Biomes.Plains, Biomes.Hills, Biomes.Desert, Biomes.Mountain, Biomes.Swamp});
+                {Biomes.Plains, Biomes.Hills, Biomes.Desert, Biomes.Mountain, Biomes.Swamp, Biomes.Savannah});
             copper.Level = 1;
             copper.Representation = 'C';
             copper.CharColor = new Color(Microsoft.Xna.Framework.Color.RosyBrown);
@@ -229,7 +229,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             MapResource medicalHerbs = new MapResource();
             medicalHerbs.Info.Name = "Medical herbs";
             medicalHerbs.Info.ProductionModifier = new ProductionValue(0, 0, 1, 2, 0, 3);
-            medicalHerbs.AppearsOn.AddRange(new[] {Biomes.Forest, Biomes.Jungle, Biomes.Plains, Biomes.Tundra});
+            medicalHerbs.AppearsOn.AddRange(new[] {Biomes.Forest, Biomes.Jungle, Biomes.Plains, Biomes.Tundra, Biomes.Savannah});
             medicalHerbs.Level = 1;
             medicalHerbs.Representation = 'H';
             medicalHerbs.CharColor = new Color(Microsoft.Xna.Framework.Color.Green);

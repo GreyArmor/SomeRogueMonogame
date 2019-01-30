@@ -46,7 +46,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             IChunkProvider worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
+                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
             }
 
             IEntity building = new Entity();

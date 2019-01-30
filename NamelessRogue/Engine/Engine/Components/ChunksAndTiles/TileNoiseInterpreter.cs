@@ -10,7 +10,7 @@ using NamelessRogue.Engine.Engine.Infrastructure;
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
     public class TileNoiseInterpreter {
-        public static Tuple<TerrainTypes, Biomes> GetTerrain(double noiseValue, double forest, double swamp, double lake, double desert)
+        public static Tuple<TerrainTypes, Biomes> GetTerrain(double noiseValue, double forest, double swamp, double lake, double desert, double temperature,  int resolutionZoomed, double dX, double dY)
         {
             if (noiseValue>1){
                 noiseValue=1;
@@ -18,6 +18,9 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             if (noiseValue<0){
                 noiseValue=0;
             }
+            
+            var temperatureCoef = dY / resolutionZoomed + temperature;
+
 
             TerrainTypes? t = null;
             Biomes? b = null;
@@ -40,7 +43,19 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             }
             else if(noiseValue>0.51) {
                 t  = TerrainTypes.Grass;
-                b = Biomes.Plains;
+
+                if (temperatureCoef <= 0.15 || temperatureCoef >= 0.85)
+                {
+                    b = Biomes.SnowDesert;
+                }
+                else if (temperatureCoef <= 0.6 && temperatureCoef >= 0.4)
+                {
+                    b = Biomes.Savannah;
+                }
+                else
+                {
+                    b = Biomes.Plains;
+                }
             }
             else if(noiseValue>=0.5) {
                 t  = TerrainTypes.Sand;
@@ -56,7 +71,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
                 if (t != TerrainTypes.Water && t!=TerrainTypes.Rocks && t!=TerrainTypes.HardRocks&&t!=TerrainTypes.HardRocks)
                 {
-                    if (lake >= 0.8f)
+                    if (lake >= 0.9f)
                     {
                         t = TerrainTypes.Water;
                         b = Biomes.Lake;
@@ -64,7 +79,16 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                     else if (desert>=0.8f)
                     {
                         t = TerrainTypes.Sand;
-                        b = Biomes.Desert;
+                       
+                        if (temperatureCoef <= 0.15 || temperatureCoef >= 0.85)
+                        {
+                            b = Biomes.SnowDesert;
+                        }
+                        else
+                        {
+                            b = Biomes.Desert;
+                        }
+                    
                     }
                     else if(swamp >=0.8f)
                     {
@@ -74,7 +98,21 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                     else if (forest>=0.8f)
                     {
                         t = TerrainTypes.Grass;
-                        b = Biomes.Forest;
+
+                        if (temperatureCoef <= 0.15 || temperatureCoef >= 0.85)
+                        {
+                            b = Biomes.Tundra;
+                        }
+                        else if (temperatureCoef <= 0.6 && temperatureCoef >= 0.5)
+                        {
+                            b = Biomes.Jungle;
+                        }
+                        else
+                        {
+                            b = Biomes.Forest;
+                        }
+
+                       
                     }
                 }
 
@@ -85,5 +123,6 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                 return new Tuple<TerrainTypes, Biomes>(TerrainTypes.Nothingness, Biomes.None);
             }
         }
+
     }
 }

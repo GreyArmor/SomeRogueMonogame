@@ -7,7 +7,7 @@ using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 
 namespace NamelessRogue.Engine.Engine.Generation.World
 {
-    public class WorldBoard : Component
+    public class TimelineLayer : Component
     {
         public int Age { get; }
         public WorldTile[,] WorldTiles { get; }
@@ -21,7 +21,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         public List<Region> Swamps { get; set; }
         public ChunkData Chunks { get; set; }
 
-        public WorldBoard(int width, int height, int age)
+        public TimelineLayer(int width, int height, int age)
         {
             WorldTiles = new WorldTile[width, height];
             Age = age;

@@ -22,7 +22,7 @@ namespace NamelessRogue.Engine.Engine.Systems
             IChunkProvider worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentWorldBoard.Chunks;
+                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
             }
 
 

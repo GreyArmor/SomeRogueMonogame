@@ -19,6 +19,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         public SimplexNoise LakesNoise;
         public SimplexNoise SwampNoise;
         public SimplexNoise DesertNoise;
+        public SimplexNoise TemperatureNoise;
         int resolution=1000;
         int layer1 = 300, layer2 = 600, layer3 = 900;
 
@@ -38,6 +39,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             SwampNoise = new SimplexNoise(200, 0.75, random);
             DesertNoise = new SimplexNoise(200, 0.75, random);
 
+            TemperatureNoise = new SimplexNoise(200, 0.75, random);
 
             TerrainNoises.Add(noise1);
             TerrainNoises.Add(noise2);
@@ -141,8 +143,11 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             double swamp = 1 - (0.5 * (1 + SwampNoise.getNoise(dX, dY)));
             double lake = 1 - (0.5 * (1 + LakesNoise.getNoise(dX, dY)));
             double desert = 1 - (0.5 * (1 + DesertNoise.getNoise(dX, dY)));
+
+            double temperature = 0.5 - (0.5 * (1 + TemperatureNoise.getNoise(dX,dY)));
+            temperature = temperature / 20;
             Tuple<TerrainTypes, Biomes> terrinBiome =
-                TileNoiseInterpreter.GetTerrain(result, forest, swamp, lake, desert);
+                TileNoiseInterpreter.GetTerrain(result, forest, swamp, lake, desert, temperature, resolutionZoomed, dX,dY);
             return new Tile(terrinBiome.Item1, terrinBiome.Item2, new Point(x,y));
         }
     }

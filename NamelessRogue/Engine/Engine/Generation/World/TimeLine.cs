@@ -11,10 +11,10 @@ namespace NamelessRogue.Engine.Engine.Generation.World
     {
         public TimeLine()
         {
-            WorldBoardAtEveryAge = new List<WorldBoard>();
+            WorldBoardAtEveryAge = new List<TimelineLayer>();
         }
-        public List<WorldBoard> WorldBoardAtEveryAge { get; }
+        public List<TimelineLayer> WorldBoardAtEveryAge { get; }
 
-        public WorldBoard CurrentWorldBoard { get; set; }
+        public TimelineLayer CurrentTimelineLayer { get; set; }
     }
 }

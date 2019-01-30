@@ -15,13 +15,13 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         Lake,
         River,
         Jungle,
-        MountainForest,
         Tundra,
         SnowDesert,
         Mountain,
         Hills,
         Plains,
         Beach,
-        Sea
+        Sea,
+        Savannah
     }
 }

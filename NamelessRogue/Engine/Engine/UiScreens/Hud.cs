@@ -89,7 +89,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             WitLabel.Scale = labelScale;
             TurnLabel.Scale = labelScale;
 
-            WorldMapButton = new Button("World map", size: new Vector2(200, 50), anchor: Anchor.BottomRight);
+            WorldMapButton = new Button("Map", size: new Vector2(200, 50), anchor: Anchor.BottomRight);
             WorldMapButton.ButtonParagraph.Scale = 0.7f;
             WorldMapButton.OnClick += OnClickWorldMap;
 

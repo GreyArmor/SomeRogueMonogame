@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -20,6 +21,7 @@ using NamelessRogue.shell;
 using NamelessRogue.Storage.data;
 using BoundingBox = NamelessRogue.Engine.Engine.Utility.BoundingBox;
 using Color = NamelessRogue.Engine.Engine.Utility.Color;
+using Tile = AStarNavigator.Tile;
 
 namespace NamelessRogue.Engine.Engine.Systems
 {
@@ -33,10 +35,18 @@ namespace NamelessRogue.Engine.Engine.Systems
         Resources
     }
 
-    public class WorldBoardRenderingSystem : ISystem
+    public class MapRenderingSystem : ISystem
     {
-
-        public WorldBoardRenderingSystemMode Mode { get; set; } = WorldBoardRenderingSystemMode.Terrain;
+        public WorldBoardRenderingSystemMode Mode
+        {
+            get => _mode;
+            set
+            {
+                _mode = value;
+                worldMap?.Dispose();
+                worldMap = null;
+            }
+        }
 
         public readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
         (
@@ -54,6 +64,9 @@ namespace NamelessRogue.Engine.Engine.Systems
         Effect effect;
         private VertexBuffer vertexBuffer;
         private IndexBuffer indexBuffer;
+        private Screen worldMapScreen;
+
+        public bool LocalMapRendering { get; set; } = false;
 
         SamplerState sampler = new SamplerState()
         {
@@ -67,10 +80,10 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         };
 
-        public WorldBoardRenderingSystem(GameSettings settings)
+        public MapRenderingSystem(GameSettings settings, WorldSettings gameWorldSettings)
         {
-
             InitializeCharacterTileDictionary();
+            worldMapScreen = new Screen(gameWorldSettings.WorldBoardWidth, gameWorldSettings.WorldBoardHeight);
         }
 
         //TODO move this hardcode to configuration file for tileset
@@ -163,44 +176,119 @@ namespace NamelessRogue.Engine.Engine.Systems
             }
 
             IEntity timeline = game.GetEntityByComponentClass<TimeLine>();
-            WorldBoard worldProvider = null;
+            TimelineLayer worldProvider = null;
             if (timeline != null)
             {
-                worldProvider = timeline.GetComponentOfType<TimeLine>().CurrentWorldBoard;
+                worldProvider = timeline.GetComponentOfType<TimeLine>().CurrentTimelineLayer;
             }
 
-            IEntity worldModeEntity = game.GetEntityByComponentClass<WorldMapMode>();
-            WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
-            Mode = worldMode.Mode;
-
-
-            foreach (IEntity entity in game.GetEntities())
+            if (LocalMapRendering)
             {
-
-                ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
-                Screen screen = entity.GetComponentOfType<Screen>();
-                if (camera != null && screen != null && worldProvider != null)
+                foreach (IEntity entity in game.GetEntities())
                 {
-                    MoveCamera(game, camera);
-                    FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), game.WorldSettings,
-                        worldProvider);
 
-                    Position playerPosition = game.GetEntityByComponentClass<Cursor>()
-                        .GetComponentOfType<Position>();
-
-                    var screenPoint = camera.PointToScreen(playerPosition.p);
-
-                    if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().getWidth() && screenPoint.X > 0 &&
-                        screenPoint.Y < game.GetSettings().getWidth())
+                    ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
+                    Screen screen = entity.GetComponentOfType<Screen>();
+                    if (camera != null && screen != null && worldProvider != null)
                     {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
+                        MoveCamera(game, camera);
+                        FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), game.WorldSettings,
+                            worldProvider);
+
+                        Position playerPosition = game.GetEntityByComponentClass<Cursor>()
+                            .GetComponentOfType<Position>();
+                        var screenPoint = camera.PointToScreen(playerPosition.p);
+
+                        if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().getWidth() &&
+                            screenPoint.X > 0 &&
+                            screenPoint.Y < game.GetSettings().getWidth())
+                        {
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
+                        }
+
+                        RenderScreen(game, screen, game.GetSettings().getFontSize());
                     }
 
-                    RenderScreen(game, screen, game.GetSettings());
                     break;
                 }
             }
+            else
+            {
+              
+                if (worldProvider != null)
+                {
+
+                    Screen screen = worldMapScreen;
+                    ConsoleCamera camera = new ConsoleCamera(new Point(0,0));
+                    if (worldMap == null)
+                    {
+                        FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), game.WorldSettings,
+                            worldProvider);
+
+                        Position playerPosition = game.GetEntityByComponentClass<Cursor>()
+                            .GetComponentOfType<Position>();
+                        var screenPoint = camera.PointToScreen(playerPosition.p);
+
+                        if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().getWidth() &&
+                            screenPoint.X > 0 &&
+                            screenPoint.Y < game.GetSettings().getWidth())
+                        {
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
+                        }
+
+                        var arr = new Color[worldMapScreen.Width, worldMapScreen.Height];
+                        var defaultcolor = new Color();
+                        for (int x = 0; x < screen.Width; x++)
+                        {
+                            for (int y = 0; y < screen.Height; y++)
+                            {
+                                if (screen.ScreenBuffer[x, y].BackGroundColor.getRed()!=0 || screen.ScreenBuffer[x, y].BackGroundColor.getGreen() != 0 || screen.ScreenBuffer[x, y].BackGroundColor.getBlue() != 0)
+                                {
+                                    arr[x, y] = screen.ScreenBuffer[x, y].BackGroundColor;
+                                }
+                                else
+                                {
+                                    arr[x, y] = screen.ScreenBuffer[x, y].CharColor;
+                                }
+                            }
+                        }
+
+                        byte[] arrBytes = new byte[screen.Width * screen.Height * 4];
+                        for (int y = 0; y < screen.Height; y++)
+                        {
+                            for (int x = 0; x < screen.Width; x++)
+                            {
+
+                                var red =  arr[x, y].getRed() * 255f;
+                                var green =  arr[x, y].getGreen() * 255f;
+                                var blue =  arr[x, y].getBlue() * 255f;
+                                arrBytes[y * screen.Height * 4 + x * 4] = (byte) red;
+                                arrBytes[y * screen.Height * 4 + x * 4 + 1] = (byte) green;
+                                arrBytes[y * screen.Height * 4 + x * 4 + 2] = (byte) blue;
+
+                                //arrBytes[y * screen.Height * 4 + x * 4] = (byte)255;
+                                //arrBytes[y * screen.Height * 4 + x * 4 + 1] = 0;
+                                //arrBytes[y * screen.Height * 4 + x * 4 + 2] = 0;
+
+
+                                arrBytes[y * screen.Height * 4 + x * 4 + 3] = 255;
+                            }
+                        }
+
+                        Texture2D tex = new Texture2D(NamelessGame.DebugDevice, screen.Width, screen.Height, false,
+                            SurfaceFormat.Color);
+                        tex.SetData(arrBytes);
+                        worldMap = tex;
+                    }
+                    RenderWorldScreen(game, screen);
+                }
+
+
+
+            }
+
         }
 
         private void MoveCamera(NamelessGame game, ConsoleCamera camera)
@@ -216,7 +304,7 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings,
             WorldSettings worldSEttings,
-            WorldBoard world)
+            TimelineLayer world)
         {
             int camX = camera.getPosition().X;
             int camY = camera.getPosition().Y;
@@ -229,9 +317,9 @@ namespace NamelessRogue.Engine.Engine.Systems
 
 
 
-            for (int x = 0; x < settings.getWidth(); x++)
+            for (int x = 0; x < screen.Width; x++)
             {
-                for (int y = 0; y < settings.getHeight(); y++)
+                for (int y = 0; y < screen.Height; y++)
                 {
                     screen.ScreenBuffer[x, y].Char = ' ';
                     screen.ScreenBuffer[x, y].CharColor = new Color();
@@ -239,9 +327,9 @@ namespace NamelessRogue.Engine.Engine.Systems
                 }
             }
 
-            for (int x = camX; x < settings.getWidth() + camX; x++)
+            for (int x = camX; x < screen.Width + camX; x++)
             {
-                for (int y = camY; y < settings.getHeight() + camY; y++)
+                for (int y = camY; y < screen.Height + camY; y++)
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
 
@@ -251,7 +339,6 @@ namespace NamelessRogue.Engine.Engine.Systems
                         continue;
                     }
 
-                    Biomes biome = world.WorldTiles[x, y].Biome;
                     GetTerrainTile(screen, screenPoint, world.WorldTiles[x, y]);
                 }
             }
@@ -274,9 +361,9 @@ namespace NamelessRogue.Engine.Engine.Systems
                 //float waveValue3 = (float) ((Math.Sin(((x + y) / 3) + angle)) + 1) / 2;
                 //float resultingColor = 0.3f + (0.5f * (waveValue1 + waveValue2 + waveValue3) / 3);
 
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0, 255);
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 255, 255);
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor =
-                    new Color(0, 1, 1);
+                    new Color(0, 0, 1);
             }
             else if (biome == Biomes.Plains)
             {
@@ -284,10 +371,16 @@ namespace NamelessRogue.Engine.Engine.Systems
                 screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0.8f, 0);
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
             }
+            else if (biome == Biomes.Savannah)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = '.';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(218/255f, 165/255f, 32/255f);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
             else if (biome == Biomes.Mountain)
             {
                 screen.ScreenBuffer[point.X, point.Y].Char = 'A';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.2, 0.2, 0.2);
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.5f, 0.5f, 0.5f);
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
             }
             else if (biome == Biomes.Hills)
@@ -320,12 +413,24 @@ namespace NamelessRogue.Engine.Engine.Systems
                 screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0f, 0.5f, 0f);
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
             }
+            else if (biome == Biomes.Jungle)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = 'j';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0f, 0.5f, 0f);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
 
+            else if (biome == Biomes.Tundra)
+            {
+                screen.ScreenBuffer[point.X, point.Y].Char = 't';
+                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 255, 255);
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
+            }
 
             else if (biome == Biomes.Swamp)
             {
                 screen.ScreenBuffer[point.X, point.Y].Char = 'S';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.5f, 0.5f, 0.5f);
+                screen.ScreenBuffer[point.X, point.Y].CharColor =  new Color(0.2, 0.2, 0.2);
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
             }
             else
@@ -354,10 +459,15 @@ namespace NamelessRogue.Engine.Engine.Systems
                     if (tile.Settlement != null)
                     {
                         screen.ScreenBuffer[point.X, point.Y].Char = 'T';
-                        screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1,1,1,1);
+                        screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1, 1, 1, 1);
                     }
 
                     screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color(tile.Owner.CivColor);
+                }
+                else
+                {
+                    screen.ScreenBuffer[point.X, point.Y].Char = ' ';
+                    screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0,0,0,0);
                 }
             }
             else if (Mode == WorldBoardRenderingSystemMode.Artifact)
@@ -378,26 +488,71 @@ namespace NamelessRogue.Engine.Engine.Systems
             }
         }
 
-        private void RenderScreen(NamelessGame gameInstance, Screen screen, GameSettings settings)
+        private void RenderScreen(NamelessGame gameInstance, Screen screen, int tileSize)
         {
-
-            for (int x = 0; x < settings.getWidth(); x++)
+            effect.Parameters["tileAtlas"].SetValue(tileAtlas);
+            for (int x = 0; x < screen.Width; x++)
             {
-                for (int y = 0; y < settings.getHeight(); y++)
+                for (int y = 0; y < screen.Height; y++)
                 {
 
                     DrawTile(gameInstance.GraphicsDevice, gameInstance,
-                        x * settings.getFontSize(),
-                        y * settings.getFontSize(),
+                        x * tileSize,
+                        y * tileSize,
                         characterToTileDictionary[screen.ScreenBuffer[x, y].Char],
                         screen.ScreenBuffer[x, y].CharColor,
-                        screen.ScreenBuffer[x, y].BackGroundColor
+                        screen.ScreenBuffer[x, y].BackGroundColor, tileSize
                     );
                 }
             }
+        }
 
+
+        private void RenderWorldScreen(NamelessGame gameInstance, Screen screen)
+        {
+            effect.Parameters["tileAtlas"].SetValue(worldMap);
+            var positionX = 0;
+            var positionY = 0;
+            var tileHeight = gameInstance.GetActualCharacterHeight();
+            var tileWidth = gameInstance.GetActualCharacterWidth();
+            float textureX = 0;
+            float textureY = 0;
+
+            float textureXend = 1;
+
+            float textureYend = 1;
+            var projectionMatrix = //Matrix.CreateOrthographic(game.getActualWidth(),game.getActualHeight(),0,1);
+                Matrix.CreateOrthographicOffCenter(0, gameInstance.GetActualWidth(),
+                    0, gameInstance.GetActualHeight(), 0, 2);
+
+            effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
+            var indices = new int[6] {0, 1, 2, 2, 3, 0};
+            effect.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
+            effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            var vertices = new Vertex[4];
+
+            vertices[0] = new Vertex(new Vector3(positionX, positionY + tileHeight, 0), new Vector4(),
+                new Vector4(), new Vector2(textureX, textureY));
+            vertices[1] = new Vertex(new Vector3(positionX, positionY, 0), new Vector4(),
+                new Vector4(), new Vector2(textureX, textureYend));
+            vertices[2] = new Vertex(new Vector3(positionX + tileWidth, positionY, 0), new Vector4(),
+                new Vector4(), new Vector2(textureXend, textureYend));
+            vertices[3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), new Vector4(),
+                new Vector4(), new Vector2(textureXend, textureY));
+
+            effect.CurrentTechnique = effect.Techniques["TextureTecnique"];
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                gameInstance.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0,
+                    vertices.Length,
+                    indices.Reverse().ToArray(), 0, 2, this.VertexDeclaration);
+            }
 
         }
+
+
+
 
         class AtlasTileData
         {
@@ -412,6 +567,8 @@ namespace NamelessRogue.Engine.Engine.Systems
         }
 
         Texture2D tileAtlas = null;
+        Texture2D worldMap  = null;
+        private WorldBoardRenderingSystemMode _mode = WorldBoardRenderingSystemMode.Terrain;
 
         private Texture InitializeTexture(NamelessGame game)
         {
@@ -425,7 +582,7 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         void DrawTile(GraphicsDevice device, NamelessGame game, int positionX, int positionY,
             AtlasTileData atlasTileData,
-            Color color, Color backGroundColor)
+            Color color, Color backGroundColor, int tileSize)
         {
 
             if (atlasTileData == null)
@@ -434,8 +591,8 @@ namespace NamelessRogue.Engine.Engine.Systems
             }
 
 
-            int tileHeight = game.GetSettings().getFontSize();
-            int tileWidth = game.GetSettings().getFontSize();
+            int tileHeight = tileSize;
+            int tileWidth = tileSize;
 
 
             float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float) tileAtlas.Width);
@@ -484,8 +641,6 @@ namespace NamelessRogue.Engine.Engine.Systems
             vertices[3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), color.ToVector4(),
                 backGroundColor.ToVector4(), new Vector2(textureXend, textureY));
 
-
-
             effect.CurrentTechnique = effect.Techniques["Point"];
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
@@ -493,9 +648,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                 device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length,
                     indices.Reverse().ToArray(), 0, 2, this.VertexDeclaration);
             }
-
-
-
         }
+
     }
 }

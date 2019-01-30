@@ -105,7 +105,6 @@
     <Compile Include="Engine\Engine\Components\Status\Damage.cs" />
     <Compile Include="Engine\Engine\Components\Status\Dead.cs" />
     <Compile Include="Engine\Engine\Components\UI\Description.cs" />
-    <Compile Include="Engine\Engine\Components\UI\WorldMapMode.cs" />
     <Compile Include="Engine\Engine\Components\WorldBoardComponents\WorldBoardPlayer.cs" />
     <Compile Include="Engine\Engine\Context\GameContext.cs" />
     <Compile Include="Engine\Engine\Factories\ArtifactLibrary.cs" />
@@ -154,7 +153,7 @@
     <Compile Include="Engine\Engine\Generation\World\TerrainGenerator.cs" />
     <Compile Include="Engine\Engine\Generation\World\TimeLine.cs" />
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\UnitTypes.cs" />
-    <Compile Include="Engine\Engine\Generation\World\WorldBoard.cs" />
+    <Compile Include="Engine\Engine\Generation\World\TimelineLayer.cs" />
     <Compile Include="Engine\Engine\Generation\World\WorldBoardGenerator.cs" />
     <Compile Include="Engine\Engine\Generation\World\WorldGenConstants.cs" />
     <Compile Include="Engine\Engine\Generation\World\WorldMapTile.cs" />
@@ -185,7 +184,7 @@
     <Compile Include="Engine\Engine\Systems\TurnManagementSystem.cs" />
     <Compile Include="Engine\Engine\Systems\UIRenderSystem.cs" />
     <Compile Include="Engine\Engine\Systems\WorldBoardIntentSystem.cs" />
-    <Compile Include="Engine\Engine\Systems\WorldBoardRenderingSystem.cs" />
+    <Compile Include="Engine\Engine\Systems\MapRenderingSystem.cs" />
     <Compile Include="Engine\Engine\Systems\WorldBoardScreenSystem.cs" />
     <Compile Include="Engine\Engine\UiScreens\BaseGuiScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\Hud.cs" />

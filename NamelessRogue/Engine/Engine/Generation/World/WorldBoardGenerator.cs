@@ -35,7 +35,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
 
 
-        public static void PopulateWithInitialData(WorldBoard board, NamelessGame game)
+        public static void PopulateWithInitialData(TimelineLayer board, NamelessGame game)
         {
             for (int x = 0; x < game.WorldSettings.WorldBoardWidth; x++)
             {
@@ -50,15 +50,15 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             }
         }
 
-        public static void PlaceResources(WorldBoard worldBoard, NamelessGame game)
+        public static void PlaceResources(TimelineLayer timelineLayer, NamelessGame game)
         {
             var continentTilesPerResource = game.WorldSettings.ContinentTilesPerResource;
 
-            foreach (var worldBoardContinent in worldBoard.Continents)
+            foreach (var worldBoardContinent in timelineLayer.Continents)
             {
                 var continentTiles = new Queue<WorldTile>();
                 var resNumber = worldBoardContinent.SizeInTiles / continentTilesPerResource;
-                foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
+                foreach (var worldBoardWorldTile in timelineLayer.WorldTiles)
                 {
                     if (worldBoardWorldTile.Continent == worldBoardContinent && worldBoardWorldTile.Owner == null)
                     {
@@ -91,7 +91,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                                 y <= tile.WorldBoardPosiiton.Y + squareToCheck;
                                 y++)
                             {
-                                if (worldBoard.WorldTiles[x, y].Artifact != null)
+                                if (timelineLayer.WorldTiles[x, y].Artifact != null)
                                 {
                                     noNeighbooringResources = false;
                                 }
@@ -106,16 +106,16 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             }
         }
 
-        public static void PlaceInitialArtifacts(WorldBoard worldBoard, NamelessGame game)
+        public static void PlaceInitialArtifacts(TimelineLayer timelineLayer, NamelessGame game)
         {
 
             var artifactsPerContinentTiles = game.WorldSettings.ContinentTilesPerArtifact;
 
-            foreach (var worldBoardContinent in worldBoard.Continents)
+            foreach (var worldBoardContinent in timelineLayer.Continents)
             {
                 var continentTiles = new Queue<WorldTile>();
                 var artifactNumber = worldBoardContinent.SizeInTiles / artifactsPerContinentTiles;
-                foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
+                foreach (var worldBoardWorldTile in timelineLayer.WorldTiles)
                 {
                     if (worldBoardWorldTile.Continent == worldBoardContinent && worldBoardWorldTile.Owner == null)
                     {
@@ -151,7 +151,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                                 y <= tile.WorldBoardPosiiton.Y + squareToCheck;
                                 y++)
                             {
-                                if (worldBoard.WorldTiles[x, y].Artifact != null)
+                                if (timelineLayer.WorldTiles[x, y].Artifact != null)
                                 {
                                     noNeighbooringArtifacts = false;
                                 }
@@ -170,21 +170,21 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
         }
 
-        public static void DistributeMetaphysics(WorldBoard worldBoard, NamelessGame game)
+        public static void DistributeMetaphysics(TimelineLayer timelineLayer, NamelessGame game)
         {
         }
 
-        public static void PlaceInitialCivilizations(WorldBoard worldBoard, NamelessGame game)
+        public static void PlaceInitialCivilizations(TimelineLayer timelineLayer, NamelessGame game)
         {
             var worldSettingsContinentTilesPerCivilization = game.WorldSettings.ContinentTilesPerCivilization;
 
-            foreach (var worldBoardContinent in worldBoard.Continents)
+            foreach (var worldBoardContinent in timelineLayer.Continents)
             {
                 var civNumber = worldBoardContinent.SizeInTiles / worldSettingsContinentTilesPerCivilization;
 
                 var continentTiles = new Queue<WorldTile>();
 
-                foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
+                foreach (var worldBoardWorldTile in timelineLayer.WorldTiles)
                 {
                     if (worldBoardWorldTile.Continent == worldBoardContinent && worldBoardWorldTile.Owner == null)
                     {
@@ -207,7 +207,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                     while (!civNameUnique)
                     {
                         civName = game.WorldSettings.NamesGenerator.GetCountryName(random).FirstCharToUpper();
-                        civNameUnique = worldBoard.Civilizations.All(x => x.Name != civName);
+                        civNameUnique = timelineLayer.Civilizations.All(x => x.Name != civName);
                     }
 
                     CultureTemplate culture = game.WorldSettings.CultureTemplates[
@@ -218,7 +218,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                                 (float) game.WorldSettings.GlobalRandom.NextDouble(),
                                 (float) game.WorldSettings.GlobalRandom.NextDouble(), 1)),
                         culture);
-                    worldBoard.Civilizations.Add(civilization);
+                    timelineLayer.Civilizations.Add(civilization);
 
 
                     var firstSettlement = new Settlement()
@@ -246,7 +246,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                         {
                             for (int y = tile.WorldBoardPosiiton.Y - squareToCheck; y <= tile.WorldBoardPosiiton.Y + squareToCheck; y++)
                             {
-                                if (worldBoard.WorldTiles[x, y].Owner != null)
+                                if (timelineLayer.WorldTiles[x, y].Owner != null)
                                 {
                                     noNeighbooringCivs = false;
                                 }
@@ -274,7 +274,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
                             if (dX * dX + dY * dY <= (radiusToClaim))
                             {
-                                worldBoard.WorldTiles[x, y].Owner = civilization;
+                                timelineLayer.WorldTiles[x, y].Owner = civilization;
                             }
 
                            
@@ -282,32 +282,32 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                     }
                 }
 
-               // var names = worldBoard.Civilizations.Select(x => x.Name).Aggregate((s1, s2) => s1 + ", " + s2);
+               // var names = timelineLayer.Civilizations.Select(x => x.Name).Aggregate((s1, s2) => s1 + ", " + s2);
             }
 
         }
 
-        public static void AnalizeLandmasses(WorldBoard worldBoard, NamelessGame game)
+        public static void AnalizeLandmasses(TimelineLayer timelineLayer, NamelessGame game)
         {
             var s = Stopwatch.StartNew();
             Random rand = game.WorldSettings.GlobalRandom;
-            List<Region> regions =  GetRegions(worldBoard, game, rand, (tile => tile.Terrain != TerrainTypes.Water &&
+            List<Region> regions =  GetRegions(timelineLayer, game, rand, (tile => tile.Terrain != TerrainTypes.Water &&
                                                         tile.Continent == null), (tile, region) => tile.Continent = region,() => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper(); });
 
-            List<Region> forests = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Forest && tile.LandmarkRegion==null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " forest"; });
-            List<Region> deserts = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Desert && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " desert"; });
-            List<Region> mountains = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Mountain && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " mountain"; });
-            List<Region> swamps = GetRegions(worldBoard, game, rand, (tile => tile.Biome == Biomes.Swamp && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " swamp"; });
+            List<Region> forests = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Forest && tile.LandmarkRegion==null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " forest"; });
+            List<Region> deserts = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Desert && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " desert"; });
+            List<Region> mountains = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Mountain && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " mountain"; });
+            List<Region> swamps = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Swamp && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " swamp"; });
             s.Stop();
-            worldBoard.Continents = regions.Where(x => x.SizeInTiles >= 2000).ToList();
-            worldBoard.Islands = regions.Where(x => x.SizeInTiles < 2000).ToList();
-            worldBoard.Forests = forests.ToList();
-            worldBoard.Deserts = deserts.ToList();
-            worldBoard.Mountains = mountains.ToList();
-            worldBoard.Swamps = swamps.ToList();
+            timelineLayer.Continents = regions.Where(x => x.SizeInTiles >= 2000).ToList();
+            timelineLayer.Islands = regions.Where(x => x.SizeInTiles < 2000).ToList();
+            timelineLayer.Forests = forests.ToList();
+            timelineLayer.Deserts = deserts.ToList();
+            timelineLayer.Mountains = mountains.ToList();
+            timelineLayer.Swamps = swamps.ToList();
         }
 
-        private static List<Region> GetRegions(WorldBoard worldBoard, NamelessGame game, Random rand, Func<WorldTile,bool> searchCriterion, Action<WorldTile,Region> onFoundRegion, Func<string> nameGenerator)
+        private static List<Region> GetRegions(TimelineLayer timelineLayer, NamelessGame game, Random rand, Func<WorldTile,bool> searchCriterion, Action<WorldTile,Region> onFoundRegion, Func<string> nameGenerator)
         {
             List<Region> regions = new List<Region>();
             var searchPoint = new Point();
@@ -316,14 +316,14 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             {
                 for (searchPoint.Y = 0; searchPoint.Y < game.WorldSettings.WorldBoardHeight; searchPoint.Y++)
                 {
-                    if (searchCriterion(worldBoard.WorldTiles[searchPoint.X, searchPoint.Y]))
+                    if (searchCriterion(timelineLayer.WorldTiles[searchPoint.X, searchPoint.Y]))
                     {
                         Region r = new Region();
                         r.Name = nameGenerator();
                         r.Color = new Color(rand.NextDouble(), rand.NextDouble(), rand.NextDouble(), 1f);
                         regions.Add(r);
 
-                        var firstNode = worldBoard.WorldTiles[searchPoint.X, searchPoint.Y];
+                        var firstNode = timelineLayer.WorldTiles[searchPoint.X, searchPoint.Y];
 
                         var floodList = new Queue<WorldTile>();
                         floodList.Enqueue(firstNode);
@@ -332,10 +332,10 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
                         void AddToFloodList(int x, int y, Region region)
                         {
-                            if (searchCriterion(worldBoard.WorldTiles[x, y]))
+                            if (searchCriterion(timelineLayer.WorldTiles[x, y]))
                             {
-                                floodList.Enqueue(worldBoard.WorldTiles[x, y]);
-                                onFoundRegion(worldBoard.WorldTiles[x, y],region);
+                                floodList.Enqueue(timelineLayer.WorldTiles[x, y]);
+                                onFoundRegion(timelineLayer.WorldTiles[x, y],region);
                                 region.SizeInTiles++;
                             }
                         }

@@ -61,6 +61,15 @@ PixelToFrame BackgroundPixelShader(VertexToPixel PSIn)
 	return Output;
 }
 
+
+PixelToFrame TexturePixelShader(VertexToPixel PSIn)
+{
+	float4 textureColor = tileAtlas.Sample(textureSampler, PSIn.TextureCoordinate);
+	PixelToFrame Output = (PixelToFrame)0;
+	Output.Color = textureColor;
+	return Output;
+}
+
 technique Point
 {
 	pass Pass0
@@ -76,5 +85,15 @@ technique Background
 	{
 		VertexShader = compile vs_4_0 SimplestVertexShader();
 		PixelShader = compile ps_4_0 BackgroundPixelShader();
+	}
+}
+
+
+technique TextureTecnique
+{
+	pass Pass0
+	{
+		VertexShader = compile vs_4_0 SimplestVertexShader();
+		PixelShader = compile ps_4_0 TexturePixelShader();
 	}
 }

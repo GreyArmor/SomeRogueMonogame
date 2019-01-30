@@ -13,6 +13,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
     public enum WorldBoardScreenAction
     {
         ReturnToGame,
+        WorldMap,
+        LocalMap,
         TerrainMode,
         RegionsMode,
         PoliticalMode,
@@ -43,14 +45,31 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             ModeResource = CreateButton("Resources", game.GetSettings().HudWidth() - 50);
             ModeResource.OnClick += OnClickResource;
 
+
+            LocalMap = new Button("Local", size: new Vector2(game.GetSettings().HudWidth() / 2 - 50, 50), anchor: Anchor.Auto);
+            LocalMap.ButtonParagraph.Scale = 0.7f;
+            LocalMap.OnClick += OnLocalMap;
+            LocalMap.Anchor = Anchor.TopLeft;
+
+
+            WorldMap = new Button("World", size: new Vector2(game.GetSettings().HudWidth()/2 - 50, 50), anchor: Anchor.Auto);
+            WorldMap.ButtonParagraph.Scale = 0.7f;
+            WorldMap.OnClick += OnWorldMap;
+            WorldMap.Anchor = Anchor.TopRight;
+
             SelectList list = new SelectList(new Vector2(0, 150));
             list.Locked = true;
             list.ItemsScale = 0.5f;
             list.ExtraSpaceBetweenLines = -10;
             DescriptionLog = list;
 
-            Panel.AddChild(DescriptionLog);
+           
 
+
+
+            Panel.AddChild(WorldMap);
+            Panel.AddChild(LocalMap);
+            Panel.AddChild(DescriptionLog);
             Panel.AddChild(ModeTerrain);
             Panel.AddChild(ModeRegions);
             Panel.AddChild(ModePolitical);
@@ -61,13 +80,23 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             UserInterface.Active.AddEntity(Panel);
         }
 
+        private void OnWorldMap(Entity entity)
+        {
+            Actions.Add(WorldBoardScreenAction.WorldMap);
+        }
+
+        private void OnLocalMap(Entity entity)
+        {
+            Actions.Add(WorldBoardScreenAction.LocalMap);
+        }
+
         private void OnClickResource(Entity entity)
         {
             Actions.Add(WorldBoardScreenAction.ResourceMode);
             Mode = WorldBoardScreenAction.ResourceMode;
         }
 
-        public Button ModeResource { get; set; }
+       
 
         private void OnClickArtifacts(Entity entity)
         {
@@ -112,7 +141,10 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public Button ModeArtifacts { get; set; }
         public Button ReturnToGame { get; set; }
 
-       
+        public Button ModeResource { get; set; }
+
+        public Button LocalMap { get; set; }
+        public Button WorldMap { get; set; }
 
     }
 }

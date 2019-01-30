@@ -174,9 +174,8 @@ namespace NamelessRogue.shell
 
             graphics.ApplyChanges();
 
-            //5 for testing
-            //1489 for desert
-            worldSettings = new WorldSettings(1489,1000,1000);
+
+            worldSettings = new WorldSettings(5000,1000,1000);
 
 
             Entities = new List<IEntity>();
@@ -198,7 +197,7 @@ namespace NamelessRogue.shell
             var  timeline = timelinEntity.GetComponentOfType<TimeLine>();
 
             WorldTile firsTile = null;
-            foreach (var worldBoardWorldTile in timeline.CurrentWorldBoard.WorldTiles)
+            foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
             {
                 if (worldBoardWorldTile.Settlement != null)
                 {
@@ -236,7 +235,6 @@ namespace NamelessRogue.shell
 
             Entities.Add(ItemFactory.CreateItem());
             Entities.Add(GameInitializer.CreateCursor());
-            Entities.Add(GameInitializer.CreateWorldMapMode());
            
 
             UserInterface.Initialize(Content, BuiltinThemes.hd);

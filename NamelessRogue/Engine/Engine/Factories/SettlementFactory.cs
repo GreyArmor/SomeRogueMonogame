@@ -14,7 +14,7 @@ namespace NamelessRogue.Engine.Engine.Factories
 {
     public static class SettlementFactory
     {
-        public static ConcreteSettlement GenerateSettlement(NamelessGame namelessGame, WorldTile tile, WorldBoard board,
+        public static ConcreteSettlement GenerateSettlement(NamelessGame namelessGame, WorldTile tile, TimelineLayer board,
             IChunkProvider worldProvider)
         {
             var result = new ConcreteSettlement();

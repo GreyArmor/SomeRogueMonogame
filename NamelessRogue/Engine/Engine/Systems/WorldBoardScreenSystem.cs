@@ -17,10 +17,15 @@ namespace NamelessRogue.Engine.Engine.Systems
 {
     public class WorldBoardScreenSystem : ISystem
     {
+        private readonly MapRenderingSystem _mapRenderSystem;
+
+        public WorldBoardScreenSystem(MapRenderingSystem mapRenderSystem)
+        {
+            _mapRenderSystem = mapRenderSystem;
+        }
+
         public void Update(long gameTime, NamelessGame namelessGame)
         {
-            
-
             ConsoleCamera camera = namelessGame.GetEntityByComponentClass<ConsoleCamera>()?.GetComponentOfType<ConsoleCamera>();
             TimeLine timeline = namelessGame.GetEntityByComponentClass<TimeLine>()?.GetComponentOfType<TimeLine>();
             var tilePosition = camera.GetMouseTilePosition(namelessGame);
@@ -28,7 +33,7 @@ namespace NamelessRogue.Engine.Engine.Systems
             if (tilePosition.X >= 0 && tilePosition.X < 1000 && tilePosition.Y >= 0 && tilePosition.Y < 1000)
             {
               
-                var tile = timeline.CurrentWorldBoard.WorldTiles[tilePosition.X, tilePosition.Y];
+                var tile = timeline.CurrentTimelineLayer.WorldTiles[tilePosition.X, tilePosition.Y];
 
                 switch (UiFactory.WorldBoardScreen.Mode)
                 {
@@ -98,37 +103,39 @@ namespace NamelessRogue.Engine.Engine.Systems
                         break;
                     case WorldBoardScreenAction.RegionsMode:
                     {
-                        IEntity worldModeEntity = namelessGame.GetEntityByComponentClass<WorldMapMode>();
-                        WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
-                        worldMode.Mode = WorldBoardRenderingSystemMode.Regions;
+                        _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Regions;
                     }
                         break;
                     case WorldBoardScreenAction.PoliticalMode:
                     {
-                        IEntity worldModeEntity = namelessGame.GetEntityByComponentClass<WorldMapMode>();
-                        WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
-                        worldMode.Mode = WorldBoardRenderingSystemMode.Political;
+                        _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Political;
                     }
                         break;
                     case WorldBoardScreenAction.TerrainMode:
                     {
-                        IEntity worldModeEntity = namelessGame.GetEntityByComponentClass<WorldMapMode>();
-                        WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
-                        worldMode.Mode = WorldBoardRenderingSystemMode.Terrain;
+                        _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
                     }
                         break;
                     case WorldBoardScreenAction.ArtifactMode:
                     {
-                        IEntity worldModeEntity = namelessGame.GetEntityByComponentClass<WorldMapMode>();
-                        WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
-                        worldMode.Mode = WorldBoardRenderingSystemMode.Artifact;
+                        _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
                     }
                         break;
                     case WorldBoardScreenAction.ResourceMode:
                     {
-                        IEntity worldModeEntity = namelessGame.GetEntityByComponentClass<WorldMapMode>();
-                        WorldMapMode worldMode = worldModeEntity.GetComponentOfType<WorldMapMode>();
-                        worldMode.Mode = WorldBoardRenderingSystemMode.Resources;
+                        _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Resources;
+                    }
+
+                        break;
+                    case WorldBoardScreenAction.LocalMap:
+                    {
+                        _mapRenderSystem.LocalMapRendering = true;
+                    }
+
+                        break;
+                    case WorldBoardScreenAction.WorldMap:
+                    {
+                        _mapRenderSystem.LocalMapRendering = false;
                     }
 
                         break;
