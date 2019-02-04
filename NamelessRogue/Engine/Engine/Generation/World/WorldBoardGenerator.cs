@@ -43,7 +43,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                 {
                     var worldTile = new WorldTile(new Point(x,y));
                     var tile = game.WorldSettings.TerrainGen.GetTile(x, y, 1);
-                    worldTile.Terrain = tile.getTerrainType();
+                    worldTile.Terrain = tile.Terrain;
                     worldTile.Biome = tile.Biome;
                     board.WorldTiles[x, y] = worldTile;
                 }
@@ -99,7 +99,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                         }
                     }
 
-                    var resource = ResourceLibrary.GetRandomResource(tile.Biome, random);
+                    var resource = ResourceLibrary.GetRandomResource(tile.Biome.Type, random);
                     resource.Info.MapPosition = tile.WorldBoardPosiiton;
                     tile.Resource = resource;
                 }
@@ -291,13 +291,13 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         {
             var s = Stopwatch.StartNew();
             Random rand = game.WorldSettings.GlobalRandom;
-            List<Region> regions =  GetRegions(timelineLayer, game, rand, (tile => tile.Terrain != TerrainTypes.Water &&
+            List<Region> regions =  GetRegions(timelineLayer, game, rand, (tile => tile.Terrain.Type != TerrainTypes.Water &&
                                                         tile.Continent == null), (tile, region) => tile.Continent = region,() => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper(); });
 
-            List<Region> forests = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Forest && tile.LandmarkRegion==null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " forest"; });
-            List<Region> deserts = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Desert && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " desert"; });
-            List<Region> mountains = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Mountain && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " mountain"; });
-            List<Region> swamps = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Swamp && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " swamp"; });
+            List<Region> forests = GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type == Biomes.Forest && tile.LandmarkRegion==null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " forest"; });
+            List<Region> deserts = GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type == Biomes.Desert && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " desert"; });
+            List<Region> mountains = GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type == Biomes.Mountain && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " mountain"; });
+            List<Region> swamps = GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type == Biomes.Swamp && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " swamp"; });
             s.Stop();
             timelineLayer.Continents = regions.Where(x => x.SizeInTiles >= 2000).ToList();
             timelineLayer.Islands = regions.Where(x => x.SizeInTiles < 2000).ToList();

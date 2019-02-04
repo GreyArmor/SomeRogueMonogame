@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         {
             IEntity door  = new Entity();
             door.AddComponent(new Position(x, y));
-            door.AddComponent(new Drawable('C', new Engine.Utility.Color(0.7,0.7,0.7)));
+            door.AddComponent(new Drawable('C', new Engine.Utility.Color(0.7,0.7,0.7), new Engine.Utility.Color()));
             door.AddComponent(new Description("Door",""));
             door.AddComponent(new Door());
             door.AddComponent(new SimpleSwitch(true));
@@ -33,7 +33,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         {
             IEntity window  = new Entity();
             window.AddComponent(new Position(x, y));
-            window.AddComponent(new Drawable('O', new Engine.Utility.Color(0.9,0.9,0.9)));
+            window.AddComponent(new Drawable('O', new Engine.Utility.Color(0.9,0.9,0.9), new Engine.Utility.Color()));
             window.AddComponent(new Description("Window",""));
             window.AddComponent(new OccupiesTile());
             return window;
@@ -61,8 +61,8 @@ namespace NamelessRogue.Engine.Engine.Factories
                 for (int j = 0;j< height; j++)
                 {
                     var tile = worldProvider.GetTile(x + i, y + j);
-                    tile.SetTerrainType(TerrainTypes.Road);
-                    tile.Biome = Biomes.None;
+                    tile.Terrain = TerrainLibrary.Terrains[TerrainTypes.Road];
+                    tile.Biome = BiomesLibrary.Biomes[Biomes.None];
                     if (i == 0 || j == 0 || i == width - 1 || j == height - 1)
                     {
                         if (i == width / 2)
@@ -139,8 +139,8 @@ namespace NamelessRogue.Engine.Engine.Factories
                 for (int j = 0; j < height; j++)
                 {
                     var tile = worldProvider.GetTile(x + i, y + j);
-                    tile.SetTerrainType(TerrainTypes.Road);
-                    tile.Biome = Biomes.None;
+                    tile.Terrain = TerrainLibrary.Terrains[TerrainTypes.Road];
+                    tile.Biome = BiomesLibrary.Biomes[Biomes.None];
                     if (i == 0 || j == 0 || i == width - 1 || j == height - 1)
                     {
                         if (i == width / 2)

@@ -9,26 +9,18 @@ using NamelessRogue.shell;
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
     public class Tile {
-        public Biomes Biome { get; set; }
+        public Biome Biome { get; set; }
 
         public Tile(){}
 	
-        public Tile(TerrainTypes terrainType, Biomes biome, Point coordinate){
-            Biome = biome;
-            this.terrainType = terrainType;
+        public Tile(Terrain terrain, Biome biome, Point coordinate){
             this.coordinate = coordinate;
+            Terrain = terrain;
+            Biome = biome;
         }
-        private TerrainTypes terrainType;
+        public Terrain Terrain { get; set; }
         private Point coordinate;
         private List<IEntity> entitiesOnTile = new List<IEntity>();
-
-        public TerrainTypes getTerrainType() {
-            return terrainType;
-        }
-
-        public void SetTerrainType(TerrainTypes terrainType) {
-            this.terrainType = terrainType;
-        }
 
 
 

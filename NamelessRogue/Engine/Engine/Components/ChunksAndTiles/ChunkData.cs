@@ -72,7 +72,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
             if (chunkOfPoint == null)
             {
-                return new Tile(TerrainTypes.Nothingness,Biomes.None, new Point(-1, -1));
+                return new Tile(TerrainLibrary.Terrains[TerrainTypes.Nothingness],BiomesLibrary.Biomes[Biomes.None], new Point(-1, -1));
             }
 
 

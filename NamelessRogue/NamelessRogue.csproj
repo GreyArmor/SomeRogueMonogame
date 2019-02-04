@@ -129,6 +129,7 @@
     <Compile Include="Engine\Engine\Generation\Noise\SimplexNoise_octave.cs" />
     <Compile Include="Engine\Engine\Generation\WorldSettings.cs" />
     <Compile Include="Engine\Engine\Generation\World\Biomes.cs" />
+    <Compile Include="Engine\Engine\Generation\World\BiomesLibrary.cs" />
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\BoardPiece.cs" />
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\MapUnit.cs" />
     <Compile Include="Engine\Engine\Generation\World\CitySlot.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Engine\Engine\Generation\World\Settlement.cs" />
     <Compile Include="Engine\Engine\Generation\World\Technology.cs" />
     <Compile Include="Engine\Engine\Generation\World\TerrainGenerator.cs" />
+    <Compile Include="Engine\Engine\Generation\World\TerrainLibrary.cs" />
     <Compile Include="Engine\Engine\Generation\World\TimeLine.cs" />
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\UnitTypes.cs" />
     <Compile Include="Engine\Engine\Generation\World\TimelineLayer.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Engine\Engine\Infrastructure\Entity.cs" />
     <Compile Include="Engine\Engine\Infrastructure\EntityManager.cs" />
     <Compile Include="Engine\Engine\Infrastructure\GameInfo.cs" />
+    <Compile Include="Engine\Engine\Infrastructure\TerrainType.cs" />
     <Compile Include="Engine\Engine\Infrastructure\TerrainTypes.cs" />
     <Compile Include="Engine\Engine\Input\Intent.cs" />
     <Compile Include="Engine\Engine\Input\KeyIntentTraslator.cs" />

@@ -74,7 +74,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    chunkTiles[x,y] = new Tile(TerrainTypes.HardRocks,Biomes.Mountain,
+                    chunkTiles[x,y] = new Tile(TerrainLibrary.Terrains[TerrainTypes.HardRocks],BiomesLibrary.Biomes[Biomes.Mountain],
                         new Point(x + worldPositionBottomLeftCorner.X, y + worldPositionBottomLeftCorner.Y));
                 }
             }

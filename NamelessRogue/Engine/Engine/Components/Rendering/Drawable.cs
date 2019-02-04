@@ -3,9 +3,14 @@ using NamelessRogue.Engine.Engine.Utility;
 namespace NamelessRogue.Engine.Engine.Components.Rendering
 {
     public class Drawable : Component {
-	
-        public Drawable(char representation, Color charColor)
+        public Color BackgroundColor { get; }
+        public Drawable(char representation, Color charColor, Color backgroundColor = null)
         {
+            this.BackgroundColor = backgroundColor;
+            if (backgroundColor == null)
+            {
+                BackgroundColor = new Color();
+            }
             Representation=representation;
             CharColor = charColor;
         }

@@ -304,7 +304,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                     if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                     {
                         Tile tileToDraw = world.GetTile(x, y);
-                        GetTerrainTile(screen, tileToDraw.getTerrainType(), screenPoint);
+                        GetTerrainTile(screen, tileToDraw.Terrain, screenPoint);
                     }
                     else
                     {
@@ -315,76 +315,12 @@ namespace NamelessRogue.Engine.Engine.Systems
             }
         }
 
-        void GetTerrainTile(Screen screen, TerrainTypes terrainTypes, Point point)
+        void GetTerrainTile(Screen screen, Terrain terrain, Point point)
         {
-            if (terrainTypes == TerrainTypes.Water)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '~';
-
-                //float waveValue1 = (float) ((Math.Sin(((x + y) / 1.5) + angle)) + 1) / 2;
-                //float waveValue2 = (float) ((Math.Sin(((x + y)) + angle)) / 2 + 1) / 2;
-                //float waveValue3 = (float) ((Math.Sin(((x + y) / 3) + angle)) + 1) / 2;
-                //float resultingColor = 0.3f + (0.5f * (waveValue1 + waveValue2 + waveValue3) / 3);
-
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0, 255);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor =
-                    new Color(0, 1, 1);
-            }
-            else if (terrainTypes == TerrainTypes.Road)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '.';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.5, 0.5, 0.5);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (terrainTypes == TerrainTypes.Dirt)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '&';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1f, 1f, 0);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (terrainTypes == TerrainTypes.Grass)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '.';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0.8f, 0);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (terrainTypes == TerrainTypes.HardRocks)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '.';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.2, 0.2, 0.2);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (terrainTypes == TerrainTypes.Rocks)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '.';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.8, 0.8, 0.8);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (terrainTypes == TerrainTypes.LightRocks)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '.';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.5, 0.5, 0.5);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (terrainTypes == TerrainTypes.Sand)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '~';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1f, 1f, 0);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (terrainTypes == TerrainTypes.Snow)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = 's';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1f, 1f, 1f);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-
-            else
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = ' ';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color();
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
+         
+                screen.ScreenBuffer[point.X, point.Y].Char = terrain.Representation.getRepresentation();
+                screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.getCharColor();
+                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
         }
 
 
@@ -455,7 +391,7 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         private void RenderScreen(NamelessGame gameInstance, Screen screen, GameSettings settings)
         {
-
+            effect.Parameters["tileAtlas"].SetValue(tileAtlas);
             for (int x = 0; x < settings.getWidth(); x++)
             {
                 for (int y = 0; y < settings.getHeight(); y++)

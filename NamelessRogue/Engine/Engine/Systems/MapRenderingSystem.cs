@@ -349,103 +349,19 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         void GetTerrainTile(Screen screen, Point point, WorldTile tile)
         {
-            var biome = tile.Biome;
-            var owner = tile.Owner;
-            var region = tile.Continent;
-            if ((biome == Biomes.Sea) || biome == Biomes.Lake)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '~';
+          
 
-                //float waveValue1 = (float) ((Math.Sin(((x + y) / 1.5) + angle)) + 1) / 2;
-                //float waveValue2 = (float) ((Math.Sin(((x + y)) + angle)) / 2 + 1) / 2;
-                //float waveValue3 = (float) ((Math.Sin(((x + y) / 3) + angle)) + 1) / 2;
-                //float resultingColor = 0.3f + (0.5f * (waveValue1 + waveValue2 + waveValue3) / 3);
 
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 255, 255);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor =
-                    new Color(0, 0, 1);
-            }
-            else if (biome == Biomes.Plains)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '.';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0.8f, 0);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (biome == Biomes.Savannah)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '.';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(218/255f, 165/255f, 32/255f);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (biome == Biomes.Mountain)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = 'A';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.5f, 0.5f, 0.5f);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (biome == Biomes.Hills)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = 'h';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0.8, 0);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (biome == Biomes.Beach)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '~';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0.5f, 0.5f, 0);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (biome == Biomes.Desert)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = '~';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1f, 1f, 0);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (biome == Biomes.SnowDesert)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = 's';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1f, 1f, 1f);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (biome == Biomes.Forest)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = 'f';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0f, 0.5f, 0f);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else if (biome == Biomes.Jungle)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = 'j';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0f, 0.5f, 0f);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-
-            else if (biome == Biomes.Tundra)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = 't';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 255, 255);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-
-            else if (biome == Biomes.Swamp)
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = 'S';
-                screen.ScreenBuffer[point.X, point.Y].CharColor =  new Color(0.2, 0.2, 0.2);
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-            else
-            {
-                screen.ScreenBuffer[point.X, point.Y].Char = ' ';
-                screen.ScreenBuffer[point.X, point.Y].CharColor = new Color();
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = new Color();
-            }
-
+                          screen.ScreenBuffer[point.X, point.Y].Char = tile.Biome.Representation.getRepresentation();
+                screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Biome.Representation.getCharColor();
+            screen.ScreenBuffer[point.X, point.Y].BackGroundColor = tile.Biome.Representation.BackgroundColor;
+            
 
             if (Mode == WorldBoardRenderingSystemMode.Regions)
             {
-                if (region != null)
+                if (tile.Continent != null)
                 {
-                    screen.ScreenBuffer[point.X, point.Y].BackGroundColor = region.Color;
+                    screen.ScreenBuffer[point.X, point.Y].BackGroundColor = tile.Continent.Color;
                 }
                 else
                 {

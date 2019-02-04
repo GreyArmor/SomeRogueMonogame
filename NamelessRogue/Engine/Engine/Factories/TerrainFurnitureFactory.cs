@@ -81,7 +81,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         {
             var random = game.WorldSettings.GlobalRandom;
             Entity result = null;
-            switch (terrainTile.Biome)
+            switch (terrainTile.Biome.Type)
             {
                 case Biomes.Beach:
                 {
