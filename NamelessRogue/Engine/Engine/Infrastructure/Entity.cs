@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components;
 using NamelessRogue.Engine.Engine.Infrastructure;
@@ -6,9 +7,11 @@ using SharpDX.WIC;
 
 namespace NamelessRogue.Engine.Engine.Infrastructure
 {
+
+    [DataContract]
     public class Entity : IEntity
     {
-        
+        [DataMember]
         private Guid Id;
 
         public Entity(params IComponent[] components)

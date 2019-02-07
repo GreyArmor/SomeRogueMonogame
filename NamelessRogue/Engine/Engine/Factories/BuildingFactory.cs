@@ -70,7 +70,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                             IEntity door = CreateDoor(x + i, y + j);
                             buildingComponent.getBuildingParts().Add(door);
                             namelessGame.GetEntities().Add(door);
-                            tile.getEntitiesOnTile().Add(door);
+                            tile.getEntitiesOnTile().Add((Entity) door);
                         }
                         else
                         {
@@ -148,7 +148,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                             IEntity door = CreateDoor(x + i, y + j);
                             buildingComponent.getBuildingParts().Add(door);
                             namelessGame.GetEntities().Add(door);
-                            tile.getEntitiesOnTile().Add(door);
+                            tile.getEntitiesOnTile().Add((Entity) door);
                         }
                         else
                         {

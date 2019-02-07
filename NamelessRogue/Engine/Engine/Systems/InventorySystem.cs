@@ -5,6 +5,7 @@ using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Generation.World;
+using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Input;
 using NamelessRogue.shell;
 
@@ -29,7 +30,7 @@ namespace NamelessRogue.Engine.Engine.Systems
 
                         foreach (var dropCommandItem in dropCommand.Items)
                         {
-                            tile.getEntitiesOnTile().Add(dropCommandItem);
+                            tile.getEntitiesOnTile().Add((Entity) dropCommandItem);
                             dropCommand.Holder.GetItems().Remove(dropCommandItem);
                         }
 
@@ -44,7 +45,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                         {
                             var tile = worldProvider.GetTile(pickupCommand.WhereToPickUp.X,
                                 pickupCommand.WhereToPickUp.Y);
-                            tile.getEntitiesOnTile().Remove(pickupCommandItem);
+                            tile.getEntitiesOnTile().Remove((Entity) pickupCommandItem);
 
 
                             pickupCommand.Holder.GetItems().Add(pickupCommandItem);

@@ -61,23 +61,30 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             WorldBoardGenerator.PlaceInitialArtifacts(worldBoard, game);
             WorldBoardGenerator.PlaceResources(worldBoard, game);
 
+            WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
+
             WorldTile firsTile = null;
             foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
             {
+
                 if (worldBoardWorldTile.Settlement != null)
                 {
+                    IChunkProvider worldProvider = chunkData;
                     firsTile = worldBoardWorldTile;
+                    var concreteSettlment = SettlementFactory.GenerateSettlement(game, firsTile, worldBoard, worldProvider);
+
+                    firsTile.Settlement.Concrete = concreteSettlment;
                     break;
 
                 }
             }
 
-            IChunkProvider worldProvider = chunkData;
+ 
 
-            var concreteSettlment = SettlementFactory.GenerateSettlement(game, firsTile, worldBoard, worldProvider);
+            //var concreteSettlment = SettlementFactory.GenerateSettlement(game, firsTile, worldBoard, worldProvider);
 
-            firsTile.Settlement.Concrete = concreteSettlment;
-            WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
+            //firsTile.Settlement.Concrete = concreteSettlment;
+          
             return worldBoard;
         }
 

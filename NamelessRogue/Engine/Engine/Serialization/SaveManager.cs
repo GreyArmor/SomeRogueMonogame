@@ -1,5 +1,8 @@
 using System;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 
@@ -7,127 +10,44 @@ namespace NamelessRogue.Engine.Engine.Serialization
 {
     public class SaveManager
     {
-//        public static void LoadGame(String pathToFolder, NamelessGame game)
-//        {
+        //        public static void LoadGame(String pathToFolder, NamelessGame game)
+        //        {
 
-//        }
+        //        }
 
-//        public static void SaveGame(String pathToFolder, NamelessGame game)
-//        {
+        //        public static void SaveGame(String pathToFolder, NamelessGame game)
+        //        {
 
-//        }
+        //        }
 
-//        public static void SaveChunk(String pathToFolder, Chunk chunk, String chunkId) //, NamelessGame game)
-//        {
-//            ObjectDictionaryper objectDictionaryper = new ObjectDictionaryper();
-//            objectDictionaryper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        public static void SaveChunk(String pathToFolder, Chunk chunk, String chunkId) //, NamelessGame game)
 
-//            BufferedWriter bw = null;
-//            FileWriter fw = null;
-//            try
-//            {
-//                File f = new File(pathToFolder);
-//                if (!f.exists())
-//                {
-//                    f.mkdir();
-//                }
+        {
 
-////            if (chunkId.Equals("1090_3070")) {
-////                pathToFolder.toString();
-////            }
-//                StringWriter stringTiles = new StringWriter();
-//                objectDictionaryper.writeValue(stringTiles, chunk.getChunkTiles());
-//                String content = stringTiles.toString();
-//                fw = new FileWriter(pathToFolder + "\\" + chunkId);
-//                bw = new BufferedWriter(fw);
-//                bw.write(content);
-//                stringTiles.close();
+            if (!Directory.Exists(pathToFolder))
+            {
+                Directory.CreateDirectory(pathToFolder);
+            }
 
-//                // System.out.println("Saved");
-//            }
-//            catch (IOException e)
-//            {
-//                //e.printStackTrace();
-//            }
-//            finally
-//            {
-//                try
-//                {
-//                    if (bw != null)
-//                        bw.close();
+            var formatter = new DataContractSerializer(typeof(Chunk));
+            var settings = new XmlWriterSettings { Indent = true };
 
-//                    if (fw != null)
-//                        fw.close();
+            var smmWriter = XmlWriter.Create(pathToFolder+ "\\" + chunkId+".xml", settings);
 
-//                }
-//                catch (IOException ex)
-//                {
-//                    //  ex.printStackTrace();
-//                }
-//            }
-//        }
+            formatter.WriteObject(smmWriter, chunk);
+            smmWriter.Close();
 
-//        public static Tile[,] LoadChunk(String pathToFolder, String chunkId)
-//        {
-//            BufferedReader br = null;
-//            FileReader fr = null;
-//            String json = "";
-//            Tile[,] tiles = null;
-//            try
-//            {
-////            if (chunkId.Equals("1090_3070")) {
-////                pathToFolder.toString();
-////            }
-//                File f = new File(pathToFolder + "\\" + chunkId);
-//                if (!f.exists())
-//                {
-//                    System.out.print("no file " + pathToFolder + "\\" + chunkId);
-//                    return null;
-//                }
-//                else
-//                {
-//                    System.out.print("found file " + pathToFolder + "\\" + chunkId);
-//                }
+          
+        }
 
-//                fr = new FileReader(pathToFolder + "\\" + chunkId);
-//                br = new BufferedReader(fr);
-
-//                String sCurrentLine;
-
-//                while ((sCurrentLine = br.readLine()) != null)
-//                {
-//                    json += sCurrentLine;
-//                }
-
-//                ObjectDictionaryper objectDictionaryper = new ObjectDictionaryper();
-
-//                //convert json string to object
-//                tiles = objectDictionaryper.readValue(json, Tile[,]);
-//            }
-//            catch (IOException e)
-//            {
-
-//                e.printStackTrace();
-
-//            }
-//            finally
-//            {
-//                try
-//                {
-//                    if (br != null)
-//                        br.close();
-//                    if (fr != null)
-//                        fr.close();
-//                }
-//                catch (IOException ex)
-//                {
-//                    ex.printStackTrace();
-//                }
-
-//                return tiles;
-
-//            }
-//        }
-//    }
+        public static Chunk LoadChunk(String pathToFolder, String chunkId)
+        {
+            var formatter = new DataContractSerializer(typeof(Chunk));
+            var stream = new FileStream(pathToFolder + "\\" + chunkId + ".xml", FileMode.Open, FileAccess.Read);
+            var chunk = (Chunk)formatter.ReadObject(stream);
+            stream.Close();
+            return chunk;
+        }
     }
 }
+

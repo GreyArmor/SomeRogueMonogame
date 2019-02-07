@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Physical;
@@ -8,7 +10,9 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
+    [DataContract]
     public class Tile {
+        [DataMember]
         public Biome Biome { get; set; }
 
         public Tile(){}
@@ -18,13 +22,16 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             Terrain = terrain;
             Biome = biome;
         }
+        [DataMember]
         public Terrain Terrain { get; set; }
+        [DataMember]
         private Point coordinate;
-        private List<IEntity> entitiesOnTile = new List<IEntity>();
+        [DataMember]
+        private List<Entity> entitiesOnTile = new List<Entity>();
 
 
 
-        public List<IEntity> getEntitiesOnTile() {
+        public List<Entity> getEntitiesOnTile() {
             return entitiesOnTile;
         }
 

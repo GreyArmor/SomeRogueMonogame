@@ -115,8 +115,10 @@ namespace NamelessRogue.Engine.Engine.Systems
             var justcreated = worldProvider.GetRealityBubbleChunks().Where(x => x.Value.JustCreated);
             foreach (var realityBubbleChunk in justcreated)
             {
-                foreach (var tile in realityBubbleChunk.Value.GetChunkTiles())
+                foreach (var tileArray in realityBubbleChunk.Value.GetChunkTiles())
                 {
+                    foreach (var tile in tileArray)
+                    {
                     var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
                     if (entity != null)
                     {
@@ -124,6 +126,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                         {
                             tile.getEntitiesOnTile().Add(entity);
                         }
+                    }
                     }
                 }
                 realityBubbleChunk.Value.JustCreated = false;

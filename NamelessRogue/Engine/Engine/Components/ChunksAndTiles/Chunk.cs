@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
@@ -10,14 +12,19 @@ using BoundingBox = NamelessRogue.Engine.Engine.Utility.BoundingBox;
 
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
+    [DataContract]
     public class Chunk : IBoundsProvider
     {
-        public Point ChunkLocationPoint { get; }
+        [DataMember]
+        public Point ChunkLocationPoint { get; set; }
+        [DataMember]
         private Point worldPositionBottomLeftCorner;
         private ChunkData chunkContainer;
-
-        private Tile[,] chunkTiles;
+        [DataMember]
+        private Tile[][] chunkTiles;
+        [DataMember]
         private BoundingBox boundingBox;
+        [DataMember]
         private bool isActive;
         private bool loaded = false;
 
@@ -61,7 +68,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    chunkTiles[x,y] = generator.GetTile(x + worldPositionBottomLeftCorner.X,
+                    chunkTiles[x][y] = generator.GetTile(x + worldPositionBottomLeftCorner.X,
                         y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
                 }
             }
@@ -74,18 +81,18 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    chunkTiles[x,y] = new Tile(TerrainLibrary.Terrains[TerrainTypes.HardRocks],BiomesLibrary.Biomes[Biomes.Mountain],
+                    chunkTiles[x][y] = new Tile(TerrainLibrary.Terrains[TerrainTypes.HardRocks],BiomesLibrary.Biomes[Biomes.Mountain],
                         new Point(x + worldPositionBottomLeftCorner.X, y + worldPositionBottomLeftCorner.Y));
                 }
             }
         }
 
-        public Tile[,] GetChunkTiles()
+        public Tile[][] GetChunkTiles()
         {
             return chunkTiles;
         }
 
-        public void SetChunkTiles(Tile[,] chunkTiles)
+        public void SetChunkTiles(Tile[][] chunkTiles)
         {
             this.chunkTiles = chunkTiles;
         }
@@ -119,7 +126,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             int localX = Math.Abs(bottomLeftX - x);
             int localY = Math.Abs(bottomLeftY - y);
 
-            return chunkTiles[localX,localY];
+            return chunkTiles[localX][localY];
         }
 
         public void Activate()
@@ -128,7 +135,12 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             isActive = true;
             if (!loaded)
             {
-                chunkTiles = new Tile[Constants.ChunkSize,Constants.ChunkSize];
+                chunkTiles = new Tile[Constants.ChunkSize][];
+                for (var index = 0; index < chunkTiles.Length; index++)
+                {
+                     chunkTiles[index] = new Tile[Constants.ChunkSize];
+                }
+
                 if (!LoadFromDisk())
                 {
                     FillWithTiles(chunkContainer.GetWorldGenerator());
@@ -144,47 +156,17 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 //TODO: serialization
         private bool LoadFromDisk()
         {
-
-            //String appPath = "";
-            //try
-            //{
-            //    appPath = new File(EntryPoint.getProtectionDomain().getCodeSource().getLocation().toURI()
-            //        .getPath()).getPath();
-            //}
-            //catch (Exception e)
-            //{
-            //    e.printStackTrace();
-            //}
-
-            //Tile[,] tiles = SaveManager.LoadChunk(appPath + "\\Chunks",
-            //    String.valueOf(worldPositionBottomLeftCorner.Y) + "_" +
-            //    String.valueOf(worldPositionBottomLeftCorner.X));
-            //if (tiles != null)
-            //{
-
-            //    chunkTiles = tiles;
-            //    System.out.print("LoadFromDisk true\n");
-            //    return true;
-            //}
-
-            //System.out.print("LoadFromDisk false\n");
             return false;
         }
 
         public void Deactivate()
         {
             //todo: do not unlod chunks for now, just deactivate
-            /*
-            String appPath = "";
-            try {
-                appPath = new File(EntryPoint.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getPath();
-            }catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            System.out.print("Deactivate\n");
-            SaveManager.SaveChunk(appPath+"\\Chunks",this,
-                    String.valueOf(worldPositionBottomLeftCorner.Y) + "_" + String.valueOf(worldPositionBottomLeftCorner.X));
-    */
+            
+            //String appPath = System.IO.Directory.GetCurrentDirectory();
+            //SaveManager.SaveChunk(appPath+"\\Chunks",this,
+            //        worldPositionBottomLeftCorner.Y + "_" + worldPositionBottomLeftCorner.X);
+    
             isActive = false;
             //	chunkTiles = null;
         }
@@ -197,7 +179,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             int localX = Math.Abs(bottomLeftX - x);
             int localY = Math.Abs(bottomLeftY - y);
 
-            chunkTiles[localX,localY] = tile;
+            chunkTiles[localX][localY] = tile;
         }
 
         public BoundingBox GetBoundingBox()

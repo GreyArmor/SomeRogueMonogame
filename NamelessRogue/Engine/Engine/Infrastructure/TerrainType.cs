@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using NamelessRogue.Engine.Engine.Components.Rendering;
@@ -8,6 +9,7 @@ using NamelessRogue.Engine.Engine.Generation.World;
 
 namespace NamelessRogue.Engine.Engine.Infrastructure
 {
+    [Serializable]
     public class Terrain
     {
         public TerrainTypes Type { get; set; }
@@ -19,10 +21,12 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
             Representation = representation;
         }
     }
-
+    [DataContract]
     public class Biome
     {
+        [DataMember]
         public Biomes Type { get; set; }
+        [DataMember]
         public Drawable Representation { get; set; }
 
         public Biome(Biomes type, Drawable representation)

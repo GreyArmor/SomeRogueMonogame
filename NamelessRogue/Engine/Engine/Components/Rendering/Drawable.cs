@@ -1,9 +1,12 @@
+using System.Runtime.Serialization;
 using NamelessRogue.Engine.Engine.Utility;
 
 namespace NamelessRogue.Engine.Engine.Components.Rendering
 {
+    [DataContract]
     public class Drawable : Component {
-        public Color BackgroundColor { get; }
+        [DataMember]
+        public Color BackgroundColor { get; set; }
         public Drawable(char representation, Color charColor, Color backgroundColor = null)
         {
             this.BackgroundColor = backgroundColor;
@@ -16,8 +19,9 @@ namespace NamelessRogue.Engine.Engine.Components.Rendering
         }
 
         private bool visible = true;
-
+        [DataMember]
         private char Representation;
+        [DataMember]
         private Engine.Utility.Color CharColor;
 
         public char getRepresentation() {

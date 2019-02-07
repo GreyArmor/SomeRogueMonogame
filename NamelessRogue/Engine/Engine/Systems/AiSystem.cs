@@ -145,8 +145,8 @@ namespace NamelessRogue.Engine.Engine.Systems
                 var previousTile = worldProvider.GetTile(position.p.X, position.p.Y);
 
                 var entitiesPrev = previousTile.getEntitiesOnTile();
-                entitiesPrev.Remove(movableEntity);
-                tileToMoveTo.getEntitiesOnTile().Add(movableEntity);
+                entitiesPrev.Remove((Entity) movableEntity);
+                tileToMoveTo.getEntitiesOnTile().Add((Entity) movableEntity);
 
                 var ap = movableEntity.GetComponentOfType<ActionPoints>();
                 ap.Points -= Constants.ActionsMovementCost;
