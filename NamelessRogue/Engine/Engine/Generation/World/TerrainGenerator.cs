@@ -111,8 +111,8 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
         public Tile GetTile(int x, int y, float scale)
         {
-            double dX = (double)x/ scale;
-            double dY = (double)y/ scale;
+            double dX = (double)x / scale;
+            double dY = (double)y / scale;
             // System.out.print("X ="+dX+"Y =" +dY +"\n");
             int resolutionZoomed = (int) (resolution * scale);
             int borderthickness = resolutionZoomed/10;
@@ -147,7 +147,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             double temperature = 0.5 - (0.5 * (1 + TemperatureNoise.getNoise(dX,dY)));
             temperature = temperature / 20;
             Tuple<Terrain, Biome> terrinBiome =
-                TileNoiseInterpreter.GetTerrain(result, forest, swamp, lake, desert, temperature, resolutionZoomed, dX,dY);
+                TileNoiseInterpreter.GetTerrain(result, forest, swamp, lake, desert, temperature, resolutionZoomed, x, y);
             return new Tile(terrinBiome.Item1, terrinBiome.Item2, new Point(x,y));
         }
     }

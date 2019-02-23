@@ -10,7 +10,7 @@ using NamelessRogue.Engine.Engine.Infrastructure;
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
     public class TileNoiseInterpreter {
-        public static Tuple<Terrain, Biome> GetTerrain(double noiseValue, double forest, double swamp, double lake, double desert, double temperature,  int resolutionZoomed, double dX, double dY)
+        public static Tuple<Terrain, Biome> GetTerrain(double noiseValue, double forest, double swamp, double lake, double desert, double temperature,  int resolutionZoomed, double x, double y)
         {
             if (noiseValue>1){
                 noiseValue=1;
@@ -18,8 +18,8 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             if (noiseValue<0){
                 noiseValue=0;
             }
-            
-            var temperatureCoef = dY / resolutionZoomed + temperature;
+
+            var temperatureCoef = y / resolutionZoomed + temperature;
 
 
             Terrain t = null;

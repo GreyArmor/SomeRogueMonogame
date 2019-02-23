@@ -1,5 +1,6 @@
 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Engine.Generation.World.BoardPieces;
@@ -7,24 +8,25 @@ using NamelessRogue.Engine.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Engine.Generation.World
 {
+   
     public class WorldTile {
-        public Terrain Terrain;
-        public Biome Biome;
-        public MapResource Resource;
-        public MapBuilding Building;
-        public MapArtifact Artifact;
-        public MetaphysicalForce Affinity;
-        public Civilization Owner;
-        public Region Continent;
-        public Region LandmarkRegion;
-        public Settlement Settlement;
+        public Terrain Terrain { get; set; }
+        public Biome Biome { get; set; }
+        public MapResource Resource { get; set; }
+        public MapBuilding Building { get; set; }
+        public MapArtifact Artifact { get; set; }
+        public MetaphysicalForce Affinity { get; set; } = new MetaphysicalForce("",new Color());
+        public Civilization Owner { get; set; }
+        public Region Continent { get; set; }
+        public Region LandmarkRegion { get; set; }
+        public Settlement Settlement { get; set; }
 
 
         private Point point;
 
         public WorldTile(Point point)
         {
-            this.point = point;
+            this.WorldBoardPosiiton = point;
         }
 
         public Point WorldBoardPosiiton

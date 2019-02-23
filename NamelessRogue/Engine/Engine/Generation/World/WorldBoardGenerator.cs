@@ -42,7 +42,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                 for (int y = 0; y < game.WorldSettings.WorldBoardHeight; y++)
                 {
                     var worldTile = new WorldTile(new Point(x,y));
-                    var tile = game.WorldSettings.TerrainGen.GetTile(x, y, 1);
+                    var tile = game.WorldSettings.TerrainGen.GetTile(x, y, (float)game.WorldSettings.WorldBoardWidth/ game.WorldSettings.TerrainGen.Resolution);
                     worldTile.Terrain = tile.Terrain;
                     worldTile.Biome = tile.Biome;
                     board.WorldTiles[x, y] = worldTile;

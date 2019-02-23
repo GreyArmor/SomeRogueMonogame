@@ -10,9 +10,9 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
-    [DataContract]
+    
     public class Tile {
-        [DataMember]
+        
         public Biome Biome { get; set; }
 
         public Tile(){}
@@ -22,11 +22,11 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             Terrain = terrain;
             Biome = biome;
         }
-        [DataMember]
+        
         public Terrain Terrain { get; set; }
-        [DataMember]
+        
         private Point coordinate;
-        [DataMember]
+        
         private List<Entity> entitiesOnTile = new List<Entity>();
 
 

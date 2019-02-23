@@ -12,19 +12,19 @@ using BoundingBox = NamelessRogue.Engine.Engine.Utility.BoundingBox;
 
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
-    [DataContract]
+    
     public class Chunk : IBoundsProvider
     {
-        [DataMember]
+        
         public Point ChunkLocationPoint { get; set; }
-        [DataMember]
+        
         private Point worldPositionBottomLeftCorner;
         private ChunkData chunkContainer;
-        [DataMember]
+        
         private Tile[][] chunkTiles;
-        [DataMember]
+        
         private BoundingBox boundingBox;
-        [DataMember]
+        
         private bool isActive;
         private bool loaded = false;
 
@@ -162,11 +162,11 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         public void Deactivate()
         {
             //todo: do not unlod chunks for now, just deactivate
-            
+
             //String appPath = System.IO.Directory.GetCurrentDirectory();
-            //SaveManager.SaveChunk(appPath+"\\Chunks",this,
+            //SaveManager.SaveChunk(appPath + "\\Chunks", this,
             //        worldPositionBottomLeftCorner.Y + "_" + worldPositionBottomLeftCorner.X);
-    
+
             isActive = false;
             //	chunkTiles = null;
         }

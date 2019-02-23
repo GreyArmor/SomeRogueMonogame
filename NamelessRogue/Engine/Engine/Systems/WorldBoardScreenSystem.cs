@@ -29,8 +29,8 @@ namespace NamelessRogue.Engine.Engine.Systems
             ConsoleCamera camera = namelessGame.GetEntityByComponentClass<ConsoleCamera>()?.GetComponentOfType<ConsoleCamera>();
             TimeLine timeline = namelessGame.GetEntityByComponentClass<TimeLine>()?.GetComponentOfType<TimeLine>();
             var tilePosition = camera.GetMouseTilePosition(namelessGame);
-
-            if (tilePosition.X >= 0 && tilePosition.X < 1000 && tilePosition.Y >= 0 && tilePosition.Y < 1000)
+            var settings = namelessGame.WorldSettings;
+            if (tilePosition.X >= 0 && tilePosition.X < settings.WorldBoardWidth && tilePosition.Y >= 0 && tilePosition.Y < settings.WorldBoardHeight)
             {
               
                 var tile = timeline.CurrentTimelineLayer.WorldTiles[tilePosition.X, tilePosition.Y];

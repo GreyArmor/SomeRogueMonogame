@@ -8,10 +8,10 @@ using SharpDX.WIC;
 namespace NamelessRogue.Engine.Engine.Infrastructure
 {
 
-    [DataContract]
+    
     public class Entity : IEntity
     {
-        [DataMember]
+        
         private Guid Id;
 
         public Entity(params IComponent[] components)

@@ -4,7 +4,7 @@ using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 
 namespace NamelessRogue.Engine.Engine.Utility
 {
-    [Serializable]
+    
     public class BoundingBox {
         private Point min;
         private Point max;

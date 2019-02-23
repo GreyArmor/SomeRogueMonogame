@@ -432,11 +432,11 @@ namespace NamelessRogue.Engine.Engine.Systems
             var tileHeight = gameInstance.GetActualCharacterHeight();
             var tileWidth = gameInstance.GetActualCharacterWidth();
             float textureX = 0;
-            float textureY = 0;
+            float textureY = 1;
 
             float textureXend = 1;
 
-            float textureYend = 1;
+            float textureYend = 0;
             var projectionMatrix = //Matrix.CreateOrthographic(game.getActualWidth(),game.getActualHeight(),0,1);
                 Matrix.CreateOrthographicOffCenter(0, gameInstance.GetActualWidth(),
                     0, gameInstance.GetActualHeight(), 0, 2);

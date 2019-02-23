@@ -213,9 +213,6 @@
     <Reference Include="DataTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GeonBit.UI.3.2.0\lib\geonbitui\DataTypes.dll</HintPath>
     </Reference>
-    <Reference Include="DevZH.FlatBuffers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevZH.FlatBuffers.1.4.0\lib\net35\DevZH.FlatBuffers.dll</HintPath>
-    </Reference>
     <Reference Include="GeonBit.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GeonBit.UI.3.2.0\lib\geonbitui\GeonBit.UI.dll</HintPath>
     </Reference>
@@ -226,8 +223,14 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.10\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Polenter.SharpSerializer, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8f4f20011571ee5f, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpSerializer.3.0.1\lib\netstandard1.0\Polenter.SharpSerializer.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1" />
     <Reference Include="SharpDX.Direct2D1, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL" />
@@ -246,6 +249,12 @@
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="ZeroFormatter, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZeroFormatter.1.6.4\lib\net45\ZeroFormatter.dll</HintPath>
+    </Reference>
+    <Reference Include="ZeroFormatter.Interfaces, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZeroFormatter.Interfaces.1.6.4\lib\net45\ZeroFormatter.Interfaces.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\GeonBit.UI\themes\editor\effects\disabled.fx" />
@@ -831,7 +840,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Storage\data\GameSettings.cs" />
-    <Compile Include="Storage\StorageManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />

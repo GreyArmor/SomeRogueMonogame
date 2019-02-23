@@ -3,9 +3,9 @@ using NamelessRogue.Engine.Engine.Utility;
 
 namespace NamelessRogue.Engine.Engine.Components.Rendering
 {
-    [DataContract]
+    
     public class Drawable : Component {
-        [DataMember]
+        
         public Color BackgroundColor { get; set; }
         public Drawable(char representation, Color charColor, Color backgroundColor = null)
         {
@@ -19,9 +19,9 @@ namespace NamelessRogue.Engine.Engine.Components.Rendering
         }
 
         private bool visible = true;
-        [DataMember]
+        
         private char Representation;
-        [DataMember]
+        
         private Engine.Utility.Color CharColor;
 
         public char getRepresentation() {

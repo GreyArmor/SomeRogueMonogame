@@ -9,8 +9,11 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 {
     public class TimeLine : Component
     {
-        public TimeLine()
+        public int Seed { get; }
+
+        public TimeLine(int seed)
         {
+            Seed = seed;
             WorldBoardAtEveryAge = new List<TimelineLayer>();
         }
         public List<TimelineLayer> WorldBoardAtEveryAge { get; }
