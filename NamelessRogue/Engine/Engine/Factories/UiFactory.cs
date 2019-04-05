@@ -17,8 +17,9 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Hud HudInstance { get; private set; }
         public static WorldBoardScreen WorldBoardScreen { get; private set; }
 
-        public static WorldBoardScreen MainMenuScreen { get; private set; }
+        public static MainMenuScreen MainMenuScreen { get; private set; }
 
+        public static InventoryScreen InventoryScreen { get; private set; }
         public static void CreateHud(NamelessGame game)
         {
             HudInstance = new Hud(game);
@@ -28,5 +29,16 @@ namespace NamelessRogue.Engine.Engine.Factories
         {
             WorldBoardScreen = new WorldBoardScreen(game);
         }
+
+        public static void CreateMainMenuScreen(NamelessGame game)
+        {
+            MainMenuScreen = new MainMenuScreen(game);
+        }
+
+        public static void CreateInventoryScreen(NamelessGame game)
+        {
+            InventoryScreen = new InventoryScreen(game);
+        }
+
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel.Security;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter;
@@ -12,7 +11,7 @@ using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
 
-namespace NamelessRogue.Engine.Engine.Systems
+namespace NamelessRogue.Engine.Engine.Systems.Ingame
 {
     public class AiSystem : ISystem
     {

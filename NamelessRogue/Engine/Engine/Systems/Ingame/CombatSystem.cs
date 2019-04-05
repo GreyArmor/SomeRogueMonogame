@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Stats;
@@ -7,7 +6,7 @@ using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.shell;
 
-namespace NamelessRogue.Engine.Engine.Systems
+namespace NamelessRogue.Engine.Engine.Systems.Ingame
 {
     public class CombatSystem : ISystem
     {

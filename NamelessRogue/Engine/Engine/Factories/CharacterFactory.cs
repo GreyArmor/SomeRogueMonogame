@@ -23,10 +23,13 @@ namespace NamelessRogue.Engine.Engine.Factories
             playerCharacter.AddComponent(new Position(x,y));
             playerCharacter.AddComponent(new Drawable('@', new Engine.Utility.Color(0.9,0.9,0.9)));
             playerCharacter.AddComponent(new Description("Player",""));
-            playerCharacter.AddComponent(new ItemsHolder());
+            var holder = new ItemsHolder();
+            playerCharacter.AddComponent(holder);
+            playerCharacter.AddComponent(new EquipmentSlots(holder));
             playerCharacter.AddComponent(new OccupiesTile());
-            
-            var stats = new Stats();
+           
+
+             var stats = new Stats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
 

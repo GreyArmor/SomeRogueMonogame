@@ -1,8 +1,7 @@
-using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.shell;
 
-namespace NamelessRogue.Engine.Engine.Systems
+namespace NamelessRogue.Engine.Engine.Systems.Ingame
 {
     public class TargetingSystem : ISystem
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeonBit.UI;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using NamelessRogue.shell;
@@ -21,7 +22,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
     }
     public class MainMenuScreen : BaseGuiScreen
     {
-        public List<MainMenuAction> Actions { get; }
+        public List<MainMenuAction> Actions { get; } = new List<MainMenuAction>();
         public Button NewGame { get; private set; }
         public Button LoadGame { get; private set; }
         public Button CreateTimeline { get; set; }
@@ -30,17 +31,28 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public MainMenuScreen(NamelessGame game)
         {
-            NewGame = new Button("New game", size: new Vector2(game.GetSettings().HudWidth() / 2 - 50, 50), anchor: Anchor.Center);
-            LoadGame = new Button("Load", size: new Vector2(game.GetSettings().HudWidth() / 2 - 50, 50), anchor: Anchor.Center);
-            CreateTimeline = new Button("Create timeline", size: new Vector2(game.GetSettings().HudWidth() / 2 - 50, 50), anchor: Anchor.Center);
-            Options = new Button("Options", size: new Vector2(game.GetSettings().HudWidth() / 2 - 50, 50), anchor: Anchor.Center);
-            Exit = new Button("Exit", size: new Vector2(game.GetSettings().HudWidth() / 2 - 50, 50), anchor: Anchor.Center);
 
-            NewGame.OnClick += entity => {  };
-            LoadGame.OnClick += entity => { };
-            CreateTimeline.OnClick += entity => { };
+            Panel = new Panel(new Vector2(game.GetSettings().HudWidth(), game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.Center);
+
+            NewGame = new Button("New game");
+            LoadGame = new Button("Load");
+            CreateTimeline = new Button("Create timeline");
+            Options = new Button("Options");
+            Exit = new Button("Exit");
+
+            NewGame.OnClick += entity => { Actions.Add(MainMenuAction.NewGame); };
+            LoadGame.OnClick += entity => { Actions.Add(MainMenuAction.LoadGame); };
+            CreateTimeline.OnClick += entity => { Actions.Add(MainMenuAction.GenerateNewTimeline); };
             Options.OnClick += entity => { Actions.Add(MainMenuAction.Options); };
             Exit.OnClick += entity => { Actions.Add(MainMenuAction.Exit); };
+
+            Panel.AddChild(NewGame);
+            Panel.AddChild(LoadGame);
+            Panel.AddChild(CreateTimeline);
+            Panel.AddChild(Options);
+            Panel.AddChild(Exit);
+
+            UserInterface.Active.AddEntity(Panel);
         }
     }
 }

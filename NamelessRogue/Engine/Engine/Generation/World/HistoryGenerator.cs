@@ -40,18 +40,18 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             timeline.CurrentTimelineLayer = worldBoard;
 
 
-            String appPath = System.IO.Directory.GetCurrentDirectory();
-            Stopwatch s = new Stopwatch(); 
-            s.Start();
-            SaveManager.SaveTimelineLayer(appPath + "\\Layers", worldBoard,
-                worldBoard.Age.ToString());
-            s.Stop();
-            s = new Stopwatch();
-            s.Start();
-            var timelineLayer = SaveManager.LoadTimelineLayer(appPath + "\\Layers",
-                worldBoard.Age.ToString());
-            s.Stop();
-            timelineLayer.ToString();
+            //String appPath = System.IO.Directory.GetCurrentDirectory();
+            //Stopwatch s = new Stopwatch(); 
+            //s.Start();
+            //SaveManager.SaveTimelineLayer(appPath + "\\Layers", worldBoard,
+            //    worldBoard.Age.ToString());
+            //s.Stop();
+            //s = new Stopwatch();
+            //s.Start();
+            //var timelineLayer = SaveManager.LoadTimelineLayer(appPath + "\\Layers",
+            //    worldBoard.Age.ToString());
+            //s.Stop();
+            //timelineLayer.ToString();
             //for (int i = 1; i < settings.HowOldIsTheWorld; i++)
             //{
 
@@ -71,7 +71,6 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             WorldBoardGenerator.PlaceInitialCivilizations(worldBoard, game);
             WorldBoardGenerator.PlaceInitialArtifacts(worldBoard, game);
             WorldBoardGenerator.PlaceResources(worldBoard, game);
-
             WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
 
             WorldTile firsTile = null;

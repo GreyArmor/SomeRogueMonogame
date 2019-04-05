@@ -13,7 +13,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 {
     public enum HudAction
     {
-        OpenWorldMap
+        OpenWorldMap, OpenInventory
     }
     public class Hud : BaseGuiScreen
     {
@@ -95,7 +95,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             InventoryButton = new Button("Inventory", size: new Vector2(200, 50), anchor: Anchor.BottomLeft);
             InventoryButton.ButtonParagraph.Scale = 0.7f;
-            InventoryButton.OnClick += OnClickWorldMap;
+            InventoryButton.OnClick += entity => { ActionsThisTick.Add(HudAction.OpenInventory); };
 
 
             Panel.AddChild(TurnLabel);

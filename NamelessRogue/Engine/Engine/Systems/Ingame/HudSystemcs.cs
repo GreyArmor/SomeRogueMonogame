@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NamelessRogue.Engine.Abstraction;
-using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
+﻿using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Stats;
@@ -13,7 +7,7 @@ using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.UiScreens;
 using NamelessRogue.shell;
 
-namespace NamelessRogue.Engine.Engine.Systems
+namespace NamelessRogue.Engine.Engine.Systems.Ingame
 {
     public class HudSystem : ISystem
     {
@@ -55,6 +49,10 @@ namespace NamelessRogue.Engine.Engine.Systems
                                 cursorPosition.p.X = (int) (playerPosition.p.X / Constants.ChunkSize);
                                 cursorPosition.p.Y = (int) (playerPosition.p.Y / Constants.ChunkSize);
                                 break;
+                            case HudAction.OpenInventory:
+                                namelessGame.ContextToSwitch = ContextFactory.GetInventoryContext(namelessGame);
+                                UiFactory.InventoryScreen.UpdateValues(namelessGame);
+                                break;;
                             default:
                                 break;
                         }

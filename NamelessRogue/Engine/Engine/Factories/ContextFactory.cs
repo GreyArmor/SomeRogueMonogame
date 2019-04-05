@@ -8,6 +8,10 @@ using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Context;
 using NamelessRogue.Engine.Engine.Systems;
+using NamelessRogue.Engine.Engine.Systems.Ingame;
+using NamelessRogue.Engine.Engine.Systems.Inventory;
+using NamelessRogue.Engine.Engine.Systems.MainMenu;
+using NamelessRogue.Engine.Engine.Systems.Map;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Factories
@@ -86,20 +90,45 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static GameContext GetMainMenuContext(NamelessGame game)
         {
 
-            if (WorldBoardContext != null)
+            if (mainMenuContext != null)
             {
-                return WorldBoardContext;
+                return mainMenuContext;
             }
             else
             {
                 var systems = new List<ISystem>();
                 systems.Add(new InputSystem());
+                systems.Add(new MainMenuScreenSystem());
                 var uiSystem = new UIRenderSystem();
 
                 // create and init the UI manager
-                UiFactory.CreateWorldBoardScreen(game);
-                WorldBoardContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UiFactory.WorldBoardScreen);
-                return WorldBoardContext;
+                UiFactory.CreateMainMenuScreen(game);
+                mainMenuContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UiFactory.MainMenuScreen);
+                return mainMenuContext;
+            }
+        }
+
+
+        private static GameContext inventoryContext;
+        public static GameContext GetInventoryContext(NamelessGame game)
+        {
+
+            if (inventoryContext != null)
+            {
+                return inventoryContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem());
+                systems.Add(new InventoryScreenSystem());
+                systems.Add(new InventorySystem());
+                var uiSystem = new UIRenderSystem();
+
+                // create and init the UI manager
+                UiFactory.CreateInventoryScreen(game);
+                inventoryContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UiFactory.InventoryScreen);
+                return inventoryContext;
             }
         }
 

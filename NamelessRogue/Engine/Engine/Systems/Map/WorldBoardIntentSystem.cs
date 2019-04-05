@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using NamelessRogue.Engine.Abstraction;
-using NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter;
-using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
-using NamelessRogue.Engine.Engine.Components.Environment;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
-using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Input;
 using NamelessRogue.shell;
 
-namespace NamelessRogue.Engine.Engine.Systems
+namespace NamelessRogue.Engine.Engine.Systems.Map
 {
     public class WorldBoardIntentSystem : ISystem
     {

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components;
+using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Context;
 using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.GameInstance;
@@ -212,8 +213,11 @@ namespace NamelessRogue.shell
             //place everything at the center of newly generated settlement;
             int x = firsTile.Settlement.Concrete.Center.X;
             int y = firsTile.Settlement.Concrete.Center.Y;
-            Entities.Add(
-                CharacterFactory.CreateSimplePlayerCharacter(x,y));
+
+
+            var player = CharacterFactory.CreateSimplePlayerCharacter(x, y);
+
+            Entities.Add(player);
 
             //for (int i = 1; i < 10; i++)
             //{
@@ -233,13 +237,19 @@ namespace NamelessRogue.shell
             //Entities.Add(CharacterFactory.CreateBlankNpc(x - 7,
             //    y));
 
-            Entities.Add(ItemFactory.CreateItem());
+
+            for (int i = 0; i < 5; i++)
+            {
+                var sword = ItemFactory.CreateSword(x - 2,
+                    y);
+                Entities.Add(sword);
+            }
             Entities.Add(GameInitializer.CreateCursor());
            
 
             UserInterface.Initialize(Content, BuiltinThemes.hd);
             UserInterface.Active.UseRenderTarget = true;
-            CurrentContext = ContextFactory.GetIngameContext(this);
+            CurrentContext = ContextFactory.GetMainMenuContext(this);
             CurrentContext.ContextScreen.Show();
             this.IsMouseVisible = true;
             UserInterface.Active.ShowCursor = false;

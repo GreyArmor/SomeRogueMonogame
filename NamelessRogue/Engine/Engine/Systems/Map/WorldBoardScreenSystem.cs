@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Input;
-using NamelessRogue.Engine.Abstraction;
+﻿using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Rendering;
-using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.UiScreens;
 using NamelessRogue.shell;
 
-namespace NamelessRogue.Engine.Engine.Systems
+namespace NamelessRogue.Engine.Engine.Systems.Map
 {
     public class WorldBoardScreenSystem : ISystem
     {

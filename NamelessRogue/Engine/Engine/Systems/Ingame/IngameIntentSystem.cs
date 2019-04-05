@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
@@ -16,9 +14,8 @@ using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Input;
 using NamelessRogue.shell;
-using SharpDX.DirectWrite;
 
-namespace NamelessRogue.Engine.Engine.Systems
+namespace NamelessRogue.Engine.Engine.Systems.Ingame
 {
     public class IngameIntentSystem : ISystem
     {
@@ -212,7 +209,7 @@ namespace NamelessRogue.Engine.Engine.Systems
                                             var desc = entity1.GetComponentOfType<Description>();
                                             if (desc != null)
                                             {
-                                                builder.Append($"Picked up: {desc.Name}");
+                                                builder.Append($"Picked up: {desc.Name} ");
                                             }
                                         }
 

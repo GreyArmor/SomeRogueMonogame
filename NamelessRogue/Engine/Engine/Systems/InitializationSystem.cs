@@ -28,12 +28,13 @@ namespace NamelessRogue.Engine.Engine.Systems
                 if (jc != null)
                 {
                     Position position = entity.GetComponentOfType<Position>();
-                    OccupiesTile occupiesTile = entity.GetComponentOfType<OccupiesTile>();
-                    if (occupiesTile != null && position != null)
+                    if (position != null)
                     {
                         Tile tile = worldProvider.GetTile(position.p.X, position.p.Y);
-                        tile.getEntitiesOnTile().Add((Entity) entity);
+                        tile.getEntitiesOnTile().Add((Entity)entity);
+
                     }
+                   
 
                     entity.RemoveComponentOfType<JustCreated>();
                 }

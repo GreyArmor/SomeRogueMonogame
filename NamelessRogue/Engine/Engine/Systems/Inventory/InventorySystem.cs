@@ -1,15 +1,11 @@
-using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
-using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Interaction;
-using NamelessRogue.Engine.Engine.Components.ItemComponents;
-using NamelessRogue.Engine.Engine.Components.Physical;
+using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
-using NamelessRogue.Engine.Engine.Input;
 using NamelessRogue.shell;
 
-namespace NamelessRogue.Engine.Engine.Systems
+namespace NamelessRogue.Engine.Engine.Systems.Inventory
 {
     public class InventorySystem : ISystem
     {
@@ -32,9 +28,11 @@ namespace NamelessRogue.Engine.Engine.Systems
                         {
                             tile.getEntitiesOnTile().Add((Entity) dropCommandItem);
                             dropCommand.Holder.GetItems().Remove(dropCommandItem);
+                            dropCommandItem.GetComponentOfType<Drawable>().setVisible(true);
                         }
 
                         entity.RemoveComponentOfType<DropItemCommand>();
+
                     }
 
                     PickUpItemCommand pickupCommand = entity.GetComponentOfType<PickUpItemCommand>();
@@ -49,12 +47,13 @@ namespace NamelessRogue.Engine.Engine.Systems
 
 
                             pickupCommand.Holder.GetItems().Add(pickupCommandItem);
+
+                            pickupCommandItem.GetComponentOfType<Drawable>().setVisible(false);
+
                         }
 
                         entity.RemoveComponentOfType<PickUpItemCommand>();
                     }
-
-
                 }
             }
         }
