@@ -176,7 +176,7 @@ namespace NamelessRogue.shell
             graphics.ApplyChanges();
 
 
-            worldSettings = new WorldSettings(5000,1000,1000);
+            worldSettings = new WorldSettings(1111,1000,1000);
 
 
             Entities = new List<IEntity>();
@@ -238,7 +238,7 @@ namespace NamelessRogue.shell
             //    y));
 
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 var sword = ItemFactory.CreateSword(x - 2,
                     y);

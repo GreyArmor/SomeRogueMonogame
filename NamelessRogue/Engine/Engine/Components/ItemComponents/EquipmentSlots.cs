@@ -20,8 +20,6 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
             Feet,
             Ring1,
             Ring2,
-            Ring3,
-            Ring4,
             Neck
         }
 
@@ -43,8 +41,6 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
             Slots.Add(Slot.Neck, new EquipmentSlot(Slot.Neck));
             Slots.Add(Slot.Ring1, new EquipmentSlot(Slot.Ring1));
             Slots.Add(Slot.Ring2, new EquipmentSlot(Slot.Ring2));
-            Slots.Add(Slot.Ring3, new EquipmentSlot(Slot.Ring3));
-            Slots.Add(Slot.Ring4, new EquipmentSlot(Slot.Ring4));
             Holder = holder;
         }
 

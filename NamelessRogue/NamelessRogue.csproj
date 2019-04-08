@@ -195,6 +195,7 @@
     <Compile Include="Engine\Engine\UiScreens\Hud.cs" />
     <Compile Include="Engine\Engine\UiScreens\InventoryScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\MainMenuScreen.cs" />
+    <Compile Include="Engine\Engine\UiScreens\UI\PickableItemList.cs" />
     <Compile Include="Engine\Engine\UiScreens\WorldBoardScreen.cs" />
     <Compile Include="Engine\Engine\Utility\BoundingBox.cs" />
     <Compile Include="Engine\Engine\Utility\Color.cs" />
