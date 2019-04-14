@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
 
@@ -76,7 +77,12 @@ namespace NamelessRogue.Engine.Engine.Input
                         break;
                     case Keys.P:
                         result.Add(Intent.PickUpItem);
-                        break;;
+                        break;
+                    case Keys.Enter:
+                        result.Add(Intent.Enter);
+                        break;
+
+
 
                 }
             }

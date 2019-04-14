@@ -31,6 +31,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity TreeStumpEntity = new Entity();
         public static Entity WallEntity = new Entity();
         public static Entity BlockerEntity = new Entity();
+        public static Entity WindowEntity = new Entity();
         public static List<Entity> CreateInstancedFurnitureEntities(NamelessGame game)
         {
             var result = new List<Entity>();
@@ -41,7 +42,8 @@ namespace NamelessRogue.Engine.Engine.Factories
             result.Add(ShellEntity);
             result.Add(TreeStumpEntity);
             result.Add(WallEntity);
-         
+            result.Add(WindowEntity);
+
             StarfishEntity.AddComponent(new Description("A starfish", ""));
             StarfishEntity.AddComponent(new Drawable('★', new Color(1f, 0, 0)));
 
@@ -68,6 +70,9 @@ namespace NamelessRogue.Engine.Engine.Factories
             WallEntity.AddComponent(new OccupiesTile());
             WallEntity.AddComponent(new BlocksVision());
 
+            WindowEntity.AddComponent(new Drawable('O', new Engine.Utility.Color(0.9, 0.9, 0.9)));
+            WindowEntity.AddComponent(new Description("Window", ""));
+            WindowEntity.AddComponent(new OccupiesTile());
             foreach (var entity in result)
             {
                 entity.AddComponent(new Instanced());

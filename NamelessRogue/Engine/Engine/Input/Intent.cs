@@ -13,6 +13,7 @@ namespace NamelessRogue.Engine.Engine.Input
         MoveRight,
         PickUpItem,
         LookAtMode, DropItem,
-        SkipTurn
+        SkipTurn,
+        Enter
     }
 }

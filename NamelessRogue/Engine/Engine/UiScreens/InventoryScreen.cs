@@ -73,15 +73,13 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             get { return pickableItemList; }
         }
 
-        private Paragraph descriptionHeader;
-        private Paragraph descriptionText;
         List<ItemPanel> slotPanels = new List<ItemPanel>();
         private IEntity draggedEntity;
         public InventoryScreen(NamelessGame game)
         {
             this.game = game;
             Panel = new Panel(new Vector2(game.GetActualWidth(), game.GetActualHeight()), PanelSkin.Default, Anchor.BottomRight);
-            pickableItemList = new PickableItemList(new Vector2(game.GetActualWidth()/2, game.GetActualHeight()-120), new Vector2(game.GetActualWidth() / 2 - 50, 0));
+            pickableItemList = new PickableItemList(new Vector2(game.GetActualWidth()/2, game.GetActualHeight()-60), new Vector2(0, 0));
 
             ReturnToGame = new Button("Back", size: new Vector2(game.GetSettings().HudWidth() / 2, 50), anchor: Anchor.BottomRight);
             ReturnToGame.ButtonParagraph.Scale = 0.7f;
@@ -90,18 +88,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             Panel.AddChild(PickableItemList);
             Panel.AddChild(ReturnToGame);
 
-            descriptionHeader = new Paragraph();
-            descriptionText = new Paragraph();
-
-            slotPanels.Add(new ItemPanel(EquipmentSlots.Slot.Head, new Vector2(game.GetActualWidth() / 2 - 100, 60),new Vector2(), "Head:"));
-            slotPanels.Add(new ItemPanel(EquipmentSlots.Slot.Neck, new Vector2(game.GetActualWidth() / 2 - 100, 60), new Vector2(0,60), "Neck:"));
-            slotPanels.Add(new ItemPanel(EquipmentSlots.Slot.LeftArm, new Vector2(game.GetActualWidth() / 2 - 100, 60), new Vector2(0, 120), "Left arm:"));
-            slotPanels.Add(new ItemPanel(EquipmentSlots.Slot.RightArm, new Vector2(game.GetActualWidth() / 2 - 100, 60), new Vector2(0, 180), "Right arm:"));
-            slotPanels.Add(new ItemPanel(EquipmentSlots.Slot.Torso, new Vector2(game.GetActualWidth() / 2 - 100, 60), new Vector2(0, 240), "Torso:"));
-            slotPanels.Add(new ItemPanel(EquipmentSlots.Slot.Legs, new Vector2(game.GetActualWidth() / 2 - 100, 60), new Vector2(0, 300), "Legs:"));
-            slotPanels.Add(new ItemPanel(EquipmentSlots.Slot.Feet, new Vector2(game.GetActualWidth() / 2 - 100, 60), new Vector2(0, 360), "Feet:"));
-            slotPanels.Add(new ItemPanel(EquipmentSlots.Slot.Ring1, new Vector2(game.GetActualWidth() / 2 - 100, 60), new Vector2(0, 420), "Ring:"));
-            slotPanels.Add(new ItemPanel(EquipmentSlots.Slot.Ring2, new Vector2(game.GetActualWidth() / 2 - 100, 60), new Vector2(0, 480), "Ring:"));
 
             foreach (var slotPanel in slotPanels)
             {
@@ -134,28 +120,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             }
 
             PickableItemList.Select(0);
-
-            //if (pickableItemList.Items.Any())
-            //{
-            //    PickableItemList.SelectedIndex = 0;
-            //}
-
-
-            foreach (EquipmentSlots.Slot slot in System.Enum.GetValues(typeof(EquipmentSlots.Slot)))
-            {
-                var slotPanel = slotPanels.FirstOrDefault(x => x.Slot == slot);
-                equipment.Slots.TryGetValue(slot, out EquipmentSlot slotEquipment);
-                if (slotEquipment.Equipment != null)
-                {
-                    var parentEntity = slotEquipment.Equipment.Parent;
-                    var description = parentEntity.GetComponentOfType<Description>();
-                    slotPanel.EquipmentText = description.Name;
-                }
-                else
-                {
-                    slotPanel.EquipmentText ="Nothing";
-                }
-            }
 
         }
 

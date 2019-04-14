@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -8,6 +9,7 @@ using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Components.UI;
+using NamelessRogue.Engine.Engine.Generation.Settlement;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Utility;
@@ -88,7 +90,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         }
 
 
-        public static IEntity CreateTiltedBuilding(int x, int y, int width, int height, NamelessGame namelessGame, IChunkProvider worldProvider)
+        public static IEntity CreateTiltedBuilding(int x, int y, int width, int height, NamelessGame namelessGame, IChunkProvider worldProvider, Random random)
         {
             IEntity building = new Entity();
 
@@ -97,68 +99,109 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             Building buildingComponent = new Building();
 
-            var shiftedY = y - 5;
+            var blueprint = BlueprintLibrary.Blueprints.First();
 
-            var points = new List<Point> { };
-
-            //points.Add(new Point(x + (width / 2), y));
-            //points.Add(new Point(x , y + (height / 2)));
-            //points.Add(new Point(x + (width / 2), y + height));
-           // points.Add(new Point(x + width, y+(height/2)));
-
-
-
-            //points.Add(new Point(x, y));
-            //points.Add(new Point(x, y + height));
-            //points.Add(new Point(x + (width), y + height));
-            //points.Add(new Point(x + width, y));
-
-            //var reversedpoints = points.ToArray();
-            //points.AddRange(reversedpoints.Reverse());
-
-
-            // WorldLineDrawer.BezierPath(points.ToArray(),worldProvider, TerrainFurnitureFactory.WallEntity);
-           // List<Tile> tiles = new List<Tile>();
-           // for (int i = 0; i < points.Count - 1; i++)
-           // {
-           //     tiles.AddRange(WorldLineDrawer.PlotLineAA(points[i], points[i + 1], worldProvider));
-           // }
-           //// tiles.AddRange(WorldLineDrawer.PlotLineAA(points[3], points[0], worldProvider));
-
-           // foreach (var tile in tiles)
-           // {
-           //    tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WallEntity); 
-           // }
-            
-
-
-
-
-            for (int i = 0; i < width; i++)
+            for (int i = 0; i < blueprint.Matrix.Length; i++)
             {
-                for (int j = 0; j < height; j++)
+                for (int j = 0; j < blueprint.Matrix[i].Length; j++)
                 {
                     var tile = worldProvider.GetTile(x + i, y + j);
                     tile.Terrain = TerrainLibrary.Terrains[TerrainTypes.Road];
                     tile.Biome = BiomesLibrary.Biomes[Biomes.None];
-                    if (i == 0 || j == 0 || i == width - 1 || j == height - 1)
+
+                    var bluepringCell = blueprint.Matrix[j][i];
+                    switch (bluepringCell)
                     {
-                        if (i == width / 2)
+                        case BlueprintCell.Wall:
+                        {
+                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WallEntity);
+                            break;
+                        }
+                        case BlueprintCell.Door:
                         {
                             IEntity door = CreateDoor(x + i, y + j);
                             buildingComponent.getBuildingParts().Add(door);
                             namelessGame.GetEntities().Add(door);
                             tile.getEntitiesOnTile().Add((Entity) door);
+                            break;
+
                         }
-                        else
+                        case BlueprintCell.Window:
                         {
-                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WallEntity);
+                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WindowEntity);
+                            break;
                         }
+
                     }
+
+
                 }
             }
 
 
+            {
+                //BSPTree tree = new BSPTree(new Rectangle(x,y,width,height));
+
+                //tree.Split(random,3);
+
+                //{
+                //    BSPTree child = tree.ChildA;
+                //    for (int i = 0; i < child.Bounds.Width; i++)
+                //    {
+                //        for (int j = 0; j < child.Bounds.Height; j++)
+                //        {
+                //            var tile = worldProvider.GetTile(child.Bounds.X + i, child.Bounds.Y + j);
+                //            tile.Terrain = TerrainLibrary.Terrains[TerrainTypes.Road];
+                //            tile.Biome = BiomesLibrary.Biomes[Biomes.None];
+
+                //            if (i == 0 || j == 0 || i == child.Bounds.Width - 1 || j == child.Bounds.Height - 1)
+                //            {
+                //                if (i == child.Bounds.Width / 2)
+                //                {
+                //                    IEntity door = CreateDoor(child.Bounds.X + i, child.Bounds.Y + j);
+                //                    buildingComponent.getBuildingParts().Add(door);
+                //                    namelessGame.GetEntities().Add(door);
+                //                    tile.getEntitiesOnTile().Add((Entity)door);
+                //                }
+                //                else
+                //                {
+                //                    tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WallEntity);
+                //                }
+                //            }
+
+                //        }
+                //    }
+                //}
+
+                //{
+                //    BSPTree child = tree.ChildB;
+                //    for (int i = 0; i < child.Bounds.Width; i++)
+                //    {
+                //        for (int j = 0; j < child.Bounds.Height; j++)
+                //        {
+                //            var tile = worldProvider.GetTile(child.Bounds.X + i, child.Bounds.Y + j);
+                //            tile.Terrain = TerrainLibrary.Terrains[TerrainTypes.Road];
+                //            tile.Biome = BiomesLibrary.Biomes[Biomes.None];
+
+                //            if (i == 0 || j == 0 || i == child.Bounds.Width - 1 || j == child.Bounds.Height - 1)
+                //            {
+                //                if (i == child.Bounds.Width / 2)
+                //                {
+                //                    IEntity door = CreateDoor(child.Bounds.X + i, child.Bounds.Y + j);
+                //                    buildingComponent.getBuildingParts().Add(door);
+                //                    namelessGame.GetEntities().Add(door);
+                //                    tile.getEntitiesOnTile().Add((Entity)door);
+                //                }
+                //                else
+                //                {
+                //                    tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WallEntity);
+                //                }
+                //            }
+
+                //        }
+                //    }
+                //}
+            }
 
             building.AddComponent(buildingComponent);
             return building;

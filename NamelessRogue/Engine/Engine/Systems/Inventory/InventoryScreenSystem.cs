@@ -43,12 +43,17 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                                 int nextIndex = UiFactory.InventoryScreen.PickableItemList.SelectedItemIndex - 1;
                                 if (nextIndex < 0)
                                 {
-                                    nextIndex = UiFactory.InventoryScreen.PickableItemList.Items.Count-1;
+                                    nextIndex = UiFactory.InventoryScreen.PickableItemList.Items.Count - 1;
                                 }
 
                                 UiFactory.InventoryScreen.PickableItemList.Select(nextIndex);
+                                break;
                             }
 
+                            case Intent.Enter:
+                            {
+
+                            }
                                 break;
                             default:
                                 break;

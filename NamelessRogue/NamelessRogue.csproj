@@ -127,6 +127,9 @@
     <Compile Include="Engine\Engine\Generation\Noise\ImageWriter.cs" />
     <Compile Include="Engine\Engine\Generation\Noise\SimplexNoise.cs" />
     <Compile Include="Engine\Engine\Generation\Noise\SimplexNoise_octave.cs" />
+    <Compile Include="Engine\Engine\Generation\Settlement\BlueprintLibrary.cs" />
+    <Compile Include="Engine\Engine\Generation\Settlement\BuildingBlueprint.cs" />
+    <Compile Include="Engine\Engine\Generation\Settlement\SettlementBlueprint.cs" />
     <Compile Include="Engine\Engine\Generation\WorldSettings.cs" />
     <Compile Include="Engine\Engine\Generation\World\Biomes.cs" />
     <Compile Include="Engine\Engine\Generation\World\BiomesLibrary.cs" />
@@ -198,6 +201,7 @@
     <Compile Include="Engine\Engine\UiScreens\UI\PickableItemList.cs" />
     <Compile Include="Engine\Engine\UiScreens\WorldBoardScreen.cs" />
     <Compile Include="Engine\Engine\Utility\BoundingBox.cs" />
+    <Compile Include="Engine\Engine\Utility\BSPGenerator.cs" />
     <Compile Include="Engine\Engine\Utility\Color.cs" />
     <Compile Include="Engine\Engine\Utility\DamageHelper.cs" />
     <Compile Include="Engine\Engine\Utility\FrameCounter.cs" />

@@ -116,16 +116,17 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             var citySize = 100;
             //TODO streets
+            
 
 
             var buildingNumber = (citySize) / 15 * (citySize) / 15;
-
+            var random = new Random(game.WorldSettings.GlobalRandom.Next());
             for (int x = 0; x < citySize; x += 15)
             {
                 for (int y = 0; y < citySize; y += 15)
                 {
                     BuildingFactory.CreateTiltedBuilding((int) (x + center.X - citySize / 2),
-                        (int) (y + center.Y - citySize / 2), 10, 10, game, chunks);
+                        (int) (y + center.Y - citySize / 2), 10, 10, game, chunks, random);
                 }
             }
         }
