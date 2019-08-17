@@ -90,7 +90,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         }
 
 
-        public static IEntity CreateTiltedBuilding(int x, int y, int width, int height, NamelessGame namelessGame, IChunkProvider worldProvider, Random random)
+        public static IEntity CreateBuilding(int x, int y, BuildingBlueprint blueprint, NamelessGame namelessGame, IChunkProvider worldProvider, Random random)
         {
             IEntity building = new Entity();
 
@@ -99,17 +99,17 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             Building buildingComponent = new Building();
 
-            var blueprint = BlueprintLibrary.Blueprints.First();
+            
 
             for (int i = 0; i < blueprint.Matrix.Length; i++)
             {
                 for (int j = 0; j < blueprint.Matrix[i].Length; j++)
                 {
-                    var tile = worldProvider.GetTile(x + i, y + j);
+                    var tile = worldProvider.GetTile(x + j, y + i);
                     tile.Terrain = TerrainLibrary.Terrains[TerrainTypes.Road];
                     tile.Biome = BiomesLibrary.Biomes[Biomes.None];
 
-                    var bluepringCell = blueprint.Matrix[j][i];
+                    var bluepringCell = blueprint.Matrix[i][j];
                     switch (bluepringCell)
                     {
                         case BlueprintCell.Wall:
@@ -119,7 +119,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                         }
                         case BlueprintCell.Door:
                         {
-                            IEntity door = CreateDoor(x + i, y + j);
+                            IEntity door = CreateDoor(x + j, y + i);
                             buildingComponent.getBuildingParts().Add(door);
                             namelessGame.GetEntities().Add(door);
                             tile.getEntitiesOnTile().Add((Entity) door);
@@ -129,6 +129,16 @@ namespace NamelessRogue.Engine.Engine.Factories
                         case BlueprintCell.Window:
                         {
                             tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WindowEntity);
+                            break;
+                        }
+                        case BlueprintCell.Bed:
+                        {
+                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.BedEntity);
+                            break;
+                        }
+                        case BlueprintCell.IndoorsFurniture:
+                        {
+                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.BedEntity);
                             break;
                         }
 

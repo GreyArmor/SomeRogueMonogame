@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Engine.Generation.Settlement;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
@@ -121,12 +122,15 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             var buildingNumber = (citySize) / 15 * (citySize) / 15;
             var random = new Random(game.WorldSettings.GlobalRandom.Next());
+
+            var blueprint = BlueprintLibrary.Blueprints.First();
+
             for (int x = 0; x < citySize; x += 15)
             {
                 for (int y = 0; y < citySize; y += 15)
                 {
-                    BuildingFactory.CreateTiltedBuilding((int) (x + center.X - citySize / 2),
-                        (int) (y + center.Y - citySize / 2), 10, 10, game, chunks, random);
+                    BuildingFactory.CreateBuilding((int) (x + center.X - citySize / 2),
+                        (int) (y + center.Y - citySize / 2), blueprint, game, chunks, random);
                 }
             }
         }

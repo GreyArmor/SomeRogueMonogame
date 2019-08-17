@@ -30,8 +30,14 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity ShellEntity = new Entity();
         public static Entity TreeStumpEntity = new Entity();
         public static Entity WallEntity = new Entity();
-        public static Entity BlockerEntity = new Entity();
         public static Entity WindowEntity = new Entity();
+        public static Entity BedEntity = new Entity();
+        public static Entity BarrelEntity = new Entity();
+        public static Entity FlowerEntity = new Entity();
+        public static Entity TableEntity = new Entity();
+        public static Entity ChairEntity = new Entity();
+
+
         public static List<Entity> CreateInstancedFurnitureEntities(NamelessGame game)
         {
             var result = new List<Entity>();
@@ -43,6 +49,9 @@ namespace NamelessRogue.Engine.Engine.Factories
             result.Add(TreeStumpEntity);
             result.Add(WallEntity);
             result.Add(WindowEntity);
+            result.Add(BedEntity);
+            result.Add(BarrelEntity);
+            result.Add(FlowerEntity);
 
             StarfishEntity.AddComponent(new Description("A starfish", ""));
             StarfishEntity.AddComponent(new Drawable('★', new Color(1f, 0, 0)));
@@ -62,7 +71,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             SmallTreeEntity.AddComponent(new Description("A small tree", ""));
             SmallTreeEntity.AddComponent(new Drawable('t', new Color(0f, 0.5f, 0f)));
 
-            TreeStumpEntity.AddComponent(new Description("A tree stumo", ""));
+            TreeStumpEntity.AddComponent(new Description("A tree stump", ""));
             TreeStumpEntity.AddComponent(new Drawable('u', new Color(0.5f, 0.5f, 0f)));
             
             WallEntity.AddComponent(new Drawable('#', new Engine.Utility.Color(0.9, 0.9, 0.9)));
@@ -70,8 +79,15 @@ namespace NamelessRogue.Engine.Engine.Factories
             WallEntity.AddComponent(new OccupiesTile());
             WallEntity.AddComponent(new BlocksVision());
 
-            WindowEntity.AddComponent(new Drawable('O', new Engine.Utility.Color(0.9, 0.9, 0.9)));
+            WindowEntity.AddComponent(new Drawable('O', new Engine.Utility.Color(0, 0.9, 0.9)));
             WindowEntity.AddComponent(new Description("Window", ""));
+
+            BedEntity.AddComponent(new Drawable('B', new Engine.Utility.Color(139, 69, 19)));
+            BedEntity.AddComponent(new Description("Bed", ""));
+
+            BarrelEntity.AddComponent(new Drawable('O', new Engine.Utility.Color(139, 69, 19)));
+            BarrelEntity.AddComponent(new Description("Barrel", ""));
+
             WindowEntity.AddComponent(new OccupiesTile());
             foreach (var entity in result)
             {
