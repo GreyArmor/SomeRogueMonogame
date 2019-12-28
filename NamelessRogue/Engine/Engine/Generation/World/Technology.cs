@@ -10,7 +10,6 @@ namespace NamelessRogue.Engine.Engine.Generation.World
     public class Technology
     {
         public List<Technology> Prerequsites { get; set; } = new List<Technology>();
-        public List<MapResource> OpensResources { get; set; } = new List<MapResource>();
         
         public int TechLevel { get; }
 

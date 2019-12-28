@@ -245,9 +245,9 @@ namespace NamelessRogue.shell
                 Entities.Add(sword);
             }
             Entities.Add(GameInitializer.CreateCursor());
-           
 
-            UserInterface.Initialize(Content, BuiltinThemes.hd);
+            //Paragraph.BaseSize = 1.175f;
+            UserInterface.Initialize(Content, "custom");
             UserInterface.Active.UseRenderTarget = true;
             CurrentContext = ContextFactory.GetMainMenuContext(this);
             CurrentContext.ContextScreen.Show();
@@ -338,8 +338,6 @@ namespace NamelessRogue.shell
 
             GraphicsDevice.Clear(Color.Black);
             CurrentContext.RenderingUpdate((long) gameTime.TotalGameTime.TotalMilliseconds, this);
-
-            
 
         }
     }

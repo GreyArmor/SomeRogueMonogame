@@ -30,21 +30,12 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                 switch (UiFactory.WorldBoardScreen.Mode)
                 {
 
-                    case WorldBoardScreenAction.ResourceMode:
-                    {
-                        UiFactory.WorldBoardScreen.DescriptionLog.ClearItems();
-                        if (tile.Resource != null)
-                        {
-                            UiFactory.WorldBoardScreen.DescriptionLog.AddItem(tile.Resource.Info.Name);
-                        }
-                    }
-                        break;
                     case WorldBoardScreenAction.ArtifactMode:
                     {
                         UiFactory.WorldBoardScreen.DescriptionLog.ClearItems();
                         if (tile.Artifact != null)
                         {
-                            UiFactory.WorldBoardScreen.DescriptionLog.AddItem(tile.Artifact.Info.Name);
+                            UiFactory.WorldBoardScreen.DescriptionLog.AddItem(tile.Artifact.Name);
                         }
                     }
                         break;
@@ -56,7 +47,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                             if (tile.Settlement != null)
                             {
                                 UiFactory.WorldBoardScreen.DescriptionLog.AddItem(
-                                    $"{tile.Owner.Name}, {tile.Settlement.Info.Name} city");
+                                    $"{tile.Owner.Name}, {tile.Settlement.Name} city");
                             }
                             else
                             {
@@ -111,11 +102,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                     case WorldBoardScreenAction.ArtifactMode:
                     {
                         _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
-                    }
-                        break;
-                    case WorldBoardScreenAction.ResourceMode:
-                    {
-                        _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Resources;
                     }
 
                         break;

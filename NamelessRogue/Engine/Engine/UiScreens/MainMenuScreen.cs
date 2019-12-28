@@ -33,7 +33,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         {
 
             Panel = new Panel(new Vector2(game.GetSettings().HudWidth(), game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.Center);
-
+            
             NewGame = new Button("New game");
             LoadGame = new Button("Load");
             CreateTimeline = new Button("Create timeline");

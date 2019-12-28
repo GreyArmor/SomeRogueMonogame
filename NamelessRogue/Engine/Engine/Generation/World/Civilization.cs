@@ -17,31 +17,29 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             CivColor = civColor;
             CultureTemplate = cultureTemplate;
             Settlements = new List<Settlement>();
-            Units = new List<MapUnit>();
+            Armies = new List<Army>();
             Buildings = new List<MapBuilding>();
 
         }
         public string Name { get; set; }
 
-        public ProductionValue GlobalTreasury
+        public Resorces GlobalTreasury
         {
             get
             {
-                return new ProductionValue(
-                    Settlements.Sum(x=>x.Info.ProductionModifier.Food),
-                    Settlements.Sum(x => x.Info.ProductionModifier.Manufacturing),
-                    Settlements.Sum(x => x.Info.ProductionModifier.Culture),
-                    Settlements.Sum(x => x.Info.ProductionModifier.Science),
-                    Settlements.Sum(x => x.Info.ProductionModifier.Mana),
-                    Settlements.Sum(x => x.Info.ProductionModifier.Health)
-
+                return new Resorces(
+                    Settlements.Sum(x=>x.Treasury.Population),
+                    Settlements.Sum(x => x.Treasury.Wealth),
+                    Settlements.Sum(x => x.Treasury.Supply),
+                    Settlements.Sum(x => x.Treasury.Mana),
+                    Settlements.Sum(x => x.Treasury.Influence)
                 );
             }
         }
         public Color CivColor { get; }
         public CultureTemplate CultureTemplate { get; }
         public List<Settlement> Settlements { get; }
-        public List<MapUnit> Units { get; }
+        public List<Army> Armies { get; }
         public List<MapBuilding> Buildings { get; }
 
         public int TechLevel { get; }

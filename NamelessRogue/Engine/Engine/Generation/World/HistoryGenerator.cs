@@ -69,9 +69,9 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             WorldBoardGenerator.PopulateWithInitialData(worldBoard, game);
             WorldBoardGenerator.AnalizeLandmasses(worldBoard, game);
             WorldBoardGenerator.PlaceInitialCivilizations(worldBoard, game);
-            WorldBoardGenerator.PlaceInitialArtifacts(worldBoard, game);
-            WorldBoardGenerator.PlaceResources(worldBoard, game);
-            WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
+            //WorldBoardGenerator.PlaceInitialArtifacts(worldBoard, game);
+            //WorldBoardGenerator.PlaceResources(worldBoard, game);
+            //WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
 
             WorldTile firsTile = null;
             foreach (var worldBoardWorldTile in worldBoard.WorldTiles)

@@ -12,7 +12,6 @@ namespace NamelessRogue.Engine.Engine.Generation.World
     public class WorldTile {
         public Terrain Terrain { get; set; }
         public Biome Biome { get; set; }
-        public MapResource Resource { get; set; }
         public MapBuilding Building { get; set; }
         public MapArtifact Artifact { get; set; }
         public MetaphysicalForce Affinity { get; set; } = new MetaphysicalForce("",new Color());

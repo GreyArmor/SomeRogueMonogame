@@ -24,7 +24,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
         Regions,
         Political,
         Artifact,
-        Resources
     }
 
     public class MapRenderingSystem : ISystem
@@ -384,14 +383,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                 {
                     screen.ScreenBuffer[point.X, point.Y].Char = tile.Artifact.Representation;
                     screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Artifact.CharColor;
-                }
-            }
-            else if (Mode == WorldBoardRenderingSystemMode.Resources)
-            {
-                if (tile.Resource != null)
-                {
-                    screen.ScreenBuffer[point.X, point.Y].Char = tile.Resource.Representation;
-                    screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Resource.CharColor;
                 }
             }
         }

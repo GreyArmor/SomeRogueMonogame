@@ -50,125 +50,6 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             }
         }
 
-        public static void PlaceResources(TimelineLayer timelineLayer, NamelessGame game)
-        {
-            var continentTilesPerResource = game.WorldSettings.ContinentTilesPerResource;
-
-            foreach (var worldBoardContinent in timelineLayer.Continents)
-            {
-                var continentTiles = new Queue<WorldTile>();
-                var resNumber = worldBoardContinent.SizeInTiles / continentTilesPerResource;
-                foreach (var worldBoardWorldTile in timelineLayer.WorldTiles)
-                {
-                    if (worldBoardWorldTile.Continent == worldBoardContinent && worldBoardWorldTile.Owner == null)
-                    {
-                        continentTiles.Enqueue(worldBoardWorldTile);
-                    }
-                }
-
-                //randomize list
-                continentTiles = new Queue<WorldTile>(continentTiles.OrderBy(
-                    (o) => { return (game.WorldSettings.GlobalRandom.Next() % continentTiles.Count); }));
-
-                var random = game.WorldSettings.GlobalRandom;
-
-
-                for (int i = 0; i < resNumber; i++)
-                {
-                    WorldTile tile = null;
-                    bool noNeighbooringResources = false;
-                    const int squareToCheck = 3;
-                    while (!noNeighbooringResources)
-                    {
-
-                        tile = continentTiles.Dequeue();
-                        noNeighbooringResources = true;
-                        for (int x = tile.WorldBoardPosiiton.X - squareToCheck;
-                            x <= tile.WorldBoardPosiiton.X + squareToCheck;
-                            x++)
-                        {
-                            for (int y = tile.WorldBoardPosiiton.Y - squareToCheck;
-                                y <= tile.WorldBoardPosiiton.Y + squareToCheck;
-                                y++)
-                            {
-                                if (timelineLayer.WorldTiles[x, y].Artifact != null)
-                                {
-                                    noNeighbooringResources = false;
-                                }
-                            }
-                        }
-                    }
-
-                    var resource = ResourceLibrary.GetRandomResource(tile.Biome.Type, random);
-                    resource.Info.MapPosition = tile.WorldBoardPosiiton;
-                    tile.Resource = resource;
-                }
-            }
-        }
-
-        public static void PlaceInitialArtifacts(TimelineLayer timelineLayer, NamelessGame game)
-        {
-
-            var artifactsPerContinentTiles = game.WorldSettings.ContinentTilesPerArtifact;
-
-            foreach (var worldBoardContinent in timelineLayer.Continents)
-            {
-                var continentTiles = new Queue<WorldTile>();
-                var artifactNumber = worldBoardContinent.SizeInTiles / artifactsPerContinentTiles;
-                foreach (var worldBoardWorldTile in timelineLayer.WorldTiles)
-                {
-                    if (worldBoardWorldTile.Continent == worldBoardContinent && worldBoardWorldTile.Owner == null)
-                    {
-                        continentTiles.Enqueue(worldBoardWorldTile);
-                    }
-                }
-
-                //randomize list
-                continentTiles = new Queue<WorldTile>(continentTiles.OrderBy(
-                    (o) => { return (game.WorldSettings.GlobalRandom.Next() % continentTiles.Count); }));
-
-                var random = game.WorldSettings.GlobalRandom;
-
-
-                for (int i = 0; i < artifactNumber; i++)
-                {
-
-
-
-                    WorldTile tile = null;
-                    bool noNeighbooringArtifacts = false;
-                    const int squareToCheck = 3;
-                    while (!noNeighbooringArtifacts)
-                    {
-
-                        tile = continentTiles.Dequeue();
-                        noNeighbooringArtifacts = true;
-                        for (int x = tile.WorldBoardPosiiton.X - squareToCheck;
-                            x <= tile.WorldBoardPosiiton.X + squareToCheck;
-                            x++)
-                        {
-                            for (int y = tile.WorldBoardPosiiton.Y - squareToCheck;
-                                y <= tile.WorldBoardPosiiton.Y + squareToCheck;
-                                y++)
-                            {
-                                if (timelineLayer.WorldTiles[x, y].Artifact != null)
-                                {
-                                    noNeighbooringArtifacts = false;
-                                }
-                            }
-                        }
-                    }
-
-                    //ArtifactLibrary.Artifacts.ToArray();
-                    var artifact = ArtifactLibrary.GetRandomArtifact(random);
-                    artifact.Info.MapPosition = tile.WorldBoardPosiiton;
-                    tile.Artifact = artifact;
-
-
-                }
-            }
-
-        }
 
         public static void DistributeMetaphysics(TimelineLayer timelineLayer, NamelessGame game)
         {
@@ -198,7 +79,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                     return (game.WorldSettings.GlobalRandom.Next() % continentTiles.Count);
                 }));
 
-                var random = game.WorldSettings.GlobalRandom;
+                var random = new Random(game.WorldSettings.GlobalRandom.Next());
 
                 for (int i = 0; i < civNumber; i++)
                 {
@@ -211,22 +92,19 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                     }
 
                     CultureTemplate culture = game.WorldSettings.CultureTemplates[
-                        game.WorldSettings.GlobalRandom.Next(game.WorldSettings.CultureTemplates.Count)];
+                        random.Next(game.WorldSettings.CultureTemplates.Count)];
 
                     var civilization = new Civilization(civName, new Microsoft.Xna.Framework.Color(
-                            new Vector4((float) game.WorldSettings.GlobalRandom.NextDouble(),
-                                (float) game.WorldSettings.GlobalRandom.NextDouble(),
-                                (float) game.WorldSettings.GlobalRandom.NextDouble(), 1)),
+                            new Vector4((float)random.NextDouble(),
+                                (float)random.NextDouble(),
+                                (float)random.NextDouble(), 1)),
                         culture);
                     timelineLayer.Civilizations.Add(civilization);
 
 
                     var firstSettlement = new Settlement()
                     {
-                        Info = new ObjectInfo()
-                        {
                             Name = civilization.CultureTemplate.GetTownName(random)
-                        }
                     };
 
                     civilization.Settlements.Add(firstSettlement);
@@ -240,6 +118,11 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                     while (!noNeighbooringCivs)
                     {
 
+                        if (!continentTiles.Any())
+                        {
+                            break;
+                        }
+                        
                         tile = continentTiles.Dequeue();
                         noNeighbooringCivs = true;
                         for (int x = tile.WorldBoardPosiiton.X - squareToCheck; x <= tile.WorldBoardPosiiton.X + squareToCheck; x++)
@@ -255,9 +138,14 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                     }
 
 
-                   
+                    //if there is no tiles to place civilizations then break the loop
+                    if (!continentTiles.Any())
+                    {
+                        break;
+                    }
 
 
+                    timelineLayer.Civilizations.Add(civilization);
 
                     tile.Settlement = firstSettlement;
 

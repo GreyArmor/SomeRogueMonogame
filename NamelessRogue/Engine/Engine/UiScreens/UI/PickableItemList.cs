@@ -84,7 +84,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
 
         private void RebuildList()
         {
-            Children.Clear();
+            //Children.Clear();
             for (int i = 0; i < Items.Count; i++)
             {
                 var item = Items[i];
@@ -110,7 +110,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
         public void ClearItems()
         {
             Items.Clear();
-            Children.Clear();
+            //Children.Clear();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
     public class Settlement : MapBuilding
     {
         private Point WorldBoardPosition { get; set; }
-        public ProductionValue Levels { get; set; }
+        public Resorces Treasury { get; set; }
         public ConcreteSettlement Concrete { get; set; }
     }
 

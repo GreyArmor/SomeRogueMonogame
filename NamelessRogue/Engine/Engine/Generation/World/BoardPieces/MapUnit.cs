@@ -1,13 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Engine.Generation.World.Meta;
 
 namespace NamelessRogue.Engine.Engine.Generation.World.BoardPieces
 {
-    public class MapUnit : BoardPiece
+    public class Army : BoardPiece
     {
-        public UnitTypes Type { get; }
-
-        public int WeaponLevel { get; set; }
-        public int DefenceLevel { get; set; }
+        public int Supply { get; set; }
+        public int Mana { get; set; }
     }
 }

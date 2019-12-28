@@ -19,7 +19,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         RegionsMode,
         PoliticalMode,
         ArtifactMode,
-        ResourceMode
     }
     public class WorldBoardScreen : BaseGuiScreen
     {
@@ -42,8 +41,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             ModeArtifacts = CreateButton("Artifacts", game.GetSettings().HudWidth() - 50);
             ModeArtifacts.OnClick += OnClickArtifacts;
-            ModeResource = CreateButton("Resources", game.GetSettings().HudWidth() - 50);
-            ModeResource.OnClick += OnClickResource;
 
 
             LocalMap = new Button("Local", size: new Vector2(game.GetSettings().HudWidth() / 2 - 50, 50), anchor: Anchor.Auto);
@@ -63,10 +60,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             list.ExtraSpaceBetweenLines = -10;
             DescriptionLog = list;
 
-           
-
-
-
             Panel.AddChild(WorldMap);
             Panel.AddChild(LocalMap);
             Panel.AddChild(DescriptionLog);
@@ -74,7 +67,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             Panel.AddChild(ModeRegions);
             Panel.AddChild(ModePolitical);
             Panel.AddChild(ModeArtifacts);
-            Panel.AddChild(ModeResource);
             Panel.AddChild(ReturnToGame);
             
             UserInterface.Active.AddEntity(Panel);
@@ -89,13 +81,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         {
             Actions.Add(WorldBoardScreenAction.LocalMap);
         }
-
-        private void OnClickResource(Entity entity)
-        {
-            Actions.Add(WorldBoardScreenAction.ResourceMode);
-            Mode = WorldBoardScreenAction.ResourceMode;
-        }
-
        
 
         private void OnClickArtifacts(Entity entity)
@@ -140,8 +125,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public Button ModePolitical { get; set; }
         public Button ModeArtifacts { get; set; }
         public Button ReturnToGame { get; set; }
-
-        public Button ModeResource { get; set; }
 
         public Button LocalMap { get; set; }
         public Button WorldMap { get; set; }
