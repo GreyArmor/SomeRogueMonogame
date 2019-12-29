@@ -176,7 +176,7 @@ namespace NamelessRogue.shell
             graphics.ApplyChanges();
 
 
-            worldSettings = new WorldSettings(1111,1000,1000);
+            worldSettings = new WorldSettings(123456789,1000,1000);
 
 
             Entities = new List<IEntity>();

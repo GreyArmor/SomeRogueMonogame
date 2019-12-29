@@ -135,8 +135,8 @@
     <Compile Include="Engine\Engine\Generation\World\BoardPieces\MapUnit.cs" />
     <Compile Include="Engine\Engine\Generation\World\CitySlot.cs" />
     <Compile Include="Engine\Engine\Generation\World\Civilization.cs" />
-    <Compile Include="Engine\Engine\Generation\World\Combat\Unit.cs" />
-    <Compile Include="Engine\Engine\Generation\World\Combat\UnitType.cs" />
+    <Compile Include="Engine\Engine\Components\WorldBoardComponents\Combat\CombatCalculator.cs" />
+    <Compile Include="Engine\Engine\Components\WorldBoardComponents\Combat\Unit.cs" />
     <Compile Include="Engine\Engine\Generation\World\ConcreteSettlement.cs" />
     <Compile Include="Engine\Engine\Generation\World\CultureTemplate.cs" />
     <Compile Include="Engine\Engine\Generation\World\HistoryGenerator.cs" />

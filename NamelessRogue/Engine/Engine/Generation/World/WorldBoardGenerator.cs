@@ -49,12 +49,6 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                 }
             }
         }
-
-
-        public static void DistributeMetaphysics(TimelineLayer timelineLayer, NamelessGame game)
-        {
-        }
-
         public static void PlaceInitialCivilizations(TimelineLayer timelineLayer, NamelessGame game)
         {
             var worldSettingsContinentTilesPerCivilization = game.WorldSettings.ContinentTilesPerCivilization;
