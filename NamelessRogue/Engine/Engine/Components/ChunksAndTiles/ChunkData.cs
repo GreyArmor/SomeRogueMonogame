@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
@@ -130,22 +131,25 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
         public bool MoveEntity(IEntity entity, Point moveTo)
         {
-                Position position = entity.GetComponentOfType<Position>();
-                if (position != null)
-                {
-                    IWorldProvider worldProvider = this;
+            Position position = entity.GetComponentOfType<Position>();
+            if (position != null)
+            {
+                IWorldProvider worldProvider = this;
 
-                    Tile oldTile = worldProvider.GetTile(position.p.X, position.p.Y);
-                    Tile newTile = worldProvider.GetTile(moveTo.X, moveTo.Y);
+                Tile oldTile = worldProvider.GetTile(position.p.X, position.p.Y);
+                Tile newTile = worldProvider.GetTile(moveTo.X, moveTo.Y);
 
-                    oldTile.getEntitiesOnTile().Remove((Entity)entity);
-                    newTile.getEntitiesOnTile().Add((Entity)entity);
+                oldTile.getEntitiesOnTile().Remove((Entity) entity);
+                newTile.getEntitiesOnTile().Add((Entity) entity);
 
 
-                    position.p.X = (moveTo.X);
-                    position.p.Y = (moveTo.Y);
-                    return true;
-                }
+                position.p.X = (moveTo.X);
+                position.p.Y = (moveTo.Y);
+
+
+
+                return true;
+            }
 
             return false;
         }

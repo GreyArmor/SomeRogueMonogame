@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
@@ -146,8 +147,9 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
                     if (path.Any())
                     {
+                        path = path.Skip(1).ToList(); // we dont need the first point in the path because its the point we are standing on currently
                         basicAi.Route = new Queue<Point>(path);
-
+                        
                         if (moveBesides)
                         {
                             basicAi.Route = new Queue<Point>(path.Take(path.Count - 1));
@@ -165,8 +167,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
                     basicAi.DestinationPoint = destination;
                 }
-
-                // namelessGame.WriteLineToConsole("moving to nextPosition  = " + nextPosition.toString());
                 worldProvider.MoveEntity(movableEntity,
                     new Point(nextPosition.X, nextPosition.Y));
 

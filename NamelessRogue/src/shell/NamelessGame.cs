@@ -228,7 +228,7 @@ namespace NamelessRogue.shell
             //    }
             //}
 
-            Entities.Add(CharacterFactory.CreateBlankNpc(x - 5,
+            Entities.Add(CharacterFactory.CreateBlankNpc(x - 6,
                 y));
             //Entities.Add(CharacterFactory.CreateBlankNpc(x - 3,
             //    y));
