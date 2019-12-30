@@ -45,7 +45,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         {
 
             IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
-            IChunkProvider worldProvider = null;
+            IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
@@ -90,7 +90,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         }
 
 
-        public static IEntity CreateBuilding(int x, int y, BuildingBlueprint blueprint, NamelessGame namelessGame, IChunkProvider worldProvider, Random random)
+        public static IEntity CreateBuilding(int x, int y, BuildingBlueprint blueprint, NamelessGame namelessGame, IWorldProvider worldProvider, Random random)
         {
             IEntity building = new Entity();
 

@@ -18,7 +18,7 @@ namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
     {
         // public const int gridSize = 100;
         // public static Grid grid = new Grid(gridSize, gridSize);
-        //public List<Point> FindPath(Point start, Point destination, IChunkProvider world, NamelessGame game)
+        //public List<Point> FindPath(Point start, Point destination, IWorldProvider world, NamelessGame game)
         //{
 
         //    var gridOffset = new Point(start.X- (gridSize/2), start.Y- (gridSize/2));
@@ -65,7 +65,7 @@ namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
         //}
 
 
-        //public List<Point> FindPath(Point start, Point destination, IChunkProvider world, NamelessGame game)
+        //public List<Point> FindPath(Point start, Point destination, IWorldProvider world, NamelessGame game)
         //{
 
         //    Func<Tile, IEnumerable<Tile>> getNeighbors = delegate(Tile p)
@@ -112,7 +112,7 @@ namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
 
 
 
-        public List<Point> FindPath(Point start, Point destination, IChunkProvider world, NamelessGame game)
+        public List<Point> FindPath(Point start, Point destination, IWorldProvider world, NamelessGame game)
         {
        
 
@@ -184,12 +184,12 @@ namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
 
         public class BlockedProvider : IBlockedProvider
         {
-            private readonly IChunkProvider _worlldProvider;
+            private readonly IWorldProvider _worlldProvider;
             private readonly Point _destination;
             private readonly Point _start;
             private int counter = 0;
             private int maxSearches = 200;
-            public BlockedProvider(IChunkProvider worlldProvider, Point destination, Point start)
+            public BlockedProvider(IWorldProvider worlldProvider, Point destination, Point start)
             {
                 _worlldProvider = worlldProvider;
                 _destination = destination;

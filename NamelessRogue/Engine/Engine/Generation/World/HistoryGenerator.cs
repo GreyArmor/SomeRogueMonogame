@@ -79,7 +79,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
 
                 if (worldBoardWorldTile.Settlement != null)
                 {
-                    IChunkProvider worldProvider = chunkData;
+                    IWorldProvider worldProvider = chunkData;
                     firsTile = worldBoardWorldTile;
                     var concreteSettlment = SettlementFactory.GenerateSettlement(game, firsTile, worldBoard, worldProvider);
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
@@ -47,8 +48,8 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                             case Intent.MoveBottomRight:
                             {
                                 Position position = playerEntity.GetComponentOfType<Position>();
-                                HasTurn hasTurn = playerEntity.GetComponentOfType<HasTurn>();
-                                if (position != null && hasTurn != null)
+                                var actionPoints = playerEntity.GetComponentOfType<ActionPoints>();
+                                if (position != null && actionPoints.Points>=100)
                                 {
 
                                     int newX =
@@ -65,7 +66,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                         position.p.Y;
 
                                     IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
-                                    IChunkProvider worldProvider = null;
+                                    IWorldProvider worldProvider = null;
                                     if (worldEntity != null)
                                     {
                                         worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
@@ -111,10 +112,11 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                             }
                                             else
                                             {
-                                                playerEntity.AddComponent(new MoveToCommand(newX, newY, playerEntity));
+
+                                                worldProvider.MoveEntity(playerEntity,
+                                                    new Point(newX, newY));
                                                 var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                                 ap.Points -= Constants.ActionsMovementCost;
-                                             //   playerEntity.RemoveComponentOfType<HasTurn>();
 
                                             }
                                         }
@@ -134,9 +136,9 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                     }
                                     else
                                     {
-                                        playerEntity.AddComponent(new MoveToCommand(newX, newY, playerEntity));
-                                      //  playerEntity.RemoveComponentOfType<HasTurn>();
-                                        var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                                        worldProvider.MoveEntity(playerEntity,
+                                            new Point(newX, newY));
+                                            var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                         ap.Points -= Constants.ActionsMovementCost;
                                     }
                                 }
@@ -172,19 +174,20 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                 break;
                             case Intent.PickUpItem:
                             {
-                                HasTurn hasTurn = playerEntity.GetComponentOfType<HasTurn>();
+                                var actionPoints = playerEntity.GetComponentOfType<ActionPoints>();
 
-                                if (hasTurn != null)
+                                if (actionPoints.Points >= 100)
                                 {
                                     IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
-                                    IChunkProvider worldProvider = null;
+                                    IWorldProvider worldProvider = null;
                                     if (worldEntity != null)
                                     {
-                                        worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+                                        worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer
+                                            .Chunks;
                                     }
 
 
-                                        var position = playerEntity.GetComponentOfType<Position>();
+                                    var position = playerEntity.GetComponentOfType<Position>();
                                     var itemHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                                     var tile = worldProvider.GetTile(position.p.X, position.p.Y);
 
@@ -233,9 +236,9 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                             }
                             case Intent.SkipTurn:
                             {
-                                HasTurn hasTurn = playerEntity.GetComponentOfType<HasTurn>();
+                                var actionPoints = playerEntity.GetComponentOfType<ActionPoints>();
 
-                                if (hasTurn != null)
+                                if (actionPoints.Points >= 100)
                                 {
                                     var ap = entity.GetComponentOfType<ActionPoints>();
                                     ap.Points -= Constants.ActionsMovementCost;

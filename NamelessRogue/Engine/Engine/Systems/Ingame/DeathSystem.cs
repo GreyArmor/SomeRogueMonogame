@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                         entityToKill.RemoveComponentOfType<DeathCommand>();
                     }
                     IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
-                    IChunkProvider worldProvider = null;
+                    IWorldProvider worldProvider = null;
                     if (worldEntity != null)
                     {
                         worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;

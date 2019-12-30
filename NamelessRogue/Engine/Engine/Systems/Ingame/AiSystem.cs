@@ -20,15 +20,15 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         public void Update(long gameTime, NamelessGame namelessGame)
         {
 
-            //var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
-            //HasTurn playerHasTurn = playerEntity.GetComponentOfType<HasTurn>();
-            //if (playerHasTurn != null)
-            //{
-            //    return;
-            //}
+            var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
+            var ap = playerEntity.GetComponentOfType<ActionPoints>();
+            if (ap.Points >= 100)
+            {
+                return;
+            }
 
             IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
-            IChunkProvider worldProvider = null;
+            IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
@@ -40,9 +40,9 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 foreach (IEntity entity in namelessGame.GetEntities())
                 {
                     AIControlled ac = entity.GetComponentOfType<AIControlled>();
-                    HasTurn hasTurn = entity.GetComponentOfType<HasTurn>();
                     Dead dead = entity.GetComponentOfType<Dead>();
-                    if (ac != null && hasTurn != null && dead==null)
+                    var actionPoints = entity.GetComponentOfType<ActionPoints>();
+                    if (ac != null && dead==null && actionPoints.Points>=100)
                     {
                         BasicAi basicAi = entity.GetComponentOfType<BasicAi>();
 
@@ -81,6 +81,17 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                     //}
                                     MoveTo(entity, namelessGame, playerPosition.p,true);
                                     break;
+                                    var movableEntity = entity;
+                                    worldProvider.MoveEntity(movableEntity,
+                                        new Point(playerPosition.p.X + 1, playerPosition.p.Y));
+
+                                    var aiap = movableEntity.GetComponentOfType<ActionPoints>();
+                                    aiap.Points -= Constants.ActionsMovementCost;
+ 
+
+
+
+                                    break;
                                 default:
                                     break;
 
@@ -95,7 +106,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides)
         {
             IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
-            IChunkProvider worldProvider = null;
+            IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
@@ -104,6 +115,25 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
             Position position = movableEntity.GetComponentOfType<Position>();
             BasicAi basicAi = movableEntity.GetComponentOfType<BasicAi>();
             var route = basicAi.Route;
+
+            if(!route.Any())
+            {
+                AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
+                List<Point> path = pathfinder.FindPath(position.p,
+                    new Point(destination.X, destination.Y), worldProvider,
+                    namelessGame);
+                if (moveBesides)
+                {
+                    basicAi.Route = new Queue<Point>(path.Take(path.Count - 1));
+                }
+                else
+                {
+                    basicAi.Route = new Queue<Point>(path);
+                }
+
+                basicAi.DestinationPoint = destination;
+            }
+            route = basicAi.Route;
             if (route.Any())
             {
                 Point nextPosition = route.Dequeue();
@@ -137,36 +167,11 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 }
 
                 // namelessGame.WriteLineToConsole("moving to nextPosition  = " + nextPosition.toString());
-                MoveToCommand mc = new MoveToCommand(nextPosition.X, nextPosition.Y,
-                    movableEntity);
-
-                tileToMoveTo = worldProvider.GetTile(nextPosition.X, nextPosition.Y);
-                var previousTile = worldProvider.GetTile(position.p.X, position.p.Y);
-
-                var entitiesPrev = previousTile.getEntitiesOnTile();
-                entitiesPrev.Remove((Entity) movableEntity);
-                tileToMoveTo.getEntitiesOnTile().Add((Entity) movableEntity);
+                worldProvider.MoveEntity(movableEntity,
+                    new Point(nextPosition.X, nextPosition.Y));
 
                 var ap = movableEntity.GetComponentOfType<ActionPoints>();
                 ap.Points -= Constants.ActionsMovementCost;
-                movableEntity.AddComponent(mc);
-            }
-            else
-            {
-                AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
-                List<Point> path = pathfinder.FindPath(position.p,
-                    new Point(destination.X, destination.Y), worldProvider,
-                    namelessGame);
-                if (moveBesides)
-                {
-                    basicAi.Route = new Queue<Point>(path.Take(path.Count - 1));
-                }
-                else
-                {
-                    basicAi.Route = new Queue<Point>(path);
-                }
-
-                basicAi.DestinationPoint = destination;
             }
             if (route.Count == 0)
             {

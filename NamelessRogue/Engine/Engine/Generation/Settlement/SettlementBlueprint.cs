@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Engine.Generation.Settlement
         }
         public SettlmentSlot[][] SettlmentSlots { get; set; }
 
-        public void GenerateOnLand(IChunkProvider worldProvider, Point center)
+        public void GenerateOnLand(IWorldProvider worldProvider, Point center)
         {
 
         }

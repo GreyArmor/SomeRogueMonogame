@@ -7,7 +7,7 @@ using Tile = NamelessRogue.Engine.Engine.Components.ChunksAndTiles.Tile;
 
 namespace NamelessRogue.Engine.Abstraction
 {
-    public interface IChunkProvider
+    public interface IWorldProvider
     {
         int ChunkResolution { get; }
         Tile GetTile(int x, int y);
@@ -15,5 +15,12 @@ namespace NamelessRogue.Engine.Abstraction
         Dictionary<Point, Chunk> GetRealityBubbleChunks();
         Dictionary<Point, Chunk> GetChunks();
         List<Chunk> RealityChunks { get; }
+
+        /// <summary>
+        /// returns true if successful;
+        /// </summary>
+        bool MoveEntity(IEntity entity, Point moveTo);
+
+
     }
 }

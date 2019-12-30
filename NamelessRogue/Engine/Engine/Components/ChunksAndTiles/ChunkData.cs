@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Generation;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
-    public class ChunkData : IChunkProvider
+    public class ChunkData : IWorldProvider
     {
         private Dictionary<Point, Chunk> chunks;
 
@@ -125,6 +126,28 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         public Guid GetId()
         {
             return Id;
+        }
+
+        public bool MoveEntity(IEntity entity, Point moveTo)
+        {
+                Position position = entity.GetComponentOfType<Position>();
+                if (position != null)
+                {
+                    IWorldProvider worldProvider = this;
+
+                    Tile oldTile = worldProvider.GetTile(position.p.X, position.p.Y);
+                    Tile newTile = worldProvider.GetTile(moveTo.X, moveTo.Y);
+
+                    oldTile.getEntitiesOnTile().Remove((Entity)entity);
+                    newTile.getEntitiesOnTile().Add((Entity)entity);
+
+
+                    position.p.X = (moveTo.X);
+                    position.p.Y = (moveTo.Y);
+                    return true;
+                }
+
+            return false;
         }
     }
 }

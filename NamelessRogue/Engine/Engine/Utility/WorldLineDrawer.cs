@@ -13,7 +13,7 @@ namespace NamelessRogue.Engine.Engine.Utility
     public static class WorldLineDrawer
     {
   
-        public static List<Tile> PlotLineAA(Point point0, Point point1, IChunkProvider world)
+        public static List<Tile> PlotLineAA(Point point0, Point point1, IWorldProvider world)
         {
             var result = new List<Tile>();
             int dx = Math.Abs(point1.X - point0.X), sx = point0.X < point1.X ? 1 : -1;
@@ -62,7 +62,7 @@ namespace NamelessRogue.Engine.Engine.Utility
         }
 
 
-        public static List<Tile> BezierPath(Point[] points, IChunkProvider world)
+        public static List<Tile> BezierPath(Point[] points, IWorldProvider world)
         {
             var result = new List<Tile>();
             HashSet<Point> foundPoints = new HashSet<Point>();

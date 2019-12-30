@@ -168,7 +168,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
             }
 
             IEntity worldEntity = game.GetEntityByComponentClass<TimeLine>();
-            IChunkProvider worldProvider = null;
+            IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
@@ -208,7 +208,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         }
         PermissiveVisibility fov;
         private void FillcharacterBufferVisibility(NamelessGame game, Screen screen, ConsoleCamera camera,
-            GameSettings settings, IChunkProvider world)
+            GameSettings settings, IWorldProvider world)
         {
 
             int camX = camera.getPosition().X;
@@ -246,7 +246,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
 
         private void FillcharacterBuffersWithTileObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
-            NamelessGame game, IChunkProvider world)
+            NamelessGame game, IWorldProvider world)
         {
             int camX = camera.getPosition().X;
             int camY = camera.getPosition().Y;
@@ -282,7 +282,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         }
 
         private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings,
-            IChunkProvider world)
+            IWorldProvider world)
         {
             int camX = camera.getPosition().X;
             int camY = camera.getPosition().Y;

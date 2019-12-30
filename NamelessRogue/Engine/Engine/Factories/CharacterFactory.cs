@@ -102,7 +102,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             stats.Wit.Value = 10;
 
             npc.AddComponent(stats);
-            npc.AddComponent(new ActionPoints());
+            npc.AddComponent(new ActionPoints(){Points = 100});
 
             return npc;
         }

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
@@ -49,12 +50,10 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                                         intent == Intent.MoveTopRight ? position.p.Y + 1 :
                                         position.p.Y;
 
-
-                                    cursorEntity.AddComponent(new MoveToCommand(newX, newY, cursorEntity));
-
-
-
+                                    position.p = new Point(newX, newY);
                                 }
+
+
 
                                 break;
 

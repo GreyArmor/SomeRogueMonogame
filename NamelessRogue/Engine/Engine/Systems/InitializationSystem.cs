@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Engine.Systems
         {
 
             IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
-            IChunkProvider worldProvider = null;
+            IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;

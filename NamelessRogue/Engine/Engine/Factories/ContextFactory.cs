@@ -34,10 +34,9 @@ namespace NamelessRogue.Engine.Engine.Factories
                 var systems = new List<ISystem>();
                 systems.Add(new InitializationSystem());
                 systems.Add(new InputSystem());
-                systems.Add(new TurnManagementSystem());
                 systems.Add(new IngameIntentSystem());
                 systems.Add(new AiSystem());
-                systems.Add(new MovementSystem());
+                systems.Add(new TurnManagementSystem());
                 systems.Add(new CombatSystem());
                 systems.Add(new InventorySystem());
                 systems.Add(new SwitchSystem());
@@ -73,7 +72,6 @@ namespace NamelessRogue.Engine.Engine.Factories
                 var systems = new List<ISystem>();
                 systems.Add(new InputSystem());
                 systems.Add(new WorldBoardIntentSystem());
-                systems.Add(new MovementSystem());
                 systems.Add(new WorldBoardScreenSystem(renderingSystem));
               
                 var uiSystem = new UIRenderSystem();

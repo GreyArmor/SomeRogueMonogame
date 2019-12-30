@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Engine.Factories
     public static class SettlementFactory
     {
         public static ConcreteSettlement GenerateSettlement(NamelessGame namelessGame, WorldTile tile, TimelineLayer board,
-            IChunkProvider worldProvider)
+            IWorldProvider worldProvider)
         {
             var result = new ConcreteSettlement();
 
@@ -112,7 +112,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         }
 
 
-        private static void GenerateCityBuildingForTest(Vector2 center, NamelessGame game, IChunkProvider chunks)
+        private static void GenerateCityBuildingForTest(Vector2 center, NamelessGame game, IWorldProvider chunks)
         {
 
             var citySize = 100;

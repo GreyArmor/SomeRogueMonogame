@@ -13,7 +13,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
         public void Update(long gameTime, NamelessGame namelessGame)
         {
             IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
-            IChunkProvider worldProvider = null;
+            IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
