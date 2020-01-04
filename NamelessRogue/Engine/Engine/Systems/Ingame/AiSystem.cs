@@ -133,10 +133,10 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                     AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
                     List<Point> path = pathfinder.FindPath(position.p,
                         destination, worldProvider, namelessGame);
-
+                    path = path.Skip(1).ToList(); // we dont need the first point in the path because its the point we are standing on currently
                     if (path.Any())
                     {
-                        path = path.Skip(1).ToList(); // we dont need the first point in the path because its the point we are standing on currently
+                        
                         basicAi.Route = new Queue<Point>(path);
                         
                         if (moveBesides)
