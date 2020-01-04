@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GeonBit.UI;
-using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
+using Myra.Graphics2D.UI;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
@@ -26,108 +25,149 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public WorldBoardScreenAction Mode { get; set; }
         public WorldBoardScreen(NamelessGame game)
         {
-            Panel = new Panel(new Vector2(game.GetSettings().HudWidth(), game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.BottomRight);
-            ReturnToGame = CreateButton("Back", game.GetSettings().HudWidth()-50);
-            ReturnToGame.OnClick += ReturnToGameOnClick;
+            Panel = new Panel()
+            {
+                Width = (int)game.GetSettings().HudWidth(),
+                Height = game.GetActualCharacterHeight(),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top
+            };
 
-            ModeTerrain = CreateButton("Terrain", game.GetSettings().HudWidth()-50);
-            ModeTerrain.OnClick += OnClickModeTerrain;
 
-            ModeRegions = CreateButton("Regions", game.GetSettings().HudWidth()-50);
-            ModeRegions.OnClick += OnClickLandmasses;
+            var vPanel = new VerticalStackPanel();
+
+            ReturnToGame = CreateButton("Back", game.GetSettings().HudWidth() - 50);
+            ReturnToGame.Click += ReturnToGameOnClick;
+            ModeTerrain = CreateButton("Terrain", game.GetSettings().HudWidth() - 50);
+            ModeTerrain.Click += OnClickModeTerrain;
+
+            ModeRegions = CreateButton("Regions", game.GetSettings().HudWidth() - 50);
+            ModeRegions.Click += OnClickLandmasses;
 
             ModePolitical = CreateButton("Political", game.GetSettings().HudWidth() - 50);
-            ModePolitical.OnClick += OnClickPolitical;
+            ModePolitical.Click += OnClickPolitical;
 
             ModeArtifacts = CreateButton("Artifacts", game.GetSettings().HudWidth() - 50);
-            ModeArtifacts.OnClick += OnClickArtifacts;
+            ModeArtifacts.Click += OnClickArtifacts;
+
+            var grid = new Grid() { VerticalAlignment = VerticalAlignment.Top, ColumnSpacing = 3, Width = (int)game.GetSettings().HudWidth() - 50, HorizontalAlignment = HorizontalAlignment.Center};
+
+            LocalMap = new ImageTextButton();
+            LocalMap.Text = "Local";
+            LocalMap.GridColumn = 0;
+            LocalMap.Width = (int)game.GetSettings().HudWidth() / 2 - 50;
+            LocalMap.Height = 50;
+            LocalMap.Click += OnLocalMap;
+            LocalMap.HorizontalAlignment = HorizontalAlignment.Left;
+            LocalMap.VerticalAlignment = VerticalAlignment.Top;
+            LocalMap.ContentHorizontalAlignment = HorizontalAlignment.Center;
+            LocalMap.ContentVerticalAlignment = VerticalAlignment.Center;
 
 
-            LocalMap = new Button("Local", size: new Vector2(game.GetSettings().HudWidth() / 2 - 50, 50), anchor: Anchor.Auto);
-            LocalMap.ButtonParagraph.Scale = 0.7f;
-            LocalMap.OnClick += OnLocalMap;
-            LocalMap.Anchor = Anchor.TopLeft;
+            WorldMap = new ImageTextButton();
+            WorldMap.Text = "World";
+            WorldMap.GridColumn = 2;
+            WorldMap.Width = (int)game.GetSettings().HudWidth() / 2 - 50;
+            WorldMap.Height = 50;
+            WorldMap.Click += OnWorldMap;
+            WorldMap.HorizontalAlignment = HorizontalAlignment.Left;
+            WorldMap.VerticalAlignment = VerticalAlignment.Top;
+            WorldMap.ContentHorizontalAlignment = HorizontalAlignment.Center;
+            WorldMap.ContentVerticalAlignment = VerticalAlignment.Center;
 
 
-            WorldMap = new Button("World", size: new Vector2(game.GetSettings().HudWidth()/2 - 50, 50), anchor: Anchor.Auto);
-            WorldMap.ButtonParagraph.Scale = 0.7f;
-            WorldMap.OnClick += OnWorldMap;
-            WorldMap.Anchor = Anchor.TopRight;
+            grid.Widgets.Add(LocalMap);
+            grid.Widgets.Add(WorldMap);
 
-            SelectList list = new SelectList(new Vector2(0, 150));
-            list.Locked = true;
-            list.ItemsScale = 0.5f;
-            list.ExtraSpaceBetweenLines = -10;
+            TextBox list = new TextBox();
+            list.Width = (int) game.GetSettings().HudWidth() - 50;
+            list.Height = 100;
+            list.Readonly = true;
             DescriptionLog = list;
 
-            Panel.AddChild(WorldMap);
-            Panel.AddChild(LocalMap);
-            Panel.AddChild(DescriptionLog);
-            Panel.AddChild(ModeTerrain);
-            Panel.AddChild(ModeRegions);
-            Panel.AddChild(ModePolitical);
-            Panel.AddChild(ModeArtifacts);
-            Panel.AddChild(ReturnToGame);
-            
-            UserInterface.Active.AddEntity(Panel);
+            vPanel.Widgets.Add(grid);
+            vPanel.Widgets.Add(new HorizontalSeparator());
+            vPanel.Widgets.Add(DescriptionLog);
+            vPanel.Widgets.Add(new HorizontalSeparator());
+            vPanel.Widgets.Add(ModeTerrain);
+            vPanel.Widgets.Add(ModeRegions);
+            vPanel.Widgets.Add(ModePolitical);
+            vPanel.Widgets.Add(ModeArtifacts);
+            vPanel.Widgets.Add(ReturnToGame);
+
+            Panel.Widgets.Add(vPanel);
+
+            Desktop.Widgets.Add(Panel);
         }
 
-        private void OnWorldMap(Entity entity)
+        private void OnWorldMap(object sender, EventArgs e)
         {
             Actions.Add(WorldBoardScreenAction.WorldMap);
         }
 
-        private void OnLocalMap(Entity entity)
+        private void OnLocalMap(object sender, EventArgs e)
         {
             Actions.Add(WorldBoardScreenAction.LocalMap);
         }
-       
 
-        private void OnClickArtifacts(Entity entity)
+
+        private void OnClickArtifacts(object sender, EventArgs e)
         {
             Actions.Add(WorldBoardScreenAction.ArtifactMode);
             Mode = WorldBoardScreenAction.ArtifactMode;
         }
 
-        private void OnClickPolitical(Entity entity)
+        private void OnClickPolitical(object sender, EventArgs e)
         {
             Actions.Add(WorldBoardScreenAction.PoliticalMode);
             Mode = WorldBoardScreenAction.PoliticalMode;
         }
 
-        private void OnClickLandmasses(Entity entity)
+        private void OnClickLandmasses(object sender, EventArgs e)
         {
             Actions.Add(WorldBoardScreenAction.RegionsMode);
             Mode = WorldBoardScreenAction.RegionsMode;
         }
 
-        private void OnClickModeTerrain(Entity entity)
+        private void OnClickModeTerrain(object sender, EventArgs e)
         {
             Actions.Add(WorldBoardScreenAction.TerrainMode);
             Mode = WorldBoardScreenAction.TerrainMode;
         }
 
-        private Button CreateButton(string Text, float width)
+        private ImageTextButton CreateButton(string Text, float width)
         {
-            var result = new Button(Text, size: new Vector2(width, 50), anchor: Anchor.Auto);
-            result.ButtonParagraph.Scale = 0.7f;
+           
+            var result = new ImageTextButton()
+            {
+                ContentHorizontalAlignment = HorizontalAlignment.Center,
+                ContentVerticalAlignment = VerticalAlignment.Center,
+                Text = Text,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = (int)width,
+                Height = 50
+            };
+
+
+
             return result;
         }
 
-        private void ReturnToGameOnClick(Entity entity)
+        private void ReturnToGameOnClick(object sender, EventArgs e)
         {
             Actions.Add(WorldBoardScreenAction.ReturnToGame);
         }
-        public SelectList DescriptionLog { get; private set; }
+        public TextBox DescriptionLog { get; private set; }
 
-        public Button ModeTerrain { get; set; }
-        public Button ModeRegions { get; set; }
-        public Button ModePolitical { get; set; }
-        public Button ModeArtifacts { get; set; }
-        public Button ReturnToGame { get; set; }
+        public ImageTextButton ModeTerrain { get; set; }
+        public ImageTextButton ModeRegions { get; set; }
+        public ImageTextButton ModePolitical { get; set; }
+        public ImageTextButton ModeArtifacts { get; set; }
+        public ImageTextButton ReturnToGame { get; set; }
 
-        public Button LocalMap { get; set; }
-        public Button WorldMap { get; set; }
+        public ImageTextButton LocalMap { get; set; }
+        public ImageTextButton WorldMap { get; set; }
 
     }
 }

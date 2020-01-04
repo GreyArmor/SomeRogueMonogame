@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GeonBit.UI;
-using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
+using Myra.Graphics2D.TextureAtlases;
+using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Engine.Factories;
+using NamelessRogue.Engine.Engine.UiScreens.UI;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
@@ -29,10 +30,10 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public Label TurnLabel { get; private set; }
 
-        public Button WorldMapButton { get; private set; }
-        public Button InventoryButton { get; private set; }
+        public ImageTextButton WorldMapButton { get; private set; }
+        public ImageTextButton InventoryButton { get; private set; }
 
-        public SelectList EventLog { get; private set; }
+        public LogView EventLog { get; private set; }
 
         public HashSet<HudAction> ActionsThisTick
         {
@@ -41,87 +42,109 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public Hud(NamelessGame game)
         {
-            Panel = new Panel(new Vector2(game.GetSettings().HudWidth(), game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.BottomRight);
-            HealthBar = new ProgressBar(0, 100);
-            HealthBar.Size = new Vector2(100, 10);
-            HealthBar.ProgressFill.FillColor = Color.Red;
-
-            StaminaBar = new ProgressBar(0, 100);
-            StaminaBar.Size = new Vector2(100, 10);
-
-            StrLabel = new Label("Str");
-            PerLabel = new Label("Per");
-            RefLabel = new Label("Ref");
-            ImgLabel = new Label("Img");
-            WillLabel = new Label("Wil");
-            WitLabel = new Label("Wit");
-            TurnLabel = new Label("Turn");
-            SelectList list = new SelectList(new Vector2(0, 150));
-            list.Locked = true;
-            list.ItemsScale = 0.5f;
-            list.ExtraSpaceBetweenLines = -10;
-            EventLog = list;
-
-            EventLog.OnListChange = (Entity entity) =>
+            Panel = new Panel()
             {
-                SelectList list1 = (SelectList)entity;
-                if (list1.Count > 100)
-                {
-                    list1.RemoveItem(0);
-                }
-                EventLog.scrollToEnd();
+                Width = (int)game.GetSettings().HudWidth(), Height = game.GetActualCharacterHeight(), HorizontalAlignment = HorizontalAlignment.Right,VerticalAlignment = VerticalAlignment.Top
             };
 
+            var vPanel = new VerticalStackPanel();
+
+            HealthBar = new HorizontalProgressBar();
+            HealthBar.Width = 50;
+            HealthBar.Height = 10;
+            HealthBar.Maximum = 100;
+            HealthBar.Minimum = 0;
+            HealthBar.Value = 0.5f;
+            HealthBar.VerticalAlignment = VerticalAlignment.Stretch;
+            HealthBar.HorizontalAlignment = HorizontalAlignment.Left;
+
+            StaminaBar = new HorizontalProgressBar();
+            StaminaBar.Width = 50;
+            StaminaBar.Height = 10;
+            StaminaBar.Maximum = 100;
+            StaminaBar.Minimum = 0;
+            StaminaBar.VerticalAlignment = VerticalAlignment.Stretch;
+            StaminaBar.HorizontalAlignment = HorizontalAlignment.Left;
+
+            StrLabel = new Label(){Text = "Str"};
+            PerLabel = new Label(){Text = "Per"};
+            RefLabel = new Label(){Text = "Ref"};
+            ImgLabel = new Label(){Text = "Img"};
+            WillLabel = new Label() { Text = "Wil"};
+            WitLabel = new Label() { Text = "Wit"};
+            TurnLabel = new Label(){Text = "Turn"};
+
+            var separator1 = new HorizontalSeparator();
+            var separator2 = new HorizontalSeparator();
+            LogView list = new LogView();
+            list.Width = (int)game.GetSettings().HudWidth();
+            list.Height = 300;
+           
+            EventLog = list;
+
+            WorldMapButton = new ImageTextButton()
+            {
+                GridColumn = 2,
+                ContentHorizontalAlignment = HorizontalAlignment.Center,
+                ContentVerticalAlignment = VerticalAlignment.Center,
+                Text = "Map",
+                VerticalAlignment = VerticalAlignment.Bottom,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Width = 200,
+                Height = 50
+            };
+            WorldMapButton.Click += OnClickWorldMap;
+
+            InventoryButton = new ImageTextButton()
+            {
+                GridColumn = 0,
+                Text = "Inventory",
+                ContentHorizontalAlignment = HorizontalAlignment.Center,
+                ContentVerticalAlignment = VerticalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Width = 200,
+                Height = 50
+            };
+            InventoryButton.Click+= (sender, args) => { ActionsThisTick.Add(HudAction.OpenInventory); };
+
+
+            vPanel.Widgets.Add(TurnLabel);
+            vPanel.Widgets.Add(HealthBar);
+            vPanel.Widgets.Add(new HorizontalSeparator());
+            vPanel.Widgets.Add(StaminaBar);
+            vPanel.Widgets.Add(StrLabel);
+            vPanel.Widgets.Add(PerLabel);
+            vPanel.Widgets.Add(RefLabel);
+            vPanel.Widgets.Add(ImgLabel);
+            vPanel.Widgets.Add(WillLabel);
+            vPanel.Widgets.Add(WitLabel);
+
+            vPanel.Widgets.Add(separator1);
+            vPanel.Widgets.Add(EventLog);
+            vPanel.Widgets.Add(separator2);
+
+
+            var grid = new Grid(){VerticalAlignment = VerticalAlignment.Bottom, ColumnSpacing = 3};
 
 
 
+            grid.Widgets.Add(InventoryButton);
+            grid.Widgets.Add(WorldMapButton);
 
-            //  EventLog.ClearItems();
+            Panel.Widgets.Add(vPanel);
+            Panel.Widgets.Add(grid);
 
+            Desktop.Widgets.Add(Panel);
 
+        }
 
-            float labelScale = 0.5f;
-            StrLabel.Scale = labelScale;
-            PerLabel.Scale = labelScale;
-            RefLabel.Scale = labelScale;
-            ImgLabel.Scale = labelScale;
-            WillLabel.Scale = labelScale;
-            WitLabel.Scale = labelScale;
-            TurnLabel.Scale = labelScale;
-
-            WorldMapButton = new Button("Map", size: new Vector2(200, 50), anchor: Anchor.BottomRight);
-            WorldMapButton.ButtonParagraph.Scale = 0.7f;
-            WorldMapButton.OnClick += OnClickWorldMap;
-
-            InventoryButton = new Button("Inventory", size: new Vector2(200, 50), anchor: Anchor.BottomLeft);
-            InventoryButton.ButtonParagraph.Scale = 0.7f;
-            InventoryButton.OnClick += entity => { ActionsThisTick.Add(HudAction.OpenInventory); };
-
-
-            Panel.AddChild(TurnLabel);
-            Panel.AddChild(HealthBar);
-            Panel.AddChild(StaminaBar);
-            Panel.AddChild(StrLabel);
-            Panel.AddChild(PerLabel);
-            Panel.AddChild(RefLabel);
-            Panel.AddChild(ImgLabel);
-            Panel.AddChild(WillLabel);
-            Panel.AddChild(WitLabel);
-
-            Panel.AddChild(EventLog);
-
-            Panel.AddChild(InventoryButton);
-            Panel.AddChild(WorldMapButton);
-
-
-            UserInterface.Active.AddEntity(Panel);
+        private void OnClickWorldMap(object sender, EventArgs e)
+        {
+            _actionsThisTick.Add(HudAction.OpenWorldMap);
         }
 
         public HashSet<HudAction> _actionsThisTick = new HashSet<HudAction>();
 
-        private void OnClickWorldMap(Entity entity)
-        {
-            _actionsThisTick.Add(HudAction.OpenWorldMap);
-        }
     }
 }

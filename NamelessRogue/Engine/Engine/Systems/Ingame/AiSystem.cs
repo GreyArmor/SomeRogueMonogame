@@ -82,17 +82,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                     //}
                                     MoveTo(entity, namelessGame, playerPosition.p,true);
                                     break;
-                                    var movableEntity = entity;
-                                    worldProvider.MoveEntity(movableEntity,
-                                        new Point(playerPosition.p.X + 1, playerPosition.p.Y));
-
-                                    var aiap = movableEntity.GetComponentOfType<ActionPoints>();
-                                    aiap.Points -= Constants.ActionsMovementCost;
- 
-
-
-
-                                    break;
                                 default:
                                     break;
 

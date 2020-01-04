@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GeonBit.UI;
-using GeonBit.UI.Entities;
+using System.Web.UI.Design.WebControls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra;
+using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components;
 using NamelessRogue.Engine.Engine.Components.ItemComponents;
@@ -19,6 +20,7 @@ using NamelessRogue.Engine.Engine.Systems;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.Storage.data;
 using Color = Microsoft.Xna.Framework.Color;
+using Label = Myra.Graphics2D.UI.Label;
 
 namespace NamelessRogue.shell
 {
@@ -163,6 +165,7 @@ namespace NamelessRogue.shell
             graphics.PreferMultiSampling = false;
             graphics.SynchronizeWithVerticalRetrace = true;
 
+            MyraEnvironment.Game = this;
 
             RenderTarget = new RenderTarget2D(
                 GraphicsDevice,
@@ -176,7 +179,7 @@ namespace NamelessRogue.shell
             graphics.ApplyChanges();
 
 
-            worldSettings = new WorldSettings(123456789,1000,1000);
+            worldSettings = new WorldSettings("Myra".GetHashCode(),1000,1000);
 
 
             Entities = new List<IEntity>();
@@ -247,15 +250,32 @@ namespace NamelessRogue.shell
             Entities.Add(GameInitializer.CreateCursor());
 
             //Paragraph.BaseSize = 1.175f;
-            UserInterface.Initialize(Content, "custom");
-            UserInterface.Active.UseRenderTarget = true;
+            //UserInterface.Initialize(Content, "custom");
+            //UserInterface.Active.UseRenderTarget = true;
             CurrentContext = ContextFactory.GetMainMenuContext(this);
             CurrentContext.ContextScreen.Show();
             this.IsMouseVisible = true;
-            UserInterface.Active.ShowCursor = false;
+           // UserInterface.Active.ShowCursor = false;
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            fpsLabel = new Label("1111", Anchor.TopLeft, new Vector2(1000, 50), new Vector2());
-            UserInterface.Active.AddEntity(fpsLabel);
+            
+
+            fpsLabel = new Label();
+
+            var stackPanel = new VerticalStackPanel();
+            stackPanel.Widgets.Add(fpsLabel);
+
+           // Desktop.Widgets.Add(stackPanel);
+
+
+            // Inform Myra that external text input is available
+            // So it stops translating Keys to chars
+            Desktop.HasExternalTextInput = true;
+
+            // Provide that text input
+            Window.TextInput += (s, a) =>
+            {
+                Desktop.OnChar(a.Character);
+            };
 
             //for (int i = 0; i < 1; i++)
             //{
@@ -320,7 +340,7 @@ namespace NamelessRogue.shell
             }
 
             CurrentContext.Update((long) gameTime.TotalGameTime.TotalMilliseconds, this);
-            UserInterface.Active.Update(gameTime);
+           // UserInterface.Active.Update(gameTime);
         }
 
         private FrameCounter _frameCounter = new FrameCounter();
@@ -338,7 +358,6 @@ namespace NamelessRogue.shell
 
             GraphicsDevice.Clear(Color.Black);
             CurrentContext.RenderingUpdate((long) gameTime.TotalGameTime.TotalMilliseconds, this);
-
         }
     }
 }

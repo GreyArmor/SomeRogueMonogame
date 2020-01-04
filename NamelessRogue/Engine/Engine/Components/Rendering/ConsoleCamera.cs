@@ -62,7 +62,7 @@ namespace NamelessRogue.Engine.Engine.Components.Rendering
                 return new Point(-1,-1);
             }
 
-            Debug.WriteLine($"X = {mouseTileX}; Y = {mouseTileY}");
+            //Debug.WriteLine($"X = {mouseTileX}; Y = {mouseTileY}");
 
             return new Point(position.X+mouseTileX,position.Y+mouseTileY);
         }

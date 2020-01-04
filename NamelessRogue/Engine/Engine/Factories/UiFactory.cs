@@ -1,7 +1,3 @@
- 
-
-using GeonBit.UI;
-using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Engine.UiScreens;
 using NamelessRogue.shell;

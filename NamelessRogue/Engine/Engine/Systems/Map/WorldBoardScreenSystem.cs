@@ -32,46 +32,43 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
 
                     case WorldBoardScreenAction.ArtifactMode:
                     {
-                        UiFactory.WorldBoardScreen.DescriptionLog.ClearItems();
-                        if (tile.Artifact != null)
-                        {
-                            UiFactory.WorldBoardScreen.DescriptionLog.AddItem(tile.Artifact.Name);
+                            if (tile.Artifact != null)
+                            {
+                                UiFactory.WorldBoardScreen.DescriptionLog.Text = (tile.Artifact.Name);
+                            }
                         }
-                    }
                         break;
                     case WorldBoardScreenAction.PoliticalMode:
                     {
-                        UiFactory.WorldBoardScreen.DescriptionLog.ClearItems();
-                        if (tile.Owner != null)
-                        {
-                            if (tile.Settlement != null)
+                           
+                            if (tile.Owner != null)
                             {
-                                UiFactory.WorldBoardScreen.DescriptionLog.AddItem(
-                                    $"{tile.Owner.Name}, {tile.Settlement.Name} city");
-                            }
-                            else
-                            {
-                                UiFactory.WorldBoardScreen.DescriptionLog.AddItem($"{tile.Owner.Name}");
-                            }
+                                if (tile.Settlement != null)
+                                {
+                                    UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Owner.Name}, {tile.Settlement.Name} city";
+                                }
+                                else
+                                {
+                                    UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Owner.Name}";
+                                }
 
+                            }
                         }
-                    }
                         break;
                     case WorldBoardScreenAction.RegionsMode:
                     {
-                        UiFactory.WorldBoardScreen.DescriptionLog.ClearItems();
-                        if (tile.Continent != null)
-                        {
-                            UiFactory.WorldBoardScreen.DescriptionLog.AddItem($"{tile.Continent.Name} continent");
-                        }
-                        if (tile.LandmarkRegion != null)
-                        {
-                            UiFactory.WorldBoardScreen.DescriptionLog.AddItem($"{tile.LandmarkRegion.Name} region");
-                        }
+                            if (tile.Continent != null)
+                            {
+                                UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Continent.Name} continent";
+                            }
+                            if (tile.LandmarkRegion != null)
+                            {
+                                UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.LandmarkRegion.Name} region";
+                            }
                         }
                         break;
                     default:
-                        UiFactory.WorldBoardScreen.DescriptionLog.ClearItems();
+                        UiFactory.WorldBoardScreen.DescriptionLog.Text = "";
                         break;
                 }
             }

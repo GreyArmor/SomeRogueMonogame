@@ -1,4 +1,5 @@
-﻿using NamelessRogue.Engine.Abstraction;
+﻿using Myra.Graphics2D.UI;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Stats;
@@ -51,7 +52,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                 break;
                             case HudAction.OpenInventory:
                                 namelessGame.ContextToSwitch = ContextFactory.GetInventoryContext(namelessGame);
-                                UiFactory.InventoryScreen.UpdateValues();
+                                //UiFactory.InventoryScreen.UpdateValues();
                                 break;;
                             default:
                                 break;
@@ -65,7 +66,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 HudLogMessageCommand logMEssgae = entity.GetComponentOfType<HudLogMessageCommand>();
                 if (logMEssgae != null)
                 {
-                    UiFactory.HudInstance.EventLog.AddItem(logMEssgae.LogMessage);
+                    UiFactory.HudInstance.EventLog.Log(logMEssgae.LogMessage);
                     entity.RemoveComponentOfType<HudLogMessageCommand>();
                 }
 

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GeonBit.UI;
-using GeonBit.UI.Entities;
+using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Engine.Factories;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
@@ -17,14 +16,12 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         {
             Panel.Visible = true;
             Panel.Enabled = true;
-            //UserInterface.Active.AddEntity(Panel);
         }
 
         public void Hide()
         {
             Panel.Visible = false;
             Panel.Enabled = false;
-         //   Panel.
         }
     }
 }

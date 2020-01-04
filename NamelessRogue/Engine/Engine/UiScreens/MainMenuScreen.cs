@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GeonBit.UI;
-using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
+using Myra.Graphics2D.UI;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
@@ -23,36 +22,39 @@ namespace NamelessRogue.Engine.Engine.UiScreens
     public class MainMenuScreen : BaseGuiScreen
     {
         public List<MainMenuAction> Actions { get; } = new List<MainMenuAction>();
-        public Button NewGame { get; private set; }
-        public Button LoadGame { get; private set; }
-        public Button CreateTimeline { get; set; }
-        public Button Options { get; set; }
-        public Button Exit { get; }
+        public ImageTextButton NewGame { get; private set; }
+        public ImageTextButton LoadGame { get; private set; }
+        public ImageTextButton CreateTimeline { get; set; }
+        public ImageTextButton Options { get; set; }
+        public ImageTextButton Exit { get; }
 
         public MainMenuScreen(NamelessGame game)
         {
 
-            Panel = new Panel(new Vector2(game.GetSettings().HudWidth(), game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.Center);
-            
-            NewGame = new Button("New game");
-            LoadGame = new Button("Load");
-            CreateTimeline = new Button("Create timeline");
-            Options = new Button("Options");
-            Exit = new Button("Exit");
 
-            NewGame.OnClick += entity => { Actions.Add(MainMenuAction.NewGame); };
-            LoadGame.OnClick += entity => { Actions.Add(MainMenuAction.LoadGame); };
-            CreateTimeline.OnClick += entity => { Actions.Add(MainMenuAction.GenerateNewTimeline); };
-            Options.OnClick += entity => { Actions.Add(MainMenuAction.Options); };
-            Exit.OnClick += entity => { Actions.Add(MainMenuAction.Exit); };
+            // Panel = new Panel(new Vector2(game.GetSettings().HudWidth(), game.GetActualCharacterHeight()), PanelSkin.Default, Anchor.Center);
 
-            Panel.AddChild(NewGame);
-            Panel.AddChild(LoadGame);
-            Panel.AddChild(CreateTimeline);
-            Panel.AddChild(Options);
-            Panel.AddChild(Exit);
+            Panel = new Panel(){HorizontalAlignment = HorizontalAlignment.Center};
+            var vPanel = new VerticalStackPanel();
+            NewGame = new ImageTextButton(){Text = "New game", Width = 200 , Height =  50};
+            LoadGame = new ImageTextButton() { Text = "Load", Width = 200, Height = 50 }; ;
+            CreateTimeline = new ImageTextButton() { Text = "Create timeline", Width = 200, Height = 50 };
+            Options = new ImageTextButton() { Text = "Options", Width = 200, Height = 50 };
+            Exit = new ImageTextButton(){Text = "Exit", Width = 200, Height = 50 };
 
-            UserInterface.Active.AddEntity(Panel);
+            NewGame.Click += (sender, args) => { Actions.Add(MainMenuAction.NewGame); };
+            LoadGame.Click += (sender, args) => { Actions.Add(MainMenuAction.LoadGame); };
+            CreateTimeline.Click += (sender, args) => { Actions.Add(MainMenuAction.GenerateNewTimeline); };
+            Options.Click += (sender, args) => { Actions.Add(MainMenuAction.Options); };
+            Exit.Click += (sender, args) => { Actions.Add(MainMenuAction.Exit); };
+
+            vPanel.Widgets.Add(NewGame);
+            vPanel.Widgets.Add(LoadGame);
+            vPanel.Widgets.Add(CreateTimeline);
+            vPanel.Widgets.Add(Options);
+            vPanel.Widgets.Add(Exit);
+            Panel.Widgets.Add(vPanel);
+            Desktop.Widgets.Add(Panel);
         }
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using GeonBit.UI.Entities;
 using NamelessRogue.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Engine.Components.ItemComponents
