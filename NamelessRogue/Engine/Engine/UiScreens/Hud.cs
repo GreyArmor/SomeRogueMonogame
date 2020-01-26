@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Engine.Factories;
@@ -50,21 +52,23 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             var vPanel = new VerticalStackPanel();
 
             HealthBar = new HorizontalProgressBar();
-            HealthBar.Width = 50;
+            HealthBar.Width = (int)game.GetSettings().HudWidth();
             HealthBar.Height = 10;
             HealthBar.Maximum = 100;
             HealthBar.Minimum = 0;
             HealthBar.Value = 0.5f;
             HealthBar.VerticalAlignment = VerticalAlignment.Stretch;
             HealthBar.HorizontalAlignment = HorizontalAlignment.Left;
+            HealthBar.SetColor(game.GraphicsDevice, Color.Red);
 
             StaminaBar = new HorizontalProgressBar();
-            StaminaBar.Width = 50;
+            StaminaBar.Width = (int)game.GetSettings().HudWidth();
             StaminaBar.Height = 10;
             StaminaBar.Maximum = 100;
             StaminaBar.Minimum = 0;
             StaminaBar.VerticalAlignment = VerticalAlignment.Stretch;
             StaminaBar.HorizontalAlignment = HorizontalAlignment.Left;
+            StaminaBar.SetColor(game.GraphicsDevice, Color.Green);
 
             StrLabel = new Label(){Text = "Str"};
             PerLabel = new Label(){Text = "Per"};
@@ -111,7 +115,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             vPanel.Widgets.Add(TurnLabel);
             vPanel.Widgets.Add(HealthBar);
-            vPanel.Widgets.Add(new HorizontalSeparator());
             vPanel.Widgets.Add(StaminaBar);
             vPanel.Widgets.Add(StrLabel);
             vPanel.Widgets.Add(PerLabel);
