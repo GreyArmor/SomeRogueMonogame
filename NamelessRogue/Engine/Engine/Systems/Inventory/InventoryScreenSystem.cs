@@ -17,51 +17,71 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
         public void Update(long gameTime, NamelessGame namelessGame)
         {
 
-            //foreach (IEntity entity in namelessGame.GetEntities())
-            //{
-            //    InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
-            //    if (inputComponent != null)
-            //    {
-            //        var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
-            //        foreach (Intent intent in inputComponent.Intents)
-            //        {
-            //            switch (intent)
-            //            {
-            //                case Intent.MoveDown:
-            //                    {
-            //                        int nextIndex = UiFactory.InventoryScreen.PickableItemList.SelectedItemIndex + 1;
-            //                        if (nextIndex >= UiFactory.InventoryScreen.PickableItemList.Items.Count)
-            //                        {
-            //                            nextIndex = 0;
-            //                        }
+            foreach (IEntity entity in namelessGame.GetEntities())
+            {
+                InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
+                if (inputComponent != null)
+                {
+                    var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
+                    foreach (Intent intent in inputComponent.Intents)
+                    {
+                        switch (intent)
+                        {
+                            case Intent.MoveDown:
+                            {
+                                UiFactory.InventoryScreen.ItemBox.SelectedIndex += 1;
 
-            //                        UiFactory.InventoryScreen.PickableItemList.Select(nextIndex);
-            //                        break;
-            //                    }
-            //                case Intent.MoveUp:
-            //                    {
-            //                        int nextIndex = UiFactory.InventoryScreen.PickableItemList.SelectedItemIndex - 1;
-            //                        if (nextIndex < 0)
-            //                        {
-            //                            nextIndex = UiFactory.InventoryScreen.PickableItemList.Items.Count - 1;
-            //                        }
+                                int nextIndex = 0;
+                                if (UiFactory.InventoryScreen.ItemBox.SelectedIndex == null)
+                                {
+                                    nextIndex = 0;
+                                }
+                                else
+                                {
+                                    nextIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
+                                }
 
-            //                        UiFactory.InventoryScreen.PickableItemList.Select(nextIndex);
-            //                        break;
-            //                    }
+                                UiFactory.InventoryScreen.ItemBox.SelectedItem =
+                                    UiFactory.InventoryScreen.ItemBox.Items[nextIndex];
+                                UiFactory.InventoryScreen.ItemBox.ScrollToSelectedItem();
+                                    break;
+                            }
+                            case Intent.MoveUp:
+                            {
+                                UiFactory.InventoryScreen.ItemBox.SelectedIndex -= 1;
 
-            //                case Intent.Enter:
-            //                    {
 
-            //                    }
-            //                    break;
-            //                default:
-            //                    break;
-            //            }
-            //        }
-            //        inputComponent.Intents.Clear();
-            //    }
-            //}
+
+                                int nextIndex = 0;
+                                if (UiFactory.InventoryScreen.ItemBox.SelectedIndex == null)
+                                {
+                                    nextIndex = UiFactory.InventoryScreen.ItemBox.Items.Count - 1;
+                                }
+                                else
+                                {
+                                    nextIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
+                                }
+
+
+                                UiFactory.InventoryScreen.ItemBox.SelectedItem =
+                                    UiFactory.InventoryScreen.ItemBox.Items[nextIndex];
+                                UiFactory.InventoryScreen.ItemBox.ScrollToSelectedItem();
+                                break;
+                            }
+
+                            case Intent.Enter:
+                            {
+
+                            }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    inputComponent.Intents.Clear();
+                }
+            }
 
 
 

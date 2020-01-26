@@ -52,7 +52,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                 break;
                             case HudAction.OpenInventory:
                                 namelessGame.ContextToSwitch = ContextFactory.GetInventoryContext(namelessGame);
-                                //UiFactory.InventoryScreen.UpdateValues();
+                                UiFactory.InventoryScreen.FillItems(namelessGame);
                                 break;;
                             default:
                                 break;

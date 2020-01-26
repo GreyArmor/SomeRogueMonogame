@@ -10,6 +10,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.UI;
+using NamelessRogue.Engine.Engine.UiScreens.UI;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
@@ -23,7 +24,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         private NamelessGame game;
 
         public ImageTextButton ReturnToGame { get; set; }
-
+        public ScrollableListBox EquipmentBox { get; set; }
+        public ScrollableListBox ItemBox { get; set; }
         public List<InventoryScreenAction> Actions { get; set; } = new List<InventoryScreenAction>();
 
         public InventoryScreen(NamelessGame game)
@@ -39,7 +41,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             };
             ReturnToGame = new ImageTextButton()
             {
-                GridColumn = 2,
+                GridRow = 1,
+                GridColumn = 1,
                 ContentHorizontalAlignment = HorizontalAlignment.Center,
                 ContentVerticalAlignment = VerticalAlignment.Center,
                 Text = "Back",
@@ -50,8 +53,51 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             };
             ReturnToGame.Click += OnClickReturnToGame;
 
-            Panel.Widgets.Add(ReturnToGame);
+            var grid = new Grid() { VerticalAlignment = VerticalAlignment.Stretch, ColumnSpacing = 3, RowSpacing = 2};
+            grid.RowsProportions.Add(new Proportion(ProportionType.Fill));
+            grid.RowsProportions.Add(new Proportion(ProportionType.Pixels,50));
+
+            EquipmentBox = new ScrollableListBox(){ GridColumn = 0, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch};
+            ItemBox = new ScrollableListBox() { GridColumn = 1, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+
+            
+
+
+            FillItems(game);
+
+
+            grid.Widgets.Add(EquipmentBox);
+            grid.Widgets.Add(ItemBox);
+            grid.Widgets.Add(ReturnToGame);
+            Panel.Widgets.Add(grid);
+            
             Desktop.Widgets.Add(Panel);
+
+        }
+
+        public void FillItems(NamelessGame game)
+        {
+            EquipmentBox.Items.Clear();
+            ItemBox.Items.Clear();
+
+            var playerEntity = game.GetEntityByComponentClass<Player>();
+
+            var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
+            var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
+
+
+            foreach (var entity in itemsHolder.GetItems())
+            {
+                Description desc = entity.GetComponentOfType<Description>();
+                ItemBox.Items.Add(new ListItem(desc.Name, Color.White, entity));
+            }
+
+            foreach (var equipmentSlot in equipment.Slots)
+            {
+                Description desc = equipmentSlot.Value.Equipment?.Parent.GetComponentOfType<Description>();
+                var text = desc != null ? desc.Name : "Nothing";
+                EquipmentBox.Items.Add(new ListItem($"{equipmentSlot.Key.ToString()}: {text}",Color.White, equipmentSlot));
+            }
 
         }
 
