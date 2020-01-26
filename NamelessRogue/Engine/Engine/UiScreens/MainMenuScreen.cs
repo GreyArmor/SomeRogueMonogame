@@ -36,11 +36,11 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             Panel = new Panel(){HorizontalAlignment = HorizontalAlignment.Center};
             var vPanel = new VerticalStackPanel();
-            NewGame = new ImageTextButton(){Text = "New game", Width = 200 , Height =  50};
-            LoadGame = new ImageTextButton() { Text = "Load", Width = 200, Height = 50 }; ;
-            CreateTimeline = new ImageTextButton() { Text = "Create timeline", Width = 200, Height = 50 };
-            Options = new ImageTextButton() { Text = "Options", Width = 200, Height = 50 };
-            Exit = new ImageTextButton(){Text = "Exit", Width = 200, Height = 50 };
+            NewGame = new ImageTextButton(){Text = "New game", Width = 200 , Height =  50, ContentHorizontalAlignment = HorizontalAlignment.Center,ContentVerticalAlignment = VerticalAlignment.Center};
+            LoadGame = new ImageTextButton() { Text = "Load", Width = 200, Height = 50, ContentHorizontalAlignment = HorizontalAlignment.Center, ContentVerticalAlignment = VerticalAlignment.Center }; ;
+            CreateTimeline = new ImageTextButton() { Text = "Create timeline", Width = 200, Height = 50, ContentHorizontalAlignment = HorizontalAlignment.Center, ContentVerticalAlignment = VerticalAlignment.Center };
+            Options = new ImageTextButton() { Text = "Options", Width = 200, Height = 50, ContentHorizontalAlignment = HorizontalAlignment.Center, ContentVerticalAlignment = VerticalAlignment.Center };
+            Exit = new ImageTextButton(){Text = "Exit", Width = 200, Height = 50, ContentHorizontalAlignment = HorizontalAlignment.Center, ContentVerticalAlignment = VerticalAlignment.Center };
 
             NewGame.Click += (sender, args) => { Actions.Add(MainMenuAction.NewGame); };
             LoadGame.Click += (sender, args) => { Actions.Add(MainMenuAction.LoadGame); };

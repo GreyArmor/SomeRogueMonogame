@@ -50,37 +50,23 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                         if (basicAi != null)
 
                         {
+                            Position playerPosition = namelessGame.GetEntityByComponentClass<Player>()
+                                .GetComponentOfType<Position>();
+
                             switch (basicAi.State)
                             {
                                 case BasicAiStates.Idle:
                                 case BasicAiStates.Moving:
-                                    //if (basicAi.State == BasicAiStates.Idle)
-                                    //{
+                                    var pPos = playerPosition.p.ToVector2();
+                                    MoveTo(entity, namelessGame, playerPosition.p, true);
+                                    var route = basicAi.Route;
+                                    if (route.Count == 0)
+                                    {
+                                        basicAi.State = (BasicAiStates.Idle);
+                                    }
 
-                                        Position playerPosition = namelessGame.GetEntityByComponentClass<Player>()
-                                            .GetComponentOfType<Position>();
-                                    //    Position position = entity.GetComponentOfType<Position>();
-                                    //    //  namelessGame.WriteLineToConsole("Starting movement state idle position = " + position.p.toString());
-                                    //    if (position != null)
-                                    //    {
-                                    //        AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
-
-
-                                    //        List<Point> path = pathfinder.FindPath(position.p,
-                                    //            new Point(playerPosition.p.X, playerPosition.p.Y), worldProvider,
-                                    //            namelessGame);
-                                    //        if (path != null)
-                                    //        {
-                                    //            basicAi.Route = new Queue<Point>(path.Take(path.Count - 1));
-                                    //            basicAi.State = (BasicAiStates.Moving);
-                                    //        }
-                                    //        else
-                                    //        {
-                                    //            basicAi.State = (BasicAiStates.Idle);
-                                    //        }
-                                    //    }
-                                    //}
-                                    MoveTo(entity, namelessGame, playerPosition.p,true);
+                                    break;
+                                case BasicAiStates.Attacking:
                                     break;
                                 default:
                                     break;
@@ -164,7 +150,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
             }
             if (route.Count == 0)
             {
-                basicAi.State = (BasicAiStates.Idle);
                 var ap = movableEntity.GetComponentOfType<ActionPoints>();
                 ap.Points = 0;
             }

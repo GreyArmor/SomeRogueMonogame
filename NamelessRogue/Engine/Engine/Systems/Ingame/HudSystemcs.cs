@@ -66,7 +66,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 HudLogMessageCommand logMEssgae = entity.GetComponentOfType<HudLogMessageCommand>();
                 if (logMEssgae != null)
                 {
-                    UiFactory.HudInstance.EventLog.Log(logMEssgae.LogMessage);
+                    UiFactory.HudInstance.LogMessage(logMEssgae.LogMessage);
                     entity.RemoveComponentOfType<HudLogMessageCommand>();
                 }
 

@@ -33,7 +33,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public ImageTextButton WorldMapButton { get; private set; }
         public ImageTextButton InventoryButton { get; private set; }
 
-        public LogView EventLog { get; private set; }
+        public ScrollableListBox EventLog { get; private set; }
 
         public HashSet<HudAction> ActionsThisTick
         {
@@ -76,10 +76,10 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             var separator1 = new HorizontalSeparator();
             var separator2 = new HorizontalSeparator();
-            LogView list = new LogView();
+            ScrollableListBox list = new ScrollableListBox();
             list.Width = (int)game.GetSettings().HudWidth();
             list.Height = 300;
-           
+
             EventLog = list;
 
             WorldMapButton = new ImageTextButton()
@@ -137,6 +137,26 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             Desktop.Widgets.Add(Panel);
 
+
+
+        }
+
+        public void LogMessage(string message)
+        {
+            if (EventLog.Items.Any())
+            {
+                EventLog.Items.Remove(EventLog.Items.Last());
+            }
+
+            EventLog.Items.Add(new ListItem(message));
+
+            if (EventLog.Items.Count > 100)
+            {
+                EventLog.Items.RemoveAt(0);
+            }
+
+            EventLog.Scroll.ScrollPosition = new Point(0, int.MaxValue);
+            EventLog.Items.Add(new ListItem(""));
         }
 
         private void OnClickWorldMap(object sender, EventArgs e)

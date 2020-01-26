@@ -199,6 +199,7 @@
     <Compile Include="Engine\Engine\UiScreens\MainMenuScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\LogView.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\EndlessContainer.cs" />
+    <Compile Include="Engine\Engine\UiScreens\UI\ScrollableListBox.cs" />
     <Compile Include="Engine\Engine\UiScreens\WorldBoardScreen.cs" />
     <Compile Include="Engine\Engine\Utility\BoundingBox.cs" />
     <Compile Include="Engine\Engine\Utility\BSPGenerator.cs" />
