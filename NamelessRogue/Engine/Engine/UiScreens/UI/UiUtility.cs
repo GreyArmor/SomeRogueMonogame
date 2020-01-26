@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
         {
             Texture2D tex = new Texture2D(device, 1, progressBar.Height.Value, false,
                 SurfaceFormat.Color);
-            byte[] arrBytes = new byte[10 * 4];
+            byte[] arrBytes = new byte[progressBar.Height.Value * 4];
             for (int x = 0; x < progressBar.Height.Value; x++)
             {
 
