@@ -29,7 +29,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
             }
 
             tex.SetData(arrBytes);
-            progressBar.Filler = new ColoredRegion(new TextureRegion(tex), color);
+            progressBar.Filler = new TextureRegion(tex);
         }
     }
 }
