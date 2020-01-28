@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Factories;
@@ -29,29 +31,30 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                         {
                             case Intent.MoveDown:
                             {
-                                UiFactory.InventoryScreen.ItemBox.SelectedIndex += 1;
+                                UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Down); /* += 1;*/
 
                                 int nextIndex = 0;
                                 if (UiFactory.InventoryScreen.ItemBox.SelectedIndex == null)
                                 {
                                     nextIndex = 0;
+                                    UiFactory.InventoryScreen.ItemBox.Scroll.ScrollPosition = new Point(0);
                                 }
                                 else
                                 {
                                     nextIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
                                 }
 
-                                UiFactory.InventoryScreen.ItemBox.SelectedItem =
-                                    UiFactory.InventoryScreen.ItemBox.Items[nextIndex];
-                                UiFactory.InventoryScreen.ItemBox.ScrollToSelectedItem();
-                                    break;
+                                if (UiFactory.InventoryScreen.ItemBox.Items.Any())
+                                {
+                                    UiFactory.InventoryScreen.ItemBox.SelectedItem =
+                                        UiFactory.InventoryScreen.ItemBox.Items[nextIndex];
+                                }
+
+                                break;
                             }
                             case Intent.MoveUp:
                             {
-                                UiFactory.InventoryScreen.ItemBox.SelectedIndex -= 1;
-
-
-
+                                UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Up); /* -= 1;*/
                                 int nextIndex = 0;
                                 if (UiFactory.InventoryScreen.ItemBox.SelectedIndex == null)
                                 {
@@ -62,10 +65,12 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                                     nextIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
                                 }
 
+                                if (UiFactory.InventoryScreen.ItemBox.Items.Any())
+                                {
+                                    UiFactory.InventoryScreen.ItemBox.SelectedItem =
+                                        UiFactory.InventoryScreen.ItemBox.Items[nextIndex];
+                                }
 
-                                UiFactory.InventoryScreen.ItemBox.SelectedItem =
-                                    UiFactory.InventoryScreen.ItemBox.Items[nextIndex];
-                                UiFactory.InventoryScreen.ItemBox.ScrollToSelectedItem();
                                 break;
                             }
 

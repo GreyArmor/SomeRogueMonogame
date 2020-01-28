@@ -200,6 +200,7 @@
     <Compile Include="Engine\Engine\UiScreens\UI\LogView.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\EndlessContainer.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\ScrollableListBox.cs" />
+    <Compile Include="Engine\Engine\UiScreens\UI\Table.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\UiUtility.cs" />
     <Compile Include="Engine\Engine\UiScreens\WorldBoardScreen.cs" />
     <Compile Include="Engine\Engine\Utility\BoundingBox.cs" />

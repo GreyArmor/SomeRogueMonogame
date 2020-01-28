@@ -14,12 +14,5 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
         {
             get { return this.InternalChild; }
         }
-
-        public void ScrollToSelectedItem()
-        {
-           // EnsureVisible(8);
-            
-            //Scroll.ScrollPosition = new Point(0, SelectedItem.Widget.ActualBounds.Y);
-        }
     }
 }
