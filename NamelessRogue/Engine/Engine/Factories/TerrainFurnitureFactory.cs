@@ -60,7 +60,7 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             RockEntity.AddComponent(new Description("A rock", ""));
             RockEntity.AddComponent(new Drawable('o', new Color(0.5f, 0.5f, 0.5f)));
-            RockEntity.AddComponent(new Item());
+            RockEntity.AddComponent(new Item(ItemType.Misc, 0.2f));
 
             TreeEntity.AddComponent(new Description("A tree", ""));
             TreeEntity.AddComponent(new BlocksVision());

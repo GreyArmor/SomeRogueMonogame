@@ -8,7 +8,8 @@ namespace NamelessRogue.Engine.Engine.Components
     
     public class Component : IComponent
     {
-        
+        public Guid ParentEntityId { get; set; }
+
         private Guid Id;
 
         public Component()

@@ -208,6 +208,7 @@
     <Compile Include="Engine\Engine\Utility\Color.cs" />
     <Compile Include="Engine\Engine\Utility\DamageHelper.cs" />
     <Compile Include="Engine\Engine\Utility\FrameCounter.cs" />
+    <Compile Include="Engine\Engine\Utility\HotkeyHelper.cs" />
     <Compile Include="Engine\Engine\Utility\PointUtil.cs" />
     <Compile Include="Engine\Engine\Utility\StringExtensions.cs" />
     <Compile Include="Engine\Engine\Utility\WorldLineDrawer.cs" />

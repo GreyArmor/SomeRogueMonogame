@@ -24,7 +24,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         private NamelessGame game;
 
         public ImageTextButton ReturnToGame { get; set; }
-        public ScrollableListBox EquipmentBox { get; set; }
+        public Table EquipmentBox { get; set; }
         public Table ItemBox { get; set; }
         public List<InventoryScreenAction> Actions { get; set; } = new List<InventoryScreenAction>();
 
@@ -57,7 +57,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             grid.RowsProportions.Add(new Proportion(ProportionType.Fill));
             grid.RowsProportions.Add(new Proportion(ProportionType.Pixels, 50));
 
-            EquipmentBox = new ScrollableListBox() { GridColumn = 0, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+            EquipmentBox = new Table() { GridColumn = 0, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
             ItemBox = new Table() { GridColumn = 1, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
 
 
@@ -92,19 +92,30 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             foreach (var entity in itemsHolder.GetItems())
             {
                 Description desc = entity.GetComponentOfType<Description>();
+                Item item = entity.GetComponentOfType<Item>();
+
                 var tableItem = new TableItem(3);
                 tableItem.Cells[0].Widgets.Add(new Label() { Text = desc.Name, });
-                tableItem.Cells[1].Widgets.Add(new Label() { Text = 1.ToString(), });
-                //TODO
-                tableItem.Cells[2].Widgets.Add(new Label() { Text = "Weapon", });
+                tableItem.Cells[1].Widgets.Add(new Label() { Text = item.Weight.ToString(), });
+                tableItem.Cells[2].Widgets.Add(new Label() { Text = item.Type.ToString(), });
                 ItemBox.Items.Add(tableItem);
             }
+
+
+            var headerEquipmentItem = new TableItem(3);
+            headerEquipmentItem.Cells[0].Widgets.Add(new Label() { Text = "Slot", });
+            headerEquipmentItem.Cells[1].Widgets.Add(new Label() { Text = "Name", });
+            EquipmentBox.Items.Add(headerEquipmentItem);
 
             foreach (var equipmentSlot in equipment.Slots)
             {
                 Description desc = equipmentSlot.Value.Equipment?.Parent.GetComponentOfType<Description>();
                 var text = desc != null ? desc.Name : "Nothing";
-                EquipmentBox.Items.Add(new ListItem($"{equipmentSlot.Key.ToString()}: {text}", Color.White, equipmentSlot));
+
+                var tableItem = new TableItem(3);
+                tableItem.Cells[0].Widgets.Add(new Label() { Text = equipmentSlot.Key.ToString(), });
+                tableItem.Cells[1].Widgets.Add(new Label() { Text = text });
+                EquipmentBox.Items.Add(tableItem);
             }
 
             if (ItemBox.Items.Any())

@@ -68,7 +68,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
             Visible = true;
             _box = new VerticalStackPanel();
             InternalChild.Content = _box;
-
+            InternalChild.Background = new SolidBrush(Color.DarkSlateGray);
         }
 
         protected override void InsertItem(TableItem item, int index)
