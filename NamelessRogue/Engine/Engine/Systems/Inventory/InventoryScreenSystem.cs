@@ -31,48 +31,56 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                         {
                             case Intent.MoveDown:
                             {
+                                var prevIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
                                 UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Down); /* += 1;*/
 
-                                int nextIndex = 0;
-                                if (UiFactory.InventoryScreen.ItemBox.SelectedIndex == null)
+                                int nextIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
+
+                                bool move = false;
+                                if (UiFactory.InventoryScreen.ItemBox.SelectedIndex == prevIndex)
                                 {
                                     nextIndex = 0;
-                                    UiFactory.InventoryScreen.ItemBox.Scroll.ScrollPosition = new Point(0);
-                                }
-                                else
-                                {
-                                    nextIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
+                                    move = true;
                                 }
 
                                 if (UiFactory.InventoryScreen.ItemBox.Items.Any())
                                 {
-                                    UiFactory.InventoryScreen.ItemBox.SelectedItem =
-                                        UiFactory.InventoryScreen.ItemBox.Items[nextIndex];
+                                    UiFactory.InventoryScreen.ItemBox.SelectedIndex = nextIndex;
+                                    if (move)
+                                    {
+                                        UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Down);
+                                        UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Up);
+                                    }
                                 }
 
                                 break;
                             }
                             case Intent.MoveUp:
                             {
+                                var prevIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
                                 UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Up); /* -= 1;*/
-                                int nextIndex = 0;
-                                if (UiFactory.InventoryScreen.ItemBox.SelectedIndex == null)
+                                int nextIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
+                                bool move = false;
+                                if (UiFactory.InventoryScreen.ItemBox.SelectedIndex == prevIndex)
                                 {
                                     nextIndex = UiFactory.InventoryScreen.ItemBox.Items.Count - 1;
-                                }
-                                else
-                                {
-                                    nextIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
+                                    move = true;
                                 }
 
                                 if (UiFactory.InventoryScreen.ItemBox.Items.Any())
                                 {
-                                    UiFactory.InventoryScreen.ItemBox.SelectedItem =
-                                        UiFactory.InventoryScreen.ItemBox.Items[nextIndex];
+                                    UiFactory.InventoryScreen.ItemBox.SelectedIndex = nextIndex;
+                                    if (move)
+                                    {
+                                        UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Up);
+                                        UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Down);
+
+                                    }
                                 }
 
                                 break;
                             }
+
 
                             case Intent.Enter:
                             {

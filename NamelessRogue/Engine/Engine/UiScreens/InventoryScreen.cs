@@ -99,6 +99,11 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 EquipmentBox.Items.Add(new ListItem($"{equipmentSlot.Key.ToString()}: {text}",Color.White, equipmentSlot));
             }
 
+            if (ItemBox.Items.Any())
+            {
+                ItemBox.SelectedIndex = 0;
+            }
+
         }
 
         private void OnClickReturnToGame(object sender, EventArgs e)
