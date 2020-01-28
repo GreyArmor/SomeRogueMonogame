@@ -12,7 +12,12 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
 {
 
     public class TableCell : Panel
-    {}
+    {
+        public TableCell()
+        {
+            Visible = true;
+        }
+    }
 
     public class TableItem : Panel, ISelectorItem
     {
@@ -27,11 +32,11 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
                 var tableCell = new TableCell();
                 Cells.Add(tableCell);
                 _internalGrid.Widgets.Add(tableCell);
+                tableCell.GridColumn = i;
             }
             this.Widgets.Add(_internalGrid);
             Columns = columns;
-            VerticalAlignment = VerticalAlignment.Stretch;
-            HorizontalAlignment = HorizontalAlignment.Stretch;
+            Visible = true;
         }
         public ObservableCollection<TableCell> Cells { get; set; }
         private bool isSelected = false;
@@ -43,7 +48,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
                 isSelected = value;
                 if (isSelected)
                 {
-                    Background = new SolidBrush(Color.WhiteSmoke);
+                    Background = new SolidBrush(Color.Gray);
                 }
                 else
                 {
@@ -56,24 +61,35 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
     }
     public class Table : Selector<ScrollViewer, TableItem>
     {
-
+        private readonly VerticalStackPanel _box;
         public Table() : base(new ScrollViewer())
         {
-            VerticalAlignment = VerticalAlignment.Stretch;
-            HorizontalAlignment = HorizontalAlignment.Stretch;
+            Visible = true;
+            _box = new VerticalStackPanel();
+            InternalChild.Content = _box;
+
         }
 
         protected override void InsertItem(TableItem item, int index)
         {
-          //  Items.Insert(index,item);
+            _box.Widgets.Insert(index, item);
         }
 
         protected override void RemoveItem(TableItem item)
         {
-           // Items.Remove(item);
+            _box.Widgets.Remove(item);
+            if (SelectedItem == item)
+            {
+                SelectedItem = null;
+            }
         }
 
         protected override void Reset()
-        {}
+        {
+            while (_box.Widgets.Count > 0)
+            {
+                RemoveItem((TableItem)_box.Widgets[0]);
+            }
+        }
     }
 }

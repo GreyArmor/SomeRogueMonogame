@@ -25,7 +25,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public ImageTextButton ReturnToGame { get; set; }
         public ScrollableListBox EquipmentBox { get; set; }
-        public ScrollableListBox ItemBox { get; set; }
+        public Table ItemBox { get; set; }
         public List<InventoryScreenAction> Actions { get; set; } = new List<InventoryScreenAction>();
 
         public InventoryScreen(NamelessGame game)
@@ -53,14 +53,12 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             };
             ReturnToGame.Click += OnClickReturnToGame;
 
-            var grid = new Grid() { VerticalAlignment = VerticalAlignment.Stretch, ColumnSpacing = 3, RowSpacing = 2};
+            var grid = new Grid() { VerticalAlignment = VerticalAlignment.Stretch, ColumnSpacing = 3, RowSpacing = 2 };
             grid.RowsProportions.Add(new Proportion(ProportionType.Fill));
-            grid.RowsProportions.Add(new Proportion(ProportionType.Pixels,50));
+            grid.RowsProportions.Add(new Proportion(ProportionType.Pixels, 50));
 
-            EquipmentBox = new ScrollableListBox(){ GridColumn = 0, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch};
-            ItemBox = new ScrollableListBox() { GridColumn = 1, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
-
-            
+            EquipmentBox = new ScrollableListBox() { GridColumn = 0, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+            ItemBox = new Table() { GridColumn = 1, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
 
 
             FillItems(game);
@@ -70,7 +68,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             grid.Widgets.Add(ItemBox);
             grid.Widgets.Add(ReturnToGame);
             Panel.Widgets.Add(grid);
-            
+
             Desktop.Widgets.Add(Panel);
 
         }
@@ -85,25 +83,36 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
             var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
 
-
+            var headerItem = new TableItem(3);
+            headerItem.Cells[0].Widgets.Add(new Label() { Text = "Name", });
+            headerItem.Cells[1].Widgets.Add(new Label() { Text = "Weight", });
+            headerItem.Cells[2].Widgets.Add(new Label() { Text = "Type", });
+            ItemBox.Items.Add(headerItem);
+            ItemBox.Items.Add(headerItem);
+            // ItemBox.Items.Add(headerItem);
             foreach (var entity in itemsHolder.GetItems())
             {
                 Description desc = entity.GetComponentOfType<Description>();
-                ItemBox.Items.Add(new ListItem(desc.Name, Color.White, entity));
+                var tableItem = new TableItem(3);
+                headerItem.Cells[0].Widgets.Add(new Label() { Text = desc.Name, });
+                headerItem.Cells[1].Widgets.Add(new Label() { Text = 1.ToString(), });
+                //TODO
+                headerItem.Cells[2].Widgets.Add(new Label() { Text = "Weapon", });
+                ItemBox.Items.Add(tableItem);
+                break;
             }
 
             foreach (var equipmentSlot in equipment.Slots)
             {
                 Description desc = equipmentSlot.Value.Equipment?.Parent.GetComponentOfType<Description>();
                 var text = desc != null ? desc.Name : "Nothing";
-                EquipmentBox.Items.Add(new ListItem($"{equipmentSlot.Key.ToString()}: {text}",Color.White, equipmentSlot));
+                EquipmentBox.Items.Add(new ListItem($"{equipmentSlot.Key.ToString()}: {text}", Color.White, equipmentSlot));
             }
 
             if (ItemBox.Items.Any())
             {
                 ItemBox.SelectedIndex = 0;
             }
-
         }
 
         private void OnClickReturnToGame(object sender, EventArgs e)
