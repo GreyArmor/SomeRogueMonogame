@@ -88,18 +88,16 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             headerItem.Cells[1].Widgets.Add(new Label() { Text = "Weight", });
             headerItem.Cells[2].Widgets.Add(new Label() { Text = "Type", });
             ItemBox.Items.Add(headerItem);
-            ItemBox.Items.Add(headerItem);
-            // ItemBox.Items.Add(headerItem);
+
             foreach (var entity in itemsHolder.GetItems())
             {
                 Description desc = entity.GetComponentOfType<Description>();
                 var tableItem = new TableItem(3);
-                headerItem.Cells[0].Widgets.Add(new Label() { Text = desc.Name, });
-                headerItem.Cells[1].Widgets.Add(new Label() { Text = 1.ToString(), });
+                tableItem.Cells[0].Widgets.Add(new Label() { Text = desc.Name, });
+                tableItem.Cells[1].Widgets.Add(new Label() { Text = 1.ToString(), });
                 //TODO
-                headerItem.Cells[2].Widgets.Add(new Label() { Text = "Weapon", });
+                tableItem.Cells[2].Widgets.Add(new Label() { Text = "Weapon", });
                 ItemBox.Items.Add(tableItem);
-                break;
             }
 
             foreach (var equipmentSlot in equipment.Slots)

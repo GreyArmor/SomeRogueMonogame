@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 
@@ -91,5 +92,63 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
                 RemoveItem((TableItem)_box.Widgets[0]);
             }
         }
+
+        public override void OnKeyDown(Keys k)
+        {
+            base.OnKeyDown(k);
+
+            switch (k)
+            {
+                case Keys.Up:
+                    if (SelectedIndex != null && SelectedIndex.Value > 0)
+                    {
+                        SelectedIndex = SelectedIndex.Value - 1;
+                        UpdateScrolling();
+                    }
+                    break;
+                case Keys.Down:
+                    if (SelectedIndex != null && SelectedIndex.Value < Items.Count - 1)
+                    {
+                        SelectedIndex = SelectedIndex.Value + 1;
+                        UpdateScrolling();
+                    }
+                    break;
+            }
+        }
+
+        private void UpdateScrolling()
+        {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+
+            var p = SelectedItem.Bounds;
+
+            var bounds = _box.ActualBounds;
+            InternalChild.UpdateLayout();
+            var sz = new Point(InternalChild.Bounds.Width, InternalChild.Bounds.Height);
+
+            p.X -= bounds.X;
+            p.Y -= bounds.Y;
+
+            var lineHeight = 20;
+
+            var sp = InternalChild.ScrollPosition;
+
+            if (p.Y < sp.Y)
+            {
+                sp.Y = p.Y;
+            }
+            else if (p.Y + lineHeight > sp.Y + sz.Y)
+            {
+                sp.Y = (p.Y + lineHeight - sz.Y);
+            }
+
+            InternalChild.ScrollPosition = sp;
+        }
+
+
+
     }
 }
