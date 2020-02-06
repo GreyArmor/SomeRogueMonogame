@@ -9,11 +9,16 @@ namespace NamelessRogue.Engine.Engine.Utility
 {
     public static class HotkeyHelper
     {
-        public static List<Keys> GetNextKeys(List<Keys> keys)
+        public static string alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ";
+        public static char GetNextKey(char hotkey)
         {
-            var result = new List<Keys>();
+            var foundIndex = alphabet.IndexOf(hotkey);
+            if (foundIndex >= 0 && foundIndex!=alphabet.Length-1)
+            {
+                return alphabet[foundIndex + 1];
+            }
 
-            return result;
+            return ' ';
         }
     }
 }
