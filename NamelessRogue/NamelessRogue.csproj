@@ -169,8 +169,12 @@
     <Compile Include="Engine\Engine\Infrastructure\GameInfo.cs" />
     <Compile Include="Engine\Engine\Infrastructure\TerrainType.cs" />
     <Compile Include="Engine\Engine\Infrastructure\TerrainTypes.cs" />
+    <Compile Include="Engine\Engine\Input\IKeyIntentTraslator.cs" />
     <Compile Include="Engine\Engine\Input\Intent.cs" />
-    <Compile Include="Engine\Engine\Input\KeyIntentTraslator.cs" />
+    <Compile Include="Engine\Engine\Input\IngameKeyIntentTraslator.cs" />
+    <Compile Include="Engine\Engine\Input\InventoryKeyIntentTranslator.cs" />
+    <Compile Include="Engine\Engine\Input\MainMenuKeyIntentTranslator.cs" />
+    <Compile Include="Engine\Engine\Input\WorldMapKeyIntentTranslator.cs" />
     <Compile Include="Engine\Engine\Serialization\SaveManager.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\AiSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\ChunkManagementSystem.cs" />

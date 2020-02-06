@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -11,15 +12,17 @@ namespace NamelessRogue.Engine.Engine.Systems
     public class InputSystem : ISystem
     {
 
-      //  List<KeyEvent> pressedKeys;
-
-        public InputSystem()
+        IKeyIntentTraslator translator;
+        public InputSystem(IKeyIntentTraslator translator, NamelessGame namelessGame)
         {
-         //   pressedKeys = new List<>();
+            this.translator = translator;
+            namelessGame.Window.TextInput += WindowOnTextInput;
         }
 
         long currentgmatime = 0;
         private long previousGametimeForMove = 0;
+
+        private char lastCommand = Char.MinValue;
 
         public void Update(long gameTime, NamelessGame namelessGame)
         {
@@ -31,10 +34,16 @@ namespace NamelessRogue.Engine.Engine.Systems
                     InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
                     if (receiver != null && inputComponent != null)
                     {
-                            inputComponent.Intents.AddRange(KeyIntentTraslator.Translate(Keyboard.GetState().GetPressedKeys()));
+                            inputComponent.Intents.AddRange(translator.Translate(Keyboard.GetState().GetPressedKeys(), lastCommand));
                     }
                 }
             }
+            lastCommand = Char.MinValue;
+        }
+
+        private void WindowOnTextInput(object sender, TextInputEventArgs e)
+        {
+            lastCommand = e.Character;
         }
 
         //public void keyPressed(KeyEvent e)

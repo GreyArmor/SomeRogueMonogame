@@ -20,17 +20,17 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                     foreach (Intent intent in inputComponent.Intents)
                     {
 
-                        switch (intent)
+                        switch (intent.Intention)
                         {
 
-                            case Intent.MoveUp:
-                            case Intent.MoveDown:
-                            case Intent.MoveLeft:
-                            case Intent.MoveRight:
-                            case Intent.MoveTopLeft:
-                            case Intent.MoveTopRight:
-                            case Intent.MoveBottomLeft:
-                            case Intent.MoveBottomRight:
+                            case IntentEnum.MoveUp:
+                            case IntentEnum.MoveDown:
+                            case IntentEnum.MoveLeft:
+                            case IntentEnum.MoveRight:
+                            case IntentEnum.MoveTopLeft:
+                            case IntentEnum.MoveTopRight:
+                            case IntentEnum.MoveBottomLeft:
+                            case IntentEnum.MoveBottomRight:
                             {
                                 var cursorEntity = namelessGame.GetEntitiesByComponentClass<Cursor>().First();
                                 Position position = cursorEntity.GetComponentOfType<Position>();
@@ -38,16 +38,16 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                                 {
 
                                     int newX =
-                                        intent == Intent.MoveLeft || intent == Intent.MoveBottomLeft ||
-                                        intent == Intent.MoveTopLeft ? position.p.X - 1 :
-                                        intent == Intent.MoveRight || intent == Intent.MoveBottomRight ||
-                                        intent == Intent.MoveTopRight ? position.p.X + 1 :
+                                        intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
+                                        intent.Intention == IntentEnum.MoveTopLeft ? position.p.X - 1 :
+                                        intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.p.X + 1 :
                                         position.p.X;
                                     int newY =
-                                        intent == Intent.MoveDown || intent == Intent.MoveBottomLeft ||
-                                        intent == Intent.MoveBottomRight ? position.p.Y - 1 :
-                                        intent == Intent.MoveUp || intent == Intent.MoveTopLeft ||
-                                        intent == Intent.MoveTopRight ? position.p.Y + 1 :
+                                        intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
+                                        intent.Intention == IntentEnum.MoveBottomRight ? position.p.Y - 1 :
+                                        intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft ||
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.p.Y + 1 :
                                         position.p.Y;
 
                                     position.p = new Point(newX, newY);

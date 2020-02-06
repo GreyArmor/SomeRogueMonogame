@@ -9,5 +9,11 @@ namespace NamelessRogue.Engine.Engine.Utility
 {
     public static class HotkeyHelper
     {
+        public static List<Keys> GetNextKeys(List<Keys> keys)
+        {
+            var result = new List<Keys>();
+
+            return result;
+        }
     }
 }

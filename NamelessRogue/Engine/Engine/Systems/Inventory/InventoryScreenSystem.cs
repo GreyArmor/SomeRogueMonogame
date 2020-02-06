@@ -27,9 +27,9 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                     var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
                     foreach (Intent intent in inputComponent.Intents)
                     {
-                        switch (intent)
+                        switch (intent.Intention)
                         {
-                            case Intent.MoveDown:
+                            case IntentEnum.MoveDown:
                             {
                                 var prevIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
                                 UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Down); /* += 1;*/
@@ -55,7 +55,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
 
                                 break;
                             }
-                            case Intent.MoveUp:
+                            case IntentEnum.MoveUp:
                             {
                                 var prevIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
                                 UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Up); /* -= 1;*/
@@ -81,8 +81,10 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                                 break;
                             }
 
-
-                            case Intent.Enter:
+                            case IntentEnum.ConetextualHoteyPressed:
+                                //TODO add contextual hotkeys logic here
+                                break;
+                            case IntentEnum.Enter:
                             {
 
                             }

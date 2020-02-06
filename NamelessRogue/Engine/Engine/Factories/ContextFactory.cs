@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Context;
+using NamelessRogue.Engine.Engine.Input;
 using NamelessRogue.Engine.Engine.Systems;
 using NamelessRogue.Engine.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Engine.Systems.Inventory;
@@ -32,7 +33,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                 chunkManagementSystem.Update(0, game);
                 var systems = new List<ISystem>();
                 systems.Add(new InitializationSystem());
-                systems.Add(new InputSystem());
+                systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
                 systems.Add(new IngameIntentSystem());
                 systems.Add(new AiSystem());
                 systems.Add(new TurnManagementSystem());
@@ -69,7 +70,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             {
                 var renderingSystem = new MapRenderingSystem(game.GetSettings(), game.WorldSettings);
                 var systems = new List<ISystem>();
-                systems.Add(new InputSystem());
+                systems.Add(new InputSystem(new WorldMapKeyIntentTranslator(), game));
                 systems.Add(new WorldBoardIntentSystem());
                 systems.Add(new WorldBoardScreenSystem(renderingSystem));
               
@@ -94,7 +95,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             else
             {
                 var systems = new List<ISystem>();
-                systems.Add(new InputSystem());
+                systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(),game ));
                 systems.Add(new MainMenuScreenSystem());
                 var uiSystem = new UIRenderSystem();
 
@@ -117,7 +118,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             else
             {
                 var systems = new List<ISystem>();
-                systems.Add(new InputSystem());
+                systems.Add(new InputSystem(new InventoryKeyIntentTranslator(), game));
                 systems.Add(new InventoryScreenSystem());
                 systems.Add(new InventorySystem());
                 var uiSystem = new UIRenderSystem();
