@@ -18,7 +18,7 @@ namespace NamelessRogue.Engine.Engine.Utility
                 return alphabet[foundIndex + 1];
             }
 
-            return ' ';
+            return char.MinValue;
         }
     }
 }

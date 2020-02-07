@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
+using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Input;
 using NamelessRogue.Engine.Engine.UiScreens;
@@ -86,7 +88,20 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                                 break;
                             case IntentEnum.Enter:
                             {
+                                int selectedIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
+                                if (selectedIndex > 0)
+                                {
+                                    var equipmentEntity = (IEntity) UiFactory.InventoryScreen.ItemBox.SelectedItem.Tag;
+                                    var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
+                                    var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
 
+                                    var equipmentItem = equipmentEntity.GetComponentOfType<Equipment>();
+                                    equipment.Equip(equipmentItem);
+                                    UiFactory.InventoryScreen.FillItems(namelessGame);
+                                    //Dialog d = new Dialog();
+                                    //d.ShowModal(new Point(0));
+
+                                }
                             }
                                 break;
                             default:

@@ -22,6 +22,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
 
     public class TableItem : Panel, ISelectorItem
     {
+        public char Hotkey { get; set; }
         private Grid _internalGrid;
         public TableItem(int columns)
         {

@@ -11,6 +11,7 @@ using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.UiScreens.UI;
+using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
@@ -83,21 +84,38 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
             var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
 
-            var headerItem = new TableItem(3);
-            headerItem.Cells[0].Widgets.Add(new Label() { Text = "Name", });
-            headerItem.Cells[1].Widgets.Add(new Label() { Text = "Weight", });
-            headerItem.Cells[2].Widgets.Add(new Label() { Text = "Type", });
+            var headerItem = new TableItem(4);
+            headerItem.Cells[0].Widgets.Add(new Label() { Text = "Hotkey", });
+            headerItem.Cells[1].Widgets.Add(new Label() { Text = "Name", });
+            headerItem.Cells[2].Widgets.Add(new Label() { Text = "Weight", });
+            headerItem.Cells[3].Widgets.Add(new Label() { Text = "Type", });
             ItemBox.Items.Add(headerItem);
 
-            foreach (var entity in itemsHolder.GetItems())
+            List<IEntity> list = itemsHolder.GetItems();
+            char hotkey = Char.MinValue;
+            for (int i = 0; i < list.Count; i++)
             {
+                IEntity entity = list[i];
+                
+                if (i == 0)
+                {
+                    hotkey = HotkeyHelper.alphabet.First();
+                }
+                else
+                {
+                    hotkey = HotkeyHelper.GetNextKey(hotkey);
+                }
+
                 Description desc = entity.GetComponentOfType<Description>();
                 Item item = entity.GetComponentOfType<Item>();
 
-                var tableItem = new TableItem(3);
-                tableItem.Cells[0].Widgets.Add(new Label() { Text = desc.Name, });
-                tableItem.Cells[1].Widgets.Add(new Label() { Text = item.Weight.ToString(), });
-                tableItem.Cells[2].Widgets.Add(new Label() { Text = item.Type.ToString(), });
+                var tableItem = new TableItem(4);
+                tableItem.Tag = entity;
+                tableItem.Hotkey = hotkey;
+                tableItem.Cells[0].Widgets.Add(new Label() { Text = hotkey.ToString(), HorizontalAlignment = HorizontalAlignment.Center});
+                tableItem.Cells[1].Widgets.Add(new Label() { Text = desc.Name, });
+                tableItem.Cells[2].Widgets.Add(new Label() { Text = item.Weight.ToString(), });
+                tableItem.Cells[3].Widgets.Add(new Label() { Text = item.Type.ToString(), });
                 ItemBox.Items.Add(tableItem);
             }
 
