@@ -249,8 +249,15 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public Table SelectedTable { get; set; }
         private Table previouslySelectedTable;
+        private bool dialogOpened;
         public void OpenDialog(ChoiceDialog dialog)
         {
+            if (dialogOpened)
+            {
+                return;
+            }
+
+            dialogOpened = true;
             previouslySelectedTable = SelectedTable;
             dialog.OptionsTable.SelectedIndex = 0;
             dialog.ShowModal(new Point(game.GetActualWidth() / 2, game.GetActualHeight() / 2));
@@ -260,6 +267,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public void CloseDialog(ChoiceDialog dialog)
         {
+            dialogOpened = false;
             SelectTable(previouslySelectedTable);
             FillItems(game);
             dialog.Close();
