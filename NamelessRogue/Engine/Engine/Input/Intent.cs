@@ -19,7 +19,7 @@ namespace NamelessRogue.Engine.Engine.Input
         LookAtMode, DropItem,
         SkipTurn,
         Enter,
-        ConetextualHoteyPressed
+        ConetextualHotkeyPressed
     }
 
     public class Intent

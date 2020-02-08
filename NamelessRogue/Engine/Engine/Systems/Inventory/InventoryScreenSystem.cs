@@ -52,12 +52,38 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                                 UiFactory.InventoryScreen.SwitchSelectedTable();
                                 break;
                             }
-                            case IntentEnum.ConetextualHoteyPressed:
-                                //TODO add contextual hotkeys logic here
+                            case IntentEnum.ConetextualHotkeyPressed:
+                                var selectedItem =
+                                    UiFactory.InventoryScreen.SelectedTable.Items.FirstOrDefault(x =>
+                                        x.Hotkey == intent.PressedChar);
+
+                                if (selectedItem != null)
+                                {
+                                    UiFactory.InventoryScreen.SelectedTable.OnItemClick.Invoke(selectedItem);
+                                }
+                                else
+                                {
+                                    var selectedInItems =
+                                        UiFactory.InventoryScreen.ItemBox.Items.FirstOrDefault(x =>
+                                            x.Hotkey == intent.PressedChar);
+                                    var selectedInEquipment = UiFactory.InventoryScreen.EquipmentBox.Items.FirstOrDefault(x =>
+                                        x.Hotkey == intent.PressedChar);
+
+                                    if (selectedInItems != null)
+                                    {
+                                        UiFactory.InventoryScreen.ItemBox.OnItemClick.Invoke(selectedInItems);
+                                    }
+                                    if (selectedInEquipment != null)
+                                    {
+                                        UiFactory.InventoryScreen.EquipmentBox.OnItemClick.Invoke(selectedInEquipment);
+                                    }
+                                }
+
+
                                 break;
                             case IntentEnum.Enter:
                             {
-                               UiFactory.InventoryScreen.SelectedTable.OnItemClick.Invoke();
+                               UiFactory.InventoryScreen.SelectedTable.OnItemClick.Invoke(UiFactory.InventoryScreen.SelectedTable.SelectedItem);
                             }
                                 break;
                             default:

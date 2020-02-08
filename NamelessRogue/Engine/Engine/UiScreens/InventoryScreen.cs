@@ -31,6 +31,14 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
     }
 
+    public enum EquipmentDialogActions
+    {
+        Drop,
+        Unequip,
+        Cancel
+    }
+
+
     public class InventoryScreen : BaseGuiScreen
     {
         private NamelessGame game;
@@ -39,13 +47,10 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public Table EquipmentBox { get; set; }
         public Table ItemBox { get; set; }
         public List<InventoryScreenAction> Actions { get; set; } = new List<InventoryScreenAction>();
-        private ChoiceDialog itemChoiceDialog;
 
-        public ChoiceDialog ItemChoiceDialog
-        {
-            get => itemChoiceDialog;
-            set => itemChoiceDialog = value;
-        }
+        public ChoiceDialog ItemChoiceDialog { get; set; }
+
+        public ChoiceDialog EquipmentChoiceDialog { get; set; }
 
         public InventoryScreen(NamelessGame game)
         {
@@ -100,24 +105,87 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             SelectedTable = ItemBox;
 
-            itemChoiceDialog = new ChoiceDialog(
+            ItemChoiceDialog = new ChoiceDialog(
                 new ChoiceOption() {Id = ItemDialogActions.Equip, Text = "Equip"},
                 new ChoiceOption() {Id = ItemDialogActions.Drop, Text = "Drop"},
                 new ChoiceOption() {Id = ItemDialogActions.Cancel, Text = "Cancel"}
+            ); ;
+
+            EquipmentChoiceDialog = new ChoiceDialog(
+                new ChoiceOption() { Id = EquipmentDialogActions.Unequip, Text = "Unequip" },
+                new ChoiceOption() { Id = EquipmentDialogActions.Drop, Text = "Drop" },
+                new ChoiceOption() { Id = EquipmentDialogActions.Cancel, Text = "Cancel" }
             );
 
-            ItemBox.OnItemClick += () =>
+            ItemBox.OnItemClick += (TableItem selectedItem) =>
             {
    
-                int selectedIndex = ItemBox.SelectedIndex.Value;
+                int selectedIndex = ItemBox.Items.IndexOf(selectedItem);
                 if (selectedIndex > 0)
                 {
-                    selectedItem = ItemBox.SelectedItem;
-                    OpenItemBoxDialog();
+                    this.selectedItem = selectedItem;
+                    OpenDialog(ItemChoiceDialog);
                 }
             };
 
-            itemChoiceDialog.OptionsTable.OnItemClick += () =>
+            EquipmentBox.OnItemClick += (TableItem selectedItem) =>
+            {
+
+                int selectedIndex = EquipmentBox.Items.IndexOf(selectedItem);
+                if (selectedIndex > 0)
+                {
+                    this.selectedItem = selectedItem;
+                    OpenDialog(EquipmentChoiceDialog);
+                }
+            };
+
+            EquipmentChoiceDialog.OptionsTable.OnItemClick += (TableItem selectedItemOptions) =>
+            {
+
+                if (selectedItem.Tag == null)
+                {
+                    CloseDialog(EquipmentChoiceDialog);
+                    return;
+                }
+
+                var playerEntity = game.GetEntitiesByComponentClass<Player>().First();
+                var slot = (EquipmentSlots.Slot)selectedItem.Tag;
+                var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
+                var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
+
+                var equipmentItem = equipment.Slots[slot].Equipment;
+
+                if (equipmentItem == null)
+                {
+                    CloseDialog(EquipmentChoiceDialog);
+                    return;
+                }
+        
+                var chosenItem = (ChoiceOption)selectedItemOptions.Tag;
+                var  dialogActions = (EquipmentDialogActions)chosenItem.Id;
+                switch (dialogActions)
+                {
+                    case EquipmentDialogActions.Drop:
+                        equipment.TakeOff(equipmentItem.Slot);
+                        var position = playerEntity.GetComponentOfType<Position>();
+                        var command = new DropItemCommand(new List<IEntity>(){ equipmentItem.Parent },itemsHolder, position.p);
+                        playerEntity.AddComponent(command);
+                        break;  
+                    case EquipmentDialogActions.Unequip:
+                        equipment.TakeOff(equipmentItem.Slot);
+                        break;
+                    case EquipmentDialogActions.Cancel:
+                        break;
+                    default:
+                        break;
+                }
+                CloseDialog(EquipmentChoiceDialog);
+             
+            };
+
+            ItemChoiceDialog.Closed += (sender, args) => { SelectTable(ItemBox); };
+
+            ItemChoiceDialog.OptionsTable.OnItemClick += (TableItem selectedItemOptions) =>
             {
 
                 var playerEntity = game.GetEntitiesByComponentClass<Player>().First();
@@ -126,31 +194,31 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
 
                 var equipmentItem = equipmentEntity.GetComponentOfType<Equipment>();
-        
 
 
-                var chosenItem = (ChoiceOption)itemChoiceDialog.OptionsTable.SelectedItem.Tag;
+
+                var chosenItem = (ChoiceOption)selectedItemOptions.Tag;
                 ItemDialogActions itemDialogActions = (ItemDialogActions)chosenItem.Id;
                 switch (itemDialogActions)
                 {
                     case ItemDialogActions.Drop:
                         var position = playerEntity.GetComponentOfType<Position>();
-                        var command = new DropItemCommand(new List<IEntity>(){ equipmentItem.Parent },itemsHolder, position.p);
+                        var command = new DropItemCommand(new List<IEntity>() { equipmentItem.Parent }, itemsHolder, position.p);
                         playerEntity.AddComponent(command);
-                        ItemBox.Items.Remove(selectedItem);
-                        break;  
+                        break;
                     case ItemDialogActions.Equip:
                         equipment.Equip(equipmentItem);
-                        ItemBox.Items.Remove(selectedItem);
                         break;
                     case ItemDialogActions.Cancel:
                         break;
                     default:
                         break;
                 }
-                CloseItemBoxDialog();
-             
+                CloseDialog(ItemChoiceDialog);
+
             };
+
+            ItemChoiceDialog.Closed += (sender, args) => { SelectTable(ItemBox); };
         }
 
         private TableItem selectedItem;
@@ -158,43 +226,54 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public void SelectTable(Table table)
         {
-            SelectedTable.SelectedIndex = null;
+            //SelectedTable.SelectedIndex = null;
             SelectedTable = table;
-            SelectedTable.SelectedIndex = 0;
+            //SelectedTable.SelectedIndex = 0;
         }
 
         public void SwitchSelectedTable()
         {
             if (SelectedTable == ItemBox)
             {
+                SelectedTable.SelectedIndex = null;
                 SelectTable(EquipmentBox);
+                SelectedTable.SelectedIndex = 0;
             }
             else if (SelectedTable == EquipmentBox)
             {
+                SelectedTable.SelectedIndex = null;
                 SelectTable(ItemBox);
+                SelectedTable.SelectedIndex = 0;
             }
         }
 
-        public bool ItemBoxDialogOpened { get; private set; }
-        public Table SelectedTable { get => selectedTable; set => selectedTable = value; }
-
-        public void OpenItemBoxDialog()
+        public Table SelectedTable { get; set; }
+        private Table previouslySelectedTable;
+        public void OpenDialog(ChoiceDialog dialog)
         {
-            ItemBoxDialogOpened = true;
-            itemChoiceDialog.OptionsTable.SelectedIndex = 0;
-            itemChoiceDialog.ShowModal(new Point(game.GetActualWidth() / 2, game.GetActualHeight() / 2));
-            SelectTable(itemChoiceDialog.OptionsTable);
+            previouslySelectedTable = SelectedTable;
+            dialog.OptionsTable.SelectedIndex = 0;
+            dialog.ShowModal(new Point(game.GetActualWidth() / 2, game.GetActualHeight() / 2));
+            SelectTable(dialog.OptionsTable);
         }
 
-        public void CloseItemBoxDialog()
+
+        public void CloseDialog(ChoiceDialog dialog)
         {
-            SelectTable(ItemBox);
-            itemChoiceDialog.Close();
+            SelectTable(previouslySelectedTable);
+            FillItems(game);
+            dialog.Close();
         }
 
-        private Table selectedTable;
         public void ScrollSelectedTableDown()
         {
+
+            if (SelectedTable.SelectedIndex == null)
+            {
+                SelectedTable.SelectedIndex = 0;
+                return;
+            }
+
             var prevIndex = SelectedTable.SelectedIndex.Value;
             SelectedTable.OnKeyDown(Keys.Down); /* += 1;*/
 
@@ -220,6 +299,12 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public void ScrollSelectedTableUp()
         {
+
+            if (SelectedTable.SelectedIndex == null)
+            {
+                SelectedTable.SelectedIndex = 0;
+                return;
+            }
             var prevIndex = SelectedTable.SelectedIndex.Value;
             SelectedTable.OnKeyDown(Keys.Up); /* -= 1;*/
             int nextIndex = SelectedTable.SelectedIndex.Value;
@@ -245,6 +330,11 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public void FillItems(NamelessGame game)
         {
+
+
+            var selectedIndex = SelectedTable?.Items.IndexOf(selectedItem);
+
+
             EquipmentBox.Items.Clear();
             ItemBox.Items.Clear();
 
@@ -253,27 +343,55 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
             var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
 
+            char hotkey = Char.MinValue;
+
+            var headerEquipmentItem = new TableItem(3);
+            headerEquipmentItem.Cells[0].Widgets.Add(new Label() { Text = "Hotkey", HorizontalAlignment  = HorizontalAlignment.Center});
+            headerEquipmentItem.Cells[1].Widgets.Add(new Label() { Text = "Slot", });
+            headerEquipmentItem.Cells[2].Widgets.Add(new Label() { Text = "Name", });
+            EquipmentBox.Items.Add(headerEquipmentItem);
+            {
+                int i = 0;
+                foreach (var equipmentSlot in equipment.Slots)
+                {
+
+                    if (i == 0)
+                    {
+                        hotkey = HotkeyHelper.alphabet.First();
+                    }
+                    else
+                    {
+                        hotkey = HotkeyHelper.GetNextKey(hotkey);
+                    }
+
+
+                    Description desc = equipmentSlot.Value.Equipment?.Parent.GetComponentOfType<Description>();
+                    var text = desc != null ? desc.Name : "Nothing";
+                    var tableItem = new TableItem(3);
+                    tableItem.Hotkey = hotkey;
+                    tableItem.Tag = equipmentSlot.Key;
+                    tableItem.Cells[0].Widgets.Add(new Label() { Text = hotkey.ToString(), HorizontalAlignment = HorizontalAlignment.Center });
+                    tableItem.Cells[1].Widgets.Add(new Label() {Text = equipmentSlot.Key.ToString(),});
+                    tableItem.Cells[2].Widgets.Add(new Label() {Text = text});
+                    EquipmentBox.Items.Add(tableItem);
+                    i++;
+                }
+            }
+
             var headerItem = new TableItem(4);
-            headerItem.Cells[0].Widgets.Add(new Label() { Text = "Hotkey", });
+            headerItem.Cells[0].Widgets.Add(new Label() { Text = "Hotkey", HorizontalAlignment = HorizontalAlignment.Center });
             headerItem.Cells[1].Widgets.Add(new Label() { Text = "Name", });
             headerItem.Cells[2].Widgets.Add(new Label() { Text = "Weight", });
             headerItem.Cells[3].Widgets.Add(new Label() { Text = "Type", });
             ItemBox.Items.Add(headerItem);
 
             List<IEntity> list = itemsHolder.GetItems();
-            char hotkey = Char.MinValue;
+
             for (int i = 0; i < list.Count; i++)
             {
                 IEntity entity = list[i];
-                
-                if (i == 0)
-                {
-                    hotkey = HotkeyHelper.alphabet.First();
-                }
-                else
-                {
-                    hotkey = HotkeyHelper.GetNextKey(hotkey);
-                }
+
+                hotkey = HotkeyHelper.GetNextKey(hotkey);
 
                 Description desc = entity.GetComponentOfType<Description>();
                 Item item = entity.GetComponentOfType<Item>();
@@ -281,34 +399,37 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 var tableItem = new TableItem(4);
                 tableItem.Tag = entity;
                 tableItem.Hotkey = hotkey;
-                tableItem.Cells[0].Widgets.Add(new Label() { Text = hotkey.ToString(), HorizontalAlignment = HorizontalAlignment.Center});
-                tableItem.Cells[1].Widgets.Add(new Label() { Text = desc.Name, });
-                tableItem.Cells[2].Widgets.Add(new Label() { Text = item.Weight.ToString(), });
-                tableItem.Cells[3].Widgets.Add(new Label() { Text = item.Type.ToString(), });
+                tableItem.Cells[0].Widgets.Add(new Label()
+                    {Text = hotkey.ToString(), HorizontalAlignment = HorizontalAlignment.Center});
+                tableItem.Cells[1].Widgets.Add(new Label() {Text = desc.Name,});
+                tableItem.Cells[2].Widgets.Add(new Label() {Text = item.Weight.ToString(),});
+                tableItem.Cells[3].Widgets.Add(new Label() {Text = item.Type.ToString(),});
                 ItemBox.Items.Add(tableItem);
             }
 
 
-            var headerEquipmentItem = new TableItem(3);
-            headerEquipmentItem.Cells[0].Widgets.Add(new Label() { Text = "Slot", });
-            headerEquipmentItem.Cells[1].Widgets.Add(new Label() { Text = "Name", });
-            EquipmentBox.Items.Add(headerEquipmentItem);
-
-            foreach (var equipmentSlot in equipment.Slots)
+            if (selectedIndex > SelectedTable?.Items.Count)
             {
-                Description desc = equipmentSlot.Value.Equipment?.Parent.GetComponentOfType<Description>();
-                var text = desc != null ? desc.Name : "Nothing";
-
-                var tableItem = new TableItem(3);
-                tableItem.Cells[0].Widgets.Add(new Label() { Text = equipmentSlot.Key.ToString(), });
-                tableItem.Cells[1].Widgets.Add(new Label() { Text = text });
-                EquipmentBox.Items.Add(tableItem);
+                if (SelectedTable != null)
+                {
+                    SelectedTable.SelectedIndex = 0;
+                    selectedItem = SelectedTable.SelectedItem;
+                }
+            }
+            else
+            {
+                if (SelectedTable != null)
+                {
+                    SelectedTable.SelectedIndex = selectedIndex;
+                    selectedItem = SelectedTable.SelectedItem;
+                }
             }
 
-            if (ItemBox.Items.Any())
-            {
-                ItemBox.SelectedIndex = 0;
-            }
+        }
+
+        public void UpdateEquipment()
+        {
+
         }
 
         private void OnClickReturnToGame(object sender, EventArgs e)

@@ -46,7 +46,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
             }
 
             OptionsTable.SelectedIndex = 0;
-            InternalChild.Widgets.Add(OptionsTable);
+            Content = OptionsTable;
         }
         public Table OptionsTable { get => optionsTable; set => optionsTable = value; }
     }

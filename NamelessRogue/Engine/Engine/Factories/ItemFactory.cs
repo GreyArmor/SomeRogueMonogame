@@ -11,12 +11,12 @@ namespace NamelessRogue.Engine.Engine.Factories
 {
     public  class ItemFactory {
 
-        public static Entity CreateSword(int x, int y)
+        public static Entity CreateSword(int x, int y, int i)
         {
             Entity item = new Entity();
             item.AddComponent(new Item(ItemType.Weapon,2));
             item.AddComponent(new Drawable('S', new Color(1f, 0, 0)));
-            item.AddComponent(new Description("Sword", "A simple sword"));
+            item.AddComponent(new Description("Sword " + i.ToString(), "A simple sword"));
             item.AddComponent(new Equipment(item, EquipmentSlots.Slot.RightArm));
             item.AddComponent(new Stats()
             {

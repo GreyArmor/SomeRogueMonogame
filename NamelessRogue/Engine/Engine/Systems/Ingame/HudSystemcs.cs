@@ -7,6 +7,7 @@ using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.UiScreens;
 using NamelessRogue.shell;
+using System.Linq;
 
 namespace NamelessRogue.Engine.Engine.Systems.Ingame
 {
@@ -53,6 +54,10 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                             case HudAction.OpenInventory:
                                 namelessGame.ContextToSwitch = ContextFactory.GetInventoryContext(namelessGame);
                                 UiFactory.InventoryScreen.FillItems(namelessGame);
+                                if (UiFactory.InventoryScreen.ItemBox.Items.Any())
+                                {
+                                    UiFactory.InventoryScreen.ItemBox.SelectedIndex = 0;
+                                }
                                 break;;
                             default:
                                 break;

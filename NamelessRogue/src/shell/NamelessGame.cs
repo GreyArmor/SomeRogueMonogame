@@ -241,10 +241,10 @@ namespace NamelessRogue.shell
             //    y));
 
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
                 var sword = ItemFactory.CreateSword(x - 2,
-                    y);
+                    y, i);
                 Entities.Add(sword);
             }
             Entities.Add(GameInitializer.CreateCursor());

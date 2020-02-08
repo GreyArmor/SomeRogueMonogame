@@ -149,7 +149,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
             InternalChild.ScrollPosition = sp;
         }
 
-        public Action OnItemClick;
+        public Action<TableItem> OnItemClick;
 
     }
 }
