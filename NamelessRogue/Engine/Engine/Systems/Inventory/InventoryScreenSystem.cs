@@ -33,75 +33,31 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                         {
                             case IntentEnum.MoveDown:
                             {
-                                var prevIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
-                                UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Down); /* += 1;*/
-
-                                int nextIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
-
-                                bool move = false;
-                                if (UiFactory.InventoryScreen.ItemBox.SelectedIndex == prevIndex)
-                                {
-                                    nextIndex = 0;
-                                    move = true;
-                                }
-
-                                if (UiFactory.InventoryScreen.ItemBox.Items.Any())
-                                {
-                                    UiFactory.InventoryScreen.ItemBox.SelectedIndex = nextIndex;
-                                    if (move)
-                                    {
-                                        UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Down);
-                                        UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Up);
-                                    }
-                                }
-
+                                UiFactory.InventoryScreen.ScrollSelectedTableDown();
                                 break;
                             }
                             case IntentEnum.MoveUp:
                             {
-                                var prevIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
-                                UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Up); /* -= 1;*/
-                                int nextIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
-                                bool move = false;
-                                if (UiFactory.InventoryScreen.ItemBox.SelectedIndex == prevIndex)
-                                {
-                                    nextIndex = UiFactory.InventoryScreen.ItemBox.Items.Count - 1;
-                                    move = true;
-                                }
-
-                                if (UiFactory.InventoryScreen.ItemBox.Items.Any())
-                                {
-                                    UiFactory.InventoryScreen.ItemBox.SelectedIndex = nextIndex;
-                                    if (move)
-                                    {
-                                        UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Up);
-                                        UiFactory.InventoryScreen.ItemBox.OnKeyDown(Keys.Down);
-
-                                    }
-                                }
-
+                                UiFactory.InventoryScreen.ScrollSelectedTableUp();
+                                break;
+                            }
+                            case IntentEnum.MoveLeft:
+                            {
+                                UiFactory.InventoryScreen.SwitchSelectedTable();
                                 break;
                             }
 
+                            case IntentEnum.MoveRight:
+                            {
+                                UiFactory.InventoryScreen.SwitchSelectedTable();
+                                break;
+                            }
                             case IntentEnum.ConetextualHoteyPressed:
                                 //TODO add contextual hotkeys logic here
                                 break;
                             case IntentEnum.Enter:
                             {
-                                int selectedIndex = UiFactory.InventoryScreen.ItemBox.SelectedIndex.Value;
-                                if (selectedIndex > 0)
-                                {
-                                    var equipmentEntity = (IEntity) UiFactory.InventoryScreen.ItemBox.SelectedItem.Tag;
-                                    var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
-                                    var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
-
-                                    var equipmentItem = equipmentEntity.GetComponentOfType<Equipment>();
-                                    equipment.Equip(equipmentItem);
-                                    UiFactory.InventoryScreen.FillItems(namelessGame);
-                                    //Dialog d = new Dialog();
-                                    //d.ShowModal(new Point(0));
-
-                                }
+                               UiFactory.InventoryScreen.SelectedTable.OnItemClick.Invoke();
                             }
                                 break;
                             default:

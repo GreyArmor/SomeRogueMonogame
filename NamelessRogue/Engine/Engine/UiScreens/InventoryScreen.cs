@@ -9,7 +9,9 @@ using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
 using NamelessRogue.Engine.Engine.Components.ItemComponents;
+using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.UI;
+using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.UiScreens.UI;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.shell;
@@ -20,6 +22,15 @@ namespace NamelessRogue.Engine.Engine.UiScreens
     {
         ReturnToGame
     }
+
+    public enum ItemDialogActions
+    {
+        Drop,
+        Equip,
+        Cancel
+
+    }
+
     public class InventoryScreen : BaseGuiScreen
     {
         private NamelessGame game;
@@ -28,6 +39,13 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public Table EquipmentBox { get; set; }
         public Table ItemBox { get; set; }
         public List<InventoryScreenAction> Actions { get; set; } = new List<InventoryScreenAction>();
+        private ChoiceDialog itemChoiceDialog;
+
+        public ChoiceDialog ItemChoiceDialog
+        {
+            get => itemChoiceDialog;
+            set => itemChoiceDialog = value;
+        }
 
         public InventoryScreen(NamelessGame game)
         {
@@ -54,12 +72,20 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             };
             ReturnToGame.Click += OnClickReturnToGame;
 
-            var grid = new Grid() { VerticalAlignment = VerticalAlignment.Stretch, ColumnSpacing = 3, RowSpacing = 2 };
+            var grid = new Grid() {VerticalAlignment = VerticalAlignment.Stretch, ColumnSpacing = 3, RowSpacing = 2};
             grid.RowsProportions.Add(new Proportion(ProportionType.Fill));
             grid.RowsProportions.Add(new Proportion(ProportionType.Pixels, 50));
 
-            EquipmentBox = new Table() { GridColumn = 0, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
-            ItemBox = new Table() { GridColumn = 1, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+            EquipmentBox = new Table()
+            {
+                GridColumn = 0, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+            ItemBox = new Table()
+            {
+                GridColumn = 1, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
 
 
             FillItems(game);
@@ -71,6 +97,149 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             Panel.Widgets.Add(grid);
 
             Desktop.Widgets.Add(Panel);
+
+            SelectedTable = ItemBox;
+
+            itemChoiceDialog = new ChoiceDialog(
+                new ChoiceOption() {Id = ItemDialogActions.Equip, Text = "Equip"},
+                new ChoiceOption() {Id = ItemDialogActions.Drop, Text = "Drop"},
+                new ChoiceOption() {Id = ItemDialogActions.Cancel, Text = "Cancel"}
+            );
+
+            ItemBox.OnItemClick += () =>
+            {
+   
+                int selectedIndex = ItemBox.SelectedIndex.Value;
+                if (selectedIndex > 0)
+                {
+                    selectedItem = ItemBox.SelectedItem;
+                    OpenItemBoxDialog();
+                }
+            };
+
+            itemChoiceDialog.OptionsTable.OnItemClick += () =>
+            {
+
+                var playerEntity = game.GetEntitiesByComponentClass<Player>().First();
+                var equipmentEntity = (IEntity)selectedItem.Tag;
+                var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
+                var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
+
+                var equipmentItem = equipmentEntity.GetComponentOfType<Equipment>();
+        
+
+
+                var chosenItem = (ChoiceOption)itemChoiceDialog.OptionsTable.SelectedItem.Tag;
+                ItemDialogActions itemDialogActions = (ItemDialogActions)chosenItem.Id;
+                switch (itemDialogActions)
+                {
+                    case ItemDialogActions.Drop:
+                        var position = playerEntity.GetComponentOfType<Position>();
+                        var command = new DropItemCommand(new List<IEntity>(){ equipmentItem.Parent },itemsHolder, position.p);
+                        playerEntity.AddComponent(command);
+                        ItemBox.Items.Remove(selectedItem);
+                        break;  
+                    case ItemDialogActions.Equip:
+                        equipment.Equip(equipmentItem);
+                        ItemBox.Items.Remove(selectedItem);
+                        break;
+                    case ItemDialogActions.Cancel:
+                        break;
+                    default:
+                        break;
+                }
+                CloseItemBoxDialog();
+             
+            };
+        }
+
+        private TableItem selectedItem;
+
+
+        public void SelectTable(Table table)
+        {
+            SelectedTable.SelectedIndex = null;
+            SelectedTable = table;
+            SelectedTable.SelectedIndex = 0;
+        }
+
+        public void SwitchSelectedTable()
+        {
+            if (SelectedTable == ItemBox)
+            {
+                SelectTable(EquipmentBox);
+            }
+            else if (SelectedTable == EquipmentBox)
+            {
+                SelectTable(ItemBox);
+            }
+        }
+
+        public bool ItemBoxDialogOpened { get; private set; }
+        public Table SelectedTable { get => selectedTable; set => selectedTable = value; }
+
+        public void OpenItemBoxDialog()
+        {
+            ItemBoxDialogOpened = true;
+            itemChoiceDialog.OptionsTable.SelectedIndex = 0;
+            itemChoiceDialog.ShowModal(new Point(game.GetActualWidth() / 2, game.GetActualHeight() / 2));
+            SelectTable(itemChoiceDialog.OptionsTable);
+        }
+
+        public void CloseItemBoxDialog()
+        {
+            SelectTable(ItemBox);
+            itemChoiceDialog.Close();
+        }
+
+        private Table selectedTable;
+        public void ScrollSelectedTableDown()
+        {
+            var prevIndex = SelectedTable.SelectedIndex.Value;
+            SelectedTable.OnKeyDown(Keys.Down); /* += 1;*/
+
+            int nextIndex = SelectedTable.SelectedIndex.Value;
+
+            bool move = false;
+            if (SelectedTable.SelectedIndex == prevIndex)
+            {
+                nextIndex = 0;
+                move = true;
+            }
+
+            if (SelectedTable.Items.Any())
+            {
+                SelectedTable.SelectedIndex = nextIndex;
+                if (move)
+                {
+                    SelectedTable.OnKeyDown(Keys.Down);
+                    SelectedTable.OnKeyDown(Keys.Up);
+                }
+            }
+        }
+
+        public void ScrollSelectedTableUp()
+        {
+            var prevIndex = SelectedTable.SelectedIndex.Value;
+            SelectedTable.OnKeyDown(Keys.Up); /* -= 1;*/
+            int nextIndex = SelectedTable.SelectedIndex.Value;
+            bool move = false;
+            if (SelectedTable.SelectedIndex == prevIndex)
+            {
+                nextIndex = SelectedTable.Items.Count - 1;
+                move = true;
+            }
+
+            if (SelectedTable.Items.Any())
+            {
+                SelectedTable.SelectedIndex = nextIndex;
+                if (move)
+                {
+                    SelectedTable.OnKeyDown(Keys.Up);
+                    SelectedTable.OnKeyDown(Keys.Down);
+
+                }
+            }
 
         }
 
