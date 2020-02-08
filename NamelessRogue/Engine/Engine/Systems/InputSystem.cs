@@ -23,6 +23,7 @@ namespace NamelessRogue.Engine.Engine.Systems
         private long previousGametimeForMove = 0;
 
         private char lastCommand = Char.MinValue;
+        private KeyboardState lastState;
 
         public void Update(long gameTime, NamelessGame namelessGame)
         {
@@ -32,18 +33,21 @@ namespace NamelessRogue.Engine.Engine.Systems
                 foreach (IEntity entity in namelessGame.GetEntities()) {
                     InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                     InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
-                    if (receiver != null && inputComponent != null)
+                    if (receiver != null && inputComponent != null && lastState != default)
                     {
-                            inputComponent.Intents.AddRange(translator.Translate(Keyboard.GetState().GetPressedKeys(), lastCommand));
+                        inputComponent.Intents.AddRange(translator.Translate(lastState.GetPressedKeys(), lastCommand));
+                        lastCommand = Char.MinValue;
+                        lastState = default;
                     }
                 }
             }
-            lastCommand = Char.MinValue;
+
         }
 
         private void WindowOnTextInput(object sender, TextInputEventArgs e)
         {
             lastCommand = e.Character;
+            lastState = Keyboard.GetState();
         }
 
         //public void keyPressed(KeyEvent e)
