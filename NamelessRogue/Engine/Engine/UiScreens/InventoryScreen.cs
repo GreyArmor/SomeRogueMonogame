@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
@@ -39,8 +38,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
     }
 
 
-    public class InventoryScreen : BaseGuiScreen
-    {
+    public class InventoryScreen : TableScreen {
         private NamelessGame game;
 
         public ImageTextButton ReturnToGame { get; set; }
@@ -219,17 +217,14 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             };
 
             ItemChoiceDialog.Closed += (sender, args) => { SelectTable(ItemBox); };
+            EquipmentChoiceDialog.Closed += (sender, args) => { SelectTable(EquipmentBox); };
+            OnCloseDialog += () => { FillItems(this.game); };
         }
 
-        private TableItem selectedItem;
+       
 
 
-        public void SelectTable(Table table)
-        {
-            //SelectedTable.SelectedIndex = null;
-            SelectedTable = table;
-            //SelectedTable.SelectedIndex = 0;
-        }
+       
 
         public void SwitchSelectedTable()
         {
@@ -247,95 +242,9 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             }
         }
 
-        public Table SelectedTable { get; set; }
-        private Table previouslySelectedTable;
-        private bool dialogOpened;
-        public void OpenDialog(ChoiceDialog dialog)
-        {
-            if (dialogOpened)
-            {
-                return;
-            }
+    
 
-            dialogOpened = true;
-            previouslySelectedTable = SelectedTable;
-            dialog.OptionsTable.SelectedIndex = 0;
-            dialog.ShowModal(null);
-            SelectTable(dialog.OptionsTable);
-        }
-
-
-        public void CloseDialog(ChoiceDialog dialog)
-        {
-            dialogOpened = false;
-            SelectTable(previouslySelectedTable);
-            FillItems(game);
-            dialog.Close();
-        }
-
-        public void ScrollSelectedTableDown()
-        {
-
-            if (SelectedTable.SelectedIndex == null)
-            {
-                SelectedTable.SelectedIndex = 0;
-                return;
-            }
-
-            var prevIndex = SelectedTable.SelectedIndex.Value;
-            SelectedTable.OnKeyDown(Keys.Down); /* += 1;*/
-
-            int nextIndex = SelectedTable.SelectedIndex.Value;
-
-            bool move = false;
-            if (SelectedTable.SelectedIndex == prevIndex)
-            {
-                nextIndex = 0;
-                move = true;
-            }
-
-            if (SelectedTable.Items.Any())
-            {
-                SelectedTable.SelectedIndex = nextIndex;
-                if (move)
-                {
-                    SelectedTable.OnKeyDown(Keys.Down);
-                    SelectedTable.OnKeyDown(Keys.Up);
-                }
-            }
-        }
-
-        public void ScrollSelectedTableUp()
-        {
-
-            if (SelectedTable.SelectedIndex == null)
-            {
-                SelectedTable.SelectedIndex = 0;
-                return;
-            }
-            var prevIndex = SelectedTable.SelectedIndex.Value;
-            SelectedTable.OnKeyDown(Keys.Up); /* -= 1;*/
-            int nextIndex = SelectedTable.SelectedIndex.Value;
-            bool move = false;
-            if (SelectedTable.SelectedIndex == prevIndex)
-            {
-                nextIndex = SelectedTable.Items.Count - 1;
-                move = true;
-            }
-
-            if (SelectedTable.Items.Any())
-            {
-                SelectedTable.SelectedIndex = nextIndex;
-                if (move)
-                {
-                    SelectedTable.OnKeyDown(Keys.Up);
-                    SelectedTable.OnKeyDown(Keys.Down);
-
-                }
-            }
-
-        }
-
+     
         public void FillItems(NamelessGame game)
         {
 
@@ -435,10 +344,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         }
 
-        public void UpdateEquipment()
-        {
-
-        }
 
         private void OnClickReturnToGame(object sender, EventArgs e)
         {

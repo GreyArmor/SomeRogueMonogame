@@ -174,6 +174,7 @@
     <Compile Include="Engine\Engine\Input\IngameKeyIntentTraslator.cs" />
     <Compile Include="Engine\Engine\Input\InventoryKeyIntentTranslator.cs" />
     <Compile Include="Engine\Engine\Input\MainMenuKeyIntentTranslator.cs" />
+    <Compile Include="Engine\Engine\Input\PickUpKeyIntentTranslator.cs" />
     <Compile Include="Engine\Engine\Input\WorldMapKeyIntentTranslator.cs" />
     <Compile Include="Engine\Engine\Serialization\SaveManager.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\AiSystem.cs" />
@@ -193,6 +194,8 @@
     <Compile Include="Engine\Engine\Systems\Ingame\SwitchSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\TargetingSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\TurnManagementSystem.cs" />
+    <Compile Include="Engine\Engine\Systems\PickUpItems\PickUpItemSystem.cs" />
+    <Compile Include="Engine\Engine\UiScreens\PickUpItemsScreen.cs" />
     <Compile Include="Engine\Engine\Systems\UIRenderSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Map\WorldBoardIntentSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Map\MapRenderingSystem.cs" />
@@ -201,6 +204,7 @@
     <Compile Include="Engine\Engine\UiScreens\Hud.cs" />
     <Compile Include="Engine\Engine\UiScreens\InventoryScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\MainMenuScreen.cs" />
+    <Compile Include="Engine\Engine\UiScreens\TableScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\ChoiceDialog.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\LogView.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\EndlessContainer.cs" />

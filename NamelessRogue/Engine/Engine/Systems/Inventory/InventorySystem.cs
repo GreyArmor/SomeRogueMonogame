@@ -55,6 +55,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
 
                             pickupCommandItem.GetComponentOfType<Drawable>().setVisible(false);
                             UiFactory.InventoryScreen?.FillItems(namelessGame);
+                            UiFactory.PickUpItemsScreen?.FillItems(namelessGame);
                         }
 
                         entity.RemoveComponentOfType<PickUpItemCommand>();

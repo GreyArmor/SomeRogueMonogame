@@ -11,6 +11,7 @@ using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Components.UI;
+using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Input;
@@ -203,27 +204,43 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
                                     if (itemsToPickUp.Any())
                                     {
-                                        StringBuilder builder = new StringBuilder();
-                                        var itemsCommand = new PickUpItemCommand(itemsToPickUp, itemHolder, position.p);
-                                        playerEntity.AddComponent(itemsCommand);
 
-                                        foreach (var entity1 in itemsToPickUp)
+
+                                        if (itemsToPickUp.Count > 1)
                                         {
-                                            var desc = entity1.GetComponentOfType<Description>();
-                                            if (desc != null)
+                                            namelessGame.ContextToSwitch =
+                                                ContextFactory.GetPickUpItemContext(namelessGame);
+                                            UiFactory.PickUpItemsScreen.FillItems(namelessGame);
+                                            if (UiFactory.PickUpItemsScreen.ItemsTable.Items.Any())
                                             {
-                                                builder.Append($"Picked up: {desc.Name} ");
+                                                UiFactory.PickUpItemsScreen.ItemsTable.SelectedIndex = 0;
                                             }
                                         }
-
-                                        var logCommand = playerEntity.GetComponentOfType<HudLogMessageCommand>();
-                                        if (logCommand == null)
+                                        else
                                         {
-                                            logCommand = new HudLogMessageCommand();
-                                            playerEntity.AddComponent(logCommand);
-                                        }
+                                            StringBuilder builder = new StringBuilder();
+                                            var itemsCommand = new PickUpItemCommand(itemsToPickUp, itemHolder,
+                                                position.p);
+                                            playerEntity.AddComponent(itemsCommand);
 
-                                        logCommand.LogMessage += builder.ToString();
+                                            foreach (var entity1 in itemsToPickUp)
+                                            {
+                                                var desc = entity1.GetComponentOfType<Description>();
+                                                if (desc != null)
+                                                {
+                                                    builder.Append($"Picked up: {desc.Name} \n");
+                                                }
+                                            }
+
+                                            var logCommand = playerEntity.GetComponentOfType<HudLogMessageCommand>();
+                                            if (logCommand == null)
+                                            {
+                                                logCommand = new HudLogMessageCommand();
+                                                playerEntity.AddComponent(logCommand);
+                                            }
+
+                                            logCommand.LogMessage += builder.ToString();
+                                        }
 
                                         var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                         ap.Points -= Constants.ActionsPickUpCost;

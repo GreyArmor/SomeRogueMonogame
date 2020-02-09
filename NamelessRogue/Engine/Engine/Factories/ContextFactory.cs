@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Engine.Systems.Inventory;
 using NamelessRogue.Engine.Engine.Systems.MainMenu;
 using NamelessRogue.Engine.Engine.Systems.Map;
+using NamelessRogue.Engine.Engine.Systems.PickUpItems;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Factories
@@ -127,6 +128,30 @@ namespace NamelessRogue.Engine.Engine.Factories
                 UiFactory.CreateInventoryScreen(game);
                 inventoryContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UiFactory.InventoryScreen);
                 return inventoryContext;
+            }
+        }
+
+
+        private static GameContext pickUpContext;
+        public static GameContext GetPickUpItemContext(NamelessGame game)
+        {
+
+            if (pickUpContext != null)
+            {
+                return pickUpContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem(new PickUpKeyIntentTranslator(), game));
+                systems.Add(new PickUpItemSystem());
+                systems.Add(new InventorySystem());
+                var uiSystem = new UIRenderSystem();
+
+                // create and init the UI manager
+                UiFactory.CreatePickUpItemsScreenn(game);
+                pickUpContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UiFactory.PickUpItemsScreen);
+                return pickUpContext;
             }
         }
 

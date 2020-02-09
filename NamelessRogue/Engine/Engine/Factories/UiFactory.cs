@@ -16,6 +16,8 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static MainMenuScreen MainMenuScreen { get; private set; }
 
         public static InventoryScreen InventoryScreen { get; private set; }
+
+        public static PickUpItemsScreen PickUpItemsScreen { get; private set; }
         public static void CreateHud(NamelessGame game)
         {
             HudInstance = new Hud(game);
@@ -34,6 +36,11 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static void CreateInventoryScreen(NamelessGame game)
         {
             InventoryScreen = new InventoryScreen(game);
+        }
+
+        public static void CreatePickUpItemsScreenn(NamelessGame game)
+        {
+            PickUpItemsScreen = new PickUpItemsScreen(game);
         }
 
     }
