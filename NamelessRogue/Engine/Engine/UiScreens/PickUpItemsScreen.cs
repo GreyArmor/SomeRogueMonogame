@@ -61,10 +61,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 VerticalAlignment = VerticalAlignment.Stretch
             };
 
-
-            //FillItems(game);
-
-
             grid.Widgets.Add(ItemsTable);
             grid.Widgets.Add(ReturnToGame);
             Panel.Widgets.Add(grid);
@@ -83,6 +79,12 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 if (itemEntity == null)
                 {
                     return;
+                }
+
+                int selectedIndex = ItemsTable.Items.IndexOf(item);
+                if (selectedIndex > 0)
+                {
+                    this.selectedItem = item;
                 }
 
                 var command = new PickUpItemCommand(new List<IEntity>(){itemEntity},itemsHolder, position.p);
