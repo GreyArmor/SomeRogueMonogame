@@ -241,12 +241,28 @@ namespace NamelessRogue.shell
             //    y));
 
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 2; i++)
             {
                 var sword = ItemFactory.CreateSword(x - 2,
                     y, i);
                 Entities.Add(sword);
             }
+
+            var platemail = ItemFactory.CreatePlateMail(x - 2, y, 1);
+            Entities.Add(platemail);
+            var pants = ItemFactory.CreatePants(x - 2, y, 1);
+            Entities.Add(pants);
+            var boots = ItemFactory.CreateBoots(x - 2, y, 1);
+            Entities.Add(boots);
+            var cape = ItemFactory.CreateCape(x - 2, y, 1);
+            Entities.Add(cape);
+            var ring = ItemFactory.CreateRing(x - 2, y, 1);
+            Entities.Add(ring);
+            var shield = ItemFactory.CreateShield(x - 2, y, 1);
+            Entities.Add(shield);
+            var helmet = ItemFactory.CreateHelmet(x - 2, y, 1);
+            Entities.Add(helmet);
+
             Entities.Add(GameInitializer.CreateCursor());
 
             //Paragraph.BaseSize = 1.175f;

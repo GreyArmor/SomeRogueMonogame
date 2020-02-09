@@ -260,7 +260,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             dialogOpened = true;
             previouslySelectedTable = SelectedTable;
             dialog.OptionsTable.SelectedIndex = 0;
-            dialog.ShowModal(new Point(game.GetActualWidth() / 2, game.GetActualHeight() / 2));
+            dialog.ShowModal(null);
             SelectTable(dialog.OptionsTable);
         }
 

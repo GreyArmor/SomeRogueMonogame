@@ -46,7 +46,7 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
 
         public void Equip(Equipment equipment)
         {
-            Slots.TryGetValue(equipment.Slot,out var slot);
+            Slots.TryGetValue(equipment.Slot, out var slot);
             if (slot!=null)
             {
                 if (slot.Equipment != null)

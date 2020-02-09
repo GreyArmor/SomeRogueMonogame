@@ -46,6 +46,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
             }
 
             OptionsTable.SelectedIndex = 0;
+            OptionsTable.Width = 200;
             Content = OptionsTable;
         }
         public Table OptionsTable { get => optionsTable; set => optionsTable = value; }
