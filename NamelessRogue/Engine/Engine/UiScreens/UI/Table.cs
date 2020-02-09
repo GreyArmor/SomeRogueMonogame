@@ -77,6 +77,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
             _box.Widgets.Insert(index, item);
             item.TouchDown += (sender, args) => { OnItemClick.Invoke(item); };
             item.MouseEntered += (sender, args) => { SelectedItem = item; };
+            item.MouseLeft += (sender, args) => { item.IsSelected = false; };
         }
 
         protected override void RemoveItem(TableItem item)
