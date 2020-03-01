@@ -12,11 +12,11 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
     public class Equipment : Component
     {
         public IEntity Parent { get; }
-        public EquipmentSlots.Slot Slot { get; }
-        public Equipment(IEntity parent, EquipmentSlots.Slot slot)
+        public List<EquipmentSlots.Slot> PossibleSlots { get; }
+        public Equipment(IEntity parent, params EquipmentSlots.Slot[] slots)
         {
             Parent = parent;
-            Slot = slot;
+            PossibleSlots = slots.ToList();
         }
 
     }

@@ -88,10 +88,12 @@
     <Compile Include="Engine\Engine\Components\Interaction\PickUpItemCommand.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\Player.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\SimpleSwitch.cs" />
+    <Compile Include="Engine\Engine\Components\ItemComponents\ArmorStats.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\Equipment.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\Item.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\ItemsHolder.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\EquipmentSlots.cs" />
+    <Compile Include="Engine\Engine\Components\ItemComponents\WeaponStats.cs" />
     <Compile Include="Engine\Engine\Components\JustCreated.cs" />
     <Compile Include="Engine\Engine\Components\Physical\BlocksVision.cs" />
     <Compile Include="Engine\Engine\Components\Physical\OccupiesTile.cs" />
@@ -124,6 +126,11 @@
     <Compile Include="Engine\Engine\Factories\TimelineFactory.cs" />
     <Compile Include="Engine\Engine\GameInstance\GameInstance.cs" />
     <Compile Include="Engine\Engine\Generation\CivilizationMachine.cs" />
+    <Compile Include="Engine\Engine\Generation\Items\ItemBlueprint.cs" />
+    <Compile Include="Engine\Engine\Generation\Items\ItemsGenerator.cs" />
+    <Compile Include="Engine\Engine\Generation\World\Diplomacy\DiplomaticAction.cs" />
+    <Compile Include="Engine\Engine\Generation\World\Diplomacy\Politics.cs" />
+    <Compile Include="Engine\Engine\Generation\World\Tech\TechnologyLibrary.cs" />
     <Compile Include="Engine\Engine\Generation\NamesGenerator.cs" />
     <Compile Include="Engine\Engine\Generation\Noise\ImageWriter.cs" />
     <Compile Include="Engine\Engine\Generation\Noise\SimplexNoise.cs" />
@@ -154,7 +161,7 @@
     <Compile Include="Engine\Engine\Generation\World\Meta\Resorces.cs" />
     <Compile Include="Engine\Engine\Generation\World\Regions.cs" />
     <Compile Include="Engine\Engine\Generation\World\Settlement.cs" />
-    <Compile Include="Engine\Engine\Generation\World\Technology.cs" />
+    <Compile Include="Engine\Engine\Generation\World\Tech\TechnologyAges.cs" />
     <Compile Include="Engine\Engine\Generation\World\TerrainGenerator.cs" />
     <Compile Include="Engine\Engine\Generation\World\TerrainLibrary.cs" />
     <Compile Include="Engine\Engine\Generation\World\TimeLine.cs" />

@@ -14,6 +14,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
     {
         public string Text { get; set; }
         public object Id { get; set; }
+
+        public object Data { get; set; }
     }
     public class ChoiceDialog : Window
     {
@@ -22,6 +24,16 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
         public ChoiceDialog(params ChoiceOption[] options)
         {
             OptionsTable = new Table();
+
+            FillChoiceOptions(options);
+
+            OptionsTable.SelectedIndex = 0;
+            Content = OptionsTable;
+        }
+
+        public void FillChoiceOptions(ChoiceOption[] options)
+        {
+            OptionsTable.Items.Clear();
             char hotkey = char.MinValue;
             for (int i = 0; i < options.Count(); i++)
             {
@@ -44,10 +56,6 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
                 tableItem.Cells[1].Widgets.Add(new Label() { Text = option.Text, });
                 OptionsTable.Items.Add(tableItem);
             }
-
-            OptionsTable.SelectedIndex = 0;
-            OptionsTable.Width = 200;
-            Content = OptionsTable;
         }
         public Table OptionsTable { get => optionsTable; set => optionsTable = value; }
     }

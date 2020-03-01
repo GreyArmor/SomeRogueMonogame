@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Engine.Generation.World.BoardPieces;
+using NamelessRogue.Engine.Engine.Generation.World.Diplomacy;
 using NamelessRogue.Engine.Engine.Generation.World.Meta;
+using NamelessRogue.Engine.Engine.Generation.World.Tech;
 
 namespace NamelessRogue.Engine.Engine.Generation.World
 {
@@ -42,10 +44,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         public List<Army> Armies { get; }
         public List<MapBuilding> Buildings { get; }
 
-        public int TechLevel { get; }
-
-        public List<Technology> ResearchedTechnoholy { get; }
-
+        public Dictionary<Civilization,PoliticalRelation> Relations { get; set; }
 
     }
 }

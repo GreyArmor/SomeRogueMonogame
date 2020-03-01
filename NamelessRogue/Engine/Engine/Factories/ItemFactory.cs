@@ -14,10 +14,10 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity CreateSword(int x, int y, int i)
         {
             Entity item = new Entity();
-            item.AddComponent(new Item(ItemType.Weapon,2));
+            item.AddComponent(new Item(ItemType.Weapon,2,ItemQuality.Normal,1,1,""));
             item.AddComponent(new Drawable('S', new Color(1f, 0, 0)));
             item.AddComponent(new Description("Sword " + i.ToString(), "A simple sword"));
-            item.AddComponent(new Equipment(item, EquipmentSlots.Slot.RightArm));
+            item.AddComponent(new Equipment(item, EquipmentSlots.Slot.BothHands));
             item.AddComponent(new Stats()
             {
                 Attack = new SimpleStat(10,0,100),
@@ -32,7 +32,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity CreateHelmet(int x, int y, int i)
         {
             Entity item = new Entity();
-            item.AddComponent(new Item(ItemType.Armor, 2));
+            item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('H', new Color(1f, 0, 0)));
             item.AddComponent(new Description("Helmet " + i.ToString(), "A simple helmet"));
             item.AddComponent(new Equipment(item, EquipmentSlots.Slot.Head));
@@ -50,7 +50,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity CreateBoots(int x, int y, int i)
         {
             Entity item = new Entity();
-            item.AddComponent(new Item(ItemType.Armor, 2));
+            item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('B', new Color(1f, 0, 0)));
             item.AddComponent(new Description("Boots " + i.ToString(), "Simple Boots"));
             item.AddComponent(new Equipment(item, EquipmentSlots.Slot.Feet));
@@ -68,7 +68,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity CreatePants(int x, int y, int i)
         {
             Entity item = new Entity();
-            item.AddComponent(new Item(ItemType.Armor, 2));
+            item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('P', new Color(1f, 0, 0)));
             item.AddComponent(new Description("Pants " + i.ToString(), "Simple pants"));
             item.AddComponent(new Equipment(item, EquipmentSlots.Slot.Legs));
@@ -86,7 +86,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity CreateShield(int x, int y, int i)
         {
             Entity item = new Entity();
-            item.AddComponent(new Item(ItemType.Armor, 2));
+            item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('S', new Color(1f, 1f, 0)));
             item.AddComponent(new Description("Shield " + i.ToString(), "Simple shield"));
             item.AddComponent(new Equipment(item, EquipmentSlots.Slot.LeftArm));
@@ -104,10 +104,10 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity CreateRing(int x, int y, int i)
         {
             Entity item = new Entity();
-            item.AddComponent(new Item(ItemType.Armor, 2));
+            item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('R', new Color(1f, 1f, 0)));
             item.AddComponent(new Description("Ring " + i.ToString(), "Simple ring"));
-            item.AddComponent(new Equipment(item, EquipmentSlots.Slot.Ring1));
+            item.AddComponent(new Equipment(item, EquipmentSlots.Slot.Ring1, EquipmentSlots.Slot.Ring2));
             item.AddComponent(new Stats()
             {
                 Attack = new SimpleStat(10, 0, 100),
@@ -122,7 +122,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity CreateCape(int x, int y, int i)
         {
             Entity item = new Entity();
-            item.AddComponent(new Item(ItemType.Armor, 2));
+            item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('C', new Color(1f, 1f, 0)));
             item.AddComponent(new Description("Cape " + i.ToString(), "Simple cape"));
             item.AddComponent(new Equipment(item, EquipmentSlots.Slot.Neck));
@@ -140,7 +140,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static Entity CreatePlateMail(int x, int y, int i)
         {
             Entity item = new Entity();
-            item.AddComponent(new Item(ItemType.Armor, 2));
+            item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('M', new Color(1f, 1f, 0)));
             item.AddComponent(new Description("Plate mail " + i.ToString(), "Simple plate mail"));
             item.AddComponent(new Equipment(item, EquipmentSlots.Slot.Torso));
