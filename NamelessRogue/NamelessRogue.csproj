@@ -237,6 +237,9 @@
     <Reference Include="AStarNavigator, Version=1.0.63.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AStarNavigator.1.0.63\lib\net35\AStarNavigator.dll</HintPath>
     </Reference>
+    <Reference Include="info.lundin.math, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2f7fe9ec5efab85f, processorArchitecture=MSIL">
+      <HintPath>..\packages\info.lundin.math.dll.1.2.6\lib\net40\info.lundin.math.dll</HintPath>
+    </Reference>
     <Reference Include="Markov, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Markov.2.0.0\lib\net35\Markov.dll</HintPath>
     </Reference>
@@ -244,8 +247,8 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Myra, Version=0.9.8.188, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Myra.0.9.8.188\lib\net45\Myra.dll</HintPath>
+    <Reference Include="Myra, Version=0.9.9.198, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Myra.0.9.9.198\lib\net45\Myra.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -274,6 +277,9 @@
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="XNAssets, Version=0.5.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\XNAssets.0.5.0.6\lib\net45\XNAssets.dll</HintPath>
+    </Reference>
     <Reference Include="ZeroFormatter, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ZeroFormatter.1.6.4\lib\net45\ZeroFormatter.dll</HintPath>
     </Reference>

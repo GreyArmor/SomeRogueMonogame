@@ -9,7 +9,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
     {
         public Table SelectedTable { get; set; }
         Table previouslySelectedTable;
-        private bool dialogOpened;
+        protected bool dialogOpened;
 
         protected TableItem selectedItem;
         public void SelectTable(Table table)

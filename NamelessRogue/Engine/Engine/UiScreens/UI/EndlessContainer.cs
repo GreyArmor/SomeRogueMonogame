@@ -10,7 +10,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
             base.Arrange();
 
             var bounds = ActualBounds;
-            var availableSize = bounds.Size();
+            var availableSize = bounds.Size;
             var measureSize = InternalChild.Measure(availableSize);
 
             bounds.Width = measureSize.X;

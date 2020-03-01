@@ -185,7 +185,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
              
             };
 
-            ItemChoiceDialog.Closed += (sender, args) => { SelectTable(ItemBox); };
+            ItemChoiceDialog.Closed += (sender, args) => { SelectTable(ItemBox); dialogOpened = false; };
 
             ItemChoiceDialog.OptionsTable.OnItemClick += (TableItem selectedItemOptions) =>
             {
@@ -221,7 +221,9 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             };
 
-            EquipmentChoiceDialog.Closed += (sender, args) => { SelectTable(EquipmentBox); };
+            EquipmentChoiceDialog.Closed += (sender, args) => { SelectTable(EquipmentBox);
+                dialogOpened = false;
+            };
 
             OnCloseDialog += () => { FillItems(this.game); };
         }
