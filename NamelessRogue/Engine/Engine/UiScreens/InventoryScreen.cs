@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Myra.Graphics2D;
+using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
@@ -14,6 +16,7 @@ using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.UiScreens.UI;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.shell;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
 {
@@ -82,12 +85,16 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             EquipmentBox = new Table()
             {
                 GridColumn = 0, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch
+                VerticalAlignment = VerticalAlignment.Stretch,
+                BorderThickness = new Thickness(1),
+                Border = new SolidBrush(Color.White)
             };
             ItemBox = new Table()
             {
                 GridColumn = 1, GridRow = 0, HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch
+                VerticalAlignment = VerticalAlignment.Stretch,
+                BorderThickness = new Thickness(1),
+                Border = new SolidBrush(Color.White)
             };
 
 
@@ -200,7 +207,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
              
 
                 var chosenItem = (ChoiceOption)selectedItemOptions.Tag;
-                var slotEquipTo = (EquipmentSlots.Slot) chosenItem.Data;
+ 
+                
              ItemDialogActions itemDialogActions = (ItemDialogActions)chosenItem.Id;
                 switch (itemDialogActions)
                 {
@@ -210,6 +218,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                         playerEntity.AddComponent(command);
                         break;
                     case ItemDialogActions.Equip:
+                        EquipmentSlots.Slot slotEquipTo;
+                        slotEquipTo = (EquipmentSlots.Slot)chosenItem.Data;
                         equipment.Equip(equipmentItem, slotEquipTo);
                         break;
                     case ItemDialogActions.Cancel:
