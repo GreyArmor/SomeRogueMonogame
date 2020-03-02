@@ -49,10 +49,10 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
                 }
 
 
-                var tableItem = new TableItem(2);
+                var tableItem = new TableItem(2, true);
                 tableItem.Tag = option;
                 tableItem.Hotkey = hotkey;
-                tableItem.Cells[0].Widgets.Add(new Label() { Text = hotkey.ToString(), HorizontalAlignment = HorizontalAlignment.Center });
+                tableItem.Cells[0].Widgets.Add(new Label() { Text = hotkey.ToString()+")", HorizontalAlignment = HorizontalAlignment.Center });
                 tableItem.Cells[1].Widgets.Add(new Label() { Text = option.Text, });
                 OptionsTable.Items.Add(tableItem);
             }
