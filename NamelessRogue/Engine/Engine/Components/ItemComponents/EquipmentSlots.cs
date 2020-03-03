@@ -76,7 +76,7 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
 
         public void TakeOff(Slot slotName)
         {
-            var slots = Slots.Where(x => x.Item2.Slot == slotName);
+            var slots = Slots.Where(x => x.Item1 == slotName || x.Item2.Slot==slotName);
             foreach (var tuple in slots)
             {
                 var equipmentSlots = Slots.Select(es=>es).Where(x=>x.Item1==tuple.Item1);
