@@ -115,12 +115,15 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 new ChoiceOption() { Id = ItemDialogActions.Drop, Text = "Drop" },
                 new ChoiceOption() { Id = ItemDialogActions.Cancel, Text = "Cancel" }
             );
+            ItemChoiceDialog.Title = "Item commands";
+
 
             EquipmentChoiceDialog = new ChoiceDialog(
                 new ChoiceOption() { Id = EquipmentDialogActions.Unequip, Text = "Unequip" },
                 new ChoiceOption() { Id = EquipmentDialogActions.Drop, Text = "Drop" },
                 new ChoiceOption() { Id = EquipmentDialogActions.Cancel, Text = "Cancel" }
             );
+            EquipmentChoiceDialog.Title = "Equipment commands";
 
             ItemBox.OnItemClick += (TableItem selectedItem) =>
             {

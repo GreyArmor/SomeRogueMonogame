@@ -179,7 +179,7 @@ namespace NamelessRogue.shell
             graphics.ApplyChanges();
 
 
-            worldSettings = new WorldSettings("Myra".GetHashCode(),1000,1000);
+            worldSettings = new WorldSettings("Game".GetHashCode(),1000,1000);
 
 
             Entities = new List<IEntity>();

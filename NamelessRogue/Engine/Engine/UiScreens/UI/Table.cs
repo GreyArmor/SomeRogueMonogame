@@ -24,13 +24,9 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
     {
         public char Hotkey { get; set; }
         private Grid _internalGrid;
-        public TableItem(int columns, bool defaultProportionAuto = false)
+        public TableItem(int columns)
         {
             _internalGrid = new Grid();
-            if (defaultProportionAuto)
-            {
-                _internalGrid.DefaultColumnProportion = Proportion.Auto;
-            }
             _internalGrid.ColumnSpacing = columns;
             Cells = new ObservableCollection<TableCell>();
             for (int i = 0; i < columns; i++)

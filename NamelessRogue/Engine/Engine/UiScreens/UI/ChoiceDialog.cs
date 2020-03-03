@@ -49,7 +49,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
                 }
 
 
-                var tableItem = new TableItem(2, true);
+                var tableItem = new TableItem(2);
                 tableItem.Tag = option;
                 tableItem.Hotkey = hotkey;
                 tableItem.Cells[0].Widgets.Add(new Label() { Text = hotkey.ToString()+")", HorizontalAlignment = HorizontalAlignment.Center });
