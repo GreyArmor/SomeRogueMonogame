@@ -179,7 +179,7 @@ namespace NamelessRogue.shell
             graphics.ApplyChanges();
 
 
-            worldSettings = new WorldSettings("Game".GetHashCode(),1000,1000);
+            worldSettings = new WorldSettings("monolord".GetHashCode(),1000,1000);
 
 
             Entities = new List<IEntity>();

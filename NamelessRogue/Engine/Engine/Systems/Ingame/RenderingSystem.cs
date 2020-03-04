@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Engine.Components.Environment;
 using NamelessRogue.Engine.Engine.Components.Interaction;
@@ -324,12 +325,22 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
             NamelessGame game)
         {
+
+
+            List<IEntity> characters = new List<IEntity>();
             foreach (IEntity entity in game.GetEntities())
             {
                 Drawable drawable = entity.GetComponentOfType<Drawable>();
 
                 if (drawable == null)
                 {
+                    continue;
+                }
+
+                var character = entity.GetComponentOfType<Character>();
+                if (character != null)
+                {
+                    characters.Add(entity);
                     continue;
                 }
 
@@ -383,6 +394,42 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                     }
                 }
             }
+
+            foreach (IEntity entity in characters)
+            {
+                Drawable drawable = entity.GetComponentOfType<Drawable>();
+
+                if (drawable == null)
+                {
+                    continue;
+                }
+                Position position = entity.GetComponentOfType<Position>();
+                if (drawable != null && position != null)
+                {
+                    if (drawable.isVisible())
+                    {
+                        Point screenPoint = camera.PointToScreen(position.p.X, position.p.Y);
+                        int x = screenPoint.X;
+                        int y = screenPoint.Y;
+                        if (x >= 0 && x < settings.getWidth() && y >= 0 && y < settings.getHeight())
+                        {
+                            if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
+                            {
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = drawable.getRepresentation();
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.getCharColor();
+                            }
+                            else
+                            {
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = ' ';
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                            }
+                        }
+
+                    }
+                }
+            }
+
         }
 
 
