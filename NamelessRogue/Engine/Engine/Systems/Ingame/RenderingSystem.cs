@@ -508,7 +508,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
             effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
             var indices = new int[6] { 0, 1, 2, 2, 3, 0 };
-            effect.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
+            effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
             effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             var vertices = new Vertex[4];
 

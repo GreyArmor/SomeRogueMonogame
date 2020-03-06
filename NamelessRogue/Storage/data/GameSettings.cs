@@ -7,7 +7,7 @@ namespace NamelessRogue.Storage.data
         //window resolution
         private int widthChars;
         private int heightChars;
-        private int fontSize = 16;
+        private int fontSize = 20;
         //some font
         private Font  font;
         public GameSettings(int width,int height)
