@@ -13,9 +13,12 @@ namespace NamelessRogue.Engine.Engine.Systems
     {
 
         IKeyIntentTraslator translator;
+        private readonly NamelessGame namelessGame;
+
         public InputSystem(IKeyIntentTraslator translator, NamelessGame namelessGame)
         {
             this.translator = translator;
+            this.namelessGame = namelessGame;
             namelessGame.Window.TextInput += WindowOnTextInput;
         }
 
@@ -46,6 +49,11 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         private void WindowOnTextInput(object sender, TextInputEventArgs e)
         {
+            if (!namelessGame.CurrentContext.Systems.Contains(this))
+            {
+                return;
+            }
+
             lastCommand = e.Character;
             lastState = Keyboard.GetState();
         }
