@@ -66,5 +66,10 @@ namespace NamelessRogue.Engine.Engine.Components.Rendering
 
             return new Point(position.X+mouseTileX,position.Y+mouseTileY);
         }
+
+        public override IComponent Clone()
+        {
+            return new ConsoleCamera(position);
+        }
     }
 }

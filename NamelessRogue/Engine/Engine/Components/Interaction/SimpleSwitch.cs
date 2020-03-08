@@ -17,5 +17,10 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
         public bool isSwitchActive() {
             return switchActive;
         }
+
+        public override IComponent Clone()
+        {
+           return new SimpleSwitch(switchActive);
+        }
     }
 }

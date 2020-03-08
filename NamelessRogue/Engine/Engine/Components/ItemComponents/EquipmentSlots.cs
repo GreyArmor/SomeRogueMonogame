@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NamelessRogue.Engine.Engine.Infrastructure;
+using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Components.ItemComponents
 {
@@ -29,8 +31,9 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
         public List<Tuple<Slot, EquipmentSlot>> Slots { get; }
 
         public ItemsHolder Holder { get; }
+        public NamelessGame Game { get; }
 
-        public EquipmentSlots(ItemsHolder holder)
+        public EquipmentSlots(ItemsHolder holder, NamelessGame game)
         {
             Slots = new List<Tuple<Slot, EquipmentSlot>>();
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Head, new EquipmentSlot(Slot.Head)));
@@ -52,6 +55,7 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.BothHands, slotRight));
 
             Holder = holder;
+            Game = game;
         }
 
         public void Equip(Equipment equipment, Slot equipTo)
@@ -71,7 +75,7 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
                     
                 }
             }
-            Holder.GetItems().Remove(equipment.Parent);
+            Holder.GetItems().Remove(Holder.GetItems().FirstOrDefault(x=>x.GetId()==equipment.ParentEntityId));
         }
 
         public void TakeOff(Slot slotName)
@@ -86,15 +90,20 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
                     equipmentSlot.Item2.Equipment = null;
                     if (equip != null)
                     {
-                        if (!Holder.GetItems().Contains(equip.Parent))
+                        var itemEntity = Holder.GetItems().FirstOrDefault(x => x.GetId() == equip.ParentEntityId);
+                        if (itemEntity==null)
                         {
-                            Holder.GetItems().Add(equip.Parent);
+                            Holder.GetItems().Add(Game.GetEntity(equip.ParentEntityId));
                         }
                     }
                 }
             }
         }
 
+        public override IComponent Clone()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class EquipmentSlot

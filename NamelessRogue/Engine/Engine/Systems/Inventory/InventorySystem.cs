@@ -1,6 +1,8 @@
+using System.Linq;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Interaction;
+using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Factories;
@@ -20,7 +22,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-                foreach (IEntity entity in namelessGame.GetEntities())
+                foreach (IEntity entity in namelessGame.GetEntities().ToList())
                 {
                     DropItemCommand dropCommand = entity.GetComponentOfType<DropItemCommand>();
                     if (dropCommand != null)
@@ -29,7 +31,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
 
                         foreach (var dropCommandItem in dropCommand.Items)
                         {
-                            tile.getEntitiesOnTile().Add((Entity) dropCommandItem);
+                            tile.AddEntity((Entity)dropCommandItem);
                             dropCommand.Holder.GetItems().Remove(dropCommandItem);
                             dropCommandItem.GetComponentOfType<Drawable>().setVisible(true);
                             var position = dropCommandItem.GetComponentOfType<Position>();
@@ -48,12 +50,32 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                         {
                             var tile = worldProvider.GetTile(pickupCommand.WhereToPickUp.X,
                                 pickupCommand.WhereToPickUp.Y);
-                            tile.getEntitiesOnTile().Remove((Entity) pickupCommandItem);
-
-
-                            pickupCommand.Holder.GetItems().Add(pickupCommandItem);
-
+                            tile.RemoveEntity((Entity) pickupCommandItem);
                             pickupCommandItem.GetComponentOfType<Drawable>().setVisible(false);
+                            var ammo = pickupCommandItem.GetComponentOfType<Ammo>();
+                            if (ammo != null)
+                            {
+                                var itemsEntities = pickupCommand.Holder.GetItems();
+                                var itemsWithAmmo = itemsEntities.Select(x=>x).Where(i => i.GetComponentOfType<Ammo>() != null);
+                                var sameTypeItem = itemsWithAmmo.FirstOrDefault(x => x.GetComponentOfType<Ammo>().Type == ammo.Type);
+                                if (sameTypeItem != null)
+                                {
+                                    sameTypeItem.GetComponentOfType<Item>().Amount +=
+                                        pickupCommandItem.GetComponentOfType<Item>().Amount;
+                                    namelessGame.RemoveEntity(pickupCommandItem);
+                                }
+                                else
+                                {
+                                    pickupCommand.Holder.GetItems().Add(pickupCommandItem);
+                                }
+                            }
+                            else
+                            {
+                                pickupCommand.Holder.GetItems().Add(pickupCommandItem);
+                            }
+                            
+
+                            
                             UiFactory.InventoryScreen?.FillItems(namelessGame);
                             UiFactory.PickUpItemsScreen?.FillItems(namelessGame);
                         }

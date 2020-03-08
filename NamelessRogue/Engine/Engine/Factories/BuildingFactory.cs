@@ -72,11 +72,11 @@ namespace NamelessRogue.Engine.Engine.Factories
                             IEntity door = CreateDoor(x + i, y + j);
                             buildingComponent.getBuildingParts().Add(door);
                             namelessGame.GetEntities().Add(door);
-                            tile.getEntitiesOnTile().Add((Entity) door);
+                            tile.AddEntity((Entity) door);
                         }
                         else
                         {
-                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WallEntity);
+                            tile.AddEntity(TerrainFurnitureFactory.WallEntity);
                         }
                     }
                 }
@@ -114,7 +114,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                     {
                         case BlueprintCell.Wall:
                         {
-                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WallEntity);
+                            tile.AddEntity(TerrainFurnitureFactory.WallEntity);
                             break;
                         }
                         case BlueprintCell.Door:
@@ -122,23 +122,23 @@ namespace NamelessRogue.Engine.Engine.Factories
                             IEntity door = CreateDoor(x + j, y + i);
                             buildingComponent.getBuildingParts().Add(door);
                             namelessGame.GetEntities().Add(door);
-                            tile.getEntitiesOnTile().Add((Entity) door);
+                            tile.AddEntity((Entity) door);
                             break;
 
                         }
                         case BlueprintCell.Window:
                         {
-                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.WindowEntity);
+                            tile.AddEntity(TerrainFurnitureFactory.WindowEntity);
                             break;
                         }
                         case BlueprintCell.Bed:
                         {
-                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.BedEntity);
+                            tile.AddEntity(TerrainFurnitureFactory.BedEntity);
                             break;
                         }
                         case BlueprintCell.IndoorsFurniture:
                         {
-                            tile.getEntitiesOnTile().Add(TerrainFurnitureFactory.BedEntity);
+                            tile.AddEntity(TerrainFurnitureFactory.BedEntity);
                             break;
                         }
 

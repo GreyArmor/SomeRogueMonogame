@@ -12,22 +12,10 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
         Ranged,
     }
 
-    public enum AmmoType
-    {
-        None,
-        Light,
-        Medium,
-        Heavy,
-        Energy,
-        Mana,
-        Rocket,
-        Explosive
-    }
-
-    public class WeaponStats : Component, ICloneable
+    public class WeaponStats : Component
     {
         public WeaponStats(int minimumDamage, int maximumDamage, int range, AttackType attackType, AmmoType ammoType,
-            int ammoInClip)
+            int ammoInClip, int currentAmmo)
         {
             this.MinimumDamage = minimumDamage;
             this.MaximumDamage = maximumDamage;
@@ -35,6 +23,7 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
             this.AttackType = attackType;
             this.AmmoType = ammoType;
             this.AmmoInClip = ammoInClip;
+            this.CurrentAmmo = currentAmmo;
         }
 
         public int MinimumDamage { get; private set; }
@@ -43,10 +32,12 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
         public AttackType AttackType { get; private set; }
         public AmmoType AmmoType { get; private set; }
         public int AmmoInClip { get; private set; }
+        public int CurrentAmmo { get; set; }
 
-        public object Clone()
+
+        public override IComponent Clone()
         {
-            return new WeaponStats(MinimumDamage,MaximumDamage,Range,AttackType,AmmoType,AmmoInClip);
+            return new WeaponStats(MinimumDamage, MaximumDamage, Range, AttackType, AmmoType, AmmoInClip, CurrentAmmo);
         }
     }
 }

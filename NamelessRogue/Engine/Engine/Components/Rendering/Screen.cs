@@ -16,5 +16,10 @@ namespace NamelessRogue.Engine.Engine.Components.Rendering
                 }
             }
         }
+
+        public override IComponent Clone()
+        {
+            return new Screen(Width, Height);
+        }
     }
 }

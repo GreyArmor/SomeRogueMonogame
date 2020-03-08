@@ -16,5 +16,10 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
 
         public int DefenceValue { get; set; }
         public int EvasionValue { get; set; }
+
+        public override IComponent Clone()
+        {
+            return new ArmorStats(DefenceValue, EvasionValue);
+        }
     }
 }

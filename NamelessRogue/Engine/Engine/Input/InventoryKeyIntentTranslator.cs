@@ -57,6 +57,9 @@ namespace NamelessRogue.Engine.Engine.Input
                         case Keys.Enter:
                             intent.Intention = IntentEnum.Enter;
                             break;
+                        case Keys.Escape:
+                            intent.Intention = IntentEnum.Escape;
+                            break;
                         default:
                             intent.Intention = IntentEnum.ConetextualHotkeyPressed;
                             break;

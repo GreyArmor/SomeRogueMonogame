@@ -1,6 +1,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using NamelessRogue.Engine.Engine.Components;
 
 namespace NamelessRogue.Engine.Abstraction
@@ -11,5 +12,7 @@ namespace NamelessRogue.Engine.Abstraction
         T GetComponentOfType<T>() where T : IComponent;
         void AddComponent<T>(T component) where T : IComponent;
         void RemoveComponentOfType<T>() where T : IComponent;
+        List<IComponent> GetAllComponents();
+        IEntity CloneEntity();
     }
 }

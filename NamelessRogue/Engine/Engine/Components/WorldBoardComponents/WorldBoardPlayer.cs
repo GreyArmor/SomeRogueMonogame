@@ -8,5 +8,9 @@ namespace NamelessRogue.Engine.Engine.Components.WorldBoardComponents
 {
     public class WorldBoardPlayer : Component
     {
+        public override IComponent Clone()
+        {
+            return new WorldBoardPlayer();
+        }
     }
 }

@@ -29,11 +29,8 @@ namespace NamelessRogue.Engine.Engine.Factories
             }
             else
             {
-                ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
-                //initialize reality bubble
-                chunkManagementSystem.Update(0, game);
+     ; 
                 var systems = new List<ISystem>();
-                systems.Add(new InitializationSystem());
                 systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
                 systems.Add(new IngameIntentSystem());
                 systems.Add(new AiSystem());
@@ -44,7 +41,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                 systems.Add(new DamageHandlingSystem());
                 systems.Add(new DeathSystem());
                 systems.Add(new HudSystem());
-                systems.Add(chunkManagementSystem);
+                systems.Add(new ChunkManagementSystem());
               
                 var renderingSystem = new RenderingSystem(game.GetSettings());
                 var uiSystem = new UIRenderSystem();

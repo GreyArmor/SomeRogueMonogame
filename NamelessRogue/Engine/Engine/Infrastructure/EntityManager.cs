@@ -17,6 +17,8 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
                 componentsOfType = new Dictionary<Guid, IComponent>();
                 Components.Add(typeof(ComponentType), componentsOfType);
             }
+
+            component.ParentEntityId = entityID;
             componentsOfType.Add(entityID, component);
         }
 
@@ -38,6 +40,21 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
             }
         return default(ComponentType);
     }
+
+        internal static List<IComponent> GetAllComponents(Guid entityID)
+        {
+            List<IComponent> componentsOfEntity = new List<IComponent>();
+            foreach (KeyValuePair<Type, Dictionary<Guid, IComponent>> keyValuePair in Components)
+            {
+                keyValuePair.Value.TryGetValue(entityID, out IComponent component);
+                if (component != null)
+                {
+                    componentsOfEntity.Add(component);
+                }
+            }
+
+            return componentsOfEntity;
+        }
 
         public static ComponentType GetComponent<ComponentType>(Guid componentId) where ComponentType : IComponent
         {

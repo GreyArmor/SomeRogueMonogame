@@ -41,6 +41,23 @@ namespace NamelessRogue.Engine.Engine.Components.Stats
         public SimpleStat AttackSpeed { get; set; }
         public SimpleStat MoveSpeed { get; set; }
 
-
+        public override IComponent Clone()
+        {
+            return new Stats()
+            {
+                Attack = Attack,
+                AttackSpeed = AttackSpeed,
+                Defence = Defence,
+                Health = Health,
+                Imagination = Imagination,
+                MoveSpeed = MoveSpeed,
+                Perception = Perception,
+                Reflexes = Reflexes,
+                Stamina = Stamina,
+                Strength = Strength,
+                Willpower = Willpower,
+                Wit = Wit
+            };
+        }
     }
 }

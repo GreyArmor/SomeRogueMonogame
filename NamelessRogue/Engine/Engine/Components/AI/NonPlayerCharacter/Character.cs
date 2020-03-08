@@ -2,6 +2,11 @@
 
 namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
 {
-    public class Character : Component {
+    public class Character : Component
+    {
+        public override IComponent Clone()
+        {
+            return new Character();
+        }
     }
 }

@@ -7,5 +7,10 @@ using System.Threading.Tasks;
 namespace NamelessRogue.Engine.Engine.Components.Environment
 {
     public class Furniture : Component
-    {}
+    {
+        public override IComponent Clone()
+        {
+            return new Furniture();
+        }
+    }
 }

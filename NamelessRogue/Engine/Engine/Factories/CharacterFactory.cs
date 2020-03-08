@@ -7,25 +7,27 @@ using NamelessRogue.Engine.Engine.Components.Stats;
 using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.Components.WorldBoardComponents;
 using NamelessRogue.Engine.Engine.Infrastructure;
+using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Factories
 {
     public class CharacterFactory {
         
-        public static Entity CreateSimplePlayerCharacter(int x,int y)
+        public static Entity CreateSimplePlayerCharacter(int x,int y, NamelessGame game)
         {
+            var position = new Position(x, y);
             Entity playerCharacter = new Entity();
             playerCharacter.AddComponent(new Character());
             playerCharacter.AddComponent(new Player());
             playerCharacter.AddComponent(new InputReceiver());
             playerCharacter.AddComponent(new FollowedByCamera());
             playerCharacter.AddComponent(new InputComponent());
-            playerCharacter.AddComponent(new Position(x,y));
+            playerCharacter.AddComponent(position);
             playerCharacter.AddComponent(new Drawable('@', new Engine.Utility.Color(0.9,0.9,0.9)));
             playerCharacter.AddComponent(new Description("Player",""));
             var holder = new ItemsHolder();
             playerCharacter.AddComponent(holder);
-            playerCharacter.AddComponent(new EquipmentSlots(holder));
+            playerCharacter.AddComponent(new EquipmentSlots(holder, game));
             playerCharacter.AddComponent(new OccupiesTile());
            
 
@@ -53,6 +55,8 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
 
+            game.WorldProvider.MoveEntity(playerCharacter, position.p);
+
             return playerCharacter;
         }
 
@@ -69,12 +73,13 @@ namespace NamelessRogue.Engine.Engine.Factories
         }
 
 
-        public static Entity CreateBlankNpc(int x,int y) {
+        public static Entity CreateBlankNpc(int x,int y, NamelessGame game) {
             Entity npc = new Entity();
+            var position = new Position(x, y);
             npc.AddComponent(new Character());
             npc.AddComponent(new InputComponent());
             npc.AddComponent(new Movable());
-            npc.AddComponent(new Position(x, y));
+            npc.AddComponent(position);
             npc.AddComponent(new Drawable('D', new Engine.Utility.Color(1f, 0, 0)));
             npc.AddComponent(new Description("Very scary dummy dragon",""));
             npc.AddComponent(new OccupiesTile());
@@ -103,7 +108,7 @@ namespace NamelessRogue.Engine.Engine.Factories
 
             npc.AddComponent(stats);
             npc.AddComponent(new ActionPoints(){Points = 100});
-
+            game.WorldProvider.MoveEntity(npc, position.p);
             return npc;
         }
 

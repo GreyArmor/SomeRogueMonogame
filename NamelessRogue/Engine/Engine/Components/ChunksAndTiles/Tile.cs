@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
@@ -29,12 +30,20 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         
         private List<Entity> entitiesOnTile = new List<Entity>();
 
-
-
-        public List<Entity> getEntitiesOnTile() {
-            return entitiesOnTile;
+        public List<Entity> GetEntities()
+        {
+            return entitiesOnTile.ToList();
         }
 
+        public void AddEntity(Entity entity)
+        {
+            entitiesOnTile.Add(entity);
+        }
+
+        public void RemoveEntity(Entity entity)
+        {
+            entitiesOnTile.Remove(entity);
+        }
 
         public bool IsPassable() {
             foreach (var entity in entitiesOnTile)

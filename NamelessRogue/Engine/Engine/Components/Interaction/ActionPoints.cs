@@ -9,5 +9,13 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
     public class ActionPoints : Component
     {
         public int Points { get; set; }
+
+        public override IComponent Clone()
+        {
+            return new ActionPoints()
+            {
+                Points = this.Points
+            };
+        }
     }
 }

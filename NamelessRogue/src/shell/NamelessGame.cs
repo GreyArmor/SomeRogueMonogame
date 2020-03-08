@@ -17,6 +17,7 @@ using NamelessRogue.Engine.Engine.Generation;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.Engine.Engine.Systems;
+using NamelessRogue.Engine.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.Storage.data;
 using Color = Microsoft.Xna.Framework.Color;
@@ -29,6 +30,8 @@ namespace NamelessRogue.shell
         private static long serialVersionUID = 1L;
 
         List<IEntity> Entities;
+        List<IEntity> entitiesToAdd = new List<IEntity>();
+        List<IEntity> entitiesToRemove = new List<IEntity>();
 
 
 
@@ -68,6 +71,14 @@ namespace NamelessRogue.shell
         public GameContext ContextToSwitch { get; set; } = null;
 
         private GameSettings settings;
+
+        public IWorldProvider WorldProvider
+        {
+            get
+            {
+                return GetEntityByComponentClass<TimeLine>().GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+            }
+        }
 
 
         public NamelessGame()
@@ -189,6 +200,8 @@ namespace NamelessRogue.shell
 
             Entities.Add(TimelineFactory.CreateTimeline(this));
 
+
+
             Entities.Add(InputHandlingFactory.CreateInput());
 
             var furnitureEntities = TerrainFurnitureFactory.CreateInstancedFurnitureEntities(this);
@@ -218,9 +231,14 @@ namespace NamelessRogue.shell
             int y = firsTile.Settlement.Concrete.Center.Y;
 
 
-            var player = CharacterFactory.CreateSimplePlayerCharacter(x, y);
+            var player = CharacterFactory.CreateSimplePlayerCharacter(x, y, this);
 
             Entities.Add(player);
+
+
+            ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
+            //initialize reality bubble
+            chunkManagementSystem.Update(0, this);
 
             //for (int i = 1; i < 10; i++)
             //{
@@ -232,7 +250,7 @@ namespace NamelessRogue.shell
             //}
 
             Entities.Add(CharacterFactory.CreateBlankNpc(x - 6,
-                y));
+                y,this));
             //Entities.Add(CharacterFactory.CreateBlankNpc(x - 3,
             //    y));
             //Entities.Add(CharacterFactory.CreateBlankNpc(x - 5,
@@ -244,24 +262,30 @@ namespace NamelessRogue.shell
             for (int i = 0; i < 2; i++)
             {
                 var sword = ItemFactory.CreateSword(x - 2,
-                    y, i);
+                    y, i, this);
                 Entities.Add(sword);
             }
 
-            var platemail = ItemFactory.CreatePlateMail(x - 2, y, 1);
+            var platemail = ItemFactory.CreatePlateMail(x - 2, y, 1, this);
             Entities.Add(platemail);
-            var pants = ItemFactory.CreatePants(x - 2, y, 1);
+            var pants = ItemFactory.CreatePants(x - 2, y, 1, this);
             Entities.Add(pants);
-            var boots = ItemFactory.CreateBoots(x - 2, y, 1);
+            var boots = ItemFactory.CreateBoots(x - 2, y, 1, this);
             Entities.Add(boots);
-            var cape = ItemFactory.CreateCape(x - 2, y, 1);
+            var cape = ItemFactory.CreateCape(x - 2, y, 1 , this);
             Entities.Add(cape);
-            var ring = ItemFactory.CreateRing(x - 2, y, 1);
+            var ring = ItemFactory.CreateRing(x - 2, y, 1, this);
             Entities.Add(ring);
-            var shield = ItemFactory.CreateShield(x - 2, y, 1);
+            var shield = ItemFactory.CreateShield(x - 2, y, 1, this);
             Entities.Add(shield);
-            var helmet = ItemFactory.CreateHelmet(x - 2, y, 1);
+            var helmet = ItemFactory.CreateHelmet(x - 2, y, 1, this);
             Entities.Add(helmet);
+
+            var ammo1 = ItemFactory.CreateLightAmmo(x - 1, y, 1,20, this);
+            Entities.Add(ammo1);
+
+            var ammo2 = ItemFactory.CreateLightAmmo(x - 1, y+1, 1, 20, this);
+            Entities.Add(ammo2);
 
             Entities.Add(GameInitializer.CreateCursor());
 
@@ -323,7 +347,10 @@ namespace NamelessRogue.shell
             set { worldSettings = value; }
         }
 
- 
+        public List<IEntity> EntitiesToAdd { get => entitiesToAdd; set => entitiesToAdd = value; }
+        public List<IEntity> EntitiesToRemove { get => entitiesToRemove; set => entitiesToRemove = value; }
+
+
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -355,8 +382,27 @@ namespace NamelessRogue.shell
                 ContextToSwitch = null;
             }
 
+            if (EntitiesToAdd.Any())
+            {
+                foreach (var entity in EntitiesToAdd)
+                {
+                    Entities.Add(entity);
+                }
+                EntitiesToAdd.Clear();
+            }
+
+            if (EntitiesToRemove.Any())
+            {
+                foreach (var entity in EntitiesToRemove)
+                {
+                    Entities.Remove(entity);
+                }
+                EntitiesToRemove.Clear();
+            }
+
             CurrentContext.Update((long) gameTime.TotalGameTime.TotalMilliseconds, this);
-           // UserInterface.Active.Update(gameTime);
+
+
         }
 
         private FrameCounter _frameCounter = new FrameCounter();

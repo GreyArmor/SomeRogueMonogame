@@ -41,7 +41,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                     if (occupiesTile != null && position != null)
                     {
                         Tile tile = worldProvider.GetTile(position.p.Y, position.p.X);
-                        tile.getEntitiesOnTile().Remove((Entity) entityToKill);
+                        tile.RemoveEntity((Entity) entityToKill);
                     }
 
                     entityToKill.RemoveComponentOfType<OccupiesTile>();

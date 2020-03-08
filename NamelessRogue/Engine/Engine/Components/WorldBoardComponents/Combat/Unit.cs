@@ -54,5 +54,23 @@
         public MovementType MovementType { get; set; }
         public AttackType AttackType { get; set; }
 
+        public override IComponent Clone()
+        {
+            return new Unit()
+            {
+                MovementType = MovementType,
+                SingleTrooperHp = SingleTrooperHp,
+                NumberOfTroops = NumberOfTroops,
+                AttackType = AttackType,
+                Defence = Defence,
+                AttackPower = AttackPower,
+                AttackRange = AttackRange,
+                CurrentHp = CurrentHp,
+                ManaCostPerTurn = ManaCostPerTurn,
+                MaxNumberOfTroops = MaxNumberOfTroops,
+                MovementSpeed = MovementSpeed,
+                SupplyCostPerTurn = SupplyCostPerTurn
+            };
+        }
     }
 }

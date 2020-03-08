@@ -77,7 +77,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
 
                                     IEntity entityThatOccupiedTile = null;
-                                    foreach (IEntity tileEntity in tileToMoveTo.getEntitiesOnTile())
+                                    foreach (IEntity tileEntity in tileToMoveTo.GetEntities())
                                     {
                                         OccupiesTile occupiesTile =
                                             tileEntity.GetComponentOfType<OccupiesTile>();
@@ -193,7 +193,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                     var tile = worldProvider.GetTile(position.p.X, position.p.Y);
 
                                     List<IEntity> itemsToPickUp = new List<IEntity>();
-                                    foreach (var entityOnTIle in tile.getEntitiesOnTile())
+                                    foreach (var entityOnTIle in tile.GetEntities())
                                     {
                                         var itemComponent = entityOnTIle.GetComponentOfType<Item>();
                                         if (itemComponent != null)

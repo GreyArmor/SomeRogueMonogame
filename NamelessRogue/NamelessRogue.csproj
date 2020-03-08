@@ -66,7 +66,6 @@
     <Compile Include="Engine\Engine\Components\ChunksAndTiles\TileNoiseInterpreter.cs" />
     <Compile Include="Engine\Engine\Components\ChunksAndTiles\TilePropertiesLibrary.cs" />
     <Compile Include="Engine\Engine\Components\Component.cs" />
-    <Compile Include="Engine\Engine\Components\EngineInfrastructure\ToRemove.cs" />
     <Compile Include="Engine\Engine\Components\Environment\Building.cs" />
     <Compile Include="Engine\Engine\Components\Environment\Door.cs" />
     <Compile Include="Engine\Engine\Components\Environment\Fire.cs" />
@@ -88,13 +87,14 @@
     <Compile Include="Engine\Engine\Components\Interaction\PickUpItemCommand.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\Player.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\SimpleSwitch.cs" />
+    <Compile Include="Engine\Engine\Components\ItemComponents\Ammo.cs" />
+    <Compile Include="Engine\Engine\Components\ItemComponents\AmmoType.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\ArmorStats.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\Equipment.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\Item.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\ItemsHolder.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\EquipmentSlots.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\WeaponStats.cs" />
-    <Compile Include="Engine\Engine\Components\JustCreated.cs" />
     <Compile Include="Engine\Engine\Components\Physical\BlocksVision.cs" />
     <Compile Include="Engine\Engine\Components\Physical\OccupiesTile.cs" />
     <Compile Include="Engine\Engine\Components\Physical\Position.cs" />
@@ -189,9 +189,7 @@
     <Compile Include="Engine\Engine\Systems\Ingame\CombatSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\DamageHandlingSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\DeathSystem.cs" />
-    <Compile Include="Engine\Engine\Systems\EntityRemovalSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\HudSystemcs.cs" />
-    <Compile Include="Engine\Engine\Systems\InitializationSystem.cs" />
     <Compile Include="Engine\Engine\Systems\InputSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\IngameIntentSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Inventory\InventoryScreenSystem.cs" />
@@ -212,6 +210,7 @@
     <Compile Include="Engine\Engine\UiScreens\InventoryScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\MainMenuScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\TableScreen.cs" />
+    <Compile Include="Engine\Engine\UiScreens\UI\AmountDialog.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\ChoiceDialog.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\LogView.cs" />
     <Compile Include="Engine\Engine\UiScreens\UI\EndlessContainer.cs" />

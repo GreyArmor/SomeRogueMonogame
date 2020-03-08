@@ -13,5 +13,10 @@ namespace NamelessRogue.Engine.Engine.Components.Physical
             p = new Point();
         }
         public Point p;
+
+        public override IComponent Clone()
+        {
+            return new Position(p.X,p.Y);
+        }
     }
 }

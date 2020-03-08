@@ -29,65 +29,91 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                     var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
                     foreach (Intent intent in inputComponent.Intents)
                     {
-                        switch (intent.Intention)
+                        if (UiFactory.InventoryScreen.AmountDialog != null)
                         {
-                            case IntentEnum.MoveDown:
+                            switch (intent.Intention)
                             {
-                                UiFactory.InventoryScreen.ScrollSelectedTableDown();
-                                break;
-                            }
-                            case IntentEnum.MoveUp:
-                            {
-                                UiFactory.InventoryScreen.ScrollSelectedTableUp();
-                                break;
-                            }
-                            case IntentEnum.MoveLeft:
-                            {
-                                UiFactory.InventoryScreen.SwitchSelectedTable();
-                                break;
-                            }
-
-                            case IntentEnum.MoveRight:
-                            {
-                                UiFactory.InventoryScreen.SwitchSelectedTable();
-                                break;
-                            }
-                            case IntentEnum.ConetextualHotkeyPressed:
-                                var selectedItem =
-                                    UiFactory.InventoryScreen.SelectedTable.Items.FirstOrDefault(x =>
-                                        x.Hotkey == intent.PressedChar);
-
-                                if (selectedItem != null)
+                                case IntentEnum.Enter:
                                 {
-                                    UiFactory.InventoryScreen.SelectedTable.OnItemClick.Invoke(selectedItem);
+                                    UiFactory.InventoryScreen.AmountDialog.ButtonOk.DoClick();
                                 }
-                                else
+                                    break;
+                                case IntentEnum.Escape:
                                 {
-                                    var selectedInItems =
-                                        UiFactory.InventoryScreen.ItemBox.Items.FirstOrDefault(x =>
+                                    UiFactory.InventoryScreen.AmountDialog.ButtonCancel.DoClick();
+                                }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        else
+                        {
+
+
+                            switch (intent.Intention)
+                            {
+                                case IntentEnum.MoveDown:
+                                {
+                                    UiFactory.InventoryScreen.ScrollSelectedTableDown();
+                                    break;
+                                }
+                                case IntentEnum.MoveUp:
+                                {
+                                    UiFactory.InventoryScreen.ScrollSelectedTableUp();
+                                    break;
+                                }
+                                case IntentEnum.MoveLeft:
+                                {
+                                    UiFactory.InventoryScreen.SwitchSelectedTable();
+                                    break;
+                                }
+
+                                case IntentEnum.MoveRight:
+                                {
+                                    UiFactory.InventoryScreen.SwitchSelectedTable();
+                                    break;
+                                }
+                                case IntentEnum.ConetextualHotkeyPressed:
+                                    var selectedItem =
+                                        UiFactory.InventoryScreen.SelectedTable.Items.FirstOrDefault(x =>
                                             x.Hotkey == intent.PressedChar);
-                                    var selectedInEquipment = UiFactory.InventoryScreen.EquipmentBox.Items.FirstOrDefault(x =>
-                                        x.Hotkey == intent.PressedChar);
 
-                                    if (selectedInItems != null)
+                                    if (selectedItem != null)
                                     {
-                                        UiFactory.InventoryScreen.ItemBox.OnItemClick.Invoke(selectedInItems);
+                                        UiFactory.InventoryScreen.SelectedTable.OnItemClick.Invoke(selectedItem);
                                     }
-                                    if (selectedInEquipment != null)
+                                    else if (!UiFactory.InventoryScreen.DialogOpened)
                                     {
-                                        UiFactory.InventoryScreen.EquipmentBox.OnItemClick.Invoke(selectedInEquipment);
+                                        var selectedInItems =
+                                            UiFactory.InventoryScreen.ItemBox.Items.FirstOrDefault(x =>
+                                                x.Hotkey == intent.PressedChar);
+                                        var selectedInEquipment =
+                                            UiFactory.InventoryScreen.EquipmentBox.Items.FirstOrDefault(x =>
+                                                x.Hotkey == intent.PressedChar);
+
+                                        if (selectedInItems != null)
+                                        {
+                                            UiFactory.InventoryScreen.ItemBox.OnItemClick.Invoke(selectedInItems);
+                                        }
+
+                                        if (selectedInEquipment != null)
+                                        {
+                                            UiFactory.InventoryScreen.EquipmentBox.OnItemClick.Invoke(
+                                                selectedInEquipment);
+                                        }
                                     }
+
+                                    break;
+                                case IntentEnum.Enter:
+                                {
+                                    UiFactory.InventoryScreen.SelectedTable.OnItemClick.Invoke(UiFactory.InventoryScreen
+                                        .SelectedTable.SelectedItem);
                                 }
-
-
-                                break;
-                            case IntentEnum.Enter:
-                            {
-                               UiFactory.InventoryScreen.SelectedTable.OnItemClick.Invoke(UiFactory.InventoryScreen.SelectedTable.SelectedItem);
+                                    break;
+                                default:
+                                    break;
                             }
-                                break;
-                            default:
-                                break;
                         }
                     }
 

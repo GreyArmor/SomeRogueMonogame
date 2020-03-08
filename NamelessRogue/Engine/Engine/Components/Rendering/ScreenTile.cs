@@ -7,7 +7,7 @@ using NamelessRogue.Engine.Engine.Utility;
  */
 namespace NamelessRogue.Engine.Engine.Components.Rendering
 {
-    public class ScreenTile : Component {
+    public class ScreenTile {
         public ScreenTile()
         {
             Char=' ';

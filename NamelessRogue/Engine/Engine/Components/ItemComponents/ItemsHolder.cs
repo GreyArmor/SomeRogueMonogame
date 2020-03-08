@@ -18,5 +18,10 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
         public List<IEntity> GetItems() {
             return items;
         }
+
+        public override IComponent Clone()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

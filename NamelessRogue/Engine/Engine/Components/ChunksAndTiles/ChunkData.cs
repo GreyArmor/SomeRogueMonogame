@@ -139,8 +139,8 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                 Tile oldTile = worldProvider.GetTile(position.p.X, position.p.Y);
                 Tile newTile = worldProvider.GetTile(moveTo.X, moveTo.Y);
 
-                oldTile.getEntitiesOnTile().Remove((Entity) entity);
-                newTile.getEntitiesOnTile().Add((Entity) entity);
+                oldTile.RemoveEntity((Entity) entity);
+                newTile.AddEntity((Entity) entity);
 
 
                 position.p.X = (moveTo.X);

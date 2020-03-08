@@ -13,5 +13,10 @@ namespace NamelessRogue.Engine.Engine.Components.Environment
         public List<IEntity> getBuildingParts() {
             return buildingParts;
         }
+
+        public override IComponent Clone()
+        {
+            return new Building(){buildingParts = this.buildingParts};
+        }
     }
 }

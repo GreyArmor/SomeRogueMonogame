@@ -12,6 +12,10 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
             this.active = active;
         }
 
+        public override IComponent Clone()
+        {
+            return new ChangeSwitchStateCommand(target,active);
+        }
 
         public SimpleSwitch getTarget() {
             return target;

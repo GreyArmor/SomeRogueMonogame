@@ -8,6 +8,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
     public class TableScreen : BaseGuiScreen
     {
         public Table SelectedTable { get; set; }
+        public bool DialogOpened { get => dialogOpened; private set => dialogOpened = value; }
+
         Table previouslySelectedTable;
         protected bool dialogOpened;
 

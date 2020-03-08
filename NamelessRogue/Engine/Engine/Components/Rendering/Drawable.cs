@@ -48,5 +48,13 @@ namespace NamelessRogue.Engine.Engine.Components.Rendering
         public bool isVisible() {
             return visible;
         }
+
+        public override IComponent Clone()
+        {
+            return new Drawable(Representation, CharColor,BackgroundColor)
+            {
+                visible = this.visible
+            };
+        }
     }
 }

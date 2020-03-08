@@ -267,7 +267,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                     {
                         Tile tileToDraw = world.GetTile(x, y);
 
-                        foreach (var entity in tileToDraw.getEntitiesOnTile())
+                        foreach (var entity in tileToDraw.GetEntities())
                         {
                             var furniture = entity.GetComponentOfType<Furniture>();
                             var drawable = entity.GetComponentOfType<Drawable>();

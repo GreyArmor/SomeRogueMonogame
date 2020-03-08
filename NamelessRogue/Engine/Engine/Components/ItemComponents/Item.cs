@@ -23,8 +23,9 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
         Superb
     }
 
-    public class Item : Component, ICloneable
+    public class Item : Component
     {
+        private int _amount;
 
         public float Weight { get; set; }
 
@@ -39,13 +40,24 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
             Amount = amount;
         }
 
-        public int Amount { get; set; }
+        public int Amount
+        {
+            get { return _amount; }
+            set
+            {
+                if (value < 1)
+                {
+                    throw new Exception("Amount could not be less than 1");
+                }
+                _amount = value;
+            }
+        }
 
         public int Level { get; set; }
 
         public string Author { get; set; }
 
-        public object Clone()
+        public override IComponent Clone()
         {
             return new Item(this.Type, this.Weight, this.Quality, this.Amount, this.Level, this.Author);
         }

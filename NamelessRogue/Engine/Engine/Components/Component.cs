@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace NamelessRogue.Engine.Engine.Components
 {
     
-    public class Component : IComponent
+    public abstract class Component : IComponent
     {
         public Guid ParentEntityId { get; set; }
 
@@ -21,5 +21,7 @@ namespace NamelessRogue.Engine.Engine.Components
         {
             return Id;
         }
+
+        public abstract IComponent Clone();
     }
 }

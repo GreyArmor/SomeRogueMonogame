@@ -8,5 +8,9 @@ namespace NamelessRogue.Engine.Engine.Components.Environment
 {
     public class Fire : Component
     {
+        public override IComponent Clone()
+        {
+            return new Fire();
+        }
     }
 }

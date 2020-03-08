@@ -25,5 +25,15 @@ namespace NamelessRogue.Engine.Engine.Components.AI.NonPlayerCharacter
         }
 
         public Point DestinationPoint { get; set; }
+
+        public override IComponent Clone()
+        {
+           return new BasicAi()
+           {
+               DestinationPoint = this.DestinationPoint,
+               State = this.State,
+               Route = this.Route,
+           };
+        }
     }
 }

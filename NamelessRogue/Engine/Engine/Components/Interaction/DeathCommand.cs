@@ -17,5 +17,10 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
         public IEntity getToKill() {
             return toKill;
         }
+
+        public override IComponent Clone()
+        {
+            return new DeathCommand(toKill);
+        }
     }
 }

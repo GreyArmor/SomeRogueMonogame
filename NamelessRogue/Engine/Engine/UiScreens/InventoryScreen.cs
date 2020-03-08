@@ -27,6 +27,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
     public enum ItemDialogActions
     {
+        DropAmount,
         Drop,
         Equip,
         Cancel
@@ -52,6 +53,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public ChoiceDialog ItemChoiceDialog { get; set; }
 
         public ChoiceDialog EquipmentChoiceDialog { get; set; }
+
+        public AmountDialog AmountDialog;
 
         public InventoryScreen(NamelessGame game)
         {
@@ -133,9 +136,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 {
                     this.selectedItem = selectedItem;
 
-                    var equipmentEntity = (IEntity)selectedItem.Tag;
-                    var equipmentItem = equipmentEntity.GetComponentOfType<Equipment>();
-                    FillEquipmentChoiceDialog(equipmentItem);
+                    var itemEntity = (IEntity)selectedItem.Tag;
+                    FillItemChoiceDialog(itemEntity);
                     OpenDialog(ItemChoiceDialog);
                 }
             };
@@ -180,7 +182,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                     case EquipmentDialogActions.Drop:
                         equipment.TakeOff(slot);
                         var position = playerEntity.GetComponentOfType<Position>();
-                        var command = new DropItemCommand(new List<IEntity>(){ equipmentItem.Parent },itemsHolder, position.p);
+                        var command = new DropItemCommand(new List<IEntity>(){ game.GetEntity(equipment.ParentEntityId) },itemsHolder, position.p);
                         playerEntity.AddComponent(command);
                         break;  
                     case EquipmentDialogActions.Unequip:
@@ -201,11 +203,11 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             {
 
                 var playerEntity = game.GetEntitiesByComponentClass<Player>().First();
-                var equipmentEntity = (IEntity)selectedItem.Tag;
+                var itemEntity = (IEntity)selectedItem.Tag;
                 var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                 var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
 
-                var equipmentItem = equipmentEntity.GetComponentOfType<Equipment>();
+                var equipmentItem = itemEntity.GetComponentOfType<Equipment>();
 
              
 
@@ -215,22 +217,72 @@ namespace NamelessRogue.Engine.Engine.UiScreens
              ItemDialogActions itemDialogActions = (ItemDialogActions)chosenItem.Id;
                 switch (itemDialogActions)
                 {
+                    case ItemDialogActions.DropAmount:
+                    {
+                        AmountDialog = new AmountDialog();
+                        AmountDialog.ShowModal();
+                        AmountDialog.Amount.OnTouchDown();
+                        AmountDialog.Closed += (sender, args) =>
+                        {
+                            if (AmountDialog.Result)
+                            {
+                                var position = playerEntity.GetComponentOfType<Position>();
+                                var amount = AmountDialog.Amount.Text == null ? 0 : int.Parse(AmountDialog.Amount.Text);
+                                var itemComponent = itemEntity.GetComponentOfType<Item>();
+                                if (amount >= itemComponent.Amount)
+                                {
+                                    var command = new DropItemCommand(new List<IEntity>() { itemEntity }, itemsHolder,
+                                        position.p);
+                                    playerEntity.AddComponent(command);
+                                    CloseDialog(ItemChoiceDialog);
+                                }
+                                else if (amount < 1)
+                                {}
+                                else
+                                {
+                                    var clonedEntity = itemEntity.CloneEntity();
+
+                                    game.EntitiesToAdd.Add(clonedEntity);
+
+                                    var clonedItemComponent = clonedEntity.GetComponentOfType<Item>();
+
+                                    itemComponent.Amount -= amount;
+                                    clonedItemComponent.Amount = amount;
+
+
+                                    var command = new DropItemCommand(new List<IEntity>() { clonedEntity }, itemsHolder,
+                                        position.p);
+                                    playerEntity.AddComponent(command);
+                                    CloseDialog(ItemChoiceDialog);
+                                }
+
+                                AmountDialog = null;
+                            }
+                        };
+                    
+                    }
+                        break;
                     case ItemDialogActions.Drop:
+                    {
                         var position = playerEntity.GetComponentOfType<Position>();
-                        var command = new DropItemCommand(new List<IEntity>() { equipmentItem.Parent }, itemsHolder, position.p);
+                        var command = new DropItemCommand(new List<IEntity>() {itemEntity}, itemsHolder, position.p);
                         playerEntity.AddComponent(command);
+                        CloseDialog(ItemChoiceDialog);
+                    }
                         break;
                     case ItemDialogActions.Equip:
                         EquipmentSlots.Slot slotEquipTo;
                         slotEquipTo = (EquipmentSlots.Slot)chosenItem.Data;
                         equipment.Equip(equipmentItem, slotEquipTo);
+                        CloseDialog(ItemChoiceDialog);
                         break;
                     case ItemDialogActions.Cancel:
+                        CloseDialog(ItemChoiceDialog);
                         break;
                     default:
                         break;
                 }
-                CloseDialog(ItemChoiceDialog);
+
 
             };
 
@@ -301,9 +353,15 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                         hotkey = HotkeyHelper.GetNextKey(hotkey);
                     }
 
-
-                    Description desc = equipmentSlot.Item2.Equipment?.Parent.GetComponentOfType<Description>();
+                    var eq = equipmentSlot.Item2.Equipment;
+                    Description desc = null;
+                    if (eq != null)
+                    {
+                        var itemEntity = game.GetEntity(eq.ParentEntityId);
+                        desc = itemEntity.GetComponentOfType<Description>();
+                    }
                     var text = desc != null ? desc.Name : "Nothing";
+                        
                     var tableItem = new TableItem(3);
                     tableItem.Hotkey = hotkey;
                     tableItem.Tag = equipmentSlot.Item1;
@@ -315,11 +373,13 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 }
             }
 
-            var headerItem = new TableItem(4);
+            var headerItem = new TableItem(6);
             headerItem.Cells[0].Widgets.Add(new Label() { Text = "Hotkey", HorizontalAlignment = HorizontalAlignment.Center });
             headerItem.Cells[1].Widgets.Add(new Label() { Text = "Name", });
-            headerItem.Cells[2].Widgets.Add(new Label() { Text = "Weight", });
-            headerItem.Cells[3].Widgets.Add(new Label() { Text = "Type", });
+            headerItem.Cells[2].Widgets.Add(new Label() { Text = "Quality", });
+            headerItem.Cells[3].Widgets.Add(new Label() { Text = "Weight", });
+            headerItem.Cells[4].Widgets.Add(new Label() { Text = "Type", });
+            headerItem.Cells[5].Widgets.Add(new Label() { Text = "Amount", });
             ItemBox.Items.Add(headerItem);
 
             List<IEntity> list = itemsHolder.GetItems();
@@ -333,19 +393,21 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 Description desc = entity.GetComponentOfType<Description>();
                 Item item = entity.GetComponentOfType<Item>();
 
-                var tableItem = new TableItem(4);
+                var tableItem = new TableItem(6);
                 tableItem.Tag = entity;
                 tableItem.Hotkey = hotkey;
                 tableItem.Cells[0].Widgets.Add(new Label()
                     {Text = hotkey.ToString(), HorizontalAlignment = HorizontalAlignment.Center});
                 tableItem.Cells[1].Widgets.Add(new Label() {Text = desc.Name,});
-                tableItem.Cells[2].Widgets.Add(new Label() {Text = item.Weight.ToString(),});
-                tableItem.Cells[3].Widgets.Add(new Label() {Text = item.Type.ToString(),});
+                tableItem.Cells[2].Widgets.Add(new Label() { Text = item.Quality.ToString(), });
+                tableItem.Cells[3].Widgets.Add(new Label() {Text = (item.Weight * item.Amount).ToString(),});
+                tableItem.Cells[4].Widgets.Add(new Label() {Text = item.Type.ToString(),});
+                tableItem.Cells[5].Widgets.Add(new Label() { Text = item.Amount.ToString(), });
                 ItemBox.Items.Add(tableItem);
             }
 
 
-            if (selectedIndex > SelectedTable?.Items.Count)
+            if (selectedIndex >= SelectedTable?.Items.Count)
             {
                 if (SelectedTable != null)
                 {
@@ -364,29 +426,47 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         }
 
-        public void FillEquipmentChoiceDialog(Equipment equipment)
+        public void FillItemChoiceDialog(IEntity itemEntity)
         {
-
             List<ChoiceOption> choices = new List<ChoiceOption>();
-            if (equipment.PossibleSlots.Count > 1)
+
+            var equipment = itemEntity.GetComponentOfType<Equipment>();
+            var ammo = itemEntity.GetComponentOfType<Ammo>();
+            var item = itemEntity.GetComponentOfType<Item>();
+            if (equipment != null)
             {
-                foreach (var equipmentPossibleSlot in equipment.PossibleSlots)
+                if (equipment.PossibleSlots.Count > 1)
+                {
+                    foreach (var equipmentPossibleSlot in equipment.PossibleSlots)
+                    {
+                        choices.Add(new ChoiceOption()
+                        {
+                            Data = equipmentPossibleSlot,
+                            Id = ItemDialogActions.Equip,
+                            Text = $"Equip into slot {equipmentPossibleSlot}"
+                        });
+                    }
+                }
+                else
                 {
                     choices.Add(new ChoiceOption()
-                    {
-                        Data = equipmentPossibleSlot,
-                        Id = ItemDialogActions.Equip,
-                        Text = $"Equip into slot {equipmentPossibleSlot}"
-                    });
+                        {Id = ItemDialogActions.Equip, Text = "Equip", Data = equipment.PossibleSlots.First()});
                 }
             }
-            else
+
+            if (item != null)
             {
-                choices.Add(new ChoiceOption() {Id = ItemDialogActions.Equip, Text = "Equip", Data = equipment.PossibleSlots.First()});
+                if (item.Amount > 1)
+                {
+                    choices.Add(new ChoiceOption() {Id = ItemDialogActions.DropAmount, Text = "Drop amount"});
+                }
             }
+
+
             choices.Add(new ChoiceOption() { Id = ItemDialogActions.Drop, Text = "Drop" });
             choices.Add(new ChoiceOption() { Id = ItemDialogActions.Cancel, Text = "Cancel" });
-            ItemChoiceDialog.FillChoiceOptions(choices.ToArray());
+            ItemChoiceDialog.
+                FillChoiceOptions(choices.ToArray());
         }
 
         private void OnClickReturnToGame(object sender, EventArgs e)

@@ -122,9 +122,9 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                     var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
                     if (entity != null)
                     {
-                        if (tile.getEntitiesOnTile().Count == 0)
+                        if (tile.GetEntities().Count == 0)
                         {
-                            tile.getEntitiesOnTile().Add(entity);
+                            tile.AddEntity(entity);
                         }
                     }
                     }

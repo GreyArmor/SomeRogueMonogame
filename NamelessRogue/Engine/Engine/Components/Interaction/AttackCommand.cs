@@ -27,5 +27,10 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
         public IEntity getTarget() {
             return target;
         }
+
+        public override IComponent Clone()
+        {
+            return new AttackCommand(getSource(),getTarget());
+        }
     }
 }

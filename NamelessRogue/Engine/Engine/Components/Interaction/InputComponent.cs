@@ -10,5 +10,10 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
             Intents = new List<Intent>();
         }
         public List<Intent> Intents;
+
+        public override IComponent Clone()
+        {
+           return new InputComponent(){ Intents = this.Intents};
+        }
     }
 }

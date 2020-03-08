@@ -19,6 +19,7 @@ namespace NamelessRogue.Engine.Engine.Input
         LookAtMode, DropItem,
         SkipTurn,
         Enter,
+        Escape,
         ConetextualHotkeyPressed
     }
 

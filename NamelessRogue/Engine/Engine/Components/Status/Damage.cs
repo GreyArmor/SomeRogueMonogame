@@ -27,5 +27,10 @@ namespace NamelessRogue.Engine.Engine.Components.Status
         public IEntity getSource() {
             return source;
         }
+
+        public override IComponent Clone()
+        {
+            return new Damage(source,damage);
+        }
     }
 }

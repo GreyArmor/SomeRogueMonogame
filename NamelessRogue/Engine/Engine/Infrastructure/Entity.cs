@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components;
@@ -20,13 +21,11 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
             foreach (IComponent component in components) {
                 EntityManager.AddComponent(Id, component);
             }
-            EntityManager.AddComponent(Id, new JustCreated());
         }
 
         public Entity()
         {
             Id = Guid.NewGuid();
-            EntityManager.AddComponent(Id, new JustCreated());
         }
 
 
@@ -50,10 +49,27 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
             return EntityManager.GetComponent<ComponentType>(Id);
         }
 
+
        
         public void RemoveComponentOfType<ComponentType>() where ComponentType : IComponent
         {
             EntityManager.RemoveComponent<ComponentType>(Id);
+        }
+
+        public List<IComponent> GetAllComponents()
+        { 
+            return EntityManager.GetAllComponents(Id); ;
+        }
+
+        public IEntity CloneEntity()
+        {
+            var newEntity = new Entity();
+            var components = GetAllComponents();
+            foreach (var component in components)
+            {
+                newEntity.AddComponent(component.Clone());
+            }
+            return newEntity;
         }
     }
 }

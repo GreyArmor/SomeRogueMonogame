@@ -14,5 +14,10 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
         }
 
         public string LogMessage { get; set; }
+
+        public override IComponent Clone()
+        {
+            return new HudLogMessageCommand();
+        }
     }
 }

@@ -18,5 +18,10 @@ namespace NamelessRogue.Engine.Engine.Components.UI
         }
         public String Name;
         public String Text;
+
+        public override IComponent Clone()
+        {
+            return new Description(Name, Text);
+        }
     }
 }

@@ -11,13 +11,15 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
 
     public class Equipment : Component
     {
-        public IEntity Parent { get; }
         public List<EquipmentSlots.Slot> PossibleSlots { get; }
-        public Equipment(IEntity parent, params EquipmentSlots.Slot[] slots)
+        public Equipment(params EquipmentSlots.Slot[] slots)
         {
-            Parent = parent;
             PossibleSlots = slots.ToList();
         }
 
+        public override IComponent Clone()
+        {
+            return new Equipment(PossibleSlots.ToArray());
+        }
     }
 }

@@ -21,5 +21,10 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
             Holder = holder;
             WhereToDrop = whereToDrop;
         }
+
+        public override IComponent Clone()
+        {
+            return new DropItemCommand(Items,Holder,WhereToDrop);
+        }
     }
 }

@@ -21,5 +21,10 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
             Holder = holder;
             WhereToPickUp = whereToPickUp;
         }
+
+        public override IComponent Clone()
+        {
+           return new PickUpItemCommand(Items, Holder, WhereToPickUp);
+        }
     }
 }
