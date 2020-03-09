@@ -16,14 +16,14 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
         {
             Head,
             Torso,
-            LeftArm,
-            RightArm,
+            LefHand,
+            RightHand,
             Legs,
             Feet,
             Ring1,
             Ring2,
             Neck,
-            BothHands
+            Hands,
         }
 
         
@@ -39,63 +39,50 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Head, new EquipmentSlot(Slot.Head)));
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Torso, new EquipmentSlot(Slot.Torso)));
 
-            var slotLeft = new EquipmentSlot(Slot.LeftArm);
-            var slotRight = new EquipmentSlot(Slot.RightArm);
+            var slotLeft = new EquipmentSlot(Slot.LefHand);
+            var slotRight = new EquipmentSlot(Slot.RightHand);
 
-            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.LeftArm, slotLeft));
-            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.RightArm, slotRight));
+            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.LefHand, slotLeft));
+            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.RightHand, slotRight));
 
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Feet, new EquipmentSlot(Slot.Feet)));
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Legs, new EquipmentSlot(Slot.Legs)));
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Neck, new EquipmentSlot(Slot.Neck)));
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Ring1, new EquipmentSlot(Slot.Ring1)));
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Ring2, new EquipmentSlot(Slot.Ring2)));
-
-            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.BothHands, slotLeft));
-            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.BothHands, slotRight));
+            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Hands, new EquipmentSlot(Slot.Hands)));
 
             Holder = holder;
             Game = game;
         }
 
-        public void Equip(Equipment equipment, Slot equipTo)
+        public void Equip(Equipment equipment, List<Slot> equipTo)
         {
-            var slots = Slots.Where(x => x.Item1 == equipTo);
+            var slots = Slots.Where(x => equipTo.Contains(x.Item1));
             foreach (var tuple in slots)
             {
                 var slot = tuple.Item2;
-                if (slot != null)
+                if (slot.Equipment != null)
                 {
-                    if (slot.Equipment != null)
-                    {
-                        TakeOff(equipTo);
-                    }
-
-                    slot.Equipment = equipment;
-                    
+                    TakeOff(slot.Equipment);
                 }
+
+                slot.Equipment = equipment;
             }
+
             Holder.GetItems().Remove(Holder.GetItems().FirstOrDefault(x=>x.GetId()==equipment.ParentEntityId));
         }
 
-        public void TakeOff(Slot slotName)
+        public void TakeOff(Equipment equipment)
         {
-            var slots = Slots.Where(x => x.Item1 == slotName || x.Item2.Slot==slotName);
+            var slots = Slots.Where(x => x.Item2.Equipment == equipment);
             foreach (var tuple in slots)
             {
-                var equipmentSlots = Slots.Select(es=>es).Where(x=>x.Item1==tuple.Item1);
-                foreach (var equipmentSlot in equipmentSlots)
+                tuple.Item2.Equipment = null;
+                var itemEntity = Holder.GetItems().FirstOrDefault(x => x.GetId() == equipment.ParentEntityId);
+                if (itemEntity == null)
                 {
-                    var equip = equipmentSlot.Item2.Equipment;
-                    equipmentSlot.Item2.Equipment = null;
-                    if (equip != null)
-                    {
-                        var itemEntity = Holder.GetItems().FirstOrDefault(x => x.GetId() == equip.ParentEntityId);
-                        if (itemEntity==null)
-                        {
-                            Holder.GetItems().Add(Game.GetEntity(equip.ParentEntityId));
-                        }
-                    }
+                    Holder.GetItems().Add(Game.GetEntity(equipment.ParentEntityId));
                 }
             }
         }

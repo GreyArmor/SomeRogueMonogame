@@ -1,16 +1,13 @@
-﻿namespace NamelessRogue.Engine.Engine.Components.ItemComponents
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace NamelessRogue.Engine.Engine.Components.ItemComponents
 {
-    public enum AmmoType
+    public class AmmoType
     {
-        None,
-        Rock,
-        Arrow,
-        Light,
-        Medium,
-        Heavy,
-        Energy,
-        Mana,
-        Rocket,
-        Explosive
+        public string Name { get; set; }
     }
 }

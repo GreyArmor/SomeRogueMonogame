@@ -57,7 +57,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                             {
                                 var itemsEntities = pickupCommand.Holder.GetItems();
                                 var itemsWithAmmo = itemsEntities.Select(x=>x).Where(i => i.GetComponentOfType<Ammo>() != null);
-                                var sameTypeItem = itemsWithAmmo.FirstOrDefault(x => x.GetComponentOfType<Ammo>().Type == ammo.Type);
+                                var sameTypeItem = itemsWithAmmo.FirstOrDefault(x => x.GetComponentOfType<Ammo>().Type.Name == ammo.Type.Name);
                                 if (sameTypeItem != null)
                                 {
                                     sameTypeItem.GetComponentOfType<Item>().Amount +=

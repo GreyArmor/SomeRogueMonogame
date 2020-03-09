@@ -180,13 +180,13 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 switch (dialogActions)
                 {
                     case EquipmentDialogActions.Drop:
-                        equipment.TakeOff(slot);
+                        equipment.TakeOff(equipmentItem);
                         var position = playerEntity.GetComponentOfType<Position>();
                         var command = new DropItemCommand(new List<IEntity>(){ game.GetEntity(equipment.ParentEntityId) },itemsHolder, position.p);
                         playerEntity.AddComponent(command);
                         break;  
                     case EquipmentDialogActions.Unequip:
-                        equipment.TakeOff(slot);
+                        equipment.TakeOff(equipmentItem);
                         break;
                     case EquipmentDialogActions.Cancel:
                         break;
@@ -271,9 +271,9 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                     }
                         break;
                     case ItemDialogActions.Equip:
-                        EquipmentSlots.Slot slotEquipTo;
-                        slotEquipTo = (EquipmentSlots.Slot)chosenItem.Data;
-                        equipment.Equip(equipmentItem, slotEquipTo);
+                        List<EquipmentSlots.Slot> slotsEquipTo;
+                        slotsEquipTo = (List<EquipmentSlots.Slot>) chosenItem.Data;
+                        equipment.Equip(equipmentItem, slotsEquipTo);
                         CloseDialog(ItemChoiceDialog);
                         break;
                     case ItemDialogActions.Cancel:
@@ -341,7 +341,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             EquipmentBox.Items.Add(headerEquipmentItem);
             {
                 int i = 0;
-                foreach (var equipmentSlot in equipment.Slots.Except(equipment.Slots.Where(x=>x.Item1==EquipmentSlots.Slot.BothHands)))
+                foreach (var equipmentSlot in equipment.Slots)
                 {
 
                     if (i == 0)
@@ -439,11 +439,16 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 {
                     foreach (var equipmentPossibleSlot in equipment.PossibleSlots)
                     {
+                        string slotsString = "";
+                        foreach (var slot in equipmentPossibleSlot)
+                        {
+                            slotsString += slot.ToString() + " ";
+                        }
                         choices.Add(new ChoiceOption()
                         {
                             Data = equipmentPossibleSlot,
                             Id = ItemDialogActions.Equip,
-                            Text = $"Equip into slot {equipmentPossibleSlot}"
+                            Text = $"Equip into {slotsString}"
                         });
                     }
                 }

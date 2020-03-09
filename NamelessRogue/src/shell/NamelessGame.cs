@@ -195,12 +195,15 @@ namespace NamelessRogue.shell
 
             Entities = new List<IEntity>();
 
-            //TODO: for test
             Entities.Add(RenderFactory.CreateViewport(settings));
 
             Entities.Add(TimelineFactory.CreateTimeline(this));
 
-
+            var libraries = new Entity();
+            var ammoLibrary = new AmmoLibrary();
+            ammoLibrary.AmmoTypes.Add(new AmmoType(){Name = "Revolver ammo"});
+            libraries.AddComponent(ammoLibrary);
+            Entities.Add(libraries);
 
             Entities.Add(InputHandlingFactory.CreateInput());
 
@@ -281,11 +284,17 @@ namespace NamelessRogue.shell
             var helmet = ItemFactory.CreateHelmet(x - 2, y, 1, this);
             Entities.Add(helmet);
 
-            var ammo1 = ItemFactory.CreateLightAmmo(x - 1, y, 1,20, this);
+            var ammo1 = ItemFactory.CreateLightAmmo(x - 1, y, 1,20, this, ammoLibrary);
             Entities.Add(ammo1);
 
-            var ammo2 = ItemFactory.CreateLightAmmo(x - 1, y+1, 1, 20, this);
+            var ammo2 = ItemFactory.CreateLightAmmo(x - 1, y+1, 1, 20, this, ammoLibrary);
             Entities.Add(ammo2);
+
+            var revolver = ItemFactory.CreateRevolver(x +2, y + 1, 1, this, ammoLibrary);
+            Entities.Add(revolver);
+
+            var pArmor = ItemFactory.CreatePowerArmor(x - 2, y, 1, this);
+            Entities.Add(pArmor);
 
             Entities.Add(GameInitializer.CreateCursor());
 

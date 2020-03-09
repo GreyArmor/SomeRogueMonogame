@@ -38,6 +38,9 @@ namespace NamelessRogue.Engine.Engine.Components.ItemComponents
             Type = type;
             Weight = weight;
             Amount = amount;
+            Quality = quality;
+            Level = level;
+            Author = author;
         }
 
         public int Amount

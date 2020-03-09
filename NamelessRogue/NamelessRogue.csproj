@@ -88,6 +88,7 @@
     <Compile Include="Engine\Engine\Components\Interaction\Player.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\SimpleSwitch.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\Ammo.cs" />
+    <Compile Include="Engine\Engine\Components\ItemComponents\AmmoLibrary.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\AmmoType.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\ArmorStats.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\Equipment.cs" />
