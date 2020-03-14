@@ -19,6 +19,12 @@ namespace NamelessRogue.Engine.Engine.Systems.PickUpItems
 
             foreach (IEntity entity in namelessGame.GetEntities())
             {
+                if (entity.GetComponentOfType<UpdatePickupDialogCommand>()!=null)
+                {
+                    UiFactory.PickUpItemsScreen.FillItems(namelessGame);
+                    entity.RemoveComponentOfType<UpdatePickupDialogCommand>();
+                }
+
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)
                 {

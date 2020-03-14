@@ -23,6 +23,14 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
 
             foreach (IEntity entity in namelessGame.GetEntities())
             {
+                var updateCommand = entity.GetComponentOfType<UpdateInventoryCommand>();
+
+                if (updateCommand != null)
+                {
+                    UiFactory.InventoryScreen.FillItems(namelessGame);
+                    entity.RemoveComponentOfType<UpdateInventoryCommand>();
+                }
+
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)
                 {

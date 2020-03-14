@@ -87,6 +87,8 @@
     <Compile Include="Engine\Engine\Components\Interaction\PickUpItemCommand.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\Player.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\SimpleSwitch.cs" />
+    <Compile Include="Engine\Engine\Components\Interaction\UpdateInventoryCommand.cs" />
+    <Compile Include="Engine\Engine\Components\Interaction\UpdatePickupDialogCommand.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\Ammo.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\AmmoLibrary.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\AmmoType.cs" />

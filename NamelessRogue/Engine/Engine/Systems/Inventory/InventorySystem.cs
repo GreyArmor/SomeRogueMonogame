@@ -73,11 +73,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                             {
                                 pickupCommand.Holder.GetItems().Add(pickupCommandItem);
                             }
-                            
-
-                            
-                            UiFactory.InventoryScreen?.FillItems(namelessGame);
-                            UiFactory.PickUpItemsScreen?.FillItems(namelessGame);
                         }
 
                         entity.RemoveComponentOfType<PickUpItemCommand>();

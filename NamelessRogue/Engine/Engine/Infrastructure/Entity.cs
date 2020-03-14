@@ -12,7 +12,8 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
     
     public class Entity : IEntity
     {
-        
+
+
         private Guid Id;
 
         public Entity(params IComponent[] components)
@@ -70,6 +71,37 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
                 newEntity.AddComponent(component.Clone());
             }
             return newEntity;
+        }
+
+        List<IComponent> delayedAddComponents = new List<IComponent>();
+        List<IComponent> delayedRemoveComponents = new List<IComponent>();
+
+        public void AddComponentDelayed<T>(T component) where T : IComponent
+        {
+            delayedAddComponents.Add(component);
+        }
+        public void RemoveComponentDelayed<T>(T component) where T : IComponent
+        {
+            delayedRemoveComponents.Add(component);
+        }
+        public void AppendDelayedComponents()
+        {
+            foreach (var delayedAddComponent in delayedAddComponents)
+            {
+                AddComponent(delayedAddComponent);
+            }
+
+            foreach (var delayedRemoveComponent in delayedRemoveComponents)
+            {
+                RemoveComponent(delayedRemoveComponent);
+            }
+            delayedRemoveComponents.Clear();
+            delayedAddComponents.Clear();
+        }
+
+        public void RemoveComponent<T>(T component) where T : IComponent
+        {
+            EntityManager.RemoveComponent(component, Id);
         }
     }
 }

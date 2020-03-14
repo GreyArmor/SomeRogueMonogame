@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using NamelessRogue.Engine.Engine.Components;
 
 namespace NamelessRogue.Engine.Engine.Infrastructure
@@ -15,7 +16,7 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
             Components.TryGetValue(component.GetType(), out componentsOfType);
             if (componentsOfType == null) {
                 componentsOfType = new Dictionary<Guid, IComponent>();
-                Components.Add(typeof(ComponentType), componentsOfType);
+                Components.Add(component.GetType(), componentsOfType);
             }
 
             component.ParentEntityId = entityID;
@@ -27,6 +28,16 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
             Dictionary<Guid, IComponent> componentsOfType;
             Components.TryGetValue(typeof(ComponentType), out componentsOfType);
             if (componentsOfType != null) {
+                componentsOfType.Remove(entityID);
+            }
+        }
+
+        public static void RemoveComponent(IComponent component,Guid entityID)
+        {
+            Dictionary<Guid, IComponent> componentsOfType;
+            Components.TryGetValue(component.GetType(), out componentsOfType);
+            if (componentsOfType != null)
+            {
                 componentsOfType.Remove(entityID);
             }
         }

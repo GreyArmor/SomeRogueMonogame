@@ -409,6 +409,11 @@ namespace NamelessRogue.shell
                 EntitiesToRemove.Clear();
             }
 
+            foreach (var entity in Entities)
+            {
+                entity.AppendDelayedComponents();
+            }
+
             CurrentContext.Update((long) gameTime.TotalGameTime.TotalMilliseconds, this);
 
 

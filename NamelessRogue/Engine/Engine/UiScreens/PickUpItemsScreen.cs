@@ -71,13 +71,21 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             ItemsTable.OnItemClick += (item) =>
             {
+
+                if (item == null)
+                {
+                    return;
+                }
+
                 var playerEntity = game.GetEntitiesByComponentClass<Player>().First();
                 var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                 var position = playerEntity.GetComponentOfType<Position>();
-                var itemEntity = (IEntity)item.Tag;
+
+                var itemEntity = item.Tag as IEntity;
 
                 if (itemEntity == null)
                 {
+                    playerEntity.AddComponent(new UpdatePickupDialogCommand());
                     return;
                 }
 
@@ -93,6 +101,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 {
                     Actions.Add(PickUpItemsScreenAction.ReturnToGame);
                 }
+                playerEntity.AddComponentDelayed(new UpdatePickupDialogCommand());
             };
         }
 

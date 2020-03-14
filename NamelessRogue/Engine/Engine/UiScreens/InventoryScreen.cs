@@ -194,6 +194,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                         break;
                 }
                 CloseDialog(EquipmentChoiceDialog);
+                playerEntity.AddComponentDelayed(new UpdateInventoryCommand());
              
             };
 
@@ -257,6 +258,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                                 }
 
                                 AmountDialog = null;
+                                playerEntity.AddComponent(new UpdateInventoryCommand());
                             }
                         };
                     
@@ -283,7 +285,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                         break;
                 }
 
-
+                playerEntity.AddComponentDelayed(new UpdateInventoryCommand());
             };
 
             EquipmentChoiceDialog.Closed += (sender, args) => { SelectTable(EquipmentBox);
