@@ -134,7 +134,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 int selectedIndex = ItemBox.Items.IndexOf(selectedItem);
                 if (selectedIndex > 0)
                 {
-                    this.selectedItem = selectedItem;
+                    this.SelectedItem = selectedItem;
 
                     var itemEntity = (IEntity)selectedItem.Tag;
                     FillItemChoiceDialog(itemEntity);
@@ -148,7 +148,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 int selectedIndex = EquipmentBox.Items.IndexOf(selectedItem);
                 if (selectedIndex > 0)
                 {
-                    this.selectedItem = selectedItem;
+                    this.SelectedItem = selectedItem;
                     OpenDialog(EquipmentChoiceDialog);
                 }
             };
@@ -156,14 +156,14 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             EquipmentChoiceDialog.OptionsTable.OnItemClick += (TableItem selectedItemOptions) =>
             {
 
-                if (selectedItem.Tag == null)
+                if (SelectedItem.Tag == null)
                 {
                     CloseDialog(EquipmentChoiceDialog);
                     return;
                 }
 
                 var playerEntity = game.GetEntitiesByComponentClass<Player>().First();
-                var slot = (EquipmentSlots.Slot)selectedItem.Tag;
+                var slot = (EquipmentSlots.Slot)SelectedItem.Tag;
                 var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                 var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
 
@@ -204,7 +204,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             {
 
                 var playerEntity = game.GetEntitiesByComponentClass<Player>().First();
-                var itemEntity = (IEntity)selectedItem.Tag;
+                var itemEntity = (IEntity)SelectedItem.Tag;
                 var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                 var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
 
@@ -236,6 +236,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                                         position.p);
                                     playerEntity.AddComponent(command);
                                     CloseDialog(ItemChoiceDialog);
+                                    playerEntity.AddComponent(new UpdateInventoryCommand());
                                 }
                                 else if (amount < 1)
                                 {}
@@ -255,10 +256,11 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                                         position.p);
                                     playerEntity.AddComponent(command);
                                     CloseDialog(ItemChoiceDialog);
+                                    playerEntity.AddComponent(new UpdateInventoryCommand());
                                 }
 
                                 AmountDialog = null;
-                                playerEntity.AddComponent(new UpdateInventoryCommand());
+
                             }
                         };
                     
@@ -270,6 +272,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                         var command = new DropItemCommand(new List<IEntity>() {itemEntity}, itemsHolder, position.p);
                         playerEntity.AddComponent(command);
                         CloseDialog(ItemChoiceDialog);
+                        playerEntity.AddComponentDelayed(new UpdateInventoryCommand());
                     }
                         break;
                     case ItemDialogActions.Equip:
@@ -277,6 +280,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                         slotsEquipTo = (List<EquipmentSlots.Slot>) chosenItem.Data;
                         equipment.Equip(equipmentItem, slotsEquipTo);
                         CloseDialog(ItemChoiceDialog);
+                        playerEntity.AddComponentDelayed(new UpdateInventoryCommand());
                         break;
                     case ItemDialogActions.Cancel:
                         CloseDialog(ItemChoiceDialog);
@@ -285,7 +289,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                         break;
                 }
 
-                playerEntity.AddComponentDelayed(new UpdateInventoryCommand());
+
             };
 
             EquipmentChoiceDialog.Closed += (sender, args) => { SelectTable(EquipmentBox);
@@ -323,7 +327,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         {
 
 
-            var selectedIndex = SelectedTable?.Items.IndexOf(selectedItem);
+            var selectedIndex = SelectedTable?.Items.IndexOf(SelectedItem);
 
 
             EquipmentBox.Items.Clear();
@@ -414,7 +418,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 if (SelectedTable != null)
                 {
                     SelectedTable.SelectedIndex = 0;
-                    selectedItem = SelectedTable.SelectedItem;
+                    SelectedItem = SelectedTable.SelectedItem;
                 }
             }
             else
@@ -422,7 +426,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 if (SelectedTable != null)
                 {
                     SelectedTable.SelectedIndex = selectedIndex;
-                    selectedItem = SelectedTable.SelectedItem;
+                    SelectedItem = SelectedTable.SelectedItem;
                 }
             }
 

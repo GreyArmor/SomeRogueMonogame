@@ -92,7 +92,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 int selectedIndex = ItemsTable.Items.IndexOf(item);
                 if (selectedIndex > 0)
                 {
-                    this.selectedItem = item;
+                    this.SelectedItem = item;
                 }
 
                 var command = new PickUpItemCommand(new List<IEntity>(){itemEntity},itemsHolder, position.p);
@@ -107,7 +107,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         public void FillItems(NamelessGame namelessGame)
         {
-            var selectedIndex = SelectedTable?.Items.IndexOf(selectedItem);
+            var selectedIndex = SelectedTable?.Items.IndexOf(SelectedItem);
 
             ItemsTable.Items.Clear();
 
@@ -186,7 +186,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 if (SelectedTable != null)
                 {
                     SelectedTable.SelectedIndex = 0;
-                    selectedItem = SelectedTable.SelectedItem;
+                    SelectedItem = SelectedTable.SelectedItem;
                 }
             }
             else
@@ -194,7 +194,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 if (SelectedTable != null)
                 {
                     SelectedTable.SelectedIndex = selectedIndex;
-                    selectedItem = SelectedTable.SelectedItem;
+                    SelectedItem = SelectedTable.SelectedItem;
                 }
             }
 

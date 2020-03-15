@@ -10,6 +10,19 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         public Table SelectedTable { get; set; }
         public bool DialogOpened { get => dialogOpened; private set => dialogOpened = value; }
 
+        protected TableItem SelectedItem
+        {
+            get { return selectedItem; }
+            set
+            {
+                if (value == null)
+                {
+                    1.ToString();
+                }
+                selectedItem = value;
+            }
+        }
+
         Table previouslySelectedTable;
         protected bool dialogOpened;
 

@@ -48,7 +48,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                                     break;
                                 case IntentEnum.Escape:
                                 {
-                                    UiFactory.InventoryScreen.AmountDialog.ButtonCancel.DoClick();
+                                    //UiFactory.InventoryScreen.AmountDialog.ButtonCancel.DoClick();
                                 }
                                     break;
                                 default:
