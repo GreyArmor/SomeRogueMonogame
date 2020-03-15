@@ -258,10 +258,8 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                                     CloseDialog(ItemChoiceDialog);
                                     playerEntity.AddComponent(new UpdateInventoryCommand());
                                 }
-
-                                AmountDialog = null;
-
                             }
+                            AmountDialog = null;
                         };
                     
                     }

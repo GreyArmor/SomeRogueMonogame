@@ -71,6 +71,13 @@ namespace NamelessRogue.Engine.Engine.UiScreens.UI
 
             InternalChild.Widgets.Add(windowGrid);
 
+            
+
         }
+
+        public override void OnKeyDown(Keys k)
+        {}
+
+        
     }
 }
