@@ -7,11 +7,8 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 {
     public class TurnManagementSystem : ISystem
     {
-
-
         public void Update(long gameTime, NamelessGame namelessGame)
         {
-
             var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
                 var playerAp = playerEntity.GetComponentOfType<ActionPoints>();
             if (playerAp.Points < 100)
