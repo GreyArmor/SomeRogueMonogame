@@ -40,20 +40,20 @@ namespace NamelessRogue.shell
 
         public static GraphicsDevice DebugDevice;
 
-        public List<IEntity> GetEntities()
-        {
-            return Entities;
-        }
-
         public IEntity GetEntity(Guid id)
         {
             return Entities.FirstOrDefault(x => x.GetId() == id);
         }
 
+        public void AddEntity(IEntity entity)
+        {
+            Entities.Add(entity);
+        }
+
         public void RemoveEntity(IEntity entity)
         {
             Entities.Remove(entity);
-            EntityManager.RemoveEntity(entity.GetId());
+            EntityInfrastructureManager.RemoveEntity(entity);
         }
 
         public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
@@ -163,6 +163,9 @@ namespace NamelessRogue.shell
         protected override void Initialize()
         {
 
+           
+
+
             CurrentGame = new GameInstance();
             DebugDevice = this.GraphicsDevice;
             //TODO: move to config later
@@ -192,6 +195,7 @@ namespace NamelessRogue.shell
 
             worldSettings = new WorldSettings("monolord".GetHashCode(),1000,1000);
 
+            ContextFactory.InitAllContexts(this);
 
             Entities = new List<IEntity>();
 

@@ -179,7 +179,7 @@
     <Compile Include="Engine\Engine\Infrastructure\Constants.cs" />
     <Compile Include="Engine\Engine\Infrastructure\Context.cs" />
     <Compile Include="Engine\Engine\Infrastructure\Entity.cs" />
-    <Compile Include="Engine\Engine\Infrastructure\EntityManager.cs" />
+    <Compile Include="Engine\Engine\Infrastructure\EntityInfrastructureManager.cs" />
     <Compile Include="Engine\Engine\Infrastructure\GameInfo.cs" />
     <Compile Include="Engine\Engine\Infrastructure\TerrainType.cs" />
     <Compile Include="Engine\Engine\Infrastructure\TerrainTypes.cs" />
@@ -191,6 +191,7 @@
     <Compile Include="Engine\Engine\Input\PickUpKeyIntentTranslator.cs" />
     <Compile Include="Engine\Engine\Input\WorldMapKeyIntentTranslator.cs" />
     <Compile Include="Engine\Engine\Serialization\SaveManager.cs" />
+    <Compile Include="Engine\Engine\Systems\BaseSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\AiSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\ChunkManagementSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\CombatSystem.cs" />

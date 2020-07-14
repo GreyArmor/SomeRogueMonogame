@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,15 +20,20 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Systems.Ingame
 {
-    public class IngameIntentSystem : ISystem
+    public class IngameIntentSystem : BaseSystem
     {
 
-
-
-
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public IngameIntentSystem()
         {
-            foreach (IEntity entity in namelessGame.GetEntities())
+            Signature = new HashSet<Type>();
+            Signature.Add(typeof(InputComponent));
+        }
+
+        public override HashSet<Type> Signature { get; }
+
+        public override void Update(long gameTime, NamelessGame namelessGame)
+        {
+            foreach (IEntity entity in RegisteredEntities)
             {
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)

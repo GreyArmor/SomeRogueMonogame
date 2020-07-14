@@ -26,7 +26,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
         Artifact,
     }
 
-    public class MapRenderingSystem : ISystem
+    public class MapRenderingSystem : BaseSystem
     {
         public WorldBoardRenderingSystemMode Mode
         {
@@ -58,6 +58,8 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
         private Screen worldMapScreen;
 
         public bool LocalMapRendering { get; set; } = false;
+
+        public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
         SamplerState sampler = new SamplerState()
         {
@@ -151,7 +153,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
         }
 
 
-        public void Update(long gameTime, NamelessGame game)
+        public override void Update(long gameTime, NamelessGame game)
         {
 
             this.gameTime = gameTime;
@@ -175,33 +177,30 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
 
             if (LocalMapRendering)
             {
-                foreach (IEntity entity in game.GetEntities())
+                var entity = game.GetEntityByComponentClass<ConsoleCamera>();
+
+                ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
+                Screen screen = entity.GetComponentOfType<Screen>();
+
+                if (camera != null && screen != null && worldProvider != null)
                 {
+                    MoveCamera(game, camera);
+                    FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), game.WorldSettings,
+                        worldProvider);
 
-                    ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
-                    Screen screen = entity.GetComponentOfType<Screen>();
-                    if (camera != null && screen != null && worldProvider != null)
+                    Position playerPosition = game.GetEntityByComponentClass<Cursor>()
+                        .GetComponentOfType<Position>();
+                    var screenPoint = camera.PointToScreen(playerPosition.p);
+
+                    if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().getWidth() &&
+                        screenPoint.X > 0 &&
+                        screenPoint.Y < game.GetSettings().getWidth())
                     {
-                        MoveCamera(game, camera);
-                        FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), game.WorldSettings,
-                            worldProvider);
-
-                        Position playerPosition = game.GetEntityByComponentClass<Cursor>()
-                            .GetComponentOfType<Position>();
-                        var screenPoint = camera.PointToScreen(playerPosition.p);
-
-                        if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().getWidth() &&
-                            screenPoint.X > 0 &&
-                            screenPoint.Y < game.GetSettings().getWidth())
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
-                        }
-
-                        RenderScreen(game, screen, game.GetSettings().getFontSize());
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
                     }
 
-                    break;
+                    RenderScreen(game, screen, game.GetSettings().getFontSize());
                 }
             }
             else

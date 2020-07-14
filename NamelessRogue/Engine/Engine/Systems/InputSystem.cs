@@ -9,7 +9,7 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Systems
 {
-    public class InputSystem : ISystem
+    public class InputSystem : BaseSystem
     {
 
         IKeyIntentTraslator translator;
@@ -20,6 +20,9 @@ namespace NamelessRogue.Engine.Engine.Systems
             this.translator = translator;
             this.namelessGame = namelessGame;
             namelessGame.Window.TextInput += WindowOnTextInput;
+
+            Signature.Add(typeof(InputComponent));
+            Signature.Add(typeof(InputReceiver));
         }
 
         long currentgmatime = 0;
@@ -28,12 +31,14 @@ namespace NamelessRogue.Engine.Engine.Systems
         private char lastCommand = Char.MinValue;
         private KeyboardState lastState;
 
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public override HashSet<Type> Signature { get; } = new HashSet<Type>();
+
+        public override void Update(long gameTime, NamelessGame namelessGame)
         {
             if (gameTime - previousGametimeForMove > 90)
             {
                 previousGametimeForMove = gameTime;
-                foreach (IEntity entity in namelessGame.GetEntities()) {
+                foreach (IEntity entity in RegisteredEntities) {
                     InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                     InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
                     if (receiver != null && inputComponent != null && lastState != default)

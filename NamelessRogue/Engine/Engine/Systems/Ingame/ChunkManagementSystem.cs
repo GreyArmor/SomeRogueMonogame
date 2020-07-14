@@ -13,10 +13,11 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Systems.Ingame
 {
-    public class ChunkManagementSystem : ISystem
+    public class ChunkManagementSystem : BaseSystem
     {
+        public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(long gameTime, NamelessGame namelessGame)
         {
             IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
             IWorldProvider worldProvider = null;

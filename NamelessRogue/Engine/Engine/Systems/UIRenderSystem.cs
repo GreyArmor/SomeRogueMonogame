@@ -9,9 +9,11 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Systems
 {
-    public class UIRenderSystem : ISystem
+    public class UIRenderSystem : BaseSystem
     {
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public override HashSet<Type> Signature { get; }  = new HashSet<Type>();
+
+        public override void Update(long gameTime, NamelessGame namelessGame)
         {
             Desktop.Render();
         }

@@ -8,50 +8,58 @@ using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.Generation.World;
 using NamelessRogue.Engine.Engine.Infrastructure;
 using NamelessRogue.shell;
+using System;
+using System.Collections.Generic;
 
 namespace NamelessRogue.Engine.Engine.Systems.Ingame
 {
-    public class DeathSystem : ISystem
+    public class DeathSystem : BaseSystem
     {
-
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public DeathSystem()
         {
-            foreach (IEntity entity in namelessGame.GetEntities()) {
+            Signature = new HashSet<Type>();
+            Signature.Add(typeof(DeathCommand));
+        }
+
+        public override HashSet<Type> Signature { get; }
+
+        public override void Update(long gameTime, NamelessGame namelessGame)
+        {
+            foreach (IEntity entity in RegisteredEntities)
+            {
                 DeathCommand dc = entity.GetComponentOfType<DeathCommand>();
-                if (dc != null)
+                IEntity entityToKill = dc.getToKill();
+                entityToKill.AddComponent(new Dead());
+
+                Drawable drawable = entityToKill.GetComponentOfType<Drawable>();
+                if (drawable != null)
                 {
-                    IEntity entityToKill = dc.getToKill();
-                    entityToKill.AddComponent(new Dead());
+                    drawable.setRepresentation('%');
+                    entityToKill.RemoveComponentOfType<DeathCommand>();
+                }
 
-                    Drawable drawable = entityToKill.GetComponentOfType<Drawable>();
-                    if (drawable != null)
-                    {
-                        drawable.setRepresentation('%');
-                        entityToKill.RemoveComponentOfType<DeathCommand>();
-                    }
-                    IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
-                    IWorldProvider worldProvider = null;
-                    if (worldEntity != null)
-                    {
-                        worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-                    }
+                IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+                IWorldProvider worldProvider = null;
+                if (worldEntity != null)
+                {
+                    worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+                }
 
-                    Position position = entityToKill.GetComponentOfType<Position>();
-                    OccupiesTile occupiesTile = entityToKill.GetComponentOfType<OccupiesTile>();
-                    if (occupiesTile != null && position != null)
-                    {
-                        Tile tile = worldProvider.GetTile(position.p.Y, position.p.X);
-                        tile.RemoveEntity((Entity) entityToKill);
-                    }
+                Position position = entityToKill.GetComponentOfType<Position>();
+                OccupiesTile occupiesTile = entityToKill.GetComponentOfType<OccupiesTile>();
+                if (occupiesTile != null && position != null)
+                {
+                    Tile tile = worldProvider.GetTile(position.p.Y, position.p.X);
+                    tile.RemoveEntity((Entity) entityToKill);
+                }
 
-                    entityToKill.RemoveComponentOfType<OccupiesTile>();
+                entityToKill.RemoveComponentOfType<OccupiesTile>();
 
-                    Description d = entityToKill.GetComponentOfType<Description>();
+                Description d = entityToKill.GetComponentOfType<Description>();
 
-                    if (d != null)
-                    {
-                       // namelessGame.WriteLineToConsole(d.Name + " is dead!");
-                    }
+                if (d != null)
+                {
+                    // namelessGame.WriteLineToConsole(d.Name + " is dead!");
                 }
             }
         }

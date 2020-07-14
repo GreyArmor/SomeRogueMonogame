@@ -101,7 +101,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             };
 
 
-            FillItems(game);
+            //FillItems(game);
 
 
             grid.Widgets.Add(EquipmentBox);

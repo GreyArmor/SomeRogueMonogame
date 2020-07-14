@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
@@ -12,17 +14,40 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Systems.Inventory
 {
-    public class InventorySystem : ISystem
+    public class InventorySystem : BaseSystem
     {
+        public InventorySystem()
+        {
+            Signature = new HashSet<Type>();
+            Signature.Add(typeof(DropItemCommand));
+            Signature.Add(typeof(PickUpItemCommand));
+        }
 
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public override bool IsEntityMatchesSignature(IEntity entity)
+        {
+            var entityComponentTypes = new HashSet<Type>(entity.GetAllComponents().Select(x => x.GetType()));
+
+            foreach (var type in Signature)
+            {
+                if (entityComponentTypes.Contains(type))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        public override HashSet<Type> Signature { get; }
+
+        public override void Update(long gameTime, NamelessGame namelessGame)
         {
             IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-                foreach (IEntity entity in namelessGame.GetEntities().ToList())
+                foreach (IEntity entity in RegisteredEntities.ToList())
                 {
                     DropItemCommand dropCommand = entity.GetComponentOfType<DropItemCommand>();
                     if (dropCommand != null)

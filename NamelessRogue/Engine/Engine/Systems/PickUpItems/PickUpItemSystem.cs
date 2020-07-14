@@ -12,12 +12,19 @@ using NamelessRogue.Engine.Engine.UiScreens;
 
 namespace NamelessRogue.Engine.Engine.Systems.PickUpItems
 {
-    public class PickUpItemSystem : ISystem
+    public class PickUpItemSystem : BaseSystem
     {
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public PickUpItemSystem()
+        {
+            Signature = new HashSet<Type>();
+            Signature.Add(typeof(InputComponent));
+        }
+        public override HashSet<Type> Signature { get; }
+
+        public override void Update(long gameTime, NamelessGame namelessGame)
         {
 
-            foreach (IEntity entity in namelessGame.GetEntities())
+            foreach (IEntity entity in RegisteredEntities)
             {
                 if (entity.GetComponentOfType<UpdatePickupDialogCommand>()!=null)
                 {

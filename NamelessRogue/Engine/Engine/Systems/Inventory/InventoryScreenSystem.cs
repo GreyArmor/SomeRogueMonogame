@@ -16,12 +16,35 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Systems.Inventory
 {
-    public class InventoryScreenSystem : ISystem
+    public class InventoryScreenSystem : BaseSystem
     {
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public InventoryScreenSystem()
+        {
+            Signature = new HashSet<Type>();
+            Signature.Add(typeof(UpdateInventoryCommand));
+            Signature.Add(typeof(InputComponent));
+        }
+
+        public override bool IsEntityMatchesSignature(IEntity entity)
+        {
+            var entityComponentTypes = new HashSet<Type>(entity.GetAllComponents().Select(x => x.GetType()));
+
+            foreach (var type in Signature)
+            {
+                if (entityComponentTypes.Contains(type))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override HashSet<Type> Signature { get; }
+
+        public override void Update(long gameTime, NamelessGame namelessGame)
         {
 
-            foreach (IEntity entity in namelessGame.GetEntities())
+            foreach (IEntity entity in RegisteredEntities)
             {
                 var updateCommand = entity.GetComponentOfType<UpdateInventoryCommand>();
 

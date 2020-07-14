@@ -1,4 +1,6 @@
-﻿using NamelessRogue.Engine.Abstraction;
+﻿using System;
+using System.Collections.Generic;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.Rendering;
 using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.Generation.World;
@@ -7,16 +9,19 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Systems.Map
 {
-    public class WorldBoardScreenSystem : ISystem
+    public class WorldBoardScreenSystem : BaseSystem
     {
         private readonly MapRenderingSystem _mapRenderSystem;
 
         public WorldBoardScreenSystem(MapRenderingSystem mapRenderSystem)
         {
             _mapRenderSystem = mapRenderSystem;
+            Signature = new HashSet<Type>();
         }
 
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public override HashSet<Type> Signature { get; }
+
+        public override void Update(long gameTime, NamelessGame namelessGame)
         {
             ConsoleCamera camera = namelessGame.GetEntityByComponentClass<ConsoleCamera>()?.GetComponentOfType<ConsoleCamera>();
             TimeLine timeline = namelessGame.GetEntityByComponentClass<TimeLine>()?.GetComponentOfType<TimeLine>();

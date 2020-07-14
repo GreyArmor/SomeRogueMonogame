@@ -41,9 +41,9 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
 
 
-    public class RenderingSystem : ISystem
+    public class RenderingSystem : BaseSystem
     {
-
+        public override HashSet<Type> Signature { get; }
 
         public readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
         (
@@ -74,10 +74,13 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
         };
 
-        public RenderingSystem(GameSettings settings)
-        {
-
+        public RenderingSystem(GameSettings settings){
             InitializeCharacterTileDictionary();
+
+            Signature = new HashSet<Type>();
+            Signature.Add(typeof(Drawable));
+            Signature.Add(typeof(Position));
+
         }
 
         //TODO move this hardcode to configuration file for tileset
@@ -153,7 +156,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                
         }
 
-        public void Update(long gameTime, NamelessGame game)
+        public override void Update(long gameTime, NamelessGame game)
         {
 
             this.gameTime = gameTime;
@@ -175,21 +178,18 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
             }
 
-            foreach (IEntity entity in game.GetEntities())
-            {
+            var entity = game.GetEntityByComponentClass<ConsoleCamera>();
 
-                ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
-                Screen screen = entity.GetComponentOfType<Screen>();
-                if (camera != null && screen != null && worldProvider != null)
-                {
-                    MoveCamera(game, camera);
-                    FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
-                    FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
-                    FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
-                    FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
-                    RenderScreen(game, screen, game.GetSettings());
-                    break;
-                }
+            ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
+            Screen screen = entity.GetComponentOfType<Screen>();
+            if (camera != null && screen != null && worldProvider != null)
+            {
+                MoveCamera(game, camera);
+                FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
+                FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
+                FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
+                FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
+                RenderScreen(game, screen, game.GetSettings());
             }
         }
 
@@ -328,14 +328,9 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
 
             List<IEntity> characters = new List<IEntity>();
-            foreach (IEntity entity in game.GetEntities())
+            foreach (IEntity entity in RegisteredEntities)
             {
                 Drawable drawable = entity.GetComponentOfType<Drawable>();
-
-                if (drawable == null)
-                {
-                    continue;
-                }
 
                 var character = entity.GetComponentOfType<Character>();
                 if (character != null)
@@ -345,34 +340,32 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 }
 
                 Position position = entity.GetComponentOfType<Position>();
-                
-                LineToPlayer lineToPlayer = entity.GetComponentOfType<LineToPlayer>();
-                if (drawable != null && position != null)
-                {
-                    if (drawable.isVisible())
-                    {
-                        Point screenPoint = camera.PointToScreen(position.p.X, position.p.Y);
-                        int x = screenPoint.X;
-                        int y = screenPoint.Y;
-                        if (x >= 0 && x < settings.getWidth() && y >= 0 && y < settings.getHeight())
-                        {
-                            if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
-                            {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = drawable.getRepresentation();
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.getCharColor();
-                            }
-                            else
-                            {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = ' ';
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                            }
-                        }
 
+                LineToPlayer lineToPlayer = entity.GetComponentOfType<LineToPlayer>();
+                if (drawable.isVisible())
+                {
+                    Point screenPoint = camera.PointToScreen(position.p.X, position.p.Y);
+                    int x = screenPoint.X;
+                    int y = screenPoint.Y;
+                    if (x >= 0 && x < settings.getWidth() && y >= 0 && y < settings.getHeight())
+                    {
+                        if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
+                        {
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = drawable.getRepresentation();
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.getCharColor();
+                        }
+                        else
+                        {
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = ' ';
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                        }
                     }
+
                 }
 
-                if (drawable != null && position != null && lineToPlayer != null)
+
+                if (lineToPlayer != null)
                 {
                     if (drawable.isVisible())
                     {
@@ -403,30 +396,28 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 {
                     continue;
                 }
-                Position position = entity.GetComponentOfType<Position>();
-                if (drawable != null && position != null)
-                {
-                    if (drawable.isVisible())
-                    {
-                        Point screenPoint = camera.PointToScreen(position.p.X, position.p.Y);
-                        int x = screenPoint.X;
-                        int y = screenPoint.Y;
-                        if (x >= 0 && x < settings.getWidth() && y >= 0 && y < settings.getHeight())
-                        {
-                            if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
-                            {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = drawable.getRepresentation();
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.getCharColor();
-                            }
-                            else
-                            {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = ' ';
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                            }
-                        }
 
+                Position position = entity.GetComponentOfType<Position>();
+                if (drawable.isVisible())
+                {
+                    Point screenPoint = camera.PointToScreen(position.p.X, position.p.Y);
+                    int x = screenPoint.X;
+                    int y = screenPoint.Y;
+                    if (x >= 0 && x < settings.getWidth() && y >= 0 && y < settings.getHeight())
+                    {
+                        if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
+                        {
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = drawable.getRepresentation();
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.getCharColor();
+                        }
+                        else
+                        {
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = ' ';
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                        }
                     }
+
                 }
             }
 
@@ -467,6 +458,8 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         }
 
         Texture2D tileAtlas = null;
+
+
 
         private Texture InitializeTexture(NamelessGame game)
         {
@@ -548,9 +541,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length,
                     indices.Reverse().ToArray(), 0, 2, this.VertexDeclaration);
             }
-
-
-
         }
     }
 }

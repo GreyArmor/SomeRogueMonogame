@@ -152,5 +152,13 @@ namespace NamelessRogue.Engine.Engine.Factories
             }
         }
 
+        internal static void InitAllContexts(NamelessGame game)
+        {
+            GetIngameContext(game).ContextScreen.Hide();
+            GetInventoryContext(game).ContextScreen.Hide(); ;
+            GetMainMenuContext(game).ContextScreen.Hide(); ;
+            GetPickUpItemContext(game).ContextScreen.Hide(); ;
+            GetWorldBoardContext(game).ContextScreen.Hide(); ;
+        }
     }
 }

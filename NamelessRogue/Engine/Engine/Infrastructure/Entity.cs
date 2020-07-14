@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
         {
             Id = Guid.NewGuid();
             foreach (IComponent component in components) {
-                EntityManager.AddComponent(Id, component);
+                EntityInfrastructureManager.AddComponent(this, component);
             }
         }
 
@@ -40,26 +40,26 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
        
         public void AddComponent<ComponentType>(ComponentType component) where ComponentType : IComponent
         {
-            EntityManager.AddComponent(Id, component);
+            EntityInfrastructureManager.AddComponent(this, component);
         }
 
    
        
         public ComponentType GetComponentOfType<ComponentType>() where ComponentType : IComponent
         {
-            return EntityManager.GetComponent<ComponentType>(Id);
+            return EntityInfrastructureManager.GetComponent<ComponentType>(Id);
         }
 
 
        
         public void RemoveComponentOfType<ComponentType>() where ComponentType : IComponent
         {
-            EntityManager.RemoveComponent<ComponentType>(Id);
+            EntityInfrastructureManager.RemoveComponent<ComponentType>(this);
         }
 
         public List<IComponent> GetAllComponents()
         { 
-            return EntityManager.GetAllComponents(Id); ;
+            return EntityInfrastructureManager.GetAllComponents(Id); ;
         }
 
         public IEntity CloneEntity()
@@ -101,7 +101,7 @@ namespace NamelessRogue.Engine.Engine.Infrastructure
 
         public void RemoveComponent<T>(T component) where T : IComponent
         {
-            EntityManager.RemoveComponent(component, Id);
+            EntityInfrastructureManager.RemoveComponent(component, Id);
         }
     }
 }

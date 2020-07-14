@@ -1,13 +1,17 @@
-﻿using NamelessRogue.Engine.Abstraction;
+﻿using System;
+using System.Collections.Generic;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Factories;
 using NamelessRogue.Engine.Engine.UiScreens;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.Systems.MainMenu
 {
-    public class MainMenuScreenSystem : ISystem
+    public class MainMenuScreenSystem : BaseSystem
     {
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public override HashSet<Type> Signature { get; } = new HashSet<Type>();
+
+        public override void Update(long gameTime, NamelessGame namelessGame)
         {
             foreach (var action in UiFactory.MainMenuScreen.Actions)
             {
