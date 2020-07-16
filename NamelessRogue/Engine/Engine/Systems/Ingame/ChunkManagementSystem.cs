@@ -19,7 +19,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+            IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -27,7 +27,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
             }
 
 
-            IEntity playerentity = namelessGame.GetEntityByComponentClass<Player>();
+            IEntity playerentity = namelessGame.PlayerEntity;
             if (playerentity != null)
             {
                 Chunk currentChunk = null;
@@ -120,14 +120,17 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 {
                     foreach (var tile in tileArray)
                     {
-                    var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
-                    if (entity != null)
-                    {
-                        if (tile.GetEntities().Count == 0)
+                        var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
+                        if (entity != null)
                         {
-                            tile.AddEntity(entity);
+                            if (tile.GetEntities().Count == 0)
+                            {
+                                tile.AddEntity(entity);
+
+                                namelessGame.AddEntity(entity);
+
+                            }
                         }
-                    }
                     }
                 }
                 realityBubbleChunk.Value.JustCreated = false;

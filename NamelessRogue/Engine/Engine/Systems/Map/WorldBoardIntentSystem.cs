@@ -41,7 +41,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                             case IntentEnum.MoveBottomLeft:
                             case IntentEnum.MoveBottomRight:
                             {
-                                var cursorEntity = namelessGame.GetEntitiesByComponentClass<Cursor>().First();
+                                var cursorEntity = namelessGame.CursorEntity;
                                 Position position = cursorEntity.GetComponentOfType<Position>();
                                 if (position != null)
                                 {

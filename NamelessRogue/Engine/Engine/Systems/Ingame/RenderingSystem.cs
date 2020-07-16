@@ -171,14 +171,14 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 InitializeTexture(game);
             }
 
-            IEntity worldEntity = game.GetEntityByComponentClass<TimeLine>();
+            IEntity worldEntity = game.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
             }
 
-            var entity = game.GetEntityByComponentClass<ConsoleCamera>();
+            var entity = game.CameraEntity;
 
             ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
             Screen screen = entity.GetComponentOfType<Screen>();
@@ -195,17 +195,13 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
         private void MoveCamera(NamelessGame game, ConsoleCamera camera)
         {
-            IEntity input = game.GetEntityByComponentClass<InputComponent>();
-            if (input != null)
-            {
-                Position playerPosition = game.GetEntityByComponentClass<FollowedByCamera>()
+                Position playerPosition = game.FollowedByCameraEntity
                     .GetComponentOfType<Position>();
 
                 Point p = camera.getPosition();
                 p.X = (playerPosition.p.X - game.GetSettings().getWidth() / 2);
                 p.Y = (playerPosition.p.Y - game.GetSettings().getHeight() / 2);
                 camera.setPosition(p);
-            }
         }
         PermissiveVisibility fov;
         private void FillcharacterBufferVisibility(NamelessGame game, Screen screen, ConsoleCamera camera,
@@ -214,7 +210,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
             int camX = camera.getPosition().X;
             int camY = camera.getPosition().Y;
-            Position playerPosition = game.GetEntityByComponentClass<Player>().GetComponentOfType<Position>();
+            Position playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
             BoundingBox b = new BoundingBox(camera.getPosition(),
                 new Point(settings.getWidth() + camX, settings.getHeight() + camY));
 
@@ -325,8 +321,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
             NamelessGame game)
         {
-
-
             List<IEntity> characters = new List<IEntity>();
             foreach (IEntity entity in RegisteredEntities)
             {
@@ -370,7 +364,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                     if (drawable.isVisible())
                     {
                         Position playerPosition =
-                            game.GetEntityByComponentClass<Player>().GetComponentOfType<Position>();
+                            game.PlayerEntity.GetComponentOfType<Position>();
                         List<Point> line = PointUtil.getLine(playerPosition.p, position.p);
                         for (int i = 1; i < line.Count - 1; i++)
                         {

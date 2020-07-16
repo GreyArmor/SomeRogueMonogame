@@ -32,14 +32,14 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
 
-            var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
+            var playerEntity = namelessGame.PlayerEntity;
             var ap = playerEntity.GetComponentOfType<ActionPoints>();
             if (ap.Points >= 100)
             {
                 return;
             }
 
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+            IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -57,7 +57,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                     if (dead == null && actionPoints.Points >= 100)
                     {
                         BasicAi basicAi = entity.GetComponentOfType<BasicAi>();
-                        Position playerPosition = namelessGame.GetEntityByComponentClass<Player>()
+                        Position playerPosition = namelessGame.PlayerEntity
                             .GetComponentOfType<Position>();
 
                         switch (basicAi.State)
@@ -88,7 +88,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
         public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides)
         {
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+            IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {

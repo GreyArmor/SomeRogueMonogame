@@ -22,79 +22,91 @@ namespace NamelessRogue.Engine.Engine.Factories
     public static class TerrainFurnitureFactory
     {
         //not sure how clear this is
-        public static Entity TreeEntity = new Entity();
-        public static Entity SmallTreeEntity = new Entity();
-        public static Entity RockEntity = new Entity();
-        public static Entity StarfishEntity = new Entity();
-        public static Entity ShellEntity = new Entity();
-        public static Entity TreeStumpEntity = new Entity();
-        public static Entity WallEntity = new Entity();
-        public static Entity WindowEntity = new Entity();
-        public static Entity BedEntity = new Entity();
-        public static Entity BarrelEntity = new Entity();
-        public static Entity FlowerEntity = new Entity();
-        public static Entity TableEntity = new Entity();
-        public static Entity ChairEntity = new Entity();
+        private static Entity treeEntity = new Entity();
+        private static Entity smallTreeEntity = new Entity();
+        private static Entity rockEntity = new Entity();
+        private static Entity starfishEntity = new Entity();
+        private static Entity shellEntity = new Entity();
+        private static Entity treeStumpEntity = new Entity();
 
+        private static Entity wallEntity = new Entity();
+        private static Entity windowEntity = new Entity();
+        private static Entity bedEntity = new Entity();
+        private static Entity barrelEntity = new Entity();
+        private static Entity flowerEntity = new Entity();
+        private static Entity tableEntity = new Entity();
+        private static Entity chairEntity = new Entity();
 
-        public static List<Entity> CreateInstancedFurnitureEntities(NamelessGame game)
+        public static Entity WallEntity { get => (Entity)wallEntity.CloneEntity(); }
+        public static Entity WindowEntity { get => (Entity)windowEntity.CloneEntity(); }
+        public static Entity BedEntity { get => (Entity)bedEntity.CloneEntity(); }
+        public static Entity BarrelEntity { get => (Entity)barrelEntity.CloneEntity(); }
+        public static Entity FlowerEntity { get => (Entity)flowerEntity.CloneEntity(); }
+        public static Entity TableEntity { get => (Entity)tableEntity.CloneEntity(); }
+        public static Entity ChairEntity { get => (Entity)chairEntity.CloneEntity(); }
+        public static Entity TreeStumpEntity { get => (Entity)treeStumpEntity.CloneEntity(); }
+        public static Entity ShellEntity { get => (Entity)shellEntity.CloneEntity(); }
+        public static Entity StarfishEntity { get => (Entity)starfishEntity.CloneEntity(); }
+        public static Entity RockEntity { get => (Entity)rockEntity.CloneEntity();}
+        public static Entity SmallTreeEntity { get => (Entity)smallTreeEntity.CloneEntity(); }
+        public static Entity TreeEntity { get => (Entity)treeEntity.CloneEntity(); }
+
+        public static void CreateFurnitureEntities(NamelessGame game)
         {
             var result = new List<Entity>();
-            result.Add(TreeEntity);
-            result.Add(SmallTreeEntity);
-            result.Add(RockEntity);
-            result.Add(StarfishEntity);
-            result.Add(ShellEntity);
-            result.Add(TreeStumpEntity);
-            result.Add(WallEntity);
-            result.Add(WindowEntity);
-            result.Add(BedEntity);
-            result.Add(BarrelEntity);
-            result.Add(FlowerEntity);
+            result.Add(treeEntity);
+            result.Add(smallTreeEntity);
+            result.Add(rockEntity);
+            result.Add(starfishEntity);
+            result.Add(shellEntity);
+            result.Add(treeStumpEntity);
+            result.Add(wallEntity);
+            result.Add(windowEntity);
+            result.Add(bedEntity);
+            result.Add(barrelEntity);
+            result.Add(flowerEntity);
 
-            StarfishEntity.AddComponent(new Description("A starfish", ""));
-            StarfishEntity.AddComponent(new Drawable('★', new Color(1f, 0, 0)));
+            starfishEntity.AddComponent(new Description("A starfish", ""));
+            starfishEntity.AddComponent(new Drawable('★', new Color(1f, 0, 0)));
 
-            ShellEntity.AddComponent(new Description("A shell", ""));
-            ShellEntity.AddComponent(new Drawable('Q', new Color(0.8f, 0.8f, 0.5f)));
+            shellEntity.AddComponent(new Description("A shell", ""));
+            shellEntity.AddComponent(new Drawable('Q', new Color(0.8f, 0.8f, 0.5f)));
 
-            RockEntity.AddComponent(new Description("A rock", ""));
-            RockEntity.AddComponent(new Drawable('o', new Color(0.5f, 0.5f, 0.5f)));
-            RockEntity.AddComponent(new Item(ItemType.Misc, 2, ItemQuality.Normal, 1, 1, ""));
+            rockEntity.AddComponent(new Description("A rock", ""));
+            rockEntity.AddComponent(new Drawable('o', new Color(0.5f, 0.5f, 0.5f)));
+            rockEntity.AddComponent(new Item(ItemType.Misc, 2, ItemQuality.Normal, 1, 1, ""));
 
-            TreeEntity.AddComponent(new Description("A tree", ""));
-            TreeEntity.AddComponent(new BlocksVision());
-            TreeEntity.AddComponent(new OccupiesTile());
-            TreeEntity.AddComponent(new Drawable('T', new Color(0f, 0.5f, 0f)));
+            treeEntity.AddComponent(new Description("A tree", ""));
+            treeEntity.AddComponent(new BlocksVision());
+            treeEntity.AddComponent(new OccupiesTile());
+            treeEntity.AddComponent(new Drawable('T', new Color(0f, 0.5f, 0f)));
 
-            SmallTreeEntity.AddComponent(new Description("A small tree", ""));
-            SmallTreeEntity.AddComponent(new Drawable('t', new Color(0f, 0.5f, 0f)));
+            smallTreeEntity.AddComponent(new Description("A small tree", ""));
+            smallTreeEntity.AddComponent(new Drawable('t', new Color(0f, 0.5f, 0f)));
 
-            TreeStumpEntity.AddComponent(new Description("A tree stump", ""));
-            TreeStumpEntity.AddComponent(new Drawable('u', new Color(0.5f, 0.5f, 0f)));
+            treeStumpEntity.AddComponent(new Description("A tree stump", ""));
+            treeStumpEntity.AddComponent(new Drawable('u', new Color(0.5f, 0.5f, 0f)));
             
-            WallEntity.AddComponent(new Drawable('#', new Engine.Utility.Color(0.9, 0.9, 0.9)));
-            WallEntity.AddComponent(new Description("Wall", ""));
-            WallEntity.AddComponent(new OccupiesTile());
-            WallEntity.AddComponent(new BlocksVision());
+            wallEntity.AddComponent(new Drawable('#', new Engine.Utility.Color(0.9, 0.9, 0.9)));
+            wallEntity.AddComponent(new Description("Wall", ""));
+            wallEntity.AddComponent(new OccupiesTile());
+            wallEntity.AddComponent(new BlocksVision());
 
-            WindowEntity.AddComponent(new Drawable('O', new Engine.Utility.Color(0, 0.9, 0.9)));
-            WindowEntity.AddComponent(new Description("Window", ""));
+            windowEntity.AddComponent(new Drawable('O', new Engine.Utility.Color(0, 0.9, 0.9)));
+            windowEntity.AddComponent(new Description("Window", ""));
 
-            BedEntity.AddComponent(new Drawable('B', new Engine.Utility.Color(139, 69, 19)));
-            BedEntity.AddComponent(new Description("Bed", ""));
+            bedEntity.AddComponent(new Drawable('B', new Engine.Utility.Color(139, 69, 19)));
+            bedEntity.AddComponent(new Description("Bed", ""));
 
-            BarrelEntity.AddComponent(new Drawable('O', new Engine.Utility.Color(139, 69, 19)));
-            BarrelEntity.AddComponent(new Description("Barrel", ""));
+            barrelEntity.AddComponent(new Drawable('O', new Engine.Utility.Color(139, 69, 19)));
+            barrelEntity.AddComponent(new Description("Barrel", ""));
 
-            WindowEntity.AddComponent(new OccupiesTile());
+            windowEntity.AddComponent(new OccupiesTile());
             foreach (var entity in result)
             {
-                entity.AddComponent(new Instanced());
                 entity.AddComponent(new Furniture());
             }
            
-            return result;
         }
 
         public static Entity GetExteriorEntities(NamelessGame game, Tile terrainTile)
@@ -109,15 +121,15 @@ namespace NamelessRogue.Engine.Engine.Factories
                     var randomValue = random.NextDouble();
                     if (randomValue > 0.997)
                     {
-                        result = StarfishEntity;
+                        result = starfishEntity;
                     }
                     else if (randomValue > 0.985)
                     {
-                        result = ShellEntity;
+                        result = shellEntity;
                     }
                     else if (randomValue > 0.98)
                     {
-                        result = RockEntity;
+                        result = rockEntity;
                     }
 
                     break;
@@ -127,14 +139,14 @@ namespace NamelessRogue.Engine.Engine.Factories
                     var randomValue = random.NextDouble();
                     if (randomValue > 0.95)
                     {
-                        result = TreeEntity;
+                        result = treeEntity;
                     }else if (randomValue > 0.90)
                     {
-                        result = SmallTreeEntity;
+                        result = smallTreeEntity;
                     }
                     else if (randomValue > 0.89)
                     {
-                        result = TreeStumpEntity;
+                        result = treeStumpEntity;
                     }
 
                         break;
@@ -144,7 +156,7 @@ namespace NamelessRogue.Engine.Engine.Factories
                     var randomValue = random.NextDouble();
                     if (randomValue > 0.98)
                     {
-                        result = RockEntity;
+                        result = rockEntity;
                     }
 
                 }
@@ -153,7 +165,12 @@ namespace NamelessRogue.Engine.Engine.Factories
                     break;;
             }
 
-            return result;
+            if (result == null)
+            {
+                return null;
+            }
+
+            return (Entity)result.CloneEntity();
         }
     }
 }

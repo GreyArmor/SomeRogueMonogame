@@ -38,7 +38,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)
                 {
-                    var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
+                    var playerEntity = namelessGame.PlayerEntity;
                     foreach (Intent intent in inputComponent.Intents)
                     {
 
@@ -72,7 +72,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                         intent.Intention == IntentEnum.MoveTopRight ? position.p.Y + 1 :
                                         position.p.Y;
 
-                                    IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+                                    IEntity worldEntity = namelessGame.TimelineEntity;
                                     IWorldProvider worldProvider = null;
                                     if (worldEntity != null)
                                     {
@@ -159,7 +159,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                 //entity.RemoveComponentOfType<InputReceiver>();
                                 //if (player != null)
                                 //{
-                                //    IEntity cursorEntity = namelessGame.GetEntityByComponentClass<Cursor>();
+                                //    IEntity cursorEntity = namelessGame.CursorEntity;
                                 //    cursorEntity.AddComponent(receiver);
                                 //    Drawable cursorDrawable = cursorEntity.GetComponentOfType<Drawable>();
                                 //    cursorDrawable.setVisible(true);
@@ -171,7 +171,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                 //}
                                 //else if (cursor != null)
                                 //{
-                                //    IEntity playerEntity = namelessGame.GetEntityByComponentClass<Player>();
+                                //    IEntity playerEntity = namelessGame.PlayerEntity;
                                 //    playerEntity.AddComponent(receiver);
                                 //    Drawable cursorDrawable = entity.GetComponentOfType<Drawable>();
                                 //    cursorDrawable.setVisible(false);
@@ -185,7 +185,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
                                 if (actionPoints.Points >= 100)
                                 {
-                                    IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+                                    IEntity worldEntity = namelessGame.TimelineEntity;
                                     IWorldProvider worldProvider = null;
                                     if (worldEntity != null)
                                     {

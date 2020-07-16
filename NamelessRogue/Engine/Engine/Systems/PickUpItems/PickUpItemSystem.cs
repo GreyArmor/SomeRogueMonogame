@@ -35,7 +35,7 @@ namespace NamelessRogue.Engine.Engine.Systems.PickUpItems
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)
                 {
-                    var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
+                    var playerEntity = namelessGame.PlayerEntity;
                     foreach (Intent intent in inputComponent.Intents)
                     {
                         switch (intent.Intention)

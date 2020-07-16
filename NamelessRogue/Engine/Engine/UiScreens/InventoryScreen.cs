@@ -162,7 +162,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                     return;
                 }
 
-                var playerEntity = game.GetEntitiesByComponentClass<Player>().First();
+                var playerEntity = game.PlayerEntity;
                 var slot = (EquipmentSlots.Slot)SelectedItem.Tag;
                 var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                 var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
@@ -203,7 +203,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             ItemChoiceDialog.OptionsTable.OnItemClick += (TableItem selectedItemOptions) =>
             {
 
-                var playerEntity = game.GetEntitiesByComponentClass<Player>().First();
+                var playerEntity = game.PlayerEntity;
                 var itemEntity = (IEntity)SelectedItem.Tag;
                 var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                 var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
@@ -331,7 +331,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             EquipmentBox.Items.Clear();
             ItemBox.Items.Clear();
 
-            var playerEntity = game.GetEntityByComponentClass<Player>();
+            var playerEntity = game.PlayerEntity;
 
             var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
             var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();

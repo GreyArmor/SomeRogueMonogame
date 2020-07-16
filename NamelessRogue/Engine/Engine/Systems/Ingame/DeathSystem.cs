@@ -38,7 +38,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                     entityToKill.RemoveComponentOfType<DeathCommand>();
                 }
 
-                IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+                IEntity worldEntity = namelessGame.TimelineEntity;
                 IWorldProvider worldProvider = null;
                 if (worldEntity != null)
                 {

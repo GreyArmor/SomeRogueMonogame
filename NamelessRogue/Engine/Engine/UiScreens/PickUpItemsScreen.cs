@@ -77,7 +77,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                     return;
                 }
 
-                var playerEntity = game.GetEntitiesByComponentClass<Player>().First();
+                var playerEntity = game.PlayerEntity;
                 var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                 var position = playerEntity.GetComponentOfType<Position>();
 
@@ -111,7 +111,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             ItemsTable.Items.Clear();
 
-            var playerEntity = game.GetEntityByComponentClass<Player>();
+            var playerEntity = game.PlayerEntity;
 
             var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
             var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
@@ -126,7 +126,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             ItemsTable.Items.Add(headerItem);
 
 
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+            IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {

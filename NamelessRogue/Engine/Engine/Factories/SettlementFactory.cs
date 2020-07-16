@@ -115,7 +115,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         private static void GenerateCityBuildingForTest(Vector2 center, NamelessGame game, IWorldProvider chunks)
         {
 
-            var citySize = 100;
+            var citySize = 200;
             //TODO streets
             
 

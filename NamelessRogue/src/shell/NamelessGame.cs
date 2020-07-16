@@ -56,12 +56,24 @@ namespace NamelessRogue.shell
             EntityInfrastructureManager.RemoveEntity(entity);
         }
 
+        public IEntity PlayerEntity { get; private set; }
+        public IEntity TimelineEntity { get; private set; }
+
+        public IEntity FollowedByCameraEntity { get; private set; }
+
+        public IEntity CameraEntity { get; private set; }
+
+        public IEntity CursorEntity { get; private set; }
+
+
+        //this lookup is very expensive, avoid using in loops
         public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
         {
             List<IEntity> results = Entities.Where(v => v.GetComponentOfType<T>() != null).ToList();
             return results;
         }
 
+        //this lookup is very expensive, avoid using in loops
         public IEntity GetEntityByComponentClass<T>() where T : IComponent
         {
             return GetEntitiesByComponentClass<T>().FirstOrDefault();
@@ -76,7 +88,7 @@ namespace NamelessRogue.shell
         {
             get
             {
-                return GetEntityByComponentClass<TimeLine>().GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+                return TimelineEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
             }
         }
 
@@ -195,13 +207,22 @@ namespace NamelessRogue.shell
 
             worldSettings = new WorldSettings("monolord".GetHashCode(),1000,1000);
 
+            TerrainFurnitureFactory.CreateFurnitureEntities(this);
+
             ContextFactory.InitAllContexts(this);
 
             Entities = new List<IEntity>();
 
-            Entities.Add(RenderFactory.CreateViewport(settings));
 
-            Entities.Add(TimelineFactory.CreateTimeline(this));
+            var viewportEntity = RenderFactory.CreateViewport(settings);
+
+            CameraEntity = viewportEntity;
+
+            TimelineEntity = TimelineFactory.CreateTimeline(this);
+
+            Entities.Add(CameraEntity);
+
+            Entities.Add(TimelineEntity);
 
             var libraries = new Entity();
             var ammoLibrary = new AmmoLibrary();
@@ -210,14 +231,9 @@ namespace NamelessRogue.shell
             Entities.Add(libraries);
 
             Entities.Add(InputHandlingFactory.CreateInput());
+           
 
-            var furnitureEntities = TerrainFurnitureFactory.CreateInstancedFurnitureEntities(this);
-            foreach (var furnitureEntity in furnitureEntities)
-            {
-                Entities.Add(furnitureEntity);
-            }
-
-            var timelinEntity = GetEntityByComponentClass<TimeLine>();
+            var timelinEntity = TimelineEntity;
             var  timeline = timelinEntity.GetComponentOfType<TimeLine>();
 
             WorldTile firsTile = null;
@@ -240,8 +256,11 @@ namespace NamelessRogue.shell
 
             var player = CharacterFactory.CreateSimplePlayerCharacter(x, y, this);
 
+            PlayerEntity = player;
+
             Entities.Add(player);
 
+            FollowedByCameraEntity = player;
 
             ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
             //initialize reality bubble
@@ -300,7 +319,10 @@ namespace NamelessRogue.shell
             var pArmor = ItemFactory.CreatePowerArmor(x - 2, y, 1, this);
             Entities.Add(pArmor);
 
-            Entities.Add(GameInitializer.CreateCursor());
+
+            CursorEntity = GameInitializer.CreateCursor();
+
+            Entities.Add(CursorEntity);
 
             //Paragraph.BaseSize = 1.175f;
             //UserInterface.Initialize(Content, "custom");
@@ -313,6 +335,8 @@ namespace NamelessRogue.shell
             
 
             fpsLabel = new Label();
+            fpsLabel.HorizontalAlignment = HorizontalAlignment.Right;
+            ContextFactory.GetIngameContext(this).ContextScreen.Panel.Widgets.Add(fpsLabel);
 
             var stackPanel = new VerticalStackPanel();
             stackPanel.Widgets.Add(fpsLabel);
@@ -431,10 +455,9 @@ namespace NamelessRogue.shell
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _frameCounter.Update(deltaTime);
-            fpsLabel.Text = _frameCounter.AverageFramesPerSecond.ToString();
+            fpsLabel.Text = "FPS = " + _frameCounter.AverageFramesPerSecond.ToString();
 
             GraphicsDevice.Clear(Color.Black);
             CurrentContext.RenderingUpdate((long) gameTime.TotalGameTime.TotalMilliseconds, this);

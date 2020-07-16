@@ -23,8 +23,8 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
-            ConsoleCamera camera = namelessGame.GetEntityByComponentClass<ConsoleCamera>()?.GetComponentOfType<ConsoleCamera>();
-            TimeLine timeline = namelessGame.GetEntityByComponentClass<TimeLine>()?.GetComponentOfType<TimeLine>();
+            ConsoleCamera camera = namelessGame.CameraEntity?.GetComponentOfType<ConsoleCamera>();
+            TimeLine timeline = namelessGame.TimelineEntity?.GetComponentOfType<TimeLine>();
             var tilePosition = camera.GetMouseTilePosition(namelessGame);
             var settings = namelessGame.WorldSettings;
             if (tilePosition.X >= 0 && tilePosition.X < settings.WorldBoardWidth && tilePosition.Y >= 0 && tilePosition.Y < settings.WorldBoardHeight)

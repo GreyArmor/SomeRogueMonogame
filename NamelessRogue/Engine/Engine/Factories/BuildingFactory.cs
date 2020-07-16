@@ -44,7 +44,7 @@ namespace NamelessRogue.Engine.Engine.Factories
         public static IEntity CreateDummyBuilding(int x, int y, int width ,int height, NamelessGame namelessGame)
         {
 
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+            IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -76,7 +76,9 @@ namespace NamelessRogue.Engine.Engine.Factories
                         }
                         else
                         {
-                            tile.AddEntity(TerrainFurnitureFactory.WallEntity);
+                            var wall = TerrainFurnitureFactory.WallEntity;
+                            tile.AddEntity(wall);
+                            namelessGame.AddEntity(wall);
                         }
                     }
                 }
@@ -114,31 +116,30 @@ namespace NamelessRogue.Engine.Engine.Factories
                     {
                         case BlueprintCell.Wall:
                         {
-                            tile.AddEntity(TerrainFurnitureFactory.WallEntity);
-                            break;
+                            AddToTileAndGame(tile, TerrainFurnitureFactory.WallEntity, namelessGame);
+                                break;
                         }
                         case BlueprintCell.Door:
                         {
                             IEntity door = CreateDoor(x + j, y + i);
                             buildingComponent.getBuildingParts().Add(door);
-                            namelessGame.AddEntity(door);
-                            tile.AddEntity((Entity) door);
+                            AddToTileAndGame(tile, door, namelessGame);
                             break;
 
                         }
                         case BlueprintCell.Window:
                         {
-                            tile.AddEntity(TerrainFurnitureFactory.WindowEntity);
+                            AddToTileAndGame(tile, TerrainFurnitureFactory.WindowEntity, namelessGame);
                             break;
                         }
                         case BlueprintCell.Bed:
                         {
-                            tile.AddEntity(TerrainFurnitureFactory.BedEntity);
+                            AddToTileAndGame(tile, TerrainFurnitureFactory.BedEntity, namelessGame);
                             break;
                         }
                         case BlueprintCell.IndoorsFurniture:
                         {
-                            tile.AddEntity(TerrainFurnitureFactory.BedEntity);
+                            AddToTileAndGame(tile, TerrainFurnitureFactory.BedEntity, namelessGame);
                             break;
                         }
 
@@ -216,6 +217,12 @@ namespace NamelessRogue.Engine.Engine.Factories
             building.AddComponent(buildingComponent);
             return building;
 
+        }
+
+        private static void AddToTileAndGame(Tile tile, IEntity entity, NamelessGame namelessGame)
+        {
+            namelessGame.AddEntity(entity);
+            tile.AddEntity((Entity)entity);
         }
 
     }

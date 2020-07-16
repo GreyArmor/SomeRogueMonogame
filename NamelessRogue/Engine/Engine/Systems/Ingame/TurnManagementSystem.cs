@@ -19,7 +19,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
-            var playerEntity = namelessGame.GetEntitiesByComponentClass<Player>().First();
+            var playerEntity = namelessGame.PlayerEntity;
                 var playerAp = playerEntity.GetComponentOfType<ActionPoints>();
             if (playerAp.Points < 100)
             {

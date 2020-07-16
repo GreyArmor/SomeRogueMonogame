@@ -58,7 +58,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                         case HudAction.OpenWorldMap:
                             var playerPosition = entity.GetComponentOfType<Position>();
                             namelessGame.ContextToSwitch = ContextFactory.GetWorldBoardContext(namelessGame);
-                            var cursorPosition = namelessGame.GetEntityByComponentClass<Cursor>()
+                            var cursorPosition = namelessGame.CursorEntity
                                 .GetComponentOfType<Position>();
                             cursorPosition.p.X = (int) (playerPosition.p.X / Constants.ChunkSize);
                             cursorPosition.p.Y = (int) (playerPosition.p.Y / Constants.ChunkSize);

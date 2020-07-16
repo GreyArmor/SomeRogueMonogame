@@ -42,7 +42,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
-            IEntity worldEntity = namelessGame.GetEntityByComponentClass<TimeLine>();
+            IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {

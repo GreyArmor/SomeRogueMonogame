@@ -168,7 +168,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                 InitializeTexture(game);
             }
 
-            IEntity timeline = game.GetEntityByComponentClass<TimeLine>();
+            IEntity timeline = game.TimelineEntity;
             TimelineLayer worldProvider = null;
             if (timeline != null)
             {
@@ -177,7 +177,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
 
             if (LocalMapRendering)
             {
-                var entity = game.GetEntityByComponentClass<ConsoleCamera>();
+                var entity = game.CameraEntity;
 
                 ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
                 Screen screen = entity.GetComponentOfType<Screen>();
@@ -188,7 +188,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                     FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), game.WorldSettings,
                         worldProvider);
 
-                    Position playerPosition = game.GetEntityByComponentClass<Cursor>()
+                    Position playerPosition = game.CursorEntity
                         .GetComponentOfType<Position>();
                     var screenPoint = camera.PointToScreen(playerPosition.p);
 
@@ -216,7 +216,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                         FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), game.WorldSettings,
                             worldProvider);
 
-                        Position playerPosition = game.GetEntityByComponentClass<Cursor>()
+                        Position playerPosition = game.CursorEntity
                             .GetComponentOfType<Position>();
                         var screenPoint = camera.PointToScreen(playerPosition.p);
 
@@ -283,7 +283,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
 
         private void MoveCamera(NamelessGame game, ConsoleCamera camera)
         {
-            Position playerPosition = game.GetEntityByComponentClass<Cursor>()
+            Position playerPosition = game.CursorEntity
                 .GetComponentOfType<Position>();
 
             Point p = camera.getPosition();

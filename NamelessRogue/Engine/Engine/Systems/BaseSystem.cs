@@ -25,6 +25,11 @@ namespace NamelessRogue.Engine.Engine.Systems
         }
         public virtual bool IsEntityMatchesSignature(IEntity entity)
         {
+            if (Signature == null || Signature.Count == 0)
+            {
+                return false;
+            }
+
             var entityComponentTypes = new HashSet<Type>(entity.GetAllComponents().Select(x => x.GetType()));
 
             foreach (var type in Signature)
