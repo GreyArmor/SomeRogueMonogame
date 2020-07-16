@@ -138,7 +138,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             Panel.Widgets.Add(vPanel);
             Panel.Widgets.Add(grid);
 
-            Desktop.Widgets.Add(Panel);
+            game.Desktop.Widgets.Add(Panel);
 
 
 

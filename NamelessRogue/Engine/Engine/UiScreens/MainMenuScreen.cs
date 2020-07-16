@@ -54,7 +54,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             vPanel.Widgets.Add(Options);
             vPanel.Widgets.Add(Exit);
             Panel.Widgets.Add(vPanel);
-            Desktop.Widgets.Add(Panel);
+            game.Desktop.Widgets.Add(Panel);
         }
     }
 }

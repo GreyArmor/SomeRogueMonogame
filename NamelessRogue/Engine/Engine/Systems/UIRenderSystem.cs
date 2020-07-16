@@ -15,7 +15,7 @@ namespace NamelessRogue.Engine.Engine.Systems
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
-            Desktop.Render();
+            namelessGame.Desktop.Render();
         }
     }
 }

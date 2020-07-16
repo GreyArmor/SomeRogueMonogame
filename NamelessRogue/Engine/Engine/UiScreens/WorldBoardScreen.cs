@@ -97,7 +97,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
             Panel.Widgets.Add(vPanel);
 
-            Desktop.Widgets.Add(Panel);
+            game.Desktop.Widgets.Add(Panel);
         }
 
         private void OnWorldMap(object sender, EventArgs e)

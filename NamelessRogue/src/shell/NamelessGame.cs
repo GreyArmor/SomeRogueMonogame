@@ -166,6 +166,7 @@ namespace NamelessRogue.shell
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         WorldSettings worldSettings;
+        private Desktop _desktop = new Desktop();
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -341,17 +342,19 @@ namespace NamelessRogue.shell
             var stackPanel = new VerticalStackPanel();
             stackPanel.Widgets.Add(fpsLabel);
 
-           // Desktop.Widgets.Add(stackPanel);
+            // Desktop.Widgets.Add(stackPanel);
 
 
             // Inform Myra that external text input is available
             // So it stops translating Keys to chars
-            Desktop.HasExternalTextInput = true;
+
+
+            _desktop.HasExternalTextInput = true;
 
             // Provide that text input
             Window.TextInput += (s, a) =>
             {
-                Desktop.OnChar(a.Character);
+                _desktop.OnChar(a.Character);
             };
 
             //for (int i = 0; i < 1; i++)
@@ -386,6 +389,7 @@ namespace NamelessRogue.shell
 
         public List<IEntity> EntitiesToAdd { get => entitiesToAdd; set => entitiesToAdd = value; }
         public List<IEntity> EntitiesToRemove { get => entitiesToRemove; set => entitiesToRemove = value; }
+        public Desktop Desktop { get => _desktop; set => _desktop = value; }
 
 
 

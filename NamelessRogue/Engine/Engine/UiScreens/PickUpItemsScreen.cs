@@ -65,7 +65,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             grid.Widgets.Add(ReturnToGame);
             Panel.Widgets.Add(grid);
 
-            Desktop.Widgets.Add(Panel);
+            game.Desktop.Widgets.Add(Panel);
 
             SelectTable(ItemsTable);
 

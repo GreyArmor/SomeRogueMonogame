@@ -109,7 +109,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             grid.Widgets.Add(ReturnToGame);
             Panel.Widgets.Add(grid);
 
-            Desktop.Widgets.Add(Panel);
+            game.Desktop.Widgets.Add(Panel);
 
             SelectedTable = ItemBox;
 
@@ -221,7 +221,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                     case ItemDialogActions.DropAmount:
                     {
                         AmountDialog = new AmountDialog();
-                        AmountDialog.ShowModal();
+                        AmountDialog.ShowModal(game.Desktop);
                         AmountDialog.Amount.OnTouchDown();
                         AmountDialog.Closed += (sender, args) =>
                         {
