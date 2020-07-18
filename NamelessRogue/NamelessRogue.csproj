@@ -246,6 +246,9 @@
     <Reference Include="info.lundin.math, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2f7fe9ec5efab85f, processorArchitecture=MSIL">
       <HintPath>..\packages\info.lundin.math.dll.1.2.6\lib\net40\info.lundin.math.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Markov, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Markov.2.0.0\lib\net35\Markov.dll</HintPath>
     </Reference>
@@ -309,6 +312,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Content\Segoe_UI_15_Bold.spritefont" />
+    <EmbeddedResource Include="log4net.config" />
     <None Include="packages.config" />
     <None Include="Storage\raw\terrain.json" />
   </ItemGroup>

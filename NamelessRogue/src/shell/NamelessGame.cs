@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web.UI.Design.WebControls;
+using log4net;
+using log4net.Config;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -167,6 +171,7 @@ namespace NamelessRogue.shell
         SpriteBatch spriteBatch;
         WorldSettings worldSettings;
         private Desktop _desktop = new Desktop();
+        public ILog Log { get; private set; }
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -176,8 +181,17 @@ namespace NamelessRogue.shell
         protected override void Initialize()
         {
 
-           
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "NamelessRogue.log4net.config";
 
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                XmlConfigurator.Configure(stream);
+            }
+
+            Log = LogManager.GetLogger(typeof(NamelessGame));
+
+            Log.Info("Application started");
 
             CurrentGame = new GameInstance();
             DebugDevice = this.GraphicsDevice;
@@ -206,7 +220,7 @@ namespace NamelessRogue.shell
             graphics.ApplyChanges();
 
 
-            worldSettings = new WorldSettings("monolord".GetHashCode(),1000,1000);
+            worldSettings = new WorldSettings("123".GetHashCode(),1000,1000);
 
             TerrainFurnitureFactory.CreateFurnitureEntities(this);
 
@@ -447,8 +461,6 @@ namespace NamelessRogue.shell
             }
 
             CurrentContext.Update((long) gameTime.TotalGameTime.TotalMilliseconds, this);
-
-
         }
 
         private FrameCounter _frameCounter = new FrameCounter();
