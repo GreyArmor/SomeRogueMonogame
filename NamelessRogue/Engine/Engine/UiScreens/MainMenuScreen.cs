@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D.UI;
+using NamelessRogue.Engine.Engine.Systems.MainMenu;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
@@ -19,9 +20,9 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         Exit,
         
     }
-    public class MainMenuScreen : BaseGuiScreen
+    public class MainMenuScreen : BaseGuiScreen<MainMenuScreenSystem>
     {
-        public List<MainMenuAction> Actions { get; } = new List<MainMenuAction>();
+        public List<MainMenuAction> SimpleActions { get; } = new List<MainMenuAction>();
         public ImageTextButton NewGame { get; private set; }
         public ImageTextButton LoadGame { get; private set; }
         public ImageTextButton CreateTimeline { get; set; }
@@ -42,11 +43,11 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             Options = new ImageTextButton() { Text = "Options", Width = 200, Height = 50, ContentHorizontalAlignment = HorizontalAlignment.Center, ContentVerticalAlignment = VerticalAlignment.Center };
             Exit = new ImageTextButton(){Text = "Exit", Width = 200, Height = 50, ContentHorizontalAlignment = HorizontalAlignment.Center, ContentVerticalAlignment = VerticalAlignment.Center };
 
-            NewGame.Click += (sender, args) => { Actions.Add(MainMenuAction.NewGame); };
-            LoadGame.Click += (sender, args) => { Actions.Add(MainMenuAction.LoadGame); };
-            CreateTimeline.Click += (sender, args) => { Actions.Add(MainMenuAction.GenerateNewTimeline); };
-            Options.Click += (sender, args) => { Actions.Add(MainMenuAction.Options); };
-            Exit.Click += (sender, args) => { Actions.Add(MainMenuAction.Exit); };
+            NewGame.Click += (sender, args) => { SimpleActions.Add(MainMenuAction.NewGame); };
+            LoadGame.Click += (sender, args) => { SimpleActions.Add(MainMenuAction.LoadGame);  };
+            CreateTimeline.Click += (sender, args) => { SimpleActions.Add(MainMenuAction.GenerateNewTimeline); };
+            Options.Click += (sender, args) => { SimpleActions.Add(MainMenuAction.Options); };
+            Exit.Click += (sender, args) => { SimpleActions.Add(MainMenuAction.Exit); };
 
             vPanel.Widgets.Add(NewGame);
             vPanel.Widgets.Add(LoadGame);

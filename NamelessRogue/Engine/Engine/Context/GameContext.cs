@@ -12,11 +12,11 @@ namespace NamelessRogue.Engine.Engine.Context
 {
     public class GameContext
     {
-        public BaseGuiScreen ContextScreen { get; }
+        public IBaseGuiScreen ContextScreen { get; }
         public HashSet<ISystem> Systems { get; } = new HashSet<ISystem>();
         public HashSet<ISystem> RenderingSystems { get; } = new HashSet<ISystem>();
 
-        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, BaseGuiScreen contextScreen)
+        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, IBaseGuiScreen contextScreen)
         {
             if (systems != null && systems.Any())
             {

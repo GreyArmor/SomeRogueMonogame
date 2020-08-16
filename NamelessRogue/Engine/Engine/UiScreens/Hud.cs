@@ -9,6 +9,7 @@ using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Engine.Factories;
+using NamelessRogue.Engine.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Engine.UiScreens.UI;
 using NamelessRogue.shell;
 
@@ -18,7 +19,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
     {
         OpenWorldMap, OpenInventory
     }
-    public class Hud : BaseGuiScreen
+    public class Hud : BaseGuiScreen<HudSystem>
     {
         public ProgressBar HealthBar { get; private set; }
         public ProgressBar StaminaBar { get; private set; }

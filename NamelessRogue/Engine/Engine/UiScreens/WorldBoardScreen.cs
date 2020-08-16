@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D.UI;
+using NamelessRogue.Engine.Engine.Systems.Map;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
@@ -19,9 +20,9 @@ namespace NamelessRogue.Engine.Engine.UiScreens
         PoliticalMode,
         ArtifactMode,
     }
-    public class WorldBoardScreen : BaseGuiScreen
+    public class WorldBoardScreen : BaseGuiScreen<WorldBoardScreenSystem>
     {
-        public List<WorldBoardScreenAction> Actions { get; private set; } = new List<WorldBoardScreenAction>();
+        public List<WorldBoardScreenAction> SimpleActions { get; private set; } = new List<WorldBoardScreenAction>();
         public WorldBoardScreenAction Mode { get; set; }
         public WorldBoardScreen(NamelessGame game)
         {
@@ -102,36 +103,36 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         private void OnWorldMap(object sender, EventArgs e)
         {
-            Actions.Add(WorldBoardScreenAction.WorldMap);
+            SimpleActions.Add(WorldBoardScreenAction.WorldMap);
         }
 
         private void OnLocalMap(object sender, EventArgs e)
         {
-            Actions.Add(WorldBoardScreenAction.LocalMap);
+            SimpleActions.Add(WorldBoardScreenAction.LocalMap);
         }
 
 
         private void OnClickArtifacts(object sender, EventArgs e)
         {
-            Actions.Add(WorldBoardScreenAction.ArtifactMode);
+            SimpleActions.Add(WorldBoardScreenAction.ArtifactMode);
             Mode = WorldBoardScreenAction.ArtifactMode;
         }
 
         private void OnClickPolitical(object sender, EventArgs e)
         {
-            Actions.Add(WorldBoardScreenAction.PoliticalMode);
+            SimpleActions.Add(WorldBoardScreenAction.PoliticalMode);
             Mode = WorldBoardScreenAction.PoliticalMode;
         }
 
         private void OnClickLandmasses(object sender, EventArgs e)
         {
-            Actions.Add(WorldBoardScreenAction.RegionsMode);
+            SimpleActions.Add(WorldBoardScreenAction.RegionsMode);
             Mode = WorldBoardScreenAction.RegionsMode;
         }
 
         private void OnClickModeTerrain(object sender, EventArgs e)
         {
-            Actions.Add(WorldBoardScreenAction.TerrainMode);
+            SimpleActions.Add(WorldBoardScreenAction.TerrainMode);
             Mode = WorldBoardScreenAction.TerrainMode;
         }
 
@@ -156,7 +157,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         private void ReturnToGameOnClick(object sender, EventArgs e)
         {
-            Actions.Add(WorldBoardScreenAction.ReturnToGame);
+            SimpleActions.Add(WorldBoardScreenAction.ReturnToGame);
         }
         public TextBox DescriptionLog { get; private set; }
 

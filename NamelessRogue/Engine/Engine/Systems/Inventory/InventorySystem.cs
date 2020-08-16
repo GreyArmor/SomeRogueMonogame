@@ -64,7 +64,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                         }
 
                         entity.RemoveComponentOfType<DropItemCommand>();
-                        UiFactory.InventoryScreen?.FillItems(namelessGame);
                     }
 
                     PickUpItemCommand pickupCommand = entity.GetComponentOfType<PickUpItemCommand>();

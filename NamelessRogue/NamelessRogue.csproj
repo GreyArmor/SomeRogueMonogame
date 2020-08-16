@@ -89,8 +89,6 @@
     <Compile Include="Engine\Engine\Components\Interaction\PickUpItemCommand.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\Player.cs" />
     <Compile Include="Engine\Engine\Components\Interaction\SimpleSwitch.cs" />
-    <Compile Include="Engine\Engine\Components\Interaction\UpdateInventoryCommand.cs" />
-    <Compile Include="Engine\Engine\Components\Interaction\UpdatePickupDialogCommand.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\Ammo.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\AmmoLibrary.cs" />
     <Compile Include="Engine\Engine\Components\ItemComponents\AmmoType.cs" />
@@ -206,7 +204,8 @@
     <Compile Include="Engine\Engine\Systems\Ingame\SwitchSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\TargetingSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Ingame\TurnManagementSystem.cs" />
-    <Compile Include="Engine\Engine\Systems\PickUpItems\PickUpItemSystem.cs" />
+    <Compile Include="Engine\Engine\Systems\PickUpItems\PickUpItemScreenSystem.cs" />
+    <Compile Include="Engine\Engine\UiScreens\IBaseGuiScreen.cs" />
     <Compile Include="Engine\Engine\UiScreens\PickUpItemsScreen.cs" />
     <Compile Include="Engine\Engine\Systems\UIRenderSystem.cs" />
     <Compile Include="Engine\Engine\Systems\Map\WorldBoardIntentSystem.cs" />

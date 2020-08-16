@@ -12,26 +12,33 @@ using NamelessRogue.Engine.Engine.UiScreens;
 
 namespace NamelessRogue.Engine.Engine.Systems.PickUpItems
 {
-    public class PickUpItemSystem : BaseSystem
+    public class PickUpItemScreenSystem : BaseSystem
     {
-        public PickUpItemSystem()
+        public PickUpItemScreenSystem()
         {
             Signature = new HashSet<Type>();
             Signature.Add(typeof(InputComponent));
         }
         public override HashSet<Type> Signature { get; }
+        public bool InventoryNeedsUpdate { get; private set; }
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
+            if (InventoryNeedsUpdate)
+            {
+                UiFactory.PickUpItemsScreen.FillItems(namelessGame);
+                InventoryNeedsUpdate = false;
+            }
+
+            foreach (var action in UiFactory.PickUpItemsScreen.Actions)
+            {
+                action.Invoke(this, namelessGame);
+            }
+
+            UiFactory.PickUpItemsScreen.Actions.Clear();
 
             foreach (IEntity entity in RegisteredEntities)
             {
-                if (entity.GetComponentOfType<UpdatePickupDialogCommand>()!=null)
-                {
-                    UiFactory.PickUpItemsScreen.FillItems(namelessGame);
-                    entity.RemoveComponentOfType<UpdatePickupDialogCommand>();
-                }
-
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)
                 {
@@ -75,24 +82,17 @@ namespace NamelessRogue.Engine.Engine.Systems.PickUpItems
                     inputComponent.Intents.Clear();
                 }
             }
-
-
-
-            foreach (var action in UiFactory.PickUpItemsScreen.Actions)
-            {
-                switch (action)
-                {
-                    case PickUpItemsScreenAction.ReturnToGame:
-                        namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            UiFactory.PickUpItemsScreen.Actions.Clear();
-
-
         }
+
+        internal void BackToGame(NamelessGame game)
+        {
+            game.ContextToSwitch = ContextFactory.GetIngameContext(game);
+        }
+
+        internal void ScheduleUpdate()
+        {
+            InventoryNeedsUpdate = true;
+        }
+
     }
 }

@@ -21,7 +21,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
         public InventoryScreenSystem()
         {
             Signature = new HashSet<Type>();
-            Signature.Add(typeof(UpdateInventoryCommand));
             Signature.Add(typeof(InputComponent));
         }
 
@@ -40,20 +39,26 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
         }
 
         public override HashSet<Type> Signature { get; }
+        public bool InventoryNeedsUpdate { get; private set; }
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
 
+            if (InventoryNeedsUpdate)
+            {
+                UiFactory.InventoryScreen.FillItems(namelessGame);
+                InventoryNeedsUpdate = false;
+            }
+
+            foreach (var action in UiFactory.InventoryScreen.Actions)
+            {
+                action.Invoke(this, namelessGame);
+            }
+
+            UiFactory.InventoryScreen.Actions.Clear();
+
             foreach (IEntity entity in RegisteredEntities)
             {
-                var updateCommand = entity.GetComponentOfType<UpdateInventoryCommand>();
-
-                if (updateCommand != null)
-                {
-                    UiFactory.InventoryScreen.FillItems(namelessGame);
-                    entity.RemoveComponentOfType<UpdateInventoryCommand>();
-                }
-
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)
                 {
@@ -153,22 +158,16 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
             }
 
 
+        }
 
-            foreach (var action in UiFactory.InventoryScreen.Actions)
-            {
-                switch (action)
-                {
-                    case InventoryScreenAction.ReturnToGame:
-                        namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
-                        break;
-                    default:
-                        break;
-                }
-            }
+        internal void BackToGame(NamelessGame game)
+        {
+            game.ContextToSwitch = ContextFactory.GetIngameContext(game);
+        }
 
-            UiFactory.InventoryScreen.Actions.Clear();
-
-
+        internal void ScheduleUpdate()
+        {
+            InventoryNeedsUpdate = true;
         }
     }
 }

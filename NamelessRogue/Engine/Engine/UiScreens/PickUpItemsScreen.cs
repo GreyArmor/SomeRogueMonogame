@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Engine.Components.Physical;
 using NamelessRogue.Engine.Engine.Components.UI;
 using NamelessRogue.Engine.Engine.Generation.World;
+using NamelessRogue.Engine.Engine.Systems.PickUpItems;
 using NamelessRogue.Engine.Engine.UiScreens.UI;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.shell;
@@ -18,11 +19,11 @@ namespace NamelessRogue.Engine.Engine.UiScreens
     {
         ReturnToGame,
     }
-    public class PickUpItemsScreen : TableScreen
+    public class PickUpItemsScreen : TableScreen<PickUpItemScreenSystem>
     {
         private readonly NamelessGame game;
         public ImageTextButton ReturnToGame { get; set; }
-        public List<PickUpItemsScreenAction> Actions { get; private set; } = new List<PickUpItemsScreenAction>();
+
         public Table ItemsTable { get; }
 
         public PickUpItemsScreen(NamelessGame game)
@@ -85,7 +86,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
                 if (itemEntity == null)
                 {
-                    playerEntity.AddComponent(new UpdatePickupDialogCommand());
+             
                     return;
                 }
 
@@ -95,13 +96,16 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                     this.SelectedItem = item;
                 }
 
-                var command = new PickUpItemCommand(new List<IEntity>(){itemEntity},itemsHolder, position.p);
-                playerEntity.AddComponent(command);
-                if (ItemsTable.Items.Count == 2)
+                Actions.Add((PickUpItemScreenSystem pickupScreenSystem, NamelessGame namelessGame) =>
                 {
-                    Actions.Add(PickUpItemsScreenAction.ReturnToGame);
-                }
-                playerEntity.AddComponentDelayed(new UpdatePickupDialogCommand());
+                    var command = new PickUpItemCommand(new List<IEntity>() {itemEntity}, itemsHolder, position.p);
+                    playerEntity.AddComponent(command);
+                    if (ItemsTable.Items.Count == 2)
+                    {
+                        pickupScreenSystem.BackToGame(game);
+                    }
+                    pickupScreenSystem.ScheduleUpdate();
+                });
             };
         }
 
@@ -202,7 +206,10 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         private void OnClickReturnToGame(object sender, EventArgs e)
         {
-            Actions.Add(PickUpItemsScreenAction.ReturnToGame);
+            Actions.Add((PickUpItemScreenSystem pickupScreenSystem, NamelessGame namelessGame) =>
+            {
+                pickupScreenSystem.BackToGame(namelessGame);
+            });
         }
     }
 }

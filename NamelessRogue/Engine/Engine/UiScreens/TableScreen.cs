@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.UiScreens.UI;
+using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Engine.UiScreens
 {
-    public class TableScreen : BaseGuiScreen
+    public class TableScreen<BondedSystemType> : BaseGuiScreen <BondedSystemType> where BondedSystemType : ISystem
     {
+
         public Table SelectedTable { get; set; }
         public bool DialogOpened { get => dialogOpened; private set => dialogOpened = value; }
 
@@ -96,7 +100,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
 
         }
 
-        public void OpenDialog(ChoiceDialog dialog)
+        public void OpenDialog(ChoiceDialog dialog, NamelessGame game)
         {
             if (dialogOpened)
             {
@@ -106,7 +110,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
             dialogOpened = true;
             previouslySelectedTable = SelectedTable;
             dialog.OptionsTable.SelectedIndex = 0;
-            dialog.ShowModal(null);
+            dialog.ShowModal(game.Desktop);
             SelectTable(dialog.OptionsTable);
         }
 

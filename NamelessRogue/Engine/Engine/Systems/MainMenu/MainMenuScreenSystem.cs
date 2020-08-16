@@ -13,7 +13,7 @@ namespace NamelessRogue.Engine.Engine.Systems.MainMenu
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
-            foreach (var action in UiFactory.MainMenuScreen.Actions)
+            foreach (var action in UiFactory.MainMenuScreen.SimpleActions)
             {
                 switch (action)
                 {
@@ -34,7 +34,7 @@ namespace NamelessRogue.Engine.Engine.Systems.MainMenu
                 }
             }
 
-            UiFactory.MainMenuScreen.Actions.Clear();
+            UiFactory.MainMenuScreen.SimpleActions.Clear();
         }
     }
 }

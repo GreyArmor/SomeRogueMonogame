@@ -78,7 +78,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                 }
             }
 
-            foreach (var worldBoardScreenAction in UiFactory.WorldBoardScreen.Actions)
+            foreach (var worldBoardScreenAction in UiFactory.WorldBoardScreen.SimpleActions)
             {
                 switch (worldBoardScreenAction)
                 {
@@ -123,7 +123,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                         break;
                 }
             }
-            UiFactory.WorldBoardScreen.Actions.Clear();
+            UiFactory.WorldBoardScreen.SimpleActions.Clear();
         }
     }
 }

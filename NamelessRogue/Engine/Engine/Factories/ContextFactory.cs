@@ -141,7 +141,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             {
                 var systems = new List<ISystem>();
                 systems.Add(new InputSystem(new PickUpKeyIntentTranslator(), game));
-                systems.Add(new PickUpItemSystem());
+                systems.Add(new PickUpItemScreenSystem());
                 systems.Add(new InventorySystem());
                 var uiSystem = new UIRenderSystem();
 
@@ -155,10 +155,10 @@ namespace NamelessRogue.Engine.Engine.Factories
         internal static void InitAllContexts(NamelessGame game)
         {
             GetIngameContext(game).ContextScreen.Hide();
-            GetInventoryContext(game).ContextScreen.Hide(); ;
-            GetMainMenuContext(game).ContextScreen.Hide(); ;
-            GetPickUpItemContext(game).ContextScreen.Hide(); ;
-            GetWorldBoardContext(game).ContextScreen.Hide(); ;
+            GetInventoryContext(game).ContextScreen.Hide();
+            GetMainMenuContext(game).ContextScreen.Hide();
+            GetPickUpItemContext(game).ContextScreen.Hide();
+            GetWorldBoardContext(game).ContextScreen.Hide();
         }
     }
 }
