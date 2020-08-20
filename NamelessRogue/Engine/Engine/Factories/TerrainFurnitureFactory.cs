@@ -87,7 +87,7 @@ namespace NamelessRogue.Engine.Engine.Factories
             treeStumpEntity.AddComponent(new Description("A tree stump", ""));
             treeStumpEntity.AddComponent(new Drawable('u', new Color(0.5f, 0.5f, 0f)));
             
-            wallEntity.AddComponent(new Drawable('#', new Engine.Utility.Color(0.9, 0.9, 0.9)));
+            wallEntity.AddComponent(new Drawable('#', new Engine.Utility.Color(0.5f)));
             wallEntity.AddComponent(new Description("Wall", ""));
             wallEntity.AddComponent(new OccupiesTile());
             wallEntity.AddComponent(new BlocksVision());

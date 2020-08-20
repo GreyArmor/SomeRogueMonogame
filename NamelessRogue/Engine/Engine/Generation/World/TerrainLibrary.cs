@@ -31,7 +31,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                 new Terrain(TerrainTypes.Water, new Drawable('~', new Color(0, 0, 255), new Color(0, 1, 1))));
 
             Terrains.Add(TerrainTypes.Grass,
-                new Terrain(TerrainTypes.Grass, new Drawable('.', new Color(0, 0.8f, 0), new Color())));
+                new Terrain(TerrainTypes.Grass, new Drawable('.', new Color(0, 0.4f, 0), new Color())));
 
             Terrains.Add(TerrainTypes.HardRocks,
                 new Terrain(TerrainTypes.HardRocks, new Drawable('.', new Color(0.2, 0.2, 0.2), new Color())));

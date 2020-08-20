@@ -22,6 +22,15 @@ namespace NamelessRogue.Engine.Engine.Utility
             Init(red, green, blue, 1f);
         }
 
+        public Color(double allColorChannels)
+        {
+            Init((float)allColorChannels, (float)allColorChannels, (float)allColorChannels, 1);
+        }
+        public Color(float allColorChannels)
+        {
+            Init(allColorChannels, allColorChannels, allColorChannels, 1);
+        }
+
         public Color(double red, double green, double blue)
         {
             Init((float) red, (float)green, (float)blue, 1);
