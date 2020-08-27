@@ -42,9 +42,17 @@ namespace NamelessRogue.Engine.Engine.Generation.World
                 for (int y = 0; y < game.WorldSettings.WorldBoardHeight; y++)
                 {
                     var worldTile = new WorldTile(new Point(x,y));
-                    var tile = game.WorldSettings.TerrainGen.GetTile(x, y, (float)game.WorldSettings.WorldBoardWidth/ game.WorldSettings.TerrainGen.Resolution);
+                    var tile = game.WorldSettings.TerrainGen.GetTileWithoutWater(x, y, (float)game.WorldSettings.WorldBoardWidth/ game.WorldSettings.TerrainGen.Resolution);
                     worldTile.Terrain = tile.Terrain;
                     worldTile.Biome = tile.Biome;
+
+
+                    if (game.WorldSettings.TerrainGen.RiverMap[x][y] && worldTile.Terrain.Type != TerrainTypes.Water)
+                    {
+                        worldTile.Terrain = TerrainLibrary.Terrains[TerrainTypes.Water];
+                        worldTile.Biome = BiomesLibrary.Biomes[Biomes.River];
+                    }
+
                     board.WorldTiles[x, y] = worldTile;
                 }
             }
@@ -173,7 +181,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         {
             var s = Stopwatch.StartNew();
             Random rand = game.WorldSettings.GlobalRandom;
-            List<Region> regions =  GetRegions(timelineLayer, game, rand, (tile => tile.Terrain.Type != TerrainTypes.Water &&
+            List<Region> regions =  GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type != Biomes.Sea &&
                                                         tile.Continent == null), (tile, region) => tile.Continent = region,() => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper(); });
 
             List<Region> forests = GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type == Biomes.Forest && tile.LandmarkRegion==null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " forest"; });

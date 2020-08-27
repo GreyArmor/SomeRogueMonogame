@@ -18,12 +18,14 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
         public Tile(){}
 	
-        public Tile(Terrain terrain, Biome biome, Point coordinate){
+        public Tile(Terrain terrain, Biome biome, Point coordinate, double elevation)
+        {
             this.coordinate = coordinate;
             Terrain = terrain;
             Biome = biome;
+            this.Elevation = elevation;
         }
-        
+        public double Elevation { get; set; }
         public Terrain Terrain { get; set; }
         
         private Point coordinate;

@@ -12,9 +12,9 @@ namespace NamelessRogue.Engine.Engine.Utility
 
         public Color(){}
 
-        public Color(int red, int green, int blue)
+        public Color(int red255, int green255, int blue255)
         {
-            Init(red,green,blue,0);
+            Init(red255/255f, green255/255f, blue255/255f, 0);
         }
 
         public Color(float red, float green, float blue)
@@ -41,9 +41,9 @@ namespace NamelessRogue.Engine.Engine.Utility
             Init((float)red,(float)green,(float)blue, (float)alpha);
         }
 
-        public Color(int red, int green, int blue, int alpha)
+        public Color(int red255, int green255, int blue255, int alpha255)
         {
-            Init((float)red /255,(float)green/255,(float)blue /255, (float)alpha/255);
+            Init((float)red255 / 255,(float)green255 / 255,(float)blue255 / 255, (float)alpha255 / 255);
         }
 
         public Color(float red, float green, float blue, float alpha)

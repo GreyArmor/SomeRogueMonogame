@@ -9,8 +9,10 @@ using NamelessRogue.Engine.Engine.Infrastructure;
  */
 namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 {
-    public class TileNoiseInterpreter {
-        public static Tuple<Terrain, Biome> GetTerrain(double noiseValue, double forest, double swamp, double lake, double desert, double temperature,  int resolutionZoomed, double x, double y)
+    public class TileNoiseInterpreter
+    {
+        public static double SeaLevelThreshold = 0.5;
+        public static Tuple<Terrain, Biome> GetTerrain(double noiseValue, double forest, double swamp, double desert, double temperature,  int resolutionZoomed, double x, double y)
         {
             if (noiseValue>1){
                 noiseValue=1;
@@ -57,11 +59,11 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                     b = BiomesLibrary.Biomes[Biomes.Plains];
                 }
             }
-            else if(noiseValue>=0.5) {
+            else if(noiseValue >= SeaLevelThreshold) {
                 t  = TerrainLibrary.Terrains[TerrainTypes.Sand];
                 b = BiomesLibrary.Biomes[Biomes.Beach];
             }
-            else if(noiseValue<0.5) {
+            else if(noiseValue < SeaLevelThreshold) {
                 t  = TerrainLibrary.Terrains[TerrainTypes.Water];
                 b = BiomesLibrary.Biomes[Biomes.Sea];
             }
@@ -71,12 +73,13 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
                 if (t.Type != TerrainTypes.Water && t.Type != TerrainTypes.Rocks && t.Type != TerrainTypes.HardRocks&& t.Type != TerrainTypes.HardRocks)
                 {
-                    if (lake >= 0.95f)
-                    {
-                        t = TerrainLibrary.Terrains[TerrainTypes.Water];
-                        b = BiomesLibrary.Biomes[Biomes.Lake];
-                    }
-                    else if (desert>=0.8f)
+                    //if (lake >= 0.95f)
+                    //{
+                    //    t = TerrainLibrary.Terrains[TerrainTypes.Water];
+                    //    b = BiomesLibrary.Biomes[Biomes.Lake];
+                    //}
+                    //else 
+                    if (desert>=0.8f)
                     {
                         t = TerrainLibrary.Terrains[TerrainTypes.Sand];
                        

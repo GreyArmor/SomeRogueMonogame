@@ -68,7 +68,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    chunkTiles[x][y] = generator.GetTile(x + worldPositionBottomLeftCorner.X,
+                    chunkTiles[x][y] = generator.GetTileWithoutWater(x + worldPositionBottomLeftCorner.X,
                         y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
                 }
             }
@@ -82,7 +82,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
                     chunkTiles[x][y] = new Tile(TerrainLibrary.Terrains[TerrainTypes.HardRocks],BiomesLibrary.Biomes[Biomes.Mountain],
-                        new Point(x + worldPositionBottomLeftCorner.X, y + worldPositionBottomLeftCorner.Y));
+                        new Point(x + worldPositionBottomLeftCorner.X, y + worldPositionBottomLeftCorner.Y), 0.5);
                 }
             }
         }

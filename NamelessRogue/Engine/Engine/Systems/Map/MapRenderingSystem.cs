@@ -339,13 +339,10 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
 
         void GetTerrainTile(Screen screen, Point point, WorldTile tile)
         {
-          
-
-
-                          screen.ScreenBuffer[point.X, point.Y].Char = tile.Biome.Representation.getRepresentation();
-                screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Biome.Representation.getCharColor();
+            screen.ScreenBuffer[point.X, point.Y].Char = tile.Biome.Representation.getRepresentation();
+            screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Biome.Representation.getCharColor();
             screen.ScreenBuffer[point.X, point.Y].BackGroundColor = tile.Biome.Representation.BackgroundColor;
-            
+
 
             if (Mode == WorldBoardRenderingSystemMode.Regions)
             {
@@ -373,7 +370,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                 else
                 {
                     screen.ScreenBuffer[point.X, point.Y].Char = ' ';
-                    screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0,0,0,0);
+                    screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0, 0, 0);
                 }
             }
             else if (Mode == WorldBoardRenderingSystemMode.Artifact)

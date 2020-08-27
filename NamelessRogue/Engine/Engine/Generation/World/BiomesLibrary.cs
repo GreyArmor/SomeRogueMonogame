@@ -19,9 +19,12 @@ namespace NamelessRogue.Engine.Engine.Generation.World
             Biomes = new Dictionary<Biomes, Biome>();
 
             Biomes.Add(World.Biomes.Sea,
-                new Biome(World.Biomes.Sea, new Drawable('~', new Color(0, 255, 255), new Color(0, 0, 1))));
+                new Biome(World.Biomes.Sea, new Drawable('~', new Color(0, 255, 255), new Color(0, 0, 1f))));
             Biomes.Add(World.Biomes.Lake,
-                new Biome(World.Biomes.Lake, new Drawable('~', new Color(0, 255, 255), new Color(0, 0, 1))));
+                new Biome(World.Biomes.Lake, new Drawable('~', new Color(0, 255, 255), new Color(0, 0, 1f))));
+
+            Biomes.Add(World.Biomes.River,
+                new Biome(World.Biomes.River, new Drawable('~', new Color(0, 255, 255), new Color(0, 0, 1f))));
 
 
             Biomes.Add(World.Biomes.Plains,
