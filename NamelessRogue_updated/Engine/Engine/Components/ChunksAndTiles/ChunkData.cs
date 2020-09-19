@@ -66,9 +66,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             Chunk chunkOfPoint = null;
 
             int chunkX = x / Constants.ChunkSize;
-            int chunkY = y / Constants.ChunkSize;
-
-            
+            int chunkY = y / Constants.ChunkSize;            
 
             realityBubbleChunks.TryGetValue(new Point(chunkX, chunkY),out chunkOfPoint);
 

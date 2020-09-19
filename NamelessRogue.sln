@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NamelessRogue_updated", "Na
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AstarNavigatorNetCore", "AstarNavigatorNetCore\AstarNavigatorNetCore.csproj", "{8280F796-C9CF-4188-842E-84662D1FB266}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoronoiLib", "VoronoiLib\VoronoiLib.csproj", "{96E175FA-74CA-4C0E-A318-8525A5658A41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8280F796-C9CF-4188-842E-84662D1FB266}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8280F796-C9CF-4188-842E-84662D1FB266}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8280F796-C9CF-4188-842E-84662D1FB266}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96E175FA-74CA-4C0E-A318-8525A5658A41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96E175FA-74CA-4C0E-A318-8525A5658A41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96E175FA-74CA-4C0E-A318-8525A5658A41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96E175FA-74CA-4C0E-A318-8525A5658A41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -220,7 +220,7 @@ namespace NamelessRogue.shell
             graphics.ApplyChanges();
 
 
-            worldSettings = new WorldSettings(111,1000,1000);
+            worldSettings = new WorldSettings(12345,1000,1000);
 
             TerrainFurnitureFactory.CreateFurnitureEntities(this);
 
@@ -344,6 +344,7 @@ namespace NamelessRogue.shell
                 {
                     anyRivers = true;
                     worldRiverPosition = pos;
+                    break;
                 }
             }
 

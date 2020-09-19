@@ -67,170 +67,148 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             isActive = false;
         }
 
-
         public void FillWithTiles(TerrainGenerator generator)
         {
 
             var surroundingChunksWithRivers = new List<TerrainGenerator.TileForInlandWaterConnectivity>();
 
-			for (int i = -1; i < 2; i++)
-			{
-				for (int j = -1; j < 2; j++)
-				{
+
+
+
+            for (int i = -1; i < 2; i++)
+            {
+                for (int j = -1; j < 2; j++)
+                {
                     var tile = generator.InlandWaterConnectivity[this.ChunkWorldMapLocationPoint.X + i][this.ChunkWorldMapLocationPoint.Y + j];
                     if (tile.WaterBorderLines.Any())
                     {
                         surroundingChunksWithRivers.Add(tile);
                     }
-
                 }
+            }
 
-			}
-            //TODO resolve filled chunks later
-
-            var chunkWater = generator.InlandWaterConnectivity[this.ChunkWorldMapLocationPoint.X][this.ChunkWorldMapLocationPoint.Y];
-
-            if (chunkWater.isWater && !chunkWater.WaterBorderLines.Any())
-			{
-				for (int x = 0; x < Constants.ChunkSize; x++)
-				{
-					for (int y = 0; y < Constants.ChunkSize; y++)
-					{
-						chunkTiles[x][y] = new Tile(
-							TerrainLibrary.Terrains[TerrainTypes.Water],
-							BiomesLibrary.Biomes[Biomes.River],
-							new Point(x + worldPositionBottomLeftCorner.X,
-								y + worldPositionBottomLeftCorner.Y), 0);
-					}
-				}
-			}
-            else
-			{
-                for (int x = 0; x < Constants.ChunkSize; x++)
+            for (int x = 0; x < Constants.ChunkSize; x++)
+            {
+                for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    for (int y = 0; y < Constants.ChunkSize; y++)
-                    {
-                        chunkTiles[x][y] = generator.GetTileWithoutRiverWater(x + worldPositionBottomLeftCorner.X,
-                            y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
+                    chunkTiles[x][y] = generator.GetTileWithoutRiverWater(x + worldPositionBottomLeftCorner.X,
+                        y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
 
-                        //if (x == 0 || y == 0 || x == Constants.ChunkSize - 1 || y == Constants.ChunkSize - 1)
-                        //{
-                        //    chunkTiles[x][y].Terrain = TerrainLibrary.Terrains[TerrainTypes.Nothingness];
-                        //}
-                    }
-                }
-
-
-
-                
-
-
-                if (surroundingChunksWithRivers.Any())
-                {
-                    //TODO this part is really useful for plotting rivers/roads on map, should be moved to its own class
-                    // the point is: i must generate a chunk sized bitmap to detect which tiles are river tiles and which are not
-                    // in this bitmap, black pixels are ignored, white ones are river tiles 
-
-                    Pen whitePen = new Pen(System.Drawing.Color.White, Constants.ChunkSize);
-
-                    var waterBitmap = new Bitmap(Constants.ChunkSize, Constants.ChunkSize);
-
-                    var graphics = Graphics.FromImage(waterBitmap);
-
-                    foreach(var chunkWithRivers in surroundingChunksWithRivers)
-                    {
-                        var riverLines = chunkWithRivers.WaterBorderLines;
-
-                        foreach (var waterBorderLine in riverLines)
-                        {
-                            var chunkRiverPoints = waterBorderLine.Points;
-
-                            var chunkPointIndex = chunkRiverPoints.FindIndex(p =>
-                                p.X == chunkWithRivers.x && p.Y == chunkWithRivers.y);
-
-                            var chHalf = Constants.ChunkSize / 2;
-                            var halfV = new Microsoft.Xna.Framework.Vector2(chHalf);
-                            Point ScalePoint(Point p)
-                            {
-                                return ((p.ToVector2() * Constants.ChunkSize) + halfV).ToPoint();
-                            }
-
-                            int curveLenght = 5;
-                            int halfLenght = curveLenght / 2;
-
-                            System.Drawing.Point[] points = null;
-
-                            if (chunkRiverPoints.Count >= curveLenght)
-                            {
-                                points = new System.Drawing.Point[curveLenght];
-                                int rangeStart = 0, rangeEnd = 0;
-                                int rangeIndex = chunkPointIndex;
-                                if (chunkPointIndex >= halfLenght && chunkPointIndex < chunkRiverPoints.Count - halfLenght)
-                                {
-                                    rangeStart = -halfLenght;
-                                    rangeEnd = halfLenght;
-                                }
-
-                                //this chunk is a first point in this water line
-                                else if (chunkPointIndex <= halfLenght)
-                                {
-                                    rangeStart = 0;
-                                    rangeEnd = curveLenght - 1;
-
-                                    rangeIndex = 0;
-
-                                }
-
-                                //this chunk is last
-                                else if (chunkPointIndex > chunkRiverPoints.Count - halfLenght - 1)
-                                {
-                                    rangeStart = -curveLenght + 1;
-                                    rangeEnd = 0;
-
-                                    rangeIndex = chunkRiverPoints.Count - 1;
-                                }
-
-
-                                for (int i = rangeStart, pointsIndex = 0; i <= rangeEnd; i++, pointsIndex++)
-                                {
-                                        points[pointsIndex] = ScalePoint(chunkRiverPoints[rangeIndex + i] - ChunkWorldMapLocationPoint).ToPoint();
-                                }
-                            }
-                            else
-                            {
-                                var allpointsCount = chunkRiverPoints.Count;
-                                points = new System.Drawing.Point[allpointsCount];
-
-								for (int i = 0; i < chunkRiverPoints.Count; i++)
-                                {
-                                    points[i] = ScalePoint(chunkRiverPoints[i] - ChunkWorldMapLocationPoint).ToPoint();
-                                }
-
-                            }
-
-
-                            graphics.DrawCurve(whitePen, points);
-
-                        }
-                        //then we use the bitmap and fill the chunk
-                        for (int x = 0; x < Constants.ChunkSize; x++)
-                        {
-                            for (int y = 0; y < Constants.ChunkSize; y++)
-                            {
-                                if (waterBitmap.GetPixel(x, y).R > 0)
-                                {
-                                    chunkTiles[x][y].Biome = BiomesLibrary.Biomes[Biomes.River];
-                                    chunkTiles[x][y].Terrain = TerrainLibrary.Terrains[TerrainTypes.Water];
-                                }
-                            }
-                        }
-                    }
-
+                    //if (x == 0 || y == 0 || x == Constants.ChunkSize - 1 || y == Constants.ChunkSize - 1)
+                    //{
+                    //	chunkTiles[x][y].Terrain = TerrainLibrary.Terrains[TerrainTypes.Nothingness];
+                    //}
                 }
             }
 
 
-      
+
+
+
+
+            if (surroundingChunksWithRivers.Any())
+            {
+                //TODO this part is really useful for plotting rivers/roads on map, should be moved to its own class
+                // the point is: i must generate a chunk sized bitmap to detect which tiles are river tiles and which are not
+                // in this bitmap, black pixels are ignored, white ones are river tiles 
+
+                Pen whitePen = new Pen(System.Drawing.Color.White, Constants.ChunkSize);
+
+                var waterBitmap = new Bitmap(Constants.ChunkSize, Constants.ChunkSize);
+
+                var graphics = Graphics.FromImage(waterBitmap);
+
+                foreach (var chunkWithRivers in surroundingChunksWithRivers)
+                {
+                    var riverLines = chunkWithRivers.WaterBorderLines;
+
+                    foreach (var waterBorderLine in riverLines)
+                    {
+                        var chunkRiverPoints = waterBorderLine.Points;
+
+                        var chunkPointIndex = chunkRiverPoints.FindIndex(p =>
+                            p.X == chunkWithRivers.x && p.Y == chunkWithRivers.y);
+
+                        var chHalf = Constants.ChunkSize / 2;
+                        var halfV = new Microsoft.Xna.Framework.Vector2(chHalf);
+                        Point ScalePoint(Point p)
+                        {
+                            return ((p.ToVector2() * Constants.ChunkSize) + halfV).ToPoint();
+                        }
+
+                        int curveLenght = 5;
+                        int halfLenght = curveLenght / 2;
+
+                        System.Drawing.Point[] points = null;
+
+                        if (chunkRiverPoints.Count >= curveLenght)
+                        {
+                            points = new System.Drawing.Point[curveLenght];
+                            int rangeStart = 0, rangeEnd = 0;
+                            int rangeIndex = chunkPointIndex;
+                            if (chunkPointIndex >= halfLenght && chunkPointIndex < chunkRiverPoints.Count - halfLenght)
+                            {
+                                rangeStart = -halfLenght;
+                                rangeEnd = halfLenght;
+                            }
+
+                            //this chunk is a first point in this water line
+                            else if (chunkPointIndex <= halfLenght)
+                            {
+                                rangeStart = 0;
+                                rangeEnd = curveLenght - 1;
+
+                                rangeIndex = 0;
+
+                            }
+
+                            //this chunk is last
+                            else if (chunkPointIndex > chunkRiverPoints.Count - halfLenght - 1)
+                            {
+                                rangeStart = -curveLenght + 1;
+                                rangeEnd = 0;
+
+                                rangeIndex = chunkRiverPoints.Count - 1;
+                            }
+
+
+                            for (int i = rangeStart, pointsIndex = 0; i <= rangeEnd; i++, pointsIndex++)
+                            {
+                                points[pointsIndex] = ScalePoint(chunkRiverPoints[rangeIndex + i] - ChunkWorldMapLocationPoint).ToPoint();
+                            }
+                        }
+                        else
+                        {
+                            var allpointsCount = chunkRiverPoints.Count;
+                            points = new System.Drawing.Point[allpointsCount];
+
+                            for (int i = 0; i < chunkRiverPoints.Count; i++)
+                            {
+                                points[i] = ScalePoint(chunkRiverPoints[i] - ChunkWorldMapLocationPoint).ToPoint();
+                            }
+
+                        }
+
+
+                        graphics.DrawCurve(whitePen, points);
+
+                    }
+
+                    //then we use the bitmap and fill the chunk
+                    for (int x = 0; x < Constants.ChunkSize; x++)
+                    {
+                        for (int y = 0; y < Constants.ChunkSize; y++)
+                        {
+                            if (waterBitmap.GetPixel(x, y).R > 0)
+                            {
+                                chunkTiles[x][y].Biome = BiomesLibrary.Biomes[Biomes.River];
+                                chunkTiles[x][y].Terrain = TerrainLibrary.Terrains[TerrainTypes.Water];
+                            }
+                        }
+                    }
+                }
+
+            }
         }
 
         public void FillWithDebugTiles(TerrainGenerator generator)

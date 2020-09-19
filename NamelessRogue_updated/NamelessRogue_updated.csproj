@@ -203,5 +203,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AstarNavigatorNetCore\AstarNavigatorNetCore.csproj" />
+    <ProjectReference Include="..\VoronoiLib\VoronoiLib.csproj" />
   </ItemGroup>
 </Project>
