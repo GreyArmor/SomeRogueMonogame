@@ -18,13 +18,15 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
         private Dictionary<Point, Chunk> realityBubbleChunks;
         public List<Chunk> RealityChunks { get; set; } = new List<Chunk>();
         private WorldSettings worldSEttings;
+		private TimelineLayer worldBoard;
 
-        public ChunkData(WorldSettings settings)
+		public ChunkData(WorldSettings settings, TimelineLayer worldBoard)
         {
             Id = Guid.NewGuid();
             chunks = new Dictionary<Point, Chunk>();
             realityBubbleChunks = new Dictionary<Point, Chunk>();
             worldSEttings = settings;
+            this.worldBoard = worldBoard;
             initWorld();
         }
 
@@ -60,8 +62,9 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
         //TODO: we need to implement quick iteration by using bounding box trees;
         public int ChunkResolution { get; } = 1000;
+		public TimelineLayer WorldBoard { get => worldBoard; set => worldBoard = value; }
 
-        public Tile GetTile(int x, int y)
+		public Tile GetTile(int x, int y)
         {
             Chunk chunkOfPoint = null;
 

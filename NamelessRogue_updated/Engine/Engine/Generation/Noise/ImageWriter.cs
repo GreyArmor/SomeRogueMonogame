@@ -103,7 +103,7 @@ namespace NamelessRogue.Engine.Engine.Generation.Noise
 
         }
 
-        public static void RiverBordersWriteImage(List<List<TerrainGenerator.TileForGeneration>> riverBorders, double[][] heights, int resolution, string path)
+        public static void RiverBordersWriteImage(List<List<TileForGeneration>> riverBorders, double[][] heights, int resolution, string path)
         {
 
             var img = new System.Drawing.Bitmap(resolution, resolution, System.Drawing.Imaging.PixelFormat.Format32bppArgb);

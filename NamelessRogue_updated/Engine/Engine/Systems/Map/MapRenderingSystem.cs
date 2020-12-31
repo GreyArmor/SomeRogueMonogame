@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -278,6 +279,13 @@ namespace NamelessRogue.Engine.Engine.Systems.Map
                         Texture2D tex = new Texture2D(NamelessGame.DebugDevice, screen.Width, screen.Height, false,
                             SurfaceFormat.Color);
                         tex.SetData(arrBytes);
+#if DEBUG
+                        using (var stream = File.OpenWrite("C:\\11\\colored.png"))
+                        {
+                            tex.SaveAsPng(stream, tex.Width, tex.Height);
+                        }
+#endif
+
                         worldMap = tex;
                     }
                     RenderWorldScreen(game, screen);

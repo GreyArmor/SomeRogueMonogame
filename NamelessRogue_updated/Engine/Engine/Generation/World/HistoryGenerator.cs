@@ -59,7 +59,7 @@ namespace NamelessRogue.Engine.Engine.Generation.World
         private static TimelineLayer InitialiseFirstBoard(NamelessGame game, HistoryGenerationSettings settings)
         {
             var worldBoard = new TimelineLayer(game.WorldSettings.WorldBoardWidth, game.WorldSettings.WorldBoardWidth, 0);
-            ChunkData chunkData = new ChunkData(game.WorldSettings);
+            ChunkData chunkData = new ChunkData(game.WorldSettings, worldBoard);
 
             worldBoard.Chunks = chunkData;
 

@@ -219,8 +219,8 @@ namespace NamelessRogue.shell
 
             graphics.ApplyChanges();
 
-
-            worldSettings = new WorldSettings(12345,1000,1000);
+            //12345 123
+            worldSettings = new WorldSettings(123,1000,1000);
 
             TerrainFurnitureFactory.CreateFurnitureEntities(this);
 
@@ -339,7 +339,7 @@ namespace NamelessRogue.shell
             foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
             {
                 var pos = worldBoardWorldTile.WorldBoardPosiiton;
-                var isWater = worldSettings.TerrainGen.InlandWaterConnectivity[pos.X][pos.Y].isWater;
+                var isWater = timeline.CurrentTimelineLayer.InlandWaterConnectivity[pos.X][pos.Y].isWater;
                 if (isWater)
                 {
                     anyRivers = true;

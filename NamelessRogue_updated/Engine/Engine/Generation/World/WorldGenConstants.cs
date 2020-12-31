@@ -10,10 +10,11 @@ namespace NamelessRogue.Engine.Engine.Generation.World
     {
         public static int FoodForPopulationGrowth = 100;
 
-        public static int CultureForBordersGrowth = 100;
-
-        
+        public static int CultureForBordersGrowth = 100;        
         //per 10 food;
         public static int HealthNeededToStoreFood = 2;
+
+        public static int Resolution = 1000;
+
     }
 }

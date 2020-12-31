@@ -67,10 +67,10 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             isActive = false;
         }
 
-        public void FillWithTiles(TerrainGenerator generator)
+        public void FillWithTiles(TerrainGenerator generator, TimelineLayer board)
         {
 
-            var surroundingChunksWithRivers = new List<TerrainGenerator.TileForInlandWaterConnectivity>();
+            var surroundingChunksWithRivers = new List<TileForInlandWaterConnectivity>();
 
 
 
@@ -79,7 +79,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
             {
                 for (int j = -1; j < 2; j++)
                 {
-                    var tile = generator.InlandWaterConnectivity[this.ChunkWorldMapLocationPoint.X + i][this.ChunkWorldMapLocationPoint.Y + j];
+                    var tile = board.InlandWaterConnectivity[this.ChunkWorldMapLocationPoint.X + i][this.ChunkWorldMapLocationPoint.Y + j];
                     if (tile.WaterBorderLines.Any())
                     {
                         surroundingChunksWithRivers.Add(tile);
@@ -168,7 +168,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                                 rangeStart = -curveLenght + 1;
                                 rangeEnd = 0;
 
-                                rangeIndex = chunkRiverPoints.Count - 1;
+                                rangeIndex = chunkRiverPoints.Count-1;
                             }
 
 
@@ -280,7 +280,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
                 if (!LoadFromDisk())
                 {
-                    FillWithTiles(chunkContainer.GetWorldGenerator());
+                    FillWithTiles(chunkContainer.GetWorldGenerator(),chunkContainer.WorldBoard);
                     this.JustCreated = true;
                 }
                 loaded = true;
@@ -298,7 +298,7 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
 
         public void Deactivate()
         {
-            //todo: do not unlod chunks for now, just deactivate
+            //todo: do not unload chunks for now, just deactivate
 
             //String appPath = System.IO.Directory.GetCurrentDirectory();
             //SaveManager.SaveChunk(appPath + "\\Chunks", this,
