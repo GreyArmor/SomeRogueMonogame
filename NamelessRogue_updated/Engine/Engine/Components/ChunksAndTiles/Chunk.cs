@@ -137,60 +137,67 @@ namespace NamelessRogue.Engine.Engine.Components.ChunksAndTiles
                         }
 
                         int curveLenght = 5;
-                        int halfLenght = curveLenght / 2;
+                        int curveHalfLenght = curveLenght / 2;
 
-                        System.Drawing.Point[] points = null;
-
+                        System.Drawing.Point[] curvePoints = null;
+                        List<System.Drawing.Point> endPoints = null;
                         if (chunkRiverPoints.Count >= curveLenght)
                         {
-                            points = new System.Drawing.Point[curveLenght];
+                            curvePoints = new System.Drawing.Point[curveLenght];
+                            endPoints = new List<System.Drawing.Point>();
                             int rangeStart = 0, rangeEnd = 0;
                             int rangeIndex = chunkPointIndex;
-                            if (chunkPointIndex >= halfLenght && chunkPointIndex < chunkRiverPoints.Count - halfLenght)
+                            if (chunkPointIndex >= curveHalfLenght && chunkPointIndex < chunkRiverPoints.Count - curveHalfLenght)
                             {
-                                rangeStart = -halfLenght;
-                                rangeEnd = halfLenght;
+                                rangeStart = -curveHalfLenght;
+                                rangeEnd = curveHalfLenght;
                             }
 
                             //this chunk is a first point in this water line
-                            else if (chunkPointIndex <= halfLenght)
+                            else if (chunkPointIndex <= curveHalfLenght)
                             {
                                 rangeStart = 0;
                                 rangeEnd = curveLenght - 1;
 
                                 rangeIndex = 0;
-
+                                endPoints.Add(ScalePoint(chunkRiverPoints[rangeStart] - ChunkWorldMapLocationPoint).ToPoint());
                             }
 
                             //this chunk is last
-                            else if (chunkPointIndex > chunkRiverPoints.Count - halfLenght - 1)
+                            else if (chunkPointIndex > chunkRiverPoints.Count - curveHalfLenght - 1)
                             {
                                 rangeStart = -curveLenght + 1;
                                 rangeEnd = 0;
 
                                 rangeIndex = chunkRiverPoints.Count-1;
+
+                                endPoints.Add(ScalePoint(chunkRiverPoints[rangeIndex] - ChunkWorldMapLocationPoint).ToPoint());
                             }
 
 
                             for (int i = rangeStart, pointsIndex = 0; i <= rangeEnd; i++, pointsIndex++)
                             {
-                                points[pointsIndex] = ScalePoint(chunkRiverPoints[rangeIndex + i] - ChunkWorldMapLocationPoint).ToPoint();
+                                curvePoints[pointsIndex] = ScalePoint(chunkRiverPoints[rangeIndex + i] - ChunkWorldMapLocationPoint).ToPoint();
                             }
                         }
                         else
                         {
                             var allpointsCount = chunkRiverPoints.Count;
-                            points = new System.Drawing.Point[allpointsCount];
+                            curvePoints = new System.Drawing.Point[allpointsCount];
 
                             for (int i = 0; i < chunkRiverPoints.Count; i++)
                             {
-                                points[i] = ScalePoint(chunkRiverPoints[i] - ChunkWorldMapLocationPoint).ToPoint();
+                                curvePoints[i] = ScalePoint(chunkRiverPoints[i] - ChunkWorldMapLocationPoint).ToPoint();
                             }
 
                         }
 
 
-                        graphics.DrawCurve(whitePen, points);
+                        graphics.DrawCurve(whitePen, curvePoints);
+                        foreach (var point in endPoints)
+                        {
+                            graphics.FillEllipse(Brushes.White, point.X- chHalf, point.Y- chHalf, Constants.ChunkSize, Constants.ChunkSize);
+                        }
 
                     }
 
