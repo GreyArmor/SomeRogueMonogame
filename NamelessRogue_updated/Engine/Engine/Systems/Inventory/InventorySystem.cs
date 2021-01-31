@@ -19,24 +19,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
         public InventorySystem()
         {
             Signature = new HashSet<Type>();
-            Signature.Add(typeof(DropItemCommand));
-            Signature.Add(typeof(PickUpItemCommand));
         }
-
-        public override bool IsEntityMatchesSignature(IEntity entity)
-        {
-            var entityComponentTypes = new HashSet<Type>(entity.GetAllComponents().Select(x => x.GetType()));
-
-            foreach (var type in Signature)
-            {
-                if (entityComponentTypes.Contains(type))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
 
         public override HashSet<Type> Signature { get; }
 
@@ -47,29 +30,23 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-                foreach (IEntity entity in RegisteredEntities.ToList())
+                while (namelessGame.Commander.DequeueCommand(out DropItemCommand dropCommand))
                 {
-                    DropItemCommand dropCommand = entity.GetComponentOfType<DropItemCommand>();
-                    if (dropCommand != null)
+                    var tile = worldProvider.GetTile(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y);
+
+                    foreach (var dropCommandItem in dropCommand.Items)
                     {
-                        var tile = worldProvider.GetTile(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y);
-
-                        foreach (var dropCommandItem in dropCommand.Items)
-                        {
-                            tile.AddEntity((Entity)dropCommandItem);
-                            dropCommand.Holder.GetItems().Remove(dropCommandItem);
-                            dropCommandItem.GetComponentOfType<Drawable>().setVisible(true);
-                            var position = dropCommandItem.GetComponentOfType<Position>();
-                            position.p = new Point(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y);
-                        }
-
-                        entity.RemoveComponentOfType<DropItemCommand>();
+                        tile.AddEntity((Entity)dropCommandItem);
+                        dropCommand.Holder.GetItems().Remove(dropCommandItem);
+                        dropCommandItem.GetComponentOfType<Drawable>().setVisible(true);
+                        var position = dropCommandItem.GetComponentOfType<Position>();
+                        position.p = new Point(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y);
                     }
-
-                    PickUpItemCommand pickupCommand = entity.GetComponentOfType<PickUpItemCommand>();
+                }
+                while (namelessGame.Commander.DequeueCommand(out PickUpItemCommand pickupCommand))
+                {
                     if (pickupCommand != null)
                     {
-
                         foreach (var pickupCommandItem in pickupCommand.Items)
                         {
                             var tile = worldProvider.GetTile(pickupCommand.WhereToPickUp.X,
@@ -98,8 +75,6 @@ namespace NamelessRogue.Engine.Engine.Systems.Inventory
                                 pickupCommand.Holder.GetItems().Add(pickupCommandItem);
                             }
                         }
-
-                        entity.RemoveComponentOfType<PickUpItemCommand>();
                     }
                 }
             }

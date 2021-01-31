@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NamelessRogue_updated.Engine.Abstraction;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Engine.Components.Interaction
 {
-    public class HudLogMessageCommand : Component
+    public class HudLogMessageCommand : ICommand
     {
         public HudLogMessageCommand(string logMessage = "")
         {
@@ -14,10 +15,5 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
         }
 
         public string LogMessage { get; set; }
-
-        public override IComponent Clone()
-        {
-            return new HudLogMessageCommand();
-        }
     }
 }

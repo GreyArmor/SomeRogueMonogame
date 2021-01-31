@@ -18,24 +18,22 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         public DeathSystem()
         {
             Signature = new HashSet<Type>();
-            Signature.Add(typeof(DeathCommand));
         }
 
         public override HashSet<Type> Signature { get; }
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
-            foreach (IEntity entity in RegisteredEntities)
+            while (namelessGame.Commander.DequeueCommand(out DeathCommand command))
             {
-                DeathCommand dc = entity.GetComponentOfType<DeathCommand>();
-                IEntity entityToKill = dc.getToKill();
+
+                IEntity entityToKill = command.getToKill();
                 entityToKill.AddComponent(new Dead());
 
                 Drawable drawable = entityToKill.GetComponentOfType<Drawable>();
                 if (drawable != null)
                 {
                     drawable.setRepresentation('%');
-                    entityToKill.RemoveComponentOfType<DeathCommand>();
                 }
 
                 IEntity worldEntity = namelessGame.TimelineEntity;
@@ -62,6 +60,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                     // namelessGame.WriteLineToConsole(d.Name + " is dead!");
                 }
             }
+
         }
     }
 }

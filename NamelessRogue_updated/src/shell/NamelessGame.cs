@@ -24,6 +24,7 @@ using NamelessRogue.Engine.Engine.Systems;
 using NamelessRogue.Engine.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Engine.Utility;
 using NamelessRogue.Storage.data;
+using NamelessRogue_updated.Engine.Engine.Infrastructure;
 using Color = Microsoft.Xna.Framework.Color;
 using Label = Myra.Graphics2D.UI.Label;
 
@@ -69,6 +70,7 @@ namespace NamelessRogue.shell
 
         public IEntity CursorEntity { get; private set; }
 
+        public Commander Commander { get; private set; }
 
         //this lookup is very expensive, avoid using in loops
         public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
@@ -198,6 +200,9 @@ namespace NamelessRogue.shell
             //TODO: move to config later
             int width = 60;
             int height = 40;
+
+            Commander = new Commander();
+
             settings = new GameSettings(width, height);
             graphics.PreferredBackBufferWidth = (int) (GetActualCharacterWidth() + settings.HudWidth());
             graphics.PreferredBackBufferHeight = GetActualCharacterHeight();

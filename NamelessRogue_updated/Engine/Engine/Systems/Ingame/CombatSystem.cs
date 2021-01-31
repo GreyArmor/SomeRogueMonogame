@@ -14,16 +14,13 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         public CombatSystem()
         {
             Signature = new HashSet<Type>();
-            Signature.Add(typeof(AttackCommand));
         }
         public override HashSet<Type> Signature { get; }
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
-            foreach (IEntity entity in RegisteredEntities)
+            while (namelessGame.Commander.DequeueCommand(out AttackCommand ac))
             {
-
-                AttackCommand ac = entity.GetComponentOfType<AttackCommand>();
                 Random r = new Random();
 
                 var source = ac.getSource();
@@ -37,19 +34,13 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 Description sourceDescription = ac.getSource().GetComponentOfType<Description>();
                 if (targetDescription != null && sourceDescription != null)
                 {
-                    var logCommand = entity.GetComponentOfType<HudLogMessageCommand>();
-                    if (logCommand == null)
-                    {
-                        logCommand = new HudLogMessageCommand();
-                        entity.AddComponent(logCommand);
-                    }
+                    var logCommand = new HudLogMessageCommand();
+                    namelessGame.Commander.EnqueueCommand(logCommand);
 
                     logCommand.LogMessage += (sourceDescription.Name + " deals " + (damage) +
                                               " damage to " + targetDescription.Name);
                     //namelessGame.WriteLineToConsole;
                 }
-
-                entity.RemoveComponentOfType<AttackCommand>();
             }
         }
     }

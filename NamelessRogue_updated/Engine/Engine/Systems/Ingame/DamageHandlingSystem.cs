@@ -28,7 +28,7 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 health.Value -= damage.getDamage();
                 if (health.Value <= health.MinValue)
                 {
-                    entity.AddComponent(new DeathCommand(entity));
+                    namelessGame.Commander.EnqueueCommand(new DeathCommand(entity));
                 }
 
                 entity.RemoveComponentOfType<Damage>();

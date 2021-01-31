@@ -1,8 +1,11 @@
- 
+
+
+using NamelessRogue_updated.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Engine.Components.Interaction
 {
-    public class ChangeSwitchStateCommand : Component {
+    public class ChangeSwitchStateCommand : ICommand
+    {
 
         private SimpleSwitch target;
         private bool active;
@@ -11,12 +14,6 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
             this.target = target;
             this.active = active;
         }
-
-        public override IComponent Clone()
-        {
-            return new ChangeSwitchStateCommand(target,active);
-        }
-
         public SimpleSwitch getTarget() {
             return target;
         }

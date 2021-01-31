@@ -99,7 +99,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                 Actions.Add((PickUpItemScreenSystem pickupScreenSystem, NamelessGame namelessGame) =>
                 {
                     var command = new PickUpItemCommand(new List<IEntity>() {itemEntity}, itemsHolder, position.p);
-                    playerEntity.AddComponent(command);
+                    namelessGame.Commander.EnqueueCommand(command);
                     if (ItemsTable.Items.Count == 2)
                     {
                         pickupScreenSystem.BackToGame(game);

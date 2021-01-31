@@ -1,8 +1,10 @@
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue_updated.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Engine.Components.Interaction
 {
-    public class DeathCommand : Component {
+    public class DeathCommand : ICommand
+    {
         private IEntity toKill;
 
         public DeathCommand(IEntity toKill)
@@ -16,11 +18,6 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
 
         public IEntity getToKill() {
             return toKill;
-        }
-
-        public override IComponent Clone()
-        {
-            return new DeathCommand(toKill);
         }
     }
 }

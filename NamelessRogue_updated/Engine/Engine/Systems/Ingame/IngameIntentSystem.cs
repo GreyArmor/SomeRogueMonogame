@@ -110,7 +110,8 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                                     .setRepresentation('o');
                                                 entityThatOccupiedTile.RemoveComponentOfType<BlocksVision>();
                                                 entityThatOccupiedTile.RemoveComponentOfType<OccupiesTile>();
-                                                entityThatOccupiedTile.AddComponent(
+
+                                                namelessGame.Commander.EnqueueCommand(
                                                     new ChangeSwitchStateCommand(simpleSwitch, false));
                                                 var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                                 ap.Points -= Constants.ActionsMovementCost;
@@ -131,8 +132,9 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                         if (characterComponent != null)
                                         {
                                             //TODO: if hostile
-                                            playerEntity.AddComponent(new AttackCommand(playerEntity,
+                                            namelessGame.Commander.EnqueueCommand(new AttackCommand(playerEntity,
                                                 entityThatOccupiedTile));
+
                                             var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                             ap.Points -= Constants.ActionsAttackCost;
                                            // playerEntity.RemoveComponentOfType<HasTurn>();
@@ -212,41 +214,37 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                                     {
 
 
-                                        if (itemsToPickUp.Count > 1)
-                                        {
-                                            namelessGame.ContextToSwitch =
-                                                ContextFactory.GetPickUpItemContext(namelessGame);
-                                            UiFactory.PickUpItemsScreen.FillItems(namelessGame);
-                                            if (UiFactory.PickUpItemsScreen.ItemsTable.Items.Any())
+                                            if (itemsToPickUp.Count > 1)
                                             {
-                                                UiFactory.PickUpItemsScreen.ItemsTable.SelectedIndex = 0;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            StringBuilder builder = new StringBuilder();
-                                            var itemsCommand = new PickUpItemCommand(itemsToPickUp, itemHolder,
-                                                position.p);
-                                            playerEntity.AddComponent(itemsCommand);
-
-                                            foreach (var entity1 in itemsToPickUp)
-                                            {
-                                                var desc = entity1.GetComponentOfType<Description>();
-                                                if (desc != null)
+                                                namelessGame.ContextToSwitch =
+                                                    ContextFactory.GetPickUpItemContext(namelessGame);
+                                                UiFactory.PickUpItemsScreen.FillItems(namelessGame);
+                                                if (UiFactory.PickUpItemsScreen.ItemsTable.Items.Any())
                                                 {
-                                                    builder.Append($"Picked up: {desc.Name} \n");
+                                                    UiFactory.PickUpItemsScreen.ItemsTable.SelectedIndex = 0;
                                                 }
                                             }
-
-                                            var logCommand = playerEntity.GetComponentOfType<HudLogMessageCommand>();
-                                            if (logCommand == null)
+                                            else
                                             {
-                                                logCommand = new HudLogMessageCommand();
-                                                playerEntity.AddComponent(logCommand);
-                                            }
+                                                StringBuilder builder = new StringBuilder();
+                                                var itemsCommand = new PickUpItemCommand(itemsToPickUp, itemHolder,
+                                                    position.p);
+                                                namelessGame.Commander.EnqueueCommand(itemsCommand);
 
-                                            logCommand.LogMessage += builder.ToString();
-                                        }
+                                                foreach (var entity1 in itemsToPickUp)
+                                                {
+                                                    var desc = entity1.GetComponentOfType<Description>();
+                                                    if (desc != null)
+                                                    {
+                                                        builder.Append($"Picked up: {desc.Name} \n");
+                                                    }
+                                                }
+
+                                                var logCommand = new HudLogMessageCommand();
+                                                logCommand.LogMessage += builder.ToString();
+                                                namelessGame.Commander.EnqueueCommand(logCommand);
+
+                                            }
 
                                         var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                         ap.Points -= Constants.ActionsPickUpCost;
@@ -261,22 +259,16 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                             {
                                 var actionPoints = playerEntity.GetComponentOfType<ActionPoints>();
 
-                                if (actionPoints.Points >= 100)
-                                {
-                                    var ap = entity.GetComponentOfType<ActionPoints>();
-                                    ap.Points -= Constants.ActionsMovementCost;
-
-                                        var logCommand = playerEntity.GetComponentOfType<HudLogMessageCommand>();
-                                    if (logCommand == null)
+                                    if (actionPoints.Points >= 100)
                                     {
-                                        logCommand = new HudLogMessageCommand();
-                                        playerEntity.AddComponent(logCommand);
+                                        var ap = entity.GetComponentOfType<ActionPoints>();
+                                        ap.Points -= Constants.ActionsMovementCost;
+                                        var logCommand = new HudLogMessageCommand();
+                                        logCommand.LogMessage += "Waiting";
+                                        namelessGame.Commander.EnqueueCommand(logCommand);
+
+                                        //   playerEntity.RemoveComponentOfType<HasTurn>();
                                     }
-
-                                    logCommand.LogMessage += "Waiting";
-
-                                    //   playerEntity.RemoveComponentOfType<HasTurn>();
-                                }
                             }
                                 break;
                             default:

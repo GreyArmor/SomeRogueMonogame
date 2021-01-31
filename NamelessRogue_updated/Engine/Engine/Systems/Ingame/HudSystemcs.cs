@@ -81,11 +81,9 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
                 UiFactory.HudInstance.ActionsThisTick.Clear();
 
 
-                HudLogMessageCommand logMEssgae = entity.GetComponentOfType<HudLogMessageCommand>();
-                if (logMEssgae != null)
+                while (namelessGame.Commander.DequeueCommand(out HudLogMessageCommand logMessage))
                 {
-                    UiFactory.HudInstance.LogMessage(logMEssgae.LogMessage);
-                    entity.RemoveComponentOfType<HudLogMessageCommand>();
+                    UiFactory.HudInstance.LogMessage(logMessage.LogMessage);
                 }
             }
         }

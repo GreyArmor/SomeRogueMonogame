@@ -11,17 +11,14 @@ namespace NamelessRogue.Engine.Engine.Systems.Ingame
         public SwitchSystem()
         {
             Signature = new HashSet<Type>();
-            Signature.Add(typeof(ChangeSwitchStateCommand));
         }
         public override HashSet<Type> Signature { get; }
 
         public override void Update(long gameTime, NamelessGame namelessGame)
         {
-            foreach (IEntity entity in RegisteredEntities)
+            while (namelessGame.Commander.DequeueCommand(out ChangeSwitchStateCommand command))
             {
-                ChangeSwitchStateCommand command = entity.GetComponentOfType<ChangeSwitchStateCommand>();
                 command.getTarget().setSwitchActive(command.isActive());
-                entity.RemoveComponentOfType<ChangeSwitchStateCommand>();
             }
         }
     }

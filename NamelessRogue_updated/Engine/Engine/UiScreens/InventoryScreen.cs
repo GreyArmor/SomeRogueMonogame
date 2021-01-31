@@ -188,7 +188,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                             equipment.TakeOff(equipmentItem);
                             var position = playerEntity.GetComponentOfType<Position>();
                             var command = new DropItemCommand(new List<IEntity>() { game.GetEntity(equipment.ParentEntityId) }, itemsHolder, position.p);
-                            playerEntity.AddComponent(command);
+                            namelessGame.Commander.EnqueueCommand(command);
                             invScreenSystem.ScheduleUpdate();
                         });
 
@@ -251,7 +251,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                                     {
                                         var command = new DropItemCommand(new List<IEntity>() { itemEntity }, itemsHolder,
                                             position.p);
-                                        playerEntity.AddComponent(command);
+                                        namelessGame.Commander.EnqueueCommand(command);
                                         invScreenSystem.ScheduleUpdate();
                                     });
 
@@ -276,7 +276,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                                         CloseDialog(ItemChoiceDialog);
                                         var command = new DropItemCommand(new List<IEntity>() { clonedEntity }, itemsHolder,
                                             position.p);
-                                        playerEntity.AddComponent(command);
+                                        namelessGame.Commander.EnqueueCommand(command);
 
                                         invScreenSystem.ScheduleUpdate();
                                     });
@@ -297,7 +297,7 @@ namespace NamelessRogue.Engine.Engine.UiScreens
                             var position = playerEntity.GetComponentOfType<Position>();
                             var command = new DropItemCommand(new List<IEntity>() {itemEntity}, itemsHolder,
                                 position.p);
-                            playerEntity.AddComponent(command);
+                            namelessGame.Commander.EnqueueCommand(command);
                             invScreenSystem.ScheduleUpdate();
                             CloseDialog(ItemChoiceDialog);
                         });

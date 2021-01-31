@@ -1,8 +1,9 @@
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue_updated.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Engine.Components.Interaction
 {
-    public class AttackCommand : Component {
+    public class AttackCommand : ICommand {
         private IEntity source;
         private IEntity target;
 
@@ -26,11 +27,6 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
 
         public IEntity getTarget() {
             return target;
-        }
-
-        public override IComponent Clone()
-        {
-            return new AttackCommand(getSource(),getTarget());
         }
     }
 }

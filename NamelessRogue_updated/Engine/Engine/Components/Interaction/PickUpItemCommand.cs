@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Engine.Components.ItemComponents;
+using NamelessRogue_updated.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Engine.Components.Interaction
 {
-    public class PickUpItemCommand : Component
+    public class PickUpItemCommand : ICommand
     {
         public IEnumerable<IEntity> Items { get; }
         public ItemsHolder Holder { get; }
@@ -20,11 +21,6 @@ namespace NamelessRogue.Engine.Engine.Components.Interaction
             Items = items;
             Holder = holder;
             WhereToPickUp = whereToPickUp;
-        }
-
-        public override IComponent Clone()
-        {
-           return new PickUpItemCommand(Items, Holder, WhereToPickUp);
         }
     }
 }

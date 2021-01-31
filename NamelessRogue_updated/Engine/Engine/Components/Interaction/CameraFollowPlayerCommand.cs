@@ -1,12 +1,9 @@
- 
+
+
+using NamelessRogue_updated.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Engine.Components.Interaction
 {
-    public class CameraFollowPlayerCommand : Component
-    {
-        public override IComponent Clone()
-        {
-            return new CameraFollowPlayerCommand();
-        }
-    }
+    public class CameraFollowPlayerCommand : ICommand
+    {}
 }
