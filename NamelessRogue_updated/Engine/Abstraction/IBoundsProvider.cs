@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework;
-using BoundingBox = NamelessRogue.Engine.Engine.Utility.BoundingBox;
+using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
 
 namespace NamelessRogue.Engine.Abstraction
 {

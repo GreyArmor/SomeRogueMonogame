@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using NamelessRogue.Engine.Engine.Components;
-using NamelessRogue.Engine.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Components;
+using NamelessRogue.Engine.Components.ChunksAndTiles;
 using SharpDX.Direct2D1.Effects;
-using Tile = NamelessRogue.Engine.Engine.Components.ChunksAndTiles.Tile;
+using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
 
 namespace NamelessRogue.Engine.Abstraction
 {

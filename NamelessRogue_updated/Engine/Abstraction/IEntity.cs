@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using NamelessRogue.Engine.Engine.Components;
+using NamelessRogue.Engine.Components;
 
 namespace NamelessRogue.Engine.Abstraction
 {

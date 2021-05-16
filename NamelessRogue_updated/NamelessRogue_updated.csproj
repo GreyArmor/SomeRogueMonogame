@@ -5,6 +5,7 @@
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
     <UseWindowsForms>true</UseWindowsForms>
+    <Configurations>Debug;Release;CodeGeneration</Configurations>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -14,6 +15,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CodeGeneration|AnyCPU'">
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Engine\Components\Interaction\BuffsAndModifiers\**" />
+    <EmbeddedResource Remove="Engine\Components\Interaction\BuffsAndModifiers\**" />
+    <None Remove="Engine\Components\Interaction\BuffsAndModifiers\**" />
+  </ItemGroup>
   <ItemGroup>
     <None Remove="Content\Content.mgcb" />
     <None Remove="Content\DFfont.png" />
@@ -31,7 +40,13 @@
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FlatSharp" Version="5.2.0" />
     <PackageReference Include="log4net" Version="2.0.9" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Mono.TextTemplating" Version="2.2.1" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
 	<PackageReference Include="AssimpNet">
@@ -194,7 +209,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Cultures\" />
-    <Folder Include="Engine\Engine\Components\Interaction\BuffsAndModifiers\" />
+    <Folder Include="Engine\Components\Serialization\" />
+    <Folder Include="Storage\raw\" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb">
@@ -204,5 +220,13 @@
   <ItemGroup>
     <ProjectReference Include="..\AstarNavigatorNetCore\AstarNavigatorNetCore.csproj" />
     <ProjectReference Include="..\VoronoiLib\VoronoiLib.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Engine\Serialization\FlatSharpSerializationGeneration.tt">
+      <Generator></Generator>
+    </None>
   </ItemGroup>
 </Project>
