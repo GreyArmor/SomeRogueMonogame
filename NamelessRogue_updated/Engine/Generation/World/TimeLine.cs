@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NamelessRogue.Engine.Components;
-using NamelessRogue_updated.Engine.Serialization;
+using NamelessRogue.Engine.Serialization;
 
 namespace NamelessRogue.Engine.Generation.World
 {

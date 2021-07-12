@@ -4,18 +4,15 @@ using System.Runtime.Serialization;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Serialization;
 using SharpDX.WIC;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
 
-    
+    [SkipClassGeneration]
     public class Entity : IEntity
     {
-
-
-        private Guid Id;
-
         public Entity(params IComponent[] components)
         {
             Id = Guid.NewGuid();
@@ -29,14 +26,12 @@ namespace NamelessRogue.Engine.Infrastructure
             Id = Guid.NewGuid();
         }
 
-
-       
-
-        public Guid GetId()
+        public Entity(Guid Id)
         {
-            return Id;
+            this.Id = Id;
         }
 
+ 
        
         public void AddComponent<ComponentType>(ComponentType component) where ComponentType : IComponent
         {
@@ -76,7 +71,9 @@ namespace NamelessRogue.Engine.Infrastructure
         List<IComponent> delayedAddComponents = new List<IComponent>();
         List<IComponent> delayedRemoveComponents = new List<IComponent>();
 
-        public void AddComponentDelayed<T>(T component) where T : IComponent
+		public Guid Id { get; set; }
+
+		public void AddComponentDelayed<T>(T component) where T : IComponent
         {
             delayedAddComponents.Add(component);
         }

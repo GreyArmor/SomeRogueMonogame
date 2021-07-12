@@ -1,6 +1,7 @@
 ﻿using System;
 using NamelessRogue.shell;
-using NamelessRogue_updated.Engine.Serialization;
+using NamelessRogue.Engine.Serialization;
+using System.Collections.Generic;
 
 namespace NamelessRogue
 {
@@ -17,10 +18,10 @@ namespace NamelessRogue
         static void Main()
         {
 
-            SerializationCodeGenerator.Generate();
-
-           // using (var game = new NamelessGame())
-           //     game.Run();
+            //SerializationCodeGenerator.Generate();
+            //return;
+            using (var game = new NamelessGame())
+                game.Run();
         }
     }
 #endif

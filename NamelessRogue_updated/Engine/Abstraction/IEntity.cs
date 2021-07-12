@@ -3,12 +3,14 @@
 using System;
 using System.Collections.Generic;
 using NamelessRogue.Engine.Components;
+using NamelessRogue.Engine.Serialization;
 
 namespace NamelessRogue.Engine.Abstraction
 {
+    [SkipClassGeneration]
     public interface IEntity
     {
-        Guid GetId();
+        Guid Id { get; set; }
         T GetComponentOfType<T>() where T : IComponent;
         void AddComponent<T>(T component) where T : IComponent;
 

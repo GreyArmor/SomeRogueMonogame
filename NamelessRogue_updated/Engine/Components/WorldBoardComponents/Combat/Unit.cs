@@ -9,7 +9,7 @@
         Naval
     }
 
-    public enum AttackType
+    public enum UnitAttackType
     {
         Melee,
         Ranged
@@ -52,7 +52,7 @@
 
 
         public MovementType MovementType { get; set; }
-        public AttackType AttackType { get; set; }
+        public UnitAttackType AttackType { get; set; }
 
         public override IComponent Clone()
         {

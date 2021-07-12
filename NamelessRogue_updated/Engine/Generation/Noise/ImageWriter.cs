@@ -269,7 +269,7 @@ namespace NamelessRogue.Engine.Generation.Noise
                     {
                         var color = data[i, j].Continent.Color;
                         
-                        var vector = new Vector4(color.getRed(), color.getGreen(), color.getBlue(), 1);
+                        var vector = new Vector4(color.Red, color.Green, color.Blue, 1);
                         arr[i, j] = vector;
                     }
                     else

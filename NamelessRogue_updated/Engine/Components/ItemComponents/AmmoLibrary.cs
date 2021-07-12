@@ -8,8 +8,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
 {
     public class AmmoLibrary : Component
     {
-        public List<AmmoType> AmmoTypes { get; private set; } = new List<AmmoType>();
-
+        public List<AmmoType> AmmoTypes { get; set; } = new List<AmmoType>();
 
         public override IComponent Clone()
         {

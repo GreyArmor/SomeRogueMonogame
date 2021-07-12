@@ -1,11 +1,11 @@
 ﻿using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
-using NamelessRogue_updated.Engine.Abstraction;
+using NamelessRogue.Engine.Abstraction;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NamelessRogue_updated.Engine.Infrastructure
+namespace NamelessRogue.Engine.Infrastructure
 {
 	public class Commander : Component
 	{

@@ -36,8 +36,8 @@ namespace NamelessRogue.Engine.Infrastructure
                 components.Add(component.GetType(), componentsOfType);
             }
 
-            component.ParentEntityId = entity.GetId();
-            componentsOfType.Add(entity.GetId(), component);
+            component.ParentEntityId = entity.Id;
+            componentsOfType.Add(entity.Id, component);
 
             foreach (var system in systems)
             {
@@ -54,7 +54,7 @@ namespace NamelessRogue.Engine.Infrastructure
             Dictionary<Guid, IComponent> componentsOfType;
             components.TryGetValue(typeof(ComponentType), out componentsOfType);
             if (componentsOfType != null) {
-                componentsOfType.Remove(entity.GetId());
+                componentsOfType.Remove(entity.Id);
             }
 
             foreach (var system in systems)
@@ -119,7 +119,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
         public static void RemoveEntity(IEntity entity) {
             foreach (Dictionary<Guid, IComponent> dict in components.Values) {
-                dict.Remove(entity.GetId());
+                dict.Remove(entity.Id);
             }
 
             foreach (var system in systems)

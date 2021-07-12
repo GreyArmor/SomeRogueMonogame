@@ -162,7 +162,7 @@ namespace NamelessRogue.Engine.UiScreens
                 }
 
                 var playerEntity = game.PlayerEntity;
-                var slot = (EquipmentSlots.Slot)SelectedItem.Tag;
+                var slot = (Slot)SelectedItem.Tag;
                 var itemsHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                 var equipment = playerEntity.GetComponentOfType<EquipmentSlots>();
 
@@ -307,8 +307,8 @@ namespace NamelessRogue.Engine.UiScreens
                     case ItemDialogActions.Equip:
                         Actions.Add((InventoryScreenSystem invScreenSystem, NamelessGame namelessGame) =>
                         {
-                            List<EquipmentSlots.Slot> slotsEquipTo;
-                            slotsEquipTo = (List<EquipmentSlots.Slot>) chosenItem.Data;
+                            List<Slot> slotsEquipTo;
+                            slotsEquipTo = (List<Slot>) chosenItem.Data;
                             equipment.Equip(equipmentItem, slotsEquipTo);
                             invScreenSystem.ScheduleUpdate();
                             CloseDialog(ItemChoiceDialog);

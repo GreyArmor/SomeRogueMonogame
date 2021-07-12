@@ -10,7 +10,7 @@ namespace NamelessRogue.Engine.Generation.World
 {
     public class CultureTemplate
     {
-        public string TemplateName { get; }
+        public string TemplateName { get; set; }
 
         private Markov.MarkovChain<char> townChain;
 

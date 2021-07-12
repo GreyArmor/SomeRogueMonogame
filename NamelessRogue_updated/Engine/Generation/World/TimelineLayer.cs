@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
-using NamelessRogue_updated.Engine.Serialization;
+using NamelessRogue.Engine.Serialization;
 using Newtonsoft.Json;
 
 namespace NamelessRogue.Engine.Generation.World
@@ -33,10 +33,9 @@ namespace NamelessRogue.Engine.Generation.World
 		public List<Point> Points { get; set; }
 	}
 
-	[SkipClassGeneration]
 	public class TimelineLayer
     {
-        public int Age { get; }
+        public int Age { get; set; }
         //[JsonIgnore]
         public WorldTile[,] WorldTiles { get; set; }
         public List<Civilization> Civilizations { get; set; }
@@ -46,7 +45,7 @@ namespace NamelessRogue.Engine.Generation.World
         public List<Region> Forests { get; set; }
         public List<Region> Deserts { get; set; }
         public List<Region> Swamps { get; set; }
-        [JsonIgnore]
+
         public ChunkData Chunks { get; set; }
 		public double[][] ElevationMap { get => elevationMap; set => elevationMap = value; }
 		public bool[][] RiverMap { get => riverMap; set => riverMap = value; }
@@ -99,5 +98,9 @@ namespace NamelessRogue.Engine.Generation.World
 
 			BorderLines = new List<WaterBorderLine>();
 		}
-    }
+
+		public TimelineLayer()
+		{
+		}
+	}
 }

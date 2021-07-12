@@ -11,7 +11,11 @@ namespace NamelessRogue.Engine.Generation.World
 {
     public class MetaphysicalForce
     {
-        public MetaphysicalForce(string name, Color color)
+		public MetaphysicalForce()
+		{
+		}
+
+		public MetaphysicalForce(string name, Color color)
         {
             Name = name;
             Color = color;

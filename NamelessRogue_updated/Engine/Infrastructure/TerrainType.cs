@@ -20,7 +20,11 @@ namespace NamelessRogue.Engine.Infrastructure
             Type = type;
             Representation = representation;
         }
-    }
+
+		public Terrain()
+		{
+		}
+	}
     
     public class Biome
     {
@@ -34,5 +38,9 @@ namespace NamelessRogue.Engine.Infrastructure
             Type = type;
             Representation = representation;
         }
-    }
+
+		public Biome()
+		{
+		}
+	}
 }

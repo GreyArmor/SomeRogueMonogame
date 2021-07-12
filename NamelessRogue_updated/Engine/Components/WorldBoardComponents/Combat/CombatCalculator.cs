@@ -89,7 +89,7 @@ namespace NamelessRogue.Engine.Components.WorldBoardComponents.Combat
 
             if (left.MovementType == MovementType.Flying)
             {
-                if (right.AttackType == AttackType.Ranged)
+                if (right.AttackType == UnitAttackType.Ranged)
                 {
                     if (distance <= right.AttackRange)
                     {

@@ -22,5 +22,9 @@ namespace NamelessRogue.Engine.Generation.World.Meta
             Supply = supply;
             Mana = mana;
         }
-    }
+
+		public Resorces()
+		{
+		}
+	}
 }

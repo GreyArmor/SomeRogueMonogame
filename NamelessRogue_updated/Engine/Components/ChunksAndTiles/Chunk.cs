@@ -19,7 +19,7 @@ using Point = Microsoft.Xna.Framework.Point;
 
 namespace NamelessRogue.Engine.Components.ChunksAndTiles
 {
-    
+    [SkipClassGeneration]
     public class Chunk : IBoundsProvider
     {
         

@@ -8,25 +8,23 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Components.ItemComponents
 {
+    public enum Slot
+    {
+        Head,
+        Torso,
+        LefHand,
+        RightHand,
+        Legs,
+        Feet,
+        Ring1,
+        Ring2,
+        Neck,
+        Hands,
+    }
 
 
     public class EquipmentSlots : Component
-    {
-        public enum Slot
-        {
-            Head,
-            Torso,
-            LefHand,
-            RightHand,
-            Legs,
-            Feet,
-            Ring1,
-            Ring2,
-            Neck,
-            Hands,
-        }
-
-        
+    {       
 
         public List<Tuple<Slot, EquipmentSlot>> Slots { get; }
 
@@ -56,7 +54,11 @@ namespace NamelessRogue.Engine.Components.ItemComponents
             Game = game;
         }
 
-        public void Equip(Equipment equipment, List<Slot> equipTo)
+		public EquipmentSlots()
+		{
+		}
+
+		public void Equip(Equipment equipment, List<Slot> equipTo)
         {
             var slots = Slots.Where(x => equipTo.Contains(x.Item1));
             foreach (var tuple in slots)
@@ -70,7 +72,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
                 slot.Equipment = equipment;
             }
 
-            Holder.Items.Remove(Holder.Items.FirstOrDefault(x=>x.GetId()==equipment.ParentEntityId));
+            Holder.Items.Remove(Holder.Items.FirstOrDefault(x=>x.Id==equipment.ParentEntityId));
         }
 
         public void TakeOff(Equipment equipment)
@@ -79,7 +81,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
             foreach (var tuple in slots)
             {
                 tuple.Item2.Equipment = null;
-                var itemEntity = Holder.Items.FirstOrDefault(x => x.GetId() == equipment.ParentEntityId);
+                var itemEntity = Holder.Items.FirstOrDefault(x => x.Id == equipment.ParentEntityId);
                 if (itemEntity == null)
                 {
                     Holder.Items.Add(Game.GetEntity(equipment.ParentEntityId));
@@ -95,12 +97,16 @@ namespace NamelessRogue.Engine.Components.ItemComponents
 
     public class EquipmentSlot
     {
-        public EquipmentSlot(EquipmentSlots.Slot slot)
+		public EquipmentSlot()
+		{
+		}
+
+		public EquipmentSlot(Slot slot)
         {
             Slot = slot;
         }
 
-        public EquipmentSlots.Slot Slot { get; }
+        public Slot Slot { get; set; }
         public Equipment Equipment { get; set; }
 
     }

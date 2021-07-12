@@ -43,7 +43,11 @@ namespace NamelessRogue.Engine.Components.ItemComponents
             Author = author;
         }
 
-        public int Amount
+		public Item()
+		{
+		}
+
+		public int Amount
         {
             get { return _amount; }
             set

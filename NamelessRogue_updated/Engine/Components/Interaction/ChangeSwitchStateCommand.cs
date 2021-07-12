@@ -1,6 +1,6 @@
 
 
-using NamelessRogue_updated.Engine.Abstraction;
+using NamelessRogue.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {

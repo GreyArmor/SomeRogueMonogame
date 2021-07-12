@@ -1,7 +1,8 @@
 using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Infrastructure;
-using NamelessRogue.Storage.data;
+
 
 namespace NamelessRogue.Engine.Factories
 {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -11,6 +11,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <StartupObject>NamelessRogue.Program</StartupObject>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AssemblyName>NamelessRogue</AssemblyName>
+    <RootNamespace>NamelessRogue</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
@@ -19,9 +22,15 @@
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Content\Cultures\**" />
     <Compile Remove="Engine\Components\Interaction\BuffsAndModifiers\**" />
+    <Compile Remove="Engine\Components\Serialization\**" />
+    <EmbeddedResource Remove="Content\Cultures\**" />
     <EmbeddedResource Remove="Engine\Components\Interaction\BuffsAndModifiers\**" />
+    <EmbeddedResource Remove="Engine\Components\Serialization\**" />
+    <None Remove="Content\Cultures\**" />
     <None Remove="Engine\Components\Interaction\BuffsAndModifiers\**" />
+    <None Remove="Engine\Components\Serialization\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Content\Content.mgcb" />
@@ -42,10 +51,6 @@
   <ItemGroup>
     <PackageReference Include="FlatSharp" Version="5.2.0" />
     <PackageReference Include="log4net" Version="2.0.9" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Mono.TextTemplating" Version="2.2.1" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
@@ -208,11 +213,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\Cultures\" />
-    <Folder Include="Engine\Components\Serialization\" />
-    <Folder Include="Storage\raw\" />
-  </ItemGroup>
-  <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb">
       <SubType>Designer</SubType>
     </MonoGameContentReference>
@@ -229,4 +229,5 @@
       <Generator></Generator>
     </None>
   </ItemGroup>
+  
 </Project>

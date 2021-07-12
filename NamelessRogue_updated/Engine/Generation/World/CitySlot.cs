@@ -15,11 +15,15 @@ namespace NamelessRogue.Engine.Generation.World
     }
     public class CitySlot
     {
-        public CitySlot(BoundingBox placement)
+		public CitySlot()
+		{
+		}
+
+		public CitySlot(BoundingBox placement)
         {
             Placement = placement;
         }
-        public BoundingBox Placement { get; private set; }
+        public BoundingBox Placement { get; set; }
         public bool Occupied { get; set; }
         public IEntity OccupiedBy { get; set; }
     }

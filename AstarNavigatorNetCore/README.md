@@ -12,7 +12,7 @@ Portable NuGet library/package for navigating on a tile-based 2-dimensional rast
 Install the NuGet package using the command below:
 
 ```
-Install-Package AStarNavigator
+Install-Package AStarNavigator  
 ```
 
 ... or search for `AStarNavigator` in the NuGet index.

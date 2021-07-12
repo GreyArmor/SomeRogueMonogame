@@ -7,13 +7,17 @@ using NamelessRogue.Engine.Generation.World.BoardPieces;
 using NamelessRogue.Engine.Generation.World.Diplomacy;
 using NamelessRogue.Engine.Generation.World.Meta;
 using NamelessRogue.Engine.Generation.World.Tech;
+using NamelessRogue.Engine.Serialization;
 
 namespace NamelessRogue.Engine.Generation.World
 {
+    [SkipClassGeneration]
     public class Civilization {
+		public Civilization()
+		{
+		}
 
-
-        public Civilization(string name, Color civColor,CultureTemplate cultureTemplate)
+		public Civilization(string name, Color civColor,CultureTemplate cultureTemplate)
         {
             Name = name;
             CivColor = civColor;

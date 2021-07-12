@@ -5,10 +5,10 @@ using Microsoft.Xna.Framework;
 namespace NamelessRogue.Engine.Utility
 {
     public class Color {
-        private float Red;
-        private float Green;
-        private float Blue;
-        private float Alpha;
+        public float Red { get; set; }
+        public float Green { get; set; }
+        public float Blue { get; set; }
+        public float Alpha { get; set; }
 
         public Color(){}
 
@@ -61,38 +61,6 @@ namespace NamelessRogue.Engine.Utility
             Red = red;
             Green = green;
             Blue = blue;
-            Alpha = alpha;
-        }
-
-        public float getRed() {
-            return Red;
-        }
-
-        public void setRed(float red) {
-            Red = red;
-        }
-
-        public float getGreen() {
-            return Green;
-        }
-
-        public void setGreen(float green) {
-            Green = green;
-        }
-
-        public float getBlue() {
-            return Blue;
-        }
-
-        public void setBlue(float blue) {
-            Blue = blue;
-        }
-
-        public float getAlpha() {
-            return Alpha;
-        }
-
-        public void setAlpha(float alpha) {
             Alpha = alpha;
         }
 

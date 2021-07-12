@@ -23,8 +23,7 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Utility;
-using NamelessRogue.Storage.data;
-using NamelessRogue_updated.Engine.Infrastructure;
+using NamelessRogue.Engine.Infrastructure;
 using Color = Microsoft.Xna.Framework.Color;
 using Label = Myra.Graphics2D.UI.Label;
 
@@ -47,7 +46,7 @@ namespace NamelessRogue.shell
 
         public IEntity GetEntity(Guid id)
         {
-            return Entities.FirstOrDefault(x => x.GetId() == id);
+            return Entities.FirstOrDefault(x => x.Id == id);
         }
 
         public void AddEntity(IEntity entity)
@@ -198,8 +197,8 @@ namespace NamelessRogue.shell
             CurrentGame = new GameInstance();
             DebugDevice = this.GraphicsDevice;
             //TODO: move to config later
-            int width = 60;
-            int height = 40;
+            int width = 80;
+            int height = 60;
 
             Commander = new Commander();
 
@@ -225,7 +224,7 @@ namespace NamelessRogue.shell
             graphics.ApplyChanges();
 
             //12345 123
-            worldSettings = new WorldSettings(123,1000,1000);
+            worldSettings = new WorldSettings(4,1000,1000);
 
             TerrainFurnitureFactory.CreateFurnitureEntities(this);
 

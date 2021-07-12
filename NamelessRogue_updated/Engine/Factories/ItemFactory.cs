@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new Item(ItemType.Weapon,2,ItemQuality.Normal,1,1,""));
             item.AddComponent(new Drawable('S', new Color(1f, 0, 0)));
             item.AddComponent(new Description("Sword " + i.ToString(), "A simple sword"));
-            item.AddComponent(new Equipment(new List<EquipmentSlots.Slot>(){EquipmentSlots.Slot.LefHand,EquipmentSlots.Slot.RightHand}));
+            item.AddComponent(new Equipment(new List<Slot>(){Slot.LefHand,Slot.RightHand}));
             item.AddComponent(new Stats()
             {
                 Attack = new SimpleStat(10,0,100),
@@ -38,7 +38,7 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('H', new Color(1f, 0, 0)));
             item.AddComponent(new Description("Helmet " + i.ToString(), "A simple helmet"));
-            item.AddComponent(new Equipment(new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.Head}));
+            item.AddComponent(new Equipment(new List<Slot>() { Slot.Head}));
             item.AddComponent(new Stats()
             {
                 Attack = new SimpleStat(10, 0, 100),
@@ -56,7 +56,7 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('B', new Color(1f, 0, 0)));
             item.AddComponent(new Description("Boots " + i.ToString(), "Simple Boots"));
-            item.AddComponent(new Equipment(new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.Feet}));
+            item.AddComponent(new Equipment(new List<Slot>() { Slot.Feet}));
             item.AddComponent(new Stats()
             {
                 Attack = new SimpleStat(10, 0, 100),
@@ -74,7 +74,7 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('P', new Color(1f, 0, 0)));
             item.AddComponent(new Description("Pants " + i.ToString(), "Simple pants"));
-            item.AddComponent(new Equipment(new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.Legs }));
+            item.AddComponent(new Equipment(new List<Slot>() { Slot.Legs }));
             item.AddComponent(new Stats()
             {
                 Attack = new SimpleStat(10, 0, 100),
@@ -92,8 +92,8 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('S', new Color(1f, 1f, 0)));
             item.AddComponent(new Description("Shield " + i.ToString(), "Simple shield"));
-            item.AddComponent(new Equipment(new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.RightHand },
-                                            new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.LefHand }));
+            item.AddComponent(new Equipment(new List<Slot>() { Slot.RightHand },
+                                            new List<Slot>() { Slot.LefHand }));
             item.AddComponent(new Stats()
             {
                 Attack = new SimpleStat(10, 0, 100),
@@ -111,8 +111,8 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('R', new Color(1f, 1f, 0)));
             item.AddComponent(new Description("Ring " + i.ToString(), "Simple ring"));
-            item.AddComponent(new Equipment(new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.Ring1 },
-                                            new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.Ring2 }));
+            item.AddComponent(new Equipment(new List<Slot>() { Slot.Ring1 },
+                                            new List<Slot>() { Slot.Ring2 }));
             item.AddComponent(new Stats()
             {
                 Attack = new SimpleStat(10, 0, 100),
@@ -130,7 +130,7 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('C', new Color(1f, 1f, 0)));
             item.AddComponent(new Description("Cape " + i.ToString(), "Simple cape"));
-            item.AddComponent(new Equipment(new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.Neck}));
+            item.AddComponent(new Equipment(new List<Slot>() { Slot.Neck}));
             item.AddComponent(new Stats()
             {
                 Attack = new SimpleStat(10, 0, 100),
@@ -148,7 +148,7 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('M', new Color(1f, 1f, 0)));
             item.AddComponent(new Description("Plate mail " + i.ToString(), "Simple plate mail"));
-            item.AddComponent(new Equipment(new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.Torso}));
+            item.AddComponent(new Equipment(new List<Slot>() { Slot.Torso}));
             item.AddComponent(new Stats()
             {
                 Attack = new SimpleStat(10, 0, 100),
@@ -180,8 +180,8 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new Item(ItemType.Weapon, 2, ItemQuality.Normal, 1, 1, ""));
             item.AddComponent(new Drawable('R', new Color(1f, 0, 0)));
             item.AddComponent(new Description("Revolver " + i.ToString(), "A simple revolver"));
-            item.AddComponent(new Equipment(new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.RightHand },
-                                            new List<EquipmentSlots.Slot>() { EquipmentSlots.Slot.LefHand }));
+            item.AddComponent(new Equipment(new List<Slot>() { Slot.RightHand },
+                                            new List<Slot>() { Slot.LefHand }));
             item.AddComponent(new WeaponStats(1,10,25,AttackType.Ranged, ammoLibrary.AmmoTypes.First(), 6,0));
             var position = new Position(x, y);
             item.AddComponent(position);
@@ -195,14 +195,14 @@ namespace NamelessRogue.Engine.Factories
                 item.AddComponent(new Item(ItemType.Armor, 2, ItemQuality.Normal, 1, 1, ""));
                 item.AddComponent(new Drawable('P', new Color(1f, 1f, 0)));
                 item.AddComponent(new Description("Power armor " + i.ToString(), "A Power armor "));
-                item.AddComponent(new Equipment(new List<EquipmentSlots.Slot>()
+                item.AddComponent(new Equipment(new List<Slot>()
                 {
-                    EquipmentSlots.Slot.Head,
-                    EquipmentSlots.Slot.Feet,
-                    EquipmentSlots.Slot.Neck,
-                    EquipmentSlots.Slot.Legs,
-                    EquipmentSlots.Slot.Torso,
-                    EquipmentSlots.Slot.Hands
+                    Slot.Head,
+                    Slot.Feet,
+                    Slot.Neck,
+                    Slot.Legs,
+                    Slot.Torso,
+                    Slot.Hands
                 }));
                 var position = new Position(x, y);
                 item.AddComponent(position);

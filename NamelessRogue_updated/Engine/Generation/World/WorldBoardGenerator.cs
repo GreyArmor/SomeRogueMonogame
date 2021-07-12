@@ -287,9 +287,9 @@ namespace NamelessRogue.Engine.Generation.World
 				graphics.DrawCurve(whitePen, listVectorEdgePoints.Select(x => x.ToPoint().ToPoint()).ToArray());
 			}
 
-			for (int x = 0; x < resolution; x++)
+			for (int x = 3; x < resolution-3; x++)
 			{
-				for (int y = 0; y < resolution; y++)
+				for (int y = 3; y < resolution-3; y++)
 				{
 					if (waterBitmap.GetPixel(x, y).R > 0)
 					{

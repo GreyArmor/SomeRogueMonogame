@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
@@ -13,7 +14,6 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
-using NamelessRogue.Storage.data;
 using Color = NamelessRogue.Engine.Utility.Color;
 
 namespace NamelessRogue.Engine.Systems.Map
@@ -242,7 +242,7 @@ namespace NamelessRogue.Engine.Systems.Map
                                 }
                                 else
                                 {
-                                    if (screen.ScreenBuffer[x, y].BackGroundColor.getRed() != 0 || screen.ScreenBuffer[x, y].BackGroundColor.getGreen() != 0 || screen.ScreenBuffer[x, y].BackGroundColor.getBlue() != 0)
+                                    if (screen.ScreenBuffer[x, y].BackGroundColor.Red != 0 || screen.ScreenBuffer[x, y].BackGroundColor.Green != 0 || screen.ScreenBuffer[x, y].BackGroundColor.Blue != 0)
                                     {
                                         arr[x, y] = screen.ScreenBuffer[x, y].BackGroundColor;
                                     }
@@ -260,9 +260,9 @@ namespace NamelessRogue.Engine.Systems.Map
                             for (int x = 0; x < screen.Width; x++)
                             {
 
-                                var red =  arr[x, y].getRed() * 255f;
-                                var green =  arr[x, y].getGreen() * 255f;
-                                var blue =  arr[x, y].getBlue() * 255f;
+                                var red =  arr[x, y].Red * 255f;
+                                var green =  arr[x, y].Green * 255f;
+                                var blue =  arr[x, y].Blue * 255f;
                                 arrBytes[y * screen.Height * 4 + x * 4] = (byte) red;
                                 arrBytes[y * screen.Height * 4 + x * 4 + 1] = (byte) green;
                                 arrBytes[y * screen.Height * 4 + x * 4 + 2] = (byte) blue;

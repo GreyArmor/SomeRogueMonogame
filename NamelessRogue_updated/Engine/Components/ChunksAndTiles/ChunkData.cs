@@ -8,9 +8,11 @@ using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Generation;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Serialization;
 
 namespace NamelessRogue.Engine.Components.ChunksAndTiles
 {
+    [SkipClassGeneration]
     public class ChunkData : IWorldProvider
     {
         private Dictionary<Point, Chunk> chunks;
@@ -30,7 +32,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             initWorld();
         }
 
-        void initWorld()
+		public ChunkData()
+		{
+		}
+
+		void initWorld()
         {
             int offfset = 0;
             for (int x = offfset; x <= ChunkResolution + offfset; x++)

@@ -14,7 +14,7 @@ namespace NamelessRogue.Engine.Generation.World.BoardPieces
         {
             Id = Guid.NewGuid();
         }
-        public Guid Id { get; }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
         public Vector2 Position { get; set; }

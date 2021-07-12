@@ -28,7 +28,11 @@ namespace NamelessRogue.Engine.Generation.World
             this.WorldBoardPosiiton = point;
         }
 
-        public Point WorldBoardPosiiton
+		public WorldTile()
+		{
+		}
+
+		public Point WorldBoardPosiiton
         {
             get { return point; }
             set { point = value; }
