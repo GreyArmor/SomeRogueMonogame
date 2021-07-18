@@ -26,6 +26,7 @@ using NamelessRogue.Engine.Utility;
 using NamelessRogue.Engine.Infrastructure;
 using Color = Microsoft.Xna.Framework.Color;
 using Label = Myra.Graphics2D.UI.Label;
+using NamelessRogue.Engine.Serialization;
 
 namespace NamelessRogue.shell
 {
@@ -409,6 +410,9 @@ namespace NamelessRogue.shell
             //    Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
             //        yoffset * Constants.ChunkSize + 13, 10,10, this));
             //}
+
+            SaveManager.SaveGame("", this);
+
 
         }
 

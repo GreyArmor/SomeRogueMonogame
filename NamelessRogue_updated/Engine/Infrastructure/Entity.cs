@@ -54,7 +54,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
         public List<IComponent> GetAllComponents()
         { 
-            return EntityInfrastructureManager.GetAllComponents(Id); ;
+            return EntityInfrastructureManager.GetAllComponents(Id);
         }
 
         public IEntity CloneEntity()

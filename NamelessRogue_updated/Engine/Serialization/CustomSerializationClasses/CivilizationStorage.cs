@@ -13,8 +13,8 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 	[FlatBufferTable]
 	public class CivilizationStorage : IStorage<Generation.World.Civilization>
 	{
-		[FlatBufferItem(0)] public Guid Id { get; set; }
-		[FlatBufferItem(1)] public Guid ParentEntityId { get; set; }
+		[FlatBufferItem(0)] public string Id { get; set; }
+		[FlatBufferItem(1)] public string ParentEntityId { get; set; }
 		[FlatBufferItem(2)] public string Name { get; set; }
 
 		[FlatBufferItem(3)] public Dictionary<CivilizationStorage, PoliticalRelationStorage> Relations { get; set; }

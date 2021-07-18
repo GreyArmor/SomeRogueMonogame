@@ -10,7 +10,7 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 	[FlatBufferTable]
 	public class Vector2Storage : IStorage<Vector2>
 	{
-		[FlatBufferItem(0)]  public float X { get; set; }
+		[FlatBufferItem(0)] public float X { get; set; }
 		[FlatBufferItem(1)] public float Y { get; set; }
 		public void FillFrom(Vector2 component)
 		{

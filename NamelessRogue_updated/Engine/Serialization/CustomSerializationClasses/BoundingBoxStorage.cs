@@ -11,8 +11,8 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 	public class BoundingBoxStorage : IStorage<BoundingBox>
 	{
 
-		[FlatBufferItem(0)] public Vector3 Max { get; private set; }
-		[FlatBufferItem(1)] public Vector3 Min { get; private set; }
+		[FlatBufferItem(0)] public Vector3Storage Max { get; private set; }
+		[FlatBufferItem(1)] public Vector3Storage Min { get; private set; }
 
 		public void FillFrom(BoundingBox component)
 		{

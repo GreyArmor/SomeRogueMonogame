@@ -13,7 +13,9 @@ namespace NamelessRogue.Engine.Infrastructure
         static Dictionary<Type, Dictionary<Guid, IComponent>> components;
         static LinkedList<ISystem> systems;
 
-        static EntityInfrastructureManager() {
+		public static Dictionary<Type, Dictionary<Guid, IComponent>> Components { get { return components; } }
+
+		static EntityInfrastructureManager() {
             components = new Dictionary<Type, Dictionary<Guid, IComponent>>();
             systems = new LinkedList<ISystem>();
         }

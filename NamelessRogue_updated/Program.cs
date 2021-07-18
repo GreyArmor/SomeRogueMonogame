@@ -2,6 +2,7 @@
 using NamelessRogue.shell;
 using NamelessRogue.Engine.Serialization;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace NamelessRogue
 {
@@ -16,12 +17,13 @@ namespace NamelessRogue
         /// </summary>
         [STAThread]
         static void Main()
-        {
-
-            //SerializationCodeGenerator.Generate();
-            //return;
+        {           
+          // SerializationCodeGenerator.GenerateStorages();
+          // return;
             using (var game = new NamelessGame())
+            {
                 game.Run();
+            }
         }
     }
 #endif
