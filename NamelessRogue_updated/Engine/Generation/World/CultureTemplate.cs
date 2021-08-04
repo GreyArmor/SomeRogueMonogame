@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Markov;
 using NamelessRogue.Engine.Utility;
+using RogueSharp.Random;
 
 namespace NamelessRogue.Engine.Generation.World
 {
@@ -37,7 +38,7 @@ namespace NamelessRogue.Engine.Generation.World
         public string TownNames { get; set; }
 
 
-        public string GetTownName(Random random)
+        public string GetTownName(InternalRandom random)
         {
             if (townChain == null)
             {
@@ -48,7 +49,7 @@ namespace NamelessRogue.Engine.Generation.World
                 }
             }
 
-            return new string(townChain.Chain(random).ToArray()).FirstCharToUpper();
+            return new string(townChain.Chain(random.Next()).ToArray()).FirstCharToUpper();
         }
 
     }

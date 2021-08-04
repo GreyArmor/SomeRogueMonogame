@@ -48,18 +48,18 @@ namespace NamelessRogue.Engine.Systems.Map
 
                                     int newX =
                                         intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                        intent.Intention == IntentEnum.MoveTopLeft ? position.p.X - 1 :
+                                        intent.Intention == IntentEnum.MoveTopLeft ? position.Point.X - 1 :
                                         intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
-                                        intent.Intention == IntentEnum.MoveTopRight ? position.p.X + 1 :
-                                        position.p.X;
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.X + 1 :
+                                        position.Point.X;
                                     int newY =
                                         intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                        intent.Intention == IntentEnum.MoveBottomRight ? position.p.Y - 1 :
+                                        intent.Intention == IntentEnum.MoveBottomRight ? position.Point.Y - 1 :
                                         intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft ||
-                                        intent.Intention == IntentEnum.MoveTopRight ? position.p.Y + 1 :
-                                        position.p.Y;
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.Y + 1 :
+                                        position.Point.Y;
 
-                                    position.p = new Point(newX, newY);
+                                    position.Point = new Point(newX, newY);
                                 }
 
 

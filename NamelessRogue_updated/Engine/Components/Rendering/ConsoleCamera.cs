@@ -9,8 +9,10 @@ namespace NamelessRogue.Engine.Components.Rendering
     public class ConsoleCamera : Component {
         private Point position;
 
-        //position is a bottom left corner of camera
-        public ConsoleCamera(Point position)
+		public Point Position { get => position; set => position = value; }
+
+		//position is a bottom left corner of camera
+		public ConsoleCamera(Point position)
         {
             this.setPosition(position);
         }
@@ -22,8 +24,8 @@ namespace NamelessRogue.Engine.Components.Rendering
 		public Point PointToScreen(Point p)	{
             Point result = new Point();
 		
-            int cameraX = position.X;
-            int cameraY = position.Y;
+            int cameraX = Position.X;
+            int cameraY = Position.Y;
             int worldX = p.X;
             int worldY = p.Y;
             int screenX = worldX - cameraX;
@@ -41,12 +43,13 @@ namespace NamelessRogue.Engine.Components.Rendering
 
 
         public Point getPosition() {
-            return position;
+            return Position;
         }
 
 
         public void setPosition(Point position) {
-            this.position = position;
+            this.Position = position;
+            Debug.WriteLine($@"x = {position.X} y={ position.Y }");
         }
 	
         public void setPosition(int x, int y)
@@ -67,12 +70,12 @@ namespace NamelessRogue.Engine.Components.Rendering
 
             //Debug.WriteLine($"X = {mouseTileX}; Y = {mouseTileY}");
 
-            return new Point(position.X+mouseTileX,position.Y+mouseTileY);
+            return new Point(Position.X+mouseTileX,Position.Y+mouseTileY);
         }
 
         public override IComponent Clone()
         {
-            return new ConsoleCamera(position);
+            return new ConsoleCamera(Position);
         }
     }
 }

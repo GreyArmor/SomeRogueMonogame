@@ -13,7 +13,7 @@ namespace NamelessRogue.Engine.Components.WorldBoardComponents.Combat
         public static void Fight(Unit right, Unit left, Position rightPosition, Position leftPosition)
         {
 
-            int distance = (int)(rightPosition.p.ToVector2() - leftPosition.p.ToVector2()).Length();
+            int distance = (int)(rightPosition.Point.ToVector2() - leftPosition.Point.ToVector2()).Length();
 
             var attacks = WhoIsAttacking(right, left, distance);
 

@@ -11,8 +11,8 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 	public class BoundingBoxStorage : IStorage<BoundingBox>
 	{
 
-		[FlatBufferItem(0)] public Vector3Storage Max { get; private set; }
-		[FlatBufferItem(1)] public Vector3Storage Min { get; private set; }
+		[FlatBufferItem(0)] public Vector3Storage Max { get; set; }
+		[FlatBufferItem(1)] public Vector3Storage Min { get; set; }
 
 		public void FillFrom(BoundingBox component)
 		{
@@ -20,23 +20,25 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 			Min = component.Min;
 		}
 
+	
+
 		public void FillTo(BoundingBox component)
 		{
-			component.Max = Max;
-			component.Min = Min;
-		}
+			throw new NotSupportedException("Value type object cant be filled into");
+		}		
 
 		public static implicit operator BoundingBox(BoundingBoxStorage thisType)
 		{
 			BoundingBox result = new BoundingBox();
-			thisType.FillTo(result);
+			result.Max = thisType.Max;
+			result.Min = thisType.Min;
 			return result;
 		}
 
 		public static implicit operator BoundingBoxStorage(BoundingBox component)
 		{
 			BoundingBoxStorage result = new BoundingBoxStorage();
-			result.FillFrom(result);
+			 result.FillFrom(component);
 			return result;
 		}
 

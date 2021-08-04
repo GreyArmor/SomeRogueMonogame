@@ -45,10 +45,17 @@ namespace NamelessRogue.Engine.Utility
         {
             Init((float)red255 / 255,(float)green255 / 255,(float)blue255 / 255, (float)alpha255 / 255);
         }
-
+        // if (red > 1 || green > 1 || blue > 1 || alpha > 1) then the color will be divided by 255
         public Color(float red, float green, float blue, float alpha)
         {
-            Init(red, green, blue, alpha);
+            if (red > 1 || green > 1 || blue > 1 || alpha > 1)
+            {
+                Init((float)red / 255, (float)green / 255, (float)blue / 255, (float)alpha / 255);
+            }
+            else
+            {
+                Init(red, green, blue, alpha);
+            }
         }
 
         public Color(Microsoft.Xna.Framework.Color color)

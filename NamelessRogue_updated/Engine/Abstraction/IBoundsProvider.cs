@@ -1,12 +1,11 @@
 using Microsoft.Xna.Framework;
-using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
+using BoundingBox = Microsoft.Xna.Framework.BoundingBox;
 
 namespace NamelessRogue.Engine.Abstraction
 {
     public interface IBoundsProvider
     {
-        BoundingBox GetBoundingBox();
-        void SetBoundingBox(BoundingBox boundingBox);
+        BoundingBox Bounds { get; set; }
         bool IsPointInside(Point point);
         bool IsPointInside(int x, int y);
     }

@@ -3,6 +3,8 @@ using NamelessRogue.Engine.Abstraction;
 namespace NamelessRogue.Engine.Components.Status
 {
     public class Damage : Component {
+
+        public Damage() { } 
 		public Damage(IEntity source = null, int damage = 0)
         {
             this.Source = source;

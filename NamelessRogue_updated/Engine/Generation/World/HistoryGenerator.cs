@@ -33,7 +33,7 @@ namespace NamelessRogue.Engine.Generation.World
 
             var timeline = new TimeLine(game.WorldSettings.Seed);
             var worldBoard = InitialiseFirstBoard(game,settings);
-            timeline.WorldBoardAtEveryAge.Add(worldBoard);
+            //timeline.WorldBoardAtEveryAge.Add(worldBoard);
             timeline.CurrentTimelineLayer = worldBoard;
 
 

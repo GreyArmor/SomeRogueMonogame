@@ -38,9 +38,9 @@ namespace NamelessRogue.Engine.Systems.Inventory
                     {
                         tile.AddEntity((Entity)dropCommandItem);
                         dropCommand.Holder.Items.Remove(dropCommandItem);
-                        dropCommandItem.GetComponentOfType<Drawable>().setVisible(true);
+                        dropCommandItem.GetComponentOfType<Drawable>().Visible = true;
                         var position = dropCommandItem.GetComponentOfType<Position>();
-                        position.p = new Point(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y);
+                        position.Point = new Point(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y);
                     }
                 }
                 while (namelessGame.Commander.DequeueCommand(out PickUpItemCommand pickupCommand))
@@ -52,7 +52,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                             var tile = worldProvider.GetTile(pickupCommand.WhereToPickUp.X,
                                 pickupCommand.WhereToPickUp.Y);
                             tile.RemoveEntity((Entity) pickupCommandItem);
-                            pickupCommandItem.GetComponentOfType<Drawable>().setVisible(false);
+                            pickupCommandItem.GetComponentOfType<Drawable>().Visible = false;
                             var ammo = pickupCommandItem.GetComponentOfType<Ammo>();
                             if (ammo != null)
                             {

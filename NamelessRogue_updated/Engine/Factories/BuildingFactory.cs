@@ -14,6 +14,7 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
+using RogueSharp.Random;
 
 namespace NamelessRogue.Engine.Factories
 {
@@ -63,8 +64,8 @@ namespace NamelessRogue.Engine.Factories
                 for (int j = 0;j< height; j++)
                 {
                     var tile = worldProvider.GetTile(x + i, y + j);
-                    tile.Terrain = TerrainLibrary.Terrains[TerrainTypes.Road];
-                    tile.Biome = BiomesLibrary.Biomes[Biomes.None];
+                    tile.Terrain = TerrainTypes.Road;
+                    tile.Biome = Biomes.None;
                     if (i == 0 || j == 0 || i == width - 1 || j == height - 1)
                     {
                         if (i == width / 2)
@@ -92,7 +93,7 @@ namespace NamelessRogue.Engine.Factories
         }
 
 
-        public static IEntity CreateBuilding(int x, int y, BuildingBlueprint blueprint, NamelessGame namelessGame, IWorldProvider worldProvider, Random random)
+        public static IEntity CreateBuilding(int x, int y, BuildingBlueprint blueprint, NamelessGame namelessGame, IWorldProvider worldProvider, InternalRandom random)
         {
             IEntity building = new Entity();
 
@@ -108,8 +109,8 @@ namespace NamelessRogue.Engine.Factories
                 for (int j = 0; j < blueprint.Matrix[i].Length; j++)
                 {
                     var tile = worldProvider.GetTile(x + j, y + i);
-                    tile.Terrain = TerrainLibrary.Terrains[TerrainTypes.Road];
-                    tile.Biome = BiomesLibrary.Biomes[Biomes.None];
+                    tile.Terrain = TerrainTypes.Road;
+                    tile.Biome = Biomes.None;
 
                     var bluepringCell = blueprint.Matrix[i][j];
                     switch (bluepringCell)

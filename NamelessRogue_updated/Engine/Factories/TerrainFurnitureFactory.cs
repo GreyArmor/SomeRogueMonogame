@@ -47,7 +47,7 @@ namespace NamelessRogue.Engine.Factories
         public static Entity TreeStumpEntity { get => (Entity)treeStumpEntity.CloneEntity(); }
         public static Entity ShellEntity { get => (Entity)shellEntity.CloneEntity(); }
         public static Entity StarfishEntity { get => (Entity)starfishEntity.CloneEntity(); }
-        public static Entity RockEntity { get => (Entity)rockEntity.CloneEntity();}
+        public static Entity RockEntity { get => (Entity)rockEntity.CloneEntity(); }
         public static Entity SmallTreeEntity { get => (Entity)smallTreeEntity.CloneEntity(); }
         public static Entity TreeEntity { get => (Entity)treeEntity.CloneEntity(); }
 
@@ -86,7 +86,7 @@ namespace NamelessRogue.Engine.Factories
 
             treeStumpEntity.AddComponent(new Description("A tree stump", ""));
             treeStumpEntity.AddComponent(new Drawable('u', new Color(0.5f, 0.5f, 0f)));
-            
+
             wallEntity.AddComponent(new Drawable('#', new Engine.Utility.Color(0.5f)));
             wallEntity.AddComponent(new Description("Wall", ""));
             wallEntity.AddComponent(new OccupiesTile());
@@ -106,63 +106,64 @@ namespace NamelessRogue.Engine.Factories
             {
                 entity.AddComponent(new Furniture());
             }
-           
+
         }
 
         public static Entity GetExteriorEntities(NamelessGame game, Tile terrainTile)
         {
             var random = game.WorldSettings.GlobalRandom;
             Entity result = null;
-            switch (terrainTile.Biome.Type)
+            switch (terrainTile.Biome)
             {
                 case Biomes.Beach:
-                {
-                    result = new Entity();
-                    var randomValue = random.NextDouble();
-                    if (randomValue > 0.997)
                     {
-                        result = starfishEntity;
-                    }
-                    else if (randomValue > 0.985)
-                    {
-                        result = shellEntity;
-                    }
-                    else if (randomValue > 0.98)
-                    {
-                        result = rockEntity;
-                    }
-
-                    break;
-                }
-                case Biomes.Forest:
-                {
-                    var randomValue = random.NextDouble();
-                    if (randomValue > 0.95)
-                    {
-                        result = treeEntity;
-                    }else if (randomValue > 0.90)
-                    {
-                        result = smallTreeEntity;
-                    }
-                    else if (randomValue > 0.89)
-                    {
-                        result = treeStumpEntity;
-                    }
+                        result = new Entity();
+                        var randomValue = random.Next(0, 100) / 100d;
+                        if (randomValue > 0.997)
+                        {
+                            result = starfishEntity;
+                        }
+                        else if (randomValue > 0.985)
+                        {
+                            result = shellEntity;
+                        }
+                        else if (randomValue > 0.98)
+                        {
+                            result = rockEntity;
+                        }
 
                         break;
-                }
-                case Biomes.Desert:
-                {
-                    var randomValue = random.NextDouble();
-                    if (randomValue > 0.98)
-                    {
-                        result = rockEntity;
                     }
+                case Biomes.Forest:
+                    {
+                        var randomValue = random.Next(0, 100) / 100d;
+                        if (randomValue > 0.95)
+                        {
+                            result = treeEntity;
+                        }
+                        else if (randomValue > 0.90)
+                        {
+                            result = smallTreeEntity;
+                        }
+                        else if (randomValue > 0.89)
+                        {
+                            result = treeStumpEntity;
+                        }
 
-                }
+                        break;
+                    }
+                case Biomes.Desert:
+                    {
+                        var randomValue = random.Next(0, 100) / 100d;
+                        if (randomValue > 0.98)
+                        {
+                            result = rockEntity;
+                        }
+
+                    }
                     break;
                 default:
-                    break;;
+                    break; ;
             }
 
             if (result == null)

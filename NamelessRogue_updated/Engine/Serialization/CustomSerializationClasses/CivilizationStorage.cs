@@ -17,37 +17,52 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 		[FlatBufferItem(1)] public string ParentEntityId { get; set; }
 		[FlatBufferItem(2)] public string Name { get; set; }
 
-		[FlatBufferItem(3)] public Dictionary<CivilizationStorage, PoliticalRelationStorage> Relations { get; set; }
+		//parallel arrays
+		[FlatBufferItem(3)] public CivilizationStorage[] CivilizationArray { get; set; }
+		[FlatBufferItem(4)] public PoliticalRelationStorage[] RelationsArray { get; set; }
+		///
 
 		public void FillFrom(Generation.World.Civilization component)
 		{
-
+			Id = component.Id.ToString();
+			ParentEntityId = component.ParentEntityId.ToString();
 			Name = component.Name;
+		
 
-			Relations = new Dictionary<CivilizationStorage, PoliticalRelationStorage>();
-
-			foreach (var pair in component.Relations)
+			if (component.Relations != null)
 			{
-				Relations.Add(pair.Key, pair.Value);
+				CivilizationArray = new CivilizationStorage[component.Relations.Count];
+				RelationsArray = new PoliticalRelationStorage[component.Relations.Count];
+				int i = 0;
+				foreach (var pair in component.Relations)
+				{
+					CivilizationArray[i] = pair.Key;
+					RelationsArray[i] = pair.Value;
+				}
 			}
 
 		}
 
 		public void FillTo(Generation.World.Civilization component)
 		{
-
+			component.Id = new Guid(Id);
+			component.ParentEntityId = new Guid(ParentEntityId);
 			component.Name = Name;
 
-			component.Relations = new Dictionary<Generation.World.Civilization, Generation.World.Diplomacy.PoliticalRelation>();
-			
-			foreach (var pair in Relations)
+			if (RelationsArray!=null && RelationsArray.Any())
 			{
-				component.Relations.Add(pair.Key, pair.Value);
+				component.Relations = new Dictionary<Generation.World.Civilization, Generation.World.Diplomacy.PoliticalRelation>();
+		
+				for (int i = 0; i < RelationsArray.Count(); i++)
+				{
+					component.Relations.Add(CivilizationArray[i], RelationsArray[i]);
+				}
 			}
 		}
 
 		public static implicit operator Generation.World.Civilization(CivilizationStorage thisType)
 		{
+			if (thisType == null) { return null; }
 			Generation.World.Civilization result = new Generation.World.Civilization();
 			thisType.FillTo(result);
 			return result;
@@ -55,8 +70,9 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		public static implicit operator CivilizationStorage(Generation.World.Civilization component)
 		{
+			if (component == null) { return null; }
 			CivilizationStorage result = new CivilizationStorage();
-			result.FillFrom(result);
+			result.FillFrom(component);
 			return result;
 		}
 

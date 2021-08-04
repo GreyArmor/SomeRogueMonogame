@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace NamelessRogue.Engine.Generation.World
 {
     
-    public enum Biomes
+    public enum Biomes : byte
     {
         None,
         Forest,

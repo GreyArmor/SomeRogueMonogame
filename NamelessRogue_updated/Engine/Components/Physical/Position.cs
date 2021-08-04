@@ -5,18 +5,18 @@ namespace NamelessRogue.Engine.Components.Physical
     public class Position : Component {
         public Position(int x,int y)
         {
-            p = new Point(x,y);
+            Point = new Point(x,y);
         }
 
         public Position()
         {
-            p = new Point();
+            Point = new Point();
         }
-        public Point p;
+        public Point Point { get; set; }
 
         public override IComponent Clone()
         {
-            return new Position(p.X,p.Y);
+            return new Position(Point.X,Point.Y);
         }
     }
 }

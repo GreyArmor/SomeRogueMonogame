@@ -187,7 +187,7 @@ namespace NamelessRogue.Engine.UiScreens
                         {
                             equipment.TakeOff(equipmentItem);
                             var position = playerEntity.GetComponentOfType<Position>();
-                            var command = new DropItemCommand(new List<IEntity>() { game.GetEntity(equipment.ParentEntityId) }, itemsHolder, position.p);
+                            var command = new DropItemCommand(new List<IEntity>() { game.GetEntity(equipment.ParentEntityId) }, itemsHolder, position.Point);
                             namelessGame.Commander.EnqueueCommand(command);
                             invScreenSystem.ScheduleUpdate();
                         });
@@ -250,7 +250,7 @@ namespace NamelessRogue.Engine.UiScreens
                                     Actions.Add((InventoryScreenSystem invScreenSystem, NamelessGame namelessGame) =>
                                     {
                                         var command = new DropItemCommand(new List<IEntity>() { itemEntity }, itemsHolder,
-                                            position.p);
+                                            position.Point);
                                         namelessGame.Commander.EnqueueCommand(command);
                                         invScreenSystem.ScheduleUpdate();
                                     });
@@ -262,7 +262,7 @@ namespace NamelessRogue.Engine.UiScreens
                                 {
                                     var clonedEntity = itemEntity.CloneEntity();
 
-                                    game.EntitiesToAdd.Add(clonedEntity);
+                                    //game.EntitiesToAdd.Add(clonedEntity);
 
                                     var clonedItemComponent = clonedEntity.GetComponentOfType<Item>();
 
@@ -275,7 +275,7 @@ namespace NamelessRogue.Engine.UiScreens
                                     {
                                         CloseDialog(ItemChoiceDialog);
                                         var command = new DropItemCommand(new List<IEntity>() { clonedEntity }, itemsHolder,
-                                            position.p);
+                                            position.Point);
                                         namelessGame.Commander.EnqueueCommand(command);
 
                                         invScreenSystem.ScheduleUpdate();
@@ -296,7 +296,7 @@ namespace NamelessRogue.Engine.UiScreens
                         {
                             var position = playerEntity.GetComponentOfType<Position>();
                             var command = new DropItemCommand(new List<IEntity>() {itemEntity}, itemsHolder,
-                                position.p);
+                                position.Point);
                             namelessGame.Commander.EnqueueCommand(command);
                             invScreenSystem.ScheduleUpdate();
                             CloseDialog(ItemChoiceDialog);

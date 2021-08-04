@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Markov;
+using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
+using RogueSharp.Random;
 
 namespace NamelessRogue.Engine.Generation
 {
@@ -13,9 +15,9 @@ namespace NamelessRogue.Engine.Generation
     {
         Markov.MarkovChain<char> countryChain = new MarkovChain<char>(2);
 
-        public string GetCountryName(Random random)
+        public string GetCountryName(InternalRandom random)
         {
-            return new string(countryChain.Chain(random).ToArray());
+            return new string(countryChain.Chain(random.Next()).ToArray());
         }
 
         public NamesGenerator()
@@ -28,10 +30,6 @@ namespace NamelessRogue.Engine.Generation
             {
                 countryChain.Add(str);
             }
-
-
-
-
         }
     }
 }

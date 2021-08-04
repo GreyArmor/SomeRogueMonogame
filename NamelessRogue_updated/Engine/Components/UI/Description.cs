@@ -11,6 +11,8 @@ using System;
 namespace NamelessRogue.Engine.Components.UI
 {
     public class Description : Component {
+
+        public Description() { }
         public Description(String name = "", String text = "")
         {
             Name = name;

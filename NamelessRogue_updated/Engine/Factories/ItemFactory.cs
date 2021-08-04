@@ -28,7 +28,7 @@ namespace NamelessRogue.Engine.Factories
             });
             var position = new Position(x, y);
             item.AddComponent(position);
-            game.WorldProvider.MoveEntity(item, position.p);
+            game.WorldProvider.MoveEntity(item, position.Point);
             return item;
         }
 
@@ -46,7 +46,7 @@ namespace NamelessRogue.Engine.Factories
             });
             var position = new Position(x, y);
             item.AddComponent(position);
-            game.WorldProvider.MoveEntity(item, position.p);
+            game.WorldProvider.MoveEntity(item, position.Point);
             return item;
         }
 
@@ -64,7 +64,7 @@ namespace NamelessRogue.Engine.Factories
             });
             var position = new Position(x, y);
             item.AddComponent(position);
-            game.WorldProvider.MoveEntity(item, position.p);
+            game.WorldProvider.MoveEntity(item, position.Point);
             return item;
         }
 
@@ -82,7 +82,7 @@ namespace NamelessRogue.Engine.Factories
             });
             var position = new Position(x, y);
             item.AddComponent(position);
-            game.WorldProvider.MoveEntity(item, position.p);
+            game.WorldProvider.MoveEntity(item, position.Point);
             return item;
         }
 
@@ -101,7 +101,7 @@ namespace NamelessRogue.Engine.Factories
             });
             var position = new Position(x, y);
             item.AddComponent(position);
-            game.WorldProvider.MoveEntity(item, position.p);
+            game.WorldProvider.MoveEntity(item, position.Point);
             return item;
         }
 
@@ -120,7 +120,7 @@ namespace NamelessRogue.Engine.Factories
             });
             var position = new Position(x, y);
             item.AddComponent(position);
-            game.WorldProvider.MoveEntity(item, position.p);
+            game.WorldProvider.MoveEntity(item, position.Point);
             return item;
         }
 
@@ -138,7 +138,7 @@ namespace NamelessRogue.Engine.Factories
             });
             var position = new Position(x, y);
             item.AddComponent(position);
-            game.WorldProvider.MoveEntity(item, position.p);
+            game.WorldProvider.MoveEntity(item, position.Point);
             return item;
         }
 
@@ -156,7 +156,7 @@ namespace NamelessRogue.Engine.Factories
             });
             var position = new Position(x, y);
             item.AddComponent(position);
-            game.WorldProvider.MoveEntity(item, position.p);
+            game.WorldProvider.MoveEntity(item, position.Point);
             return item;
         }
 
@@ -170,7 +170,7 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new Description(revoAmmo.Name + i.ToString(), revoAmmo.Name));
             var position = new Position(x, y);
             item.AddComponent(position);
-            game.WorldProvider.MoveEntity(item, position.p);
+            game.WorldProvider.MoveEntity(item, position.Point);
             return item;
         }
 
@@ -185,7 +185,7 @@ namespace NamelessRogue.Engine.Factories
             item.AddComponent(new WeaponStats(1,10,25,AttackType.Ranged, ammoLibrary.AmmoTypes.First(), 6,0));
             var position = new Position(x, y);
             item.AddComponent(position);
-            game.WorldProvider.MoveEntity(item, position.p);
+            game.WorldProvider.MoveEntity(item, position.Point);
             return item;
         }
 
@@ -206,7 +206,7 @@ namespace NamelessRogue.Engine.Factories
                 }));
                 var position = new Position(x, y);
                 item.AddComponent(position);
-                game.WorldProvider.MoveEntity(item, position.p);
+                game.WorldProvider.MoveEntity(item, position.Point);
                 return item;
             }
 

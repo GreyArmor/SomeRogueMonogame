@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RogueSharp.Random;
 using NamelessRogue.Engine.Generation.World;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Generation
 {
     public class WorldSettings
     {
+        public WorldSettings() { }
         public WorldSettings(int seed, int worldBoardWidth, int worldBoardHeight)
         {
             Seed = seed;
             WorldBoardWidth = worldBoardWidth;
             WorldBoardHeight = worldBoardHeight;
-            GlobalRandom = new Random(seed);
+            GlobalRandom = new InternalRandom(seed);
             TerrainGen = new TerrainGenerator(GlobalRandom);
             WorldMapScale = 1;
             ContinentTilesPerCivilization = 2000;
@@ -58,10 +61,10 @@ namespace NamelessRogue.Engine.Generation
         //TODO: not implemented currently
         public float WorldMapScale { get; set; }
 
-        public TerrainGenerator TerrainGen { get; }
-        public int Seed { get; }
-        public int WorldBoardWidth { get; }
-        public int WorldBoardHeight { get; }
-        public Random GlobalRandom { get; }
+        public TerrainGenerator TerrainGen { get; set; }
+        public int Seed { get; set; }
+        public int WorldBoardWidth { get; set; }
+        public int WorldBoardHeight { get; set; }
+        public InternalRandom GlobalRandom { get; set; }
     }
 }

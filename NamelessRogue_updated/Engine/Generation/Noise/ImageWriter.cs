@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using log4net.Appender;
+using RogueSharp.Random;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
@@ -15,6 +16,7 @@ using Bitmap = SharpDX.WIC.Bitmap;
 using Color = NamelessRogue.Engine.Utility.Color;
 using Image = System.Drawing.Image;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Generation.Noise
 {
@@ -103,7 +105,7 @@ namespace NamelessRogue.Engine.Generation.Noise
 
         }
 
-        public static void RiverBordersWriteImage(List<List<TileForGeneration>> riverBorders, double[][] heights, int resolution, string path)
+        public static void RiverBordersWriteImage(List<List<TileForGeneration>> riverBorders, float[][] heights, int resolution, string path)
         {
 
             var img = new System.Drawing.Bitmap(resolution, resolution, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -126,13 +128,12 @@ namespace NamelessRogue.Engine.Generation.Noise
                     var col = new Color(colorRGB, colorRGB, colorRGB, 1f);
                     img.SetPixel(x, resolution - 1 - y, col.ToColor());
                 }
-            }
+            }           
 
-
-            var random = new Random();
+            var random = new InternalRandom();
             foreach (var riverBorder in riverBorders)
             {
-                var color = new Color(random.NextDouble(), random.NextDouble(), random.NextDouble(), 1f);
+                var color = new Color(random.Next(0,255), random.Next(0, 255), random.Next(0, 255), 1f);
                 foreach (var tileForGeneration in riverBorder)
                 {
                     img.SetPixel(tileForGeneration.x, resolution - 1 - tileForGeneration.y, color.ToColor());
@@ -154,7 +155,7 @@ namespace NamelessRogue.Engine.Generation.Noise
             //tex.Dispose();
         }
 
-        public static void WaterWriteImage(bool[][] data, double[][] heights,  int resolution, string path, Color waterColor)
+        public static void WaterWriteImage(bool[][] data, float[][] heights,  int resolution, string path, Color waterColor)
         {
 
             var img = new System.Drawing.Bitmap(resolution, resolution, System.Drawing.Imaging.PixelFormat.Format32bppArgb);

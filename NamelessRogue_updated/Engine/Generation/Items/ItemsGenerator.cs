@@ -4,21 +4,23 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using RogueSharp.Random;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Generation.Items
 {
     public class ItemsGenerator
     {
 
-        private Random random;
-        public ItemsGenerator(Random random)
+        private InternalRandom random;
+        public ItemsGenerator(InternalRandom random)
         {
-            this.random = new Random(random.Next());
+            this.random = new InternalRandom(random.Next());
         }
 
         public class WeaponGenerationParameters
@@ -90,7 +92,7 @@ namespace NamelessRogue.Engine.Generation.Items
 
             weapon.AddComponent(new Description(weaponsName, weaponsDescription));
             weapon.AddComponent((Item)parameters.ItemData.Clone());
-            weapon.AddComponent(new Drawable(parameters.Representation.getRepresentation(), parameters.Representation.getCharColor()));
+            weapon.AddComponent(new Drawable(parameters.Representation.Representation, parameters.Representation.CharColor));
             weapon.AddComponent(new Equipment(new List<Slot>(){}));
             weapon.AddComponent((WeaponStats)parameters.Stats.Clone());
             return weapon;

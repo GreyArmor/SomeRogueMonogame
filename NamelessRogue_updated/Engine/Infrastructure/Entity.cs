@@ -19,16 +19,20 @@ namespace NamelessRogue.Engine.Infrastructure
             foreach (IComponent component in components) {
                 EntityInfrastructureManager.AddComponent(this, component);
             }
+            EntityInfrastructureManager.AddEntity(this);
+
         }
 
         public Entity()
         {
             Id = Guid.NewGuid();
+            EntityInfrastructureManager.AddEntity(this);
         }
 
         public Entity(Guid Id)
         {
             this.Id = Id;
+            EntityInfrastructureManager.AddEntity(this);
         }
 
  
@@ -100,5 +104,30 @@ namespace NamelessRogue.Engine.Infrastructure
         {
             EntityInfrastructureManager.RemoveComponent(component, Id);
         }
-    }
+		public override bool Equals(object obj)
+		{
+            if (obj is Entity e)
+            {
+                return Id == e.Id;
+            }
+            
+			return false;
+		}
+
+        public static bool operator ==(Entity a, Entity b)
+        {
+            if (a is null)
+            {
+                return b is null;
+            }
+            return a.Equals(b);
+        }
+
+		public static bool operator !=(Entity a, Entity b) => !(a==b);
+
+		public override int GetHashCode()
+		{
+            return Id.GetHashCode();
+		}
+	}
 }

@@ -33,7 +33,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 Drawable drawable = entityToKill.GetComponentOfType<Drawable>();
                 if (drawable != null)
                 {
-                    drawable.setRepresentation('%');
+                    drawable.Representation = '%';
                 }
 
                 IEntity worldEntity = namelessGame.TimelineEntity;
@@ -47,7 +47,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 OccupiesTile occupiesTile = entityToKill.GetComponentOfType<OccupiesTile>();
                 if (occupiesTile != null && position != null)
                 {
-                    Tile tile = worldProvider.GetTile(position.p.Y, position.p.X);
+                    Tile tile = worldProvider.GetTile(position.Point.Y, position.Point.X);
                     tile.RemoveEntity((Entity) entityToKill);
                 }
 

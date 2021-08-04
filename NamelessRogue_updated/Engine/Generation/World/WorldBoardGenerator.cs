@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Markov;
+using RogueSharp.Random;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Factories;
@@ -134,7 +135,7 @@ namespace NamelessRogue.Engine.Generation.World
         {
 			var resolution = WorldGenConstants.Resolution;
 
-			var random = new Random(game.WorldSettings.GlobalRandom.Next());
+			var random = new InternalRandom(game.WorldSettings.GlobalRandom.Next());
 
 
 			for (int x = 0; x < game.WorldSettings.WorldBoardWidth; x++)
@@ -176,7 +177,7 @@ namespace NamelessRogue.Engine.Generation.World
 			List<FortuneSite> points = new List<FortuneSite>();
 			LinkedList<VEdge> edges = new LinkedList<VEdge>();
 
-			for (var i = 0; i < 1000; i++)
+			for (var i = 0; i < resolution; i++)
 			{
 				points.Add(new FortuneSite(
 					random.Next(0, resolution - 1),
@@ -252,8 +253,8 @@ namespace NamelessRogue.Engine.Generation.World
 
 			//if not in desert biome ignore, if in desert, cull with high probability
 			culledEdges = culledEdges.Where(edge => 
-			(board.WorldTiles[(int)edge.Start.X, (int)edge.Start.Y].Biome.Type.HasFlag(Biomes.Desert|Biomes.Jungle|Biomes.Savannah) && 
-			board.WorldTiles[(int)edge.End.X, (int)edge.End.Y].Biome.Type.HasFlag(Biomes.Desert | Biomes.Jungle | Biomes.Savannah)) 
+			(board.WorldTiles[(int)edge.Start.X, (int)edge.Start.Y].Biome.HasFlag(Biomes.Desert|Biomes.Jungle|Biomes.Savannah) && 
+			board.WorldTiles[(int)edge.End.X, (int)edge.End.Y].Biome.HasFlag(Biomes.Desert | Biomes.Jungle | Biomes.Savannah)) 
 			|| random.Next(1, 101) < cullingDesertChance).ToList();
 
 			var finalEdges = new List<VEdge>();
@@ -401,7 +402,7 @@ namespace NamelessRogue.Engine.Generation.World
 
 			ImageWriter.WaterWriteImage(board.RiverBorderMap, board.ElevationMap, resolution, "C:\\11\\RiverBorderMap.png", new Color(1, 0, 0, 1f));
 
-			ImageWriter.RiverBordersWriteImage(borderLines, board.ElevationMap, 1000, "C:\\11\\riverBordersLines.png");
+			ImageWriter.RiverBordersWriteImage(borderLines, board.ElevationMap, resolution, "C:\\11\\riverBordersLines.png");
 #endif
 
 			for (int x = 0; x < game.WorldSettings.WorldBoardWidth; x++)
@@ -410,10 +411,10 @@ namespace NamelessRogue.Engine.Generation.World
 				{
 					var worldTile = board.WorldTiles[x, y];
 
-					if (board.RiverMap[x][y] && worldTile.Terrain.Type != TerrainTypes.Water)
+					if (board.RiverMap[x][y] && worldTile.Terrain != TerrainTypes.Water)
 					{
-						worldTile.Terrain = TerrainLibrary.Terrains[TerrainTypes.Water];
-						worldTile.Biome = BiomesLibrary.Biomes[Biomes.River];
+						worldTile.Terrain = TerrainTypes.Water;
+						worldTile.Biome = Biomes.River;
 					}
 
 				}
@@ -433,7 +434,7 @@ namespace NamelessRogue.Engine.Generation.World
 
                 foreach (var worldBoardWorldTile in timelineLayer.WorldTiles)
                 {
-                    if (worldBoardWorldTile.Continent == worldBoardContinent && worldBoardWorldTile.Terrain.Type!=TerrainTypes.Water && worldBoardWorldTile.Owner == null)
+                    if (worldBoardWorldTile.Continent == worldBoardContinent && worldBoardWorldTile.Terrain!=TerrainTypes.Water && worldBoardWorldTile.Owner == null)
                     {
                         continentTiles.Enqueue(worldBoardWorldTile);
                     }
@@ -445,7 +446,7 @@ namespace NamelessRogue.Engine.Generation.World
                     return (game.WorldSettings.GlobalRandom.Next() % continentTiles.Count);
                 }));
 
-                var random = new Random(game.WorldSettings.GlobalRandom.Next());
+				InternalRandom random = new InternalRandom(game.WorldSettings.GlobalRandom.Next(int.MaxValue - 1));
 
                 for (int i = 0; i < civNumber; i++)
                 {
@@ -458,12 +459,12 @@ namespace NamelessRogue.Engine.Generation.World
                     }
 
                     CultureTemplate culture = game.WorldSettings.CultureTemplates[
-                        random.Next(game.WorldSettings.CultureTemplates.Count)];
+                        random.Next(game.WorldSettings.CultureTemplates.Count-1)];
 
                     var civilization = new Civilization(civName, new Microsoft.Xna.Framework.Color(
-                            new Vector4((float)random.NextDouble(),
-                                (float)random.NextDouble(),
-                                (float)random.NextDouble(), 1)),
+                            new Vector4((float)random.Next(0,100)/100,
+								(float)random.Next(0, 100) / 100,
+								(float)random.Next(0, 100) / 100, 1)),
                         culture);
                     timelineLayer.Civilizations.Add(civilization);
 
@@ -544,14 +545,14 @@ namespace NamelessRogue.Engine.Generation.World
         public static void AnalizeLandmasses(TimelineLayer timelineLayer, NamelessGame game)
         {
             var s = Stopwatch.StartNew();
-            Random rand = game.WorldSettings.GlobalRandom;
-            List<Region> regions =  GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type != Biomes.Sea &&
-                                                        tile.Continent == null), (tile, region) => tile.Continent = region,() => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper(); });
+            InternalRandom rand = game.WorldSettings.GlobalRandom;
+            List<Region> regions =  GetRegions(timelineLayer, game, rand, (tile => tile.Biome != Biomes.Sea &&
+                                                        tile.Continent == null), (tile, region) => tile.Continent = region,() => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom.Next()).ToArray()).FirstCharToUpper(); });
 
-            List<Region> forests = GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type == Biomes.Forest && tile.LandmarkRegion==null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " forest"; });
-            List<Region> deserts = GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type == Biomes.Desert && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " desert"; });
-            List<Region> mountains = GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type == Biomes.Mountain && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " mountain"; });
-            List<Region> swamps = GetRegions(timelineLayer, game, rand, (tile => tile.Biome.Type == Biomes.Swamp && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom).ToArray()).FirstCharToUpper() + " swamp"; });
+            List<Region> forests = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Forest && tile.LandmarkRegion==null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom.Next(int.MaxValue - 1)).ToArray()).FirstCharToUpper() + " forest"; });
+            List<Region> deserts = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Desert && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom.Next(int.MaxValue - 1)).ToArray()).FirstCharToUpper() + " desert"; });
+            List<Region> mountains = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Mountain && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom.Next(int.MaxValue - 1)).ToArray()).FirstCharToUpper() + " mountain"; });
+            List<Region> swamps = GetRegions(timelineLayer, game, rand, (tile => tile.Biome == Biomes.Swamp && tile.LandmarkRegion == null), (tile, region) => tile.LandmarkRegion = region, () => { return new string(continentNamesChain.Chain(game.WorldSettings.GlobalRandom.Next(int.MaxValue - 1)).ToArray()).FirstCharToUpper() + " swamp"; });
             s.Stop();
             timelineLayer.Continents = regions.Where(x => x.SizeInTiles >= 2000).ToList();
             timelineLayer.Islands = regions.Where(x => x.SizeInTiles < 2000).ToList();
@@ -561,7 +562,7 @@ namespace NamelessRogue.Engine.Generation.World
             timelineLayer.Swamps = swamps.ToList();
         }
 
-        private static List<Region> GetRegions(TimelineLayer timelineLayer, NamelessGame game, Random rand, Func<WorldTile,bool> searchCriterion, Action<WorldTile,Region> onFoundRegion, Func<string> nameGenerator)
+        private static List<Region> GetRegions(TimelineLayer timelineLayer, NamelessGame game, InternalRandom rand, Func<WorldTile,bool> searchCriterion, Action<WorldTile,Region> onFoundRegion, Func<string> nameGenerator)
         {
             List<Region> regions = new List<Region>();
             var searchPoint = new Microsoft.Xna.Framework.Point();
@@ -574,7 +575,7 @@ namespace NamelessRogue.Engine.Generation.World
                     {
                         Region r = new Region();
                         r.Name = nameGenerator();
-                        r.Color = new Color(rand.NextDouble(), rand.NextDouble(), rand.NextDouble(), 1f);
+                        r.Color = new Color(rand.Next(0,255), rand.Next(0, 255), rand.Next(0, 255), 1f);
                         regions.Add(r);
 
                         var firstNode = timelineLayer.WorldTiles[searchPoint.X, searchPoint.Y];

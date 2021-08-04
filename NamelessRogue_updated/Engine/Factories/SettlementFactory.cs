@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RogueSharp.Random;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
@@ -10,6 +11,7 @@ using NamelessRogue.Engine.Generation.Settlement;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Factories
 {
@@ -61,12 +63,12 @@ namespace NamelessRogue.Engine.Factories
 
             var firstChunk = allChunksToWorkWith.First().Value;
 
-            minPoint = firstChunk.GetWorldPosition();
-            maxPoint = firstChunk.GetWorldPosition();
+            minPoint = firstChunk.ChunkWorldMapLocationPoint;
+            maxPoint = firstChunk.ChunkWorldMapLocationPoint;
 
             foreach (var keyValuePair in allChunksToWorkWith)
             {
-                var currentPoint = keyValuePair.Value.GetWorldPosition();
+                var currentPoint = keyValuePair.Value.ChunkWorldMapLocationPoint;
                 if (currentPoint.X > maxPoint.X || currentPoint.Y > maxPoint.Y)
                 {
                     maxPoint = currentPoint;
@@ -121,7 +123,7 @@ namespace NamelessRogue.Engine.Factories
 
 
             var buildingNumber = (citySize) / 15 * (citySize) / 15;
-            var random = new Random(game.WorldSettings.GlobalRandom.Next());
+            var random = new InternalRandom(game.WorldSettings.GlobalRandom.Next());
 
             var blueprint = BlueprintLibrary.Blueprints.First();
 

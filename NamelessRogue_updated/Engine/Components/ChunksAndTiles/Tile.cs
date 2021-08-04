@@ -14,11 +14,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
     
     public class Tile {
         
-        public Biome Biome { get; set; }
+        public Biomes Biome { get; set; }
 
         public Tile(){}
 	
-        public Tile(Terrain terrain, Biome biome, Point coordinate, double elevation)
+        public Tile(TerrainTypes terrain, Biomes biome, Point coordinate, double elevation)
         {
             this.coordinate = coordinate;
             Terrain = terrain;
@@ -26,7 +26,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             this.Elevation = elevation;
         }
         public double Elevation { get; set; }
-        public Terrain Terrain { get; set; }
+        public TerrainTypes Terrain { get; set; }
         
         private Point coordinate;
         
@@ -35,6 +35,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         public List<Entity> GetEntities()
         {
             return entitiesOnTile.ToList();
+        }
+
+        public void SetEntities(List<Entity> entities)
+        {
+            entitiesOnTile = entities.ToList();
         }
 
         public void AddEntity(Entity entity)
@@ -70,11 +75,6 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                 }
             }
             return true;
-        }
-
-
-        public Point GetCoordinate() {
-            return coordinate;
         }
     }
 }

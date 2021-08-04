@@ -1,4 +1,4 @@
- 
+
 
 
 
@@ -20,6 +20,8 @@
  *
  */
 
+using NamelessRogue.Engine.Utility;
+using RogueSharp.Random;
 using System;
 
 namespace NamelessRogue.Engine.Generation.Noise
@@ -79,21 +81,21 @@ namespace NamelessRogue.Engine.Generation.Noise
         {
             p = (short[]) p_supply.Clone();
 
-            Random rand;
+            InternalRandom rand;
             if (seed == RANDOMSEED)
             {
-                rand = new Random();
+                rand = new InternalRandom();
                 seed = rand.Next();
             }
 
             //the random for the swaps
-            rand = new Random(seed);
+            rand = new InternalRandom(seed);
 
             //the seed determines the swaps that occur between the default order and the order we're actually going to use
             for (int i = 0; i < NUMBEROFSWAPS; i++)
             {
-                int swapFrom = rand.Next(p.Length);
-                int swapTo = rand.Next(p.Length);
+                int swapFrom = rand.Next(p.Length-1);
+                int swapTo = rand.Next(p.Length-1);
 
                 short temp = p[swapFrom];
                 p[swapFrom] = p[swapTo];

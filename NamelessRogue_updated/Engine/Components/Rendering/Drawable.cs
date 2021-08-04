@@ -7,15 +7,19 @@ namespace NamelessRogue.Engine.Components.Rendering
     public class Drawable : Component {
         
         public Color BackgroundColor { get; set; }
-        public Drawable(char representation, Color charColor, Color backgroundColor = null)
+		public char Representation { get => representation; set => representation = value; }
+		public bool Visible { get => visible; set => visible = value; }
+		public Color CharColor { get => charColor; set => charColor = value; }
+
+		public Drawable(char representation, Color charColor, Color backgroundColor = null)
         {
             this.BackgroundColor = backgroundColor;
             if (backgroundColor == null)
             {
                 BackgroundColor = new Color();
             }
-            Representation=representation;
-            CharColor = charColor;
+            this.representation= representation;
+            this.charColor = charColor;
         }
 
 		public Drawable()
@@ -24,38 +28,14 @@ namespace NamelessRogue.Engine.Components.Rendering
 
 		private bool visible = true;
         
-        private char Representation;
+        private char representation;
         
-        private Engine.Utility.Color CharColor;
+        private Engine.Utility.Color charColor;
 
-        public char getRepresentation() {
-            return Representation;
-        }
-
-        public void setRepresentation(char representation) {
-            Representation=representation;
-        }
-
-        public void setCharColor(Color charColor)
-        {
-            CharColor = charColor;
-        }
-
-        public Color getCharColor() {
-            return CharColor;
-        }
-
-        public void setVisible(bool visible) {
-            this.visible = visible;
-        }
-
-        public bool isVisible() {
-            return visible;
-        }
 
         public override IComponent Clone()
         {
-            return new Drawable(Representation, CharColor,BackgroundColor)
+            return new Drawable(representation, charColor, BackgroundColor)
             {
                 visible = this.visible
             };

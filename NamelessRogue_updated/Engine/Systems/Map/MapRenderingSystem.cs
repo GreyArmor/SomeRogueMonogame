@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using RogueSharp.Random;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Abstraction;
@@ -15,6 +16,7 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
 using Color = NamelessRogue.Engine.Utility.Color;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Systems.Map
 {
@@ -52,7 +54,7 @@ namespace NamelessRogue.Engine.Systems.Map
         private float gameTime;
         private float angle = 0;
         private float step = 0.04f;
-        private Random graphicalRandom = new Random();
+        private InternalRandom graphicalRandom = new InternalRandom();
         Effect effect;
         private VertexBuffer vertexBuffer;
         private IndexBuffer indexBuffer;
@@ -191,7 +193,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
                     Position playerPosition = game.CursorEntity
                         .GetComponentOfType<Position>();
-                    var screenPoint = camera.PointToScreen(playerPosition.p);
+                    var screenPoint = camera.PointToScreen(playerPosition.Point);
 
                     if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().getWidth() &&
                         screenPoint.X > 0 &&
@@ -219,7 +221,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
                         Position cursorPosition = game.CursorEntity
                             .GetComponentOfType<Position>();
-                        var screenPoint = camera.PointToScreen(cursorPosition.p);
+                        var screenPoint = camera.PointToScreen(cursorPosition.Point);
 
                         if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().getWidth() &&
                             screenPoint.X > 0 &&
@@ -236,7 +238,7 @@ namespace NamelessRogue.Engine.Systems.Map
                             for (int y = 0; y < screen.Height; y++)
                             {
                                 var playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
-                                if ((playerPosition.p.X / Constants.ChunkSize) == x || playerPosition.p.Y / Constants.ChunkSize == y)
+                                if ((playerPosition.Point.X / Constants.ChunkSize) == x || playerPosition.Point.Y / Constants.ChunkSize == y)
                                 {
                                     arr[x, y] = new Color(1f, 0, 0, 1f);
                                 }
@@ -303,8 +305,8 @@ namespace NamelessRogue.Engine.Systems.Map
                 .GetComponentOfType<Position>();
 
             Point p = camera.getPosition();
-            p.X = (playerPosition.p.X - game.GetSettings().getWidth() / 2);
-            p.Y = (playerPosition.p.Y - game.GetSettings().getHeight() / 2);
+            p.X = (playerPosition.Point.X - game.GetSettings().getWidth() / 2);
+            p.Y = (playerPosition.Point.Y - game.GetSettings().getHeight() / 2);
             camera.setPosition(p);
         }
 
@@ -355,9 +357,9 @@ namespace NamelessRogue.Engine.Systems.Map
 
         void GetTerrainTile(Screen screen, Point point, WorldTile tile)
         {
-            screen.ScreenBuffer[point.X, point.Y].Char = tile.Biome.Representation.getRepresentation();
-            screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Biome.Representation.getCharColor();
-            screen.ScreenBuffer[point.X, point.Y].BackGroundColor = tile.Biome.Representation.BackgroundColor;
+            screen.ScreenBuffer[point.X, point.Y].Char = BiomesLibrary.Biomes[tile.Biome].Representation.Representation;
+            screen.ScreenBuffer[point.X, point.Y].CharColor = BiomesLibrary.Biomes[tile.Biome].Representation.CharColor;
+            screen.ScreenBuffer[point.X, point.Y].BackGroundColor = BiomesLibrary.Biomes[tile.Biome].Representation.BackgroundColor;
 
 
             if (Mode == WorldBoardRenderingSystemMode.Regions)

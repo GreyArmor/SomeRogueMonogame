@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.Serialization;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Serialization;
@@ -13,10 +12,10 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.Utility;
-using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
+using BoundingBox = Microsoft.Xna.Framework.BoundingBox;
 using Color = Microsoft.Xna.Framework.Color;
 using Point = Microsoft.Xna.Framework.Point;
-
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 namespace NamelessRogue.Engine.Components.ChunksAndTiles
 {
     [SkipClassGeneration]
@@ -30,7 +29,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         
         private Tile[][] chunkTiles;
         
-        private BoundingBox boundingBox;
+        private Microsoft.Xna.Framework.BoundingBox boundingBox;
         
         private bool isActive;
         private bool loaded = false;
@@ -39,28 +38,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         {
         }
 
-        public bool IsActive()
-        {
-            return isActive;
-        }
-
-        public Point GetWorldPosition()
-        {
-            return worldPositionBottomLeftCorner;
-        }
-
-        public void SetWorldPosition(Point worldPosition)
-        {
-            this.worldPositionBottomLeftCorner = worldPosition;
-        }
-
-
         public Chunk(Point bottomLeftCornerWorld, Point chunkWorldMapLocationPoint, ChunkData chunkContainer)
         {
             ChunkWorldMapLocationPoint = chunkWorldMapLocationPoint;
-            boundingBox = new BoundingBox(bottomLeftCornerWorld,
-                new Point(bottomLeftCornerWorld.X + Constants.ChunkSize,
-                    bottomLeftCornerWorld.Y + Constants.ChunkSize));
+            boundingBox = new BoundingBox(new Vector3(bottomLeftCornerWorld.X, bottomLeftCornerWorld.Y, 0),
+               new Vector3(bottomLeftCornerWorld.X + Constants.ChunkSize,bottomLeftCornerWorld.Y + Constants.ChunkSize,0));
             worldPositionBottomLeftCorner = bottomLeftCornerWorld;
             this.chunkContainer = chunkContainer;
 
@@ -71,8 +53,6 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         {
 
             var surroundingChunksWithRivers = new List<TileForInlandWaterConnectivity>();
-
-
 
 
             for (int i = -1; i < 2; i++)
@@ -210,8 +190,8 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                         {
                             if (waterBitmap.GetPixel(x, y).R > 0)
                             {
-                                chunkTiles[x][y].Biome = BiomesLibrary.Biomes[Biomes.River];
-                                chunkTiles[x][y].Terrain = TerrainLibrary.Terrains[TerrainTypes.Water];
+                                chunkTiles[x][y].Biome = Biomes.River;
+                                chunkTiles[x][y].Terrain = TerrainTypes.Water;
                             }
                         }
                     }
@@ -227,7 +207,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    chunkTiles[x][y] = new Tile(TerrainLibrary.Terrains[TerrainTypes.HardRocks],BiomesLibrary.Biomes[Biomes.Mountain],
+                    chunkTiles[x][y] = new Tile(TerrainTypes.HardRocks, Biomes.Mountain,
                         new Point(x + worldPositionBottomLeftCorner.X, y + worldPositionBottomLeftCorner.Y), 0.5);
                 }
             }
@@ -250,7 +230,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
         public bool IsPointInside(int x, int y)
         {
-            return boundingBox.IsPointInside(x, y);
+            return x >= boundingBox.Min.X && x < boundingBox.Max.X && y >= boundingBox.Min.Y && y < boundingBox.Max.Y;
         }
 
         public Tile GetTile(Point p)
@@ -298,9 +278,14 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         }
 
         public bool JustCreated { get; set; }
+		public Point WorldPositionBottomLeftCorner { get => worldPositionBottomLeftCorner; set => worldPositionBottomLeftCorner = value; }
+		public BoundingBox Bounds { get => boundingBox; set => boundingBox = value; }
+		public ChunkData ChunkContainer { get => chunkContainer; set => chunkContainer = value; }
+		public bool Loaded { get => loaded; set => loaded = value; }
+		public bool IsActive { get => isActive; set => isActive = value; }
 
-//TODO: serialization
-        private bool LoadFromDisk()
+		//TODO: serialization
+		private bool LoadFromDisk()
         {
             return false;
         }
@@ -326,16 +311,6 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             int localY = Math.Abs(bottomLeftY - y);
 
             chunkTiles[localX][localY] = tile;
-        }
-
-        public BoundingBox GetBoundingBox()
-        {
-            return boundingBox;
-        }
-
-        public void SetBoundingBox(BoundingBox boundingBox)
-        {
-            this.boundingBox = boundingBox;
         }
     }
 }

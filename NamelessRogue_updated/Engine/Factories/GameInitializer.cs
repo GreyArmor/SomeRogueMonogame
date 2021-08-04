@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Factories
             cursor.AddComponent(new Cursor());
             cursor.AddComponent(new Position(0,0));
             Drawable dr = new Drawable('X', new Engine.Utility.Color(0.9,0.9,0.9));
-            dr.setVisible(false);
+            dr.Visible = false;
             cursor.AddComponent(dr);
             cursor.AddComponent(new InputComponent());
             cursor.AddComponent(new LineToPlayer());

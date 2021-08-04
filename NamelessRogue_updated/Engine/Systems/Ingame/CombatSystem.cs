@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using RogueSharp.Random;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Stats;
@@ -21,7 +22,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             while (namelessGame.Commander.DequeueCommand(out AttackCommand ac))
             {
-                Random r = new Random();
+                var random = new InternalRandom();
 
                 var source = ac.getSource();
                 var stats = source.GetComponentOfType<Stats>();

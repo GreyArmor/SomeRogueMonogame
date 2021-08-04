@@ -20,21 +20,23 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		public void FillTo(Point component)
 		{
-			component.X = X;
-			component.Y = Y;
+			throw new NotSupportedException("Value type object cant be filled into");
 		}
 
 		public static implicit operator Point(PointStorage thisType)
 		{
+			if (thisType == null) { return default; }
 			Point result = new Point();
-			thisType.FillTo(result);
+			result.X = thisType.X;
+			result.Y = thisType.Y;
 			return result;
 		}
 
 		public static implicit operator PointStorage(Point component)
 		{
+			if (component == null) { return null; }
 			PointStorage result = new PointStorage();
-			result.FillFrom(result);
+			result.FillFrom(component);
 			return result;
 		}
 	}

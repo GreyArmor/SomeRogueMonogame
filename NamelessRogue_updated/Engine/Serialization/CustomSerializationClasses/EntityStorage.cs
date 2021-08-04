@@ -9,7 +9,7 @@ using System.Text;
 namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 {
 	[FlatSharp.Attributes.FlatBufferTable]
-	public class EntityStorage : IStorage<Entity>, IStorage<IEntity>
+	public class EntityStorage : IStorage<Entity>
 	{
 		[FlatBufferItem(0)] public string Id { get; set; }
 		public void FillFrom(IEntity component)
@@ -34,6 +34,7 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		public static implicit operator Entity(EntityStorage thisType)
 		{
+			if (thisType == null) { return null; }
 			Entity result = new Entity();
 			thisType.FillTo(result);
 			return result;
@@ -41,8 +42,9 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		public static implicit operator EntityStorage(Entity component)
 		{
+			if (component == null) { return null; }
 			EntityStorage result = new EntityStorage();
-			result.FillFrom(result);
+			result.FillFrom(component);
 			return result;
 		}
 

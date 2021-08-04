@@ -1,5 +1,7 @@
- 
 
+
+using NamelessRogue.Engine.Utility;
+using RogueSharp.Random;
 using System;
 
 namespace NamelessRogue.Engine.Generation.Noise
@@ -13,7 +15,7 @@ namespace NamelessRogue.Engine.Generation.Noise
         private int largestFeature;
         double persistence;
 
-        public SimplexNoise(int largestFeature,double persistence, Random rnd){
+        public SimplexNoise(int largestFeature,double persistence, InternalRandom rnd){
             this.largestFeature=largestFeature;
             this.persistence=persistence;
 

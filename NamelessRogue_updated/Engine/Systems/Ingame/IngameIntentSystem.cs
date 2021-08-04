@@ -16,6 +16,7 @@ using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Input;
+using NamelessRogue.Engine.Serialization;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
@@ -61,16 +62,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                     int newX =
                                         intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                        intent.Intention == IntentEnum.MoveTopLeft ? position.p.X - 1 :
+                                        intent.Intention == IntentEnum.MoveTopLeft ? position.Point.X - 1 :
                                         intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
-                                        intent.Intention == IntentEnum.MoveTopRight ? position.p.X + 1 :
-                                        position.p.X;
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.X + 1 :
+                                        position.Point.X;
                                     int newY =
                                         intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                        intent.Intention == IntentEnum.MoveBottomRight ? position.p.Y - 1 :
+                                        intent.Intention == IntentEnum.MoveBottomRight ? position.Point.Y - 1 :
                                         intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft ||
-                                        intent.Intention == IntentEnum.MoveTopRight ? position.p.Y + 1 :
-                                        position.p.Y;
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.Y + 1 :
+                                        position.Point.Y;
 
                                     IEntity worldEntity = namelessGame.TimelineEntity;
                                     IWorldProvider worldProvider = null;
@@ -107,7 +108,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             if (simpleSwitch != null == simpleSwitch.isSwitchActive())
                                             {
                                                 entityThatOccupiedTile.GetComponentOfType<Drawable>()
-                                                    .setRepresentation('o');
+                                                    .Representation = 'o';
                                                 entityThatOccupiedTile.RemoveComponentOfType<BlocksVision>();
                                                 entityThatOccupiedTile.RemoveComponentOfType<OccupiesTile>();
 
@@ -155,6 +156,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                 break;
                             case IntentEnum.LookAtMode:
+                                namelessGame.ScheduleLoad();
                                 //InputReceiver receiver = new InputReceiver();
                                 //Player player = entity.GetComponentOfType<Player>();
                                 //cursor = entity.GetComponentOfType<Cursor>();
@@ -183,6 +185,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 break;
                             case IntentEnum.PickUpItem:
                             {
+                                namelessGame.ScheduleSave();
+                                
                                 var actionPoints = playerEntity.GetComponentOfType<ActionPoints>();
 
                                 if (actionPoints.Points >= 100)
@@ -198,7 +202,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                     var position = playerEntity.GetComponentOfType<Position>();
                                     var itemHolder = playerEntity.GetComponentOfType<ItemsHolder>();
-                                    var tile = worldProvider.GetTile(position.p.X, position.p.Y);
+                                    var tile = worldProvider.GetTile(position.Point.X, position.Point.Y);
 
                                     List<IEntity> itemsToPickUp = new List<IEntity>();
                                     foreach (var entityOnTIle in tile.GetEntities())
@@ -228,7 +232,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             {
                                                 StringBuilder builder = new StringBuilder();
                                                 var itemsCommand = new PickUpItemCommand(itemsToPickUp, itemHolder,
-                                                    position.p);
+                                                    position.Point);
                                                 namelessGame.Commander.EnqueueCommand(itemsCommand);
 
                                                 foreach (var entity1 in itemsToPickUp)

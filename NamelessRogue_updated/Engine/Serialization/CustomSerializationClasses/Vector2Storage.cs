@@ -20,21 +20,23 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		public void FillTo(Vector2 component)
 		{
-			component.X = X;
-			component.Y = Y;
+			throw new NotSupportedException("Value type object cant be filled into");
 		}
 
 		public static implicit operator Vector2 (Vector2Storage thisType)
-        {
-            Vector2 result = new Vector2();
-            thisType.FillTo(result);
-            return result;
+		{
+			if (thisType == null) { return default; }
+			Vector2 result = new Vector2();
+			result.X = thisType.X;
+			result.Y = thisType.Y;
+			return result;
         }
 
         public static implicit operator Vector2Storage (Vector2  component)
         {
-            Vector2Storage result = new Vector2Storage();
-            result.FillFrom(result);
+			if (component == null) { return null; }
+			Vector2Storage result = new Vector2Storage();
+            result.FillFrom(component);
             return result;
         }
 

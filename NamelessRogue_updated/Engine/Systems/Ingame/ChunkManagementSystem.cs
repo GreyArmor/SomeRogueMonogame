@@ -9,6 +9,7 @@ using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Serialization;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
@@ -37,7 +38,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 foreach (Point key in worldProvider.GetRealityBubbleChunks().Keys)
                 {
                     Chunk ch = worldProvider.GetRealityBubbleChunks()[key];
-                    if (ch.IsPointInside(playerPosition.p))
+                    if (ch.IsPointInside(playerPosition.Point))
                     {
                         currentChunk = ch;
                         currentChunkKey = key;
@@ -51,7 +52,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     foreach (Point key in worldProvider.GetChunks().Keys)
                     {
                         Chunk ch = worldProvider.GetChunks()[key];
-                        if (ch.IsPointInside(playerPosition.p))
+                        if (ch.IsPointInside(playerPosition.Point))
                         {
                             currentChunk = ch;
                             currentChunkKey = key;
@@ -101,7 +102,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     foreach (Point key in
                         keysToRemove)
                     {
-                        if (worldProvider.GetRealityBubbleChunks()[key].IsActive())
+                        if (worldProvider.GetRealityBubbleChunks()[key].IsActive)
                         {
                             worldProvider.GetRealityBubbleChunks()[key].Deactivate();
                             worldProvider.RealityChunks.Remove(worldProvider.GetRealityBubbleChunks()[key]);
@@ -134,7 +135,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }
                 }
                 realityBubbleChunk.Value.JustCreated = false;
-            }
+            }          
+
         }
     }
 }

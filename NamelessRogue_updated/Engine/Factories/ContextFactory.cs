@@ -160,5 +160,15 @@ namespace NamelessRogue.Engine.Factories
             GetPickUpItemContext(game).ContextScreen.Hide();
             GetWorldBoardContext(game).ContextScreen.Hide();
         }
+
+        internal static void ReleaseAllContexts(NamelessGame game)
+        {
+            IngameContext = null;
+            inventoryContext = null;
+            mainMenuContext = null;
+            pickUpContext = null;
+            WorldBoardContext = null;
+        }
+
     }
 }

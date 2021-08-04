@@ -17,7 +17,11 @@ namespace NamelessRogue.Engine.Components.ItemComponents
             PossibleSlots = slots.ToList();
         }
 
-        public override IComponent Clone()
+		public Equipment()
+		{
+		}
+
+		public override IComponent Clone()
         {
             return new Equipment(PossibleSlots.ToArray());
         }

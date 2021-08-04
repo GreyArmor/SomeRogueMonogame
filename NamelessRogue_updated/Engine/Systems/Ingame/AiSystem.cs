@@ -64,8 +64,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             case BasicAiStates.Idle:
                             case BasicAiStates.Moving:
-                                var pPos = playerPosition.p.ToVector2();
-                                MoveTo(entity, namelessGame, playerPosition.p, true);
+                                var pPos = playerPosition.Point.ToVector2();
+                                MoveTo(entity, namelessGame, playerPosition.Point, true);
                                 var route = basicAi.Route;
                                 if (route.Count == 0)
                                 {
@@ -102,7 +102,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             if (!route.Any())
             {
                 AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
-                List<Point> path = pathfinder.FindPath(position.p,
+                List<Point> path = pathfinder.FindPath(position.Point,
                     new Point(destination.X, destination.Y), worldProvider,
                     namelessGame);
                 if (moveBesides)
@@ -125,7 +125,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 if (!tileToMoveTo.IsPassable() || destination != basicAi.DestinationPoint)
                 {
                     AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
-                    List<Point> path = pathfinder.FindPath(position.p,
+                    List<Point> path = pathfinder.FindPath(position.Point,
                         destination, worldProvider, namelessGame);
                     path = path.Skip(1)
                         .ToList(); // we dont need the first point in the path because its the point we are standing on currently
@@ -146,7 +146,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     else
                     {
                         basicAi.Route = new Queue<Point>();
-                        nextPosition = position.p;
+                        nextPosition = position.Point;
                     }
 
                     basicAi.DestinationPoint = destination;

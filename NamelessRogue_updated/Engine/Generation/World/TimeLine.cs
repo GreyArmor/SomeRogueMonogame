@@ -13,12 +13,15 @@ namespace NamelessRogue.Engine.Generation.World
     {
         public int Seed { get; }
 
+        public TimeLine()
+        {
+        }
         public TimeLine(int seed)
         {
             Seed = seed;
-            WorldBoardAtEveryAge = new List<TimelineLayer>();
+           // WorldBoardAtEveryAge = new List<TimelineLayer>();
         }
-        public List<TimelineLayer> WorldBoardAtEveryAge { get; }
+       // public List<TimelineLayer> WorldBoardAtEveryAge { get; set; }
 
         public TimelineLayer CurrentTimelineLayer { get; set; }
 

@@ -9,6 +9,8 @@ using NamelessRogue.Engine.Generation;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
+using NamelessRogue.Engine.Utility;
+using RogueSharp.Random;
 
 namespace NamelessRogue.Engine.Components.ChunksAndTiles
 {
@@ -19,7 +21,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
         private Dictionary<Point, Chunk> realityBubbleChunks;
         public List<Chunk> RealityChunks { get; set; } = new List<Chunk>();
-        private WorldSettings worldSEttings;
+        private WorldSettings worldSettings;
 		private TimelineLayer worldBoard;
 
 		public ChunkData(WorldSettings settings, TimelineLayer worldBoard)
@@ -27,7 +29,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             Id = Guid.NewGuid();
             chunks = new Dictionary<Point, Chunk>();
             realityBubbleChunks = new Dictionary<Point, Chunk>();
-            worldSEttings = settings;
+            worldSettings = settings;
             this.worldBoard = worldBoard;
             initWorld();
         }
@@ -39,9 +41,9 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 		void initWorld()
         {
             int offfset = 0;
-            for (int x = offfset; x <= ChunkResolution + offfset; x++)
+            for (int x = offfset; x < ChunkResolution + offfset; x++)
             {
-                for (int y = offfset; y <= ChunkResolution + offfset; y++)
+                for (int y = offfset; y < ChunkResolution + offfset; y++)
                 {
                     CreateChunk(x, y);
                 }
@@ -67,8 +69,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         }
 
         //TODO: we need to implement quick iteration by using bounding box trees;
-        public int ChunkResolution { get; } = 1000;
+        public int ChunkResolution { get; set; } = WorldGenConstants.Resolution;
 		public TimelineLayer WorldBoard { get => worldBoard; set => worldBoard = value; }
+		public Dictionary<Point, Chunk> Chunks { get => chunks; set => chunks = value; }
+		public Dictionary<Point, Chunk> RealityBubbleChunks { get => realityBubbleChunks; set => realityBubbleChunks = value; }
+		public WorldSettings WorldSettings { get => worldSettings; set => worldSettings = value; }
 
 		public Tile GetTile(int x, int y)
         {
@@ -77,11 +82,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             int chunkX = x / Constants.ChunkSize;
             int chunkY = y / Constants.ChunkSize;            
 
-            realityBubbleChunks.TryGetValue(new Point(chunkX, chunkY),out chunkOfPoint);
+            realityBubbleChunks.TryGetValue(new Point(chunkX, chunkY), out chunkOfPoint);
 
             if (chunkOfPoint == null)
             {
-                return new Tile(TerrainLibrary.Terrains[TerrainTypes.Nothingness],BiomesLibrary.Biomes[Biomes.None], new Point(-1, -1),0.5);
+                return new Tile(TerrainTypes.Nothingness, Biomes.None, new Point(-1, -1),0.5);
             }
 
 
@@ -110,12 +115,12 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
         public TerrainGenerator GetWorldGenerator()
         {
-            return worldSEttings.TerrainGen;
+            return worldSettings.TerrainGen;
         }
 
-        public Random GetGlobalRandom()
+        public InternalRandom GetGlobalRandom()
         {
-            return worldSEttings.GlobalRandom;
+            return worldSettings.GlobalRandom;
         }
 
         public Dictionary<Point, Chunk> GetRealityBubbleChunks()
@@ -143,15 +148,14 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             {
                 IWorldProvider worldProvider = this;
 
-                Tile oldTile = worldProvider.GetTile(position.p.X, position.p.Y);
+                Tile oldTile = worldProvider.GetTile(position.Point.X, position.Point.Y);
                 Tile newTile = worldProvider.GetTile(moveTo.X, moveTo.Y);
 
                 oldTile.RemoveEntity((Entity) entity);
                 newTile.AddEntity((Entity) entity);
 
 
-                position.p.X = (moveTo.X);
-                position.p.Y = (moveTo.Y);
+                position.Point = new Point(moveTo.X, moveTo.Y);
 
 
 

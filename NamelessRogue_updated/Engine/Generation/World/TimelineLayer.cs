@@ -36,7 +36,6 @@ namespace NamelessRogue.Engine.Generation.World
 	public class TimelineLayer
     {
         public int Age { get; set; }
-        //[JsonIgnore]
         public WorldTile[,] WorldTiles { get; set; }
         public List<Civilization> Civilizations { get; set; }
         public List<Region> Continents { set; get; }
@@ -47,19 +46,17 @@ namespace NamelessRogue.Engine.Generation.World
         public List<Region> Swamps { get; set; }
 
         public ChunkData Chunks { get; set; }
-		public double[][] ElevationMap { get => elevationMap; set => elevationMap = value; }
+		public float[][] ElevationMap { get => elevationMap; set => elevationMap = value; }
 		public bool[][] RiverMap { get => riverMap; set => riverMap = value; }
 		public bool[][] RiverBorderMap { get => riverBorderMap; set => riverBorderMap = value; }
-		public List<WaterBorderLine> BorderLines { get; internal set; }
+		public List<WaterBorderLine> BorderLines { get; set; }
 
 
 		//used for river/lake generation
-		private double[][] elevationMap;
+		private float[][] elevationMap;
 		private bool[][] riverMap;
 		private bool[][] riverBorderMap;
-		public TileForInlandWaterConnectivity[][] InlandWaterConnectivity;
-
-
+		public TileForInlandWaterConnectivity[][] InlandWaterConnectivity { get; set; }
 
 
         public TimelineLayer(int width, int height, int age)
@@ -72,10 +69,10 @@ namespace NamelessRogue.Engine.Generation.World
 
 			var resolution = WorldGenConstants.Resolution;
 
-			ElevationMap = new double[resolution][];
+			ElevationMap = new float[resolution][];
 			for (int i = 0; i < resolution; i++)
 			{
-				ElevationMap[i] = new double[resolution];
+				ElevationMap[i] = new float[resolution];
 			}
 
 			RiverMap = new bool[resolution][];

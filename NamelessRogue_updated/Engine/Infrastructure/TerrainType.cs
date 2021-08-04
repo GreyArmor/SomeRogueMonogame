@@ -27,8 +27,7 @@ namespace NamelessRogue.Engine.Infrastructure
 	}
     
     public class Biome
-    {
-        
+    {        
         public Biomes Type { get; set; }
         
         public Drawable Representation { get; set; }

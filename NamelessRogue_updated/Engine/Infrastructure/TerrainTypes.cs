@@ -5,7 +5,8 @@ using System;
 namespace NamelessRogue.Engine.Infrastructure
 {
     
-    public enum TerrainTypes {
+
+    public enum TerrainTypes : short {
         Nothingness,
         Dirt,
         Road,

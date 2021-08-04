@@ -55,7 +55,7 @@ namespace NamelessRogue.Engine.Factories
 
             playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
 
-            game.WorldProvider.MoveEntity(playerCharacter, position.p);
+            game.WorldProvider.MoveEntity(playerCharacter, position.Point);
 
             return playerCharacter;
         }
@@ -108,7 +108,7 @@ namespace NamelessRogue.Engine.Factories
 
             npc.AddComponent(stats);
             npc.AddComponent(new ActionPoints(){Points = 100});
-            game.WorldProvider.MoveEntity(npc, position.p);
+            game.WorldProvider.MoveEntity(npc, position.Point);
             return npc;
         }
 

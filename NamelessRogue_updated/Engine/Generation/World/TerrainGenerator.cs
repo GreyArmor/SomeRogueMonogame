@@ -12,6 +12,7 @@ using System.Drawing;
 using Point = Microsoft.Xna.Framework.Point;
 using VoronoiLib.Structures;
 using VoronoiLib;
+using RogueSharp.Random;
 
 /**
 * Created by Admin on 04.11.2017.
@@ -32,15 +33,18 @@ namespace NamelessRogue.Engine.Generation.World
 		public SimplexNoise DesertNoise;
 		public SimplexNoise TemperatureNoise;
 		int layer1 = 300, layer2 = 600, layer3 = 900;
+		public InternalRandom Random { get; set; }
+		public List<WaterBorderLine> BorderLines { get; set; } = new List<WaterBorderLine>();
 
-		public List<WaterBorderLine> BorderLines { get; } = new List<WaterBorderLine>();
-
-		public TerrainGenerator(Random random)
+		public TerrainGenerator(InternalRandom random)
 		{
+			Init(random);
+		}
+
+		public void Init(InternalRandom random)
+		{
+			Random = random;
 			TerrainNoises = new List<SimplexNoise>();
-
-
-
 			SimplexNoise noise1 = new SimplexNoise(layer1, 0.5, random);
 			SimplexNoise noise2 = new SimplexNoise(layer2, 0.5, random);
 			SimplexNoise noise3 = new SimplexNoise(layer3, 0.5, random);
@@ -55,14 +59,14 @@ namespace NamelessRogue.Engine.Generation.World
 
 			TerrainNoises.Add(noise1);
 			TerrainNoises.Add(noise2);
-			TerrainNoises.Add(noise3);		
-
-
+			TerrainNoises.Add(noise3);
 		}
 
+		public TerrainGenerator()
+		{
+		}
 
-
-		public double GetHeightNoise(int x, int y, float scale)
+		public float GetHeightNoise(int x, int y, float scale)
 		{
 			double dX = (double)x / scale;
 			double dY = (double)y / scale;
@@ -89,7 +93,7 @@ namespace NamelessRogue.Engine.Generation.World
 				//System.out.print(String.format("edgePosition = {0}\n", edgePosition));
 				result *= (float)edgePosition / (resolutionZoomed / 10);
 			}
-			return result;
+			return (float)result;
 		}
 
 		public Tile GetTileWithoutRiverWater(int x, int y, float scale)
@@ -115,7 +119,7 @@ namespace NamelessRogue.Engine.Generation.World
 			temperature = temperature / 20;
 			Tuple<Terrain, Biome> terrinBiome =
 				TileNoiseInterpreter.GetTerrain(terrainElevation, forest, swamp, desert, temperature, resolutionZoomed, x, y);
-			return new Tile(terrinBiome.Item1, terrinBiome.Item2, new Point(x, y), terrainElevation);
+			return new Tile(terrinBiome.Item1.Type, terrinBiome.Item2.Type, new Point(x, y), terrainElevation);
 		}
 	}
 }

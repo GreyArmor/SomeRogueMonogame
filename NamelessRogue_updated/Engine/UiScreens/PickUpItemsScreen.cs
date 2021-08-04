@@ -98,7 +98,7 @@ namespace NamelessRogue.Engine.UiScreens
 
                 Actions.Add((PickUpItemScreenSystem pickupScreenSystem, NamelessGame namelessGame) =>
                 {
-                    var command = new PickUpItemCommand(new List<IEntity>() {itemEntity}, itemsHolder, position.p);
+                    var command = new PickUpItemCommand(new List<IEntity>() {itemEntity}, itemsHolder, position.Point);
                     namelessGame.Commander.EnqueueCommand(command);
                     if (ItemsTable.Items.Count == 2)
                     {
@@ -141,7 +141,7 @@ namespace NamelessRogue.Engine.UiScreens
 
             var position = playerEntity.GetComponentOfType<Position>();
             var itemHolder = playerEntity.GetComponentOfType<ItemsHolder>();
-            var tile = worldProvider.GetTile(position.p.X, position.p.Y);
+            var tile = worldProvider.GetTile(position.Point.X, position.Point.Y);
 
             List<IEntity> itemsToPickUp = new List<IEntity>();
             foreach (var entityOnTIle in tile.GetEntities())

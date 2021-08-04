@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Generation.World.BoardPieces;
 using NamelessRogue.Engine.Generation.World.Diplomacy;
 using NamelessRogue.Engine.Generation.World.Meta;
@@ -11,8 +12,7 @@ using NamelessRogue.Engine.Serialization;
 
 namespace NamelessRogue.Engine.Generation.World
 {
-    [SkipClassGeneration]
-    public class Civilization {
+    public class Civilization : Component {
 		public Civilization()
 		{
 		}

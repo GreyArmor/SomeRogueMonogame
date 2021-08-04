@@ -9,17 +9,31 @@ using NamelessRogue.Engine.Components;
 namespace NamelessRogue.Engine.Infrastructure
 {
     public class EntityInfrastructureManager {
-
+        static List<IEntity> entities;
         static Dictionary<Type, Dictionary<Guid, IComponent>> components;
         static LinkedList<ISystem> systems;
 
 		public static Dictionary<Type, Dictionary<Guid, IComponent>> Components { get { return components; } }
 
+		public static List<IEntity> Entities { get { return entities; } }
+
 		static EntityInfrastructureManager() {
+            entities = new List<IEntity>();
             components = new Dictionary<Type, Dictionary<Guid, IComponent>>();
             systems = new LinkedList<ISystem>();
         }
 
+        public static IEntity GetEntity(Guid id)
+        {
+            return entities.FirstOrDefault(x => x.Id == id);
+        }
+        public static void AddEntity(IEntity entity)
+        {
+            if (!entities.Any(x => x == entity))
+            {
+                entities.Add(entity);
+            }
+        }
         public static void AddSystem(ISystem system)
         {
             systems.AddLast(system);
@@ -130,5 +144,15 @@ namespace NamelessRogue.Engine.Infrastructure
             }
 
         }
-    }
+
+		internal static void ClearGame()
+		{
+            foreach (IEntity entity in entities)
+            {
+                RemoveEntity(entity);
+            }
+            entities.Clear();
+            systems.Clear();
+		}
+	}
 }
