@@ -69,7 +69,7 @@ namespace NamelessRogue.shell
 		// this lookup is very expensive, avoid using in loops
 		public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
 		{
-			List<IEntity> results = EntityInfrastructureManager.Entities.Where(v => v.GetComponentOfType<T>() != null).ToList();
+			List<IEntity> results = EntityInfrastructureManager.Entities.Values.Where(v => v.GetComponentOfType<T>() != null).ToList();
 			return results;
 		}
 
@@ -188,6 +188,9 @@ namespace NamelessRogue.shell
 			Log = LogManager.GetLogger(typeof(NamelessGame));
 
 			Log.Info("Application started");
+
+
+			SaveManager.Init();
 
 			CurrentGame = new GameInstance();
 			DebugDevice = this.GraphicsDevice;
@@ -347,8 +350,8 @@ namespace NamelessRogue.shell
 			if (anyRivers)
 			{
 				//move player to some river
-				PlayerEntity.GetComponentOfType<Position>().Point = new Point(worldRiverPosition.X * Constants.ChunkSize, worldRiverPosition.Y * Constants.ChunkSize);
-				chunkManagementSystem.Update(0, this);
+				//PlayerEntity.GetComponentOfType<Position>().Point = new Point(worldRiverPosition.X * Constants.ChunkSize, worldRiverPosition.Y * Constants.ChunkSize);
+				//chunkManagementSystem.Update(0, this);
 			}
 
 			CursorEntity = GameInitializer.CreateCursor();

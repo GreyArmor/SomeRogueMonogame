@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -41,8 +42,12 @@ namespace NamelessRogue.Engine.Serialization
     }
 
     public class SaveManager
-    {        
-
+    {
+        public static void Init()
+        {
+            FlatBufferSerializer.Default.Compile<NamelessRogueSaveFile>();
+            FlatBufferSerializer.Default.Compile<TimelineStorage>();
+        }
         public static void SaveGame(String pathToFolder, NamelessGame game)
         {
             var saveFile = new NamelessRogueSaveFile();
@@ -73,7 +78,7 @@ namespace NamelessRogue.Engine.Serialization
                     saveFile.StoragesDictionary[storageObject.GetType()].Add(storageObject);
                 }
             }
-            foreach (var entity in EntityInfrastructureManager.Entities)
+            foreach (var entity in EntityInfrastructureManager.Entities.Values)
             {
                 var storage = new EntityStorage();
                 storage.FillFrom(entity);
@@ -108,7 +113,6 @@ namespace NamelessRogue.Engine.Serialization
                     var stream = File.OpenWrite("chunksmemory.nrs");                
                     stream.Write(buffer,0, bytesWritten);
                     stream.Close();
-                 // TimelineStorage p = serializer.Parse<TimelineStorage>(memory);
                 }
             }
         }
@@ -147,13 +151,13 @@ namespace NamelessRogue.Engine.Serialization
 
                         storage.FillTo(component.CastToReflected(typePair.Key));
 
-                        EntityInfrastructureManager.GetEntity(component.ParentEntityId).AddComponent(component);
+                        EntityInfrastructureManager.AddComponent(component.ParentEntityId, component);
                     }
    
                 }
             }      
+            
             {
-               
                 var buffer = File.ReadAllBytes("chunksmemory.nrs");
                 var saveFile = FlatBufferSerializer.Default.Parse<TimelineStorage>(buffer);
                 TimeLine timeLine = new TimeLine();
@@ -177,7 +181,6 @@ namespace NamelessRogue.Engine.Serialization
                 game.TimelineEntity = entity;
                 game.CursorEntity = game.GetEntityByComponentClass<Cursor>();
                 game.FollowedByCameraEntity = game.GetEntityByComponentClass<FollowedByCamera>();
-
             }
         }
 

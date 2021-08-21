@@ -29,7 +29,6 @@ namespace NamelessRogue.Engine.Factories
             }
             else
             {
-     ; 
                 var systems = new List<ISystem>();
                 systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
                 systems.Add(new IngameIntentSystem());

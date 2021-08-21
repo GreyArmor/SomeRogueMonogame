@@ -9,30 +9,27 @@ using NamelessRogue.Engine.Components;
 namespace NamelessRogue.Engine.Infrastructure
 {
     public class EntityInfrastructureManager {
-        static List<IEntity> entities;
+        static Dictionary<Guid, IEntity> entities;
         static Dictionary<Type, Dictionary<Guid, IComponent>> components;
         static LinkedList<ISystem> systems;
 
 		public static Dictionary<Type, Dictionary<Guid, IComponent>> Components { get { return components; } }
 
-		public static List<IEntity> Entities { get { return entities; } }
+		public static Dictionary<Guid,IEntity> Entities { get { return entities; } }
 
 		static EntityInfrastructureManager() {
-            entities = new List<IEntity>();
+            entities = new Dictionary<Guid, IEntity>();
             components = new Dictionary<Type, Dictionary<Guid, IComponent>>();
             systems = new LinkedList<ISystem>();
         }
 
         public static IEntity GetEntity(Guid id)
         {
-            return entities.FirstOrDefault(x => x.Id == id);
+            return entities.TryGetValue(id, out IEntity entity) ? entity : null;
         }
         public static void AddEntity(IEntity entity)
         {
-            if (!entities.Any(x => x == entity))
-            {
-                entities.Add(entity);
-            }
+            entities.TryAdd(entity.Id,entity);
         }
         public static void AddSystem(ISystem system)
         {
@@ -44,17 +41,24 @@ namespace NamelessRogue.Engine.Infrastructure
             systems.Remove(system);
         }
 
-        public static  void AddComponent<ComponentType>(IEntity entity, ComponentType component) where ComponentType : IComponent {
+
+        public static void AddComponent<ComponentType>(Guid entityId, ComponentType component) where ComponentType : IComponent
+        {
             Dictionary<Guid, IComponent> componentsOfType;
             components.TryGetValue(component.GetType(), out componentsOfType);
-            if (componentsOfType == null) {
+            if (componentsOfType == null)
+            {
                 componentsOfType = new Dictionary<Guid, IComponent>();
                 components.Add(component.GetType(), componentsOfType);
             }
 
-            component.ParentEntityId = entity.Id;
-            componentsOfType.Add(entity.Id, component);
+            component.ParentEntityId = entityId;
+            componentsOfType.Add(entityId, component);
 
+            if (!entities.TryGetValue(entityId, out IEntity entity))
+            {
+                entity = new Entity();
+            }
             foreach (var system in systems)
             {
                 if (system.IsEntityMatchesSignature(entity))
@@ -62,7 +66,10 @@ namespace NamelessRogue.Engine.Infrastructure
                     system.AddEntity(entity);
                 }
             }
+        }
 
+        public static  void AddComponent<ComponentType>(IEntity entity, ComponentType component) where ComponentType : IComponent {
+            AddComponent(entity.Id, component);
         }
 
         public static void RemoveComponent<ComponentType>(IEntity entity) where ComponentType : IComponent
@@ -147,12 +154,10 @@ namespace NamelessRogue.Engine.Infrastructure
 
 		internal static void ClearGame()
 		{
-            foreach (IEntity entity in entities)
-            {
-                RemoveEntity(entity);
-            }
             entities.Clear();
             systems.Clear();
-		}
+            components.Clear();
+
+        }
 	}
 }
