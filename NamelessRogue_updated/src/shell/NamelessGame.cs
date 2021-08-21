@@ -514,18 +514,30 @@ namespace NamelessRogue.shell
 				SaveManager.LoadGame("", this);
 
 				ContextToSwitch = ContextFactory.GetIngameContext(this);
+				skipNextFrame = true;
 			}
+
+		
 
 		}
 
 		private FrameCounter _frameCounter = new FrameCounter();
 		Label fpsLabel;
+		private bool skipNextFrame;
+
 		/// <summary>
 		/// This is called when the game should draw itself.
 		/// </summary>
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw(GameTime gameTime)
 		{
+
+			if (skipNextFrame)
+			{
+				skipNextFrame = false;
+				return;
+			}
+
 			var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 			_frameCounter.Update(deltaTime);
 			fpsLabel.Text = "FPS = " + _frameCounter.AverageFramesPerSecond.ToString();
