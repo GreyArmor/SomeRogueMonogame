@@ -64,6 +64,12 @@ namespace NamelessRogue.Engine.Input
                         case Keys.P:
                             intent.Intention = IntentEnum.PickUpItem;
                             break;
+                        case Keys.F5:
+                            intent.Intention = IntentEnum.Quicksave;
+                            break;
+                        case Keys.F9:
+                            intent.Intention = IntentEnum.Quickload;
+                            break;
                     }
                 }
             }

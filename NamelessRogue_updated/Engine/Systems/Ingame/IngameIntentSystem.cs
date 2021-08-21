@@ -156,7 +156,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                 break;
                             case IntentEnum.LookAtMode:
-                                namelessGame.ScheduleLoad();
                                 //InputReceiver receiver = new InputReceiver();
                                 //Player player = entity.GetComponentOfType<Player>();
                                 //cursor = entity.GetComponentOfType<Cursor>();
@@ -184,9 +183,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                 break;
                             case IntentEnum.PickUpItem:
-                            {
-                                namelessGame.ScheduleSave();
-                                
+                            {                                
                                 var actionPoints = playerEntity.GetComponentOfType<ActionPoints>();
 
                                 if (actionPoints.Points >= 100)
@@ -274,6 +271,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         //   playerEntity.RemoveComponentOfType<HasTurn>();
                                     }
                             }
+                                break;
+                            case IntentEnum.Quicksave:
+                                namelessGame.ScheduleSave();
+                                break;
+                            case IntentEnum.Quickload:
+                                namelessGame.ScheduleLoad();
                                 break;
                             default:
                                 break;

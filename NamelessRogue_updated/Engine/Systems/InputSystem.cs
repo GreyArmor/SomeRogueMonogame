@@ -20,12 +20,22 @@ namespace NamelessRogue.Engine.Systems
             this.translator = translator;
             this.namelessGame = namelessGame;
             namelessGame.Window.TextInput += WindowOnTextInput;
+			namelessGame.Window.KeyDown += Window_KeyDown;
 
             Signature.Add(typeof(InputComponent));
             Signature.Add(typeof(InputReceiver));
         }
 
-        long currentgmatime = 0;
+		private void Window_KeyDown(object sender, InputKeyEventArgs e)
+		{
+            if (!namelessGame.CurrentContext.Systems.Contains(this))
+            {
+                return;
+            }
+            lastState = Keyboard.GetState();
+        }
+
+		long currentgmatime = 0;
         private long previousGametimeForMove = 0;
 
         int inputsTimeLimit = 30;
