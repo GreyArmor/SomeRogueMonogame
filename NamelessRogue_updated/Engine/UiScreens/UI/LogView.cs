@@ -137,7 +137,7 @@ namespace NamelessRogue.Engine.UiScreens.UI
             _gridLog.Top = y;
         }
 
-        public override void InternalRender(RenderContext context)
+        public override void InternalRender(Myra.Graphics2D.RenderContext context)
         {
             base.InternalRender(context);
 
