@@ -195,15 +195,15 @@ namespace NamelessRogue.Engine.Systems.Map
                         .GetComponentOfType<Position>();
                     var screenPoint = camera.PointToScreen(playerPosition.Point);
 
-                    if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().getWidth() &&
+                    if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().GetWidthZoomed() &&
                         screenPoint.X > 0 &&
-                        screenPoint.Y < game.GetSettings().getWidth())
+                        screenPoint.Y < game.GetSettings().GetWidthZoomed())
                     {
                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
                     }
 
-                    RenderScreen(game, screen, game.GetSettings().getFontSize());
+                    RenderScreen(game, screen, game.GetSettings().GetFontSize());
                 }
             }
             else
@@ -223,9 +223,9 @@ namespace NamelessRogue.Engine.Systems.Map
                             .GetComponentOfType<Position>();
                         var screenPoint = camera.PointToScreen(cursorPosition.Point);
 
-                        if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().getWidth() &&
+                        if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().GetWidthZoomed() &&
                             screenPoint.X > 0 &&
-                            screenPoint.Y < game.GetSettings().getWidth())
+                            screenPoint.Y < game.GetSettings().GetWidthZoomed())
                         {
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
@@ -305,8 +305,8 @@ namespace NamelessRogue.Engine.Systems.Map
                 .GetComponentOfType<Position>();
 
             Point p = camera.getPosition();
-            p.X = (playerPosition.Point.X - game.GetSettings().getWidth() / 2);
-            p.Y = (playerPosition.Point.Y - game.GetSettings().getHeight() / 2);
+            p.X = (playerPosition.Point.X - game.GetSettings().GetWidthZoomed() / 2);
+            p.Y = (playerPosition.Point.Y - game.GetSettings().GetHeightZoomed() / 2);
             camera.setPosition(p);
         }
 

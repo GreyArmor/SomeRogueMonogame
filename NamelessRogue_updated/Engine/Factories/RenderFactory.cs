@@ -12,7 +12,7 @@ namespace NamelessRogue.Engine.Factories
         {
             Entity viewport = new Entity();
             ConsoleCamera camera = new ConsoleCamera(new Point(0,0));
-            Screen screen = new Screen(settings.getWidth(),settings.getHeight());
+            Screen screen = new Screen(settings.GetWidthZoomed(), settings.GetHeightZoomed());
             viewport.AddComponent(camera);
             viewport.AddComponent(screen);
             return viewport;

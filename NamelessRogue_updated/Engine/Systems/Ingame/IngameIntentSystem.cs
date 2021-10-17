@@ -278,6 +278,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             case IntentEnum.Quickload:
                                 namelessGame.ScheduleLoad();
                                 break;
+                            case IntentEnum.ZoomIn:
+                                var zoomCommand = new ZoomCommand(false);
+                                namelessGame.Commander.EnqueueCommand(zoomCommand);
+                                break;
+                            case IntentEnum.ZoomOut:
+                                var zoomOutCommand = new ZoomCommand();
+                                namelessGame.Commander.EnqueueCommand(zoomOutCommand);
+                                break;
                             default:
                                 break;
                         }

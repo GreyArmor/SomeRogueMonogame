@@ -42,7 +42,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new HudSystem());
                 systems.Add(new ChunkManagementSystem());
               
-                var renderingSystem = new RenderingSystem(game.GetSettings());
+                var renderingSystem = new RenderingSystemSpriteBatch(game.GetSettings());
                 var uiSystem = new UIRenderSystem();
 
                 // create and init the UI manager

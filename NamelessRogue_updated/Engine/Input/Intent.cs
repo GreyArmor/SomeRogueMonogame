@@ -23,6 +23,8 @@ namespace NamelessRogue.Engine.Input
         ConetextualHotkeyPressed,
         Quicksave,
         Quickload,
+        ZoomIn,
+        ZoomOut
     }
 
     public class Intent

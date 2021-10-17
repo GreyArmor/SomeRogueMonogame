@@ -20,69 +20,27 @@ using NamelessRogue.shell;
 
 using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
 using Color = NamelessRogue.Engine.Utility.Color;
+using System.Diagnostics;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
 
-    public struct Vertex
-    {
-        // ReSharper disable NotAccessedField.Local
-        private Vector3 position;
-        private Vector4 color;
-        private Vector4 backgroundColor;
-        private Vector2 textureCoordinate;
-
-        public Vertex(Vector3 position, Vector4 color, Vector4 backgroundColor, Vector2 textureCoordinate)
-        {
-            this.position = position;
-            this.color = color;
-            this.backgroundColor = backgroundColor;
-            this.textureCoordinate = textureCoordinate;
-        }
-    }
-
-
-
-    public class RenderingSystem : BaseSystem
+    public class RenderingSystemSpriteBatch : BaseSystem
     {
         public override HashSet<Type> Signature { get; }
-
-        public readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
-        (
-            new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
-            new VertexElement(sizeof(float) * 3, VertexElementFormat.Vector4, VertexElementUsage.Color, 0),
-            new VertexElement(sizeof(float) * 7, VertexElementFormat.Vector4, VertexElementUsage.Color, 1),
-            new VertexElement(sizeof(float) * 11, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0)
-        );
 
         Dictionary<char, AtlasTileData> characterToTileDictionary;
         private float gameTime;
         private float angle = 0;
         private float step = 0.04f;
-        private InternalRandom graphicalRandom = new InternalRandom();
-        Effect effect;
-        private VertexBuffer vertexBuffer;
-        private IndexBuffer indexBuffer;
 
-        SamplerState sampler = new SamplerState()
+        public RenderingSystemSpriteBatch(GameSettings settings)
         {
-            AddressU = TextureAddressMode.Clamp,
-            AddressV = TextureAddressMode.Clamp,
-            AddressW = TextureAddressMode.Clamp,
-            Filter = TextureFilter.Point,
-            FilterMode = TextureFilterMode.Default,
-            MaxMipLevel = 0,
-            MaxAnisotropy = 0,
-
-        };
-
-        public RenderingSystem(GameSettings settings){
             InitializeCharacterTileDictionary();
 
             Signature = new HashSet<Type>();
             Signature.Add(typeof(Drawable));
             Signature.Add(typeof(Position));
-
         }
 
         //TODO move this hardcode to configuration file for tileset
@@ -155,35 +113,77 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add('z', new AtlasTileData(10, 7));
 
             characterToTileDictionary.Add('★', new AtlasTileData(15, 0));
-               
+
         }
+        SpriteBatch _spriteBatch;
 
         public override void Update(long gameTime, NamelessGame game)
         {
 
-            this.gameTime = gameTime;
 
-            game.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            game.GraphicsDevice.SamplerStates[0] = sampler;
-            game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+            this.gameTime = gameTime;
 
             //todo move to constructor or some other place better suited for initialization
             if (tileAtlas == null)
             {
                 InitializeTexture(game);
+                _spriteBatch = new SpriteBatch(game.GraphicsDevice);
             }
+
+
+            Commander commander = game.Commander;
+
+
+            var entity = game.CameraEntity;
+            ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
+            Screen screen = entity.GetComponentOfType<Screen>();
+
+
+            if (commander.DequeueCommand(out ZoomCommand zoom))
+            {
+                var settings = game.GetSettings();
+
+          
+                entity.RemoveComponent(screen);
+
+                if (zoom.ZoomOut)
+                {
+                    if (settings.Zoom < 16)
+                    {
+                        settings.Zoom *= 2;
+                    }
+                    else
+                    {
+                        settings.Zoom = 1;
+                    }
+                }
+                else
+                {
+                    if (settings.Zoom > 1)
+                    {
+                        settings.Zoom /= 2;
+                    }
+                    else
+                    {
+                        settings.Zoom = 16;
+                    }
+                }
+                screen = new Screen(settings.GetWidthZoomed(), settings.GetHeightZoomed());
+                entity.AddComponent(screen);
+            }
+
+            _spriteBatch.Begin(SpriteSortMode.Deferred,null,null, DepthStencilState.None);
+
 
             IEntity worldEntity = game.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-            }
+            }           
 
-            var entity = game.CameraEntity;
-
-            ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
-            Screen screen = entity.GetComponentOfType<Screen>();
+          
             if (camera != null && screen != null && worldProvider != null)
             {
                 MoveCamera(game, camera);
@@ -193,17 +193,18 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
                 RenderScreen(game, screen, game.GetSettings());
             }
+            _spriteBatch.End();
         }
 
         private void MoveCamera(NamelessGame game, ConsoleCamera camera)
         {
-                Position playerPosition = game.FollowedByCameraEntity
-                    .GetComponentOfType<Position>();
+            Position playerPosition = game.FollowedByCameraEntity
+                .GetComponentOfType<Position>();
 
-                Point p = camera.getPosition();
-                p.X = (playerPosition.Point.X - game.GetSettings().GetWidth() / 2);
-                p.Y = (playerPosition.Point.Y - game.GetSettings().GetWidth() / 2);
-                camera.setPosition(p);
+            Point p = camera.getPosition();
+            p.X = (playerPosition.Point.X - game.GetSettings().GetWidthZoomed() / 2);
+            p.Y = (playerPosition.Point.Y - game.GetSettings().GetHeightZoomed() / 2);
+            camera.setPosition(p);
         }
         PermissiveVisibility fov;
         private void FillcharacterBufferVisibility(NamelessGame game, Screen screen, ConsoleCamera camera,
@@ -214,33 +215,48 @@ namespace NamelessRogue.Engine.Systems.Ingame
             int camY = camera.getPosition().Y;
             Position playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
             BoundingBox b = new BoundingBox(camera.getPosition(),
-                new Point(settings.GetWidth() + camX, settings.GetHeight() + camY));
+                new Point(settings.GetWidthZoomed() + camX, settings.GetHeightZoomed() + camY));
 
-            for (int x = 0; x < settings.GetWidth(); x++)
+            for (int x = 0; x < settings.GetWidthZoomed(); x++)
             {
-                for (int y = 0; y < settings.GetHeight(); y++)
+                for (int y = 0; y < settings.GetHeightZoomed(); y++)
                 {
                     screen.ScreenBuffer[x, y].isVisible = false;
                 }
             }
 
-            //return;
+            //  return;
             if (fov == null)
             {
-                fov = new PermissiveVisibility((x, y) => { return !world.GetTile(x, y).GetBlocksVision(game); },
-                    (x, y) =>
-                    {
-                        Point screenPoint = camera.PointToScreen(x, y);
-                        if (screenPoint.X >= 0 && screenPoint.X < settings.GetWidth() && screenPoint.Y >= 0 &&
-                            screenPoint.Y < settings.GetHeight())
+                {
+                  
+                    fov = new PermissiveVisibility((x, y) => { return !world.GetTile(x, y).GetBlocksVision(game); },
+                        (x, y) =>
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible = true;
-                        }
-                    }, (x, y) => { return Math.Abs(x) + Math.Abs(y); }
-                );
-            }
+                            Stopwatch s = Stopwatch.StartNew();
+                            var lambdaLocalScreen = game.CameraEntity.GetComponentOfType<Screen>();
+                            s.Stop();
+                            s.ToString();
 
-            fov.Compute(playerPosition.Point,60);
+                            Point screenPoint = camera.PointToScreen(x, y);
+                            if (screenPoint.X >= 0 && screenPoint.X < settings.GetWidthZoomed() && screenPoint.Y >= 0 &&
+                                screenPoint.Y < settings.GetHeightZoomed())
+                            {
+                                lambdaLocalScreen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible = true;
+                            }
+                        }, (x, y) =>
+                        {
+                            if (Math.Abs(x) > 60 || Math.Abs(y) > 60)
+                            {
+                                return 10000;
+                            }
+                            return (int)((x*x) + (y*y)); 
+                        //return Math.Abs(x) + Math.Abs(y);
+                        }
+                    );
+                }
+            }
+            fov.Compute(playerPosition.Point, 3600);
         }
 
 
@@ -256,9 +272,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             angle += step;
 
-            for (int x = camX; x < settings.GetWidth() + camX; x++)
+            for (int x = camX; x < settings.GetWidthZoomed() + camX; x++)
             {
-                for (int y = camY; y < settings.GetHeight() + camY; y++)
+                for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
                     if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
@@ -292,9 +308,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             angle += step;
 
-            for (int x = camX; x < settings.GetWidth() + camX; x++)
+            for (int x = camX; x < settings.GetWidthZoomed() + camX; x++)
             {
-                for (int y = camY; y < settings.GetHeight() + camY; y++)
+                for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
                     if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
@@ -313,10 +329,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         void GetTerrainTile(Screen screen, Terrain terrain, Point point)
         {
-         
-                screen.ScreenBuffer[point.X, point.Y].Char = terrain.Representation.Representation;
-                screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.CharColor;
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
+
+            screen.ScreenBuffer[point.X, point.Y].Char = terrain.Representation.Representation;
+            screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.CharColor;
+            screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
         }
 
 
@@ -343,7 +359,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     Point screenPoint = camera.PointToScreen(position.Point.X, position.Point.Y);
                     int x = screenPoint.X;
                     int y = screenPoint.Y;
-                    if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
+                    if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                         {
@@ -374,7 +390,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             Point screenPoint = camera.PointToScreen(p.X, p.Y);
                             int x = screenPoint.X;
                             int y = screenPoint.Y;
-                            if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
+                            if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
                             {
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'x';
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
@@ -399,7 +415,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     Point screenPoint = camera.PointToScreen(position.Point.X, position.Point.Y);
                     int x = screenPoint.X;
                     int y = screenPoint.Y;
-                    if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
+                    if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                         {
@@ -422,19 +438,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         private void RenderScreen(NamelessGame gameInstance, Screen screen, GameSettings settings)
         {
-            effect.Parameters["tileAtlas"].SetValue(tileAtlas);
-            for (int x = 0; x < settings.GetWidth(); x++)
+            for (int x = 0; x < settings.GetWidthZoomed(); x++)
             {
-                for (int y = 0; y < settings.GetHeight(); y++)
+                for (int y = 0; y < settings.GetHeightZoomed(); y++)
                 {
-
-                    DrawTile(gameInstance.GraphicsDevice, gameInstance,
-                        x * settings.GetFontSize(),
-                        y * settings.GetFontSize(),
-                        characterToTileDictionary[screen.ScreenBuffer[x, y].Char],
-                        screen.ScreenBuffer[x, y].CharColor,
-                        screen.ScreenBuffer[x, y].BackGroundColor
-                        );
+                    if (screen.ScreenBuffer[x, y].isVisible)
+                    {
+                        DrawTile(gameInstance.GraphicsDevice, gameInstance,
+                            x * settings.GetFontSizeZoomed(),
+                            y * settings.GetFontSizeZoomed(),
+                            characterToTileDictionary[screen.ScreenBuffer[x, y].Char],
+                            screen.ScreenBuffer[x, y].CharColor,
+                            screen.ScreenBuffer[x, y].BackGroundColor
+                            );
+                    }
                 }
             }
 
@@ -454,6 +471,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
 
         Texture2D tileAtlas = null;
+        Texture2D whiteRectangle = null;
 
 
 
@@ -462,8 +480,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             tileAtlas = null;
             tileAtlas = game.Content.Load<Texture2D>("DFfont");
-            effect = game.Content.Load<Effect>("Shader");
-            effect.Parameters["tileAtlas"].SetValue(tileAtlas);
+
+            whiteRectangle = new Texture2D(game.GraphicsDevice, 1, 1);
+            whiteRectangle.SetData(new[] { Microsoft.Xna.Framework.Color.White });
+
             return tileAtlas;
         }
 
@@ -476,66 +496,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 atlasTileData = new AtlasTileData(1, 1);
             }
-
-
-            int tileHeight = game.GetSettings().GetFontSize();
-            int tileWidth = game.GetSettings().GetFontSize();
-
-
-            float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float) tileAtlas.Width);
-            float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float) tileAtlas.Height);
-
-            float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float) tileAtlas.Width);
-
-            float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float) tileAtlas.Height);
-
-
-            var settings = game.GetSettings();
-            var projectionMatrix = //Matrix.CreateOrthographic(game.getActualWidth(),game.getActualHeight(),0,1);
-                Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(),
-                    0, game.GetActualHeight(), 0, 2);
-
-            effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
-            var indices = new int[6] { 0, 1, 2, 2, 3, 0 };
-            effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
-            effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            var vertices = new Vertex[4];
-
-            vertices[0] = new Vertex(new Vector3(positionX, positionY + tileHeight, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureX, textureY));
-            vertices[1] = new Vertex(new Vector3(positionX, positionY, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureX, textureYend));
-            vertices[2] = new Vertex(new Vector3(positionX + tileWidth, positionY, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureXend, textureYend));
-            vertices[3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureXend, textureY));
-
-            effect.CurrentTechnique = effect.Techniques["Background"];
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            var fontsize = game.GetSettings().GetFontSizeZoomed();
+            var tilesize = tileAtlas.Width / 16;
+            if (fontsize < 4)
             {
-                pass.Apply();
-                device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length,
-                    indices.Reverse().ToArray(), 0, 2, this.VertexDeclaration);
+                _spriteBatch.Draw(whiteRectangle, new Rectangle(positionX, game.GetActualCharacterHeight() - positionY, fontsize, fontsize), null, color.ToXnaColor(), 0, default(Vector2), SpriteEffects.None, 0);
             }
-
-
-            vertices[0] = new Vertex(new Vector3(positionX, positionY + tileHeight, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureX, textureY));
-            vertices[1] = new Vertex(new Vector3(positionX, positionY, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureX, textureYend));
-            vertices[2] = new Vertex(new Vector3(positionX + tileWidth, positionY, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureXend, textureYend));
-            vertices[3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureXend, textureY));
-
-
-         
-            effect.CurrentTechnique = effect.Techniques["Point"];
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            else
             {
-                pass.Apply();
-                device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length,
-                    indices.Reverse().ToArray(), 0, 2, this.VertexDeclaration);
+                //_spriteBatch.Draw(whiteRectangle, new Rectangle(positionX, game.GetActualCharacterHeight() - positionY, fontsize, fontsize), null, backGroundColor.ToXnaColor(), 0, default(Vector2), SpriteEffects.None, 0);
+                _spriteBatch.Draw(tileAtlas, new Rectangle(positionX, game.GetActualCharacterHeight() - positionY, fontsize, fontsize), new Rectangle(atlasTileData.X * tilesize, atlasTileData.Y * tilesize, tilesize, tilesize), color.ToXnaColor(), 0, default(Vector2), SpriteEffects.None, 1);
             }
         }
     }

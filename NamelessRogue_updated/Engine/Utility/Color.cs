@@ -81,6 +81,11 @@ namespace NamelessRogue.Engine.Utility
             return System.Drawing.Color.FromArgb((int)(Alpha*255), (int)(Red *255), (int)(Green *255), (int)(Blue *255));
         }
 
+        public Microsoft.Xna.Framework.Color ToXnaColor()
+        {
+            return new Microsoft.Xna.Framework.Color((int)(Red * 255), (int)(Green * 255), (int)(Blue * 255), (int)(Alpha * 255));
+        }
+
         public static Color operator +(Color a, Color b)
         {
             return new Color(a.Red + b.Red, a.Green + b.Green, a.Blue + b.Blue, a.Alpha + b.Alpha);

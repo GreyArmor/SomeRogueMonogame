@@ -7,36 +7,51 @@ namespace NamelessRogue.Engine.Components
 		//window resolution
 		private int widthChars;
 		private int heightChars;
-		private int fontSize = 16;
-		//some font
-		private Font font;
-		public GameSettings(int width, int height)
+		private int fontSize = 32;
+		public int Zoom { get; set; } = 2;
+		public GameSettings(int defaultWidth, int defaultHeight)
 		{
-			setWidth(width);
-			setHeight(height);
+			setWidth(defaultWidth);
+			setHeight(defaultHeight);
 		}
 
-		public int getWidth()
+		public int GetWidthZoomed()
 		{
-			return widthChars;
+			return widthChars * Zoom;
 		}
 		public void setWidth(int width)
 		{
 			widthChars = width;
 		}
-		public int getHeight()
+		public int GetHeight()
 		{
 			return heightChars;
+		}
+
+		public int GetWidth()
+		{
+			return widthChars;
+		}
+
+		public int GetHeightZoomed()
+		{
+			return heightChars * Zoom;
 		}
 		public void setHeight(int height)
 		{
 			heightChars = height;
 		}
 
-		public int getFontSize()
+		public int GetFontSize()
 		{
 			return fontSize;
 		}
+		public int GetFontSizeZoomed()
+		{
+			return fontSize / Zoom;
+		}
+
+
 
 		public void setFontSize(int fontSize)
 		{

@@ -104,12 +104,12 @@ namespace NamelessRogue.shell
 
 		public int GetActualCharacterWidth()
 		{
-			return settings.getWidth() * settings.getFontSize();
+			return settings.GetWidth() * settings.GetFontSize();
 		}
 
 		public int GetActualCharacterHeight()
 		{
-			return settings.getHeight() * settings.getFontSize();
+			return settings.GetHeight() * settings.GetFontSize();
 		}
 
 		public int GetActualWidth()
@@ -140,28 +140,6 @@ namespace NamelessRogue.shell
 
 
 
-
-		public void WriteLineToConsole(String text)
-		{
-			//int lineCount = textConsole.getLineCount();
-			//if(lineCount>10)
-			//{
-			//	int howMuchLinesToRemove = lineCount - 10;
-			//	for (int i = 0;i<howMuchLinesToRemove;i++) {
-			//		int end = 0;
-			//		try {
-			//			end = textConsole.getLineEndOffset(0);
-			//		} catch (BadLocationException e) {
-			//			e.printStackTrace();
-			//		}
-			//		textConsole.replaceRange("", 0, end);
-			//	}
-			//}
-			//textConsole.append("\n");
-			//textConsole.append(text);
-			//textConsole.setCaretPosition(textConsole.getDocument().getLength());
-
-		}
 
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
@@ -195,8 +173,8 @@ namespace NamelessRogue.shell
 			CurrentGame = new GameInstance();
 			DebugDevice = this.GraphicsDevice;
 			//TODO: move to config later
-			int width = 80;
-			int height = 60;
+			int width = 40;
+			int height = 30;
 
 
 			var commanderEntity = new Entity();
@@ -350,8 +328,8 @@ namespace NamelessRogue.shell
 			if (anyRivers)
 			{
 				//move player to some river
-				//PlayerEntity.GetComponentOfType<Position>().Point = new Point(worldRiverPosition.X * Constants.ChunkSize, worldRiverPosition.Y * Constants.ChunkSize);
-				//chunkManagementSystem.Update(0, this);
+				PlayerEntity.GetComponentOfType<Position>().Point = new Point(worldRiverPosition.X * Constants.ChunkSize, worldRiverPosition.Y * Constants.ChunkSize);
+				chunkManagementSystem.Update(0, this);
 			}
 
 			CursorEntity = GameInitializer.CreateCursor();
@@ -388,22 +366,6 @@ namespace NamelessRogue.shell
 			{
 				_desktop.OnChar(a.Character);
 			};
-
-			//for (int i = 0; i < 1; i++)
-			//{
-			//    Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
-			//        yoffset * Constants.ChunkSize, 10, 10,
-			//        this));
-			//    Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 13 + (i * 10),
-			//        yoffset * Constants.ChunkSize, 10,10,
-			//        this));
-			//    Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + (i * 10),
-			//        yoffset * Constants.ChunkSize + 13,10,
-			//        10, this));
-			//    Entities.Add(BuildingFactory.CreateDummyBuilding(xoffset * Constants.ChunkSize + 1 + 13 + (i * 10),
-			//        yoffset * Constants.ChunkSize + 13, 10,10, this));
-			//}
-
 
 
 

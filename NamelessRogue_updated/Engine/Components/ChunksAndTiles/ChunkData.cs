@@ -80,10 +80,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             Chunk chunkOfPoint = null;
 
             int chunkX = x / Constants.ChunkSize;
-            int chunkY = y / Constants.ChunkSize;            
+            int chunkY = y / Constants.ChunkSize;
+            var s = Stopwatch.StartNew();
 
             realityBubbleChunks.TryGetValue(new Point(chunkX, chunkY), out chunkOfPoint);
-
+            s.Stop();
             if (chunkOfPoint == null)
             {
                 return new Tile(TerrainTypes.Nothingness, Biomes.None, new Point(-1, -1),0.5);

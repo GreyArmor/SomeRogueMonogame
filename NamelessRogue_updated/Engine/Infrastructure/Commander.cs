@@ -22,6 +22,7 @@ namespace NamelessRogue.Engine.Infrastructure
 			{
 				value = new Queue<ICommand>();
 				value.Enqueue(command);
+				Commands.Add(command.GetType(), value);
 			}
 		}
 

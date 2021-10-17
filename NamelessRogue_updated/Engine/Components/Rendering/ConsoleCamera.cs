@@ -60,8 +60,8 @@ namespace NamelessRogue.Engine.Components.Rendering
         public Point GetMouseTilePosition(NamelessGame game)
         {
             var state = Mouse.GetState();
-            var mouseTileX = state.X / game.GetSettings().getFontSize();
-            var mouseTileY = (game.GetActualHeight() - state.Y) / game.GetSettings().getFontSize();
+            var mouseTileX = state.X / game.GetSettings().GetFontSize();
+            var mouseTileY = (game.GetActualHeight() - state.Y) / game.GetSettings().GetFontSize();
 
             if (mouseTileX<0||mouseTileX>=game.GetActualCharacterWidth() || mouseTileY < 0 || mouseTileY >= game.GetActualCharacterHeight())
             {
