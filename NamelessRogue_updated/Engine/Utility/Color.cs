@@ -14,7 +14,7 @@ namespace NamelessRogue.Engine.Utility
 
         public Color(int red255, int green255, int blue255)
         {
-            Init(red255/255f, green255/255f, blue255/255f, 0);
+            Init(red255/255f, green255/255f, blue255/255f, 1);
         }
 
         public Color(float red, float green, float blue)
@@ -83,7 +83,7 @@ namespace NamelessRogue.Engine.Utility
 
         public Microsoft.Xna.Framework.Color ToXnaColor()
         {
-            return new Microsoft.Xna.Framework.Color((int)(Red * 255), (int)(Green * 255), (int)(Blue * 255), (int)(Alpha * 255));
+            return new Microsoft.Xna.Framework.Color((int)(Red * 255f), (int)(Green * 255f), (int)(Blue * 255f), (int)(Alpha * 255f));
         }
 
         public static Color operator +(Color a, Color b)

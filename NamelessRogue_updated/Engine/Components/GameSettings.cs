@@ -8,7 +8,7 @@ namespace NamelessRogue.Engine.Components
 		private int widthChars;
 		private int heightChars;
 		private int fontSize = 32;
-		public int Zoom { get; set; } = 2;
+		public int Zoom { get; set; } = 1;
 		public GameSettings(int defaultWidth, int defaultHeight)
 		{
 			setWidth(defaultWidth);

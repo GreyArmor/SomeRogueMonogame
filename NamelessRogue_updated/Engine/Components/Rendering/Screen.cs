@@ -7,15 +7,22 @@ namespace NamelessRogue.Engine.Components.Rendering
         public Screen(int width,int height) {
             Width = width;
             Height = height;
-            ScreenBuffer = new ScreenTile[width,height];
-            for (int i = 0; i <width;i++)
+            Resize();
+        }
+
+
+        public void Resize()
+        {
+            ScreenBuffer = new ScreenTile[Height, Width];
+            for (int i = 0; i < Height; i++)
             {
-                for (int j = 0;j<height;j++)
+                for (int j = 0; j < Width; j++)
                 {
-                    ScreenBuffer[i,j]= new ScreenTile();
+                    ScreenBuffer[i, j] = new ScreenTile();
                 }
             }
         }
+
 
 		public Screen()
 		{

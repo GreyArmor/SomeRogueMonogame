@@ -118,85 +118,91 @@ namespace NamelessRogue.Engine.Systems.Ingame
         SpriteBatch _spriteBatch;
 
         public override void Update(long gameTime, NamelessGame game)
-        {
+		{
 
 
 
-            this.gameTime = gameTime;
+			this.gameTime = gameTime;
 
-            //todo move to constructor or some other place better suited for initialization
-            if (tileAtlas == null)
-            {
-                InitializeTexture(game);
-                _spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            }
-
-
-            Commander commander = game.Commander;
+			//todo move to constructor or some other place better suited for initialization
+			if (tileAtlas == null)
+			{
+				InitializeTexture(game);
+				_spriteBatch = new SpriteBatch(game.GraphicsDevice);
+			}
 
 
-            var entity = game.CameraEntity;
-            ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
-            Screen screen = entity.GetComponentOfType<Screen>();
+			Commander commander = game.Commander;
 
 
-            if (commander.DequeueCommand(out ZoomCommand zoom))
-            {
-                var settings = game.GetSettings();
+			var entity = game.CameraEntity;
+			ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
+			Screen screen = entity.GetComponentOfType<Screen>();
 
-          
-                entity.RemoveComponent(screen);
+			screen = UpdateZoom(game, commander, entity, screen);
 
-                if (zoom.ZoomOut)
-                {
-                    if (settings.Zoom < 16)
-                    {
-                        settings.Zoom *= 2;
-                    }
-                    else
-                    {
-                        settings.Zoom = 1;
-                    }
-                }
-                else
-                {
-                    if (settings.Zoom > 1)
-                    {
-                        settings.Zoom /= 2;
-                    }
-                    else
-                    {
-                        settings.Zoom = 16;
-                    }
-                }
-                screen = new Screen(settings.GetWidthZoomed(), settings.GetHeightZoomed());
-                entity.AddComponent(screen);
-            }
-
-            _spriteBatch.Begin(SpriteSortMode.Deferred,null,null, DepthStencilState.None);
+			_spriteBatch.Begin(SpriteSortMode.Deferred, null, null, DepthStencilState.None);
 
 
-            IEntity worldEntity = game.TimelineEntity;
-            IWorldProvider worldProvider = null;
-            if (worldEntity != null)
-            {
-                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-            }           
+			IEntity worldEntity = game.TimelineEntity;
+			IWorldProvider worldProvider = null;
+			if (worldEntity != null)
+			{
+				worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+			}
 
-          
-            if (camera != null && screen != null && worldProvider != null)
-            {
-                MoveCamera(game, camera);
-                FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
-                FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
-                FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
-                FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
-                RenderScreen(game, screen, game.GetSettings());
-            }
-            _spriteBatch.End();
-        }
 
-        private void MoveCamera(NamelessGame game, ConsoleCamera camera)
+			if (camera != null && screen != null && worldProvider != null)
+			{
+				MoveCamera(game, camera);
+				FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
+				FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
+				FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
+				FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
+				RenderScreen(game, screen, game.GetSettings());
+			}
+			_spriteBatch.End();
+		}
+
+		private static Screen UpdateZoom(NamelessGame game, Commander commander, IEntity entity, Screen screen)
+		{
+			if (commander.DequeueCommand(out ZoomCommand zoom))
+			{
+				var settings = game.GetSettings();
+
+
+				entity.RemoveComponent(screen);
+
+				if (zoom.ZoomOut)
+				{
+					if (settings.Zoom < 16)
+					{
+						settings.Zoom *= 2;
+					}
+					else
+					{
+						settings.Zoom = 1;
+					}
+				}
+				else
+				{
+					if (settings.Zoom > 1)
+					{
+						settings.Zoom /= 2;
+					}
+					else
+					{
+						settings.Zoom = 16;
+					}
+				}
+				screen = new Screen(settings.GetWidthZoomed(), settings.GetHeightZoomed());
+				entity.AddComponent(screen);
+			}
+
+			return screen;
+		}
+
+		private void MoveCamera(NamelessGame game, ConsoleCamera camera)
         {
             Position playerPosition = game.FollowedByCameraEntity
                 .GetComponentOfType<Position>();
@@ -225,7 +231,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
 
-            //  return;
+            //return;
+
             if (fov == null)
             {
                 {
@@ -250,13 +257,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 return 10000;
                             }
-                            return (int)((x*x) + (y*y)); 
-                        //return Math.Abs(x) + Math.Abs(y);
+                         //   return (int)((x*x) + (y*y)); 
+                        return Math.Abs(x) + Math.Abs(y);
                         }
                     );
                 }
             }
-            fov.Compute(playerPosition.Point, 3600);
+            fov.Compute(playerPosition.Point, 60);
         }
 
 
@@ -504,7 +511,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
             else
             {
-                //_spriteBatch.Draw(whiteRectangle, new Rectangle(positionX, game.GetActualCharacterHeight() - positionY, fontsize, fontsize), null, backGroundColor.ToXnaColor(), 0, default(Vector2), SpriteEffects.None, 0);
+                _spriteBatch.Draw(whiteRectangle, new Rectangle(positionX, game.GetActualCharacterHeight() - positionY, fontsize, fontsize), null, backGroundColor.ToXnaColor(), 0, default(Vector2), SpriteEffects.None, 0);
                 _spriteBatch.Draw(tileAtlas, new Rectangle(positionX, game.GetActualCharacterHeight() - positionY, fontsize, fontsize), new Rectangle(atlasTileData.X * tilesize, atlasTileData.Y * tilesize, tilesize, tilesize), color.ToXnaColor(), 0, default(Vector2), SpriteEffects.None, 1);
             }
         }

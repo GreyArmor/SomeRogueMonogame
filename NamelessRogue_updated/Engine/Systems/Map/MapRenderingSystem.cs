@@ -169,6 +169,7 @@ namespace NamelessRogue.Engine.Systems.Map
             if (tileAtlas == null)
             {
                 InitializeTexture(game);
+                _spriteBatch = new SpriteBatch(game.GraphicsDevice,6400);
             }
 
             IEntity timeline = game.TimelineEntity;
@@ -180,6 +181,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
             if (LocalMapRendering)
             {
+                _spriteBatch.Begin(SpriteSortMode.Deferred, null, null, DepthStencilState.None);
                 var entity = game.CameraEntity;
 
                 ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
@@ -203,8 +205,9 @@ namespace NamelessRogue.Engine.Systems.Map
                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
                     }
 
-                    RenderScreen(game, screen, game.GetSettings().GetFontSize());
+                    RenderScreen(game, screen, game.GetSettings().GetFontSize(), game.GetSettings());
                 }
+                _spriteBatch.End();
             }
             else
             {
@@ -281,12 +284,12 @@ namespace NamelessRogue.Engine.Systems.Map
                         Texture2D tex = new Texture2D(NamelessGame.DebugDevice, screen.Width, screen.Height, false,
                             SurfaceFormat.Color);
                         tex.SetData(arrBytes);
-#if DEBUG
-                        using (var stream = File.OpenWrite("C:\\11\\colored.png"))
-                        {
-                            tex.SaveAsPng(stream, tex.Width, tex.Height);
-                        }
-#endif
+//#if DEBUG
+//                        using (var stream = File.OpenWrite("C:\\11\\colored.png"))
+//                        {
+//                            tex.SaveAsPng(stream, tex.Width, tex.Height);
+//                        }
+//#endif
 
                         worldMap = tex;
                     }
@@ -401,24 +404,24 @@ namespace NamelessRogue.Engine.Systems.Map
             }
         }
 
-        private void RenderScreen(NamelessGame gameInstance, Screen screen, int tileSize)
+        private void RenderScreen(NamelessGame gameInstance, Screen screen, int tileSize, GameSettings settings)
         {
-            effect.Parameters["tileAtlas"].SetValue(tileAtlas);
-            for (int x = 0; x < screen.Width; x++)
+            for (int x = 0; x < settings.GetWidthZoomed(); x++)
             {
-                for (int y = 0; y < screen.Height; y++)
+                for (int y = 0; y < settings.GetHeightZoomed(); y++)
                 {
-
-                    DrawTile(gameInstance.GraphicsDevice, gameInstance,
-                        x * tileSize,
-                        y * tileSize,
-                        characterToTileDictionary[screen.ScreenBuffer[x, y].Char],
-                        screen.ScreenBuffer[x, y].CharColor,
-                        screen.ScreenBuffer[x, y].BackGroundColor, tileSize
-                    );
+                        DrawTile(gameInstance.GraphicsDevice, gameInstance,
+                            x * settings.GetFontSizeZoomed(),
+                            y * settings.GetFontSizeZoomed(),
+                            characterToTileDictionary[screen.ScreenBuffer[x, y].Char],
+                            screen.ScreenBuffer[x, y].CharColor,
+                            screen.ScreenBuffer[x, y].BackGroundColor
+                            );
                 }
             }
         }
+
+
 
 
         private void RenderWorldScreen(NamelessGame gameInstance, Screen screen)
@@ -463,7 +466,28 @@ namespace NamelessRogue.Engine.Systems.Map
             }
 
         }
+        SpriteBatch _spriteBatch;
+        void DrawTile(GraphicsDevice device, NamelessGame game, int positionX, int positionY,
+    AtlasTileData atlasTileData,
+    Color color, Color backGroundColor)
+        {
 
+            if (atlasTileData == null)
+            {
+                atlasTileData = new AtlasTileData(1, 1);
+            }
+            var fontsize = game.GetSettings().GetFontSizeZoomed();
+            var tilesize = tileAtlas.Width / 16;
+            if (fontsize < 4)
+            {
+                _spriteBatch.Draw(whiteRectangle, new Rectangle(positionX, game.GetActualCharacterHeight() - positionY, fontsize, fontsize), null, color.ToXnaColor(), 0, default(Vector2), SpriteEffects.None, 0);
+            }
+            else
+            {
+                _spriteBatch.Draw(whiteRectangle, new Rectangle(positionX, game.GetActualCharacterHeight() - positionY, fontsize, fontsize), null, backGroundColor.ToXnaColor(), 0, default(Vector2), SpriteEffects.None, 0);
+                _spriteBatch.Draw(tileAtlas, new Rectangle(positionX, game.GetActualCharacterHeight() - positionY, fontsize, fontsize), new Rectangle(atlasTileData.X * tilesize, atlasTileData.Y * tilesize, tilesize, tilesize), color.ToXnaColor(), 0, default(Vector2), SpriteEffects.None, 1);
+            }
+        }
 
 
 
@@ -482,6 +506,7 @@ namespace NamelessRogue.Engine.Systems.Map
         Texture2D tileAtlas = null;
         Texture2D worldMap  = null;
         private WorldBoardRenderingSystemMode _mode = WorldBoardRenderingSystemMode.Terrain;
+        Texture2D whiteRectangle = null;
 
         private Texture InitializeTexture(NamelessGame game)
         {
@@ -490,6 +515,10 @@ namespace NamelessRogue.Engine.Systems.Map
             tileAtlas = game.Content.Load<Texture2D>("DFfont");
             effect = game.Content.Load<Effect>("Shader");
             effect.Parameters["tileAtlas"].SetValue(tileAtlas);
+
+            whiteRectangle = new Texture2D(game.GraphicsDevice, 1, 1);
+            whiteRectangle.SetData(new[] { Microsoft.Xna.Framework.Color.White });
+
             return tileAtlas;
         }
 
