@@ -45,7 +45,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                         switch (intent.Intention)
                         {
-
                             case IntentEnum.MoveUp:
                             case IntentEnum.MoveDown:
                             case IntentEnum.MoveLeft:
@@ -68,9 +67,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         position.Point.X;
                                     int newY =
                                         intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                        intent.Intention == IntentEnum.MoveBottomRight ? position.Point.Y - 1 :
+                                        intent.Intention == IntentEnum.MoveBottomRight ? position.Point.Y + 1 :
                                         intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft ||
-                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.Y + 1 :
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.Y - 1 :
                                         position.Point.Y;
 
                                     IEntity worldEntity = namelessGame.TimelineEntity;
