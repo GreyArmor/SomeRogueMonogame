@@ -13,6 +13,7 @@ using NamelessRogue.Engine.Systems.Inventory;
 using NamelessRogue.Engine.Systems.MainMenu;
 using NamelessRogue.Engine.Systems.Map;
 using NamelessRogue.Engine.Systems.PickUpItems;
+using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Factories
@@ -43,13 +44,11 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new ChunkManagementSystem());
               
                 var renderingSystem = new RenderingSystem(game.GetSettings());
-                var uiSystem = new UIRenderSystem();
+                var uiSystem = new UIRenderSystem(game);
 
-                // create and init the UI manager
-                UiFactory.CreateHud(game);
 
                 IngameContext = new GameContext(systems, new List<ISystem>() {uiSystem, renderingSystem},
-                    UiFactory.HudInstance);
+                    UIController.Instance.HudScreen);
 
                 return IngameContext;
             }
@@ -71,11 +70,10 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new WorldBoardIntentSystem());
                 systems.Add(new WorldBoardScreenSystem(renderingSystem));
               
-                var uiSystem = new UIRenderSystem();
+                var uiSystem = new UIRenderSystem(game);
 
                 // create and init the UI manager
-                UiFactory.CreateWorldBoardScreen(game);
-                WorldBoardContext = new GameContext(systems, new List<ISystem>() { uiSystem, renderingSystem }, UiFactory.WorldBoardScreen);
+                WorldBoardContext = new GameContext(systems, new List<ISystem>() { uiSystem, renderingSystem }, UIController.Instance.MapScreen);
                 return WorldBoardContext;
             }
         }
@@ -94,11 +92,10 @@ namespace NamelessRogue.Engine.Factories
                 var systems = new List<ISystem>();
                 systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(),game ));
                 systems.Add(new MainMenuScreenSystem());
-                var uiSystem = new UIRenderSystem();
+                var uiSystem = new UIRenderSystem(game);
 
                 // create and init the UI manager
-                UiFactory.CreateMainMenuScreen(game);
-                mainMenuContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UiFactory.MainMenuScreen);
+                mainMenuContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.MainMenu);
                 return mainMenuContext;
             }
         }
@@ -118,11 +115,9 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new InventoryKeyIntentTranslator(), game));
                 systems.Add(new InventoryScreenSystem());
                 systems.Add(new InventorySystem());
-                var uiSystem = new UIRenderSystem();
+                var uiSystem = new UIRenderSystem(game);
 
-                // create and init the UI manager
-                UiFactory.CreateInventoryScreen(game);
-                inventoryContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UiFactory.InventoryScreen);
+                inventoryContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.InventoryScreen);
                 return inventoryContext;
             }
         }
@@ -142,23 +137,21 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new PickUpKeyIntentTranslator(), game));
                 systems.Add(new PickUpItemScreenSystem());
                 systems.Add(new InventorySystem());
-                var uiSystem = new UIRenderSystem();
+                var uiSystem = new UIRenderSystem(game);
 
-                // create and init the UI manager
-                UiFactory.CreatePickUpItemsScreenn(game);
-                pickUpContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UiFactory.PickUpItemsScreen);
+                pickUpContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.MainMenu);
                 return pickUpContext;
             }
         }
 
         internal static void InitAllContexts(NamelessGame game)
         {
-            GetIngameContext(game).ContextScreen.Hide();
-            GetInventoryContext(game).ContextScreen.Hide();
-            GetMainMenuContext(game).ContextScreen.Hide();
-            GetPickUpItemContext(game).ContextScreen.Hide();
-            GetWorldBoardContext(game).ContextScreen.Hide();
-        }
+            GetIngameContext(game);
+            GetInventoryContext(game);
+            GetMainMenuContext(game);
+            GetPickUpItemContext(game);
+            GetWorldBoardContext(game);
+		}
 
         internal static void ReleaseAllContexts(NamelessGame game)
         {

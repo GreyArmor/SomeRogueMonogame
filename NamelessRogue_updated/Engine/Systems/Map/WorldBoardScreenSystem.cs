@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
-using NamelessRogue.Engine.UiScreens;
+using NamelessRogue.Engine.UI;
+using NamelessRogue.Engine.ViewModels;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Map
@@ -21,7 +23,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             ConsoleCamera camera = namelessGame.CameraEntity?.GetComponentOfType<ConsoleCamera>();
             TimeLine timeline = namelessGame.TimelineEntity?.GetComponentOfType<TimeLine>();
@@ -32,52 +34,52 @@ namespace NamelessRogue.Engine.Systems.Map
               
                 var tile = timeline.CurrentTimelineLayer.WorldTiles[tilePosition.X, tilePosition.Y];
 
-                switch (UiFactory.WorldBoardScreen.Mode)
-                {
+                //switch (UIController.Instance.MapScreenViewModel.Mode)
+                //{
 
-                    case WorldBoardScreenAction.ArtifactMode:
-                    {
-                            if (tile.Artifact != null)
-                            {
-                                UiFactory.WorldBoardScreen.DescriptionLog.Text = (tile.Artifact.Name);
-                            }
-                        }
-                        break;
-                    case WorldBoardScreenAction.PoliticalMode:
-                    {
+                //    case WorldBoardScreenAction.ArtifactMode:
+                //    {
+                //            if (tile.Artifact != null)
+                //            {
+                //               // UiFactory.WorldBoardScreen.DescriptionLog.Text = (tile.Artifact.Name);
+                //            }
+                //        }
+                //        break;
+                //    case WorldBoardScreenAction.PoliticalMode:
+                //    {
                            
-                            if (tile.Owner != null)
-                            {
-                                if (tile.Settlement != null)
-                                {
-                                    UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Owner.Name}, {tile.Settlement.Name} city";
-                                }
-                                else
-                                {
-                                    UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Owner.Name}";
-                                }
+                //            if (tile.Owner != null)
+                //            {
+                //                if (tile.Settlement != null)
+                //                {
+                //                 //   UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Owner.Name}, {tile.Settlement.Name} city";
+                //                }
+                //                else
+                //                {
+                //                  //  UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Owner.Name}";
+                //                }
 
-                            }
-                        }
-                        break;
-                    case WorldBoardScreenAction.RegionsMode:
-                    {
-                            if (tile.Continent != null)
-                            {
-                                UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Continent.Name} continent";
-                            }
-                            if (tile.LandmarkRegion != null)
-                            {
-                                UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.LandmarkRegion.Name} region";
-                            }
-                        }
-                        break;
-                    default:
-                        UiFactory.WorldBoardScreen.DescriptionLog.Text = "";
-                        break;
-                }
+                //            }
+                //        }
+                //        break;
+                //    case WorldBoardScreenAction.RegionsMode:
+                //    {
+                //            if (tile.Continent != null)
+                //            {
+                //              //  UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Continent.Name} continent";
+                //            }
+                //            if (tile.LandmarkRegion != null)
+                //            {
+                //               // UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.LandmarkRegion.Name} region";
+                //            }
+                //        }
+                //        break;
+                //    default:
+                //       // UiFactory.WorldBoardScreen.DescriptionLog.Text = "";
+                //        break;
+                //}
             }
-
+            /*
             foreach (var worldBoardScreenAction in UiFactory.WorldBoardScreen.SimpleActions)
             {
                 switch (worldBoardScreenAction)
@@ -124,6 +126,7 @@ namespace NamelessRogue.Engine.Systems.Map
                 }
             }
             UiFactory.WorldBoardScreen.SimpleActions.Clear();
+            */
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using Myra.Graphics2D.UI;
+﻿using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Infrastructure;
-using NamelessRogue.Engine.UiScreens;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
@@ -26,10 +25,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             foreach (IEntity entity in RegisteredEntities)
-            {
+            { 
+                /*
                 Player player = entity.GetComponentOfType<Player>();
                 var stats = entity.GetComponentOfType<Stats>();
 
@@ -85,7 +85,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     UiFactory.HudInstance.LogMessage(logMessage.LogMessage);
                 }
+                */
             }
         }
-    }
+
+	}
 }

@@ -19,7 +19,6 @@ using NamelessRogue.Engine.Components.Physical;
 
 namespace NamelessRogue
 {
-#if WINDOWS || LINUX
     /// <summary>
     /// The main class.
     /// </summary>
@@ -37,7 +36,8 @@ namespace NamelessRogue
             {
                 game.Run();
             }
+
+
         }    
     }
-#endif
 }

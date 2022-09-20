@@ -31,7 +31,7 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new OccupiesTile());
            
 
-             var stats = new Stats();
+            var stats = new Stats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
 

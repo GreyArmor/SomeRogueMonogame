@@ -29,7 +29,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
 
             var playerEntity = namelessGame.PlayerEntity;

@@ -10,7 +10,7 @@ namespace NamelessRogue.Engine.Abstraction
         void RemoveEntity(IEntity entity);
         void AddEntity(IEntity entity);
         bool IsEntityMatchesSignature(IEntity entity);
-        void Update(long gameTime, NamelessGame namelessGame);
+        void Update(GameTime gameTime, NamelessGame namelessGame);
     }
 
 }

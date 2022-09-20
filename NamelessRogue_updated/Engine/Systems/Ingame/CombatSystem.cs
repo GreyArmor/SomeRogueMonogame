@@ -7,6 +7,7 @@ using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
+using Microsoft.Xna.Framework;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -18,7 +19,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             while (namelessGame.Commander.DequeueCommand(out AttackCommand ac))
             {

@@ -32,7 +32,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             foreach (IEntity entity in RegisteredEntities)
             {
@@ -213,7 +213,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     if (itemsToPickUp.Any())
                                     {
 
-
+                                            /*
                                             if (itemsToPickUp.Count > 1)
                                             {
                                                 namelessGame.ContextToSwitch =
@@ -249,6 +249,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                         ap.Points -= Constants.ActionsPickUpCost;
                                         //playerEntity.RemoveComponentOfType<HasTurn>();
+                                            */
                                     }
 
                                 }

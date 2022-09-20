@@ -23,7 +23,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;

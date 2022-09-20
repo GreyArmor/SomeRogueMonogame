@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.shell;
@@ -17,7 +18,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             var playerEntity = namelessGame.PlayerEntity;
                 var playerAp = playerEntity.GetComponentOfType<ActionPoints>();

@@ -1,4 +1,5 @@
-﻿using NamelessRogue.Engine.Abstraction;
+﻿using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Input;
@@ -8,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NamelessRogue.Engine.UiScreens;
 
 namespace NamelessRogue.Engine.Systems.PickUpItems
 {
@@ -22,8 +22,9 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
         public override HashSet<Type> Signature { get; }
         public bool InventoryNeedsUpdate { get; private set; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
+            /*
             if (InventoryNeedsUpdate)
             {
                 UiFactory.PickUpItemsScreen.FillItems(namelessGame);
@@ -82,6 +83,7 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
                     inputComponent.Intents.Clear();
                 }
             }
+            */
         }
 
         internal void BackToGame(NamelessGame game)

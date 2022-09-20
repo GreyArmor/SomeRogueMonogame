@@ -117,15 +117,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
         SpriteBatch _spriteBatch;
 
-        public override void Update(long gameTime, NamelessGame game)
+        public override void Update(GameTime gameTime, NamelessGame game)
 		{
 
 
 
-			this.gameTime = gameTime;
+            this.gameTime = (long)gameTime.TotalGameTime.TotalMilliseconds;
 
-			//todo move to constructor or some other place better suited for initialization
-			if (tileAtlas == null)
+            //todo move to constructor or some other place better suited for initialization
+            if (tileAtlas == null)
 			{
 				InitializeTexture(game);
 				_spriteBatch = new SpriteBatch(game.GraphicsDevice);

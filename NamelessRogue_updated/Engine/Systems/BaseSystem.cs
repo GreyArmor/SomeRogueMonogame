@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
@@ -55,6 +56,6 @@ namespace NamelessRogue.Engine.Systems
             _registeredEntities.Remove(entity);
         }
 
-        public abstract void Update(long gameTime, NamelessGame namelessGame);
+        public abstract void Update(GameTime gameTime, NamelessGame namelessGame);
     }
 }

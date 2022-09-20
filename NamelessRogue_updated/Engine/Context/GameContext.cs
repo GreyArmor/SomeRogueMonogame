@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
-using NamelessRogue.Engine.UiScreens;
+using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Context
@@ -16,7 +17,7 @@ namespace NamelessRogue.Engine.Context
         public HashSet<ISystem> Systems { get; } = new HashSet<ISystem>();
         public HashSet<ISystem> RenderingSystems { get; } = new HashSet<ISystem>();
 
-        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, IBaseGuiScreen contextScreen)
+        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, BaseScreen contextScreen)
         {
             if (systems != null && systems.Any())
             {
@@ -36,7 +37,7 @@ namespace NamelessRogue.Engine.Context
             ContextScreen = contextScreen;
         }
 
-        public void Update(long gameTime, NamelessGame namelessGame)
+        public void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             foreach (var system in Systems)
             {
@@ -44,7 +45,7 @@ namespace NamelessRogue.Engine.Context
             }
         }
 
-        public void RenderingUpdate(long gameTime, NamelessGame namelessGame)
+        public void RenderingUpdate(GameTime gameTime, NamelessGame namelessGame)
         {
             foreach (var system in RenderingSystems)
             {

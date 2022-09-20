@@ -5,13 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Input;
-using NamelessRogue.Engine.UiScreens;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Inventory
@@ -41,9 +39,10 @@ namespace NamelessRogue.Engine.Systems.Inventory
         public override HashSet<Type> Signature { get; }
         public bool InventoryNeedsUpdate { get; private set; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
 
+            /*
             if (InventoryNeedsUpdate)
             {
                 UiFactory.InventoryScreen.FillItems(namelessGame);
@@ -156,7 +155,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                     inputComponent.Intents.Clear();
                 }
             }
-
+            */
 
         }
 

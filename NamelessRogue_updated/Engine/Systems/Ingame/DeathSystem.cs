@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Interaction;
@@ -22,7 +23,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             while (namelessGame.Commander.DequeueCommand(out DeathCommand command))
             {
@@ -62,5 +63,5 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
 
         }
-    }
+	}
 }

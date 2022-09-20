@@ -8,8 +8,6 @@ using log4net.Config;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Myra;
-using Myra.Graphics2D.UI;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ItemComponents;
@@ -23,10 +21,10 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Utility;
-using NamelessRogue.Engine.Infrastructure;
 using Color = Microsoft.Xna.Framework.Color;
-using Label = Myra.Graphics2D.UI.Label;
 using NamelessRogue.Engine.Serialization;
+using NamelessRogue.Engine.UI;
+using System.Runtime.InteropServices;
 
 namespace NamelessRogue.shell
 {
@@ -34,9 +32,8 @@ namespace NamelessRogue.shell
 	{
 		private static long serialVersionUID = 1L;
 
-
+		//RenderTarget2D renderTarget = new RenderTarget2D(
 		public GameInstance CurrentGame { get; set; }
-
 
 		public static GraphicsDevice DebugDevice;
 
@@ -65,6 +62,7 @@ namespace NamelessRogue.shell
 		public IEntity CursorEntity { get; set; }
 
 		public Commander Commander { get; set; }
+
 
 		// this lookup is very expensive, avoid using in loops
 		public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
@@ -144,7 +142,6 @@ namespace NamelessRogue.shell
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 		WorldSettings worldSettings;
-		private Desktop _desktop = new Desktop();
 		public ILog Log { get; private set; }
 		/// <summary>
 		/// Allows the game to perform any initialization it needs to before starting to run.
@@ -167,8 +164,10 @@ namespace NamelessRogue.shell
 
 			Log.Info("Application started");
 
+			GameTime zero = new GameTime();
 
-			SaveManager.Init();
+			//SaveManager.Init();
+		
 
 			CurrentGame = new GameInstance();
 			DebugDevice = this.GraphicsDevice;
@@ -182,14 +181,15 @@ namespace NamelessRogue.shell
 			commanderEntity.AddComponent(Commander);
 
 			settings = new GameSettings(width, height);
+
 			graphics.PreferredBackBufferWidth = (int)(GetActualCharacterWidth() + settings.HudWidth());
 			graphics.PreferredBackBufferHeight = GetActualCharacterHeight();
+
+			new UIController(this);
 
 			graphics.IsFullScreen = false;
 			graphics.PreferMultiSampling = false;
 			graphics.SynchronizeWithVerticalRetrace = true;
-
-			MyraEnvironment.Game = this;
 
 			RenderTarget = new RenderTarget2D(
 				GraphicsDevice,
@@ -198,7 +198,6 @@ namespace NamelessRogue.shell
 				false,
 				GraphicsDevice.PresentationParameters.BackBufferFormat,
 				DepthFormat.Depth24, 4, RenderTargetUsage.PlatformContents);
-
 
 			graphics.ApplyChanges();
 
@@ -258,7 +257,7 @@ namespace NamelessRogue.shell
 
 			ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
 			//initialize reality bubble
-			chunkManagementSystem.Update(0, this);
+			chunkManagementSystem.Update(zero, this);
 			//for (int i = 1; i < 10; i++)
 			//{
 			//    for (int j = 1; j < 10; j++)
@@ -329,7 +328,7 @@ namespace NamelessRogue.shell
 			{
 				//move player to some river
 				PlayerEntity.GetComponentOfType<Position>().Point = new Point(worldRiverPosition.X * Constants.ChunkSize, worldRiverPosition.Y * Constants.ChunkSize);
-				chunkManagementSystem.Update(0, this);
+				chunkManagementSystem.Update(zero, this);
 			}
 
 			CursorEntity = GameInitializer.CreateCursor();
@@ -339,33 +338,15 @@ namespace NamelessRogue.shell
 			//UserInterface.Initialize(Content, "custom");
 			//UserInterface.Active.UseRenderTarget = true;
 			CurrentContext = ContextFactory.GetMainMenuContext(this);
-			CurrentContext.ContextScreen.Show();
+			//CurrentContext.ContextScreen.Visibility = Visibility.Visible;
 			this.IsMouseVisible = true;
 			// UserInterface.Active.ShowCursor = false;
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
+			//data = new byte[graphics.PreferredBackBufferWidth * graphics.PreferredBackBufferHeight * 4];
 
-			fpsLabel = new Label();
-			fpsLabel.HorizontalAlignment = HorizontalAlignment.Right;
-			ContextFactory.GetIngameContext(this).ContextScreen.Panel.Widgets.Add(fpsLabel);
-
-			var stackPanel = new VerticalStackPanel();
-			stackPanel.Widgets.Add(fpsLabel);
-
-			// Desktop.Widgets.Add(stackPanel);
-
-
-			// Inform Myra that external text input is available
-			// So it stops translating Keys to chars
-
-
-			_desktop.HasExternalTextInput = true;
-
-			// Provide that text input
-			Window.TextInput += (s, a) =>
-			{
-				_desktop.OnChar(a.Character);
-			};
+			IsInitialized = true;
+			Viewport viewport = GraphicsDevice.Viewport;
 
 
 
@@ -395,11 +376,11 @@ namespace NamelessRogue.shell
 			get { return worldSettings; }
 			set { worldSettings = value; }
 		}
+		public bool IsInitialized { get; internal set; }
+		public GameSettings Settings { get => settings; set => settings = value; }
 
 		//public List<IEntity> EntitiesToAdd { get => entitiesToAdd; set => entitiesToAdd = value; }
 		//public List<IEntity> EntitiesToRemove { get => entitiesToRemove; set => entitiesToRemove = value; }
-		public Desktop Desktop { get => _desktop; set => _desktop = value; }
-
 
 
 		/// <summary>
@@ -424,13 +405,13 @@ namespace NamelessRogue.shell
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			if (ContextToSwitch != null)
-			{
-				CurrentContext.ContextScreen.Hide();
-				CurrentContext = ContextToSwitch;
-				CurrentContext.ContextScreen.Show();
-				ContextToSwitch = null;
-			}
+			//if (ContextToSwitch != null)
+			//{
+			//	CurrentContext.ContextScreen.Visibility = Visibility.Hidden;
+			//	CurrentContext = ContextToSwitch;
+			//	CurrentContext.ContextScreen.Visibility = Visibility.Visible;
+			//	ContextToSwitch = null;
+			//}
 
 			//if (EntitiesToAdd.Any())
 			//{
@@ -455,7 +436,7 @@ namespace NamelessRogue.shell
 			//    entity.AppendDelayedComponents();
 			//}	
 
-			CurrentContext.Update((long)gameTime.TotalGameTime.TotalMilliseconds, this);
+			CurrentContext.Update(gameTime, this);
 
 			if (saveScheduled)
 			{
@@ -484,15 +465,19 @@ namespace NamelessRogue.shell
 		}
 
 		private FrameCounter _frameCounter = new FrameCounter();
-		Label fpsLabel;
+		//Label fpsLabel;
 		private bool skipNextFrame;
 
 		/// <summary>
 		/// This is called when the game should draw itself.
 		/// </summary>
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+
+		//byte[] data;
 		protected override void Draw(GameTime gameTime)
 		{
+			//if (!this.IsActive) //Pause Game when minimized
+			//	return;
 
 			if (skipNextFrame)
 			{
@@ -502,10 +487,10 @@ namespace NamelessRogue.shell
 
 			var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 			_frameCounter.Update(deltaTime);
-			fpsLabel.Text = "FPS = " + _frameCounter.AverageFramesPerSecond.ToString();
+			//fpsLabel.Text = "FPS = " + _frameCounter.AverageFramesPerSecond.ToString();
 
 			GraphicsDevice.Clear(Color.Black);
-			CurrentContext.RenderingUpdate((long)gameTime.TotalGameTime.TotalMilliseconds, this);
+			CurrentContext.RenderingUpdate(gameTime, this);
 		}
 	}
 }

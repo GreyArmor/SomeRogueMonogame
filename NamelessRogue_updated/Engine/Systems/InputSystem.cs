@@ -45,11 +45,11 @@ namespace NamelessRogue.Engine.Systems
 
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            if (gameTime - previousGametimeForMove > inputsTimeLimit)
+            if (gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove > inputsTimeLimit)
             {
-                previousGametimeForMove = gameTime;
+                previousGametimeForMove = (long)gameTime.TotalGameTime.TotalMilliseconds;
                 foreach (IEntity entity in RegisteredEntities) {
                     InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                     InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();

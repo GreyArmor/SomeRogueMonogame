@@ -1,6 +1,5 @@
 ﻿using RogueSharp.Random;
 using System;
-using Troschuetz.Random;
 
 namespace NamelessRogue.Engine.Utility
 {
@@ -8,7 +7,7 @@ namespace NamelessRogue.Engine.Utility
     {
         private int _seed;
         private long _numberGenerated;
-        private TRandom _random;
+        private Random _random;
 
         /// <summary>
         /// Constructs a new pseudo-random number generator 
@@ -26,7 +25,7 @@ namespace NamelessRogue.Engine.Utility
         public InternalRandom(int seed)
         {
             _seed = seed;
-            _random = new TRandom(_seed);
+            _random = new Random(_seed);
         }
 
         /// <summary>
@@ -106,7 +105,7 @@ namespace NamelessRogue.Engine.Utility
             }
 
             _seed = state.Seed[0];
-            _random = new TRandom(_seed);
+            _random = new Random(_seed);
             for (long i = 0; i < state.NumberGenerated; i++)
             {
                 _random.Next();

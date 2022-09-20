@@ -156,10 +156,10 @@ namespace NamelessRogue.Engine.Systems.Map
         }
 
 
-        public override void Update(long gameTime, NamelessGame game)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
 
-            this.gameTime = gameTime;
+            this.gameTime = (long)gameTime.TotalGameTime.TotalMilliseconds;
 
             game.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             game.GraphicsDevice.SamplerStates[0] = sampler;

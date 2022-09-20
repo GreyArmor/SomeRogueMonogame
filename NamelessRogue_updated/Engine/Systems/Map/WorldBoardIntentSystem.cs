@@ -19,7 +19,7 @@ namespace NamelessRogue.Engine.Systems.Map
         }
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             foreach (IEntity entity in RegisteredEntities)
             {

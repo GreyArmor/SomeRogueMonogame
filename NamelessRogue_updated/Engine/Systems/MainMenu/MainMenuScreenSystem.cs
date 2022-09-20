@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Factories;
-using NamelessRogue.Engine.UiScreens;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.MainMenu
@@ -11,8 +11,9 @@ namespace NamelessRogue.Engine.Systems.MainMenu
     {
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
+            /*
             foreach (var action in UiFactory.MainMenuScreen.SimpleActions)
             {
                 switch (action)
@@ -32,9 +33,10 @@ namespace NamelessRogue.Engine.Systems.MainMenu
                     default:
                         break;
                 }
-            }
+            }            
 
             UiFactory.MainMenuScreen.SimpleActions.Clear();
+            */
         }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Stats;
@@ -19,7 +20,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(long gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             foreach (IEntity entity in RegisteredEntities)
             {
@@ -34,5 +35,5 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 entity.RemoveComponentOfType<Damage>();
             }
         }
-    }
+	}
 }
