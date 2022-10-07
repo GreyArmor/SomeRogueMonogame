@@ -45,16 +45,16 @@ namespace NamelessRogue.Engine.Systems.Inventory
             /*
             if (InventoryNeedsUpdate)
             {
-                UiFactory.InventoryScreen.FillItems(namelessGame);
+                UIController.InventoryScreen.FillItems(namelessGame);
                 InventoryNeedsUpdate = false;
             }
 
-            foreach (var action in UiFactory.InventoryScreen.Actions)
+            foreach (var action in UIController.InventoryScreen.Actions)
             {
                 action.Invoke(this, namelessGame);
             }
 
-            UiFactory.InventoryScreen.Actions.Clear();
+            UIController.InventoryScreen.Actions.Clear();
 
             foreach (IEntity entity in RegisteredEntities)
             {
@@ -64,18 +64,18 @@ namespace NamelessRogue.Engine.Systems.Inventory
                     var playerEntity = namelessGame.PlayerEntity;
                     foreach (Intent intent in inputComponent.Intents)
                     {
-                        if (UiFactory.InventoryScreen.AmountDialog != null)
+                        if (UIController.InventoryScreen.AmountDialog != null)
                         {
                             switch (intent.Intention)
                             {
                                 case IntentEnum.Enter:
                                 {
-                                    UiFactory.InventoryScreen.AmountDialog.ButtonOk.DoClick();
+                                    UIController.InventoryScreen.AmountDialog.ButtonOk.DoClick();
                                 }
                                     break;
                                 case IntentEnum.Escape:
                                 {
-                                    UiFactory.InventoryScreen.AmountDialog.ButtonCancel.DoClick();
+                                    UIController.InventoryScreen.AmountDialog.ButtonCancel.DoClick();
                                 }
                                     break;
                                 default:
@@ -90,51 +90,51 @@ namespace NamelessRogue.Engine.Systems.Inventory
                             {
                                 case IntentEnum.MoveDown:
                                 {
-                                    UiFactory.InventoryScreen.ScrollSelectedTableDown();
+                                    UIController.InventoryScreen.ScrollSelectedTableDown();
                                     break;
                                 }
                                 case IntentEnum.MoveUp:
                                 {
-                                    UiFactory.InventoryScreen.ScrollSelectedTableUp();
+                                    UIController.InventoryScreen.ScrollSelectedTableUp();
                                     break;
                                 }
                                 case IntentEnum.MoveLeft:
                                 {
-                                    UiFactory.InventoryScreen.SwitchSelectedTable();
+                                    UIController.InventoryScreen.SwitchSelectedTable();
                                     break;
                                 }
 
                                 case IntentEnum.MoveRight:
                                 {
-                                    UiFactory.InventoryScreen.SwitchSelectedTable();
+                                    UIController.InventoryScreen.SwitchSelectedTable();
                                     break;
                                 }
                                 case IntentEnum.ConetextualHotkeyPressed:
                                     var selectedItem =
-                                        UiFactory.InventoryScreen.SelectedTable.Items.FirstOrDefault(x =>
+                                        UIController.InventoryScreen.SelectedTable.Items.FirstOrDefault(x =>
                                             x.Hotkey == intent.PressedChar);
 
                                     if (selectedItem != null)
                                     {
-                                        UiFactory.InventoryScreen.SelectedTable.OnItemClick.Invoke(selectedItem);
+                                        UIController.InventoryScreen.SelectedTable.OnItemClick.Invoke(selectedItem);
                                     }
-                                    else if (!UiFactory.InventoryScreen.DialogOpened)
+                                    else if (!UIController.InventoryScreen.DialogOpened)
                                     {
                                         var selectedInItems =
-                                            UiFactory.InventoryScreen.ItemBox.Items.FirstOrDefault(x =>
+                                            UIController.InventoryScreen.ItemBox.Items.FirstOrDefault(x =>
                                                 x.Hotkey == intent.PressedChar);
                                         var selectedInEquipment =
-                                            UiFactory.InventoryScreen.EquipmentBox.Items.FirstOrDefault(x =>
+                                            UIController.InventoryScreen.EquipmentBox.Items.FirstOrDefault(x =>
                                                 x.Hotkey == intent.PressedChar);
 
                                         if (selectedInItems != null)
                                         {
-                                            UiFactory.InventoryScreen.ItemBox.OnItemClick.Invoke(selectedInItems);
+                                            UIController.InventoryScreen.ItemBox.OnItemClick.Invoke(selectedInItems);
                                         }
 
                                         if (selectedInEquipment != null)
                                         {
-                                            UiFactory.InventoryScreen.EquipmentBox.OnItemClick.Invoke(
+                                            UIController.InventoryScreen.EquipmentBox.OnItemClick.Invoke(
                                                 selectedInEquipment);
                                         }
                                     }
@@ -142,7 +142,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                     break;
                                 case IntentEnum.Enter:
                                 {
-                                    UiFactory.InventoryScreen.SelectedTable.OnItemClick.Invoke(UiFactory.InventoryScreen
+                                    UIController.InventoryScreen.SelectedTable.OnItemClick.Invoke(UIController.InventoryScreen
                                         .SelectedTable.SelectedItem);
                                 }
                                     break;

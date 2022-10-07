@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Factories;
+using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.MainMenu
@@ -13,10 +14,7 @@ namespace NamelessRogue.Engine.Systems.MainMenu
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            /*
-            foreach (var action in UiFactory.MainMenuScreen.SimpleActions)
-            {
-                switch (action)
+                switch (UIController.Instance.MainMenu.Action)
                 {
                     case MainMenuAction.GenerateNewTimeline:
                         break;
@@ -33,10 +31,10 @@ namespace NamelessRogue.Engine.Systems.MainMenu
                     default:
                         break;
                 }
-            }            
 
-            UiFactory.MainMenuScreen.SimpleActions.Clear();
-            */
+            UIController.Instance.MainMenu.Action = MainMenuAction.None;
         }
     }
+
+	
 }

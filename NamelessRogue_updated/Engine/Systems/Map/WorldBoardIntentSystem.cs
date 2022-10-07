@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
+using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.shell;
 
@@ -61,12 +62,14 @@ namespace NamelessRogue.Engine.Systems.Map
 
                                     position.Point = new Point(newX, newY);
                                 }
-
-
-
                                 break;
-
                             }
+                            case IntentEnum.ZoomOut:
+                                {
+                                    var zoomCommand = new ZoomCommand(false);
+                                    namelessGame.Commander.EnqueueCommand(zoomCommand);
+                                    break;
+                                }
                             default:
                                 break;
                         }

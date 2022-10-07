@@ -218,10 +218,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             {
                                                 namelessGame.ContextToSwitch =
                                                     ContextFactory.GetPickUpItemContext(namelessGame);
-                                                UiFactory.PickUpItemsScreen.FillItems(namelessGame);
-                                                if (UiFactory.PickUpItemsScreen.ItemsTable.Items.Any())
+                                                UIController.PickUpItemsScreen.FillItems(namelessGame);
+                                                if (UIController.PickUpItemsScreen.ItemsTable.Items.Any())
                                                 {
-                                                    UiFactory.PickUpItemsScreen.ItemsTable.SelectedIndex = 0;
+                                                    UIController.PickUpItemsScreen.ItemsTable.SelectedIndex = 0;
                                                 }
                                             }
                                             else

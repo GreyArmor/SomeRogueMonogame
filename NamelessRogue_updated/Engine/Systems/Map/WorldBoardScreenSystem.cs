@@ -29,105 +29,90 @@ namespace NamelessRogue.Engine.Systems.Map
             TimeLine timeline = namelessGame.TimelineEntity?.GetComponentOfType<TimeLine>();
             var tilePosition = camera.GetMouseTilePosition(namelessGame);
             var settings = namelessGame.WorldSettings;
-            if (tilePosition.X >= 0 && tilePosition.X < settings.WorldBoardWidth && tilePosition.Y >= 0 && tilePosition.Y < settings.WorldBoardHeight)
+			var mapScreen = UIController.Instance.MapScreen;
+			if (tilePosition.X >= 0 && tilePosition.X < settings.WorldBoardWidth && tilePosition.Y >= 0 && tilePosition.Y < settings.WorldBoardHeight)
             {
-              
                 var tile = timeline.CurrentTimelineLayer.WorldTiles[tilePosition.X, tilePosition.Y];
+                switch (mapScreen.Mode)
+				{
 
-                //switch (UIController.Instance.MapScreenViewModel.Mode)
-                //{
+					case MapMode.ArtifactMode:
+						{
+							if (tile.Artifact != null)
+							{
+                                mapScreen.Description = (tile.Artifact.Name);
+							}
+						}
+						break;
+					case MapMode.PoliticalMode:
+						{
 
-                //    case WorldBoardScreenAction.ArtifactMode:
-                //    {
-                //            if (tile.Artifact != null)
-                //            {
-                //               // UiFactory.WorldBoardScreen.DescriptionLog.Text = (tile.Artifact.Name);
-                //            }
-                //        }
-                //        break;
-                //    case WorldBoardScreenAction.PoliticalMode:
-                //    {
-                           
-                //            if (tile.Owner != null)
-                //            {
-                //                if (tile.Settlement != null)
-                //                {
-                //                 //   UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Owner.Name}, {tile.Settlement.Name} city";
-                //                }
-                //                else
-                //                {
-                //                  //  UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Owner.Name}";
-                //                }
+							if (tile.Owner != null)
+							{
+								if (tile.Settlement != null)
+								{
+                                    mapScreen.Description = $"{tile.Owner.Name}, {tile.Settlement.Name} city";
+								}
+								else
+								{
+                                    mapScreen.Description = $"{tile.Owner.Name}";
+								}
 
-                //            }
-                //        }
-                //        break;
-                //    case WorldBoardScreenAction.RegionsMode:
-                //    {
-                //            if (tile.Continent != null)
-                //            {
-                //              //  UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.Continent.Name} continent";
-                //            }
-                //            if (tile.LandmarkRegion != null)
-                //            {
-                //               // UiFactory.WorldBoardScreen.DescriptionLog.Text = $"{tile.LandmarkRegion.Name} region";
-                //            }
-                //        }
-                //        break;
-                //    default:
-                //       // UiFactory.WorldBoardScreen.DescriptionLog.Text = "";
-                //        break;
-                //}
-            }
-            /*
-            foreach (var worldBoardScreenAction in UiFactory.WorldBoardScreen.SimpleActions)
-            {
-                switch (worldBoardScreenAction)
-                {
-                    case WorldBoardScreenAction.ReturnToGame:
+							}
+						}
+						break;
+					case MapMode.RegionsMode:
+						{
+							if (tile.Continent != null)
+							{
+                                mapScreen.Description = $"{tile.Continent.Name} continent";
+							}
+							if (tile.LandmarkRegion != null)
+							{
+                                mapScreen.Description = $"{tile.LandmarkRegion.Name} region";
+							}
+						}
+						break;
+					default:
+                        mapScreen.Description = "";
+						break;
+				}
+			}
 
-                        namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
-                        break;
-                    case WorldBoardScreenAction.RegionsMode:
-                    {
-                        _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Regions;
-                    }
-                        break;
-                    case WorldBoardScreenAction.PoliticalMode:
-                    {
-                        _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Political;
-                    }
-                        break;
-                    case WorldBoardScreenAction.TerrainMode:
-                    {
-                        _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
-                    }
-                        break;
-                    case WorldBoardScreenAction.ArtifactMode:
-                    {
-                        _mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
-                    }
+			switch (mapScreen.Action)
+			{
+				case MapAction.Exit:
+					namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
+					break;
+				case MapAction.RegionsMode:
+					{
+						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Regions;
+					}
+					break;
+				case MapAction.PoliticalMode:
+					{
+						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Political;
+					}
+					break;
+				case MapAction.TerrainMode:
+					{
+						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
+					}
+					break;
+				case MapAction.ArtifactMode:
+					{
+						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
+					}
+					break;
+				default:
+					break;
+			}
 
-                        break;
-                    case WorldBoardScreenAction.LocalMap:
-                    {
-                        _mapRenderSystem.LocalMapRendering = true;
-                    }
+			_mapRenderSystem.LocalMapRendering = mapScreen.LocalMapDisplay;
 
-                        break;
-                    case WorldBoardScreenAction.WorldMap:
-                    {
-                        _mapRenderSystem.LocalMapRendering = false;
-                    }
+			mapScreen.Action = MapAction.None;
 
-                        break;
-                    default:
-                        break;
-                }
-            }
-            UiFactory.WorldBoardScreen.SimpleActions.Clear();
-            */
-        }
-    }
+		}
+	}
 }
 

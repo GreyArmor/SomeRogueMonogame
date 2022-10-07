@@ -241,5 +241,10 @@
   <ItemGroup>
     <Folder Include="UI\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Content\Fonts\AnonymousPro-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
 </Project>

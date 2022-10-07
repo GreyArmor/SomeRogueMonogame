@@ -182,10 +182,10 @@ namespace NamelessRogue.shell
 
 			settings = new GameSettings(width, height);
 
-			graphics.PreferredBackBufferWidth = (int)(GetActualCharacterWidth() + settings.HudWidth());
+			graphics.PreferredBackBufferWidth = (int)(GetActualCharacterWidth() + settings.HudWidth);
 			graphics.PreferredBackBufferHeight = GetActualCharacterHeight();
 
-			new UIController(this);
+			
 
 			graphics.IsFullScreen = false;
 			graphics.PreferMultiSampling = false;
@@ -205,7 +205,7 @@ namespace NamelessRogue.shell
 			worldSettings = new WorldSettings(4, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
 
 			TerrainFurnitureFactory.CreateFurnitureEntities(this);
-
+			new UIController(this);
 			ContextFactory.InitAllContexts(this);
 
 
@@ -333,22 +333,13 @@ namespace NamelessRogue.shell
 
 			CursorEntity = GameInitializer.CreateCursor();
 
-
-			//Paragraph.BaseSize = 1.175f;
-			//UserInterface.Initialize(Content, "custom");
-			//UserInterface.Active.UseRenderTarget = true;
 			CurrentContext = ContextFactory.GetMainMenuContext(this);
-			//CurrentContext.ContextScreen.Visibility = Visibility.Visible;
 			this.IsMouseVisible = true;
-			// UserInterface.Active.ShowCursor = false;
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			//data = new byte[graphics.PreferredBackBufferWidth * graphics.PreferredBackBufferHeight * 4];
-
 			IsInitialized = true;
-			Viewport viewport = GraphicsDevice.Viewport;
 
-
+	
 
 		}
 
@@ -405,13 +396,11 @@ namespace NamelessRogue.shell
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			//if (ContextToSwitch != null)
-			//{
-			//	CurrentContext.ContextScreen.Visibility = Visibility.Hidden;
-			//	CurrentContext = ContextToSwitch;
-			//	CurrentContext.ContextScreen.Visibility = Visibility.Visible;
-			//	ContextToSwitch = null;
-			//}
+			if (ContextToSwitch != null)
+			{
+				CurrentContext = ContextToSwitch;
+				ContextToSwitch = null;
+			}
 
 			//if (EntitiesToAdd.Any())
 			//{

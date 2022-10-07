@@ -326,8 +326,6 @@ namespace NamelessRogue.Engine.Systems.Map
 
             angle += step;
 
-
-
             for (int x = 0; x < screen.Width; x++)
             {
                 for (int y = 0; y < screen.Height; y++)
@@ -353,9 +351,6 @@ namespace NamelessRogue.Engine.Systems.Map
                     GetTerrainTile(screen, screenPoint, world.WorldTiles[x, y]);
                 }
             }
-
-
-
         }
 
         void GetTerrainTile(Screen screen, Point point, WorldTile tile)

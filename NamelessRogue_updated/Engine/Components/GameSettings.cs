@@ -7,7 +7,7 @@ namespace NamelessRogue.Engine.Components
 		//window resolution
 		private int widthChars;
 		private int heightChars;
-		private int fontSize = 16;
+		private int fontSize = 32;
 		public int Zoom { get; set; } = 1;
 		public GameSettings(int defaultWidth, int defaultHeight)
 		{
@@ -58,9 +58,9 @@ namespace NamelessRogue.Engine.Components
 			this.fontSize = fontSize;
 		}
 
-		public float HudWidth()
+		public float HudWidth
 		{
-			return 500;
+			get { return 500; }
 		}
 	}
 }

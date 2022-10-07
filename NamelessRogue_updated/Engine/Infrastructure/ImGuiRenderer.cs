@@ -184,8 +184,12 @@ namespace NamelessRogue.Engine.Infrastructure
 			//    ImGui.GetIO().AddInputCharacter(c);
 			//};
 			///////////////////////////////////////////
-
-			ImGui.GetIO().Fonts.AddFontDefault();
+			var fontAtlas = ImGui.GetIO().Fonts;
+			fontAtlas.AddFontDefault();
+			ImGUI_FontLibrary.AnonymousPro_Regular32 = fontAtlas.AddFontFromFileTTF(@"Content\Fonts\AnonymousPro-Regular.ttf", 32);
+			ImGUI_FontLibrary.AnonymousPro_Regular24 = fontAtlas.AddFontFromFileTTF(@"Content\Fonts\AnonymousPro-Regular.ttf", 24);
+			ImGUI_FontLibrary.AnonymousPro_Regular16 = fontAtlas.AddFontFromFileTTF(@"Content\Fonts\AnonymousPro-Regular.ttf", 16);
+			ImGUI_FontLibrary.AnonymousPro_Regular8 = fontAtlas.AddFontFromFileTTF(@"Content\Fonts\AnonymousPro-Regular.ttf", 8);
 		}
 
 		/// <summary>

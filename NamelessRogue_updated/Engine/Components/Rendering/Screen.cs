@@ -13,10 +13,10 @@ namespace NamelessRogue.Engine.Components.Rendering
 
         public void Resize()
         {
-            ScreenBuffer = new ScreenTile[Height, Width];
-            for (int i = 0; i < Height; i++)
+            ScreenBuffer = new ScreenTile[Width, Height];
+            for (int i = 0; i < Width; i++)
             {
-                for (int j = 0; j < Width; j++)
+                for (int j = 0; j < Height; j++)
                 {
                     ScreenBuffer[i, j] = new ScreenTile();
                 }

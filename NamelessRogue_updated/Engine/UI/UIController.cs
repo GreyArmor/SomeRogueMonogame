@@ -12,9 +12,9 @@ namespace NamelessRogue.Engine.UI
 
 		public static UIController Instance { get; private set; } = null;
 
-		public BaseScreen MainMenu { get; set; }
-		public BaseScreen HudScreen { get; set; }
-		public BaseScreen MapScreen { get; set; }
+		public MainMenuScreen MainMenu { get; set; }
+		public IngameScreen HudScreen { get; set; }
+		public MapScreen MapScreen { get; set; }
 		public BaseScreen InventoryScreen { get; set; }
 
 		public UIController(NamelessGame game)
@@ -26,9 +26,9 @@ namespace NamelessRogue.Engine.UI
 
 			MainMenu = new MainMenuScreen(game);
 
-			//HudScreen = new HudScreen();
-			//MapScreen = new MapScreen();
-			//InventoryScreen = new InventoryScreen();
+		    HudScreen = new IngameScreen(game);
+			MapScreen = new MapScreen(game);
+			//InventoryScreen = new MainMenuScreen(game);
 
 			Instance = this;
 
