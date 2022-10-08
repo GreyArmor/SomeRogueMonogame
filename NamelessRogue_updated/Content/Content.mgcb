@@ -38,3 +38,9 @@
 /processorParam:DebugMode=Auto
 /build:Shader.fx
 
+#begin sounds/annabloom_click1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/annabloom_click1.wav
+

@@ -242,6 +242,9 @@
     <Folder Include="UI\" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Content\Credits.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Fonts\AnonymousPro-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

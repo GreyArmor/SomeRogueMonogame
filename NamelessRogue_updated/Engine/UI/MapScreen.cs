@@ -59,22 +59,22 @@ namespace NamelessRogue.Engine.UI
 				ImGui.BeginChild("menu", sidebarSize);
 				{
 
-					if (ImGui.Button("Artifacts", buttonSize)) { Action = MapAction.ArtifactMode; Mode = MapMode.ArtifactMode; };
+					if (ButtonWithSound("Artifacts", buttonSize)) { Action = MapAction.ArtifactMode; Mode = MapMode.ArtifactMode; };
 
 					ImGui.SetCursorPos(shiftVector);
-					if (ImGui.Button("Political", buttonSize)) { Action = MapAction.PoliticalMode; Mode = MapMode.PoliticalMode; };
+					if (ButtonWithSound("Political", buttonSize)) { Action = MapAction.PoliticalMode; Mode = MapMode.PoliticalMode; };
 
 					ImGui.SetCursorPos(shiftVector * 2);
-					if (ImGui.Button("Terrain", buttonSize)) { Action = MapAction.TerrainMode; Mode = MapMode.TerrainMode; };
+					if (ButtonWithSound("Terrain", buttonSize)) { Action = MapAction.TerrainMode; Mode = MapMode.TerrainMode; };
 
 					ImGui.SetCursorPos(shiftVector * 3);
-					if (ImGui.Button("Regions", buttonSize)) { Action = MapAction.RegionsMode; Mode = MapMode.RegionsMode; };
+					if (ButtonWithSound("Regions", buttonSize)) { Action = MapAction.RegionsMode; Mode = MapMode.RegionsMode; };
 
 					ImGui.SetCursorPos(shiftVector * 4);
 					if (ImGui.RadioButton("LocalMap", LocalMapDisplay)) { LocalMapDisplay = !LocalMapDisplay; };
 
 					ImGui.SetCursorPos(shiftVector * 5);
-					if (ImGui.Button("Exit", buttonSize)) { Action = MapAction.Exit; }
+					if (ButtonWithSound("Exit", buttonSize)) { Action = MapAction.Exit; }
 
 				}
 				var labelPosition = menuPosition;

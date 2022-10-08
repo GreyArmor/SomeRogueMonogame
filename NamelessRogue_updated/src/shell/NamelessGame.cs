@@ -25,6 +25,8 @@ using Color = Microsoft.Xna.Framework.Color;
 using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.UI;
 using System.Runtime.InteropServices;
+using NamelessRogue.Engine.Sounds;
+using Microsoft.Xna.Framework.Audio;
 
 namespace NamelessRogue.shell
 {
@@ -337,11 +339,19 @@ namespace NamelessRogue.shell
 			this.IsMouseVisible = true;
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
+			InitSound();
+
 			IsInitialized = true;
 
 	
 
 		}
+
+		public void InitSound()
+		{
+			SoundsHolder.SoundDictionary.Add(Sound.ButtonClick, Content.Load<SoundEffect>("sounds\\annabloom_click1"));
+		}
+
 
 		bool saveScheduled = false;
 		internal void ScheduleSave()

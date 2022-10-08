@@ -42,6 +42,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new DeathSystem());
                 systems.Add(new HudSystem());
                 systems.Add(new ChunkManagementSystem());
+                systems.Add(new SoundPlaySystem());
               
                 var renderingSystem = new RenderingSystem(game.GetSettings());
                 var uiSystem = new UIRenderSystem(game);
@@ -69,7 +70,8 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new WorldMapKeyIntentTranslator(), game));
                 systems.Add(new WorldBoardIntentSystem());
                 systems.Add(new WorldBoardScreenSystem(renderingSystem));
-              
+                systems.Add(new SoundPlaySystem());
+
                 var uiSystem = new UIRenderSystem(game);
 
                 // create and init the UI manager
@@ -92,6 +94,7 @@ namespace NamelessRogue.Engine.Factories
                 var systems = new List<ISystem>();
                 systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(),game ));
                 systems.Add(new MainMenuScreenSystem());
+                systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
 
                 // create and init the UI manager
@@ -115,6 +118,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new InventoryKeyIntentTranslator(), game));
                 systems.Add(new InventoryScreenSystem());
                 systems.Add(new InventorySystem());
+                systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
 
                 inventoryContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.InventoryScreen);
@@ -137,6 +141,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new PickUpKeyIntentTranslator(), game));
                 systems.Add(new PickUpItemScreenSystem());
                 systems.Add(new InventorySystem());
+                systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
 
                 pickUpContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.MainMenu);

@@ -1,5 +1,7 @@
 ﻿using ImGuiNET;
+using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Sounds;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
@@ -48,10 +50,10 @@ namespace NamelessRogue.Engine.UI
 				ImGui.BeginChild("menu", sidebarSize);
 				{
 					ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-					if (ImGui.Button("Open map", buttonSize)) { Action = HudAction.OpenWorldMap; };
+					if (ButtonWithSound("Open map", buttonSize)) { Action = HudAction.OpenWorldMap; };
 
 					ImGui.SetCursorPos(shiftVector);
-					if (ImGui.Button("Open inventory", buttonSize)) { Action = HudAction.OpenInventory; }
+					if (ButtonWithSound("Open inventory", buttonSize)) { Action = HudAction.OpenInventory; }
 					ImGui.PopFont();
 				}
 				ImGui.EndChild();

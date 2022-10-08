@@ -47,16 +47,16 @@ namespace NamelessRogue.Engine.UI
 				ImGui.BeginChild("menu", sidebarSize);
 				{
 					ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-					if (ImGui.Button("New game", buttonSize)) { Action = MainMenuAction.NewGame; };
+					if (ButtonWithSound("New game", buttonSize)) { Action = MainMenuAction.NewGame; };
 
 					ImGui.SetCursorPos(shiftVector);
-					if (ImGui.Button("Load game", buttonSize)) { Action = MainMenuAction.LoadGame; }
+					if (ButtonWithSound("Load game", buttonSize)) { Action = MainMenuAction.LoadGame; }
 
 					ImGui.SetCursorPos(shiftVector * 2);
-					if (ImGui.Button("World generation", buttonSize)) { Action = MainMenuAction.GenerateNewTimeline; }
+					if (ButtonWithSound("World generation", buttonSize)) { Action = MainMenuAction.GenerateNewTimeline; }
 
 					ImGui.SetCursorPos(shiftVector * 3);
-					if (ImGui.Button("Exit", buttonSize)) { Action = MainMenuAction.Exit; }
+					if (ButtonWithSound("Exit", buttonSize)) { Action = MainMenuAction.Exit; }
 					ImGui.PopFont();
 				}
 				ImGui.EndChild();
