@@ -17,6 +17,8 @@ namespace NamelessRogue.Engine.UI
 		public MapScreen MapScreen { get; set; }
 		public BaseScreen InventoryScreen { get; set; }
 
+		public WorldGenerationUI WorldGenScreen { get; set; }
+
 		public UIController(NamelessGame game)
 		{
 			if (Instance != null)
@@ -29,7 +31,7 @@ namespace NamelessRogue.Engine.UI
 		    HudScreen = new IngameScreen(game);
 			MapScreen = new MapScreen(game);
 			//InventoryScreen = new MainMenuScreen(game);
-
+			WorldGenScreen = new WorldGenerationUI(game);
 			Instance = this;
 
 		}

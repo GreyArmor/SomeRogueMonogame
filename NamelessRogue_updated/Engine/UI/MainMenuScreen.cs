@@ -23,20 +23,20 @@ namespace NamelessRogue.Engine.UI
 		public MainMenuAction Action { get; set; } = MainMenuAction.None;
 
 		System.Numerics.Vector2 menuPosition;
-		System.Numerics.Vector2 buttonSpacing = new System.Numerics.Vector2(0, 5);
+		System.Numerics.Vector2 buttonSpacing = new System.Numerics.Vector2(10, 0);
 		System.Numerics.Vector2 buttonSize;
 		System.Numerics.Vector2 shiftVector;
-		System.Numerics.Vector2 sidebarSize;
+		System.Numerics.Vector2 menuSize;
 		int buttonCount = 4;
 		public MainMenuScreen(NamelessGame game) : base(game) {
-			buttonSize = new System.Numerics.Vector2(game.Settings.HudWidth - 10, 50);
-			shiftVector = new System.Numerics.Vector2(0, buttonSpacing.Y + buttonSize.Y);
-			sidebarSize = new System.Numerics.Vector2(game.Settings.HudWidth, shiftVector.Y + buttonSize.Y * buttonCount);
+			buttonSize = new System.Numerics.Vector2((uiSize.X / buttonCount) - buttonSpacing.X, 50);
+			shiftVector = new System.Numerics.Vector2(buttonSpacing.X + buttonSize.X, 0);
+			menuSize = new System.Numerics.Vector2(uiSize.X, uiSize.Y * 0.1f);
 		}
 
 		public override void DrawLayout()
 		{
-			menuPosition = new System.Numerics.Vector2(uiSize.X - game.Settings.HudWidth + sidebarSize.X / 2 - buttonSize.X/2, (uiSize.Y/2) - (sidebarSize.Y/2));
+			menuPosition = new System.Numerics.Vector2((uiSize.X - ((buttonSize.X + buttonSpacing.X) * buttonCount))/2, uiSize.Y * 0.9f);
 			ImGui.SetNextWindowPos(new System.Numerics.Vector2());
 			ImGui.Begin("", ImGuiWindowFlags.NoBackground|ImGuiWindowFlags.NoTitleBar|ImGuiWindowFlags.NoResize|ImGuiWindowFlags.NoScrollbar);
 
@@ -44,7 +44,7 @@ namespace NamelessRogue.Engine.UI
 		
 			ImGui.SetCursorPos(menuPosition);
 			{
-				ImGui.BeginChild("menu", sidebarSize);
+				ImGui.BeginChild("menu", menuSize);
 				{
 					ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
 					if (ButtonWithSound("New game", buttonSize)) { Action = MainMenuAction.NewGame; };

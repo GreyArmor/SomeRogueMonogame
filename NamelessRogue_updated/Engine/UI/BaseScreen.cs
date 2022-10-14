@@ -20,9 +20,21 @@ namespace NamelessRogue.Engine.UI
 		}
 		public abstract void DrawLayout();
 
-		public bool ButtonWithSound(String text, System.Numerics.Vector2 size)
+		public bool ButtonWithSound(String text, System.Numerics.Vector2 size, bool enabled = true)
 		{
-			var clicked = ImGui.Button(text, size);
+			bool clicked = false;
+			if (enabled)
+			{
+				clicked = ImGui.Button(text, size);
+			}
+			else
+			{
+				ImGui.BeginDisabled();
+				ImGui.PushStyleVar(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f);
+				ImGui.Button(text, size);
+				ImGui.PopStyleVar();
+				ImGui.EndDisabled();
+			}
 			if (clicked) { game.Commander.EnqueueCommand(new PlaySoundCommand(Sound.ButtonClick, 0.5f)); }
 			return clicked;
 		}

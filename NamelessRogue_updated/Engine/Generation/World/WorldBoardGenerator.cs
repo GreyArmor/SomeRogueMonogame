@@ -418,9 +418,7 @@ namespace NamelessRogue.Engine.Generation.World
 					}
 
 				}
-			}
-
-
+			}			
 		}
 		public static void PlaceInitialCivilizations(TimelineLayer timelineLayer, NamelessGame game)
         {
@@ -531,8 +529,7 @@ namespace NamelessRogue.Engine.Generation.World
                             {
                                 timelineLayer.WorldTiles[x, y].Owner = civilization;
                             }
-
-                           
+							
                         }
                     }
                 }

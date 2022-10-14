@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ChunkShader3D.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:ChunkShader3D.fx
+
 #begin DFfont.png
 /importer:TextureImporter
 /processor:TextureProcessor

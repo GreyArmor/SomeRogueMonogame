@@ -1,3 +1,4 @@
+using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
@@ -54,7 +55,7 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(stats);
 
             playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
-
+            playerCharacter.AddComponent(new Camera3D(game));
             game.WorldProvider.MoveEntity(playerCharacter, position.Point);
 
             return playerCharacter;

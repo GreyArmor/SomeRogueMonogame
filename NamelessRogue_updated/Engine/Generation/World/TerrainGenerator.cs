@@ -107,7 +107,7 @@ namespace NamelessRogue.Engine.Generation.World
 
 			if (terrainElevation <= 0.5)
 			{
-				terrainElevation = 0;
+				terrainElevation = 0.49f;
 			}
 
 			double forest = 1 - (0.5 * (1 + ForestsNoise.getNoise(dX, dY)));

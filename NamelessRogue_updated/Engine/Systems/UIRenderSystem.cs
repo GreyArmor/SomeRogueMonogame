@@ -22,7 +22,7 @@ namespace NamelessRogue.Engine.Systems
  
 		private SpriteBatch spriteBatch;
 		NamelessGame game;
-        private ImGuiRenderer _imGuiRenderer;
+        private static ImGuiRenderer _imGuiRendererInstance;
 
         private Texture2D _xnaTexture;
         private IntPtr _imGuiTexture;
@@ -31,8 +31,11 @@ namespace NamelessRogue.Engine.Systems
             this.game = game;
             spriteBatch = new SpriteBatch(game.GraphicsDevice);
 
-            _imGuiRenderer = new ImGuiRenderer(game);
-            _imGuiRenderer.RebuildFontAtlas();
+            if (_imGuiRendererInstance == null)
+            {
+                _imGuiRendererInstance = new ImGuiRenderer(game);
+                _imGuiRendererInstance.RebuildFontAtlas();
+            }
 
             _xnaTexture = CreateTexture(game.GraphicsDevice, game.GetActualWidth(), game.GetActualHeight(), pixel =>
             {
@@ -41,21 +44,21 @@ namespace NamelessRogue.Engine.Systems
             });
 
             // Then, bind it to an ImGui-friendly pointer, that we can use during regular ImGui.** calls (see below)
-            _imGuiTexture = _imGuiRenderer.BindTexture(_xnaTexture);
+            _imGuiTexture = _imGuiRendererInstance.BindTexture(_xnaTexture);
 
         }
         public override HashSet<Type> Signature { get; }  = new HashSet<Type>();
         
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            _imGuiRenderer.BeforeLayout(gameTime);
+            _imGuiRendererInstance.BeforeLayout(gameTime);
 
             game.CurrentContext.ContextScreen.DrawLayout();
             // Draw our UI
-           // ImGuiLayout();
+            //ImGuiLayout();
 
             // Call AfterLayout now to finish up and draw all the things
-            _imGuiRenderer.AfterLayout();
+            _imGuiRendererInstance.AfterLayout();
         }
 
         // Direct port of the example at https://github.com/ocornut/imgui/blob/master/examples/sdl_opengl2_example/main.cpp

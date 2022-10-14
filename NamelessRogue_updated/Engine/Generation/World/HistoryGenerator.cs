@@ -70,21 +70,21 @@ namespace NamelessRogue.Engine.Generation.World
             //WorldBoardGenerator.PlaceResources(worldBoard, game);
             //WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
 
-            WorldTile firsTile = null;
-            foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
-            {
+            //WorldTile firsTile = null;
+            //foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
+            //{
 
-                if (worldBoardWorldTile.Settlement != null)
-                {
-                    IWorldProvider worldProvider = chunkData;
-                    firsTile = worldBoardWorldTile;
-                    var concreteSettlment = SettlementFactory.GenerateSettlement(game, firsTile, worldBoard, worldProvider);
+            //    if (worldBoardWorldTile.Settlement != null)
+            //    {
+            //        IWorldProvider worldProvider = chunkData;
+            //        firsTile = worldBoardWorldTile;
+            //        var concreteSettlment = SettlementFactory.GenerateSettlement(game, firsTile, worldBoard, worldProvider);
 
-                    firsTile.Settlement.Concrete = concreteSettlment;
-                    break;
+            //        firsTile.Settlement.Concrete = concreteSettlment;
+            //        break;
 
-                }
-            }
+            //    }
+            //}
 
  
 

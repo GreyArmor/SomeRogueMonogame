@@ -21,10 +21,11 @@ using NamelessRogue.shell;
 using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
 using Color = NamelessRogue.Engine.Utility.Color;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vertex
     {
         // ReSharper disable NotAccessedField.Local

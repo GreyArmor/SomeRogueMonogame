@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Context;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.Systems;
+using NamelessRogue.Engine.Systems._3DView;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Systems.Inventory;
 using NamelessRogue.Engine.Systems.MainMenu;
@@ -41,10 +42,14 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new DamageHandlingSystem());
                 systems.Add(new DeathSystem());
                 systems.Add(new HudSystem());
-                systems.Add(new ChunkManagementSystem());
+                systems.Add(new Camera3DSystem(game));
+              //  systems.Add(new ChunkManagementSystem());
+                systems.Add(new Chunk3DManagementSystem());
                 systems.Add(new SoundPlaySystem());
               
-                var renderingSystem = new RenderingSystem(game.GetSettings());
+               // var renderingSystem = new RenderingSystem(game.GetSettings());
+
+                var renderingSystem = new RenderingSystem3D(game.GetSettings());
                 var uiSystem = new UIRenderSystem(game);
 
 
@@ -148,6 +153,29 @@ namespace NamelessRogue.Engine.Factories
                 return pickUpContext;
             }
         }
+
+
+        private static GameContext worldGenContext;
+        public static GameContext GetWorldGenContext(NamelessGame game)
+        {
+
+            if (worldGenContext != null)
+            {
+                return worldGenContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
+                systems.Add(new WorldGenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+
+                worldGenContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.WorldGenScreen);
+                return worldGenContext;
+            }
+        }
+
 
         internal static void InitAllContexts(NamelessGame game)
         {

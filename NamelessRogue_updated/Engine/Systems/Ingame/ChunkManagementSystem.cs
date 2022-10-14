@@ -10,6 +10,7 @@ using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
+using NamelessRogue.Engine.Systems._3DView;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
@@ -77,8 +78,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 if (worldProvider.GetChunks().ContainsKey(p))
                                 {
                                     Chunk chunk = worldProvider.GetChunks()[p];
-
-                                    
 
                                     worldProvider.GetRealityBubbleChunks().Add(p, chunk);
                                     worldProvider.RealityChunks.Add(chunk);

@@ -54,6 +54,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             case IntentEnum.MoveBottomLeft:
                             case IntentEnum.MoveBottomRight:
                             {
+                                    break;
                                 Position position = playerEntity.GetComponentOfType<Position>();
                                 var actionPoints = playerEntity.GetComponentOfType<ActionPoints>();
                                 if (position != null && actionPoints.Points>=100)

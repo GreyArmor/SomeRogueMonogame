@@ -20,6 +20,7 @@ namespace NamelessRogue.Engine.Generation.World
         public Region LandmarkRegion { get; set; }
         public Settlement Settlement { get; set; }
 
+        public int Elevation { get; set; }
 
         private Point point;
 

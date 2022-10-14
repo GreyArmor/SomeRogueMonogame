@@ -43,6 +43,7 @@
     <None Remove="Engine\Systems\SquadBattle\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Content\ChunkShader3D.fx" />
     <None Remove="Content\Content.mgcb" />
     <None Remove="Content\DFfont.png" />
     <None Remove="Content\Shader.fx" />
@@ -50,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\DFfont.png" />
+    <Content Include="Content\ChunkShader3D.fx" />
     <Content Include="Content\Shader.fx" />
   </ItemGroup>
   <ItemGroup>

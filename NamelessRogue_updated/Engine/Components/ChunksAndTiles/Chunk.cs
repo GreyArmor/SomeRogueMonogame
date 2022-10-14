@@ -54,15 +54,17 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
             var surroundingChunksWithRivers = new List<TileForInlandWaterConnectivity>();
 
-
-            for (int i = -1; i < 2; i++)
+            if (ChunkWorldMapLocationPoint.X > 0 && ChunkWorldMapLocationPoint.Y > 0)
             {
-                for (int j = -1; j < 2; j++)
+                for (int i = -1; i < 2; i++)
                 {
-                    var tile = board.InlandWaterConnectivity[this.ChunkWorldMapLocationPoint.X + i][this.ChunkWorldMapLocationPoint.Y + j];
-                    if (tile.WaterBorderLines.Any())
+                    for (int j = -1; j < 2; j++)
                     {
-                        surroundingChunksWithRivers.Add(tile);
+                        var tile = board.InlandWaterConnectivity[this.ChunkWorldMapLocationPoint.X + i][this.ChunkWorldMapLocationPoint.Y + j];
+                        if (tile.WaterBorderLines.Any())
+                        {
+                            surroundingChunksWithRivers.Add(tile);
+                        }
                     }
                 }
             }
