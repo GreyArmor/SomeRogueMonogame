@@ -7,6 +7,7 @@ using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Utility;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -128,6 +129,7 @@ namespace NamelessRogue.Engine._3DUtility
 		static Random random = new Random();
 		public static Geometry3D GenerateChunkModelTiles(Game namelessGame, Point chunkToGenerate, ChunkData chunks, TileAtlasConfig atlasConfig)
 		{
+
 			var result = new Geometry3D();
 
 			var chunk = chunks.Chunks[chunkToGenerate];
@@ -154,13 +156,13 @@ namespace NamelessRogue.Engine._3DUtility
 			}
 
 			var tiles = chunk.GetChunkTiles();
-			List<Vertex3D> vertices = new List<Vertex3D>();
-			List<int> indices = new List<int>();
+			Queue<Vertex3D> vertices = new Queue<Vertex3D>();
+			Queue<int> indices = new Queue<int>();
 			var resolution = Constants.ChunkSize;
 			Matrix scaleDown = Matrix.CreateScale(0.001f);
-			var transformedPoints = new List<Vector3>();
-			var colors = new List<Vector4>();
-			const float worldHeight = 2500;
+			var transformedPoints = new Queue<Vector3>();
+			var colors = new Queue<Vector4>();
+			const float worldHeight = 650;
 			//bool first = true;
 			for (int x = 0; x < resolution; x++)
 			{
@@ -170,7 +172,7 @@ namespace NamelessRogue.Engine._3DUtility
 					Tile tileE = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x + 1, chunk.WorldPositionBottomLeftCorner.Y + y);
 					Tile tileS = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x, chunk.WorldPositionBottomLeftCorner.Y + y + 1);
 					Tile tileSE = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x + 1, chunk.WorldPositionBottomLeftCorner.Y + y + 1);
-					
+
 					float elevation = (float)tile.Elevation;
 					float elevationE = (float)tileE.Elevation;
 					float elevationS = (float)tileS.Elevation;
@@ -178,7 +180,7 @@ namespace NamelessRogue.Engine._3DUtility
 
 					void AddPoint(int x, int y, float pointElevation)
 					{
-						transformedPoints.Add(Vector3.Transform(
+						transformedPoints.Enqueue(Vector3.Transform(
 							new Vector3(
 							x + currentCorner.X - originalPointForTest.X,
 							y + currentCorner.Y - originalPointForTest.Y,
@@ -186,7 +188,7 @@ namespace NamelessRogue.Engine._3DUtility
 						var tileColor = TerrainLibrary.Terrains[tile.Terrain].Representation.CharColor;
 						//colors.Add(first? new Vector4(100,0,0,100):tileColor.ToVector4());
 						//first = false;
-						colors.Add(tileColor.ToVector4() * (random.Next(5,10)/10f));
+						colors.Enqueue(tileColor.ToVector4() * (random.Next(7, 9) / 10f));
 					}
 
 					//Tile nwTile = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x - 1, chunk.WorldPositionBottomLeftCorner.Y + y - 1);
@@ -206,41 +208,37 @@ namespace NamelessRogue.Engine._3DUtility
 
 					AddPoint(x, y, elevation);
 					AddPoint(x + 1, y, elevationE);
-					AddPoint(x, y +1, elevationS);
-					AddPoint(x+1, y + 1, elevationSE);
+					AddPoint(x, y + 1, elevationS);
+					AddPoint(x + 1, y + 1, elevationSE);
 
 				}
 			}
 
-
-
-			int triangleCount = 0;			
-			for (int i = 0; i < transformedPoints.Count-3; i+=4)
+			int triangleCount = 0;
+			for (int i = 0; i < transformedPoints.Count - 3; i += 4)
 			{
-					var index = i;
+				var index = i;
 
-					indices.Add(index);
-					indices.Add(index+1);
-					indices.Add(index+2);
+				indices.Enqueue(index);
+				indices.Enqueue(index + 1);
+				indices.Enqueue(index + 2);
 
-					indices.Add(index + 3);
-					indices.Add(index + 2);
-					indices.Add(index + 1);
+				indices.Enqueue(index + 3);
+				indices.Enqueue(index + 2);
+				indices.Enqueue(index + 1);
 
-					triangleCount += 2;
-
-				
+				triangleCount += 2;
 			}
 
-			for (int i = 0; i < transformedPoints.Count; i++)
+			while (transformedPoints.Any())
 			{
-				Vector3 point = transformedPoints[i];
+				Vector3 point = transformedPoints.Dequeue();
+				var color = colors.Dequeue();
 				var vertex = new Systems.Ingame.Vertex3D(point,
-				colors[i],
-				colors[i], new Vector2(0, 0), Vector3.UnitZ);
-				vertices.Add(vertex);
+				color,
+				color, new Vector2(0, 0), Vector3.UnitZ);
+				vertices.Enqueue(vertex);
 			}
-
 
 			result.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, vertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
 			result.Buffer.SetData<Vertex3D>(vertices.ToArray());

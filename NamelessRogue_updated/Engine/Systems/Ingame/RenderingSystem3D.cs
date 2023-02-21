@@ -106,11 +106,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			//rasterizerState.DepthBias = 0.1f;
 			//game.GraphicsDevice.RasterizerState = rasterizerState;
 
-
-
-
 			var device = game.GraphicsDevice;
-           var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+            var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 			effect.CurrentTechnique = effect.Techniques["ColorTech"];
 			foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
 			{

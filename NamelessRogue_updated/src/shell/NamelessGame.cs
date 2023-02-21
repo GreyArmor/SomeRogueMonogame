@@ -349,10 +349,10 @@ namespace NamelessRogue.shell
 
 			InitSound();
 
-			IsInitialized = true;
-			for (int i = 0; i < 40; i++)
+			IsInitialized = true;		
+			for (int i = 0; i < 100; i++)
 			{
-				for (int j = 0; j < 40; j++)
+				for (int j = 0; j < 100; j++)
 				{
 					var p = new Point(x + i, y + j);
 					UpdateChunkCommand command = new UpdateChunkCommand(p);

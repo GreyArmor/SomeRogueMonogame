@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace NamelessRogue.Engine.Systems._3DView
@@ -20,7 +21,6 @@ namespace NamelessRogue.Engine.Systems._3DView
 		{
 			config = new TileAtlasConfig();
 		}
-		bool once = true;
 		public override void Update(GameTime gameTime, NamelessGame game)
 		{
 			IEntity worldEntity = game.TimelineEntity;
@@ -29,16 +29,11 @@ namespace NamelessRogue.Engine.Systems._3DView
 			{
 				chunks = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
 			}
-			
 			while (game.Commander.DequeueCommand(out UpdateChunkCommand command))
 			{
-				//if (once)
-				//{
-				//	once = false;
-					var geometry = ChunkGeometryGeneratorWeb.GenerateChunkModelTiles(game, command.ChunkToUpdate, chunks, config);
+				var geometry = ChunkGeometryGeneratorWeb.GenerateChunkModelTiles(game, command.ChunkToUpdate, chunks, config);
 					var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 					chunkGeometries.ChunkGeometries.Add(command.ChunkToUpdate, geometry);
-				//}
 			}
 		}
 	}

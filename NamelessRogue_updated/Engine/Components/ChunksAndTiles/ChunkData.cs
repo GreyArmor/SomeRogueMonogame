@@ -77,22 +77,25 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
 		public Tile GetTile(int x, int y)
         {
-            Chunk chunkOfPoint = null;
+			
+			Chunk chunkOfPoint = null;
 
             int chunkX = x / Constants.ChunkSize;
             int chunkY = y / Constants.ChunkSize;
-            var s = Stopwatch.StartNew();
+          
 
             realityBubbleChunks.TryGetValue(new Point(chunkX, chunkY), out chunkOfPoint);
-            s.Stop();
+       
             if (chunkOfPoint == null)
             {
                 return new Tile(TerrainTypes.Nothingness, Biomes.None, new Point(-1, -1),0.5);
             }
+			var s = Stopwatch.StartNew();
+			var result = chunkOfPoint.GetTile(x, y);
+			s.Stop();
+            return result;
 
-
-            return chunkOfPoint.GetTile(x, y);
-        }
+		}
         public bool SetTile(int x, int y, Tile tile)
         {
             Chunk chunkOfPoint = null;
