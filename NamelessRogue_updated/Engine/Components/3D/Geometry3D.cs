@@ -9,12 +9,11 @@ namespace NamelessRogue.Engine.Components
 {
 	public class Geometry3D : Component
 	{
-		public List<Vertex> Positions { get; set; } = new List<Vertex>();
-		public List<int> Indices { get; set; } = new List<int>();
-		public List<Vector2> TextureCoords { get; set; } = new List<Vector2>();
-
+		public int TriangleCount { get; set; }
 		public VertexBuffer Buffer { get; set; }
 		public IndexBuffer IndexBuffer { get; set; }
+
+		public IndexBuffer WirefraveIndexBuffer { get; set; }
 
 	}
 }

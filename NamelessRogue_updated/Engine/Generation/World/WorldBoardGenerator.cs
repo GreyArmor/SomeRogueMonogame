@@ -397,7 +397,7 @@ namespace NamelessRogue.Engine.Generation.World
 					board.InlandWaterConnectivity[p.X][p.Y].WaterBorderLines.Add(line);
 				}
 			}
-#if DEBUG
+#if false
 			ImageWriter.WaterWriteImage(board.RiverMap, board.ElevationMap, resolution, "C:\\11\\RiverMap.png", new Color(1, 0, 0, 1f));
 
 			ImageWriter.WaterWriteImage(board.RiverBorderMap, board.ElevationMap, resolution, "C:\\11\\RiverBorderMap.png", new Color(1, 0, 0, 1f));

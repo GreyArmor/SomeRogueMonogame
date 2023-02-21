@@ -43,6 +43,27 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
     }
 
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Vertex3D
+    {
+        // ReSharper disable NotAccessedField.Local
+        private Vector3 position;
+        private Vector4 color;
+        private Vector4 backgroundColor;
+        private Vector2 textureCoordinate;
+        private Vector3 normal;
+
+        public Vertex3D(Vector3 position, Vector4 color, Vector4 backgroundColor, Vector2 textureCoordinate, Vector3 normal)
+        {
+            this.position = position;
+            this.color = color;
+            this.backgroundColor = backgroundColor;
+            this.textureCoordinate = textureCoordinate;
+            this.normal = normal;
+        }
+    }
+
+
     public class TileModel { 
         public Vertex[] Vertices { get; }
         public int[] Indices { get; }

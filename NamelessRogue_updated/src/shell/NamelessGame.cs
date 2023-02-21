@@ -194,7 +194,7 @@ namespace NamelessRogue.shell
 			
 
 			graphics.IsFullScreen = false;
-			graphics.PreferMultiSampling = false;
+			graphics.PreferMultiSampling = true;
 			graphics.SynchronizeWithVerticalRetrace = true;
 
 			RenderTarget = new RenderTarget2D(
@@ -350,9 +350,9 @@ namespace NamelessRogue.shell
 			InitSound();
 
 			IsInitialized = true;
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < 40; i++)
 			{
-				for (int j = 0; j < 100; j++)
+				for (int j = 0; j < 40; j++)
 				{
 					var p = new Point(x + i, y + j);
 					UpdateChunkCommand command = new UpdateChunkCommand(p);

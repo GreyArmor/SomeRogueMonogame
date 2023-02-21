@@ -14,7 +14,7 @@ namespace NamelessRogue.Engine.Systems._3DView
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
         const float rotationSpeed = 0.3f;
-        const float moveSpeed = 3f;
+        const float moveSpeed = 0.3f;
         MouseState originalMouseState;
         NamelessGame game;
         Camera3D camera;
@@ -108,7 +108,7 @@ namespace NamelessRogue.Engine.Systems._3DView
             Vector3 cameraFinalTarget = camera.Position + cameraRotatedTarget;
 
             Vector3 cameraRotatedUpVector = Vector3.Transform(cameraOriginalUpVector, cameraRotationUpDown * rotationLeftRight);
-
+            camera.Look = cameraRotatedTarget;
             camera.View = Matrix.CreateLookAt(camera.Position, cameraFinalTarget, cameraRotatedUpVector);
         }
     }

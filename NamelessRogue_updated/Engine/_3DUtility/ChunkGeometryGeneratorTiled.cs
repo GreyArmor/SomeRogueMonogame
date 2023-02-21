@@ -14,20 +14,20 @@ namespace NamelessRogue.Engine._3DUtility
 	enum SurfaceType {
 		North, South, East, West, Top, Bottom
 	}
-	public static class ChunkGeometryGenerator
+	public static class ChunkGeometryGeneratorTiled
 	{
 
-		static List<Vector3> points = new List<Vector3>();
-		static List<int> indices = new List<int>();
+		static List<Vector3> _points = new List<Vector3>();
+		static List<int> _indices = new List<int>();
 
-		static ChunkGeometryGenerator()
+		static ChunkGeometryGeneratorTiled()
 		{
-			points.Add(new Vector3(0, 0, 0));
-			points.Add(new Vector3(1, 0, 0));
-			points.Add(new Vector3(1, 1, 0));
-			points.Add(new Vector3(0, 1, 0));
+			_points.Add(new Vector3(0, 0, 0));
+			_points.Add(new Vector3(1, 0, 0));
+			_points.Add(new Vector3(1, 1, 0));
+			_points.Add(new Vector3(0, 1, 0));
 
-			indices.AddRange(new int[6] { 0, 1, 2, 2, 3, 0 });
+			_indices.AddRange(new int[6] { 0, 1, 2, 2, 3, 0 });
 		}
 
 		/// <summary>
@@ -42,6 +42,19 @@ namespace NamelessRogue.Engine._3DUtility
 		static Matrix moveToZero = Matrix.CreateTranslation(-(new Vector3(1,1,0) / 2));
 		static Matrix invertedMoveToZero = Matrix.Invert(moveToZero);
 		static Matrix scaleDown = Matrix.CreateScale(0.01f);
+		//precalculated out of loop
+		static Matrix northRot = Matrix.CreateRotationX(MathHelper.ToRadians(90f));
+		static Matrix northTR = Matrix.CreateTranslation(new Vector3(0, -0.5f, 0.5f));
+
+		static Matrix southRot = Matrix.CreateRotationX(MathHelper.ToRadians(90f));
+		static Matrix southTR = Matrix.CreateTranslation(new Vector3(0, 0.5f, 0.5f));
+
+		static Matrix eastRot = Matrix.CreateRotationX(MathHelper.ToRadians(90f)) * Matrix.CreateRotationZ(MathHelper.ToRadians(90f));
+		static Matrix eastTR = Matrix.CreateTranslation(new Vector3(-0.5f, 0, 0.5f));
+
+		static Matrix westRot = Matrix.CreateRotationX(MathHelper.ToRadians(90f)) * Matrix.CreateRotationZ(MathHelper.ToRadians(90f));
+		static Matrix westTR = Matrix.CreateTranslation(new Vector3(0.5f, 0, 0.5f));
+
 		public static Geometry3D GenerateChunkModel(Game namelessGame, Point chunkToGenerate, ChunkData chunks, TileAtlasConfig atlasConfig)
 		{
 
@@ -64,13 +77,15 @@ namespace NamelessRogue.Engine._3DUtility
 
 
 			int geometryCounter = 0;
-			
+			List<Vertex3D> vertices = new List<Vertex3D>();
+			List<int> indices = new List<int>();
+			var light = new Vector3(0, 0, 1);
 			// TODO:unoptimized
 			void AddSurface(SurfaceType type, float surfaceHeight, float neighborHeight, AtlasTileData atlasTileData, Vector2 tilePostion, Utility.Color tileColor)
 			{
 
-			
 
+				Vector3 originalNormal = Vector3.UnitZ;
 				Matrix rotation = Matrix.Identity;
 				Matrix translation = Matrix.Identity;
 				const float worldHeight = 2500;
@@ -85,23 +100,23 @@ namespace NamelessRogue.Engine._3DUtility
 					
 						break;
 					case SurfaceType.North:
-						rotation = Matrix.CreateRotationX(MathHelper.ToRadians(90f));
-						translation = Matrix.CreateTranslation(new Vector3(0, -0.5f, 0.5f));
+						rotation = northRot;
+						translation = northTR;
 						//tileColor = new Utility.Color(0, 0, 255);						
 						break;
 					case SurfaceType.South:
-						rotation = Matrix.CreateRotationX(MathHelper.ToRadians(90f));
-						translation = Matrix.CreateTranslation(new Vector3(0, 0.5f, 0.5f));
+						rotation = southRot;
+						translation = southTR;
 						//tileColor = new Utility.Color(0, 128, 128);
 						break;
 					case SurfaceType.East:
-						rotation = Matrix.CreateRotationX(MathHelper.ToRadians(90f)) * Matrix.CreateRotationZ(MathHelper.ToRadians(90f));
-						translation = Matrix.CreateTranslation(new Vector3(-0.5f, 0, 0.5f));
+						rotation = eastRot;
+						translation = eastTR;
 						//tileColor = new Utility.Color(255, 0, 0);
 						break;
 					case SurfaceType.West:
-						rotation = Matrix.CreateRotationX(MathHelper.ToRadians(90f)) * Matrix.CreateRotationZ(MathHelper.ToRadians(90f));
-						translation = Matrix.CreateTranslation(new Vector3(0.5f, 0, 0.5f));
+						rotation = westRot;
+						translation = westTR;
 						//tileColor = new Utility.Color(0, 255, 0);
 						break;
 
@@ -113,33 +128,25 @@ namespace NamelessRogue.Engine._3DUtility
 				//add transformed position to geometry
 				var transformedPoints = new Queue<Vector3>();
 
-				transformedPoints.Enqueue(Vector3.Transform(points[0], finalMatrix));
-				transformedPoints.Enqueue(Vector3.Transform(points[1], finalMatrix));
+				transformedPoints.Enqueue(Vector3.Transform(_points[0], finalMatrix));
+				transformedPoints.Enqueue(Vector3.Transform(_points[1], finalMatrix));
 
 				if (type == SurfaceType.Top || type == SurfaceType.Bottom)
 				{
-					transformedPoints.Enqueue(Vector3.Transform(points[2], finalMatrix));
-					transformedPoints.Enqueue(Vector3.Transform(points[3], finalMatrix));
+					transformedPoints.Enqueue(Vector3.Transform(_points[2], finalMatrix));
+					transformedPoints.Enqueue(Vector3.Transform(_points[3], finalMatrix));
 				}
 				else
 				{
-					var p2 = points[2]; p2.Y = -sideHeight * worldHeight;
-					var p3 = points[3]; p3.Y = -sideHeight * worldHeight;
+					var p2 = _points[2]; p2.Y = -sideHeight * worldHeight;
+					var p3 = _points[3]; p3.Y = -sideHeight * worldHeight;
 					transformedPoints.Enqueue(Vector3.Transform(p2, finalMatrix));
 					transformedPoints.Enqueue(Vector3.Transform(p3, finalMatrix));
 				}
 
+				var transformedNormal = Vector3.TransformNormal(originalNormal, finalMatrix);
 
-
-
-				//TODO: refactor to allow flexible texture packs
-				var tileAtlasWidth = 1024f;
-				var tileAtlasHeight = 1024f;
-
-				float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / tileAtlasWidth);
-				float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / tileAtlasHeight);
-				float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / tileAtlasWidth);
-				float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / tileAtlasHeight);
+				transformedNormal.Normalize();
 
 				var textureCoordCounter = 1;
 				foreach (var point in transformedPoints)
@@ -149,32 +156,32 @@ namespace NamelessRogue.Engine._3DUtility
 					switch (textureCoordCounter)
 					{
 						case 1:
-							textCoord = new Vector2(textureX, textureY);
+							textCoord = new Vector2(0, 0);
 							break;
 						case 2:
-							textCoord = new Vector2(textureXend, textureY);
+							textCoord = new Vector2(1, 0);
 							break;
 						case 3:
-							textCoord = new Vector2(textureXend, textureYend);
+							textCoord = new Vector2(1, 1);
 							break;
 						case 4:
 							textureCoordCounter = 1;
-							textCoord = new Vector2(textureX, textureYend);
+							textCoord = new Vector2(0, 1);
 							break;
 						default:
 							textureCoordCounter = 1;
 							break;
 					}
-					var vetex = new Systems.Ingame.Vertex(point, 
+					var vetex = new Systems.Ingame.Vertex3D(point, 
 						new Vector4(tileColor.Red, tileColor.Green, tileColor.Blue, 1), 
-						new Vector4(tileColor.Red, tileColor.Green, tileColor.Blue, 1), textCoord);
+						new Vector4(tileColor.Red, tileColor.Green, tileColor.Blue, 1), textCoord, transformedNormal);
 					textureCoordCounter++;
-					result.Positions.Add(vetex);
+					vertices.Add(vetex);
 				}
 
-				foreach (var index in indices)
+				foreach (var index in _indices)
 				{
-					result.Indices.Add(index + geometryCounter);
+					indices.Add(index + geometryCounter);
 				}
 				geometryCounter += 4;
 			}
@@ -231,16 +238,18 @@ namespace NamelessRogue.Engine._3DUtility
 					}
 					if (nth && sth)
 					{
-					//	tileColor = new Utility.Color(255, 0, 255);
+					//	tileColor = new Utility.Color(255, 0, 2	55);
 					}
 					AddSurface(SurfaceType.Top, (float)currentTile.Elevation, (float)currentTile.Elevation, atlasData, shift, tileColor);
 
 				}
 			}
-			result.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, result.Positions.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
-			result.Buffer.SetData<Vertex>(result.Positions.ToArray());
-			result.IndexBuffer = new Microsoft.Xna.Framework.Graphics.IndexBuffer(namelessGame.GraphicsDevice, Microsoft.Xna.Framework.Graphics.IndexElementSize.ThirtyTwoBits, result.Indices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
-			result.IndexBuffer.SetData<int>(result.Indices.ToArray());
+
+			result.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, vertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
+			result.Buffer.SetData<Vertex3D>(vertices.ToArray());
+			result.IndexBuffer = new Microsoft.Xna.Framework.Graphics.IndexBuffer(namelessGame.GraphicsDevice, Microsoft.Xna.Framework.Graphics.IndexElementSize.ThirtyTwoBits, indices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
+			result.IndexBuffer.SetData<int>(indices.ToArray());
+			result.TriangleCount = vertices.Count - 1 / 3;
 			return result;
 		}
 	}
