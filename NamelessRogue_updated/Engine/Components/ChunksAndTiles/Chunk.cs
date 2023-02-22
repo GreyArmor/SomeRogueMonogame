@@ -88,7 +88,8 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
 
 
-            if (surroundingChunksWithRivers.Any())
+           // if (surroundingChunksWithRivers.Any())
+            if(false)
             {
                 //TODO this part is really useful for plotting rivers/roads on map, should be moved to its own class
                 // the point is: i must generate a chunk sized bitmap to detect which tiles are river tiles and which are not
