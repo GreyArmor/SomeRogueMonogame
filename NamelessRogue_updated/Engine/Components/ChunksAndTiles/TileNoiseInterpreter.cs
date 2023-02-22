@@ -59,11 +59,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                     b = BiomesLibrary.Biomes[Biomes.Plains];
                 }
             }
-            else if(noiseValue >= SeaLevelThreshold) {
+            else if(noiseValue > SeaLevelThreshold) {
                 t  = TerrainLibrary.Terrains[TerrainTypes.Sand];
                 b = BiomesLibrary.Biomes[Biomes.Beach];
             }
-            else if(noiseValue < SeaLevelThreshold) {
+            else if(noiseValue == SeaLevelThreshold) {
                 t  = TerrainLibrary.Terrains[TerrainTypes.Water];
                 b = BiomesLibrary.Biomes[Biomes.Sea];
             }
@@ -79,26 +79,27 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                     //    b = BiomesLibrary.Biomes[Biomes.Lake];
                     //}
                     //else 
-                    if (desert>=0.8f)
-                    {
-                        t = TerrainLibrary.Terrains[TerrainTypes.Sand];
+                    //if (desert>=0.8f)
+                    //{
+                    //    t = TerrainLibrary.Terrains[TerrainTypes.Sand];
                        
-                        if (temperatureCoef <= 0.15 || temperatureCoef >= 0.85)
-                        {
-                            b = BiomesLibrary.Biomes[Biomes.SnowDesert];
-                        }
-                        else
-                        {
-                            b = BiomesLibrary.Biomes[Biomes.Desert];
-                        }
+                    //    if (temperatureCoef <= 0.15 || temperatureCoef >= 0.85)
+                    //    {
+                    //        b = BiomesLibrary.Biomes[Biomes.SnowDesert];
+                    //    }
+                    //    else
+                    //    {
+                    //        b = BiomesLibrary.Biomes[Biomes.Desert];
+                    //    }
                     
-                    }
-                    else if(swamp >=0.9f)
-                    {
-                        t = TerrainLibrary.Terrains[TerrainTypes.Dirt];
-                        b = BiomesLibrary.Biomes[Biomes.Swamp];
-                    }
-                    else if (forest>=0.8f)
+                    //}
+                    //else if(swamp >=0.9f)
+                    //{
+                    //    t = TerrainLibrary.Terrains[TerrainTypes.Dirt];
+                    //    b = BiomesLibrary.Biomes[Biomes.Swamp];
+                    //}
+                    //else 
+                    if (forest>=0.8f)
                     {
                         t = TerrainLibrary.Terrains[TerrainTypes.Grass];
 

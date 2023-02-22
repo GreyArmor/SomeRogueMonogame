@@ -162,7 +162,8 @@ namespace NamelessRogue.Engine._3DUtility
 			Matrix scaleDown = Matrix.CreateScale(0.001f);
 			var transformedPoints = new Queue<Vector3>();
 			var colors = new Queue<Vector4>();
-			const float worldHeight = 650;
+			const float worldHeight = 1300;
+			const float worldHeightMount = 1300;
 			//bool first = true;
 			for (int x = 0; x < resolution; x++)
 			{
@@ -178,18 +179,28 @@ namespace NamelessRogue.Engine._3DUtility
 					float elevationS = (float)tileS.Elevation;
 					float elevationSE = (float)tileSE.Elevation;
 
-					void AddPoint(int x, int y, float pointElevation)
+					void AddPoint(int x, int y, float pointElevation, Tile tile)
 					{
+						pointElevation = pointElevation - 0.5f;
+						bool _isMountain(Tile t)
+						{
+							return t.Terrain == TerrainTypes.LightRocks || t.Terrain == TerrainTypes.HardRocks || t.Terrain == TerrainTypes.Snow;
+						}
+
+						float elevation = (pointElevation) * worldHeight;
+						elevation = MathF.Pow(elevation,2) * 0.005f;
 						transformedPoints.Enqueue(Vector3.Transform(
 							new Vector3(
 							x + currentCorner.X - originalPointForTest.X,
 							y + currentCorner.Y - originalPointForTest.Y,
-							((pointElevation) * worldHeight) - worldHeight), scaleDown));
+							elevation), scaleDown));
 						var tileColor = TerrainLibrary.Terrains[tile.Terrain].Representation.CharColor;
 						//colors.Add(first? new Vector4(100,0,0,100):tileColor.ToVector4());
 						//first = false;
 						colors.Enqueue(tileColor.ToVector4() * (random.Next(7, 9) / 10f));
 					}
+
+				
 
 					//Tile nwTile = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x - 1, chunk.WorldPositionBottomLeftCorner.Y + y - 1);
 					//Tile neTile = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x + 1, chunk.WorldPositionBottomLeftCorner.Y + y - 1);
@@ -206,10 +217,10 @@ namespace NamelessRogue.Engine._3DUtility
 					//float seElevation = _getElevation(seTile, elevation);
 
 
-					AddPoint(x, y, elevation);
-					AddPoint(x + 1, y, elevationE);
-					AddPoint(x, y + 1, elevationS);
-					AddPoint(x + 1, y + 1, elevationSE);
+					AddPoint(x, y, elevation, tile);
+					AddPoint(x + 1, y, elevationE, tileE);
+					AddPoint(x, y + 1, elevationS, tileS);
+					AddPoint(x + 1, y + 1, elevationSE, tileSE);
 
 				}
 			}

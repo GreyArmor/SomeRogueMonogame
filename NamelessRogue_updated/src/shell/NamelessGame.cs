@@ -256,9 +256,15 @@ namespace NamelessRogue.shell
 			}
 			else
 			{
-				x = 300;
-				y = 300;
-			}
+				//x = 300;
+				//y = 300;
+
+				//x = 400;
+				//y = 300;
+
+				x = 400;
+				y = 400;
+			}	
 			var player = CharacterFactory.CreateSimplePlayerCharacter(x, y, this);
 
 			PlayerEntity = player;
@@ -361,8 +367,6 @@ namespace NamelessRogue.shell
 					var chunk = WorldProvider.GetChunks()[p];
 					WorldProvider.GetRealityBubbleChunks().Add(p, chunk);
 					WorldProvider.RealityChunks.Add(chunk);
-
-
 				}
 			}
 		}
