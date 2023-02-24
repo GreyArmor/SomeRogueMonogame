@@ -14,6 +14,7 @@ namespace NamelessRogue.Engine.Components
 		public IndexBuffer IndexBuffer { get; set; }
 
 		public IndexBuffer WirefraveIndexBuffer { get; set; }
+		public BoundingBox Bounds { get; set; }
 
 	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Abstraction;
@@ -38,16 +39,36 @@ namespace NamelessRogue.Engine.Systems
 		long currentgmatime = 0;
         private long previousGametimeForMove = 0;
 
-        int inputsTimeLimit = 30;
+        int inputsTimeLimit = 0;
 
         private char lastCommand = Char.MinValue;
         private KeyboardState lastState;
 
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
+		List<Keys> immediatePressedKeys = new List<Keys>();
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+		public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            if (gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove > inputsTimeLimit)
+            //should probably move to monogame keys anyway, if im not doing roguelike controls anymore
+			var keyPressed = Keyboard.GetState();
+			if (keyPressed.IsKeyDown(Keys.W)) immediatePressedKeys.Add(Keys.W);
+			if (keyPressed.IsKeyDown(Keys.S)) immediatePressedKeys.Add(Keys.S);
+			if (keyPressed.IsKeyDown(Keys.A)) immediatePressedKeys.Add(Keys.A);
+			if (keyPressed.IsKeyDown(Keys.D)) immediatePressedKeys.Add(Keys.D);
+
+            if (immediatePressedKeys.Any())
+            {
+                foreach (IEntity entity in RegisteredEntities)
+                {
+					InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
+                    //InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
+                    inputComponent.Intents.AddRange(translator.Translate(immediatePressedKeys.ToArray(), lastCommand));
+                }
+                immediatePressedKeys.Clear();
+				lastCommand = Char.MinValue;
+				lastState = default;
+			}
+			if (gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove > inputsTimeLimit)
             {
                 previousGametimeForMove = (long)gameTime.TotalGameTime.TotalMilliseconds;
                 foreach (IEntity entity in RegisteredEntities) {

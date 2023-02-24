@@ -13,8 +13,7 @@ namespace NamelessRogue.Engine.Systems._3DView
 	{
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
-        const float rotationSpeed = 0.3f;
-        const float moveSpeed = 0.3f;
+       
         MouseState originalMouseState;
         NamelessGame game;
         Camera3D camera;
@@ -34,13 +33,13 @@ namespace NamelessRogue.Engine.Systems._3DView
             }
             float timeDifference = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
-            ProcessInput(timeDifference);
+            ProcessInput(timeDifference, game);
         }
         bool stopCapturing = false;
-        private void ProcessInput(float amount)
+        private void ProcessInput(float amount, NamelessGame game)
         {
+            //TODO for debug, remove later
             KeyboardState keyState = Keyboard.GetState();
-
             if (keyState.IsKeyDown(Keys.F1))
             {
                 stopCapturing = true;
@@ -49,42 +48,42 @@ namespace NamelessRogue.Engine.Systems._3DView
             {
                 stopCapturing = false;
             }
-
             if (stopCapturing)
             {
                 return;
             }
 
+            while (game.Commander.DequeueCommand(out MoveCamera3dCommand command))
+            {
+				Vector3 moveVector = new Vector3(0, 0, 0);
+
+				if (command.MovesToMake.Contains(MoveType.Forward))
+					moveVector += new Vector3(1, 0, 0);
+				if (command.MovesToMake.Contains(MoveType.Backward))
+					moveVector += new Vector3(-1, 0, 0);
+				if (command.MovesToMake.Contains(MoveType.Right))
+					moveVector += new Vector3(0, -1, 0);
+				if (command.MovesToMake.Contains(MoveType.Left))
+					moveVector += new Vector3(0, 1, 0);
+				//if (keyState.IsKeyDown(Keys.Q))
+				//	moveVector += new Vector3(0, 0, 1);
+				//if (keyState.IsKeyDown(Keys.Z))
+				//	moveVector += new Vector3(0, 0, -1);
+				AddToCameraPosition(moveVector * amount);
+			}
+            
+            
+            //TODO leaving mouse capture here for now, even its not correct
             MouseState currentMouseState = Mouse.GetState();
             if (currentMouseState != originalMouseState)
             {
                 float xDifference = currentMouseState.X - originalMouseState.X;
                 float yDifference = currentMouseState.Y - originalMouseState.Y;
-                camera.LeftrightRot -= rotationSpeed * xDifference * amount;
-                camera.UpdownRot -= rotationSpeed * yDifference * amount;
+                camera.LeftrightRot -= camera.RotationSpeed * xDifference * amount;
+                camera.UpdownRot -= camera.RotationSpeed * yDifference * amount;
                 Mouse.SetPosition(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height / 2);
                 UpdateViewMatrix();
             }
-
-            Vector3 moveVector = new Vector3(0, 0, 0);
-        
-
-         
-
-        
-            if (keyState.IsKeyDown(Keys.Up) || keyState.IsKeyDown(Keys.W))
-                moveVector += new Vector3(1, 0, 0);
-            if (keyState.IsKeyDown(Keys.Down) || keyState.IsKeyDown(Keys.S))
-                moveVector += new Vector3(-1, 0, 0);
-            if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
-                moveVector += new Vector3(0, -1, 0);
-            if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
-                moveVector += new Vector3(0, 1, 0);
-            if (keyState.IsKeyDown(Keys.Q))
-                moveVector += new Vector3(0, 0, 1);
-            if (keyState.IsKeyDown(Keys.Z))
-                moveVector += new Vector3(0, 0, -1);
-            AddToCameraPosition(moveVector * amount);
         }
 
 
@@ -92,7 +91,7 @@ namespace NamelessRogue.Engine.Systems._3DView
         {
             Matrix cameraRotation = Matrix.CreateRotationY(-camera.UpdownRot) * Matrix.CreateRotationZ(camera.LeftrightRot);
             Vector3 rotatedVector = Vector3.Transform(vectorToAdd, cameraRotation);
-            camera.Position += moveSpeed * rotatedVector;
+            camera.Position += camera.MoveSpeed * rotatedVector;
             UpdateViewMatrix();
         }
 

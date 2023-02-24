@@ -13,10 +13,9 @@ namespace NamelessRogue.Engine.Components._3D
         public Vector3 Look { get; set; } = new Vector3(1, 0, 0);
         public float LeftrightRot { get; set; } = MathHelper.ToRadians(-90f);
         public float UpdownRot { get; set; } = MathHelper.ToRadians(-45);
-        //public const float rotationSpeed = 0.3f;
-        //public const float moveSpeed = 30.0f;
-
-        public Camera3D(Game game) 
+        public float RotationSpeed = 0.3f;
+		public float MoveSpeed = 0.3f;
+		public Camera3D(Game game) 
         {
             this.Position = new Vector3(0.1f, 0.1f, 0);
             this.Projection = 

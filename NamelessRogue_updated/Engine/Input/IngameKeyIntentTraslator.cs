@@ -25,37 +25,40 @@ namespace NamelessRogue.Engine.Input
                     switch (keyCode)
                     {
                         case Keys.Up:
-                        case Keys.NumPad8:
+                        case Keys.W:
                             intent.Intention = IntentEnum.MoveUp;
                             break;
-                        case Keys.NumPad2:
+                        case Keys.S:
                         case Keys.Down:
                             intent.Intention = IntentEnum.MoveDown;
                             break;
-                        case Keys.NumPad4:
+                        case Keys.A:
                         case Keys.Left:
                             intent.Intention = IntentEnum.MoveLeft;
                             break;
-                        case Keys.NumPad6:
-                        case Keys.Right:
-                            intent.Intention = IntentEnum.MoveRight;
+                        case Keys.D:
+							intent.Intention = IntentEnum.MoveRight;
                             break;
-                        case Keys.NumPad7:
-                            intent.Intention = IntentEnum.MoveTopLeft;
-                            break;
-                        case Keys.NumPad9:
-                            intent.Intention = IntentEnum.MoveTopRight;
-                            break;
-                        case Keys.NumPad1:
-                            intent.Intention = IntentEnum.MoveBottomLeft;
-                            break;
-                        case Keys.NumPad3:
-                            intent.Intention = IntentEnum.MoveBottomRight;
-                            break;
-                        case Keys.NumPad5:
-                            intent.Intention = IntentEnum.SkipTurn;
-                            break;
-                        case Keys.Enter:
+						//case Keys.Right:
+						//    intent.Intention = IntentEnum.MoveRight;
+						//    break;
+						//case Keys.NumPad7:
+						//    intent.Intention = IntentEnum.MoveTopLeft;
+						//    break;
+						//case Keys.NumPad9:
+						//    intent.Intention = IntentEnum.MoveTopRight;
+						//    break;
+						//case Keys.NumPad1:
+						//    intent.Intention = IntentEnum.MoveBottomLeft;
+						//    break;
+						//case Keys.NumPad3:
+						//    intent.Intention = IntentEnum.MoveBottomRight;
+						//    break;
+						//case Keys.NumPad5:
+						//    intent.Intention = IntentEnum.SkipTurn;
+
+						//    break;
+						case Keys.Enter:
                             intent.Intention = IntentEnum.Enter;
                             break;
                         case Keys.F:
