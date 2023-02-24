@@ -17,7 +17,7 @@ namespace NamelessRogue.Engine.Utility
 				var idx2 = geometry3D.Indices[i + 2];
 				if (Intersect(geometry3D.Vertices[idx0], geometry3D.Vertices[idx1], geometry3D.Vertices[idx2], ray))
 				{
-					triangle = new List<int>{ idx0, idx1, idx2 };
+					triangle = new List<int>{ i, i+1, i+2 };
 					return true;
 				}
 			}

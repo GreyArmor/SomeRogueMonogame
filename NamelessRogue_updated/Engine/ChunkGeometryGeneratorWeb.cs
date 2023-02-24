@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DynamicData;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
@@ -163,7 +164,10 @@ namespace NamelessRogue.Engine._3DUtility
 			var transformedPoints = new Queue<Vector3>();
 			var colors = new Queue<Vector4>();
 			const float worldHeight = 1300;
-			const float worldHeightMount = 1300;
+
+			//for terrain collion detection
+			var tileTriangleAssociations = new List<Point>();
+
 			//bool first = true;
 			for (int x = 0; x < resolution; x++)
 			{
@@ -222,6 +226,10 @@ namespace NamelessRogue.Engine._3DUtility
 					AddPoint(x, y + 1, elevationS, tileS);
 					AddPoint(x + 1, y + 1, elevationSE, tileSE);
 
+					for (int i = 0; i < 6; i++)
+					{
+						tileTriangleAssociations.Add(new Point(x, y));
+					}			
 				}
 			}
 
@@ -254,6 +262,8 @@ namespace NamelessRogue.Engine._3DUtility
 			result.Vertices = points;
 			result.Indices = indices.ToList();
 			result.Bounds = Microsoft.Xna.Framework.BoundingBox.CreateFromPoints(points);
+
+			result.TriangleTerrainAssociation = tileTriangleAssociations;
 
 			result.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, vertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
 			result.Buffer.SetData<Vertex3D>(vertices.ToArray());

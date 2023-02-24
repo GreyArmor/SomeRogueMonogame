@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
@@ -21,9 +22,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 	{
 		public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
-		private struct Intersection {
+		private class Intersection {
 			public float distance;
 			public Point chunkId;
+			public List<int> triangle;
+			public Geometry3D geometry; 
 		}
 		public override void Update(GameTime gameTime, NamelessGame game)
 		{
@@ -47,8 +50,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 							{
 								if (CollisionMath.Intersect(geometry, r, out var triangle))
 								{
-
-									intersections.Add(new Intersection() { distance = distance.Value, chunkId = geometryPointPair.Key });
+									intersections.Add(new Intersection() { distance = distance.Value, chunkId = geometryPointPair.Key, geometry = geometry, triangle = triangle });
 								}
 							}
 						}
@@ -57,8 +59,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					if (intersections.Any())
 					{
 						var closestIntersection = intersections.OrderBy(x => x.distance).FirstOrDefault();
-						//set chunk to sand for test
+						
+					
 						var chunk = game.WorldProvider.RealityChunks.FirstOrDefault(x => x.ChunkWorldMapLocationPoint == closestIntersection.chunkId);
+						/*	//set chunk to water for test
 						if (chunk != null)
 						{
 							for (int i = 0; i < Infrastructure.Constants.ChunkSize; i++)
@@ -71,6 +75,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 								}
 							}
 						}
+						*/
+						var clicledTile = closestIntersection.geometry.TriangleTerrainAssociation[closestIntersection.triangle[2]];
+						var tile = chunk.GetTileLocal(clicledTile.X, clicledTile.Y);
+						tile.Biome = Biomes.Sea;
+						tile.Terrain = TerrainTypes.Water;
 						UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(closestIntersection.chunkId);
 						game.Commander.EnqueueCommand(updateChunkCommand);
 					}
