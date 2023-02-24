@@ -33,6 +33,7 @@ namespace NamelessRogue.Engine.Systems._3DView
 			{
 				var geometry = ChunkGeometryGeneratorWeb.GenerateChunkModelTiles(game, command.ChunkToUpdate, chunks, config);
 					var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+					chunkGeometries.ChunkGeometries.Remove(command.ChunkToUpdate);
 					chunkGeometries.ChunkGeometries.Add(command.ChunkToUpdate, geometry);
 			}
 		}

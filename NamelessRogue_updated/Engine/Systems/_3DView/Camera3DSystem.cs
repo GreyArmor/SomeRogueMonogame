@@ -73,7 +73,7 @@ namespace NamelessRogue.Engine.Systems._3DView
 			}
             
             
-            //TODO leaving mouse capture here for now, even its not correct
+            //TODO leaving mouse capture here for now, even if its not correct
             MouseState currentMouseState = Mouse.GetState();
             if (currentMouseState != originalMouseState)
             {

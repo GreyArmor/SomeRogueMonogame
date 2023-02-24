@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.Utility;
+using SharpDX.DirectWrite;
 using BoundingBox = Microsoft.Xna.Framework.BoundingBox;
 using Color = Microsoft.Xna.Framework.Color;
 using Point = Microsoft.Xna.Framework.Point;
@@ -312,8 +313,18 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
             int localX = Math.Abs(bottomLeftX - x);
             int localY = Math.Abs(bottomLeftY - y);
+            SetTileLocal(localX, localY, tile);
+		}
 
-            chunkTiles[localX][localY] = tile;
-        }
-    }
+        public void SetTileLocal(int localX, int localY, Tile tile)
+        {
+			chunkTiles[localX][localY] = tile;
+		}
+
+		public Tile GetTileLocal(int localX, int localY)
+		{
+			return chunkTiles[localX][localY];
+		}
+
+	}
 }

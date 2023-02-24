@@ -9,6 +9,8 @@ namespace NamelessRogue.Engine.Components
 {
 	public class Geometry3D : Component
 	{
+		public List<Vector3> Vertices { get; set; }
+		public List<int> Indices { get; set; }
 		public int TriangleCount { get; set; }
 		public VertexBuffer Buffer { get; set; }
 		public IndexBuffer IndexBuffer { get; set; }

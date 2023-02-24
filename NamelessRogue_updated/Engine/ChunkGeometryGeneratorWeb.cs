@@ -240,7 +240,7 @@ namespace NamelessRogue.Engine._3DUtility
 
 				triangleCount += 2;
 			}
-
+			var points = transformedPoints.ToList();
 			while (transformedPoints.Any())
 			{
 				Vector3 point = transformedPoints.Dequeue();
@@ -250,6 +250,10 @@ namespace NamelessRogue.Engine._3DUtility
 				color, new Vector2(0, 0), Vector3.UnitZ);
 				vertices.Enqueue(vertex);
 			}
+
+			result.Vertices = points;
+			result.Indices = indices.ToList();
+			result.Bounds = Microsoft.Xna.Framework.BoundingBox.CreateFromPoints(points);
 
 			result.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, vertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
 			result.Buffer.SetData<Vertex3D>(vertices.ToArray());
