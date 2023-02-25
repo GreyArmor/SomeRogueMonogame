@@ -73,7 +73,7 @@ namespace NamelessRogue.Engine._3DUtility
 			List<Vertex3D> vertices = new List<Vertex3D>();
 			List<int> indices = new List<int>();
 			var resolution = Constants.ChunkSize;
-			Matrix scaleDown = Matrix.CreateScale(0.001f);
+			Matrix scaleDown = Matrix.Identity;
 			var transformedPoints = new List<Vector3>();
 			var colors = new List<Vector4>();
 			const float worldHeight = 2500;
