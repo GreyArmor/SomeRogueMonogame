@@ -166,16 +166,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
 						{
 							if (drawable.Representation == 'T')
 							{
-								var modelShift = Matrix.CreateTranslation(0.5f, 0.5f, 2f);
+								//var modelShift = Matrix.CreateTranslation(0.5f, 0.5f, 2f);
 								Matrix.CreateTranslation(Constants.ScaleDownCoeficient * x, Constants.ScaleDownCoeficient * y, (float)tileToDraw.Elevation, out Matrix pos);
-								objects.Add(new ModelInstance() { modelId = "tree", position = modelShift * Constants.ScaleDownMatrix * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient) });
-								//return objects;
+								objects.Add(new ModelInstance() { modelId = "smallTree", position = Constants.ScaleDownMatrix * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient) });
+								//return objects;s
 							}
 							if (drawable.Representation == 't')
 							{
-								var modelShift = Matrix.CreateTranslation(0.5f, 0.5f, 2f);
+								
 								Matrix.CreateTranslation(Constants.ScaleDownCoeficient * x, Constants.ScaleDownCoeficient * y, (float)tileToDraw.Elevation, out Matrix pos);
-								objects.Add(new ModelInstance() { modelId = "tree", position = modelShift * Constants.ScaleDownMatrix * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient) });
+								objects.Add(new ModelInstance() { modelId = "smallTree", position = Constants.ScaleDownMatrix * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient) });
 								//return objects;
 							}
 						}
@@ -210,8 +210,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				}
 			}
         }
-		Matrix rotationX = Matrix.CreateRotationX(MathHelper.ToRadians(90f));
-
 		Dictionary<string, int> cacheCheckDictionary = new Dictionary<string, int>();
 		Dictionary<string, VertexBuffer> instanceBufferCache = new Dictionary<string,	VertexBuffer>();
 		private void RenderObjects(NamelessGame game)
@@ -263,6 +261,21 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				}
 			}
 		}
+
+		RasterizerState ApplyWireframe(GraphicsDevice device)
+		{
+			var oldState = device.RasterizerState;
+			RasterizerState rasterizerState = new RasterizerState();
+			rasterizerState.FillMode = FillMode.WireFrame;
+			device.RasterizerState = rasterizerState;
+			return oldState;
+		}
+
+		void RestoreState(GraphicsDevice device, RasterizerState oldstate)
+		{
+			device.RasterizerState = oldstate;
+		}
+
 
 		class AtlasTileData
         {

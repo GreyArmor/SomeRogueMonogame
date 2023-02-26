@@ -37,10 +37,8 @@ namespace NamelessRogue.Engine._3DUtility
 		static bool firstTime = true;
 		static Point originalPointForTest;
 		static Matrix moveToZero = Matrix.CreateTranslation(-(new Vector3(1, 1, 0) / 2));
-		static Matrix invertedMoveToZero = Matrix.Invert(moveToZero);
-		static Matrix scaleDown = Matrix.CreateScale(0.01f);
 		//precalculated out of loop
-
+		[Obsolete]
 		public static Geometry3D GenerateChunkModel(Game namelessGame, Point chunkToGenerate, ChunkData chunks, TileAtlasConfig atlasConfig)
 		{
 			var result = new Geometry3D();
@@ -133,20 +131,6 @@ namespace NamelessRogue.Engine._3DUtility
 			var result = new Geometry3D();
 
 			var chunk = chunks.Chunks[chunkToGenerate];
-			//chunk.Activate();
-
-			////activate neighbors
-			//var sp = new Point(chunkToGenerate.X, chunkToGenerate.Y + 1);
-			//var southChunk = chunks.Chunks[sp];
-			//var ep = new Point(chunkToGenerate.X + 1, chunkToGenerate.Y);
-			//var eastChunk = chunks.Chunks[ep];
-
-			//southChunk.Activate();
-			//eastChunk.Activate();
-
-			//chunks.RealityBubbleChunks.Add(sp, southChunk);
-			//	chunks.RealityBubbleChunks.Add(wp, westChunk);
-
 
 			var currentCorner = chunk.WorldPositionBottomLeftCorner;
 			if (firstTime)
@@ -155,11 +139,9 @@ namespace NamelessRogue.Engine._3DUtility
 				originalPointForTest = currentCorner;
 			}
 
-			var tiles = chunk.GetChunkTiles();
 			Queue<Vertex3D> vertices = new Queue<Vertex3D>();
 			Queue<int> indices = new Queue<int>();
 			var resolution = Constants.ChunkSize;
-			//Matrix scaleDown =;
 			var transformedPoints = new Queue<Vector3>();
 			var colors = new Queue<Vector4>();
 			const float worldHeight = 1300;
@@ -182,7 +164,9 @@ namespace NamelessRogue.Engine._3DUtility
 					float elevationS = (float)tileS.Elevation;
 					float elevationSE = (float)tileSE.Elevation;
 
-					tile.ElevationVisual = MathF.Pow((float)(tile.Elevation-0.5f) * worldHeight, 2) * 0.005f;
+					float elevationMedian = (elevation + elevationE + elevationS + elevationSE) / 4;
+
+					tile.ElevationVisual = MathF.Pow((float)(elevationMedian - 0.5f) * worldHeight, 2) * 0.005f;
 					
 
 					void AddPoint(int x, int y, float pointElevation, Tile tile)
@@ -200,22 +184,6 @@ namespace NamelessRogue.Engine._3DUtility
 						//first = false;
 						colors.Enqueue(tileColor.ToVector4() * (random.Next(7, 9) / 10f));
 					}
-
-				
-
-					//Tile nwTile = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x - 1, chunk.WorldPositionBottomLeftCorner.Y + y - 1);
-					//Tile neTile = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x + 1, chunk.WorldPositionBottomLeftCorner.Y + y - 1);
-					//Tile swTile = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x - 1, chunk.WorldPositionBottomLeftCorner.Y + y + 1);
-					//Tile seTile = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x + 1, chunk.WorldPositionBottomLeftCorner.Y + y + 1);
-
-					//float _getElevation(Tile neighbor, float currentElevation) { 
-					//	return neighbor.Biome == Biomes.None ? elevation : (float)((elevation + neighbor.Elevation) / 2f);
-					//}
-
-					//float nwElevation = _getElevation(nwTile, elevation);
-					//float neElevation = _getElevation(neTile, elevation);
-					//float swElevation = _getElevation(swTile, elevation);
-					//float seElevation = _getElevation(seTile, elevation);
 
 
 					AddPoint(x, y, elevation, tile);

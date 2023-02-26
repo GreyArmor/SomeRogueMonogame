@@ -20,11 +20,11 @@ namespace NamelessRogue.Engine.Infrastructure
 
 		public static void Initialize(NamelessGame game)
 		{
-			void _addModel(string id, string path) {
+			void _addModel(string id, string path, Matrix modelTrandform) {
 
 				AssimpContext importer = new AssimpContext();
 
-				NormalSmoothingAngleConfig config = new NormalSmoothingAngleConfig(66.0f);
+				NormalSmoothingAngleConfig config = new NormalSmoothingAngleConfig(175f);
 				importer.SetConfig(config);
 
 				LogStream logstream = new LogStream(delegate (String msg, String userData)
@@ -47,7 +47,7 @@ namespace NamelessRogue.Engine.Infrastructure
 					var color = mesh.VertexColorChannels[0][i];
 					var colorConverted = new Vector4(color.R, color.G, color.B, color.A);
 					var normal = new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z);
-					var vecConverted = new Microsoft.Xna.Framework.Vector3(vec.X, vec.Y, vec.Z);
+					var vecConverted = Vector3.Transform(new Microsoft.Xna.Framework.Vector3(vec.X, vec.Y, vec.Z), modelTrandform);
 					vertices.Enqueue(new Vertex3D(vecConverted, colorConverted, colorConverted, Vector2.Zero, normal));
 					positions.Enqueue(vecConverted);
 				}
@@ -68,8 +68,12 @@ namespace NamelessRogue.Engine.Infrastructure
 
 				Models.Add(id, geometry);
 			}
-			_addModel("smallTree", "Content\\Models\\smallTree.fbx");
-			_addModel("tree", "Content\\Models\\tree.fbx");
+			Matrix rotationX = Matrix.CreateRotationX(MathHelper.ToRadians(90f));
+			var modelShiftTree1 = Matrix.CreateTranslation(0.5f, 0.5f, 0);
+			var modelShift = Matrix.CreateTranslation(0.5f, 0.5f, 1.5f);
+			_addModel("smallTree", "Content\\Models\\smallTree.fbx", modelShift);
+			_addModel("tree", "Content\\Models\\tree.fbx", modelShift);
+			_addModel("tree1", "Content\\Models\\tree1.fbx", rotationX * modelShiftTree1);
 
 		}
 	}

@@ -14,7 +14,7 @@ namespace NamelessRogue.Engine.Components._3D
         public float LeftrightRot { get; set; } = MathHelper.ToRadians(-90f);
         public float UpdownRot { get; set; } = MathHelper.ToRadians(-45);
         public float RotationSpeed = 0.3f;
-		public float MoveSpeed = 0.3f;
+		public float MoveSpeed = 0.1f;
 		public Camera3D(Game game) 
         {
             this.Position = new Vector3(0.1f, 0.1f, 0);
