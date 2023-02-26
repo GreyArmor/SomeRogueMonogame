@@ -72,6 +72,7 @@ namespace NamelessRogue.Engine._3DUtility
 			var resolution = Constants.ChunkSize;
 			Matrix scaleDown = Matrix.Identity;
 			var transformedPoints = new List<Vector3>();
+
 			var colors = new List<Vector4>();
 			const float worldHeight = 2500;
 			for (int x = 0; x < resolution+1; x++)
@@ -143,6 +144,7 @@ namespace NamelessRogue.Engine._3DUtility
 			Queue<int> indices = new Queue<int>();
 			var resolution = Constants.ChunkSize;
 			var transformedPoints = new Queue<Vector3>();
+			var transformedPointsNormals = new Queue<Vector3>();
 			var colors = new Queue<Vector4>();
 			const float worldHeight = 1300;
 
@@ -150,6 +152,14 @@ namespace NamelessRogue.Engine._3DUtility
 			var tileTriangleAssociations = new List<Point>();
 
 			//bool first = true;
+			Vector3 _calculateNormal(Vector3 point, Vector3 neighbor1, Vector3 neightbor2)
+			{
+				var v1 = point - neighbor1;
+				var v2 = point - neightbor2;
+				var normal = Vector3.Cross(v1, v2);
+				normal.Normalize();
+				return normal;
+			}
 			for (int x = 0; x < resolution; x++)
 			{
 				for (int y = 0; y < resolution; y++)
@@ -168,28 +178,38 @@ namespace NamelessRogue.Engine._3DUtility
 
 					tile.ElevationVisual = MathF.Pow((float)(elevationMedian - 0.5f) * worldHeight, 2) * 0.005f;
 					
-
-					void AddPoint(int x, int y, float pointElevation, Tile tile)
+					//return point adden for normal calculation
+					Vector3 AddPoint(int x, int y, float pointElevation, Tile tile)
 					{
 						pointElevation = pointElevation - 0.5f;
 						float elevation = (pointElevation) * worldHeight;
 						elevation = MathF.Pow(elevation,2) * 0.005f;
-						transformedPoints.Enqueue(Vector3.Transform(
-							new Vector3(
+
+						var vector = Vector3.Transform(new Vector3(
 							x + currentCorner.X - originalPointForTest.X,
 							y + currentCorner.Y - originalPointForTest.Y,
-							elevation), Constants.ScaleDownMatrix));
+							elevation), Constants.ScaleDownMatrix);
+
+						transformedPoints.Enqueue(vector);
 						var tileColor = TerrainLibrary.Terrains[tile.Terrain].Representation.CharColor;
 						//colors.Add(first? new Vector4(100,0,0,100):tileColor.ToVector4());
 						//first = false;
 						colors.Enqueue(tileColor.ToVector4() * (random.Next(7, 9) / 10f));
+						return vector;
 					}
 
 
-					AddPoint(x, y, elevation, tile);
-					AddPoint(x + 1, y, elevationE, tileE);
-					AddPoint(x, y + 1, elevationS, tileS);
-					AddPoint(x + 1, y + 1, elevationSE, tileSE);
+					var point = AddPoint(x, y, elevation, tile);
+					var vec1  = AddPoint(x + 1, y, elevationE, tileE);
+					var vec2  = AddPoint(x, y + 1, elevationS, tileS);
+								AddPoint(x + 1, y + 1, elevationSE, tileSE);
+
+					var normal = _calculateNormal(point, vec1,vec2);
+
+					transformedPointsNormals.Enqueue(normal);
+					transformedPointsNormals.Enqueue(normal);
+					transformedPointsNormals.Enqueue(normal);
+					transformedPointsNormals.Enqueue(normal);
 
 					for (int i = 0; i < 6; i++)
 					{
@@ -197,6 +217,8 @@ namespace NamelessRogue.Engine._3DUtility
 					}			
 				}
 			}
+
+			
 
 			int triangleCount = 0;
 			for (int i = 0; i < transformedPoints.Count - 3; i += 4)
@@ -211,6 +233,7 @@ namespace NamelessRogue.Engine._3DUtility
 				indices.Enqueue(index + 2);
 				indices.Enqueue(index + 1);
 
+				
 				triangleCount += 2;
 			}
 			var points = transformedPoints.ToList();
@@ -220,7 +243,7 @@ namespace NamelessRogue.Engine._3DUtility
 				var color = colors.Dequeue();
 				var vertex = new Systems.Ingame.Vertex3D(point,
 				color,
-				color, new Vector2(0, 0), Vector3.UnitZ);
+				color, new Vector2(0, 0), transformedPointsNormals.Dequeue());
 				vertices.Enqueue(vertex);
 			}
 

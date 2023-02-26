@@ -50,7 +50,7 @@ namespace NamelessRogue.Engine.Factories
               
                // var renderingSystem = new RenderingSystem(game.GetSettings());
 
-                var renderingSystem = new RenderingSystem3D(game.GetSettings());
+                var renderingSystem = new RenderingSystem3D(game.GetSettings(), game);
                 var uiSystem = new UIRenderSystem(game);
 
 

@@ -26,8 +26,9 @@ using System.Reflection.Metadata;
 using System.Windows.Forms;
 using AStarNavigator;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
+using NamelessRogue.Engine.Systems._3DView;
+using VertexBuffer = Microsoft.Xna.Framework.Graphics.VertexBuffer;
 using System.Runtime.InteropServices;
-using SharpDX.Direct2D1.Effects;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -87,12 +88,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         };
 
-        public RenderingSystem3D(GameSettings settings)
+		LightSource sunLight;
+
+        public RenderingSystem3D(GameSettings settings, NamelessGame game)
         {
-            Signature = new HashSet<Type>();
-            Signature.Add(typeof(Drawable));
-            Signature.Add(typeof(Position));
-        }
+			Signature = new HashSet<Type>
+			{
+				typeof(Drawable),
+				typeof(Position)
+			};
+
+			sunLight = new LightSource(game.GraphicsDevice, 2000, 2000, new Vector3(-1f, -1f,  2f), new Vector3(1, 1 , 0), new Vector4(1, 1, 1, 1));
+
+
+		}
 
         class ModelInstance
         {
@@ -105,19 +114,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		public override void Update(GameTime gameTime, NamelessGame game)
         {
 
-            //this.gameTime = (long)gameTime.TotalGameTime.TotalMilliseconds;
-
             game.GraphicsDevice.BlendState = BlendState.Opaque;
             game.GraphicsDevice.SamplerStates[0] = sampler;
             game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            //todo move to constructor or some other place better suited for initialization
-            if (tileAtlas == null)
-            {
-                InitializeTexture(game);
-            }
-			//var defautstate = game.GraphicsDevice.RasterizerState;
-			//var rsterizer = new RasterizerState();
 
 			IEntity worldEntity = game.TimelineEntity;
 			IWorldProvider worldProvider = null;
@@ -127,8 +127,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
             if (once)
             {
-                // var playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
-                objectsToDraw = GetWorldObjectsToDraw(new Point(300, 300), worldProvider);
+				effect = game.Content.Load<Effect>("ChunkShader3D");
+				objectsToDraw = GetWorldObjectsToDraw(new Point(300, 300), worldProvider);
 				once = false;
             }
 
@@ -137,14 +137,44 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			effect.Parameters["xWorldViewProjection"].SetValue(camera.View * camera.Projection);
 			effect.Parameters["xView"].SetValue(camera.View);
 			effect.Parameters["xProjection"].SetValue(camera.Projection);
-			effect.Parameters["SunLightIntensity"].SetValue(1f);
 			effect.Parameters["CameraPosition"].SetValue(camera.Position);
-			effect.Parameters["SunLightDirection"].SetValue(new Vector3(0));
-			effect.Parameters["SunLightColor"].SetValue(sunColor);
 			effect.Parameters["xWorldMatrix"].SetValue(Matrix.Identity);
+
+
+			effect.Parameters["xLightPos"].SetValue(sunLight.Position);
+			effect.Parameters["xLightPower"].SetValue(1f);
+			effect.Parameters["xAmbient"].SetValue(0.2f);
+			effect.Parameters["xLightsWorldViewProjection"].SetValue(sunLight.LightsViewProjectionMatrix);
+		
+
+			var device = game.GraphicsDevice;
+			device.SetRenderTarget(sunLight.ShadowMapRenderTarget);
+			device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Microsoft.Xna.Framework.Color.Black, 1.0f, 0);
+
 			effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
 			effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-			RenderChunks(game);
+
+
+			RenderChunksToShadowMap(game);
+
+			device.SetRenderTarget(null);
+			var shadowMap = (Texture2D)sunLight.ShadowMapRenderTarget;
+
+			effect.Parameters["shadowMap"].SetValue(shadowMap);
+
+			//device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.DarkSlateBlue, 1.0f, 0);
+			//debug
+			
+			//using (SpriteBatch sprite = new SpriteBatch(device))
+			//{
+			//	sprite.Begin();
+			//	sprite.Draw(shadowMap, new Vector2(0, 0), null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(0, 0), 0.4f, SpriteEffects.None, 1);
+			//	sprite.End();
+			//}
+
+			RenderChunksWithShadows(game);
+
+			//RenderChunks(game);
 			RenderObjects(game);
 		}
 
@@ -185,10 +215,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
             return objects;
         }
 
-
-        static Microsoft.Xna.Framework.Vector3 sunColor = Microsoft.Xna.Framework.Color.White.ToVector3();
-        static Microsoft.Xna.Framework.Color groundColor = Microsoft.Xna.Framework.Color.Black;
-        static Vector3 downColor = groundColor.ToVector3();
         private void RenderChunks(NamelessGame game)
         {
 			var device = game.GraphicsDevice;
@@ -196,22 +222,54 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			effect.CurrentTechnique = effect.Techniques["ColorTech"];
 			foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
 			{
-				if (geometry.TriangleCount > 0)
+				foreach (EffectPass pass in effect.CurrentTechnique.Passes)
 				{
-					foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-					{
-						pass.Apply();
+					pass.Apply();
 
-						device.SetVertexBuffer(geometry.Buffer);
-						device.Indices = geometry.IndexBuffer;
+					device.SetVertexBuffer(geometry.Buffer);
+					device.Indices = geometry.IndexBuffer;
 
-						device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
-					}
+					device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
 				}
 			}
         }
+
+		private void RenderChunksWithShadows(NamelessGame game)
+		{
+			var device = game.GraphicsDevice;
+			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+			effect.CurrentTechnique = effect.Techniques["ColorTechShadowMap"];
+			foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
+			{
+				EffectPass pass = effect.CurrentTechnique.Passes[1];
+				pass.Apply();
+
+				device.SetVertexBuffer(geometry.Buffer);
+				device.Indices = geometry.IndexBuffer;
+
+				device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
+			}
+		}
+
+		private void RenderChunksToShadowMap(NamelessGame game)
+		{
+			var device = game.GraphicsDevice;
+			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+			effect.CurrentTechnique = effect.Techniques["ColorTechShadowMap"];
+			foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
+			{
+				EffectPass pass = effect.CurrentTechnique.Passes[0];
+				pass.Apply();
+
+				device.SetVertexBuffer(geometry.Buffer);
+				device.Indices = geometry.IndexBuffer;
+
+				device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
+			}
+		}
+
 		Dictionary<string, int> cacheCheckDictionary = new Dictionary<string, int>();
-		Dictionary<string, VertexBuffer> instanceBufferCache = new Dictionary<string,	VertexBuffer>();
+		Dictionary<string, VertexBuffer> instanceBufferCache = new Dictionary<string, VertexBuffer>();
 		private void RenderObjects(NamelessGame game)
 		{
 					
@@ -262,6 +320,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			}
 		}
 
+		#region debug
 		RasterizerState ApplyWireframe(GraphicsDevice device)
 		{
 			var oldState = device.RasterizerState;
@@ -275,33 +334,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		{
 			device.RasterizerState = oldstate;
 		}
-
-
-		class AtlasTileData
-        {
-            public int X;
-            public int Y;
-
-            public AtlasTileData(int x, int y)
-            {
-                X = x;
-                Y = y;
-            }
-        }
-
-        Texture2D tileAtlas = null;
-
-
-
-        private Texture InitializeTexture(NamelessGame game)
-        {
-
-            tileAtlas = null;
-            tileAtlas = game.Content.Load<Texture2D>("SideTexture");
-            effect = game.Content.Load<Effect>("ChunkShader3D");
-
-            //effect.Parameters["tileAtlas"].SetValue(tileAtlas);
-            return tileAtlas;
-        }
+		#endregion
     }
 }
