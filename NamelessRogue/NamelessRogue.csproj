@@ -27,6 +27,8 @@
     <EmbeddedResource Include="log4net.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AssimpNet" Version="4.1.0" />
+    <PackageReference Include="FbxSharp" Version="0.9.0" />
     <PackageReference Include="FlatSharp" Version="6.3.5" />
     <PackageReference Include="ImGui.NET" Version="1.89.4" />
     <PackageReference Include="log4net" Version="2.0.15" />
@@ -45,6 +47,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Fonts\AnonymousPro-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Models\smallTree.fbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Models\tree.fbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Models\tree1.fbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

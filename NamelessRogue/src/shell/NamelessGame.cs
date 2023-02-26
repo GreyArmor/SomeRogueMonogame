@@ -173,7 +173,7 @@ namespace NamelessRogue.shell
 			GameTime zero = new GameTime();
 
 			//SaveManager.Init();
-		
+
 
 			CurrentGame = new GameInstance();
 			DebugDevice = this.GraphicsDevice;
@@ -191,7 +191,7 @@ namespace NamelessRogue.shell
 			graphics.PreferredBackBufferWidth = (int)(GetActualCharacterWidth() + settings.HudWidth);
 			graphics.PreferredBackBufferHeight = GetActualCharacterHeight();
 
-			
+
 
 			graphics.IsFullScreen = false;
 			graphics.PreferMultiSampling = true;
@@ -206,6 +206,8 @@ namespace NamelessRogue.shell
 				DepthFormat.Depth24, 4, RenderTargetUsage.PlatformContents);
 
 			graphics.ApplyChanges();
+
+			ModelsLibrary.Initialize(this);
 
 			//12345 123
 			worldSettings = new WorldSettings(4, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
@@ -256,16 +258,18 @@ namespace NamelessRogue.shell
 			}
 			else
 			{
-				x = 300;
-				y = 300;
+				x = 350;
+				y = 350;
+				//x = 300;
+				//y = 300;
 
 				//x = 400;
 				//y = 300;
 
 				//x = 400;
 				//y = 400;
-			}	
-			var player = CharacterFactory.CreateSimplePlayerCharacter(x, y, this);
+			}
+			var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);
 
 			PlayerEntity = player;
 
@@ -300,29 +304,15 @@ namespace NamelessRogue.shell
 			}
 
 			var platemail = ItemFactory.CreatePlateMail(x - 2, y, 1, this);
-
 			var pants = ItemFactory.CreatePants(x - 2, y, 1, this);
-
 			var boots = ItemFactory.CreateBoots(x - 2, y, 1, this);
-
 			var cape = ItemFactory.CreateCape(x - 2, y, 1, this);
-
 			var ring = ItemFactory.CreateRing(x - 2, y, 1, this);
-
 			var shield = ItemFactory.CreateShield(x - 2, y, 1, this);
-
 			var helmet = ItemFactory.CreateHelmet(x - 2, y, 1, this);
-
-
 			var ammo1 = ItemFactory.CreateLightAmmo(x - 1, y, 1, 20, this, ammoLibrary);
-
-
 			var ammo2 = ItemFactory.CreateLightAmmo(x - 1, y + 1, 1, 20, this, ammoLibrary);
-
-
 			var revolver = ItemFactory.CreateRevolver(x + 2, y + 1, 1, this, ammoLibrary);
-
-
 			var pArmor = ItemFactory.CreatePowerArmor(x - 2, y, 1, this);
 
 
@@ -340,7 +330,7 @@ namespace NamelessRogue.shell
 				}
 			}
 
-			if (anyRivers)
+			if(false)//if (anyRivers)
 			{
 				//move player to some river
 				PlayerEntity.GetComponentOfType<Position>().Point = new Point(200 * Constants.ChunkSize, 200 * Constants.ChunkSize);
@@ -354,19 +344,20 @@ namespace NamelessRogue.shell
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			InitSound();
+			
 
-			IsInitialized = true;		
-			for (int i = 0; i < 100; i++)
+			IsInitialized = true;
+			for (int i = x - Constants.RealityBubbleRangeInChunks; i < x + Constants.RealityBubbleRangeInChunks; i++)
 			{
-				for (int j = 0; j < 100; j++)
+				for (int j = y - Constants.RealityBubbleRangeInChunks; j < y + Constants.RealityBubbleRangeInChunks; j++)
 				{
-					var p = new Point(x + i, y + j);
+					var p = new Point(i, j);
 					UpdateChunkCommand command = new UpdateChunkCommand(p);
 					Commander.EnqueueCommand(command);
 
-					var chunk = WorldProvider.GetChunks()[p];
-					WorldProvider.GetRealityBubbleChunks().Add(p, chunk);
-					WorldProvider.RealityChunks.Add(chunk);
+					//var chunk = WorldProvider.GetChunks()[p];
+					//WorldProvider.GetRealityBubbleChunks().Add(p, chunk);
+					//WorldProvider.RealityChunks.Add(chunk);
 				}
 			}
 		}
@@ -412,7 +403,9 @@ namespace NamelessRogue.shell
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
 		/// </summary>
-		protected override void LoadContent() { }
+		protected override void LoadContent() {
+		
+		}
 
 		/// <summary>
 		/// UnloadContent will be called once per game and is the place to unload
@@ -512,7 +505,7 @@ namespace NamelessRogue.shell
 			_frameCounter.Update(deltaTime);
 			//fpsLabel.Text = "FPS = " + _frameCounter.AverageFramesPerSecond.ToString();
 
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+			GraphicsDevice.Clear(Color.Black);
 			CurrentContext.RenderingUpdate(gameTime, this);
 		}
 	}

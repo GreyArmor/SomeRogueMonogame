@@ -520,7 +520,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 }
             }
-
         }
 
 

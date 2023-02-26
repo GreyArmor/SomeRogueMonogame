@@ -16,9 +16,7 @@ namespace NamelessRogue.Engine.Components
 		public int TriangleCount { get; set; }
 		public VertexBuffer Buffer { get; set; }
 		public IndexBuffer IndexBuffer { get; set; }
-
-		public IndexBuffer WirefraveIndexBuffer { get; set; }
 		public BoundingBox Bounds { get; set; }
-
+		public Texture2D Material { get; set; }
 	}
 }

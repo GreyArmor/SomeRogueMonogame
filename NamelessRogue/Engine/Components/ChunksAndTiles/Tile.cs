@@ -26,6 +26,8 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             this.Elevation = elevation;
         }
         public double Elevation { get; set; }
+        //TODO: should not be here
+        public float ElevationVisual { get; set; }
         public TerrainTypes Terrain { get; set; }
         
         private Point coordinate;

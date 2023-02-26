@@ -19,10 +19,6 @@ using RogueSharp.Random;
 */
 namespace NamelessRogue.Engine.Generation.World
 {
-
-
-
-
 	public class TerrainGenerator
 	{
 

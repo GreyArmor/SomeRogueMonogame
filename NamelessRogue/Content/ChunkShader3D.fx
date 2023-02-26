@@ -1,13 +1,45 @@
 ﻿
 float3 CameraPosition;
 Texture2D tileAtlas;
+float4x4 xView;
+float4x4 xProjection;
 float4x4 xViewProjection;
+float4x4 xWorldViewProjection;
+float4x4 xWorldMatrix;
 
 float4x4 xTextureCoordinatesDistanceScaling;
 
 float3 SunLightDirection;
 float4 SunLightColor;
 float SunLightIntensity;
+
+//instance transform matrix
+struct VertexShaderInstanceInput
+{
+	float4 row1 : TEXCOORD1;
+	float4 row2 : TEXCOORD2;
+	float4 row3 : TEXCOORD3;
+	float4 row4 : TEXCOORD4;
+};
+
+float4x4 CreateMatrixFromRows(
+	float4 row1, float4 row2, float4 row3, float4 row4)
+{
+	return float4x4(
+		row1.x, row1.y, row1.z, row1.w,
+		row2.x, row2.y, row2.z, row2.w,
+		row3.x, row3.y, row3.z, row3.w,
+		row4.x, row4.y, row4.z, row4.w);
+}
+
+struct VSIn
+{
+	float4 inPos : POSITION;
+	float4 inColor : COLOR0;
+	float4 inBackgroundColor : COLOR1;
+	float2 inTextureCoord : TEXCOORD;
+	float3 normal : NORMAL;
+};
 
 struct VertexToPixel
 {
@@ -37,18 +69,18 @@ SamplerState textureSampler : register(s0) = sampler_state
 };
 
 
-VertexToPixel SimplestVertexShader(float4 inPos : POSITION, float4 inColor : COLOR0, float4 inBackgroundColor : COLOR1, float2 inTextureCoord : TEXCOORD, float3 normal : NORMAL)
+VertexToPixel SimplestVertexShader(VSIn input)
 {
 	VertexToPixel Output = (VertexToPixel)0;
 
-	Output.Position = mul(inPos, xViewProjection);
+	Output.Position = mul(input.inPos, xWorldViewProjection);
 
-	Output.Color = inColor;
-	Output.BackgroundColor = inBackgroundColor;
-	Output.TextureCoordinate = inTextureCoord;
-	Output.Normal = normal;
+	Output.Color = input.inColor;
+	Output.BackgroundColor = input.inBackgroundColor;
+	Output.TextureCoordinate = input.inTextureCoord;
+	Output.Normal = input.normal;
 	//no world matrix yet, so just pass the point
-	Output.WorldPos = inPos;
+	Output.WorldPos = input.inPos.xyz;
 	return Output;
 }
 
@@ -61,24 +93,6 @@ PixelToFrame SimplePixelShader(VertexToPixel PSIn)
 }
 
 
-float4 CalcDiffuseLight(float3 normal, float3 lightDirection, float4 lightColor, float lightIntensity)
-{
-	return saturate(dot(normal, -lightDirection)) * lightIntensity * lightColor;
-}
-
-float4 CalcSpecularLight(float3 normal, float3 lightDirection, float3 cameraDirection, float4 lightColor, float lightIntensity)
-{
-	//float4 specular = SpecularIntensity * SpecularColor * max(pow(dotProduct, Shininess), 0) * length(input.Color);
-
-	float3 halfVector = normalize(-lightDirection + -cameraDirection);
-	float specular = saturate(dot(halfVector, normal));
-
-	//I have all models be the same reflectance
-	float specularPower = 20;
-
-	return lightIntensity * lightColor * pow(abs(specular), specularPower);
-}
-
 float lengthSquared(float3 v1)
 {
 	return v1.x * v1.x + v1.y * v1.y + v1.z * v1.z;
@@ -90,58 +104,6 @@ PixelToFrame BackgroundPixelShader(VertexToPixel input)
 	PixelToFrame Output = (PixelToFrame)0;
 	Output.Color = input.BackgroundColor;
 	return Output;
-
-	/*
-	PixelToFrame Output = (PixelToFrame)0;
-	//float3 lightToPoint = v3GlobalLight - PSIn.Position;
-	//float light = abs(dot(lightToPoint, PSIn.Normal));
-	float4 baseColor = input.BackgroundColor;
-	float4 diffuseLight = float4(0, 0, 0, 0);
-	float4 specularLight = float4(0, 0, 0, 0);
-
-	//calculate our viewDirection
-	float3 pos = input.WorldPos;
-	float3 cameraDirection = normalize(pos - CameraPosition);
-
-	//calculate our sunlight
-	diffuseLight += CalcDiffuseLight(input.Normal, SunLightDirection, SunLightColor, SunLightIntensity);
-	specularLight += CalcSpecularLight(input.Normal, SunLightDirection, cameraDirection, SunLightColor, SunLightIntensity);
-
-	//calculate our pointLights
-	//[loop]
-	//for (int i = 0; i < MaxLightsRendered; i++)
-	//{
-	//	float3 PointLightDirection = input.WorldPos - PointLightPosition[i];
-
-	//	float DistanceSq = lengthSquared(PointLightDirection);
-
-	//	float radius = PointLightRadius[i];
-
-	//	[branch]
-	//	if (DistanceSq < abs(radius * radius))
-	//	{
-	//		float Distance = sqrt(DistanceSq);
-
-	//		//normalize
-	//		PointLightDirection /= Distance;
-
-	//		float du = Distance / (1 - DistanceSq / (radius * radius - 1));
-
-	//		float denom = du / abs(radius) + 1;
-
-	//		//The attenuation is the falloff of the light depending on distance basically
-	//		float attenuation = 1 / (denom * denom);
-
-	//		diffuseLight += CalcDiffuseLight(input.Normal, PointLightDirection, PointLightColor[i], PointLightIntensity[i]) * attenuation;
-
-	//		specularLight += CalcSpecularLight(input.Normal, PointLightDirection, cameraDirection, PointLightColor[i], PointLightIntensity[i]) * attenuation;
-	//	}
-	//}
-
-	Output.Color = (baseColor * diffuseLight) + baseColor * SunLightColor * SunLightIntensity;
-	Output.Color.a = 1;
-	return Output;
-	*/
 }
 
 
@@ -177,6 +139,41 @@ technique ColorTech
 	pass Pass0
 	{
 		VertexShader = compile vs_4_0 SimplestVertexShader();
+		PixelShader = compile ps_4_0 ColorPixelShader();
+	}
+}
+
+
+VertexToPixel SimplestVertexShaderInstanced(VSIn input, VertexShaderInstanceInput instanceInput)
+{
+	VertexToPixel output;
+
+	float4x4 worldMatrixInstance = CreateMatrixFromRows(
+		instanceInput.row1,
+		instanceInput.row2,
+		instanceInput.row3,
+		instanceInput.row4);
+
+	float4 worldPosition = mul(input.inPos, worldMatrixInstance);
+	float4 viewPosition = mul(worldPosition, xView);
+
+	output.Color = input.inColor;
+	output.BackgroundColor = input.inBackgroundColor;
+	output.TextureCoordinate = input.inTextureCoord;
+	output.Normal = input.normal;
+
+	float4 finalPosition = mul(viewPosition, xProjection);
+	output.Position = finalPosition;
+	output.WorldPos = finalPosition.xyz;
+
+	return output;
+}
+
+technique ColorTechInstanced
+{
+	pass Pass0
+	{
+		VertexShader = compile vs_4_0 SimplestVertexShaderInstanced();
 		PixelShader = compile ps_4_0 ColorPixelShader();
 	}
 }

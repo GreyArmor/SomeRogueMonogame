@@ -32,35 +32,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
             IEntity playerentity = namelessGame.PlayerEntity;
             if (playerentity != null)
             {
-                Chunk currentChunk = null;
+                    Chunk currentChunk = null;
                 Point? currentChunkKey = null;
                 Position playerPosition = playerentity.GetComponentOfType<Position>();
-                //look for current chunk
-                foreach (Point key in worldProvider.GetRealityBubbleChunks().Keys)
-                {
-                    Chunk ch = worldProvider.GetRealityBubbleChunks()[key];
-                    if (ch.IsPointInside(playerPosition.Point))
-                    {
-                        currentChunk = ch;
-                        currentChunkKey = key;
-                        break;
-                    }
+				//look for current chunk
+				var playerChunkPositon = new Point(playerPosition.Point.X / Constants.ChunkSize, playerPosition.Point.Y / Constants.ChunkSize);
+                if (worldProvider.GetRealityBubbleChunks().TryGetValue(playerChunkPositon, out var ch))
+				{                   
+                    currentChunk = ch;
+                    currentChunkKey = playerChunkPositon;
                 }
-
                 //if there is none, that means we just loaded the namelessGame, look for current in all chunks
-                if (currentChunk == null)
+                else
                 {
-                    foreach (Point key in worldProvider.GetChunks().Keys)
-                    {
-                        Chunk ch = worldProvider.GetChunks()[key];
-                        if (ch.IsPointInside(playerPosition.Point))
-                        {
-                            currentChunk = ch;
-                            currentChunkKey = key;
-                            break;
-                        }
-                    }
-                }
+					worldProvider.GetChunks().TryGetValue(playerChunkPositon, out var worldChunk);
+					currentChunk = worldChunk;
+					currentChunkKey = playerChunkPositon;
+				}
 
                 if (currentChunk != null)
                 {
@@ -75,12 +63,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             Point p = new Point(x, y);
                             if (!worldProvider.GetRealityBubbleChunks().ContainsKey(p))
                             {
-                                if (worldProvider.GetChunks().ContainsKey(p))
+                                if (worldProvider.GetChunks().TryGetValue(p,out var chunk))
                                 {
-                                    Chunk chunk = worldProvider.GetChunks()[p];
-
                                     worldProvider.GetRealityBubbleChunks().Add(p, chunk);
                                     worldProvider.RealityChunks.Add(chunk);
+                                    chunk.Activate();
                                 }
                             }
                         }

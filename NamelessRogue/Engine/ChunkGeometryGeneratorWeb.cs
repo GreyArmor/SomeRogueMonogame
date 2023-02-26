@@ -133,16 +133,16 @@ namespace NamelessRogue.Engine._3DUtility
 			var result = new Geometry3D();
 
 			var chunk = chunks.Chunks[chunkToGenerate];
-			chunk.Activate();
+			//chunk.Activate();
 
-			//activate neighbors
-			var sp = new Point(chunkToGenerate.X, chunkToGenerate.Y + 1);
-			var southChunk = chunks.Chunks[sp];
-			var ep = new Point(chunkToGenerate.X + 1, chunkToGenerate.Y);
-			var eastChunk = chunks.Chunks[ep];
+			////activate neighbors
+			//var sp = new Point(chunkToGenerate.X, chunkToGenerate.Y + 1);
+			//var southChunk = chunks.Chunks[sp];
+			//var ep = new Point(chunkToGenerate.X + 1, chunkToGenerate.Y);
+			//var eastChunk = chunks.Chunks[ep];
 
-			southChunk.Activate();
-			eastChunk.Activate();
+			//southChunk.Activate();
+			//eastChunk.Activate();
 
 			//chunks.RealityBubbleChunks.Add(sp, southChunk);
 			//	chunks.RealityBubbleChunks.Add(wp, westChunk);
@@ -159,7 +159,7 @@ namespace NamelessRogue.Engine._3DUtility
 			Queue<Vertex3D> vertices = new Queue<Vertex3D>();
 			Queue<int> indices = new Queue<int>();
 			var resolution = Constants.ChunkSize;
-			Matrix scaleDown = Matrix.CreateScale(0.001f);
+			//Matrix scaleDown =;
 			var transformedPoints = new Queue<Vector3>();
 			var colors = new Queue<Vector4>();
 			const float worldHeight = 1300;
@@ -182,21 +182,19 @@ namespace NamelessRogue.Engine._3DUtility
 					float elevationS = (float)tileS.Elevation;
 					float elevationSE = (float)tileSE.Elevation;
 
+					tile.ElevationVisual = MathF.Pow((float)(tile.Elevation-0.5f) * worldHeight, 2) * 0.005f;
+					
+
 					void AddPoint(int x, int y, float pointElevation, Tile tile)
 					{
 						pointElevation = pointElevation - 0.5f;
-						bool _isMountain(Tile t)
-						{
-							return t.Terrain == TerrainTypes.LightRocks || t.Terrain == TerrainTypes.HardRocks || t.Terrain == TerrainTypes.Snow;
-						}
-
 						float elevation = (pointElevation) * worldHeight;
 						elevation = MathF.Pow(elevation,2) * 0.005f;
 						transformedPoints.Enqueue(Vector3.Transform(
 							new Vector3(
 							x + currentCorner.X - originalPointForTest.X,
 							y + currentCorner.Y - originalPointForTest.Y,
-							elevation), scaleDown));
+							elevation), Constants.ScaleDownMatrix));
 						var tileColor = TerrainLibrary.Terrains[tile.Terrain].Representation.CharColor;
 						//colors.Add(first? new Vector4(100,0,0,100):tileColor.ToVector4());
 						//first = false;

@@ -30,11 +30,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                 t  = TerrainLibrary.Terrains[TerrainTypes.Snow];
                 b = BiomesLibrary.Biomes[Biomes.SnowDesert];
             }
-            else if(noiseValue>0.55) {
+            else if(noiseValue>0.60) {
                 t  = TerrainLibrary.Terrains[TerrainTypes.LightRocks];
                 b = BiomesLibrary.Biomes[Biomes.Mountain];
             }
-             else if(noiseValue>0.51) {
+             else if(noiseValue>0.55) {
                 t  = TerrainLibrary.Terrains[TerrainTypes.Grass];
 
                 if (temperatureCoef <= 0.15 || temperatureCoef >= 0.85)

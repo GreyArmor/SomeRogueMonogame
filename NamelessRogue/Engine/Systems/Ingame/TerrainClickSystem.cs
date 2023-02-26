@@ -61,7 +61,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 						var closestIntersection = intersections.OrderBy(x => x.distance).FirstOrDefault();
 						
 					
-						var chunk = game.WorldProvider.RealityChunks.FirstOrDefault(x => x.ChunkWorldMapLocationPoint == closestIntersection.chunkId);
+						var chunk = game.WorldProvider.GetRealityBubbleChunks()[closestIntersection.chunkId];
 						/*	//set chunk to water for test
 						if (chunk != null)
 						{
