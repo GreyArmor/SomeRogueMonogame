@@ -26,14 +26,14 @@ namespace NamelessRogue.Engine.Systems._3DView
 		float ambient;
 		public LightSource(GraphicsDevice device,int frustrumWidth, int frustrumHeight, Vector3 position, Vector3 direction, Vector4 lightColor)
 		{
-			shadowMapRenderTarget = new RenderTarget2D(device, frustrumWidth, frustrumHeight, true, device.DisplayMode.Format, DepthFormat.Depth24);
+			shadowMapRenderTarget = new RenderTarget2D(device, frustrumWidth, frustrumHeight, true, SurfaceFormat.Bgr32SRgb, DepthFormat.Depth24);
 			this.position = position;
 			this.direction = direction;
 			this.lightColor = lightColor;
 			this.frustrumHeight = frustrumHeight;
 			this.frustrumWidth = frustrumWidth;
 			Matrix view = Matrix.CreateLookAt(position, direction, new Vector3(0, 0, 1));
-			Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, 1f, 0.001f, 10000f);
+			Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), 1f, 0.001f, 100f);
 			lightsViewProjectionMatrix = view * projection;
 		}
 

@@ -1,6 +1,5 @@
 ﻿
 float3 CameraPosition;
-Texture tileAtlas;
 float4x4 xView;
 float4x4 xProjection;
 float4x4 xViewProjection;
@@ -70,7 +69,6 @@ struct PixelToFrame
 	float4 Color        : COLOR0;
 };
 
-
 SamplerState textureSampler : register(s0) = sampler_state
 {
 	Filter = Point;
@@ -82,26 +80,10 @@ SamplerState textureSampler : register(s0) = sampler_state
 };
 
 
-VertexToPixel SimplestVertexShader(VSIn input)
-{
-	VertexToPixel Output = (VertexToPixel)0;
-
-	Output.Position = mul(input.inPos, xWorldViewProjection);
-
-	Output.Color = input.inColor;
-	Output.BackgroundColor = input.inBackgroundColor;
-	Output.TextureCoordinate = input.inTextureCoord;
-	Output.Normal = input.normal;
-	//no world matrix yet, so just pass the point
-	Output.WorldPos = input.inPos.xyz;
-	return Output;
-}
-
-
 PixelToFrame SimplePixelShader(VertexToPixel PSIn)
 {
 	PixelToFrame Output = (PixelToFrame)0;
-	Output.Color = float4(0,0,0,1);
+	Output.Color = float4(0, 0, 0, 1);
 	return Output;
 }
 
@@ -113,50 +95,6 @@ PixelToFrame ColorPixelShader(VertexToPixel PSIn)
 	Output.Color.a = 1;
 	return Output;
 }
-
-VertexToPixel SimplestVertexShaderInstanced(VSIn input, VertexShaderInstanceInput instanceInput)
-{
-	VertexToPixel output;
-
-	float4x4 worldMatrixInstance = CreateMatrixFromRows(
-		instanceInput.row1,
-		instanceInput.row2,
-		instanceInput.row3,
-		instanceInput.row4);
-
-	float4 worldPosition = mul(input.inPos, worldMatrixInstance);
-	float4 viewPosition = mul(worldPosition, xView);
-
-	output.Color = input.inColor;
-	output.BackgroundColor = input.inBackgroundColor;
-	output.TextureCoordinate = input.inTextureCoord;
-	output.Normal = input.normal;
-
-	float4 finalPosition = mul(viewPosition, xProjection);
-	output.Position = finalPosition;
-	output.WorldPos = finalPosition.xyz;
-
-	return output;
-}
-
-technique ColorTech
-{
-	pass Pass0
-	{
-		VertexShader = compile vs_4_0 SimplestVertexShader();
-		PixelShader = compile ps_4_0 ColorPixelShader();
-	}
-}
-
-technique ColorTechInstanced
-{
-	pass Pass0
-	{
-		VertexShader = compile vs_4_0 SimplestVertexShaderInstanced();
-		PixelShader = compile ps_4_0 ColorPixelShader();
-	}
-}
-
 
 struct SMapVertexToPixel
 {
@@ -187,11 +125,19 @@ struct SScenePixelToFrame
 	float4 Color : COLOR0;
 };
 
-SMapVertexToPixel ShadowMapVertexShader(float4 inPos : POSITION)
+SMapVertexToPixel ShadowMapVertexShader(float4 inPos : POSITION, VertexShaderInstanceInput instanceInput)
 {
 	SMapVertexToPixel Output = (SMapVertexToPixel)0;
 
-	Output.Position = mul(inPos, xLightsWorldViewProjection);
+	float4x4 worldMatrixInstance = CreateMatrixFromRows(
+		instanceInput.row1,
+		instanceInput.row2,
+		instanceInput.row3,
+		instanceInput.row4);
+
+	float4 worldPosition = mul(inPos, worldMatrixInstance);
+
+	Output.Position = mul(worldPosition, xLightsWorldViewProjection);
 	Output.Position2D = Output.Position;
 
 	return Output;
@@ -207,14 +153,24 @@ SMapPixelToFrame ShadowMapPixelShader(SMapVertexToPixel PSIn)
 	return Output;
 }
 
-SSceneVertexToPixel ShadowedSceneVertexShader(float4 inPos : POSITION, float2 inTexCoords : TEXCOORD0, float3 inNormal : NORMAL, float4 Color : COLOR0)
+SSceneVertexToPixel ShadowedSceneVertexShader(float4 inPos : POSITION, float2 inTexCoords : TEXCOORD0, float3 inNormal : NORMAL, float4 Color : COLOR0, VertexShaderInstanceInput instanceInput)
 {
 	SSceneVertexToPixel Output = (SSceneVertexToPixel)0;
 
-	Output.Position = mul(inPos, xWorldViewProjection);
+	float4x4 worldMatrixInstance = CreateMatrixFromRows(
+		instanceInput.row1,
+		instanceInput.row2,
+		instanceInput.row3,
+		instanceInput.row4);
+
+	float4 worldPosition = mul(inPos, worldMatrixInstance);
+	float4 viewPosition = mul(worldPosition, xView);
+	float4 finalPosition = mul(viewPosition, xProjection);
+
+	Output.Position = finalPosition;
 	Output.Pos2DAsSeenByLight = mul(inPos, xLightsWorldViewProjection);
 	Output.Normal = normalize(mul(inNormal, (float3x3)xWorldMatrix));
-	Output.Position3D = mul(inPos, xWorldMatrix);
+	Output.Position3D = mul(inPos, worldMatrixInstance);
 	Output.TexCoords = inTexCoords;
 	Output.Color = Color;
 	return Output;
@@ -256,7 +212,7 @@ SScenePixelToFrame ShadowedScenePixelShader(SSceneVertexToPixel PSIn)
 }
 
 
-technique ColorTechShadowMap
+technique ColorTechShadowMapInstanced
 {
 	pass Pass0
 	{

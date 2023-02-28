@@ -29,7 +29,7 @@ using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
 using NamelessRogue.Engine.Systems._3DView;
 using VertexBuffer = Microsoft.Xna.Framework.Graphics.VertexBuffer;
 using System.Runtime.InteropServices;
-
+using SharpDX.XAudio2;
 namespace NamelessRogue.Engine.Systems.Ingame
 {
     public class RenderingSystem3D : BaseSystem
@@ -75,6 +75,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
 		Effect effect;
+		Effect shadedInstancedEffect;
 
         SamplerState sampler = new SamplerState()
         {
@@ -98,9 +99,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				typeof(Position)
 			};
 
-			sunLight = new LightSource(game.GraphicsDevice, 2000, 2000, new Vector3(-1f, -1f,  2f), new Vector3(1, 1 , 0), new Vector4(1, 1, 1, 1));
-
-
+			sunLight = new LightSource(game.GraphicsDevice, 2048, 2048, new Vector3(10, -10f,  5f), new Vector3(0,  1, 0), new Vector4(1, 1, 1, 1));
 		}
 
         class ModelInstance
@@ -111,6 +110,34 @@ namespace NamelessRogue.Engine.Systems.Ingame
         //for test
 		List<ModelInstance> objectsToDraw = new List<ModelInstance>();
         bool once = true;
+
+		VertexBuffer hackBuffer;
+		IndexBuffer hackBufferIndices;
+		private void CreateshadowMapEdgeHackMesh(NamelessGame game)
+		{
+			List<Vector3> points = new List<Vector3>();
+			var size = 10000f;
+			points.Add(new Vector3(-size, -size, 0));
+			points.Add(new Vector3(size, -size, 0));
+			points.Add(new Vector3(size, size, 0));
+			points.Add(new Vector3(-size, size, 0));
+
+			List<int> indices = new List<int>() {0,1,2,2,3,1 };
+
+			Queue<Vertex3D> vertices = new Queue<Vertex3D>();
+			foreach (var point in points)
+			{
+				var vertex = new Systems.Ingame.Vertex3D(point,
+				new Vector4(0, 0, 0, 1),
+				new Vector4(0, 0, 0, 1), new Vector2(0, 0), Vector3.UnitZ);
+				vertices.Enqueue(vertex);
+			}
+			hackBuffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(game.GraphicsDevice, RenderingSystem3D.VertexDeclaration, vertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
+			hackBuffer.SetData<Vertex3D>(vertices.ToArray());
+			hackBufferIndices = new Microsoft.Xna.Framework.Graphics.IndexBuffer(game.GraphicsDevice, Microsoft.Xna.Framework.Graphics.IndexElementSize.ThirtyTwoBits, indices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
+			hackBufferIndices.SetData<int>(indices.ToArray());
+		}
+
 		public override void Update(GameTime gameTime, NamelessGame game)
         {
 
@@ -128,25 +155,31 @@ namespace NamelessRogue.Engine.Systems.Ingame
             if (once)
             {
 				effect = game.Content.Load<Effect>("ChunkShader3D");
+				shadedInstancedEffect = game.Content.Load<Effect>("ObjectsShader");
 				objectsToDraw = GetWorldObjectsToDraw(new Point(300, 300), worldProvider);
+				CreateshadowMapEdgeHackMesh(game);
 				once = false;
             }
 
 			Camera3D camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
-			effect.Parameters["xViewProjection"].SetValue(camera.View * camera.Projection);
-			effect.Parameters["xWorldViewProjection"].SetValue(camera.View * camera.Projection);
-			effect.Parameters["xView"].SetValue(camera.View);
-			effect.Parameters["xProjection"].SetValue(camera.Projection);
-			effect.Parameters["CameraPosition"].SetValue(camera.Position);
-			effect.Parameters["xWorldMatrix"].SetValue(Matrix.Identity);
+			void _setParameters(Effect shader)
+			{
+				shader.Parameters["xViewProjection"].SetValue(camera.View * camera.Projection);
+				shader.Parameters["xWorldViewProjection"].SetValue(camera.View * camera.Projection);
+				shader.Parameters["xView"].SetValue(camera.View);
+				shader.Parameters["xProjection"].SetValue(camera.Projection);
+				shader.Parameters["CameraPosition"].SetValue(camera.Position);
+				shader.Parameters["xWorldMatrix"].SetValue(Matrix.Identity);
+				shader.Parameters["xLightPos"].SetValue(sunLight.Position);
+				shader.Parameters["xLightPower"].SetValue(1f);
+				shader.Parameters["xAmbient"].SetValue(0.2f);
+				shader.Parameters["xLightsWorldViewProjection"].SetValue(sunLight.LightsViewProjectionMatrix);
+			}
 
-
-			effect.Parameters["xLightPos"].SetValue(sunLight.Position);
-			effect.Parameters["xLightPower"].SetValue(1f);
-			effect.Parameters["xAmbient"].SetValue(0.2f);
-			effect.Parameters["xLightsWorldViewProjection"].SetValue(sunLight.LightsViewProjectionMatrix);
-		
-
+			_setParameters(effect);
+			_setParameters(shadedInstancedEffect);
+			shadedInstancedEffect.Parameters["xLightPower"].SetValue(1f);
+			shadedInstancedEffect.Parameters["xAmbient"].SetValue(0.7f);
 			var device = game.GraphicsDevice;
 			device.SetRenderTarget(sunLight.ShadowMapRenderTarget);
 			device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Microsoft.Xna.Framework.Color.Black, 1.0f, 0);
@@ -154,17 +187,26 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
 			effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
+			//fighting shadow map imprecision with mad skillz, to remove artifacts on terrain border
+			RenderHackBufferToShadowMap(game);
 
 			RenderChunksToShadowMap(game);
-
+			RenderObjectsToShadowMap(game);
+		
 			device.SetRenderTarget(null);
 			var shadowMap = (Texture2D)sunLight.ShadowMapRenderTarget;
 
 			effect.Parameters["shadowMap"].SetValue(shadowMap);
+			shadedInstancedEffect.Parameters["shadowMap"].SetValue(shadowMap);
 
-			//device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.DarkSlateBlue, 1.0f, 0);
-			//debug
-			
+			RenderChunksWithShadows(game);
+			RenderObjectsWithShadow(game);
+			//RenderChunks(game);
+			//RenderObjects(game);
+
+			//effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+			//effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
 			//using (SpriteBatch sprite = new SpriteBatch(device))
 			//{
 			//	sprite.Begin();
@@ -172,13 +214,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			//	sprite.End();
 			//}
 
-			RenderChunksWithShadows(game);
-
-			//RenderChunks(game);
-			RenderObjects(game);
 		}
 
-        private List<ModelInstance> GetWorldObjectsToDraw(Point positon, IWorldProvider world)
+		private List<ModelInstance> GetWorldObjectsToDraw(Point positon, IWorldProvider world)
         {
             var postionOffsetX = positon.X * Constants.ChunkSize;
 			var postionOffsetY = positon.Y * Constants.ChunkSize;
@@ -268,6 +306,21 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			}
 		}
 
+		private void RenderHackBufferToShadowMap(NamelessGame game)
+		{
+			var device = game.GraphicsDevice;
+			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+			effect.CurrentTechnique = effect.Techniques["ColorTechShadowMap"];
+			EffectPass pass = effect.CurrentTechnique.Passes[0];
+			pass.Apply();
+
+			device.SetVertexBuffer(hackBuffer);
+			device.Indices = hackBufferIndices;
+
+			device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 2);
+
+		}
+
 		Dictionary<string, int> cacheCheckDictionary = new Dictionary<string, int>();
 		Dictionary<string, VertexBuffer> instanceBufferCache = new Dictionary<string, VertexBuffer>();
 		private void RenderObjects(NamelessGame game)
@@ -317,6 +370,104 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					pass.Apply();
 					device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount, groupCount);
 				}
+			}
+		}
+
+		private void RenderObjectsToShadowMap(NamelessGame game)
+		{
+
+			shadedInstancedEffect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+			shadedInstancedEffect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
+			var device = game.GraphicsDevice;
+			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+			shadedInstancedEffect.CurrentTechnique = shadedInstancedEffect.Techniques["ColorTechShadowMapInstanced"];
+
+			//avoid setting the same buffer a million times, only transform is changed
+			var objectGroups = objectsToDraw.GroupBy(x => x.modelId);
+
+			foreach (var group in objectGroups)
+			{
+				VertexBuffer instanceBuffer;
+				var groupCount = group.Count();
+				if (cacheCheckDictionary.TryGetValue(group.Key, out int numberOfInstances) && numberOfInstances == groupCount)
+				{
+					instanceBuffer = instanceBufferCache[group.Key];
+				}
+				else
+				{
+					var instanceTransforms = new List<VertexShaderInstanceMatrix>(group.Count());
+					//create insatnce data buffer
+					foreach (var gameObject in objectsToDraw)
+					{
+						instanceTransforms.Add(new VertexShaderInstanceMatrix(gameObject.position));
+					}
+					instanceBuffer = new VertexBuffer(device, VertexShaderInstanceInput, instanceTransforms.Count, BufferUsage.WriteOnly);
+					instanceBuffer.SetData(instanceTransforms.ToArray());
+					cacheCheckDictionary[group.Key] = groupCount;
+					instanceBufferCache[group.Key] = instanceBuffer;
+				}
+
+				var geometry = ModelsLibrary.Models[group.First().modelId];
+
+				var bindings = new VertexBufferBinding[2];
+				bindings[0] = new VertexBufferBinding(geometry.Buffer);
+				bindings[1] = new VertexBufferBinding(instanceBuffer, 0, 1);
+				device.SetVertexBuffers(bindings);
+				device.Indices = geometry.IndexBuffer;
+				var pass = shadedInstancedEffect.CurrentTechnique.Passes[0];
+				pass.Apply();
+				device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount, groupCount);
+
+			}
+		}
+		//TODO: remove copypaste
+		private void RenderObjectsWithShadow(NamelessGame game)
+		{
+
+			shadedInstancedEffect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+			shadedInstancedEffect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
+			var device = game.GraphicsDevice;
+			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+			shadedInstancedEffect.CurrentTechnique = shadedInstancedEffect.Techniques["ColorTechShadowMapInstanced"];
+
+			//avoid setting the same buffer a million times, only transform is changed
+			var objectGroups = objectsToDraw.GroupBy(x => x.modelId);
+
+			foreach (var group in objectGroups)
+			{
+				VertexBuffer instanceBuffer;
+				var groupCount = group.Count();
+				if (cacheCheckDictionary.TryGetValue(group.Key, out int numberOfInstances) && numberOfInstances == groupCount)
+				{
+					instanceBuffer = instanceBufferCache[group.Key];
+				}
+				else
+				{
+					var instanceTransforms = new List<VertexShaderInstanceMatrix>(group.Count());
+					//create insatnce data buffer
+					foreach (var gameObject in objectsToDraw)
+					{
+						instanceTransforms.Add(new VertexShaderInstanceMatrix(gameObject.position));
+					}
+					instanceBuffer = new VertexBuffer(device, VertexShaderInstanceInput, instanceTransforms.Count, BufferUsage.WriteOnly);
+					instanceBuffer.SetData(instanceTransforms.ToArray());
+					cacheCheckDictionary[group.Key] = groupCount;
+					instanceBufferCache[group.Key] = instanceBuffer;
+				}
+
+				var geometry = ModelsLibrary.Models[group.First().modelId];
+
+				var bindings = new VertexBufferBinding[2];
+				bindings[0] = new VertexBufferBinding(geometry.Buffer);
+				bindings[1] = new VertexBufferBinding(instanceBuffer, 0, 1);
+				device.SetVertexBuffers(bindings);
+				device.Indices = geometry.IndexBuffer;
+				var pass = shadedInstancedEffect.CurrentTechnique.Passes[1];
+				pass.Apply();
+				device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount, groupCount);
+
 			}
 		}
 

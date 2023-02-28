@@ -37,6 +37,12 @@
 /processorParam:DebugMode=Auto
 /build:Light.fx
 
+#begin ObjectsShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:ObjectsShader.fx
+
 #begin Segoe_UI_15_Bold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
