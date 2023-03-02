@@ -17,9 +17,7 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.FieldOfView;
 using NamelessRogue.shell;
-
 using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
-using Color = NamelessRogue.Engine.Utility.Color;
 using System.Diagnostics;
 using NamelessRogue.Engine.Components._3D;
 using System.Reflection.Metadata;
@@ -30,9 +28,11 @@ using NamelessRogue.Engine.Systems._3DView;
 using VertexBuffer = Microsoft.Xna.Framework.Graphics.VertexBuffer;
 using System.Runtime.InteropServices;
 using SharpDX.XAudio2;
+using Color = Microsoft.Xna.Framework.Color;
+
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-    public class RenderingSystem3D : BaseSystem
+	public class RenderingSystem3D : BaseSystem
     {
         public override HashSet<Type> Signature { get; }
 
@@ -90,17 +90,26 @@ namespace NamelessRogue.Engine.Systems.Ingame
         };
 
 		LightSource sunLight;
-
-        public RenderingSystem3D(GameSettings settings, NamelessGame game)
-        {
+		float angleRotation = 0;
+		public RenderingSystem3D(GameSettings settings, NamelessGame game)
+		{
 			Signature = new HashSet<Type>
 			{
 				typeof(Drawable),
 				typeof(Position)
 			};
 
-			sunLight = new LightSource(game.GraphicsDevice, 2048, 2048, new Vector3(10, -10f,  5f), new Vector3(0,  1, 0), new Vector4(1, 1, 1, 1));
+			sunLight = new LightSource(game.GraphicsDevice, 2048, 2048, new Vector3(10, -10f, 5f), new Vector3(1, 0, 0), new Vector4(1, 1, 1, 1));
 		}
+
+		void CalculateSun(float angle, Vector3 landCentre)
+		{
+			float offset = 3;
+			sunLight.Position = new Vector3(LandCenter.X + (MathF.Cos(angle)* offset), LandCenter.Y, LandCenter.Z + (MathF.Sin(angle)* offset));
+			sunLight.LookAtPoint = LandCenter;
+			sunLight.RecalculateMatrix();
+		}
+
 
         class ModelInstance
         {
@@ -137,11 +146,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			hackBufferIndices = new Microsoft.Xna.Framework.Graphics.IndexBuffer(game.GraphicsDevice, Microsoft.Xna.Framework.Graphics.IndexElementSize.ThirtyTwoBits, indices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
 			hackBufferIndices.SetData<int>(indices.ToArray());
 		}
-
+		Vector3 LandCenter;
 		public override void Update(GameTime gameTime, NamelessGame game)
         {
-
-            game.GraphicsDevice.BlendState = BlendState.Opaque;
+			game.GraphicsDevice.BlendState = BlendState.Opaque;
             game.GraphicsDevice.SamplerStates[0] = sampler;
             game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
@@ -152,14 +160,22 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			{
 				worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
             }
-            if (once)
-            {
+			if (once)
+			{
 				effect = game.Content.Load<Effect>("ChunkShader3D");
 				shadedInstancedEffect = game.Content.Load<Effect>("ObjectsShader");
 				objectsToDraw = GetWorldObjectsToDraw(new Point(300, 300), worldProvider);
 				CreateshadowMapEdgeHackMesh(game);
+				SetupDebugDraw(game.GraphicsDevice);
 				once = false;
-            }
+				var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+				var landBounds = Microsoft.Xna.Framework.BoundingBox.CreateFromPoints(chunkGeometries.ChunkGeometries.Values.Select(x => (x.Bounds.Max + x.Bounds.Min) / 2));
+				LandCenter = (landBounds.Max + landBounds.Min) / 2;
+			}
+
+			angleRotation += 0.01f;
+			if (angleRotation > 360) angleRotation -= 360;
+			CalculateSun(angleRotation, LandCenter);
 
 			Camera3D camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
 			void _setParameters(Effect shader)
@@ -201,21 +217,52 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 			RenderChunksWithShadows(game);
 			RenderObjectsWithShadow(game);
-			//RenderChunks(game);
+
+
+			var matrix = Matrix.CreateTranslation(sunLight.Position);
+			effect.Parameters["xWorldViewProjection"].SetValue(matrix * camera.View * camera.Projection);
+			RenderDebug(game);
 			//RenderObjects(game);
 
 			//effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
 			//effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
-			//using (SpriteBatch sprite = new SpriteBatch(device))
-			//{
-			//	sprite.Begin();
-			//	sprite.Draw(shadowMap, new Vector2(0, 0), null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(0, 0), 0.4f, SpriteEffects.None, 1);
-			//	sprite.End();
-			//}
+			DrawDebugAxis(device,camera);
+
+			using (SpriteBatch sprite = new SpriteBatch(device))
+			{
+				sprite.Begin();
+				sprite.Draw(shadowMap, new Vector2(0, 0), null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(0, 0), 0.2f, SpriteEffects.None, 1);
+				sprite.End();
+			}
+
+		
 
 		}
 
+		private void DebugAxis()
+		{
+
+			
+		}
+		DebugDraw debugDraw;
+		protected void SetupDebugDraw(GraphicsDevice device)
+		{
+			debugDraw = new DebugDraw(device);
+		}
+
+		void DrawDebugAxis(GraphicsDevice device, Camera3D camera)
+		{
+			debugDraw.Begin(camera.View, camera.Projection);
+
+			BoundingFrustum frustum = new BoundingFrustum(sunLight.LightsViewProjectionMatrix);
+
+			debugDraw.DrawWireFrustum(frustum, Color.Red);
+
+			debugDraw.End();
+
+
+		}
 		private List<ModelInstance> GetWorldObjectsToDraw(Point positon, IWorldProvider world)
         {
             var postionOffsetX = positon.X * Constants.ChunkSize;
@@ -253,7 +300,25 @@ namespace NamelessRogue.Engine.Systems.Ingame
             return objects;
         }
 
-        private void RenderChunks(NamelessGame game)
+		private void RenderDebug(NamelessGame game)
+		{
+			var device = game.GraphicsDevice;
+			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+			effect.CurrentTechnique = effect.Techniques["ColorTech"];
+			var geometry = ModelsLibrary.Models["cube"];
+
+			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+			{
+				pass.Apply();
+
+				device.SetVertexBuffer(geometry.Buffer);
+				device.Indices = geometry.IndexBuffer;
+
+				device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
+			}
+		}
+
+		private void RenderChunks(NamelessGame game)
         {
 			var device = game.GraphicsDevice;
             var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();

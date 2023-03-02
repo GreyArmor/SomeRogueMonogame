@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NamelessRogue.Engine.Systems.Ingame;
 using Microsoft.Xna.Framework;
+using System.Drawing;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
@@ -40,14 +41,20 @@ namespace NamelessRogue.Engine.Infrastructure
 				var vertices = new Queue<Vertex3D>();
 				var positions = new Queue<Vector3>();
 				var mesh = model.Meshes[0];
+				
 				for (int i = 0; i < mesh.Vertices.Count; i++)
 				{
 					var vec = mesh.Vertices[i];
-
-					var color = mesh.VertexColorChannels[0][i];
-					var colorConverted = new Vector4(color.R, color.G, color.B, color.A);
+					
+				
 					var normal = new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z);
 					var vecConverted = Vector3.Transform(new Microsoft.Xna.Framework.Vector3(vec.X, vec.Y, vec.Z), modelTrandform);
+					Vector4 colorConverted = new Vector4(1,1,1,1);
+					if (mesh.VertexColorChannels[0].Any())
+					{
+						var color = mesh.VertexColorChannels[0][i];
+						colorConverted = new Vector4(color.R, color.G, color.B, color.A);
+					}
 					vertices.Enqueue(new Vertex3D(vecConverted, colorConverted, colorConverted, Vector2.Zero, normal));
 					positions.Enqueue(vecConverted);
 				}
@@ -74,6 +81,7 @@ namespace NamelessRogue.Engine.Infrastructure
 			_addModel("smallTree", "Content\\Models\\smallTree.fbx", modelShift);
 			_addModel("tree", "Content\\Models\\tree.fbx", modelShift);
 			_addModel("tree1", "Content\\Models\\tree1.fbx", rotationX * modelShiftTree1);
+			_addModel("cube", "Content\\Models\\cube.fbx", Matrix.CreateScale(0.01f));
 
 		}
 	}

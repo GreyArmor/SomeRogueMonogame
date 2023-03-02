@@ -17,28 +17,28 @@ namespace NamelessRogue.Engine.Systems._3DView
 		//Texture2D shadowMap;
 		RenderTarget2D shadowMapRenderTarget;
 		Vector3 position;
-		Vector3 direction;
+		Vector3 lookAtPoint;
 		Matrix lightsViewProjectionMatrix;
 		Vector4 lightColor;
 		int frustrumHeight;
 		int frustrumWidth;
 		float lightPower;
 		float ambient;
-		public LightSource(GraphicsDevice device,int frustrumWidth, int frustrumHeight, Vector3 position, Vector3 direction, Vector4 lightColor)
+		public LightSource(GraphicsDevice device,int frustrumWidth, int frustrumHeight, Vector3 position, Vector3 lookAtPoint, Vector4 lightColor)
 		{
 			shadowMapRenderTarget = new RenderTarget2D(device, frustrumWidth, frustrumHeight, true, SurfaceFormat.Bgr32SRgb, DepthFormat.Depth24);
 			this.position = position;
-			this.direction = direction;
+			this.LookAtPoint = lookAtPoint;
 			this.lightColor = lightColor;
 			this.frustrumHeight = frustrumHeight;
 			this.frustrumWidth = frustrumWidth;
-			Matrix view = Matrix.CreateLookAt(position, direction, new Vector3(0, 0, 1));
+			Matrix view = Matrix.CreateLookAt(position, lookAtPoint, new Vector3(0, 0, 1));
 			Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), 1f, 0.001f, 100f);
 			lightsViewProjectionMatrix = view * projection;
 		}
 
 		public Vector3 Position { get => position; set => position = value; }
-		public Vector3 Direction { get => direction; set => direction = value; }
+		public Vector3 LookAtPoint { get => lookAtPoint; set => lookAtPoint = value; }
 		public RenderTarget2D ShadowMapRenderTarget { get => shadowMapRenderTarget; set => shadowMapRenderTarget = value; }
 		public float LightPower { get => lightPower; set => lightPower = value; }
 		public float Ambient { get => ambient; set => ambient = value; }
@@ -47,8 +47,11 @@ namespace NamelessRogue.Engine.Systems._3DView
 
 		public void RecalculateMatrix()
 		{
-			Matrix projection = Matrix.CreateLookAt(position, new Vector3(-2, 3, -10), new Vector3(0, 1, 0));
-			Matrix view = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, 1f, 0f, 100f);
+			var dir = -position;
+			dir.Y = 2;
+			dir.Normalize();
+			Matrix view = Matrix.CreateLookAt(position, LookAtPoint, new Vector3(0, 0, 1));
+			Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), 1f, 0.001f, 100f);
 			lightsViewProjectionMatrix = view * projection;
 		}
 
