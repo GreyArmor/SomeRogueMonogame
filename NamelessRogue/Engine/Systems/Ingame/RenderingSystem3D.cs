@@ -90,7 +90,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         };
 
 		LightSource sunLight;
-		float angleRotation = 0;
+		float angleRotation = 70;
 		public RenderingSystem3D(GameSettings settings, NamelessGame game)
 		{
 			Signature = new HashSet<Type>
@@ -173,7 +173,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				LandCenter = (landBounds.Max + landBounds.Min) / 2;
 			}
 
-			angleRotation += 0.01f;
+			//angleRotation += 0.01f;
 			if (angleRotation > 360) angleRotation -= 360;
 			CalculateSun(angleRotation, LandCenter);
 
@@ -216,8 +216,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			shadedInstancedEffect.Parameters["shadowMap"].SetValue(shadowMap);
 
 			RenderChunksWithShadows(game);
-			RenderObjectsWithShadow(game);
-
+			//RenderObjectsWithShadow(game);
+			RenderTestPlayer(game, camera);
 
 			var matrix = Matrix.CreateTranslation(sunLight.Position);
 			effect.Parameters["xWorldViewProjection"].SetValue(matrix * camera.View * camera.Projection);
@@ -229,22 +229,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 			DrawDebugAxis(device,camera);
 
-			using (SpriteBatch sprite = new SpriteBatch(device))
-			{
-				sprite.Begin();
-				sprite.Draw(shadowMap, new Vector2(0, 0), null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(0, 0), 0.2f, SpriteEffects.None, 1);
-				sprite.End();
-			}
+			//using (SpriteBatch sprite = new SpriteBatch(device))
+			//{
+			//	sprite.Begin();
+			//	sprite.Draw(shadowMap, new Vector2(0, 0), null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(0, 0), 0.2f, SpriteEffects.None, 1);
+			//	sprite.End();
+			//}
 
 		
 
 		}
 
-		private void DebugAxis()
-		{
-
-			
-		}
 		DebugDraw debugDraw;
 		protected void SetupDebugDraw(GraphicsDevice device)
 		{
@@ -264,15 +259,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 		}
 		private List<ModelInstance> GetWorldObjectsToDraw(Point positon, IWorldProvider world)
-        {
-            var postionOffsetX = positon.X * Constants.ChunkSize;
+		{
+			var postionOffsetX = positon.X * Constants.ChunkSize;
 			var postionOffsetY = positon.Y * Constants.ChunkSize;
-            var objects = new List<ModelInstance>();
-			for (int x = 0; x < 100*Constants.ChunkSize; x++)
-            {
-                for (int y = 0; y < 100* Constants.ChunkSize; y++)
-                {
-					Tile tileToDraw = world.GetTile(x+ postionOffsetX, y+ postionOffsetY);
+			var objects = new List<ModelInstance>();
+
+			for (int x = 0; x < 100 * Constants.ChunkSize; x++)
+			{
+				for (int y = 0; y < 100 * Constants.ChunkSize; y++)
+				{
+					Tile tileToDraw = world.GetTile(x + postionOffsetX, y + postionOffsetY);
 					foreach (var entity in tileToDraw.GetEntities())
 					{
 						var furniture = entity.GetComponentOfType<Furniture>();
@@ -282,23 +278,24 @@ namespace NamelessRogue.Engine.Systems.Ingame
 							if (drawable.Representation == 'T')
 							{
 								//var modelShift = Matrix.CreateTranslation(0.5f, 0.5f, 2f);
-								Matrix.CreateTranslation(Constants.ScaleDownCoeficient * x, Constants.ScaleDownCoeficient * y, (float)tileToDraw.Elevation, out Matrix pos);
+								//Matrix.CreateTranslation(Constants.ScaleDownCoeficient * x, Constants.ScaleDownCoeficient * y, (float)tileToDraw.Elevation, out Matrix pos);
 								objects.Add(new ModelInstance() { modelId = "smallTree", position = Constants.ScaleDownMatrix * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient) });
 								//return objects;s
 							}
 							if (drawable.Representation == 't')
 							{
-								
-								Matrix.CreateTranslation(Constants.ScaleDownCoeficient * x, Constants.ScaleDownCoeficient * y, (float)tileToDraw.Elevation, out Matrix pos);
+
+								//Matrix.CreateTranslation(Constants.ScaleDownCoeficient * x, Constants.ScaleDownCoeficient * y, (float)tileToDraw.Elevation, out Matrix pos);
 								objects.Add(new ModelInstance() { modelId = "smallTree", position = Constants.ScaleDownMatrix * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient) });
 								//return objects;
 							}
 						}
 					}
 				}
-            }
-            return objects;
-        }
+			}
+
+			return objects;
+		}
 
 		private void RenderDebug(NamelessGame game)
 		{
@@ -436,6 +433,35 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount, groupCount);
 				}
 			}
+		}
+
+		private void RenderTestPlayer(NamelessGame game, Camera3D camera)
+		{
+
+			var device = game.GraphicsDevice;
+			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+			effect.CurrentTechnique = effect.Techniques["ColorTechShadowMap"];
+			//foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
+			//{
+
+			Geometry3D geometry = ModelsLibrary.Models["smallTree"];
+			var offset = Constants.ChunkSize * 290;
+			var player = game.PlayerEntity; 
+			var p = player.GetComponentOfType<Position>().Point;
+			var position = new Point(p.X - offset, p.Y - offset);
+			var tileToDraw = game.WorldProvider.GetTile(p.X, p.Y);
+			//Matrix.CreateTranslation(Constants.ScaleDownCoeficient * position.X, Constants.ScaleDownCoeficient * position.Y, (float)tileToDraw.Elevation, out Matrix pos);
+			var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
+			effect.Parameters["xWorldViewProjection"].SetValue(world * camera.View * camera.Projection);
+
+			EffectPass pass = effect.CurrentTechnique.Passes[1];
+			pass.Apply();
+
+			device.SetVertexBuffer(geometry.Buffer);
+			device.Indices = geometry.IndexBuffer;
+
+			device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
+			//}
 		}
 
 		private void RenderObjectsToShadowMap(NamelessGame game)

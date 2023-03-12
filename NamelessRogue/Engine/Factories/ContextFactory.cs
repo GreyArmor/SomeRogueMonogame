@@ -32,10 +32,12 @@ namespace NamelessRogue.Engine.Factories
             else
             {
                 var systems = new List<ISystem>();
-                systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
+				systems.Add(new ChunkManagementSystem());
+				systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
                 systems.Add(new IngameIntentSystem());
                 systems.Add(new AiSystem());
-                systems.Add(new TurnManagementSystem());
+                systems.Add(new FlowFieldMovementSystem());
+				systems.Add(new TurnManagementSystem());
                 systems.Add(new CombatSystem());
                 systems.Add(new InventorySystem());
                 systems.Add(new SwitchSystem());
@@ -44,7 +46,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new HudSystem());
                 systems.Add(new Camera3DSystem(game));
                 systems.Add(new TerrainClickSystem());
-			    systems.Add(new ChunkManagementSystem());
+
 				systems.Add(new Chunk3DManagementSystem());
                 systems.Add(new SoundPlaySystem());
               

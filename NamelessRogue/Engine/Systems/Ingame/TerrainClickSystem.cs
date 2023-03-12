@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
@@ -82,6 +83,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 						tile.Terrain = TerrainTypes.Water;
 						UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(closestIntersection.chunkId);
 						game.Commander.EnqueueCommand(updateChunkCommand);
+
+						var worldPos = new Point(clicledTile.X + chunk.WorldPositionBottomLeftCorner.X, clicledTile.Y + chunk.WorldPositionBottomLeftCorner.Y);
+
+						FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(new Point(), worldPos);
+						game.Commander.EnqueueCommand(moveCommand);
+
 					}
 				}
 			}

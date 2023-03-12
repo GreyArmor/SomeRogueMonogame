@@ -258,8 +258,8 @@ namespace NamelessRogue.shell
 			}
 			else
 			{
-				x = 350;
-				y = 350;
+				x = 300;
+				y = 300;
 				//x = 300;
 				//y = 300;
 

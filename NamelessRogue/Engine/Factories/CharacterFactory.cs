@@ -1,5 +1,6 @@
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
+using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
@@ -30,9 +31,10 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(holder);
             playerCharacter.AddComponent(new EquipmentSlots(holder, game));
             playerCharacter.AddComponent(new OccupiesTile());
-           
+            playerCharacter.AddComponent(new FlowMoveComponent());
 
-            var stats = new Stats();
+
+			var stats = new Stats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
 
