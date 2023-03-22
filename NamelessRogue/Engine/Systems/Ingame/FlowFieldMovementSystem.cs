@@ -59,6 +59,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 						if (flowMoveComponent.To == nextPoint)
 						{
 							flowMoveComponent.FinishedMoving = true;
+							continue;
 						}
 
 						namelessGame.WorldProvider.MoveEntity(movableEntity,

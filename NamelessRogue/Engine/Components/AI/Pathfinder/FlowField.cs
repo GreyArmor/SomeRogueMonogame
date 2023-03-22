@@ -16,7 +16,6 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			public int Cost = 1;
 		}
 
-		Point currentDestination;
 		Point flowFieldWorldPosition;
 		//used as the cost map
 		IWorldProvider world;
@@ -68,8 +67,6 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 			var toWorldPos = to - flowFieldWorldPosition;
 			int arrayDimention = Nodes.GetLength(0);
-
-			currentDestination = to;
 			Queue<Point> closedPoints = new Queue<Point>();
 			Queue<Point> openPoints = new Queue<Point>();
 			openPoints.Enqueue(toWorldPos);

@@ -60,35 +60,36 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					if (intersections.Any())
 					{
 						var closestIntersection = intersections.OrderBy(x => x.distance).FirstOrDefault();
-						
-					
-						var chunk = game.WorldProvider.GetRealityBubbleChunks()[closestIntersection.chunkId];
-						/*	//set chunk to water for test
-						if (chunk != null)
+
+
+						if (game.WorldProvider.GetRealityBubbleChunks().TryGetValue(closestIntersection.chunkId, out Components.ChunksAndTiles.Chunk chunk))
 						{
-							for (int i = 0; i < Infrastructure.Constants.ChunkSize; i++)
+							/*	//set chunk to water for test
+							if (chunk != null)
 							{
-								for (int j = 0; j < Infrastructure.Constants.ChunkSize; j++)
+								for (int i = 0; i < Infrastructure.Constants.ChunkSize; i++)
 								{
-									var tile = chunk.GetTileLocal(i, j);
-									tile.Biome = Biomes.Sea;
-									tile.Terrain = TerrainTypes.Water;
+									for (int j = 0; j < Infrastructure.Constants.ChunkSize; j++)
+									{
+										var tile = chunk.GetTileLocal(i, j);
+										tile.Biome = Biomes.Sea;
+										tile.Terrain = TerrainTypes.Water;
+									}
 								}
 							}
+							*/
+							var clicledTile = closestIntersection.geometry.TriangleTerrainAssociation[closestIntersection.triangle[2]];
+							var tile = chunk.GetTileLocal(clicledTile.X, clicledTile.Y);
+							tile.Biome = Biomes.Sea;
+							tile.Terrain = TerrainTypes.Water;
+							UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(closestIntersection.chunkId);
+							game.Commander.EnqueueCommand(updateChunkCommand);
+
+							var worldPos = new Point(clicledTile.X + chunk.WorldPositionBottomLeftCorner.X, clicledTile.Y + chunk.WorldPositionBottomLeftCorner.Y);
+
+							FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(new Point(), worldPos);
+							game.Commander.EnqueueCommand(moveCommand);
 						}
-						*/
-						var clicledTile = closestIntersection.geometry.TriangleTerrainAssociation[closestIntersection.triangle[2]];
-						var tile = chunk.GetTileLocal(clicledTile.X, clicledTile.Y);
-						tile.Biome = Biomes.Sea;
-						tile.Terrain = TerrainTypes.Water;
-						UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(closestIntersection.chunkId);
-						game.Commander.EnqueueCommand(updateChunkCommand);
-
-						var worldPos = new Point(clicledTile.X + chunk.WorldPositionBottomLeftCorner.X, clicledTile.Y + chunk.WorldPositionBottomLeftCorner.Y);
-
-						FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(new Point(), worldPos);
-						game.Commander.EnqueueCommand(moveCommand);
-
 					}
 				}
 			}
