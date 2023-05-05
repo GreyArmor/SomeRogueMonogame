@@ -15,8 +15,9 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 		{
 			this.To = To;
 		}
-
+		//this id is received after calculation
+		public int PathId { get; set; }
 		public Point To { get; set; }
-		public bool FinishedMoving { get; set; }
+		public bool FinishedMoving { get; set; } = true;
 	}
 }

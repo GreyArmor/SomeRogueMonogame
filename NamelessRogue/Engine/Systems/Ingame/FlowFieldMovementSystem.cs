@@ -22,22 +22,27 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		bool init = true;
 		double moveDelayMilisecends = 0.01;
 		double milisecondsCounter = 0;
-		FlowFieldChunkModel flowField;
+		FlowFieldModel flowField;
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
 		{
 			if (init)
 			{
-				flowField = new FlowFieldChunkModel(namelessGame.WorldProvider);
+				var realityBubbleChunks = namelessGame.WorldProvider.GetRealityBubbleChunks();
+				var orderedChunks = realityBubbleChunks.Values.OrderBy(x => x.WorldPositionBottomLeftCorner.X + x.WorldPositionBottomLeftCorner.Y);
+				var minChunk = orderedChunks.First();
+
+				flowField = new FlowFieldModel(namelessGame, namelessGame.WorldProvider, minChunk.WorldPositionBottomLeftCorner);
 				init = false;
 			}
 
 			while (namelessGame.Commander.DequeueCommand(out FlowFieldMoveCommand mc))
 			{
-				flowField.ClaculateTo(mc.To);
+				var pathId = flowField.ClaculateTo(mc.To, mc.From);
 				foreach (Entity movableEntity in RegisteredEntities)
 				{
 					var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
 					flowMoveComponent.To = mc.To;
+					flowMoveComponent.PathId = pathId;
 					flowMoveComponent.FinishedMoving = false;
 				}
 			}
@@ -52,9 +57,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				{
 					Position position = movableEntity.GetComponentOfType<Position>();
 					var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
-					if (!flowMoveComponent.FinishedMoving && position.Point.X > 0 && position.Point.Y > 0 && flowField.IsCalculated)
+					if (!flowMoveComponent.FinishedMoving && position.Point.X > 0 && position.Point.Y > 0)
 					{
-						var nextPoint = flowField.GetNextPoint(position.Point);
+						var nextPoint = flowField.GetNextPoint(flowMoveComponent.PathId, position.Point);
 
 						if (flowMoveComponent.To == nextPoint)
 						{

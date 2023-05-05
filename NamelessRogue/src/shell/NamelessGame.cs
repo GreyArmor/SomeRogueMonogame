@@ -475,9 +475,6 @@ namespace NamelessRogue.shell
 				ContextToSwitch = ContextFactory.GetIngameContext(this);
 				skipNextFrame = true;
 			}
-
-		
-
 		}
 
 		private FrameCounter _frameCounter = new FrameCounter();

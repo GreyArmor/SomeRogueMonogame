@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems._3DView;
@@ -82,12 +83,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
 							var tile = chunk.GetTileLocal(clicledTile.X, clicledTile.Y);
 							tile.Biome = Biomes.Sea;
 							tile.Terrain = TerrainTypes.Water;
-							UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(closestIntersection.chunkId);
-							game.Commander.EnqueueCommand(updateChunkCommand);
+							//UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(closestIntersection.chunkId);
+							//game.Commander.EnqueueCommand(updateChunkCommand);
 
 							var worldPos = new Point(clicledTile.X + chunk.WorldPositionBottomLeftCorner.X, clicledTile.Y + chunk.WorldPositionBottomLeftCorner.Y);
 
-							FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(new Point(), worldPos);
+							var playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
+
+							FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(playerPosition.Point, worldPos);
 							game.Commander.EnqueueCommand(moveCommand);
 						}
 					}
