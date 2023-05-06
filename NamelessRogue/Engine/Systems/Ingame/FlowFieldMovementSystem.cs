@@ -7,6 +7,7 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				var orderedChunks = realityBubbleChunks.Values.OrderBy(x => x.WorldPositionBottomLeftCorner.X + x.WorldPositionBottomLeftCorner.Y);
 				var minChunk = orderedChunks.First();
 
-				flowField = new FlowFieldModel(namelessGame, namelessGame.WorldProvider, minChunk.WorldPositionBottomLeftCorner);
+				flowField = new FlowFieldModel(namelessGame, namelessGame.WorldProvider);
 				init = false;
 			}
 

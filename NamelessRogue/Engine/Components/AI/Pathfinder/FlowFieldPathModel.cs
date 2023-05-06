@@ -14,7 +14,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 	{
 		string _key(int x, int y)
 		{
-			return x.ToString() + y.ToString();
+			return x.ToString() + ':' + y.ToString();
 		}
 
 		string _keyP(Point p)
@@ -29,7 +29,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		public bool IsCalculated { get; internal set; }
 
-		public FlowFieldPathModel(NamelessGame game,IEnumerable<Point> chunkPath, IWorldProvider worldProvider, Point worldPosition)
+		public FlowFieldPathModel(NamelessGame game, IEnumerable<Point> chunkPath, IWorldProvider worldProvider, Point worldPosition)
 		{
 			world = worldProvider;
 			this.flowFieldWorldPosition = worldPosition;
@@ -58,14 +58,15 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				//		for (int j = 0; j < Infrastructure.Constants.ChunkSize; j++)
 				//		{
 				//			var tile = chunk.GetTileLocal(i, j);
-				//			tile.Biome = Biomes.Sea;
-				//			tile.Terrain = TerrainTypes.Water;
+				//			tile.Biome = Biomes.Mountain;
+				//			tile.Terrain = TerrainTypes.Snow;
 
-				//			//UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(chunk.ChunkWorldMapLocationPoint);
-				//			//game.Commander.EnqueueCommand(updateChunkCommand);
 
 				//		}
 				//	}
+				//	UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(chunk.ChunkWorldMapLocationPoint);
+				//	game.Commander.EnqueueCommand(updateChunkCommand);
+
 				//}
 
 				var location = chunk.WorldPositionBottomLeftCorner;

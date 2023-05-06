@@ -9,7 +9,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 		public FlowNode Next;
 		public Point Coordinate = new Point(-1, -1);
 		public bool Occupied = false;
-		public int IntegrationValue = 255;
+		public int IntegrationValue = 10000;
 		public int Cost = 1;
 		public List<string> neighbors;
 	}

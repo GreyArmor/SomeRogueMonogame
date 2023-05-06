@@ -445,7 +445,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			//{
 
 			Geometry3D geometry = ModelsLibrary.Models["smallTree"];
-			var offset = Constants.ChunkSize * 290;
+			var offset = Constants.ChunkSize * (300 - Constants.RealityBubbleRangeInChunks);
 			var player = game.PlayerEntity; 
 			var p = player.GetComponentOfType<Position>().Point;
 			var position = new Point(p.X - offset, p.Y - offset);

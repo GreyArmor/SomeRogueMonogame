@@ -77,9 +77,8 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		//FlowFieldRegion[,] flowFieldRegions = null;
 
-		public FlowFieldModel(NamelessGame game, IWorldProvider world, Point worldPosition)
+		public FlowFieldModel(NamelessGame game, IWorldProvider world)
 		{
-			this.flowFieldWorldPosition = worldPosition;
 			this.game = game;
 			this.world = world;
 		}
