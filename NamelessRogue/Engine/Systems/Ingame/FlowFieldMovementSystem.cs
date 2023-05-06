@@ -28,10 +28,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		{
 			if (init)
 			{
-				var realityBubbleChunks = namelessGame.WorldProvider.GetRealityBubbleChunks();
-				var orderedChunks = realityBubbleChunks.Values.OrderBy(x => x.WorldPositionBottomLeftCorner.X + x.WorldPositionBottomLeftCorner.Y);
-				var minChunk = orderedChunks.First();
-
 				flowField = new FlowFieldModel(namelessGame, namelessGame.WorldProvider);
 				init = false;
 			}
