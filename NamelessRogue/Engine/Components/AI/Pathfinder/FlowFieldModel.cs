@@ -114,7 +114,11 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 			pathOfPoints = pathOfPoints.Distinct().ToList();
 
-			//pathOfPoints.Insert(0, fromWorldPos);
+			//clicked very closely to initial point, on the same chunk, so A* pathfinder returned an empty path
+			if (!pathOfPoints.Any())
+			{
+				pathOfPoints.Add(fromWorldPos);
+			}
 			var flowPath = new FlowFieldPathModel(game, pathOfPoints, world, flowFieldWorldPosition);
 
 			flowPath.ClaculateTo(to);

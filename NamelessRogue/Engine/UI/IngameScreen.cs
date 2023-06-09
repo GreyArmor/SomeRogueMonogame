@@ -21,7 +21,7 @@ namespace NamelessRogue.Engine.UI
 
 	public class IngameScreen : BaseScreen
 	{
-
+		public static string FPS = "0";
 		public HudAction Action { get; set; } = HudAction.None;
 
 		System.Numerics.Vector2 menuPosition;
@@ -44,6 +44,8 @@ namespace NamelessRogue.Engine.UI
 			ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
 
 			ImGui.SetWindowSize(uiSize);
+
+			ImGui.Text($@"FPS = {FPS}");
 
 			ImGui.SetCursorPos(menuPosition);
 			{
