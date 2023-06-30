@@ -49,6 +49,7 @@ namespace NamelessRogue.Engine.Serialization
         }
         public static void SaveGame(String pathToFolder, NamelessGame game)
         {
+            return;
             var saveFile = new NamelessRogueSaveFile();
             Type iStorageInterfaceType = typeof(IStorage<>);
 

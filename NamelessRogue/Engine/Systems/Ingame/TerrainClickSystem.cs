@@ -24,20 +24,26 @@ namespace NamelessRogue.Engine.Systems.Ingame
 	{
 		public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
-		private class Intersection {
+		private class Intersection
+		{
 			public float distance;
 			public Point chunkId;
 			public List<int> triangle;
-			public Geometry3D geometry; 
+			public Geometry3D geometry;
 		}
+		bool wasPressed;
 		public override void Update(GameTime gameTime, NamelessGame game)
 		{
 			Camera3D camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
 			//TODO leaving mouse capture here for now, even if its not correct
 			MouseState currentMouseState = Mouse.GetState();
-
-			if (currentMouseState.LeftButton == ButtonState.Pressed)
+			if (currentMouseState.LeftButton != ButtonState.Pressed)
 			{
+				wasPressed = false;
+			}
+			else if (!wasPressed)
+			{
+				wasPressed = true;
 				Ray r = new Ray(camera.Position, camera.Look);
 				List<Intersection> intersections = new List<Intersection>();
 				var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();

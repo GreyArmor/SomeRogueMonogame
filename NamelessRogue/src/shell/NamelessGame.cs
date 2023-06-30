@@ -56,6 +56,7 @@ namespace NamelessRogue.shell
 			EntityInfrastructureManager.RemoveEntity(entity);
 		}
 
+		public Position TestMapPosition { get; private set; }
 		public IEntity PlayerEntity { get; set; }
 		public IEntity TimelineEntity { get; set; }
 
@@ -270,6 +271,8 @@ namespace NamelessRogue.shell
 				//y = 400;
 			}
 			var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);
+
+			TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
 
 			PlayerEntity = player;
 

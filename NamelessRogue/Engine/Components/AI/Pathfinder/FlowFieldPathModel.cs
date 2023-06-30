@@ -6,6 +6,7 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems._3DView;
 using NamelessRogue.shell;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Constants = NamelessRogue.Engine.Infrastructure.Constants;
 namespace NamelessRogue.Engine.Components.AI.Pathfinder
@@ -175,6 +176,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		public Point GetNextPoint(Point from)
 		{
+			var s = Stopwatch.StartNew();
 			//var position = from - flowFieldWorldPosition;
 			var next = Nodes[_keyP(from)].Next;
 
@@ -184,6 +186,8 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				return from;
 			}
 
+			s.Stop();
+			Debug.WriteLine(s.ElapsedMilliseconds);
 			return new Point(next.Coordinate.X, next.Coordinate.Y);
 		}
 	}

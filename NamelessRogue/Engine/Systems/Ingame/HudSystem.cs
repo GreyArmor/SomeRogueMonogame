@@ -43,7 +43,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 float staminaValue = (float) stats.Stamina.Value / stats.Stamina.MaxValue;
                // UIController.HudScreen.StaminaBar.Value = (int) (staminaValue * 100f);
 
-
                 //UIController.HudScreen.StrLabel.Text = $"Str: {stats.Strength.Value}";
                 //UIController.HudScreen.ImgLabel.Text = $"Img: {stats.Imagination.Value}";
                 //UIController.HudScreen.RefLabel.Text = $"Ref: {stats.Reflexes.Value}";

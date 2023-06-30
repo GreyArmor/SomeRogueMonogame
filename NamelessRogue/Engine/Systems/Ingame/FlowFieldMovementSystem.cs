@@ -69,6 +69,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					}
 				}
 			}
+
 		}
 	}
 	public class FlowFieldMoveCommand : ICommand
@@ -77,6 +78,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		public Point To;
 		public FlowFieldMoveCommand(Point from, Point to)
 		{
+			//Debug.WriteLine("FlowFieldMoveCommand");
 			From = from;
 			To = to;
 		}
