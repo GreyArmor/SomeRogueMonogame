@@ -92,7 +92,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			var arrayDimension = Constants.ChunkSize * Constants.RealityBubbleRangeInChunks * 2;
 			foreach (var node in Nodes)
 			{
-				node.Value.IntegrationValue = 255;
+				node.Value.IntegrationValue = int.MaxValue;
 			}
 		}
 
