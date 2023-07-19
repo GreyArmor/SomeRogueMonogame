@@ -170,6 +170,7 @@ namespace NamelessRogue.Engine.Infrastructure
 			// MonoGame-specific //////////////////////
 			_game.Window.TextInput += (s, a) =>
 			{
+				if(!_game.IsActive) { return; }
 				if (a.Character == '\t') return;
 
 				io.AddInputCharacter(a.Character);
@@ -216,6 +217,9 @@ namespace NamelessRogue.Engine.Infrastructure
 		/// </summary>
 		protected virtual void UpdateInput()
 		{
+
+			if (!_game.IsActive) { return; }
+
 			var io = ImGui.GetIO();
 
 			var mouse = Mouse.GetState();
