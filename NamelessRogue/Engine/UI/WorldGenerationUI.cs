@@ -32,46 +32,48 @@ namespace NamelessRogue.Engine.UI
 		int worldHeight = 1000;
 		public WorldGenerationUI(NamelessGame game) : base(game)
 		{
-			buttonSize = new System.Numerics.Vector2(game.Settings.HudWidth - 10, 50);
+			buttonSize = new System.Numerics.Vector2(game.Settings.HudWidth, 50);
 			shiftVector = new System.Numerics.Vector2(0, buttonSpacing.Y + buttonSize.Y);
-			sidebarSize = new System.Numerics.Vector2(uiSize.X / 2, uiSize.Y);
+			sidebarSize = new System.Numerics.Vector2(0, uiSize.Y);
 			Random r = new Random();
 			_seed = r.Next().ToString();
 		}
 
 		public override void DrawLayout()
 		{
-			menuPosition = new System.Numerics.Vector2(uiSize.X /2 , 0);
+			menuPosition = new System.Numerics.Vector2(10, 0);
 			ImGui.SetNextWindowPos(new System.Numerics.Vector2());
 			ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
 			ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
 			ImGui.SetWindowSize(uiSize);
 
-			ImGui.SetCursorPos(menuPosition);
+			//ImGui.SetCursorPos(menuPosition);
+			//{
+			ImGui.BeginChild("menu", sidebarSize, false);
 			{
-				ImGui.BeginChild("menu", sidebarSize, false);
-				{
-					ImGui.Text("Seed");
-					ImGui.InputText("", ref _seed, 30);
-					ImGui.Text("Width ");
-					ImGui.SameLine();
-					ImGui.InputInt("", ref worldWidth, 1, 10);
-					ImGui.Text("Height");
-					ImGui.SameLine();					
-					ImGui.InputInt("", ref worldHeight, 1, 10);
 
-					if (worldWidth < 100) worldWidth = 100;
-					if (worldWidth > 1000) worldWidth = 1000;
+				//"label" is also an ID on InputText, placing ## in front of it makes it invisible while retaining the ID
+				ImGui.Text("Seed");
+				ImGui.InputText("##seedinput", ref _seed, 30);
+				ImGui.Spacing();
+				ImGui.Text("Width");
+				ImGui.InputInt("##widthinput", ref worldWidth, 1, 10);
+				ImGui.Spacing();
+				ImGui.Text("Height");
+				ImGui.InputInt("##Heightinput", ref worldHeight, 1, 10);
 
-					if (worldHeight < 100) worldHeight = 100;
-					if (worldHeight > 1000) worldHeight = 1000;
+				if (worldWidth < 100) worldWidth = 100;
+				if (worldWidth > 1000) worldWidth = 1000;
 
-					if (ButtonWithSound("Generate", buttonSize, _seed.Any())) { Action = WorldGenAction.Generate; }
-					if (ButtonWithSound("Exit", buttonSize)) { Action = WorldGenAction.Exit; }
-				}
-			
-				ImGui.EndChild();
+				if (worldHeight < 100) worldHeight = 100;
+				if (worldHeight > 1000) worldHeight = 1000;
+
+				if (ButtonWithSound("Generate", buttonSize, _seed.Any())) { Action = WorldGenAction.Generate; }
+				if (ButtonWithSound("Exit", buttonSize)) { Action = WorldGenAction.Exit; }
 			}
+
+			//ImGui.EndChild();
+			//}
 			ImGui.PopFont();
 			ImGui.End();
 		}

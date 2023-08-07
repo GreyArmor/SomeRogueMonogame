@@ -11,16 +11,21 @@ namespace NamelessRogue.Engine.Components.Interaction
 	{
 		public bool IsSong { get; set; }
 		public bool OnLoop { get; set; }
-		public Sound SoundToPlay
+		public int LoopStart { get; }
+		public int LoopEnd { get; }
+		public string SoundToPlay
 		{
 			get; set;
 		}
 		public float Volume { get; set; }
-		public PlaySoundCommand(Sound soundToPlay, float volume = 1, bool onLoop = false)
+		public PlaySoundCommand(string soundToPlay, bool isSong, float volume = 1, bool onLoop = false, int loopStart = 0, int loopEnd = 0)
 		{
 			SoundToPlay = soundToPlay;
+			IsSong = isSong;
 			Volume = volume;
 			OnLoop = onLoop;
+			LoopStart = loopStart;
+			LoopEnd = loopEnd;
 		} 
 	}
 }

@@ -1,12 +1,6 @@
- 
-
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
-using NamelessRogue.Engine.Serialization;
-using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace NamelessRogue.Engine.Generation.World
 {
@@ -33,7 +27,7 @@ namespace NamelessRogue.Engine.Generation.World
 		public List<Point> Points { get; set; }
 	}
 
-	public class TimelineLayer
+	public class WorldBoard
     {
         public int Age { get; set; }
         public WorldTile[,] WorldTiles { get; set; }
@@ -59,7 +53,7 @@ namespace NamelessRogue.Engine.Generation.World
 		public TileForInlandWaterConnectivity[][] InlandWaterConnectivity { get; set; }
 
 
-        public TimelineLayer(int width, int height, int age)
+        public WorldBoard(int width, int height, int age)
         {
             WorldTiles = new WorldTile[width, height];
             Age = age;
@@ -96,7 +90,7 @@ namespace NamelessRogue.Engine.Generation.World
 			BorderLines = new List<WaterBorderLine>();
 		}
 
-		public TimelineLayer()
+		public WorldBoard()
 		{
 		}
 	}

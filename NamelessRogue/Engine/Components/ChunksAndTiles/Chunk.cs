@@ -50,7 +50,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             isActive = false;
         }
 
-        public void FillWithTiles(TerrainGenerator generator, TimelineLayer board)
+        public void FillWithTiles(TerrainGenerator generator, WorldBoard board)
         {
 
             var surroundingChunksWithRivers = new List<TileForInlandWaterConnectivity>();

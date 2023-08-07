@@ -207,7 +207,7 @@ namespace NamelessRogue.Engine.Serialization
         }
 
 
-        public static void SaveTimelineLayer(String pathToFolder, TimelineLayer layer, String id)
+        public static void SaveTimelineLayer(String pathToFolder, WorldBoard layer, String id)
         {
             if (!Directory.Exists(pathToFolder))
             {
@@ -224,14 +224,14 @@ namespace NamelessRogue.Engine.Serialization
             }
         }
 
-        public static TimelineLayer LoadTimelineLayer(String pathToFolder, String id)
+        public static WorldBoard LoadTimelineLayer(String pathToFolder, String id)
         {
 
             using (StreamReader reader = new StreamReader(pathToFolder + "\\" + id + ".json"))
             using (JsonTextReader jsonReader = new JsonTextReader(reader))
             {
                 JsonSerializer ser = new JsonSerializer();
-                return ser.Deserialize<TimelineLayer>(jsonReader);
+                return ser.Deserialize<WorldBoard>(jsonReader);
             }
         }
     }

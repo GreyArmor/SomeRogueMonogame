@@ -29,6 +29,10 @@ using NamelessRogue.Engine.Sounds;
 using Microsoft.Xna.Framework.Audio;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Systems._3DView;
+using System.Xml.Serialization;
+using Microsoft.Xna.Framework.Media;
+using NamelessRogue.Engine.Components.Interaction;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace NamelessRogue.shell
 {
@@ -213,161 +217,181 @@ namespace NamelessRogue.shell
 			//12345 123
 			worldSettings = new WorldSettings(4, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
 
-			TerrainFurnitureFactory.CreateFurnitureEntities(this);
+
 			new UIController(this);
 			ContextFactory.InitAllContexts(this);
-
-
-
 			var viewportEntity = RenderFactory.CreateViewport(settings);
-
 			CameraEntity = viewportEntity;
-
-			Entity chunksHolder = new Entity();
-			Chunk3dGeometryHolder holder = new Chunk3dGeometryHolder();
-			chunksHolder.AddComponent(holder);
-			ChunkGeometryEntiry = chunksHolder;
-			TimelineEntity = TimelineFactory.CreateTimeline(this);
-
-
-			var libraries = new Entity();
-			var ammoLibrary = new AmmoLibrary();
-			ammoLibrary.AmmoTypes.Add(new AmmoType() { Name = "Revolver ammo" });
-			libraries.AddComponent(ammoLibrary);
-
-			var timelinEntity = TimelineEntity;
-			var timeline = timelinEntity.GetComponentOfType<TimeLine>();
-
-			WorldTile firsTile = null;
-			//foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
-			//{
-			//	if (worldBoardWorldTile.Settlement != null)
-			//	{
-			//		firsTile = worldBoardWorldTile;
-			//		break;
-
-			//	}
-			//}
-			int x, y;
-			if (firsTile != null)
+			if (false)
 			{
 
-				//place everything at the center of newly generated settlement;
-				x = firsTile.Settlement.Concrete.Center.X;
-				y = firsTile.Settlement.Concrete.Center.Y;
+				TerrainFurnitureFactory.CreateFurnitureEntities(this);
+				Entity chunksHolder = new Entity();
+				Chunk3dGeometryHolder holder = new Chunk3dGeometryHolder();
+				chunksHolder.AddComponent(holder);
+				ChunkGeometryEntiry = chunksHolder;
+				TimelineEntity = TimelineFactory.CreateTimeline(this);
+				var libraries = new Entity();
+				var ammoLibrary = new AmmoLibrary();
+				ammoLibrary.AmmoTypes.Add(new AmmoType() { Name = "Revolver ammo" });
+				libraries.AddComponent(ammoLibrary);
 
-			}
-			else
-			{
-				x = 300;
-				y = 300;
-				//x = 300;
-				//y = 300;
+				var timelinEntity = TimelineEntity;
+				var timeline = timelinEntity.GetComponentOfType<TimeLine>();
 
-				//x = 400;
-				//y = 300;
+				WorldTile firsTile = null;
+				//foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
+				//{
+				//	if (worldBoardWorldTile.Settlement != null)
+				//	{
+				//		firsTile = worldBoardWorldTile;
+				//		break;
 
-				//x = 400;
-				//y = 400;
-			}
-			var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);
-
-			TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
-
-			PlayerEntity = player;
-
-			FollowedByCameraEntity = player;
-
-			ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
-			//initialize reality bubble
-			chunkManagementSystem.Update(zero, this);
-			//for (int i = 1; i < 10; i++)
-			//{
-			//    for (int j = 1; j < 10; j++)
-			//    {
-			//        Entities.Add(CharacterFactory.CreateBlankNpc(x - i,
-			//            y - j));
-			//    }
-			//}
-
-			CharacterFactory.CreateBlankNpc(x - 6,
-				y, this);
-			//Entities.Add(CharacterFactory.CreateBlankNpc(x - 3,
-			//    y));
-			//Entities.Add(CharacterFactory.CreateBlankNpc(x - 5,
-			//    y));
-			//Entities.Add(CharacterFactory.CreateBlankNpc(x - 7,
-			//    y));
-
-
-			for (int i = 0; i < 2; i++)
-			{
-				var sword = ItemFactory.CreateSword(x - 2,
-					y, i, this); ;
-			}
-
-			var platemail = ItemFactory.CreatePlateMail(x - 2, y, 1, this);
-			var pants = ItemFactory.CreatePants(x - 2, y, 1, this);
-			var boots = ItemFactory.CreateBoots(x - 2, y, 1, this);
-			var cape = ItemFactory.CreateCape(x - 2, y, 1, this);
-			var ring = ItemFactory.CreateRing(x - 2, y, 1, this);
-			var shield = ItemFactory.CreateShield(x - 2, y, 1, this);
-			var helmet = ItemFactory.CreateHelmet(x - 2, y, 1, this);
-			var ammo1 = ItemFactory.CreateLightAmmo(x - 1, y, 1, 20, this, ammoLibrary);
-			var ammo2 = ItemFactory.CreateLightAmmo(x - 1, y + 1, 1, 20, this, ammoLibrary);
-			var revolver = ItemFactory.CreateRevolver(x + 2, y + 1, 1, this, ammoLibrary);
-			var pArmor = ItemFactory.CreatePowerArmor(x - 2, y, 1, this);
-
-
-			Point worldRiverPosition = new Point();
-			bool anyRivers = false;
-			foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
-			{
-				var pos = worldBoardWorldTile.WorldBoardPosiiton;
-				var isWater = timeline.CurrentTimelineLayer.InlandWaterConnectivity[pos.X][pos.Y].isWater;
-				if (isWater)
+				//	}
+				//}
+				int x, y;
+				if (firsTile != null)
 				{
-					anyRivers = true;
-					worldRiverPosition = pos;
-					break;
+
+					//place everything at the center of newly generated settlement;
+					x = firsTile.Settlement.Concrete.Center.X;
+					y = firsTile.Settlement.Concrete.Center.Y;
+
+				}
+				else
+				{
+					x = 300;
+					y = 300;
+					//x = 300;
+					//y = 300;
+
+					//x = 400;
+					//y = 300;
+
+					//x = 400;
+					//y = 400;
+				}
+				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);
+
+				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
+
+				PlayerEntity = player;
+
+				FollowedByCameraEntity = player;
+
+				ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
+				//initialize reality bubble
+				chunkManagementSystem.Update(zero, this);
+				//for (int i = 1; i < 10; i++)
+				//{
+				//    for (int j = 1; j < 10; j++)
+				//    {
+				//        Entities.Add(CharacterFactory.CreateBlankNpc(x - i,
+				//            y - j));
+				//    }
+				//}
+
+				CharacterFactory.CreateBlankNpc(x - 6,
+					y, this);
+				//Entities.Add(CharacterFactory.CreateBlankNpc(x - 3,
+				//    y));
+				//Entities.Add(CharacterFactory.CreateBlankNpc(x - 5,
+				//    y));
+				//Entities.Add(CharacterFactory.CreateBlankNpc(x - 7,
+				//    y));
+
+
+				for (int i = 0; i < 2; i++)
+				{
+					var sword = ItemFactory.CreateSword(x - 2,
+						y, i, this); ;
+				}
+
+				var platemail = ItemFactory.CreatePlateMail(x - 2, y, 1, this);
+				var pants = ItemFactory.CreatePants(x - 2, y, 1, this);
+				var boots = ItemFactory.CreateBoots(x - 2, y, 1, this);
+				var cape = ItemFactory.CreateCape(x - 2, y, 1, this);
+				var ring = ItemFactory.CreateRing(x - 2, y, 1, this);
+				var shield = ItemFactory.CreateShield(x - 2, y, 1, this);
+				var helmet = ItemFactory.CreateHelmet(x - 2, y, 1, this);
+				var ammo1 = ItemFactory.CreateLightAmmo(x - 1, y, 1, 20, this, ammoLibrary);
+				var ammo2 = ItemFactory.CreateLightAmmo(x - 1, y + 1, 1, 20, this, ammoLibrary);
+				var revolver = ItemFactory.CreateRevolver(x + 2, y + 1, 1, this, ammoLibrary);
+				var pArmor = ItemFactory.CreatePowerArmor(x - 2, y, 1, this);
+
+
+				Point worldRiverPosition = new Point();
+				bool anyRivers = false;
+				foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
+				{
+					var pos = worldBoardWorldTile.WorldBoardPosiiton;
+					var isWater = timeline.CurrentTimelineLayer.InlandWaterConnectivity[pos.X][pos.Y].isWater;
+					if (isWater)
+					{
+						anyRivers = true;
+						worldRiverPosition = pos;
+						break;
+					}
+				}
+
+				if (false)//if (anyRivers)
+				{
+					//move player to some river
+					PlayerEntity.GetComponentOfType<Position>().Point = new Point(200 * Constants.ChunkSize, 200 * Constants.ChunkSize);
+					chunkManagementSystem.Update(zero, this);
+				}
+
+				CursorEntity = GameInitializer.CreateCursor();
+
+				for (int i = x - Constants.RealityBubbleRangeInChunks; i < x + Constants.RealityBubbleRangeInChunks; i++)
+				{
+					for (int j = y - Constants.RealityBubbleRangeInChunks; j < y + Constants.RealityBubbleRangeInChunks; j++)
+					{
+						var p = new Point(i, j);
+						UpdateChunkCommand command = new UpdateChunkCommand(p);
+						Commander.EnqueueCommand(command);
+
+						//var chunk = WorldProvider.GetChunks()[p];
+						//WorldProvider.GetRealityBubbleChunks().Add(p, chunk);
+						//WorldProvider.RealityChunks.Add(chunk);
+					}
 				}
 			}
-
-			if(false)//if (anyRivers)
-			{
-				//move player to some river
-				PlayerEntity.GetComponentOfType<Position>().Point = new Point(200 * Constants.ChunkSize, 200 * Constants.ChunkSize);
-				chunkManagementSystem.Update(zero, this);
-			}
-
-			CursorEntity = GameInitializer.CreateCursor();
 
 			CurrentContext = ContextFactory.GetMainMenuContext(this);
 			this.IsMouseVisible = true;
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			InitSound();
-			
-
+			PlayMainMenuTheme();
 			IsInitialized = true;
-			for (int i = x - Constants.RealityBubbleRangeInChunks; i < x + Constants.RealityBubbleRangeInChunks; i++)
-			{
-				for (int j = y - Constants.RealityBubbleRangeInChunks; j < y + Constants.RealityBubbleRangeInChunks; j++)
-				{
-					var p = new Point(i, j);
-					UpdateChunkCommand command = new UpdateChunkCommand(p);
-					Commander.EnqueueCommand(command);
 
-					//var chunk = WorldProvider.GetChunks()[p];
-					//WorldProvider.GetRealityBubbleChunks().Add(p, chunk);
-					//WorldProvider.RealityChunks.Add(chunk);
-				}
-			}
 		}
-
+		MusicPack musicPack;
 		public void InitSound()
 		{
-			SoundsHolder.SoundDictionary.Add(Sound.ButtonClick, Content.Load<SoundEffect>("sounds\\annabloom_click1"));
+			var packPath = @$"Content\MusicPack\PackConfig.xml";
+			if (File.Exists(packPath))
+			{
+				var musicPackSerializer = XmlSerializer.FromTypes(new Type[] { typeof(MusicPack) }).First();
+				musicPack = (MusicPack)musicPackSerializer.Deserialize(File.OpenRead(packPath));
+				foreach (var track in musicPack.Tracks)
+				{
+					var trackPath = @$"Content\MusicPack\" + track.File;
+					if (File.Exists(trackPath))
+					{
+						var song = Song.FromUri(trackPath, new Uri(trackPath, UriKind.Relative));
+						SoundsHolder.SongDictionary.Add(track.ThemeId, song);
+					}
+				}
+			}
+			SoundsHolder.SoundDictionary.Add("ButtonClick", Content.Load<SoundEffect>("sounds\\annabloom_click1"));
+		}
+
+		public void PlayMainMenuTheme()
+		{
+			Commander.EnqueueCommand(new PlaySoundCommand(CurrentContext.MusicThemeId, true, 1, true));
+
 		}
 
 
@@ -406,8 +430,9 @@ namespace NamelessRogue.shell
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
 		/// </summary>
-		protected override void LoadContent() {
-		
+		protected override void LoadContent()
+		{
+
 		}
 
 		/// <summary>
@@ -429,6 +454,9 @@ namespace NamelessRogue.shell
 			if (ContextToSwitch != null)
 			{
 				CurrentContext = ContextToSwitch;
+
+				Commander.EnqueueCommand(new PlaySoundCommand(CurrentContext.MusicThemeId, true, 1, true));
+
 				ContextToSwitch = null;
 			}
 
@@ -460,7 +488,7 @@ namespace NamelessRogue.shell
 			if (saveScheduled)
 			{
 				saveScheduled = false;
-				SaveManager.SaveGame ("", this);
+				SaveManager.SaveGame("", this);
 			}
 
 			if (loadScheduled)

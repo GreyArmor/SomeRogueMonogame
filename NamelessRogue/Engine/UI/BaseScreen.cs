@@ -35,7 +35,7 @@ namespace NamelessRogue.Engine.UI
 				ImGui.PopStyleVar();
 				ImGui.EndDisabled();
 			}
-			if (clicked) { game.Commander.EnqueueCommand(new PlaySoundCommand(Sound.ButtonClick, 0.5f)); }
+			if (clicked) { game.Commander.EnqueueCommand(new PlaySoundCommand("ButtonClick", false, 0.5f)); }
 			return clicked;
 		}
 

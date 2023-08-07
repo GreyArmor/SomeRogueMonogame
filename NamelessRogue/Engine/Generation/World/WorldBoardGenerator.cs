@@ -19,6 +19,7 @@ using NamelessRogue.shell;
 using VoronoiLib;
 using VoronoiLib.Structures;
 using Color = NamelessRogue.Engine.Utility.Color;
+using NamelessRogue.Engine.Generation.World.Denizens;
 
 namespace NamelessRogue.Engine.Generation.World
 {
@@ -131,7 +132,7 @@ namespace NamelessRogue.Engine.Generation.World
 		}
 
 
-        public static void PopulateWithInitialData(TimelineLayer board, NamelessGame game)
+        public static void PopulateWithInitialData(WorldBoard board, NamelessGame game)
         {
 			var resolution = WorldGenConstants.Resolution;
 
@@ -420,7 +421,7 @@ namespace NamelessRogue.Engine.Generation.World
 				}
 			}			
 		}
-		public static void PlaceInitialCivilizations(TimelineLayer timelineLayer, NamelessGame game)
+		public static void PlaceInitialCivilizations(WorldBoard timelineLayer, NamelessGame game)
         {
             var worldSettingsContinentTilesPerCivilization = game.WorldSettings.ContinentTilesPerCivilization;
 
@@ -539,7 +540,7 @@ namespace NamelessRogue.Engine.Generation.World
 
         }
 
-        public static void AnalizeLandmasses(TimelineLayer timelineLayer, NamelessGame game)
+        public static void AnalizeLandmasses(WorldBoard timelineLayer, NamelessGame game)
         {
             var s = Stopwatch.StartNew();
             InternalRandom rand = game.WorldSettings.GlobalRandom;
@@ -559,7 +560,7 @@ namespace NamelessRogue.Engine.Generation.World
             timelineLayer.Swamps = swamps.ToList();
         }
 
-        private static List<Region> GetRegions(TimelineLayer timelineLayer, NamelessGame game, InternalRandom rand, Func<WorldTile,bool> searchCriterion, Action<WorldTile,Region> onFoundRegion, Func<string> nameGenerator)
+        private static List<Region> GetRegions(WorldBoard timelineLayer, NamelessGame game, InternalRandom rand, Func<WorldTile,bool> searchCriterion, Action<WorldTile,Region> onFoundRegion, Func<string> nameGenerator)
         {
             List<Region> regions = new List<Region>();
             var searchPoint = new Microsoft.Xna.Framework.Point();
@@ -614,4 +615,19 @@ namespace NamelessRogue.Engine.Generation.World
             return regions;
         }
     }
+
+
+	public class WorldGenerationParameters
+	{
+		public string StrSeed { get; set; }
+		int Seed { get; set; }
+		public Vector2 Size { get; set; }
+		public int SimulationSizeInYears { get; set; }
+
+		//if empty then generate the name procedurally
+		string Name { get; set; } = "";
+		List<RaceId> RacesOfDenizens { get; set; }
+		public WorldGenerationParameters() { }
+	}
+
 }

@@ -16,8 +16,8 @@ namespace NamelessRogue.Engine.Context
         public IBaseGuiScreen ContextScreen { get; }
         public HashSet<ISystem> Systems { get; } = new HashSet<ISystem>();
         public HashSet<ISystem> RenderingSystems { get; } = new HashSet<ISystem>();
-
-        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, BaseScreen contextScreen)
+        public string MusicThemeId { get; set; }
+        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, BaseScreen contextScreen, string musicThemeId)
         {
             if (systems != null && systems.Any())
             {
@@ -35,6 +35,7 @@ namespace NamelessRogue.Engine.Context
             }
 
             ContextScreen = contextScreen;
+            MusicThemeId = musicThemeId;
         }
 
         public void Update(GameTime gameTime, NamelessGame namelessGame)

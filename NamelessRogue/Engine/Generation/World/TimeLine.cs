@@ -23,7 +23,7 @@ namespace NamelessRogue.Engine.Generation.World
         }
        // public List<TimelineLayer> WorldBoardAtEveryAge { get; set; }
 
-        public TimelineLayer CurrentTimelineLayer { get; set; }
+        public WorldBoard CurrentTimelineLayer { get; set; }
 
         public override IComponent Clone()
         {

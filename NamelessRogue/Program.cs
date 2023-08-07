@@ -36,8 +36,6 @@ namespace NamelessRogue
             {
                 game.Run();
             }
-
-
         }    
     }
 }

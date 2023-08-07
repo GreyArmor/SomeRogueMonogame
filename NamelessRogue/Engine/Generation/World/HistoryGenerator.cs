@@ -56,9 +56,9 @@ namespace NamelessRogue.Engine.Generation.World
             return timeline;
         }
 
-        private static TimelineLayer InitialiseFirstBoard(NamelessGame game, HistoryGenerationSettings settings)
+        private static WorldBoard InitialiseFirstBoard(NamelessGame game, HistoryGenerationSettings settings)
         {
-            var worldBoard = new TimelineLayer(game.WorldSettings.WorldBoardWidth, game.WorldSettings.WorldBoardWidth, 0);
+            var worldBoard = new WorldBoard(game.WorldSettings.WorldBoardWidth, game.WorldSettings.WorldBoardWidth, 0);
             ChunkData chunkData = new ChunkData(game.WorldSettings, worldBoard);
 
             worldBoard.Chunks = chunkData;
@@ -96,9 +96,9 @@ namespace NamelessRogue.Engine.Generation.World
         }
 
 
-        private static TimelineLayer ProgressWorldBoard(TimelineLayer previousState, WorldSettings settings)
+        private static WorldBoard ProgressWorldBoard(WorldBoard previousState, WorldSettings settings)
         {
-            var newState = new TimelineLayer(settings.WorldBoardWidth, settings.WorldBoardHeight, previousState.Age + 1);
+            var newState = new WorldBoard(settings.WorldBoardWidth, settings.WorldBoardHeight, previousState.Age + 1);
 
 
             

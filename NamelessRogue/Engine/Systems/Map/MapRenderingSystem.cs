@@ -169,11 +169,11 @@ namespace NamelessRogue.Engine.Systems.Map
             if (tileAtlas == null)
             {
                 InitializeTexture(game);
-                _spriteBatch = new SpriteBatch(game.GraphicsDevice,6400);
+                _spriteBatch = new SpriteBatch(game.GraphicsDevice, 6400);
             }
 
             IEntity timeline = game.TimelineEntity;
-            TimelineLayer worldProvider = null;
+            WorldBoard worldProvider = null;
             if (timeline != null)
             {
                 worldProvider = timeline.GetComponentOfType<TimeLine>().CurrentTimelineLayer;
@@ -315,7 +315,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
         private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings,
             WorldSettings worldSEttings,
-            TimelineLayer world)
+            WorldBoard world)
         {
             int camX = camera.getPosition().X;
             int camY = camera.getPosition().Y;

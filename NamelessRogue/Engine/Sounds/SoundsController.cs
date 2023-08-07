@@ -5,19 +5,10 @@ using System.Text;
 using XnaSong = Microsoft.Xna.Framework.Media.Song;
 namespace NamelessRogue.Engine.Sounds
 {
-	public enum Sound
-	{
-		ButtonClick
-	}
-
-	public enum Song
-	{
-		MainMenu
-	}
 
 	public static class SoundsHolder
 	{
-		public static Dictionary<Sound, SoundEffect> SoundDictionary { get; set; } = new Dictionary<Sound, SoundEffect>();
-		public static Dictionary<Song, XnaSong> SongDictionary { get; set; } = new Dictionary<Song, XnaSong>();
+		public static Dictionary<string, SoundEffect> SoundDictionary { get; set; } = new Dictionary<string, SoundEffect>();
+		public static Dictionary<string, XnaSong> SongDictionary { get; set; } = new Dictionary<string, XnaSong>();
 	}
 }

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MusicPack>
+    <Tracks>
+        <Track>
+            <Name>Sample</Name>
+            <File>\Tracks\sample.mp3</File>
+            <Artist> GreyArmor </Artist>
+            <Credits>By GreyArmor</Credits>
+            <ThemeId>MainMenu</ThemeId>
+            <Loopable>true</Loopable>
+            <LoopStartSecond>0</LoopStartSecond>
+            <LoopEndSecond>180</LoopEndSecond>
+        </Track>
+        <Track>
+            <Name>Sample1</Name>
+            <File>sample1.mp3</File>
+            <Credits>GreyArmor</Credits>
+            <ThemeId>BattleIce</ThemeId>
+            <Loopable>true</Loopable>
+            <LoopStartSecond>0</LoopStartSecond>
+            <LoopEndSecond>180</LoopEndSecond>
+        </Track>
+        <Track>
+            <Name>Sample1</Name>
+            <File>sample1.mp3</File>
+            <Credits>GreyArmor</Credits>
+            <Loopable>true</Loopable>
+            <ThemeId>Battle2</ThemeId>
+            <LoopStartSecond>0</LoopStartSecond>
+            <LoopEndSecond>180</LoopEndSecond>
+        </Track>
+    </Tracks>
+</MusicPack>

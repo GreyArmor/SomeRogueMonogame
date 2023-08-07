@@ -57,7 +57,7 @@ namespace NamelessRogue.Engine.Factories
 
 
                 IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem, uiSystem },
-                    UIController.Instance.HudScreen);
+                    UIController.Instance.HudScreen, "InGame");
 
                 return IngameContext;
             }
@@ -83,7 +83,7 @@ namespace NamelessRogue.Engine.Factories
                 var uiSystem = new UIRenderSystem(game);
 
                 // create and init the UI manager
-                WorldBoardContext = new GameContext(systems, new List<ISystem>() { uiSystem, renderingSystem }, UIController.Instance.MapScreen);
+                WorldBoardContext = new GameContext(systems, new List<ISystem>() { uiSystem, renderingSystem }, UIController.Instance.MapScreen, "WorldMap");
                 return WorldBoardContext;
             }
         }
@@ -104,9 +104,9 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new MainMenuScreenSystem());
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
-
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
                 // create and init the UI manager
-                mainMenuContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.MainMenu);
+                mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIController.Instance.MainMenu, "MainMenu");
                 return mainMenuContext;
             }
         }
@@ -129,7 +129,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
 
-                inventoryContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.InventoryScreen);
+                inventoryContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.InventoryScreen, "");
                 return inventoryContext;
             }
         }
@@ -152,7 +152,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
 
-                pickUpContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.MainMenu);
+                pickUpContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.MainMenu, "");
                 return pickUpContext;
             }
         }
@@ -174,7 +174,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
 
-                worldGenContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.WorldGenScreen);
+                worldGenContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.WorldGenScreen, "NewWorld");
                 return worldGenContext;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Sounds;
 using NamelessRogue.shell;
@@ -14,12 +15,70 @@ namespace NamelessRogue.Engine.Systems
 	{
 		public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 		public List<SoundEffectInstance> SoundInstances { get; set; } = new List<SoundEffectInstance>();
+		public Song CurrentSong {get;set; }
+		bool songsFadeIn = true;
+		float fadespeed = 0.0001f;
+		float maxVolume = 1;
+		bool isFadingIn = false;
+		private void _fadeIn(double delta)
+		{
+			float volume = MediaPlayer.Volume;
+			volume += (float)(delta * fadespeed);
+			if (volume > maxVolume)
+			{
+				volume = maxVolume;
+				isFadingIn = false;
+			}
+			MediaPlayer.Volume = volume;
+		}
+
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
 		{
+
+			if (isFadingIn)
+			{
+				_fadeIn(gameTime.ElapsedGameTime.Milliseconds);
+			}
+
+
 			while (namelessGame.Commander.DequeueCommand(out PlaySoundCommand command))
 			{
-			
-					SoundsHolder.SoundDictionary[command.SoundToPlay].Play(command.Volume, 0, 0);
+				if (command.IsSong)
+				{
+					SoundsHolder.SongDictionary.TryGetValue(command.SoundToPlay, out var sound);
+					MediaPlayer.Stop();
+					
+					MediaPlayer.Play(sound);
+					MediaPlayer.IsRepeating = true;
+
+					if (songsFadeIn)
+					{
+						MediaPlayer.Volume = 0;
+						isFadingIn = true;
+					}
+					else {
+						MediaPlayer.Volume = command.Volume;
+					}
+					
+				}
+				else
+				{
+					if (!MediaPlayer.IsMuted)
+					{
+						SoundsHolder.SoundDictionary.TryGetValue(command.SoundToPlay, out var sound);
+						sound?.Play(command.Volume, 0, 0);
+					}
+				}
+			}
+
+			while (namelessGame.Commander.DequeueCommand(out MuteUnmuteSoundCommand command))
+			{
+				MediaPlayer.IsMuted = command.IsMuted;
+			}
+
+			while (namelessGame.Commander.DequeueCommand(out ChangeVolumeCommand command))
+			{
+				MediaPlayer.Volume = command.Volume;
 			}
 		}
 	}
