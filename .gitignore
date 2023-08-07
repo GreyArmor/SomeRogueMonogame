@@ -328,3 +328,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/NamelessRogue/Content/MusicPack/PackConfig.xml
+/NamelessRogue/Content/MusicPack/Realm of Fantasy.mp3
+/NamelessRogue/Content/MusicPack/World Map.mp3
+/NamelessRogue/Content/MusicPack.7z
