@@ -17,7 +17,7 @@ namespace NamelessRogue.Engine.Utility
 		private Vector2 position;
 		private float depth;
 		private float moveScale;
-		private float defaultSpeed;
+        private float shiftY;
 
 		public Rectangle SpritePositon { get; }
 
@@ -29,15 +29,15 @@ namespace NamelessRogue.Engine.Utility
 
 		public float MoveScale => moveScale;
 
-		public float DefaultSpeed => defaultSpeed;
+        public float DefaultSpeed { get; }
 
-		public LayeredSprite(Texture2D texture, Rectangle spritePositon, float depth, Vector2 initialPosition, float defaultSpeed = 0)
+        public LayeredSprite(Texture2D texture, Rectangle spritePositon, float depth, Vector2 initialPosition, float defaultSpeed = 0)
 		{
 			this.texture = texture;
 			this.SpritePositon = spritePositon;
 			this.depth = depth;
 			this.position = initialPosition;
-			this.defaultSpeed = defaultSpeed;
+			this.DefaultSpeed = defaultSpeed;
 		}
 
 		public void Update(GameTime time)

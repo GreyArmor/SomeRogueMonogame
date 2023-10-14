@@ -18,7 +18,7 @@ namespace NamelessRogue.Engine.Systems
 		public Song CurrentSong {get;set; }
 		bool songsFadeIn = true;
 		float fadespeed = 0.0001f;
-		float maxVolume = 1;
+		float maxVolume = 1f;
 		bool isFadingIn = false;
 		private void _fadeIn(double delta)
 		{
@@ -34,6 +34,7 @@ namespace NamelessRogue.Engine.Systems
 
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
 		{
+			//return;
 
 			if (isFadingIn)
 			{
@@ -54,6 +55,7 @@ namespace NamelessRogue.Engine.Systems
 					if (songsFadeIn)
 					{
 						MediaPlayer.Volume = 0;
+						maxVolume = command.Volume;
 						isFadingIn = true;
 					}
 					else {

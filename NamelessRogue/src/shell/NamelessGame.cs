@@ -390,8 +390,7 @@ namespace NamelessRogue.shell
 
 		public void PlayMainMenuTheme()
 		{
-			Commander.EnqueueCommand(new PlaySoundCommand(CurrentContext.MusicThemeId, true, 1, true));
-
+			Commander.EnqueueCommand(new PlaySoundCommand(CurrentContext.MusicThemeId, true, 0.0f, true));
 		}
 
 
@@ -455,7 +454,7 @@ namespace NamelessRogue.shell
 			{
 				CurrentContext = ContextToSwitch;
 
-				Commander.EnqueueCommand(new PlaySoundCommand(CurrentContext.MusicThemeId, true, 1, true));
+				Commander.EnqueueCommand(new PlaySoundCommand(CurrentContext.MusicThemeId, true, 0, true));
 
 				ContextToSwitch = null;
 			}
@@ -534,7 +533,7 @@ namespace NamelessRogue.shell
 
 			IngameScreen.FPS = _frameCounter.AverageFramesPerSecond.ToString();
 
-			GraphicsDevice.Clear(Color.Black);
+			GraphicsDevice.Clear(Color.SkyBlue);
 			CurrentContext.RenderingUpdate(gameTime, this);
 		}
 	}
