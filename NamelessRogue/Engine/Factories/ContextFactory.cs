@@ -105,8 +105,9 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
                 var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
-                // create and init the UI manager
-                mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIController.Instance.MainMenu, "MainMenu");
+				var testStriteSystem = new SpriteRenderingSystem();
+				// create and init the UI manager
+				mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, testStriteSystem, uiSystem }, UIController.Instance.MainMenu, "MainMenu");
                 return mainMenuContext;
             }
         }

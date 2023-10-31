@@ -1,0 +1,109 @@
+{
+  "textureAtlas": {
+    "texture": "EasyChar_2023-10-31T21_44_08.635Z.png",
+    "regionWidth": 16,
+    "regionHeight": 16
+  },
+  "cycles": {
+    "idleFront": {
+      "frames": [0],
+      "isLooping": true,
+      "frameDuration": 0.2
+    },
+    "inleBack": {
+      "frames": [5],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "idleLeft": {
+      "frames": [15],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "idleRight": {
+      "frames": [10],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "walkFront": {
+      "frames": [20,21,22,23],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "walkBack": {
+      "frames": [25,26,27,28],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "walkLeft": {
+      "frames": [35,36,37,38],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "walkRight": {
+      "frames": [30,31,32,33],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "attackFront": {
+      "frames": [40,40,41,42,43],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "attackBack": {
+      "frames": [45,46,47,48],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "attackLeft": {
+      "frames": [55,56,57,58],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "attackRight": {
+      "frames": [50,51,52,53],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "arrowFront": {
+      "frames": [60,61,62,63,64],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "arrowBack": {
+      "frames": [65,66,67,68,69],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "arrowRight": {
+      "frames": [70,71,72,73,74],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "arrowLeft": {
+      "frames": [75,76,78,79],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "castFront": {
+      "frames": [80,81,82,83,84],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "castBack": {
+      "frames": [85,86,87,88,89],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "castLeft": {
+      "frames": [95,96,97,98,99],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "castRight": {
+      "frames": [90,91,92,93,94],
+      "isLooping": false,
+      "frameDuration": 0.2
+    }
+  }
+}

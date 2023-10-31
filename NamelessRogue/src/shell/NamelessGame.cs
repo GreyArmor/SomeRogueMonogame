@@ -33,6 +33,7 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework.Media;
 using NamelessRogue.Engine.Components.Interaction;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using SharpDX.MediaFoundation;
 
 namespace NamelessRogue.shell
 {
@@ -222,6 +223,10 @@ namespace NamelessRogue.shell
 			ContextFactory.InitAllContexts(this);
 			var viewportEntity = RenderFactory.CreateViewport(settings);
 			CameraEntity = viewportEntity;
+
+			var spriteentity = new Entity();
+			spriteentity.AddComponent(new SpriteModel3D(this, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
+
 			if (false)
 			{
 
