@@ -197,8 +197,6 @@ namespace NamelessRogue.shell
 			graphics.PreferredBackBufferWidth = (int)(GetActualCharacterWidth() + settings.HudWidth);
 			graphics.PreferredBackBufferHeight = GetActualCharacterHeight();
 
-
-
 			graphics.IsFullScreen = false;
 			graphics.PreferMultiSampling = true;
 			graphics.SynchronizeWithVerticalRetrace = true;
@@ -223,13 +221,12 @@ namespace NamelessRogue.shell
 			ContextFactory.InitAllContexts(this);
 			var viewportEntity = RenderFactory.CreateViewport(settings);
 			CameraEntity = viewportEntity;
-
-			var spriteentity = new Entity();
-			spriteentity.AddComponent(new SpriteModel3D(this, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
-
-			if (false)
+			
+			if (true)
 			{
-
+				var spriteentity = new Entity();
+				spriteentity.AddComponent(new SpriteModel3D(this, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
+				spriteentity.AddComponent(new Position3D());
 				TerrainFurnitureFactory.CreateFurnitureEntities(this);
 				Entity chunksHolder = new Entity();
 				Chunk3dGeometryHolder holder = new Chunk3dGeometryHolder();
@@ -276,14 +273,7 @@ namespace NamelessRogue.shell
 					//x = 400;
 					//y = 400;
 				}
-				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);
-
-				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
-
-				PlayerEntity = player;
-
-				FollowedByCameraEntity = player;
-
+			
 				ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
 				//initialize reality bubble
 				chunkManagementSystem.Update(zero, this);
@@ -338,6 +328,17 @@ namespace NamelessRogue.shell
 						break;
 					}
 				}
+
+
+				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);
+
+				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
+
+				PlayerEntity = player;
+
+				FollowedByCameraEntity = player;
+
+
 
 				if (false)//if (anyRivers)
 				{

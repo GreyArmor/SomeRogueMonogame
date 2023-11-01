@@ -34,7 +34,7 @@ namespace NamelessRogue.Engine.Systems
 
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
 		{
-			//return;
+			return;
 
 			if (isFadingIn)
 			{

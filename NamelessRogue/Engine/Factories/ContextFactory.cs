@@ -54,9 +54,10 @@ namespace NamelessRogue.Engine.Factories
 
                 var renderingSystem = new RenderingSystem3D(game.GetSettings(), game);
                 var uiSystem = new UIRenderSystem(game);
+				var testStriteSystem = new SpriteRenderingSystem();
 
 
-                IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem, uiSystem },
+				IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem, testStriteSystem, uiSystem },
                     UIController.Instance.HudScreen, "InGame");
 
                 return IngameContext;
@@ -105,9 +106,9 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
                 var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
-				var testStriteSystem = new SpriteRenderingSystem();
+			
 				// create and init the UI manager
-				mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, testStriteSystem, uiSystem }, UIController.Instance.MainMenu, "MainMenu");
+				mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIController.Instance.MainMenu, "MainMenu");
                 return mainMenuContext;
             }
         }

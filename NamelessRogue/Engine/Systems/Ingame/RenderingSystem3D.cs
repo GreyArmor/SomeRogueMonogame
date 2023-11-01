@@ -217,14 +217,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 			RenderChunksWithShadows(game);
 			//RenderObjectsWithShadow(game);
-			RenderTestPlayer(game, camera);
+			//RenderTestPlayer(game, camera);
 
 			var matrix = Matrix.CreateTranslation(sunLight.Position);
 			effect.Parameters["xWorldViewProjection"].SetValue(matrix * camera.View * camera.Projection);
 			RenderDebug(game);
 			//RenderObjects(game);
 
-			//effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+			//effect.GraphicsDevice.SamplerStates[0] = SamplerState.Linea	rClamp;
 			//effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
 			DrawDebugAxis(device,camera);

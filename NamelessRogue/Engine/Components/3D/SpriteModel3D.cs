@@ -14,10 +14,7 @@ namespace NamelessRogue.Engine.Components._3D
 {
 	internal class SpriteModel3D : Component
 	{
-
 		public AnimatedSprite Sprite { get; set; }
-		public string SpriteId { get; set; }
-		public Matrix Transform { get; set; }
 		public SpriteModel3D(NamelessGame game, string spritePath)
 		{
 			var spriteSheet = game.Content.Load<SpriteSheet>(spritePath, new JsonContentLoader());
