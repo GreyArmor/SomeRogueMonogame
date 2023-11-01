@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
@@ -158,10 +159,18 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                 oldTile.RemoveEntity((Entity) entity);
                 newTile.AddEntity((Entity) entity);
 
+                var new3dNormal = new Vector2(position.Point.X - moveTo.X, position.Point.Y - moveTo.Y);
 
-                position.Point = new Point(moveTo.X, moveTo.Y);
 
+				position.Point = new Point(moveTo.X, moveTo.Y);
 
+                var pos3d = entity.GetComponentOfType<Position3D>();
+
+                if (pos3d != null)
+                {
+                    pos3d.Position = new Vector3(moveTo.X, moveTo.Y, newTile.ElevationVisual);
+                    pos3d.Normal = new3dNormal;
+				}
 
                 return true;
             }

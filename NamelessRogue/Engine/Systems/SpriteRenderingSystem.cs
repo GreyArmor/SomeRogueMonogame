@@ -34,8 +34,6 @@ namespace NamelessRogue.Engine.Systems
 			typeof(SpriteModel3D), typeof(Position3D)
 		};
 
-
-		const float scalingMagicNumber = 20f;
 		private SpriteBatch spriteBatch;
 		private BasicEffect basicEffect;
 
@@ -44,11 +42,11 @@ namespace NamelessRogue.Engine.Systems
 			Camera3D camera = namelessGame.PlayerEntity.GetComponentOfType<Camera3D>();
 			var offset = Constants.ChunkSize * (300 - Constants.RealityBubbleRangeInChunks);
 			var player = namelessGame.PlayerEntity;
-			var p = player.GetComponentOfType<Position>().Point;
-			var position = new Point(p.X - offset, p.Y - offset);
-			var tileToDraw = namelessGame.WorldProvider.GetTile(p.X, p.Y);
+			//var p = player.GetComponentOfType<Position>().Point;
+			//var position = new Point(p.X - offset, p.Y - offset);
+			//var tileToDraw = namelessGame.WorldProvider.GetTile(p.X, p.Y);
 
-			var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
+		//	var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
 			var frustrum = new Microsoft.Xna.Framework.BoundingFrustum(camera.View * camera.Projection);
 
 
@@ -59,13 +57,20 @@ namespace NamelessRogue.Engine.Systems
 
 			foreach (var entity in RegisteredEntities)
 			{
+				var pos3d = entity.GetComponentOfType<Position3D>();
+				var p = pos3d.Position;
+				var tileToDraw = namelessGame.WorldProvider.GetTile((int)p.X, (int)p.Y);
+				var position = new Point((int)(p.X - offset), (int)(p.Y - offset));
+				var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
+
+
 				var worldPos = Vector3.Transform(Vector3.One, world);
 
 				if (frustrum.Contains(worldPos) == Microsoft.Xna.Framework.ContainmentType.Contains)
 				{
 					var spriteModel = entity.GetComponentOfType<SpriteModel3D>();
 
-					var angle = AngleBetween(new Vector2(camera.Look.X, camera.Look.Y), Vector2.UnitX);
+					var angle = AngleBetween(new Vector2(camera.Look.X, camera.Look.Y), pos3d.Normal);
 
 					var animationSuffix = "Front";
 
@@ -89,7 +94,7 @@ namespace NamelessRogue.Engine.Systems
 					var viewport = namelessGame.GraphicsDevice.Viewport;
 
 
-					spriteModel.Sprite.Play("attack" + animationSuffix);
+					spriteModel.Sprite.Play("walk" + animationSuffix);
 					spriteModel.Sprite.Update(gameTime);
 					Vector3 textPosition = worldPos;
 

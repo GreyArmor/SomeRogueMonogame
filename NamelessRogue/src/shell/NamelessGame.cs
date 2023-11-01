@@ -224,9 +224,7 @@ namespace NamelessRogue.shell
 			
 			if (true)
 			{
-				var spriteentity = new Entity();
-				spriteentity.AddComponent(new SpriteModel3D(this, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
-				spriteentity.AddComponent(new Position3D());
+			
 				TerrainFurnitureFactory.CreateFurnitureEntities(this);
 				Entity chunksHolder = new Entity();
 				Chunk3dGeometryHolder holder = new Chunk3dGeometryHolder();
@@ -333,6 +331,9 @@ namespace NamelessRogue.shell
 				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);
 
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
+
+				player.AddComponent(new SpriteModel3D(this, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
+				player.AddComponent(new Position3D());
 
 				PlayerEntity = player;
 
