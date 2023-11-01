@@ -54,7 +54,7 @@ namespace NamelessRogue.Engine.Factories
 
                 var renderingSystem = new RenderingSystem3D(game.GetSettings(), game);
                 var uiSystem = new UIRenderSystem(game);
-				var testStriteSystem = new SpriteRenderingSystem();
+				var testStriteSystem = new SpriteRenderingSystem(game);
 
 
 				IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem, testStriteSystem, uiSystem },

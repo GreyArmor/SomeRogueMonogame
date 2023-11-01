@@ -2,34 +2,42 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Sprites;
 using NamelessRogue.Engine.Components._3D;
-using NamelessRogue.Engine.Components.AI.Pathfinder;
+using NamelessRogue.Engine.Components.Physical;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MonoGame.Extended.Content;
-using MonoGame.Extended;
-using NamelessRogue.Engine.Components.Physical;
-using NamelessRogue.Engine.Components;
-using NamelessRogue.Engine.Infrastructure;
-using SharpDX.MediaFoundation;
-using System.Diagnostics;
-using SharpDX;
-using System.Numerics;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
-using Point = Microsoft.Xna.Framework.Point;
 using Matrix = Microsoft.Xna.Framework.Matrix;
+using Point = Microsoft.Xna.Framework.Point;
+using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace NamelessRogue.Engine.Systems
 {
 	internal class SpriteRenderingSystem : BaseSystem
 	{
+
+		public SpriteRenderingSystem(NamelessGame game)
+		{
+			spriteBatch = new SpriteBatch(game.GraphicsDevice);
+			//	spriteFont = Content.Load<SpriteFont>("font");
+
+			basicEffect = new BasicEffect(game.GraphicsDevice)
+			{
+				TextureEnabled = true,
+				VertexColorEnabled = true,
+			};
+		}
+
 		public override HashSet<Type> Signature => new HashSet<Type>() {
 			typeof(SpriteModel3D), typeof(Position3D)
 		};
+
+
+		const float scalingMagicNumber = 20f;
+		private SpriteBatch spriteBatch;
+		private BasicEffect basicEffect;
 
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
 		{
@@ -42,57 +50,60 @@ namespace NamelessRogue.Engine.Systems
 
 			var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
 			var frustrum = new Microsoft.Xna.Framework.BoundingFrustum(camera.View * camera.Projection);
+
+
+			Matrix invertY = Matrix.CreateScale(1, -1, 1);
+			basicEffect.World = invertY;
+			basicEffect.View = Matrix.Identity;
+			basicEffect.Projection = camera.Projection;
+
 			foreach (var entity in RegisteredEntities)
 			{
-				var spriteModel = entity.GetComponentOfType<SpriteModel3D>();
-
-				var angle = AngleBetween(new Vector2(camera.Look.X, camera.Look.Y), Vector2.UnitX);
-
-				var animationSuffix = "Front";
-
-				if (angle > -45 && angle < 45)
-				{
-					animationSuffix = "Front";
-				}
-				else if (angle > 45 && angle < 135)
-				{
-					animationSuffix = "Right";
-				}
-				else if (angle > 135 || angle < -135)
-				{
-					animationSuffix = "Back";
-				}
-				else if (angle > -135 && angle < -45f)
-				{
-					animationSuffix = "Left";
-				}
-
-				var position3d = new Vector3(1, 1, 1);
-
-				var viewport = namelessGame.GraphicsDevice.Viewport;
-
-				var worldPos = Vector3.Transform(position3d, world);
-
-				var position2d = viewport.Project(position3d, camera.Projection, camera.View, world);
-
-				spriteModel.Sprite.Play("attack" + animationSuffix);
-				spriteModel.Sprite.Update(gameTime);
+				var worldPos = Vector3.Transform(Vector3.One, world);
 
 				if (frustrum.Contains(worldPos) == Microsoft.Xna.Framework.ContainmentType.Contains)
 				{
-					namelessGame.Batch.Begin(samplerState: SamplerState.PointClamp);
-					if (position2d.Z != float.NaN)
-					{
-						spriteModel.Sprite.Depth = position2d.Z;
-					}
-					namelessGame.Batch.Draw(spriteModel.Sprite, new Vector2(position2d.X, position2d.Y), 0, new Vector2(1, 1));
-					namelessGame.Batch.End();
-				}
+					var spriteModel = entity.GetComponentOfType<SpriteModel3D>();
 
+					var angle = AngleBetween(new Vector2(camera.Look.X, camera.Look.Y), Vector2.UnitX);
+
+					var animationSuffix = "Front";
+
+					if (angle > -45 && angle < 45)
+					{
+						animationSuffix = "Front";
+					}
+					else if (angle > 45 && angle < 135)
+					{
+						animationSuffix = "Right";
+					}
+					else if (angle > 135 || angle < -135)
+					{
+						animationSuffix = "Back";
+					}
+					else if (angle > -135 && angle < -45f)
+					{
+						animationSuffix = "Left";
+					}
+
+					var viewport = namelessGame.GraphicsDevice.Viewport;
+
+
+					spriteModel.Sprite.Play("attack" + animationSuffix);
+					spriteModel.Sprite.Update(gameTime);
+					Vector3 textPosition = worldPos;
+
+					Vector3 viewSpacePosition = Vector3.Transform(textPosition, camera.View * invertY);
+
+					spriteBatch.Begin(0, null, Microsoft.Xna.Framework.Graphics.SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, basicEffect);
+					spriteModel.Sprite.Depth = viewSpacePosition.Z;
+					spriteBatch.Draw(spriteModel.Sprite, new Vector2(viewSpacePosition.X, viewSpacePosition.Y), 0, new Vector2(0.0001f, 0.0001f));
+					spriteBatch.End();
+				}
 			}
 		}
 
-
+		//TODO useful utility, move somewhere appropriate
 		private double AngleBetween(Vector2 vector1, Vector2 vector2)
 		{
 			double sin = vector1.X * vector2.Y - vector2.X * vector1.Y;
