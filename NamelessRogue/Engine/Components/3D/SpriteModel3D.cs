@@ -14,11 +14,14 @@ namespace NamelessRogue.Engine.Components._3D
 {
 	internal class SpriteModel3D : Component
 	{
+		public bool IdleOnly { get; set; }
 		public AnimatedSprite Sprite { get; set; }
-		public SpriteModel3D(NamelessGame game, string spritePath)
+		public SpriteModel3D(NamelessGame game, string spritePath, bool idleOnly = false)
 		{
 			var spriteSheet = game.Content.Load<SpriteSheet>(spritePath, new JsonContentLoader());
 			Sprite = new AnimatedSprite(spriteSheet);
+			IdleOnly = idleOnly;
 		}
+		
 	}
 }

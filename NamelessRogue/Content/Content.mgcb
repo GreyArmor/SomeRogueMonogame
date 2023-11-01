@@ -46,6 +46,27 @@
 /processorParam:TextureFormat=Color
 /build:DFfont.png
 
+#begin Doodads/cacti.sf
+/copy:Doodads/cacti.sf
+
+#begin Doodads/nature.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Doodads/nature.png
+
+#begin Doodads/palmTree.sf
+/copy:Doodads/palmTree.sf
+
+#begin Doodads/treeEvergreen.sf
+/copy:Doodads/treeEvergreen.sf
+
 #begin Light.fx
 /importer:EffectImporter
 /processor:EffectProcessor
