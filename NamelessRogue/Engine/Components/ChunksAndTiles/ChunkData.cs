@@ -91,10 +91,9 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             {
                 return new Tile(TerrainTypes.Nothingness, Biomes.None, new Point(-1, -1),0.5);
             }
-			var s = Stopwatch.StartNew();
 			var result = chunkOfPoint.GetTile(x, y);
-			s.Stop();
             return result;
+            //return new Tile(TerrainTypes.Nothingness, Biomes.None, new Point(-1, -1), 0.5); ;
 
 		}
         public bool SetTile(int x, int y, Tile tile)
@@ -170,6 +169,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                 {
                     pos3d.Position = new Vector3(moveTo.X, moveTo.Y, newTile.ElevationVisual);
                     pos3d.Normal = new3dNormal;
+                    pos3d.WorldPosition = null;
 				}
 
                 return true;

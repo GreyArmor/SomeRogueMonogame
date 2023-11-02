@@ -368,7 +368,7 @@ namespace NamelessRogue.shell
 			CurrentContext = ContextFactory.GetMainMenuContext(this);
 			this.IsMouseVisible = true;
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-
+			SpriteLibrary.Initialize(this);
 			InitSound();
 			PlayMainMenuTheme();
 			IsInitialized = true;

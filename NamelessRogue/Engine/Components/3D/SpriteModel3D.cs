@@ -9,6 +9,7 @@ using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Serialization;
 using NamelessRogue.shell;
 using NamelessRogue.Engine.Context;
+using NamelessRogue.Engine.Components.ChunksAndTiles;
 
 namespace NamelessRogue.Engine.Components._3D
 {
@@ -16,12 +17,19 @@ namespace NamelessRogue.Engine.Components._3D
 	{
 		public bool IdleOnly { get; set; }
 		public AnimatedSprite Sprite { get; set; }
-		public SpriteModel3D(NamelessGame game, string spritePath, bool idleOnly = false)
+
+		public string SpriteId { get; set; }
+		public SpriteModel3D(NamelessGame game, string spritePath)
 		{
 			var spriteSheet = game.Content.Load<SpriteSheet>(spritePath, new JsonContentLoader());
 			Sprite = new AnimatedSprite(spriteSheet);
-			IdleOnly = idleOnly;
+			IdleOnly = false;
 		}
-		
+
+		public SpriteModel3D(string spriteLibraryId)
+		{
+			IdleOnly = true;
+			SpriteId = spriteLibraryId;
+		}		
 	}
 }

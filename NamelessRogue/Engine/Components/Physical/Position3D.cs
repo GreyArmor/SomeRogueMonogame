@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Components.ChunksAndTiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +20,9 @@ namespace NamelessRogue.Engine.Components.Physical
 		}
 
 		public Position3D() { }
+
+		public Tile Tile { get; set; }
+
+		public Vector3? WorldPosition { get; set; }
 	}
 }

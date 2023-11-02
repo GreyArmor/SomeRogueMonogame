@@ -253,8 +253,8 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             int bottomLeftX = worldPositionBottomLeftCorner.X;
             int bottomLeftY = worldPositionBottomLeftCorner.Y;
 
-            int localX = Math.Abs(bottomLeftX - x);
-            int localY = Math.Abs(bottomLeftY - y);
+            int localX = x - bottomLeftX;
+            int localY = y - bottomLeftY;
 
             return chunkTiles[localX][localY];
         }
