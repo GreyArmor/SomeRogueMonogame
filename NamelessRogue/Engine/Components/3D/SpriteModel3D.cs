@@ -13,6 +13,15 @@ using NamelessRogue.Engine.Components.ChunksAndTiles;
 
 namespace NamelessRogue.Engine.Components._3D
 {
+
+	public enum AnimationType { 
+		Idle,
+		Attack,
+		Walk,
+		Cast,
+		Shoot,
+	}
+
 	internal class SpriteModel3D : Component
 	{
 		public bool IdleOnly { get; set; }
@@ -30,6 +39,7 @@ namespace NamelessRogue.Engine.Components._3D
 		{
 			IdleOnly = true;
 			SpriteId = spriteLibraryId;
-		}		
+		}	
+		public AnimationType AnimationType { get; set; }	
 	}
 }

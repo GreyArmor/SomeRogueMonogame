@@ -10,38 +10,28 @@ namespace NamelessRogue.Engine.Components.Stats
     {
         public Stats()
         {
-            Health = new SimpleStat(0, 0, 100);
-            Stamina = new SimpleStat(0, 0, 100);
-            Strength = new SimpleStat(0, 0, 9999);
-            Reflexes = new SimpleStat(0, 0, 9999);
-            Perception = (new SimpleStat(0, 0, 9999));
-            Imagination = (new SimpleStat(0, 0, 9999));
-            Willpower = (new SimpleStat(0, 0, 9999));
-            Wit = (new SimpleStat(0, 0, 9999));
-
+            Health = new SimpleStat(0, 0, 9999);
+            Stamina = new SimpleStat(0, 0, 9999);
             Attack = new SimpleStat(0, 0, 9999);
             Defence = new SimpleStat(0, 0, 9999);
             AttackSpeed = new SimpleStat(0, 0, 9999);
             MoveSpeed = new SimpleStat(0, 0, 9999);
-
-        }
-
-   
-        public SimpleStat Strength { get; set; }
-        public SimpleStat Reflexes { get; set; }
-        public SimpleStat Perception { get; set; }
-        public SimpleStat Willpower { get; set; }
-        public SimpleStat Wit { get; set; }
-        public SimpleStat Imagination { get; set; }
-
+			AttackRange = new SimpleStat(0, 0, 9999);
+            VisionRange = new SimpleStat(0, 0, 9999);
+		}
+        
         public SimpleStat Health { get; set; }
         public SimpleStat Stamina { get; set; }
         public SimpleStat Attack { get; set; }
         public SimpleStat Defence { get; set; }
         public SimpleStat AttackSpeed { get; set; }
         public SimpleStat MoveSpeed { get; set; }
+        public SimpleStat AttackRange { get; set; }
+		public SimpleStat VisionRange { get; set; }
 
-        public override IComponent Clone()
+        public string FactionId { get; set; }
+
+		public override IComponent Clone()
         {
             return new Stats()
             {
@@ -49,15 +39,12 @@ namespace NamelessRogue.Engine.Components.Stats
                 AttackSpeed = AttackSpeed,
                 Defence = Defence,
                 Health = Health,
-                Imagination = Imagination,
                 MoveSpeed = MoveSpeed,
-                Perception = Perception,
-                Reflexes = Reflexes,
                 Stamina = Stamina,
-                Strength = Strength,
-                Willpower = Willpower,
-                Wit = Wit
-            };
+                AttackRange = AttackRange,
+                VisionRange = VisionRange,
+				FactionId = FactionId,
+			};
         }
     }
 }

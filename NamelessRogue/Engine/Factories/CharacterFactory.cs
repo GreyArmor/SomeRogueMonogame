@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
@@ -32,7 +33,8 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new EquipmentSlots(holder, game));
             playerCharacter.AddComponent(new OccupiesTile());
             playerCharacter.AddComponent(new FlowMoveComponent());
-
+			playerCharacter.AddComponent(new SpriteModel3D(game, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
+			playerCharacter.AddComponent(new Position3D());
 
 			var stats = new Stats();
             stats.Health.Value = 100;
@@ -46,13 +48,6 @@ namespace NamelessRogue.Engine.Factories
             stats.Defence.Value = 10;
             stats.AttackSpeed.Value = 100;
             stats.MoveSpeed.Value = 100;
-
-            stats.Strength.Value = 10;
-            stats.Reflexes.Value = 10;
-            stats.Perception.Value = 10;
-            stats.Willpower.Value = 10;
-            stats.Imagination.Value = 10;
-            stats.Wit.Value = 10;
 
             playerCharacter.AddComponent(stats);
 
@@ -76,15 +71,17 @@ namespace NamelessRogue.Engine.Factories
         }
 
 
-        public static Entity CreateBlankNpc(int x,int y, NamelessGame game) {
+        public static Entity CreateBlankKnight(NamelessGame game, Vector2 facingNormal, int x,int y, string factionId = "") {
             Entity npc = new Entity();
             var position = new Position(x, y);
-            npc.AddComponent(new Character());
+			var position3D = new Position3D(new Vector3(x, y, 0), facingNormal);
+            npc.AddComponent(position3D);
+			npc.AddComponent(new Character());
             npc.AddComponent(new InputComponent());
             npc.AddComponent(new Movable());
             npc.AddComponent(position);
-            npc.AddComponent(new Drawable('D', new Engine.Utility.Color(1f, 0, 0)));
-            npc.AddComponent(new Description("Very scary dummy dragon",""));
+            npc.AddComponent(new Drawable('K', new Engine.Utility.Color(1f, 0, 0)));
+            npc.AddComponent(new Description("Very scary dummy knight",""));
             npc.AddComponent(new OccupiesTile());
             npc.AddComponent(new AIControlled());
             npc.AddComponent(new BasicAi());
@@ -101,18 +98,28 @@ namespace NamelessRogue.Engine.Factories
             stats.Defence.Value = 10;
             stats.AttackSpeed.Value = 100;
             stats.MoveSpeed.Value = 100;
+            stats.AttackRange.Value = 1;
+            stats.VisionRange.Value = 100;
 
-            stats.Strength.Value = 10;
-            stats.Reflexes.Value = 10;
-            stats.Perception.Value = 10;
-            stats.Willpower.Value = 10;
-            stats.Imagination.Value = 10;
-            stats.Wit.Value = 10;
+            stats.FactionId = factionId;
 
-            npc.AddComponent(stats);
-            npc.AddComponent(new ActionPoints(){Points = 100});
-            game.WorldProvider.MoveEntity(npc, position.Point);
+            var sprite = new SpriteModel3D(game, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf");
+            npc.AddComponent(sprite);
+
+			npc.AddComponent(new ActionPoints(){Points = 100});
+         //   game.WorldProvider.MoveEntity(npc, position.Point);
             return npc;
+        }
+
+        public static void CreateNpcField(Rectangle rect, Vector2 facingNormal, string factionId, NamelessGame game)
+        {
+            for (int i = rect.Left; i < rect.Right; i++)
+            {
+                for (int j = rect.Top; j < rect.Bottom; j++)
+                {
+                    CreateBlankKnight(game, facingNormal, i, j, factionId);
+                }
+            }
         }
 
 	

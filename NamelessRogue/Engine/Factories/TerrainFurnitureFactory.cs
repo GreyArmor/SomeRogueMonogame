@@ -137,15 +137,15 @@ namespace NamelessRogue.Engine.Factories
                 case Biomes.Forest:
                     {
                         var randomValue = random.Next(0, 100) / 100d;
-                        if (randomValue > 0.90)
+                        if (randomValue > 0.80)
                         {
                             result = treeEntity;
                         }
-                        else if (randomValue > 0.85)
+                        else if (randomValue > 0.75)
                         {
                             result = smallTreeEntity;
                         }
-                        else if (randomValue > 0.84)
+                        else if (randomValue > 0.74)
                         {
                             result = treeStumpEntity;
                         }

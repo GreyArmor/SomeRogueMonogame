@@ -65,22 +65,22 @@
       "isLooping": false,
       "frameDuration": 0.2
     },
-    "arrowFront": {
+    "shootFront": {
       "frames": [60,61,62,63,64],
       "isLooping": false,
       "frameDuration": 0.2
     },
-    "arrowBack": {
+    "shootBack": {
       "frames": [65,66,67,68,69],
       "isLooping": false,
       "frameDuration": 0.2
     },
-    "arrowRight": {
+    "shootRight": {
       "frames": [70,71,72,73,74],
       "isLooping": false,
       "frameDuration": 0.2
     },
-    "arrowLeft": {
+    "shootLeft": {
       "frames": [75,76,78,79],
       "isLooping": false,
       "frameDuration": 0.2

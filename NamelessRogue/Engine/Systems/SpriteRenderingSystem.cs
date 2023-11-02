@@ -113,7 +113,7 @@ namespace NamelessRogue.Engine.Systems
 					foreach (var obj in objectGroup)
 					{
 						Entity doodadEntity = new Entity();
-						doodadEntity.AddComponent(new SpriteModel3D("treeEvergreen"));
+						doodadEntity.AddComponent(new SpriteModel3D("palmTree"));
 						doodadEntity.AddComponent(new Position3D(new Vector3(obj.position.X, obj.position.Y, 0), Vector2.UnitX));
 					}
 				}
@@ -173,16 +173,13 @@ namespace NamelessRogue.Engine.Systems
 							animationSuffix = "Left";
 						}
 
-						spriteModel.Sprite.Play("cast" + animationSuffix);
+						spriteModel.Sprite.Play("walk" + animationSuffix);
 						spriteModel.Sprite.Update(gameTime);
 					}
 
 					Vector3 spritePosition = worldPos.Value;
 
 					Vector3 viewSpacePosition = Vector3.Transform(spritePosition, camera.View * invertY);
-
-
-
 
 					if (spriteModel.IdleOnly)
 					{

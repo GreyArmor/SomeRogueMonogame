@@ -23,6 +23,6 @@ namespace NamelessRogue.Engine.Components.Physical
 
 		public Tile Tile { get; set; }
 
-		public Vector3? WorldPosition { get; set; }
+		public Vector3? WorldPosition { get; set; } = null;
 	}
 }

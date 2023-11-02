@@ -46,7 +46,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
             }
 
-
             if (worldProvider != null)
             {
                 foreach (IEntity entity in this.RegisteredEntities)

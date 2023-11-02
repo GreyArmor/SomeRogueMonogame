@@ -47,9 +47,6 @@
     <None Update="Content\AnimatedCharacters\EasyChar_2023-10-31T21_44_08.635Z.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Content\AnimatedCharacters\EasyChar_2023-10-31T21_44_08.635Z.sf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Content\Credits.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

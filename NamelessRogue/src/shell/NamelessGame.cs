@@ -284,8 +284,8 @@ namespace NamelessRogue.shell
 				//    }
 				//}
 
-				CharacterFactory.CreateBlankNpc(x - 6,
-					y, this);
+				//CharacterFactory.CreateBlankNpc(game, x - 6,
+				//	y, this);
 				//Entities.Add(CharacterFactory.CreateBlankNpc(x - 3,
 				//    y));
 				//Entities.Add(CharacterFactory.CreateBlankNpc(x - 5,
@@ -332,8 +332,15 @@ namespace NamelessRogue.shell
 
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
 
-				player.AddComponent(new SpriteModel3D(this, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
-				player.AddComponent(new Position3D());
+				var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 10, 20);
+
+				CharacterFactory.CreateNpcField(rect, Vector2.UnitY, "Red", this);
+
+			
+
+				rect = new Rectangle(TestMapPosition.Point.X + 10, TestMapPosition.Point.Y + 10, 10, 20);
+				
+				CharacterFactory.CreateNpcField(rect, -Vector2.UnitY, "Blue", this);
 
 				PlayerEntity = player;
 
