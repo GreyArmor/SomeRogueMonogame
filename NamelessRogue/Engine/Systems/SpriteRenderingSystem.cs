@@ -158,7 +158,7 @@ namespace NamelessRogue.Engine.Systems
 			var offset = Constants.ChunkSize * (300 - Constants.RealityBubbleRangeInChunks);
 			var player = namelessGame.PlayerEntity;	var frustrum = new BoundingFrustum(camera.View * camera.Projection);
 
-
+			const float spriteScaleDownCoef = 0.0001f;
 			Matrix invertY = Matrix.CreateScale(1, -1, 1);
 			basicEffect.World = invertY;
 			basicEffect.View = Matrix.Identity;
@@ -171,13 +171,13 @@ namespace NamelessRogue.Engine.Systems
 				var tileToDraw = namelessGame.WorldProvider.GetTile((int)p.X, (int)p.Y);
 				var position = new Point((int)(p.X - offset), (int)(p.Y - offset));
 				var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
-
+				var spriteModel = entity.GetComponentOfType<SpriteModel3D>();
 				spriteBatch.Begin(0, null, Microsoft.Xna.Framework.Graphics.SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, basicEffect);
 
 				var worldPos = Vector3.Transform(Vector3.One, world);
 				if (frustrum.Contains(worldPos) == Microsoft.Xna.Framework.ContainmentType.Contains)
 				{
-					var spriteModel = entity.GetComponentOfType<SpriteModel3D>();
+					
 
 
 					var viewport = namelessGame.GraphicsDevice.Viewport;
@@ -219,7 +219,7 @@ namespace NamelessRogue.Engine.Systems
 
 
 					spriteModel.Sprite.Depth = viewSpacePosition.Z;
-					spriteBatch.Draw(spriteModel.Sprite, new Vector2(viewSpacePosition.X, viewSpacePosition.Y), 0, new Vector2(0.0001f, 0.0001f));
+					spriteBatch.Draw(spriteModel.Sprite, new Vector2(viewSpacePosition.X, viewSpacePosition.Y), 0, new Vector2(spriteScaleDownCoef, spriteScaleDownCoef));
 				}
 
 				spriteBatch.End();
