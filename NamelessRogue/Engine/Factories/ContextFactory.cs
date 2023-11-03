@@ -46,7 +46,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new HudSystem());
                 systems.Add(new Camera3DSystem(game));
                 systems.Add(new TerrainClickSystem());
-
+                systems.Add(new SelectionSystem());
 				systems.Add(new Chunk3DManagementSystem());
                 systems.Add(new SoundPlaySystem());
               
@@ -54,10 +54,10 @@ namespace NamelessRogue.Engine.Factories
 
                 var renderingSystem = new RenderingSystem3D(game.GetSettings(), game);
                 var uiSystem = new UIRenderSystem(game);
-				var testStriteSystem = new SpriteRenderingSystem(game);
+				var spriteSystem = new SpriteRenderingSystem(game);
 
 
-				IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem, testStriteSystem, uiSystem },
+				IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem, spriteSystem, uiSystem, new SelectionRenderingSystem(game) },
                     UIController.Instance.HudScreen, "InGame");
 
                 return IngameContext;

@@ -46,7 +46,9 @@ namespace NamelessRogue.Engine.Systems
 
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 		List<Keys> immediatePressedKeys = new List<Keys>();
-
+        MouseState LastMouseState { get; set; }
+        MouseState MouseState { get; set; }
+        bool mouseStateChanged = false;
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             //should probably move to monogame keys anyway, if im not doing roguelike controls anymore
@@ -56,17 +58,26 @@ namespace NamelessRogue.Engine.Systems
 			if (keyPressed.IsKeyDown(Keys.A)) immediatePressedKeys.Add(Keys.A);
 			if (keyPressed.IsKeyDown(Keys.D)) immediatePressedKeys.Add(Keys.D);
 
-            if (immediatePressedKeys.Any())
+			MouseState = Mouse.GetState();
+
+            if (MouseState != LastMouseState)
+            {
+                mouseStateChanged = true;
+			}
+
+			if (immediatePressedKeys.Any() || mouseStateChanged)
             {
                 foreach (IEntity entity in RegisteredEntities)
                 {
 					InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                     //InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
-                    inputComponent.Intents.AddRange(translator.Translate(immediatePressedKeys.ToArray(), lastCommand));
+                    inputComponent.Intents.AddRange(translator.Translate(immediatePressedKeys.ToArray(), lastCommand, MouseState));
                 }
                 immediatePressedKeys.Clear();
 				lastCommand = Char.MinValue;
 				lastState = default;
+                LastMouseState = MouseState;
+                mouseStateChanged = false;
 			}
 			if (gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove > inputsTimeLimit)
             {
@@ -76,10 +87,12 @@ namespace NamelessRogue.Engine.Systems
                     InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
                     if (receiver != null && inputComponent != null && lastState != default)
                     {
-                        inputComponent.Intents.AddRange(translator.Translate(lastState.GetPressedKeys(), lastCommand));
+                        inputComponent.Intents.AddRange(translator.Translate(lastState.GetPressedKeys(), lastCommand, MouseState));
                         lastCommand = Char.MinValue;
                         lastState = default;
-                    }
+						LastMouseState = MouseState;
+						mouseStateChanged = false;
+					}
                 }
             }
 

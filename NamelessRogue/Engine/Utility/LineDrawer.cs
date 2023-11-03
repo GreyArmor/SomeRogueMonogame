@@ -8,7 +8,7 @@ using BoundingBoxXna = Microsoft.Xna.Framework.BoundingBox;
 namespace NamelessRogue.Engine.Utility
 {
 
-	public class DebugDraw : IDisposable
+	public class LineDrawer : IDisposable
 	{
 		#region Constants
 
@@ -36,7 +36,7 @@ namespace NamelessRogue.Engine.Utility
 
 		#region Initialization
 
-		public DebugDraw(GraphicsDevice device)
+		public LineDrawer(GraphicsDevice device)
 		{
 			vertexBuffer = new DynamicVertexBuffer(device, typeof(VertexPositionColor), MAX_VERTS, BufferUsage.WriteOnly);
 			indexBuffer = new DynamicIndexBuffer(device, typeof(ushort), MAX_INDICES, BufferUsage.WriteOnly);
@@ -51,7 +51,7 @@ namespace NamelessRogue.Engine.Utility
 
 		#region Dispose
 
-		~DebugDraw()
+		~LineDrawer()
 		{
 			Dispose(false);
 		}
@@ -82,7 +82,7 @@ namespace NamelessRogue.Engine.Utility
 		#region Draw
 
 		/// <summary>
-		/// Starts debug drawing by setting the required render states and camera information
+		/// Starts drawing by setting the required render states and camera information
 		/// </summary>
 		public void Begin(Matrix view, Matrix projection)
 		{
@@ -95,7 +95,7 @@ namespace NamelessRogue.Engine.Utility
 		}
 
 		/// <summary>
-		/// Ends debug drawing and restores standard render states
+		/// Ends drawing and restores standard render states
 		/// </summary>
 		public void End()
 		{

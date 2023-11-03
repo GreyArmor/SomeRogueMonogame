@@ -9,8 +9,8 @@ namespace NamelessRogue.Engine.Input
 {
     public class PickUpKeyIntentTranslator : IKeyIntentTraslator
     {
-        public List<Intent> Translate(Keys[] keyCodes, char lastCommand)
-        {
+        public List<Intent> Translate(Keys[] keyCodes, char lastCommand, MouseState mouseState)
+		{
             List<Intent> result = new List<Intent>();
             ////TODO: Add dictionary for actions, based on game config files
 

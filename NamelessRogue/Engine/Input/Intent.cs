@@ -24,8 +24,9 @@ namespace NamelessRogue.Engine.Input
         Quicksave,
         Quickload,
         ZoomIn,
-        ZoomOut
-    }
+        ZoomOut,
+        MouseChanged,
+	}
 
     public class Intent
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
@@ -320,6 +321,26 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 var zoomOutCommand = new ZoomCommand();
                                 namelessGame.Commander.EnqueueCommand(zoomOutCommand);
                                 break;
+                            case IntentEnum.MouseChanged:
+
+								MouseState mouseState = Mouse.GetState();
+
+								var player = namelessGame.PlayerEntity;
+								var selectionData = player.GetComponentOfType<SelectionData>();
+
+                                if (selectionData.SelectionState == SelectionState.None && mouseState.LeftButton == ButtonState.Pressed)
+                                {
+                                    namelessGame.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Start, mouseState.Position));
+                                }
+                                else if ((selectionData.SelectionState == SelectionState.Start || selectionData.SelectionState == SelectionState.Drag) && mouseState.LeftButton == ButtonState.Pressed)
+                                {
+                                    namelessGame.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Drag, mouseState.Position));
+                                }
+                                else if (selectionData.SelectionState == SelectionState.Drag && mouseState.LeftButton == ButtonState.Released)
+                                {
+									namelessGame.Commander.EnqueueCommand(new SelectionCommand(SelectionState.End, mouseState.Position));
+								}
+								break;
                             default:
                                 break;
                         }

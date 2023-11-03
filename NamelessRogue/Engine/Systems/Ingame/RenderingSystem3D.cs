@@ -240,10 +240,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 		}
 
-		DebugDraw debugDraw;
+		LineDrawer debugDraw;
 		protected void SetupDebugDraw(GraphicsDevice device)
 		{
-			debugDraw = new DebugDraw(device);
+			debugDraw = new LineDrawer(device);
 		}
 
 		void DrawDebugAxis(GraphicsDevice device, Camera3D camera)

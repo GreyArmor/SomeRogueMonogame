@@ -35,6 +35,7 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new FlowMoveComponent());
 			playerCharacter.AddComponent(new SpriteModel3D(game, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
 			playerCharacter.AddComponent(new Position3D());
+			playerCharacter.AddComponent(new SelectionData());
 
 			var stats = new Stats();
             stats.Health.Value = 100;

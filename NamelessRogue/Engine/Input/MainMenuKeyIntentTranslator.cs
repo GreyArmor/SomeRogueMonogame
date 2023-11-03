@@ -9,7 +9,7 @@ namespace NamelessRogue.Engine.Input
 {
     public class MainMenuKeyIntentTranslator : IKeyIntentTraslator
     {
-        public List<Intent> Translate(Keys[] keyCodes, char lastCommand)
+        public List<Intent> Translate(Keys[] keyCodes, char lastCommand, MouseState mouseState)
         {
             return new List<Intent>();
         }
