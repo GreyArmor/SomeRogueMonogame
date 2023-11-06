@@ -80,7 +80,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 						Nodes.Add(_key(coordX, coordY), new FlowNode()
 						{
 							Coordinate = new Point(coordX, coordY),
-							Occupied = false,
+							Occupied = !world.GetTile(coordX,coordY).IsPassable()
 						});
 					}
 				}
@@ -157,7 +157,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 						continue;
 					}
 					var neighborNode = Nodes[_keyP(neighborP)];
-					if (neighborNode != null && (bestCostFlowNode == null || bestCostFlowNode.IntegrationValue > neighborNode.IntegrationValue))
+					if (neighborNode != null && (bestCostFlowNode == null || (bestCostFlowNode.IntegrationValue > neighborNode.IntegrationValue && !neighborNode.Occupied)))
 					{
 						bestCostFlowNode = neighborNode;
 					}
@@ -176,7 +176,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		public Point GetNextPoint(Point from)
 		{
-			var s = Stopwatch.StartNew();
+			//var s = Stopwatch.StartNew();
 			//var position = from - flowFieldWorldPosition;
 			var next = Nodes[_keyP(from)].Next;
 
@@ -186,8 +186,8 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				return from;
 			}
 
-			s.Stop();
-			Debug.WriteLine(s.ElapsedMilliseconds);
+			//s.Stop();
+			//Debug.WriteLine(s.ElapsedMilliseconds);
 			return new Point(next.Coordinate.X, next.Coordinate.Y);
 		}
 	}

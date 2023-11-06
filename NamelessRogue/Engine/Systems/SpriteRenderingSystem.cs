@@ -58,9 +58,11 @@ namespace NamelessRogue.Engine.Systems
 			var postionOffsetY = positon.Y * Constants.ChunkSize;
 			var objects = new List<ModelInstance>();
 
-			for (int x = 0; x < 100 * Constants.ChunkSize; x++)
+			var chSize = 100 * Constants.ChunkSize;
+
+			for (int x = 0; x < chSize; x++)
 			{
-				for (int y = 0; y < 100 * Constants.ChunkSize; y++)
+				for (int y = 0; y < chSize; y++)
 				{
 					Tile tileToDraw = world.GetTile(x + postionOffsetX, y + postionOffsetY);
 					foreach (var entity in tileToDraw.GetEntities())
@@ -104,7 +106,7 @@ namespace NamelessRogue.Engine.Systems
 					worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
 				}
 				once = false;
-				objectsToDraw = GetWorldObjectsToDraw(new Point(300, 300), worldProvider);
+				objectsToDraw = GetWorldObjectsToDraw(new Point(300 - Constants.RealityBubbleRangeInChunks, 300 - Constants.RealityBubbleRangeInChunks), worldProvider);
 
 				var objectGroups = objectsToDraw.GroupBy(x => x.modelId);
 
