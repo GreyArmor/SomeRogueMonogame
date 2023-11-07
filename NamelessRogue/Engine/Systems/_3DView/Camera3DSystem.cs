@@ -109,6 +109,7 @@ namespace NamelessRogue.Engine.Systems._3DView
             Vector3 cameraRotatedUpVector = Vector3.Transform(cameraOriginalUpVector, cameraRotationUpDown * rotationLeftRight);
             camera.Look = cameraRotatedTarget;
             camera.View = Matrix.CreateLookAt(camera.Position, cameraFinalTarget, cameraRotatedUpVector);
+            camera.Up = cameraRotatedUpVector;
         }
     }
 }

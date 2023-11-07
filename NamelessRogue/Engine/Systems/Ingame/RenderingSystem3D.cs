@@ -1,49 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RogueSharp.Random;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
-using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
-using NamelessRogue.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.Environment;
-using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
-using NamelessRogue.Engine.Utility;
-using NamelessRogue.FieldOfView;
-using NamelessRogue.shell;
-using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
-using System.Diagnostics;
-using NamelessRogue.Engine.Components._3D;
-using System.Reflection.Metadata;
-using System.Windows.Forms;
-using AStarNavigator;
-using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
 using NamelessRogue.Engine.Systems._3DView;
-using VertexBuffer = Microsoft.Xna.Framework.Graphics.VertexBuffer;
+using NamelessRogue.Engine.Utility;
+using NamelessRogue.shell;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
-using SharpDX.XAudio2;
 using Color = Microsoft.Xna.Framework.Color;
+using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
+using VertexBuffer = Microsoft.Xna.Framework.Graphics.VertexBuffer;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
 	public class RenderingSystem3D : BaseSystem
-    {
-        public override HashSet<Type> Signature { get; }
+	{
+		public override HashSet<Type> Signature { get; }
 
-        public static readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
-        (
-            new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
-            new VertexElement(sizeof(float) * 3, VertexElementFormat.Vector4, VertexElementUsage.Color, 0),
-            new VertexElement(sizeof(float) * 7, VertexElementFormat.Vector4, VertexElementUsage.Color, 1),
-            new VertexElement(sizeof(float) * 11, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0),
-            new VertexElement(sizeof(float) * 13, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0)
-        );
+		public static readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
+		(
+			new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+			new VertexElement(sizeof(float) * 3, VertexElementFormat.Vector4, VertexElementUsage.Color, 0),
+			new VertexElement(sizeof(float) * 7, VertexElementFormat.Vector4, VertexElementUsage.Color, 1),
+			new VertexElement(sizeof(float) * 11, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0),
+			new VertexElement(sizeof(float) * 13, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0)
+		);
 
 		public static readonly VertexDeclaration VertexShaderInstanceInput = new VertexDeclaration
 		(
@@ -53,6 +42,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			new VertexElement(sizeof(float) * 8, VertexElementFormat.Vector4, VertexElementUsage.TextureCoordinate, 3),
 			new VertexElement(sizeof(float) * 12, VertexElementFormat.Vector4, VertexElementUsage.TextureCoordinate, 4)
 		);
+
+		public static readonly VertexDeclaration VertexShaderBillboardInstanceDataInput = new VertexDeclaration
+		(
+			new VertexElement(0, VertexElementFormat.Vector4, VertexElementUsage.TextureCoordinate, 1)
+		);
+
 
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct VertexShaderInstanceMatrix
@@ -65,10 +60,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 			public VertexShaderInstanceMatrix(Matrix matrix)
 			{
-				row1 = new Vector4(matrix[0,0], matrix[0, 1], matrix[0, 2], matrix[0, 3]);
+				row1 = new Vector4(matrix[0, 0], matrix[0, 1], matrix[0, 2], matrix[0, 3]);
 				row2 = new Vector4(matrix[1, 0], matrix[1, 1], matrix[1, 2], matrix[1, 3]);
 				row3 = new Vector4(matrix[2, 0], matrix[2, 1], matrix[2, 2], matrix[2, 3]);
 				row4 = new Vector4(matrix[3, 0], matrix[3, 1], matrix[3, 2], matrix[3, 3]);
+			}
+		}
+
+
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct VertexShaderBillboardInstanceData
+		{
+			// ReSharper disable NotAccessedField.Local
+			public Vector3 position;
+
+			public VertexShaderBillboardInstanceData(Vector3 pos)
+			{
+				position = new Vector3(pos.X, pos.Y, pos.Z);
 			}
 		}
 
@@ -77,17 +85,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		Effect effect;
 		Effect shadedInstancedEffect;
 
-        SamplerState sampler = new SamplerState()
-        {
-            AddressU = TextureAddressMode.Clamp,
-            AddressV = TextureAddressMode.Clamp,
-            AddressW = TextureAddressMode.Clamp,
-            Filter = TextureFilter.Anisotropic,
-            FilterMode = TextureFilterMode.Default,
-            MaxMipLevel = 0,
-            MaxAnisotropy = 0,
+		SamplerState sampler = new SamplerState()
+		{
+			AddressU = TextureAddressMode.Clamp,
+			AddressV = TextureAddressMode.Clamp,
+			AddressW = TextureAddressMode.Clamp,
+			Filter = TextureFilter.Anisotropic,
+			FilterMode = TextureFilterMode.Default,
+			MaxMipLevel = 0,
+			MaxAnisotropy = 0,
 
-        };
+		};
 
 		LightSource sunLight;
 		float angleRotation = 70;
@@ -105,20 +113,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		void CalculateSun(float angle, Vector3 landCentre)
 		{
 			float offset = 3;
-			sunLight.Position = new Vector3(LandCenter.X + (MathF.Cos(angle)* offset), LandCenter.Y, LandCenter.Z + (MathF.Sin(angle)* offset));
+			sunLight.Position = new Vector3(LandCenter.X + (MathF.Cos(angle) * offset), LandCenter.Y, LandCenter.Z + (MathF.Sin(angle) * offset));
 			sunLight.LookAtPoint = LandCenter;
 			sunLight.RecalculateMatrix();
 		}
 
 
-        class ModelInstance
-        {
-            public string modelId;
-            public Matrix position;
-        }
-        //for test
+		class ModelInstance
+		{
+			public string modelId;
+			public Matrix position;
+		}
+		//for test
 		List<ModelInstance> objectsToDraw = new List<ModelInstance>();
-        bool once = true;
+		bool once = true;
 
 		VertexBuffer hackBuffer;
 		IndexBuffer hackBufferIndices;
@@ -131,7 +139,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			points.Add(new Vector3(size, size, 0));
 			points.Add(new Vector3(-size, size, 0));
 
-			List<int> indices = new List<int>() {0,1,2,2,3,1 };
+			List<int> indices = new List<int>() { 0, 1, 2, 2, 3, 1 };
 
 			Queue<Vertex3D> vertices = new Queue<Vertex3D>();
 			foreach (var point in points)
@@ -148,10 +156,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		}
 		Vector3 LandCenter;
 		public override void Update(GameTime gameTime, NamelessGame game)
-        {
+		{
 			game.GraphicsDevice.BlendState = BlendState.Opaque;
-            game.GraphicsDevice.SamplerStates[0] = sampler;
-            game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+			game.GraphicsDevice.SamplerStates[0] = sampler;
+			game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
 
 			IEntity worldEntity = game.TimelineEntity;
@@ -159,7 +167,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			if (worldEntity != null)
 			{
 				worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-            }
+			}
 			if (once)
 			{
 				effect = game.Content.Load<Effect>("ChunkShader3D");
@@ -208,7 +216,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 			RenderChunksToShadowMap(game);
 			RenderObjectsToShadowMap(game);
-		
+
 			device.SetRenderTarget(null);
 			var shadowMap = (Texture2D)sunLight.ShadowMapRenderTarget;
 
@@ -222,12 +230,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			var matrix = Matrix.CreateTranslation(sunLight.Position);
 			effect.Parameters["xWorldViewProjection"].SetValue(matrix * camera.View * camera.Projection);
 			RenderDebug(game);
-			//RenderObjects(game);
+		//	RenderObjects(game);
 
 			//effect.GraphicsDevice.SamplerStates[0] = SamplerState.Linea	rClamp;
 			//effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
-			DrawDebugAxis(device,camera);
+			DrawDebugAxis(device, camera);
 
 			//using (SpriteBatch sprite = new SpriteBatch(device))
 			//{
@@ -236,7 +244,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			//	sprite.End();
 			//}
 
-		
+
 
 		}
 
@@ -316,9 +324,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		}
 
 		private void RenderChunks(NamelessGame game)
-        {
+		{
 			var device = game.GraphicsDevice;
-            var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 			effect.CurrentTechnique = effect.Techniques["ColorTech"];
 			foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
 			{
@@ -332,7 +340,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
 				}
 			}
-        }
+		}
 
 		private void RenderChunksWithShadows(NamelessGame game)
 		{
@@ -387,12 +395,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		Dictionary<string, VertexBuffer> instanceBufferCache = new Dictionary<string, VertexBuffer>();
 		private void RenderObjects(NamelessGame game)
 		{
-					
+
 			effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
 			effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
 			var device = game.GraphicsDevice;
-			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 			effect.CurrentTechnique = effect.Techniques["ColorTechInstanced"];
 
 			//avoid setting the same buffer a million times, only transform is changed
@@ -424,9 +431,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 				var bindings = new VertexBufferBinding[2];
 				bindings[0] = new VertexBufferBinding(geometry.Buffer);
-				bindings[1] = new VertexBufferBinding(instanceBuffer,0,1);
+				bindings[1] = new VertexBufferBinding(instanceBuffer, 0, 1);
 				device.SetVertexBuffers(bindings);
 				device.Indices = geometry.IndexBuffer;
+				//Matrix.CreateBillboard
 				foreach (EffectPass pass in effect.CurrentTechnique.Passes)
 				{
 					pass.Apply();
@@ -446,7 +454,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 			Geometry3D geometry = ModelsLibrary.Models["smallTree"];
 			var offset = Constants.ChunkSize * (300 - Constants.RealityBubbleRangeInChunks);
-			var player = game.PlayerEntity; 
+			var player = game.PlayerEntity;
 			var p = player.GetComponentOfType<Position>().Point;
 			var position = new Point(p.X - offset, p.Y - offset);
 			var tileToDraw = game.WorldProvider.GetTile(p.X, p.Y);
@@ -577,5 +585,5 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			device.RasterizerState = oldstate;
 		}
 		#endregion
-    }
+	}
 }

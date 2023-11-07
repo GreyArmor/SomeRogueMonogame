@@ -1,26 +1,35 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FbxSharp;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
+using MonoGame.Extended.Content;
+using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
-using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
-using static NamelessRogue.Engine.Systems.Ingame.RenderingSystem3D;
+using System.Diagnostics;
 using System.Linq;
+using static NamelessRogue.Engine.Systems.Ingame.RenderingSystem3D;
+using BoundingFrustum = Microsoft.Xna.Framework.BoundingFrustum;
+using Color = Microsoft.Xna.Framework.Color;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Point = Microsoft.Xna.Framework.Point;
+using SamplerState = Microsoft.Xna.Framework.Graphics.SamplerState;
 using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
+using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Diagnostics;
+using VertexBuffer = Microsoft.Xna.Framework.Graphics.VertexBuffer;
 
 namespace NamelessRogue.Engine.Systems
 {
@@ -29,7 +38,8 @@ namespace NamelessRogue.Engine.Systems
 		class ModelInstance
 		{
 			public string modelId;
-			public Point position;
+			public Vector3 position;
+			public Point2 tile;
 		}
 		public SpriteRenderingSystem(NamelessGame game)
 		{
@@ -37,12 +47,65 @@ namespace NamelessRogue.Engine.Systems
 			//	spriteFont = Content.Load<SpriteFont>("font");
 
 			spriteEffect = new AlphaTestEffect(game.GraphicsDevice)
-			{			
+			{
 				VertexColorEnabled = true,
 			};
 			spriteEffect.World = invertY;
 			spriteEffect.View = Matrix.Identity;
 		}
+
+		static List<Vector3> _points = new List<Vector3>();
+		static List<int> _indices = new List<int>();
+		Geometry3D CreateSpriteGeometry(NamelessGame namelessGame, SpriteSheetAnimation sheetAnimation)
+		{
+
+			var scale = 0.01f;
+			_points.Add(new Vector3(1, 1, 0) * scale);
+			_points.Add(new Vector3(-1, 1, 0) * scale);
+			_points.Add(new Vector3(-1, -1, 0) * scale);
+			_points.Add(new Vector3(1, -1, 0) * scale);
+
+			_indices.AddRange(new int[6] { 0, 1, 2, 2, 3, 0 });
+			var geometry3D = new Geometry3D();
+			List<Vertex3D> vertices = new List<Vertex3D>();
+
+			var frame = sheetAnimation.CurrentFrame;
+
+			var texelWidth = 1f / frame.Texture.Width;
+			
+
+			void _addVertice(Vector3 position, Vector2 textureCoords)
+			{
+				vertices.Add(new Vertex3D(position, Color.White.ToVector4(), Color.White.ToVector4(), textureCoords, -Vector3.UnitZ));
+			}
+
+			//	var 
+
+			var x = frame.Bounds.X;
+			var y = frame.Bounds.Y;
+			var sizeX = frame.Bounds.Size.X;
+			var sizeY = frame.Bounds.Size.Y;
+			_addVertice(_points[0], new Vector2((x + sizeX) * texelWidth, (y + sizeY) * texelWidth));
+			_addVertice(_points[1], new Vector2(x * texelWidth, (y + sizeY) * texelWidth));
+			_addVertice(_points[2], new Vector2(x * texelWidth, y * texelWidth));
+			_addVertice(_points[3], new Vector2((x + sizeX) * texelWidth, y * texelWidth));
+		
+			//vertices.Add(new Vertex3D(_points[0], Color.White.ToVector4(), Color.White.ToVector4(), new Vector2(frame.Bounds.X * texelWidth, (frame.Bounds.Y + frame.Bounds.Size.Y) * texelWidth),			);
+			//vertices.Add(new Vertex3D(_points[1], Color.White.ToVector4(), Color.White.ToVector4(), new Vector2(frame.Bounds.X * texelWidth, frame.Bounds.Y * texelWidth), -Vector3.UnitZ));
+			//vertices.Add(new Vertex3D(_points[2], Color.White.ToVector4(), Color.White.ToVector4(), new Vector2((frame.Bounds.X + frame.Bounds.Size.X) * texelWidth, (frame.Bounds.Y + frame.Bounds.Size.Y) * texelWidth), -Vector3.UnitZ));
+			//vertices.Add(new Vertex3D(_points[3], Color.White.ToVector4(), Color.White.ToVector4(), new Vector2((frame.Bounds.X + frame.Bounds.Size.X) * texelWidth, frame.Bounds.Y * texelWidth), -Vector3.UnitZ));
+			
+
+			geometry3D.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, _points.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
+			geometry3D.Buffer.SetData(vertices.ToArray());
+			geometry3D.IndexBuffer = new Microsoft.Xna.Framework.Graphics.IndexBuffer(namelessGame.GraphicsDevice, Microsoft.Xna.Framework.Graphics.IndexElementSize.ThirtyTwoBits, _indices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
+			geometry3D.IndexBuffer.SetData<int>(_indices.ToArray());
+			geometry3D.TriangleCount = 2;
+			geometry3D.Material = frame.Texture;
+			return geometry3D;
+		}
+
+
 
 		public override HashSet<Type> Signature => new HashSet<Type>() {
 			typeof(SpriteModel3D), typeof(Position3D)
@@ -50,19 +113,23 @@ namespace NamelessRogue.Engine.Systems
 
 		private SpriteBatch spriteBatch;
 		private AlphaTestEffect spriteEffect;
+
+		Effect effect;
+
 		List<ModelInstance> objectsToDraw = new List<ModelInstance>();
 		bool once = true;
-		private List<ModelInstance> GetWorldObjectsToDraw(Point positon, IWorldProvider world)
+		private List<ModelInstance> GetWorldObjectsToDraw(Point positon, IWorldProvider world, out Point2 tilePosition)
 		{
 			var postionOffsetX = positon.X * Constants.ChunkSize;
 			var postionOffsetY = positon.Y * Constants.ChunkSize;
 			var objects = new List<ModelInstance>();
+			tilePosition = new Point2();
 
 			var chSize = 100 * Constants.ChunkSize;
 
-			for (int x = 0; x < chSize; x++)
+			for (int x = 0; x < chSize - 1; x++)
 			{
-				for (int y = 0; y < chSize; y++)
+				for (int y = 0; y < chSize - 1; y++)
 				{
 					Tile tileToDraw = world.GetTile(x + postionOffsetX, y + postionOffsetY);
 					foreach (var entity in tileToDraw.GetEntities())
@@ -71,19 +138,15 @@ namespace NamelessRogue.Engine.Systems
 						var drawable = entity.GetComponentOfType<Drawable>();
 						if (furniture != null && drawable != null)
 						{
-							if (drawable.Representation == 'T')
+							if (drawable.Representation == 'T' || drawable.Representation == 'T')
 							{
 								//var modelShift = Matrix.CreateTranslation(0.5f, 0.5f, 2f);
-								//Matrix.CreateTranslation(Constants.ScaleDownCoeficient * x, Constants.ScaleDownCoeficient * y, (float)tileToDraw.Elevation, out Matrix pos);
-								objects.Add(new ModelInstance() { modelId = "smallTree", position = new Point(x+ postionOffsetX, y+ postionOffsetY) });
-								//return objects;s
-							}
-							if (drawable.Representation == 't')
-							{
+								tilePosition = new Point2(x + postionOffsetX, y + postionOffsetY);
+								var matrix = Constants.ScaleDownMatrix * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
+								Matrix.CreateTranslation(Constants.ScaleDownCoeficient * x, Constants.ScaleDownCoeficient * y, (float)tileToDraw.Elevation, out Matrix pos);
+								objects.Add(new ModelInstance() { modelId = "smallTree", position = Vector3.Transform(Vector3.One, matrix), tile = tilePosition });
 
-								//Matrix.CreateTranslation(Constants.ScaleDownCoeficient * x, Constants.ScaleDownCoeficient * y, (float)tileToDraw.Elevation, out Matrix pos);
-								objects.Add(new ModelInstance() { modelId = "smallTree", position = new Point(x+ postionOffsetX, y+ postionOffsetY) });
-								//return objects;
+								//return objects;s
 							}
 						}
 					}
@@ -105,27 +168,36 @@ namespace NamelessRogue.Engine.Systems
 				{
 					worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
 				}
+
+				objectsToDraw = GetWorldObjectsToDraw(new Point(300 - Constants.RealityBubbleRangeInChunks, 300 - Constants.RealityBubbleRangeInChunks), worldProvider, out Point2 tilePosition);
+
+				var obj = objectsToDraw.First();
+				Entity doodadEntity = new Entity();
+				var sp = new SpriteModel3D("cacti");
+				sp.IdleOnly = true;
+				doodadEntity.AddComponent(sp);
+				doodadEntity.AddComponent(new Position3D(new Vector3(tilePosition.X, tilePosition.Y, 0), Vector2.UnitX));
 				once = false;
-				objectsToDraw = GetWorldObjectsToDraw(new Point(300 - Constants.RealityBubbleRangeInChunks, 300 - Constants.RealityBubbleRangeInChunks), worldProvider);
 
 				var objectGroups = objectsToDraw.GroupBy(x => x.modelId);
 
-				foreach (var objectGroup in objectGroups)
+				foreach (var group in objectGroups)
 				{
-					foreach (var obj in objectGroup)
-					{
-						Entity doodadEntity = new Entity();
-						doodadEntity.AddComponent(new SpriteModel3D("palmTree"));
-						doodadEntity.AddComponent(new Position3D(new Vector3(obj.position.X, obj.position.Y, 0), Vector2.UnitX));
-					}
+					var spriteSheet = namelessGame.Content.Load<SpriteSheet>("Doodads\\cacti.sf", new JsonContentLoader());
+					var spr = new AnimatedSprite(spriteSheet);
+					spriteCache.Add(group.Key, CreateSpriteGeometry(namelessGame, spr.Play("idleFront")));
 				}
+
+				effect = namelessGame.Content.Load<Effect>("ChunkShader3D");
 			}
 
 			Camera3D camera = namelessGame.PlayerEntity.GetComponentOfType<Camera3D>();
-			
-			var player = namelessGame.PlayerEntity; 
+
+			var player = namelessGame.PlayerEntity;
 			var frustrum = new BoundingFrustum(camera.View * camera.Projection);
-			spriteEffect.Projection = camera.Projection;	
+
+			spriteEffect.View = Matrix.Identity;
+			spriteEffect.Projection = camera.Projection;
 			spriteBatch.Begin(0, BlendState.AlphaBlend, Microsoft.Xna.Framework.Graphics.SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, spriteEffect);
 			foreach (var entity in RegisteredEntities)
 			{
@@ -143,10 +215,10 @@ namespace NamelessRogue.Engine.Systems
 					var tileToDraw = pos3d.Tile;
 					var position = new Point((int)(p.X - offset), (int)(p.Y - offset));
 					var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
-					pos3d.WorldPosition = Vector3.Transform(Vector3.One, world); ; 
+					pos3d.WorldPosition = Vector3.Transform(Vector3.One, world);
 				}
 				var worldPos = pos3d.WorldPosition;
-				if (frustrum.Contains(worldPos.Value) == Microsoft.Xna.Framework.ContainmentType.Contains)
+				//	if (frustrum.Contains(worldPos.Value) == Microsoft.Xna.Framework.ContainmentType.Contains)
 				{
 					var spriteModel = entity.GetComponentOfType<SpriteModel3D>();
 					var viewport = namelessGame.GraphicsDevice.Viewport;
@@ -185,8 +257,8 @@ namespace NamelessRogue.Engine.Systems
 
 					if (spriteModel.IdleOnly)
 					{
-						SpriteLibrary.SpritesIdle[spriteModel.SpriteId].Depth = viewSpacePosition.Z;
-						spriteBatch.Draw(SpriteLibrary.SpritesIdle[spriteModel.SpriteId], new Vector2(viewSpacePosition.X, viewSpacePosition.Y), 0, new Vector2(spriteScaleDownCoef, spriteScaleDownCoef));
+						//SpriteLibrary.SpritesIdle[spriteModel.SpriteId].Depth = viewSpacePosition.Z;
+						//	spriteBatch.Draw(SpriteLibrary.SpritesIdle[spriteModel.SpriteId], new Vector2(viewSpacePosition.X, viewSpacePosition.Y), 0, new Vector2(spriteScaleDownCoef, spriteScaleDownCoef));
 					}
 					else
 					{
@@ -196,7 +268,131 @@ namespace NamelessRogue.Engine.Systems
 				}
 			}
 			spriteBatch.End();
+
+			effect.Parameters["xViewProjection"].SetValue(camera.View * camera.Projection);
+			effect.Parameters["xWorldViewProjection"].SetValue(camera.View * camera.Projection);
+
+			//	camera.View.Decompose(out var scale, out var quat, out var translation);
+
+			effect.Parameters["xView"].SetValue(camera.View);
+			effect.Parameters["xProjection"].SetValue(camera.Projection);
+			effect.Parameters["CameraPosition"].SetValue(camera.Position);
+			effect.Parameters["CameraUp"].SetValue(camera.Up);
+			effect.Parameters["CameraRight"].SetValue(camera.Right);
+			effect.Parameters["xViewProjection"].SetValue(camera.Projection * camera.View);
+
+			var invertedView = Matrix.Invert(camera.View);
+			if (camera.View == Matrix.Identity)
+			{
+				return;
+			}
+
+
+			effect.Parameters["xBillboard"].SetValue(invertedView);
+
+
+			RenderStaticObjects(namelessGame, camera);
 		}
+
+
+
+
+		Dictionary<string, int> cacheCheckDictionary = new Dictionary<string, int>();
+		Dictionary<string, VertexBuffer> instanceBufferCache = new Dictionary<string, VertexBuffer>();
+		Dictionary<string, Geometry3D> spriteCache = new Dictionary<string, Geometry3D>();
+		Matrix worldtest;
+		List<VertexShaderInstanceMatrix> instanceTransforms;
+		private void RenderStaticObjects(NamelessGame game, Camera3D camera)
+		{
+
+			effect.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
+			//effect.GraphicsDevice.BlendState = BlendState.Opaque;
+
+			var device = game.GraphicsDevice;
+			effect.CurrentTechnique = effect.Techniques["TextureTechInstanced"];
+
+			effect.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
+			effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+			effect.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+			effect.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+
+			//avoid setting the same buffer a million times, only transform is changed
+			var objectGroups = objectsToDraw.GroupBy(x => x.modelId);
+
+			foreach (var group in objectGroups)
+			{
+				VertexBuffer instanceBuffer;
+				var groupCount = group.Count();
+				if (cacheCheckDictionary.TryGetValue(group.Key, out int numberOfInstances) && numberOfInstances == groupCount)
+				{
+					instanceBuffer = instanceBufferCache[group.Key];
+				}
+				else
+				{
+					instanceTransforms = new List<VertexShaderInstanceMatrix>();
+					//create insatnce data buffer
+					foreach (var gameObject in objectsToDraw)
+					{
+
+						var tileToDraw = game.WorldProvider.GetTile((int)gameObject.tile.X, (int)gameObject.tile.Y);
+						var p = gameObject.tile;
+						var position = new Point((int)(p.X - offset), (int)(p.Y - offset));
+						var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
+						var worldPos = Vector3.Transform(Vector3.Zero, world); 
+						instanceTransforms.Add(new VertexShaderInstanceMatrix(world));
+					}
+
+				
+					instanceBuffer = new VertexBuffer(device, VertexShaderInstanceInput, instanceTransforms.Count, BufferUsage.WriteOnly);
+					instanceBuffer.SetData(instanceTransforms.ToArray());
+					cacheCheckDictionary[group.Key] = groupCount;
+					instanceBufferCache[group.Key] = instanceBuffer;
+				}
+				var geometry = spriteCache[group.First().modelId];
+				effect.Parameters["tileAtlas"].SetValue(SpriteLibrary.SpritesIdle["cacti"].TextureRegion.Texture);
+				var bindings = new VertexBufferBinding[2];
+				bindings[0] = new VertexBufferBinding(geometry.Buffer);
+				bindings[1] = new VertexBufferBinding(instanceBuffer, 0, 1);
+				device.SetVertexBuffers(bindings);
+				device.Indices = geometry.IndexBuffer;
+				foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+				{
+					pass.Apply();
+					device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, cacheCheckDictionary[group.Key]);
+				}
+			}
+		}
+
+
+		public Vector3 Project(Viewport viewport,  Vector3 source, Matrix projection, Matrix view, Matrix world)
+		{
+			Matrix matrix = Matrix.Multiply(Matrix.Multiply(world, view), projection);
+			Vector3 result = Vector3.Transform(source, matrix);
+			float num = source.X * matrix.M14 + source.Y * matrix.M24 + source.Z * matrix.M34 + matrix.M44;
+			if (!WithinEpsilon(num, 1f))
+			{
+				result.X /= num;
+				result.Y /= num;
+				result.Z /= num;
+			}
+
+			result.X = (result.X + 1f) * 0.5f * (float)viewport.Width + (float)viewport.X;
+			result.Y = (0f - result.Y + 1f) * 0.5f * (float)viewport.Height + (float)viewport.Y;
+			result.Z = result.Z * (viewport.MaxDepth - viewport.MinDepth) + viewport.MinDepth;
+			return result;
+		}
+
+		private static bool WithinEpsilon(float a, float b)
+		{
+			float num = a - b;
+			if (-1.401298E-45f <= num)
+			{
+				return num <= float.Epsilon;
+			}
+
+			return false;
+		}
+
 
 		//TODO useful utility, move somewhere appropriate
 		private double AngleBetween(Vector2 vector1, Vector2 vector2)
@@ -209,36 +405,6 @@ namespace NamelessRogue.Engine.Systems
 
 
 
-
-		//private void RenderTestPlayer(NamelessGame game, Camera3D camera)
-		//{
-
-
-		//	var device = game.GraphicsDevice;
-		//	var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
-		//	effect.CurrentTechnique = effect.Techniques["ColorTechShadowMap"];
-		//	//foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
-		//	//{
-
-		//	Geometry3D geometry = ModelsLibrary.Models["smallTree"];
-		//	var offset = Constants.ChunkSize * (300 - Constants.RealityBubbleRangeInChunks);
-		//	var player = game.PlayerEntity;
-		//	var p = player.GetComponentOfType<Position>().Point;
-		//	var position = new Point(p.X - offset, p.Y - offset);
-		//	var tileToDraw = game.WorldProvider.GetTile(p.X, p.Y);
-		//	//Matrix.CreateTranslation(Constants.ScaleDownCoeficient * position.X, Constants.ScaleDownCoeficient * position.Y, (float)tileToDraw.Elevation, out Matrix pos);
-		//	var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
-		//	effect.Parameters["xWorldViewProjection"].SetValue(world * camera.View * camera.Projection);
-
-		//	EffectPass pass = effect.CurrentTechnique.Passes[1];
-		//	pass.Apply();
-
-		//	device.SetVertexBuffer(geometry.Buffer);
-		//	device.Indices = geometry.IndexBuffer;
-
-		//	device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
-		//	//}
-		//}
 
 	}
 }

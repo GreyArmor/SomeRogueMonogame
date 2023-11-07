@@ -1,11 +1,14 @@
 ﻿
 float3 CameraPosition;
-Texture tileAtlas;
+float3 CameraUp;
+float3 CameraRight;
+Texture2D tileAtlas;
 float4x4 xView;
 float4x4 xProjection;
 float4x4 xViewProjection;
 float4x4 xWorldViewProjection;
 float4x4 xWorldMatrix;
+float4x4 xBillboard;
 
 //shadow mapping
 float4x4 xLightsWorldViewProjection;
@@ -33,6 +36,12 @@ struct VertexShaderInstanceInput
 	float4 row2 : TEXCOORD2;
 	float4 row3 : TEXCOORD3;
 	float4 row4 : TEXCOORD4;
+};
+
+//instance of billboard sprite data
+struct VertexShaderBillboardInstanceInput
+{
+	float4 position : TEXCOORD1;
 };
 
 float4x4 CreateMatrixFromRows(
@@ -139,6 +148,51 @@ VertexToPixel SimplestVertexShaderInstanced(VSIn input, VertexShaderInstanceInpu
 	return output;
 }
 
+VertexToPixel BillboardVertexShaderInstanced(VSIn input, VertexShaderInstanceInput instanceInput)
+{
+	VertexToPixel output;	
+	output.Color = input.inColor;
+	output.BackgroundColor = input.inBackgroundColor;
+	output.TextureCoordinate = input.inTextureCoord;
+	output.Normal = input.normal;
+	
+
+	float4x4 worldMatrixInstance = CreateMatrixFromRows(
+		instanceInput.row1,
+		instanceInput.row2,
+		instanceInput.row3,
+		instanceInput.row4);
+
+	float4 world = mul(float4(0,0,0,1), worldMatrixInstance);
+
+	float4 viewPosition = mul(world, xView);
+
+	float4 pos = mul(viewPosition, xProjection);
+
+	Matrix viewproj = xViewProjection;
+
+	float num = pos.x * viewproj[0][3] + pos.y * viewproj[1][3] + pos.z * viewproj[2][3] + viewproj[3][3];
+
+	if(-0.00001 >= (num-1))
+	{
+		pos.x = pos.x / num;
+		pos.y = pos.y / num;
+		pos.z = pos.z / num;
+	}	
+
+	pos.x = pos.x;
+	pos.y = pos.y;
+	pos.z = pos.z;
+
+	float4 finalPosition = float4(input.inPos.x - pos.x,  input.inPos.y - pos.y, pos.z, 1);
+
+	output.Position = finalPosition;
+	output.WorldPos = finalPosition.xyz;
+
+	return output;
+}
+
+
 technique ColorTech
 {
 	pass Pass0
@@ -156,6 +210,29 @@ technique ColorTechInstanced
 		PixelShader = compile ps_4_0 ColorPixelShader();
 	}
 }
+
+
+PixelToFrame SimplePixelShaderTextured(VertexToPixel PSIn)
+{
+	PixelToFrame Output = (PixelToFrame)0;
+
+	float4 textureColor = tileAtlas.Sample(textureSampler, PSIn.TextureCoordinate);
+
+	Output.Color = textureColor * PSIn.Color;
+	Output.Color.a = textureColor.a;
+	return Output;
+}
+
+
+technique TextureTechInstanced
+{
+	pass Pass0
+	{
+		VertexShader = compile vs_4_0 BillboardVertexShaderInstanced();
+		PixelShader = compile ps_4_0 SimplePixelShaderTextured();
+	}
+}
+
 
 
 struct SMapVertexToPixel
@@ -254,6 +331,8 @@ SScenePixelToFrame ShadowedScenePixelShader(SSceneVertexToPixel PSIn)
 	Output.Color.a = 1;
 	return Output;
 }
+
+
 
 
 technique ColorTechShadowMap
