@@ -75,13 +75,10 @@ namespace NamelessRogue.Engine.Systems
 
 			var texelWidth = 1f / frame.Texture.Width;
 			
-
 			void _addVertice(Vector3 position, Vector2 textureCoords)
 			{
 				vertices.Add(new Vertex3D(position, Color.White.ToVector4(), Color.White.ToVector4(), textureCoords, -Vector3.UnitZ));
 			}
-
-			//	var 
 
 			var x = frame.Bounds.X;
 			var y = frame.Bounds.Y;
@@ -92,12 +89,6 @@ namespace NamelessRogue.Engine.Systems
 			_addVertice(_points[1], new Vector2(x * texelWidth, y * texelWidth));
 			_addVertice(_points[0], new Vector2((x + sizeX) * texelWidth, y * texelWidth));
 		
-			//vertices.Add(new Vertex3D(_points[0], Color.White.ToVector4(), Color.White.ToVector4(), new Vector2(frame.Bounds.X * texelWidth, (frame.Bounds.Y + frame.Bounds.Size.Y) * texelWidth),			);
-			//vertices.Add(new Vertex3D(_points[1], Color.White.ToVector4(), Color.White.ToVector4(), new Vector2(frame.Bounds.X * texelWidth, frame.Bounds.Y * texelWidth), -Vector3.UnitZ));
-			//vertices.Add(new Vertex3D(_points[2], Color.White.ToVector4(), Color.White.ToVector4(), new Vector2((frame.Bounds.X + frame.Bounds.Size.X) * texelWidth, (frame.Bounds.Y + frame.Bounds.Size.Y) * texelWidth), -Vector3.UnitZ));
-			//vertices.Add(new Vertex3D(_points[3], Color.White.ToVector4(), Color.White.ToVector4(), new Vector2((frame.Bounds.X + frame.Bounds.Size.X) * texelWidth, frame.Bounds.Y * texelWidth), -Vector3.UnitZ));
-			
-
 			geometry3D.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, _points.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
 			geometry3D.Buffer.SetData(vertices.ToArray());
 			geometry3D.IndexBuffer = new Microsoft.Xna.Framework.Graphics.IndexBuffer(namelessGame.GraphicsDevice, Microsoft.Xna.Framework.Graphics.IndexElementSize.ThirtyTwoBits, _indices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
@@ -173,12 +164,6 @@ namespace NamelessRogue.Engine.Systems
 
 				objectsToDraw = GetWorldObjectsToDraw(new Point(300 - Constants.RealityBubbleRangeInChunks, 300 - Constants.RealityBubbleRangeInChunks), worldProvider, out Point2 tilePosition);
 
-				var obj = objectsToDraw.First();
-				Entity doodadEntity = new Entity();
-				var sp = new SpriteModel3D("cacti");
-				sp.IdleOnly = true;
-				doodadEntity.AddComponent(sp);
-				doodadEntity.AddComponent(new Position3D(new Vector3(tilePosition.X, tilePosition.Y, 0), Vector2.UnitX));
 				once = false;
 
 				var objectGroups = objectsToDraw.GroupBy(x => x.modelId);
@@ -220,7 +205,7 @@ namespace NamelessRogue.Engine.Systems
 					pos3d.WorldPosition = Vector3.Transform(Vector3.One, world);
 				}
 				var worldPos = pos3d.WorldPosition;
-				//	if (frustrum.Contains(worldPos.Value) == Microsoft.Xna.Framework.ContainmentType.Contains)
+				if (frustrum.Contains(worldPos.Value) == Microsoft.Xna.Framework.ContainmentType.Contains)
 				{
 					var spriteModel = entity.GetComponentOfType<SpriteModel3D>();
 					var viewport = namelessGame.GraphicsDevice.Viewport;
@@ -259,8 +244,8 @@ namespace NamelessRogue.Engine.Systems
 
 					if (spriteModel.IdleOnly)
 					{
-						//SpriteLibrary.SpritesIdle[spriteModel.SpriteId].Depth = viewSpacePosition.Z;
-						//	spriteBatch.Draw(SpriteLibrary.SpritesIdle[spriteModel.SpriteId], new Vector2(viewSpacePosition.X, viewSpacePosition.Y), 0, new Vector2(spriteScaleDownCoef, spriteScaleDownCoef));
+						SpriteLibrary.SpritesIdle[spriteModel.SpriteId].Depth = viewSpacePosition.Z;
+							spriteBatch.Draw(SpriteLibrary.SpritesIdle[spriteModel.SpriteId], new Vector2(viewSpacePosition.X, viewSpacePosition.Y), 0, new Vector2(spriteScaleDownCoef, spriteScaleDownCoef));
 					}
 					else
 					{
