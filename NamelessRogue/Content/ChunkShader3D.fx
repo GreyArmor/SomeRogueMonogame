@@ -163,31 +163,16 @@ VertexToPixel BillboardVertexShaderInstanced(VSIn input, VertexShaderInstanceInp
 		instanceInput.row3,
 		instanceInput.row4);
 
-	float4 world = mul(float4(0,0,0,1), worldMatrixInstance);
+	float4 billboard = mul(float4(input.inPos.x,input.inPos.y,0,1), xBillboard);
+
+	float4 world = mul(billboard, worldMatrixInstance);
 
 	float4 viewPosition = mul(world, xView);
 
 	float4 pos = mul(viewPosition, xProjection);
 
-	Matrix viewproj = xViewProjection;
-
-	float num = pos.x * viewproj[0][3] + pos.y * viewproj[1][3] + pos.z * viewproj[2][3] + viewproj[3][3];
-
-	if(-0.00001 >= (num-1))
-	{
-		pos.x = pos.x / num;
-		pos.y = pos.y / num;
-		pos.z = pos.z / num;
-	}	
-
-	pos.x = pos.x;
-	pos.y = pos.y;
-	pos.z = pos.z;
-
-	float4 finalPosition = float4(input.inPos.x - pos.x,  input.inPos.y - pos.y, pos.z, 1);
-
-	output.Position = finalPosition;
-	output.WorldPos = finalPosition.xyz;
+	output.Position = pos;
+	output.WorldPos = pos.xyz;
 
 	return output;
 }
@@ -217,6 +202,11 @@ PixelToFrame SimplePixelShaderTextured(VertexToPixel PSIn)
 	PixelToFrame Output = (PixelToFrame)0;
 
 	float4 textureColor = tileAtlas.Sample(textureSampler, PSIn.TextureCoordinate);
+
+	if(textureColor.a == 0)
+	{
+		discard;
+	}
 
 	Output.Color = textureColor * PSIn.Color;
 	Output.Color.a = textureColor.a;

@@ -25,7 +25,7 @@ namespace NamelessRogue.Engine.Components._3D
             this.Projection = 
                 Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(60), game.GraphicsDevice.Viewport.AspectRatio,
-                0.001f, 10000.0f); ;
+                0.001f, 10000.0f);
 		}
 
 
