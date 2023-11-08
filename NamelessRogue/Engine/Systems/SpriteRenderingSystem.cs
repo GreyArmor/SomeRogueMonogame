@@ -258,9 +258,6 @@ namespace NamelessRogue.Engine.Systems
 
 			effect.Parameters["xViewProjection"].SetValue(camera.View * camera.Projection);
 			effect.Parameters["xWorldViewProjection"].SetValue(camera.View * camera.Projection);
-
-			//	camera.View.Decompose(out var scale, out var quat, out var translation);
-
 			effect.Parameters["xView"].SetValue(camera.View);
 			effect.Parameters["xProjection"].SetValue(camera.Projection);
 			effect.Parameters["CameraPosition"].SetValue(camera.Position);
@@ -279,10 +276,7 @@ namespace NamelessRogue.Engine.Systems
 			camera.View.Decompose(out var scale, out var rot,out Vector3 translation);
 
 			var rotation = Matrix.Invert(Matrix.CreateFromQuaternion(rot));
-			//var zBillboard = Matrix.CreateRotationX(Vector3.Zero, camera.Look, null);
 			effect.Parameters["xBillboard"].SetValue(rotation);
-
-
 			RenderStaticObjects(namelessGame, camera);
 		}
 
