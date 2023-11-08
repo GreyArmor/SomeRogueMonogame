@@ -12,7 +12,8 @@ namespace NamelessRogue.Engine.Components.Interaction
 			TextId = testId;
 		}
 		public string TextId { get; set; }
-		public List<string> EntitiesInGroup { get; set; } = new List<string>();
+		public List<Guid> EntitiesInGroup { get; set; } = new List<Guid>();
 		public bool FormationMaintained { get; set; } = true;
+		public Guid FlagbearerId { get; internal set; }
 	}
 }

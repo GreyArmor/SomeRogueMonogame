@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
@@ -94,10 +95,24 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 							var worldPos = new Point(clicledTile.X + chunk.WorldPositionBottomLeftCorner.X, clicledTile.Y + chunk.WorldPositionBottomLeftCorner.Y);
 
-							var playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
+							var selectedGroups = game.PlayerEntity.GetComponentOfType<SelectedUnitsData>();
 
-							FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(playerPosition.Point, worldPos);
-							game.Commander.EnqueueCommand(moveCommand);
+
+
+							var selectedGroupId = selectedGroups.SelectedGroups.FirstOrDefault();
+							if (selectedGroupId != null)
+							{
+								var groups = game.GetEntitiesByComponentClass<Group>().Select(gr => gr.GetComponentOfType<Group>());
+								var group = groups.FirstOrDefault(x => x.TextId == selectedGroupId);
+
+
+								var flagbearer = game.GetEntity(group.FlagbearerId);
+								var position = flagbearer.GetComponentOfType<Position>();
+
+								FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(position.Point, worldPos);
+								game.Commander.EnqueueCommand(moveCommand);
+
+							}
 						}
 					}
 				}

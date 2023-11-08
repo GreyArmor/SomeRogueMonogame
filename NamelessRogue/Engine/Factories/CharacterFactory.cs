@@ -91,6 +91,7 @@ namespace NamelessRogue.Engine.Factories
 
             if (isFlagbearer) {
 				npc.AddComponent(new FlagBearerTag());
+                npc.AddComponent(new FlowMoveComponent());
 			}
 
             var stats = new Stats();
@@ -121,18 +122,25 @@ namespace NamelessRogue.Engine.Factories
         public static void CreateNpcField(Rectangle rect, Vector2 facingNormal, string factionId, string groupId, NamelessGame game)
         {
             var groupentity = new Entity();
-            groupentity.AddComponent(new Group(groupId));
+
+            var group = new Group(groupId);
+			groupentity.AddComponent(group);
+            groupentity.AddComponent(new FlowMoveComponent());
 
             for (int i = rect.Left; i < rect.Right; i++)
             {
                 for (int j = rect.Top; j < rect.Bottom; j++)
                 {
-                    if (i == (rect.Right / 2) && j == (rect.Bottom / 2))
+                    if (i == (rect.Right-1) && j == (rect.Bottom-1))
                     {
-						CreateBlankKnight(game, facingNormal, i, j, true, factionId, groupId);
+                        var unitId = CreateBlankKnight(game, facingNormal, i, j, true, factionId, groupId).Id;
+						group.EntitiesInGroup.Add(unitId);
+                        group.FlagbearerId = unitId;
 					}
-
-                    CreateBlankKnight(game, facingNormal, i, j, false, factionId, groupId);
+                    else
+                    {
+                        group.EntitiesInGroup.Add(CreateBlankKnight(game, facingNormal, i, j, false, factionId, groupId).Id);
+                    }
                 }
             }
         }

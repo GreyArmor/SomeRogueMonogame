@@ -340,7 +340,7 @@ namespace NamelessRogue.shell
 
 				rect = new Rectangle(TestMapPosition.Point.X + 10, TestMapPosition.Point.Y + 10, 10, 20);
 				
-				CharacterFactory.CreateNpcField(rect, -Vector2.UnitY, "Blue", "2", this);
+			//	CharacterFactory.CreateNpcField(rect, -Vector2.UnitY, "Blue", "2", this);
 
 				PlayerEntity = player;
 

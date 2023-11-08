@@ -10,14 +10,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Group = NamelessRogue.Engine.Components.Interaction.Group;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
 	internal class FlowFieldMovementSystem : BaseSystem
 	{
 		public override HashSet<Type> Signature => new HashSet<Type>() {
-			typeof(FlowMoveComponent)
+			typeof(FlowMoveComponent), typeof(GroupTag)
 		};
 
 		bool init = true;
@@ -63,9 +65,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 							flowMoveComponent.FinishedMoving = true;
 							//continue;
 						}
+						var groupToMove = movableEntity.GetComponentOfType<GroupTag>();
 
-						namelessGame.WorldProvider.MoveEntity(movableEntity,
-						  new Point(nextPoint.X, nextPoint.Y));
+						namelessGame.Commander.EnqueueCommand(new GroupMoveCommand(groupToMove.GroupId, position.Point, nextPoint));
+
+						//namelessGame.WorldProvider.MoveEntity(movableEntity,
+						//  new Point(nextPoint.X, nextPoint.Y));
 					}
 				}
 			}
