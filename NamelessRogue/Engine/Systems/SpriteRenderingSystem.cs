@@ -170,7 +170,7 @@ namespace NamelessRogue.Engine.Systems
 
 				foreach (var group in objectGroups)
 				{
-					var spriteSheet = namelessGame.Content.Load<SpriteSheet>("Doodads\\cacti.sf", new JsonContentLoader());
+					var spriteSheet = namelessGame.Content.Load<SpriteSheet>("Doodads\\treeEvergreen.sf", new JsonContentLoader());
 					var spr = new AnimatedSprite(spriteSheet);
 					spriteCache.Add(group.Key, CreateSpriteGeometry(namelessGame, spr.Play("idleFront")));
 				}

@@ -651,8 +651,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
             backgroundVertices[arrayPosition + 3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), color.ToVector4(),
                 backGroundColor.ToVector4(), new Vector2(textureXend, textureYend));
 
-
-
         }
     }
 }

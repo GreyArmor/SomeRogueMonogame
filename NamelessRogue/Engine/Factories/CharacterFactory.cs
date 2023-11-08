@@ -36,6 +36,7 @@ namespace NamelessRogue.Engine.Factories
 			playerCharacter.AddComponent(new SpriteModel3D(game, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
 			playerCharacter.AddComponent(new Position3D());
 			playerCharacter.AddComponent(new SelectionData());
+            playerCharacter.AddComponent(new SelectedUnitsData());
 
 			var stats = new Stats();
             stats.Health.Value = 100;
@@ -72,7 +73,7 @@ namespace NamelessRogue.Engine.Factories
         }
 
 
-        public static Entity CreateBlankKnight(NamelessGame game, Vector2 facingNormal, int x,int y, string factionId = "") {
+        public static Entity CreateBlankKnight(NamelessGame game, Vector2 facingNormal, int x, int y, bool isFlagbearer, string factionId = "", string groupID = "") {
             Entity npc = new Entity();
             var position = new Position(x, y);
 			var position3D = new Position3D(new Vector3(x, y, 0), facingNormal);
@@ -86,6 +87,11 @@ namespace NamelessRogue.Engine.Factories
             npc.AddComponent(new OccupiesTile());
             npc.AddComponent(new AIControlled());
             npc.AddComponent(new BasicAi());
+            npc.AddComponent(new GroupTag() { GroupId = groupID });
+
+            if (isFlagbearer) {
+				npc.AddComponent(new FlagBearerTag());
+			}
 
             var stats = new Stats();
             stats.Health.Value = 100;
@@ -112,13 +118,21 @@ namespace NamelessRogue.Engine.Factories
             return npc;
         }
 
-        public static void CreateNpcField(Rectangle rect, Vector2 facingNormal, string factionId, NamelessGame game)
+        public static void CreateNpcField(Rectangle rect, Vector2 facingNormal, string factionId, string groupId, NamelessGame game)
         {
+            var groupentity = new Entity();
+            groupentity.AddComponent(new Group(groupId));
+
             for (int i = rect.Left; i < rect.Right; i++)
             {
                 for (int j = rect.Top; j < rect.Bottom; j++)
                 {
-                    CreateBlankKnight(game, facingNormal, i, j, factionId);
+                    if (i == (rect.Right / 2) && j == (rect.Bottom / 2))
+                    {
+						CreateBlankKnight(game, facingNormal, i, j, true, factionId, groupId);
+					}
+
+                    CreateBlankKnight(game, facingNormal, i, j, false, factionId, groupId);
                 }
             }
         }

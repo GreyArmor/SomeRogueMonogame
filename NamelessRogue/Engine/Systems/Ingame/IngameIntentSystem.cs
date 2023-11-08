@@ -36,6 +36,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
+            if (!namelessGame.IsActive) { return; }
             foreach (IEntity entity in RegisteredEntities)
             {
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
