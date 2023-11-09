@@ -8,6 +8,7 @@ using NamelessRogue.shell;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms;
 using Constants = NamelessRogue.Engine.Infrastructure.Constants;
 namespace NamelessRogue.Engine.Components.AI.Pathfinder
 {
@@ -80,7 +81,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 						Nodes.Add(_key(coordX, coordY), new FlowNode()
 						{
 							Coordinate = new Point(coordX, coordY),
-							Occupied = !world.GetTile(coordX,coordY).IsPassable()
+							Occupied = false//!world.GetTile(coordX, coordY).IsPassable()
 						});
 					}
 				}

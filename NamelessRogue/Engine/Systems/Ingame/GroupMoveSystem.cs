@@ -32,7 +32,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                         var position = unit.GetComponentOfType<Position>();
 
-                        var nextPoint = position.Point + diffPoint;
+                        var nextPoint = command.NextPoint; //position.Point + diffPoint;
 
 						namelessGame.WorldProvider.MoveEntity(unit,
 						  new Point(nextPoint.X, nextPoint.Y));

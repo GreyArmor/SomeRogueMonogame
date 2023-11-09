@@ -1,5 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.shell;
+using SharpDX.MediaFoundation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,5 +27,21 @@ namespace NamelessRogue.Engine.Components.Physical
 		public Tile Tile { get; set; }
 
 		public Vector3? WorldPosition { get; set; } = null;
+
+
+		public void InitWorldPosition(NamelessGame namelessGame, int offset)
+		{
+			if (Tile == null)
+			{
+				var tile = namelessGame.WorldProvider.GetTile((int)Position.X, (int)Position.Y);
+				Tile = tile;
+			}
+
+			var tileToDraw = Tile;
+			var position = new Point((int)(Position.X - offset), (int)(Position.Y - offset));
+			var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
+			WorldPosition = Vector3.Transform(Vector3.One, world);
+		}
+
 	}
 }

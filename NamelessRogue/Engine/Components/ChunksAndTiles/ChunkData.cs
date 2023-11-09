@@ -170,6 +170,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                     pos3d.Tile = newTile;
                     pos3d.Position = new Vector3(moveTo.X, moveTo.Y, newTile.ElevationVisual);
                     pos3d.Normal = new3dNormal;
+
                     pos3d.WorldPosition = null;
 				}
 

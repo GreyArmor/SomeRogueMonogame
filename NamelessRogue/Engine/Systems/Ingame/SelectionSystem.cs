@@ -3,7 +3,9 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
+using SharpDX.MediaFoundation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 	internal class SelectionSystem : BaseSystem
 	{
 		public override HashSet<Type> Signature { get; } = new HashSet<Type>();
-			
+		int offset = Constants.ChunkSize * (300 - Constants.RealityBubbleRangeInChunks);
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
 		{
 			var player = namelessGame.PlayerEntity;
@@ -42,6 +44,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				foreach (var unit in units)
 				{
 					var position = unit.GetComponentOfType<Position3D>();
+
+					if (position.WorldPosition == null)
+					{
+						position.InitWorldPosition(namelessGame, offset);
+					}
+
+
 					var screenPos = viewport.Project(position.WorldPosition.Value, camera.Projection, camera.View, Matrix.Identity);
 					screenPos.Z = 0;
 					if (box.Contains(screenPos) == ContainmentType.Contains || box.Contains(screenPos) == ContainmentType.Intersects)

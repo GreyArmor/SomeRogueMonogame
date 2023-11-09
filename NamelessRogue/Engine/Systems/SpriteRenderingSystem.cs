@@ -193,16 +193,7 @@ namespace NamelessRogue.Engine.Systems
 
 				if (pos3d.WorldPosition == null)
 				{
-					if (pos3d.Tile == null)
-					{
-						var tile = namelessGame.WorldProvider.GetTile((int)p.X, (int)p.Y);
-						pos3d.Tile = tile;
-					}
-
-					var tileToDraw = pos3d.Tile;
-					var position = new Point((int)(p.X - offset), (int)(p.Y - offset));
-					var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
-					pos3d.WorldPosition = Vector3.Transform(Vector3.One, world);
+					pos3d.InitWorldPosition(namelessGame, offset);
 				}
 				var worldPos = pos3d.WorldPosition;
 				if (frustrum.Contains(worldPos.Value) == Microsoft.Xna.Framework.ContainmentType.Contains)

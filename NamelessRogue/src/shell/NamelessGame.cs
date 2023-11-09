@@ -332,13 +332,13 @@ namespace NamelessRogue.shell
 
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
 
-				var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 10, 20);
+				var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 1, 1);
 
 				CharacterFactory.CreateNpcField(rect, Vector2.UnitY, "Red", "1", this);
 
 			
 
-				rect = new Rectangle(TestMapPosition.Point.X + 10, TestMapPosition.Point.Y + 10, 10, 20);
+				rect = new Rectangle(TestMapPosition.Point.X + 10, TestMapPosition.Point.Y + 10, 2, 2);
 				
 			//	CharacterFactory.CreateNpcField(rect, -Vector2.UnitY, "Blue", "2", this);
 

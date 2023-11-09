@@ -33,6 +33,27 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			public Geometry3D geometry;
 		}
 		bool wasPressed;
+
+
+		public Ray CalculateRay(Vector2 mouseLocation, Matrix view,	Matrix projection, Viewport viewport)
+		{
+			Vector3 nearPoint = viewport.Unproject(new Vector3(mouseLocation.X,
+					mouseLocation.Y, 0.0f),
+					projection,
+					view,
+					Matrix.Identity);
+
+			Vector3 farPoint = viewport.Unproject(new Vector3(mouseLocation.X,
+					mouseLocation.Y, 1.0f),
+					projection,
+					view,
+					Matrix.Identity);
+
+			Vector3 direction = farPoint - nearPoint;
+			direction.Normalize();
+
+			return new Ray(nearPoint, direction);
+		}
 		public override void Update(GameTime gameTime, NamelessGame game)
 		{
 			Camera3D camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
@@ -45,8 +66,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			else if (!wasPressed)
 			{
 				wasPressed = true;
-				Ray r = new Ray(camera.Position, camera.Look);
-				List<Intersection> intersections = new List<Intersection>();
+
+				var clickPosition = currentMouseState.Position.ToVector2();
+
+				Ray r = CalculateRay(currentMouseState.Position.ToVector2(), camera.View, camera.Projection, game.GraphicsDevice.Viewport);
+				List <Intersection> intersections = new List<Intersection>();
 				var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 				{
 					foreach (var geometryPointPair in chunkGeometries.ChunkGeometries)
@@ -90,8 +114,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
 							var tile = chunk.GetTileLocal(clicledTile.X, clicledTile.Y);
 							tile.Biome = Biomes.Sea;
 							tile.Terrain = TerrainTypes.Water;
-							//UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(closestIntersection.chunkId);
-							//game.Commander.EnqueueCommand(updateChunkCommand);
+							UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(closestIntersection.chunkId);
+							game.Commander.EnqueueCommand(updateChunkCommand);
 
 							var worldPos = new Point(clicledTile.X + chunk.WorldPositionBottomLeftCorner.X, clicledTile.Y + chunk.WorldPositionBottomLeftCorner.Y);
 
