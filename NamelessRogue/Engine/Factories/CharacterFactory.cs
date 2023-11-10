@@ -11,6 +11,7 @@ using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Components.WorldBoardComponents;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
+using System;
 
 namespace NamelessRogue.Engine.Factories
 {
@@ -128,14 +129,17 @@ namespace NamelessRogue.Engine.Factories
 			groupentity.AddComponent(group);
             groupentity.AddComponent(new FlowMoveComponent());
 
-            game.PlayerEntity.GetComponentOfType<GroupsHolder>().Groups.Add(groupentity);           
+            game.PlayerEntity.GetComponentOfType<GroupsHolder>().Groups.Add(groupentity);
 
+
+            var halfDistHorizontal = Math.Abs(rect.Left - rect.Right)/2;
+			var halfDistVertical = Math.Abs(rect.Top - rect.Bottom)/2;
 
 			for (int i = rect.Left; i < rect.Right; i++)
             {
                 for (int j = rect.Top; j < rect.Bottom; j++)
                 {
-                    if (i == (rect.Right-1) && j == (rect.Bottom-1))
+                    if (i == (rect.Right-halfDistHorizontal) && j == (rect.Bottom-halfDistVertical))
                     {
                         var unitId = CreateBlankKnight(game, facingNormal, i, j, true, factionId, groupId).Id;
 						group.EntitiesInGroup.Add(unitId);

@@ -293,26 +293,6 @@ namespace NamelessRogue.shell
 				//Entities.Add(CharacterFactory.CreateBlankNpc(x - 7,
 				//    y));
 
-
-				for (int i = 0; i < 2; i++)
-				{
-					var sword = ItemFactory.CreateSword(x - 2,
-						y, i, this); ;
-				}
-
-				var platemail = ItemFactory.CreatePlateMail(x - 2, y, 1, this);
-				var pants = ItemFactory.CreatePants(x - 2, y, 1, this);
-				var boots = ItemFactory.CreateBoots(x - 2, y, 1, this);
-				var cape = ItemFactory.CreateCape(x - 2, y, 1, this);
-				var ring = ItemFactory.CreateRing(x - 2, y, 1, this);
-				var shield = ItemFactory.CreateShield(x - 2, y, 1, this);
-				var helmet = ItemFactory.CreateHelmet(x - 2, y, 1, this);
-				var ammo1 = ItemFactory.CreateLightAmmo(x - 1, y, 1, 20, this, ammoLibrary);
-				var ammo2 = ItemFactory.CreateLightAmmo(x - 1, y + 1, 1, 20, this, ammoLibrary);
-				var revolver = ItemFactory.CreateRevolver(x + 2, y + 1, 1, this, ammoLibrary);
-				var pArmor = ItemFactory.CreatePowerArmor(x - 2, y, 1, this);
-
-
 				Point worldRiverPosition = new Point();
 				bool anyRivers = false;
 				foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
