@@ -329,10 +329,10 @@ namespace NamelessRogue.shell
 
 
 				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);
-
+				PlayerEntity = player;
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
 
-				var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 1, 1);
+				var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 20, 10);
 
 				CharacterFactory.CreateNpcField(rect, Vector2.UnitY, "Red", "1", this);
 
@@ -342,7 +342,7 @@ namespace NamelessRogue.shell
 				
 			//	CharacterFactory.CreateNpcField(rect, -Vector2.UnitY, "Blue", "2", this);
 
-				PlayerEntity = player;
+			
 
 				FollowedByCameraEntity = player;
 

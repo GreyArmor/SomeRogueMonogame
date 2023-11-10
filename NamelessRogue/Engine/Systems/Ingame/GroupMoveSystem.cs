@@ -5,6 +5,7 @@ using NamelessRogue.Engine.Systems;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +20,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             while (namelessGame.Commander.DequeueCommand(out GroupMoveCommand command))
             {
-                var groups = namelessGame.GetEntitiesByComponentClass<Group>().Select(gr=>gr.GetComponentOfType<Group>());
-                var group = groups.FirstOrDefault(x=>x.TextId==command.GroupTag);
+                var groups = namelessGame.PlayerEntity.GetComponentOfType<GroupsHolder>().Groups.Select(x => x.GetComponentOfType<Group>());
+				var group = groups.FirstOrDefault(x=>x.TextId==command.GroupTag);
                 if (group != null)
                 {
 
@@ -28,11 +29,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                     foreach (var unitId in group.EntitiesInGroup)
                     {
+                  
                         var unit = namelessGame.GetEntity(unitId);
-
+                   
                         var position = unit.GetComponentOfType<Position>();
-
-                        var nextPoint = command.NextPoint; //position.Point + diffPoint;
+                      
+                        var nextPoint = position.Point + diffPoint;
 
 						namelessGame.WorldProvider.MoveEntity(unit,
 						  new Point(nextPoint.X, nextPoint.Y));

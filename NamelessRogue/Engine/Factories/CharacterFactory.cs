@@ -37,7 +37,7 @@ namespace NamelessRogue.Engine.Factories
 			playerCharacter.AddComponent(new Position3D());
 			playerCharacter.AddComponent(new SelectionData());
             playerCharacter.AddComponent(new SelectedUnitsData());
-
+			playerCharacter.AddComponent(new GroupsHolder());
 			var stats = new Stats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
@@ -69,7 +69,8 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new InputComponent());
             playerCharacter.AddComponent(new Position(x, y));
             playerCharacter.AddComponent(new WorldBoardPlayer());
-            return playerCharacter;
+
+			return playerCharacter;
         }
 
 
@@ -127,7 +128,10 @@ namespace NamelessRogue.Engine.Factories
 			groupentity.AddComponent(group);
             groupentity.AddComponent(new FlowMoveComponent());
 
-            for (int i = rect.Left; i < rect.Right; i++)
+            game.PlayerEntity.GetComponentOfType<GroupsHolder>().Groups.Add(groupentity);           
+
+
+			for (int i = rect.Left; i < rect.Right; i++)
             {
                 for (int j = rect.Top; j < rect.Bottom; j++)
                 {
