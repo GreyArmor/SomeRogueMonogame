@@ -62,10 +62,10 @@ namespace NamelessRogue.Engine.Systems
 		{
 
 			var scale = 2f;
-			_points.Add(new Vector3(1, 2, 0) * scale);
-			_points.Add(new Vector3(-1, 2, 0) * scale);
-			_points.Add(new Vector3(-1, 0, 0) * scale);
-			_points.Add(new Vector3(1, 0, 0) * scale);
+			_points.Add(new Vector3(1, 1, 0) * scale);
+			_points.Add(new Vector3(-1, 1, 0) * scale);
+			_points.Add(new Vector3(-1, -1, 0) * scale);
+			_points.Add(new Vector3(1, -1, 0) * scale);
 
 			_indices.AddRange(new int[6] { 0, 1, 2, 2, 3, 0 });
 			var geometry3D = new Geometry3D();
@@ -316,7 +316,7 @@ namespace NamelessRogue.Engine.Systems
 						var tileToDraw = game.WorldProvider.GetTile((int)gameObject.tile.X, (int)gameObject.tile.Y);
 						var p = gameObject.tile;
 						var position = new Point((int)(p.X - offset), (int)(p.Y - offset));
-						var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
+						var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient + (2 * Constants.ScaleDownCoeficient));
 						var worldPos = Vector3.Transform(Vector3.Zero, world);
 						instanceTransforms.Add(new VertexShaderInstanceMatrix(world));
 					}
