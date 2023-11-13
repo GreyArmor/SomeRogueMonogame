@@ -59,7 +59,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			Camera3D camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
 			//TODO leaving mouse capture here for now, even if its not correct
 			MouseState currentMouseState = Mouse.GetState();
-			if (currentMouseState.LeftButton != ButtonState.Pressed)
+			if (currentMouseState.RightButton != ButtonState.Pressed)
 			{
 				wasPressed = false;
 			}
@@ -109,15 +109,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
 									}
 								}
 							}
-							*/
-							var clicledTile = closestIntersection.geometry.TriangleTerrainAssociation[closestIntersection.triangle[2]];
-							var tile = chunk.GetTileLocal(clicledTile.X, clicledTile.Y);
-							tile.Biome = Biomes.Sea;
-							tile.Terrain = TerrainTypes.Water;
-							UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(closestIntersection.chunkId);
-							game.Commander.EnqueueCommand(updateChunkCommand);
+							//*/
+							var clickedTile = closestIntersection.geometry.TriangleTerrainAssociation[closestIntersection.triangle[2]];
+							//var tile = chunk.GetTileLocal(clicledTile.X, clicledTile.Y);
+							//tile.Biome = Biomes.Sea;
+							//tile.Terrain = TerrainTypes.Water;
+							//	UpdateChunkCommand updateChunkCommand = new UpdateChunkCommand(closestIntersection.chunkId);
+							//	game.Commander.EnqueueCommand(updateChunkCommand);
 
-							var worldPos = new Point(clicledTile.X + chunk.WorldPositionBottomLeftCorner.X, clicledTile.Y + chunk.WorldPositionBottomLeftCorner.Y);
+							var worldPos = new Point(clickedTile.X + chunk.WorldPositionBottomLeftCorner.X, clickedTile.Y + chunk.WorldPositionBottomLeftCorner.Y);
 
 							var selectedGroups = game.PlayerEntity.GetComponentOfType<SelectedUnitsData>();
 
@@ -133,7 +133,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 								var flagbearer = game.GetEntity(group.FlagbearerId);
 								var position = flagbearer.GetComponentOfType<Position>();
 
-								FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(position.Point, worldPos);
+								FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(position.Point, worldPos, group.TextId);
 								game.Commander.EnqueueCommand(moveCommand);
 
 							}

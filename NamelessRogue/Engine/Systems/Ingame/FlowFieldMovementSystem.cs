@@ -39,10 +39,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				var pathId = flowField.ClaculateTo(mc.To, mc.From);
 				foreach (Entity movableEntity in RegisteredEntities)
 				{
-					var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
-					flowMoveComponent.To = mc.To;
-					flowMoveComponent.PathId = pathId;
-					flowMoveComponent.FinishedMoving = false;
+					var group = movableEntity.GetComponentOfType<GroupTag>();
+				
+					if (group.GroupId == mc.GroupId)
+					{	
+						var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
+						flowMoveComponent.To = mc.To;
+						flowMoveComponent.PathId = pathId;
+						flowMoveComponent.FinishedMoving = false;
+					}
 				}
 			}
 			var deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
@@ -81,12 +86,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
 	{
 		public Point From;
 		public Point To;
-		public FlowFieldMoveCommand(Point from, Point to)
+		public FlowFieldMoveCommand(Point from, Point to, string groupId)
 		{
 			//Debug.WriteLine("FlowFieldMoveCommand");
 			From = from;
 			To = to;
+			GroupId = groupId;
 		}
+
+		public string GroupId { get; }
 	}
 
 }
