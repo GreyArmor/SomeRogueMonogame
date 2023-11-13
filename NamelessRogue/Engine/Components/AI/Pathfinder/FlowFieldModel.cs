@@ -112,6 +112,13 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				pathOfPoints.AddRange(neighbors);
 			}
 
+			foreach (var point in pathOfPoints.ToList())
+			{
+				var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
+				pathOfPoints.AddRange(neighbors);
+			}
+
+
 			pathOfPoints = pathOfPoints.Distinct().ToList();
 
 			//clicked very closely to initial point, on the same chunk, so A* pathfinder returned an empty path

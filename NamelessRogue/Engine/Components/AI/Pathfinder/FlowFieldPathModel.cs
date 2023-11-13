@@ -81,7 +81,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 						Nodes.Add(_key(coordX, coordY), new FlowNode()
 						{
 							Coordinate = new Point(coordX, coordY),
-							Occupied = false//!world.GetTile(coordX, coordY).IsPassable()
+							Occupied = /* !world.GetTile(coordX, coordY).IsPassableIgnoringCharacters() ||*/ world.GetTile(coordX, coordY).Terrain == TerrainTypes.Water
 						});
 					}
 				}
@@ -130,10 +130,17 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 					if (neighborNode != null)
 					{
 						var integrationValue = neighborNode.Cost + currentFlowNode.IntegrationValue;
-						if (integrationValue < neighborNode.IntegrationValue)
+						if (neighborNode.Occupied)
 						{
-							neighborNode.IntegrationValue = integrationValue;
-							openPoints.Enqueue(neighborP);
+							neighborNode.IntegrationValue = int.MaxValue;
+						}
+						else
+						{
+							if (integrationValue < neighborNode.IntegrationValue)
+							{
+								neighborNode.IntegrationValue = integrationValue;
+								openPoints.Enqueue(neighborP);
+							}
 						}
 					}
 				}
@@ -158,7 +165,13 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 						continue;
 					}
 					var neighborNode = Nodes[_keyP(neighborP)];
-					if (neighborNode != null && (bestCostFlowNode == null || (bestCostFlowNode.IntegrationValue > neighborNode.IntegrationValue && !neighborNode.Occupied)))
+
+					if (neighborNode.Occupied)
+					{
+						continue;
+					}
+
+					if (neighborNode != null&& (bestCostFlowNode == null || (bestCostFlowNode.IntegrationValue > neighborNode.IntegrationValue)))
 					{
 						bestCostFlowNode = neighborNode;
 					}

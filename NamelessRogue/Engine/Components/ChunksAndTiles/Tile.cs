@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
@@ -66,7 +67,21 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             return true;
         }
 
-        public bool GetBlocksVision(NamelessGame namelessGame)
+		public bool IsPassableIgnoringCharacters()
+		{
+			foreach (var entity in entitiesOnTile)
+			{
+				var occupiesTile = entity.GetComponentOfType<OccupiesTile>();
+				var character = entity.GetComponentOfType<Character>();
+				if (occupiesTile != null && character== null)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public bool GetBlocksVision(NamelessGame namelessGame)
         {
             foreach (var entity in entitiesOnTile)
             {
