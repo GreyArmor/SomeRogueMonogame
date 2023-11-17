@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Linq;
+
 namespace NamelessRogue.Engine.Components.AI.Pathfinder
 {
 	public static class DiagonalNeighborProviderFlowfield
@@ -11,11 +13,11 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		public static IEnumerable<Point> GetNeighbors(Point tile)
 		{
-			var result = new List<Point>();
+			var result = new Queue<Point>();
 
-			for (var i = 0; i < neighbors.GetLongLength(0); i++)
+			for (var i = 0; i < 8; i++)
 			{
-				result.Add(new Point(
+				result.Enqueue(new Point(
 					x: tile.X + neighbors[i, 0],
 					y: tile.Y + neighbors[i, 1]
 				));
@@ -23,6 +25,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 			return result;
 		}
+
 	}
 
 }
