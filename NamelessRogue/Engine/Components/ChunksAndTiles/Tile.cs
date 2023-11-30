@@ -35,6 +35,12 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         
         private List<Entity> entitiesOnTile = new List<Entity>();
 
+        public bool AnyEntities()
+        {
+            return entitiesOnTile.Any();
+        }
+
+
         public List<Entity> GetEntities()
         {
             return entitiesOnTile.ToList();

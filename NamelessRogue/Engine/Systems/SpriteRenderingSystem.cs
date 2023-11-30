@@ -268,6 +268,8 @@ namespace NamelessRogue.Engine.Systems
 
 			var rotation = Matrix.Invert(Matrix.CreateFromQuaternion(rot));
 			effect.Parameters["xBillboard"].SetValue(rotation);
+			effect.Parameters["xBillboard"].SetValue(Matrix.Identity);
+			return;
 			RenderStaticObjects(namelessGame, camera);
 		}
 

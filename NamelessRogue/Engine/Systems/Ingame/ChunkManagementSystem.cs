@@ -110,10 +110,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
                         if (entity != null)
                         {
-                            if (tile.GetEntities().Count == 0)
+                            realityBubbleChunk.Value.IsAnyEntities = true;
+
+							if (tile.GetEntities().Count == 0)
                             {
                                 tile.AddEntity(entity);
-
+                                tile.Terrain = TerrainTypes.Lava;
                                 namelessGame.AddEntity(entity);
 
                             }
@@ -121,7 +123,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }
                 }
                 realityBubbleChunk.Value.JustCreated = false;
-            }          
+				
+
+			}          
 
         }
     }

@@ -62,6 +62,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                     for (int j = -1; j < 2; j++)
                     {
                         var tile = board.InlandWaterConnectivity[this.ChunkWorldMapLocationPoint.X + i][this.ChunkWorldMapLocationPoint.Y + j];
+
                         if (tile.WaterBorderLines.Any())
                         {
                             surroundingChunksWithRivers.Add(tile);
@@ -77,11 +78,15 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                     chunkTiles[x][y] = generator.GetTileWithoutRiverWater(x + worldPositionBottomLeftCorner.X,
                         y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
 
-                    //if (x == 0 || y == 0 || x == Constants.ChunkSize - 1 || y == Constants.ChunkSize - 1)
-                    //{
-                    //	chunkTiles[x][y].Terrain = TerrainLibrary.Terrains[TerrainTypes.Nothingness];
-                    //}
-                }
+                    if (chunkTiles[x][y].Terrain != TerrainTypes.Water)
+                    {
+                        this.NonGroundPassable = false;
+                    }
+					//if (x == 0 || y == 0 || x == Constants.ChunkSize - 1 || y == Constants.ChunkSize - 1)
+					//{
+					//	chunkTiles[x][y].Terrain = TerrainLibrary.Terrains[TerrainTypes.Nothingness];
+					//}
+				}
             }
 
 
@@ -287,12 +292,32 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 		public ChunkData ChunkContainer { get => chunkContainer; set => chunkContainer = value; }
 		public bool Loaded { get => loaded; set => loaded = value; }
 		public bool IsActive { get => isActive; set => isActive = value; }
+        public bool NonGroundPassable { get; private set; } = true;
+		public bool IsAnyEntities { get; set; } = false;
 
 		//TODO: serialization
 		private bool LoadFromDisk()
         {
             return false;
         }
+
+
+        public void FindIfAnyEntitiesOnChunk()
+        {
+            foreach (var arr in chunkTiles)
+            {
+                foreach (Tile tile in arr)
+                {
+                    if (tile.AnyEntities())
+                    {
+                        IsAnyEntities = true;
+                        return;
+                    }
+                }
+            }
+            IsAnyEntities = false;
+		}
+
 
         public void Deactivate()
         {

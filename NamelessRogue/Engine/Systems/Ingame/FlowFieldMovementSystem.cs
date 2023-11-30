@@ -25,7 +25,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		bool init = true;
 		double moveDelayMilisecends = 0.01;
 		double milisecondsCounter = 0;
-		FlowFieldModel flowField;
+		public static FlowFieldModel flowField;
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
 		{
 			if (init)
@@ -37,12 +37,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			while (namelessGame.Commander.DequeueCommand(out FlowFieldMoveCommand mc))
 			{
 				var pathId = flowField.ClaculateTo(mc.To, mc.From);
-				foreach (Entity movableEntity in RegisteredEntities)
+
+				if (pathId > -1)
 				{
-					var group = movableEntity.GetComponentOfType<GroupTag>();
-				
-					if (group.GroupId == mc.GroupId)
-					{	
+					foreach (Entity movableEntity in mc.EntitiesToMove)
+					{
 						var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
 						flowMoveComponent.To = mc.To;
 						flowMoveComponent.PathId = pathId;
@@ -70,12 +69,18 @@ namespace NamelessRogue.Engine.Systems.Ingame
 							flowMoveComponent.FinishedMoving = true;
 							//continue;
 						}
-						var groupToMove = movableEntity.GetComponentOfType<GroupTag>();
 
-						namelessGame.Commander.EnqueueCommand(new GroupMoveCommand(groupToMove.GroupId, position.Point, nextPoint));
-
-						//namelessGame.WorldProvider.MoveEntity(movableEntity,
-						//  new Point(nextPoint.X, nextPoint.Y));
+						var flagbearerTag = movableEntity.GetComponentOfType<FlagBearerTag>();
+						if (flagbearerTag != null)
+						{
+							var groupToMove = movableEntity.GetComponentOfType<GroupTag>();
+							namelessGame.Commander.EnqueueCommand(new GroupMoveCommand(groupToMove.GroupId, position.Point, nextPoint, flowMoveComponent.To));
+						}
+						else
+						{
+							namelessGame.WorldProvider.MoveEntity(movableEntity,
+							  new Point(nextPoint.X, nextPoint.Y));
+						}
 					}
 				}
 			}
@@ -86,15 +91,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
 	{
 		public Point From;
 		public Point To;
-		public FlowFieldMoveCommand(Point from, Point to, string groupId)
+		public FlowFieldMoveCommand(Point from, Point to, params IEntity[] entitiesToMove)
 		{
 			//Debug.WriteLine("FlowFieldMoveCommand");
 			From = from;
 			To = to;
-			GroupId = groupId;
+			EntitiesToMove = entitiesToMove.ToList();
 		}
 
-		public string GroupId { get; }
+		public List<IEntity> EntitiesToMove { get; }
 	}
 
 }

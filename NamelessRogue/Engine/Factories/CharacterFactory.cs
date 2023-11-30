@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Components.WorldBoardComponents;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
+using System.Linq;
 
 namespace NamelessRogue.Engine.Factories
 {
@@ -75,25 +76,28 @@ namespace NamelessRogue.Engine.Factories
         }
 
 
-        public static Entity CreateBlankKnight(NamelessGame game, Vector2 facingNormal, int x, int y, bool isFlagbearer, string factionId = "", string groupID = "") {
+        public static Entity CreateBlankKnight(NamelessGame game, Vector2 facingNormal, Point position, Point formationPosition, bool isFlagbearer, string factionId = "", string groupID = "") {
             Entity npc = new Entity();
-            var position = new Position(x, y);
+
+            var x = position.X; var y = position.Y;
+
+
+			var positioncComponent = new Position(x, y);
 			var position3D = new Position3D(new Vector3(x, y, 0), facingNormal);
             npc.AddComponent(position3D);
 			npc.AddComponent(new Character());
             npc.AddComponent(new InputComponent());
             npc.AddComponent(new Movable());
-            npc.AddComponent(position);
+            npc.AddComponent(positioncComponent);
             npc.AddComponent(new Drawable('K', new Engine.Utility.Color(1f, 0, 0)));
             npc.AddComponent(new Description("Very scary dummy knight",""));
             npc.AddComponent(new OccupiesTile());
             npc.AddComponent(new AIControlled());
             npc.AddComponent(new BasicAi());
-            npc.AddComponent(new GroupTag() { GroupId = groupID });
-
-            if (isFlagbearer) {
+            npc.AddComponent(new GroupTag() { GroupId = groupID, FormationPositionDisplacement = formationPosition });
+			npc.AddComponent(new FlowMoveComponent());
+			if (isFlagbearer) {
 				npc.AddComponent(new FlagBearerTag());
-                npc.AddComponent(new FlowMoveComponent());
 			}
 
             var stats = new Stats();
@@ -121,13 +125,13 @@ namespace NamelessRogue.Engine.Factories
             return npc;
         }
 
-        public static void CreateNpcField(Rectangle rect, Vector2 facingNormal, string factionId, string groupId, NamelessGame game)
+        public static void CreateNpcFormation(Rectangle rect, Vector2 facingNormal, string factionId, string groupId, NamelessGame game)
         {
             var groupentity = new Entity();
 
             var group = new Group(groupId);
 			groupentity.AddComponent(group);
-            groupentity.AddComponent(new FlowMoveComponent());
+           //groupentity.AddComponent();
 
             game.PlayerEntity.GetComponentOfType<GroupsHolder>().Groups.Add(groupentity);
 
@@ -135,23 +139,40 @@ namespace NamelessRogue.Engine.Factories
             var halfDistHorizontal = Math.Abs(rect.Left - rect.Right)/2;
 			var halfDistVertical = Math.Abs(rect.Top - rect.Bottom)/2;
 
-			for (int i = rect.Left; i < rect.Right; i++)
+            for (int i = rect.Left, x = 0; i < rect.Right; i++, x++)
             {
-                for (int j = rect.Top; j < rect.Bottom; j++)
+                for (int j = rect.Top, y = 0; j < rect.Bottom; j++, y++)
                 {
                     if (i == (rect.Right-halfDistHorizontal) && j == (rect.Bottom-halfDistVertical))
                     {
-                        var unitId = CreateBlankKnight(game, facingNormal, i, j, true, factionId, groupId).Id;
+                        var unitId = CreateBlankKnight(game, facingNormal, new Point(i, j), new Point(x,y), true, factionId, groupId);
 						group.EntitiesInGroup.Add(unitId);
                         group.FlagbearerId = unitId;
 					}
                     else
                     {
-                        group.EntitiesInGroup.Add(CreateBlankKnight(game, facingNormal, i, j, false, factionId, groupId).Id);
+                        group.EntitiesInGroup.Add(CreateBlankKnight(game, facingNormal, new Point(i, j), new Point(x, y), false, factionId, groupId));
                     }
                 }
             }
-        }
+
+            var flagbearer = group.FlagbearerId;
+            var flagbearerPositionPoint = flagbearer.GetComponentOfType<Position>().Point;
+
+            foreach (var unit in group.EntitiesInGroup)
+            {
+                if (unit == flagbearer)
+                {
+                    continue;
+                }
+                var groupData = unit.GetComponentOfType<GroupTag>();
+                var unitPosition = unit.GetComponentOfType<Position>();
+                groupData.FormationPositionDisplacement = flagbearerPositionPoint - unitPosition.Point;
+            }
+
+
+
+		}
 
 	
 	

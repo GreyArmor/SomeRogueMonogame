@@ -312,21 +312,21 @@ namespace NamelessRogue.shell
 				PlayerEntity = player;
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
 
-				var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 20, 10);
+				var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 2, 2);
 
-				CharacterFactory.CreateNpcField(rect, Vector2.UnitY, "Red", "1", this);
+				CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "1", this);
 
 				rect = new Rectangle(TestMapPosition.Point.X - 60, TestMapPosition.Point.Y + 10, 20, 10);
 
-				CharacterFactory.CreateNpcField(rect, Vector2.UnitY, "Red", "2", this);
+				CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "2", this);
 
 				rect = new Rectangle(TestMapPosition.Point.X - 80, TestMapPosition.Point.Y + 10, 20, 10);
 
-				CharacterFactory.CreateNpcField(rect, Vector2.UnitY, "Red", "3", this);
+				CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "3", this);
 
 				rect = new Rectangle(TestMapPosition.Point.X - 100, TestMapPosition.Point.Y + 10, 20, 10);
 
-				CharacterFactory.CreateNpcField(rect, Vector2.UnitY, "Red", "4", this);
+				CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "4", this);
 
 
 

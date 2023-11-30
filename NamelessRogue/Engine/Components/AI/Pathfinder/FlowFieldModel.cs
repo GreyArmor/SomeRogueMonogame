@@ -42,7 +42,17 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		public bool IsBlocked(AStarNavigator.Tile coord)
 		{
-			counter++;
+
+			//counter++;
+
+			//if (counter >= maxSearches)
+			//{
+			//	return true;
+			//}
+
+			var chunk = _worlldProvider.GetChunks()[new Point((int)coord.X, (int)coord.Y)];
+			return chunk.NonGroundPassable;
+
 			return false;
 			var tile = _worlldProvider.GetTile((int)coord.X, (int)coord.Y);
 			if (counter >= maxSearches)
@@ -89,7 +99,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			this.world = world;
 
 			navigator = new TileNavigator(
-			new FlowRegionBlockedProvider(null, default(Point), default(Point)),
+			new FlowRegionBlockedProvider(world, default(Point), default(Point)),
 			new DiagonalNeighborProvider(),
 			new PythagorasAlgorithm(),
 			new ManhattanHeuristicAlgorithm());
@@ -112,6 +122,10 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 			var path = navigator.Navigate(new Tile(fromWorldPos.X, fromWorldPos.Y), new Tile(toWorldPos.X, toWorldPos.Y));
 
+			if (path == null)
+			{
+				return -1;
+			}
 
 			var pathOfPoints = path.Select(t => new Point((int)t.X, (int)t.Y)).ToList();
 
@@ -119,26 +133,26 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 			foreach (var point in pathOfPoints.ToList())
 			{
-				var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
+				var neighbors = AllNeighborProviderFlowfield.GetNeighbors(point);
 				pathOfPoints.AddRange(neighbors);
 			}
 
 			foreach (var point in pathOfPoints.ToList())
 			{
-				var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
+				var neighbors = AllNeighborProviderFlowfield.GetNeighbors(point);
 				pathOfPoints.AddRange(neighbors);
 			}
 
 
 			foreach (var point in shortPathOfPoints.ToList())
 			{
-				var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
+				var neighbors = AllNeighborProviderFlowfield.GetNeighbors(point);
 				shortPathOfPoints.AddRange(neighbors);
 			}
 
 			foreach (var point in shortPathOfPoints.ToList())
 			{
-				var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
+				var neighbors = AllNeighborProviderFlowfield.GetNeighbors(point);
 				shortPathOfPoints.AddRange(neighbors);
 			}
 

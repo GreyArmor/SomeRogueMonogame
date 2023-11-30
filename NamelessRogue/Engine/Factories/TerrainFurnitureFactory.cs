@@ -117,7 +117,6 @@ namespace NamelessRogue.Engine.Factories
             {
                 case Biomes.Beach:
                     {
-                        result = new Entity();
                         var randomValue = random.Next(0, 100) / 100d;
                         if (randomValue > 0.997)
                         {

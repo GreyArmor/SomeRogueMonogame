@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Abstraction
         /// returns true if successful;
         /// </summary>
         bool MoveEntity(IEntity entity, Point moveTo);
-
-
-    }
+		void ClearTheWay(IEntity entity, Point moveTo);
+		void AddEntityToNewLocation(IEntity entity, Point moveTo);
+	}
 }

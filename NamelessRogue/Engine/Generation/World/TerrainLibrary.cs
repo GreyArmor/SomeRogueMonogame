@@ -48,7 +48,10 @@ namespace NamelessRogue.Engine.Generation.World
             Terrains.Add(TerrainTypes.Snow,
                 new Terrain(TerrainTypes.Snow, new Drawable('~', new Color(1f, 1f, 1f), new Color())));
 
-            Terrains.Add(TerrainTypes.Nothingness,
+			Terrains.Add(TerrainTypes.Lava,
+			   new Terrain(TerrainTypes.Lava, new Drawable('~', new Color(0.7f, 0, 0), new Color())));
+
+			Terrains.Add(TerrainTypes.Nothingness,
                 new Terrain(TerrainTypes.Nothingness, new Drawable(' ', new Color(), new Color())));
         }
     }

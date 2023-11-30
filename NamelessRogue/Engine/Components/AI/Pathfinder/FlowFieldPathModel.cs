@@ -138,7 +138,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				var point = openPoints.Dequeue();
 				var currentFlowNode = Nodes[point];
 
-				var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
+				var neighbors = AllNeighborProviderFlowfield.GetNeighbors(point);
 				foreach (var neighborP in neighbors)
 				{
 					var arrayX = neighborP.X - minX + 1;
@@ -162,7 +162,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			foreach (var node in Nodes)
 			{
 				var point = node.Value.Coordinate;
-				var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
+				var neighbors = AllNeighborProviderFlowfield.GetNeighbors(point);
 				FlowNode bestCostFlowNode = null;
 
 				foreach (var neighborP in neighbors)

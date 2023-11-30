@@ -11,15 +11,17 @@ namespace NamelessRogue.Engine.Components.Interaction
 {
 	internal class GroupMoveCommand : ICommand
 	{
-		public GroupMoveCommand(string groupTag, Point previousPoint, Point nextPoint)
+		public GroupMoveCommand(string groupTag, Point previousPoint, Point nextPoint, Point endPoint)
 		{
 			GroupTag = groupTag;
 			PreviousPoint = previousPoint;
 			NextPoint = nextPoint;
+			EndPoint = endPoint;
 		}
 
 		public string GroupTag { get; }
 		public Point PreviousPoint { get; }
 		public Point NextPoint { get; }
+		public Point EndPoint { get; }
 	}
 }

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,5 +10,7 @@ namespace NamelessRogue.Engine.Components.Interaction
 	{
 		public string GroupId { get; set; }
 		public bool IsInFormation { get; set; } = true;
+
+		public Point FormationPositionDisplacement {get; set; }
 	}
 }

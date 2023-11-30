@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NamelessRogue.Engine.Abstraction;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,8 @@ namespace NamelessRogue.Engine.Components.Interaction
 			TextId = testId;
 		}
 		public string TextId { get; set; }
-		public List<Guid> EntitiesInGroup { get; set; } = new List<Guid>();
+		public List<IEntity> EntitiesInGroup { get; set; } = new List<IEntity>();
 		public bool FormationMaintained { get; set; } = true;
-		public Guid FlagbearerId { get; internal set; }
+		public IEntity FlagbearerId { get; internal set; }
 	}
 }

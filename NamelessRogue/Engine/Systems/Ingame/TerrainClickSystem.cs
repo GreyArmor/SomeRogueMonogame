@@ -130,10 +130,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 								var group = groups.FirstOrDefault(x => x.TextId == selectedGroupId);
 
 
-								var flagbearer = game.GetEntity(group.FlagbearerId);
+								var flagbearer = group.FlagbearerId;
 								var position = flagbearer.GetComponentOfType<Position>();
 
-								FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(position.Point, worldPos, group.TextId);
+								FlowFieldMoveCommand moveCommand = new FlowFieldMoveCommand(position.Point, worldPos, flagbearer);
 								game.Commander.EnqueueCommand(moveCommand);
 
 							}
