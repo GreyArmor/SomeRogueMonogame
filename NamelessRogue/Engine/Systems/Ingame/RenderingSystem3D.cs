@@ -160,7 +160,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			game.GraphicsDevice.BlendState = BlendState.Opaque;
 			game.GraphicsDevice.SamplerStates[0] = sampler;
 			game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-
+			
 
 			IEntity worldEntity = game.TimelineEntity;
 			IWorldProvider worldProvider = null;
@@ -222,6 +222,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 			effect.Parameters["shadowMap"].SetValue(shadowMap);
 			shadedInstancedEffect.Parameters["shadowMap"].SetValue(shadowMap);
+
+
+			game.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
 			RenderChunksWithShadows(game);
 			//RenderObjectsWithShadow(game);
@@ -347,8 +350,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			var device = game.GraphicsDevice;
 			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 			effect.CurrentTechnique = effect.Techniques["ColorTechShadowMap"];
+		
 			foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
 			{
+				effect.Parameters["tileAtlas"].SetValue(geometry.Material);
 				EffectPass pass = effect.CurrentTechnique.Passes[1];
 				pass.Apply();
 

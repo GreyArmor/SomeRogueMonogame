@@ -71,7 +71,7 @@ namespace NamelessRogue.Engine._3DUtility
 				originalPointForTest = currentCorner;
 			}
 
-			
+				
 
 			var tiles = chunk.GetChunkTiles();
 

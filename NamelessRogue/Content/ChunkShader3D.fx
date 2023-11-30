@@ -268,7 +268,6 @@ SMapVertexToPixel ShadowMapVertexShader(float4 inPos : POSITION)
 SMapPixelToFrame ShadowMapPixelShader(SMapVertexToPixel PSIn)
 {
 	SMapPixelToFrame Output = (SMapPixelToFrame)0;
-
 	Output.Color = PSIn.Position2D.z / PSIn.Position2D.w;
 
 	return Output;
@@ -316,7 +315,7 @@ SScenePixelToFrame ShadowedScenePixelShader(SSceneVertexToPixel PSIn)
 		}
 	}
 
-	float4 baseColor = PSIn.Color;
+	float4 baseColor = tileAtlas.Sample(textureSampler, PSIn.TexCoords);
 	Output.Color = baseColor * (diffuseLightingFactor + xAmbient);
 	Output.Color.a = 1;
 	return Output;

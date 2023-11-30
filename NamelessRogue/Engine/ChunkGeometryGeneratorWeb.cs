@@ -1,8 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Utility;
 using System;
@@ -130,7 +133,7 @@ namespace NamelessRogue.Engine._3DUtility
 		{
 
 			var result = new Geometry3D();
-
+			Vector4[,] textureData = new Vector4[Constants.ChunkSize, Constants.ChunkSize];
 			var chunk = chunks.Chunks[chunkToGenerate];
 
 			var currentCorner = chunk.WorldPositionBottomLeftCorner;
@@ -145,6 +148,7 @@ namespace NamelessRogue.Engine._3DUtility
 			var resolution = Constants.ChunkSize;
 			var transformedPoints = new Queue<Vector3>();
 			var transformedPointsNormals = new Queue<Vector3>();
+			var textureCoordinates = new Queue<Vector2>();
 			var colors = new Queue<Vector4>();
 			const float worldHeight = 1300;
 
@@ -191,12 +195,15 @@ namespace NamelessRogue.Engine._3DUtility
 							elevation), Constants.ScaleDownMatrix);
 
 						transformedPoints.Enqueue(vector);
-						var tileColor = TerrainLibrary.Terrains[tile.Terrain].Representation.CharColor;
-						//colors.Add(first? new Vector4(100,0,0,100):tileColor.ToVector4());
-						//first = false;
-						colors.Enqueue(tileColor.ToVector4() * (random.Next(7, 9) / 10f));
+						textureCoordinates.Enqueue(new Vector2((float)x/Constants.ChunkSize, (float)y/Constants.ChunkSize));
+
+
+						//colors.Enqueue();
 						return vector;
 					}
+
+					var tileColor = TerrainLibrary.Terrains[tile.Terrain].Representation.CharColor;
+					textureData[y, x] = tileColor.ToVector4() * (random.Next(7, 9) / 10f);
 
 
 					var point = AddPoint(x, y, elevation, tile);
@@ -240,17 +247,32 @@ namespace NamelessRogue.Engine._3DUtility
 			while (transformedPoints.Any())
 			{
 				Vector3 point = transformedPoints.Dequeue();
-				var color = colors.Dequeue();
+				var color = new Vector4();
 				var vertex = new Systems.Ingame.Vertex3D(point,
 				color,
-				color, new Vector2(0, 0), transformedPointsNormals.Dequeue());
+				color, textureCoordinates.Dequeue(), transformedPointsNormals.Dequeue());
 				vertices.Enqueue(vertex);
 			}
+
+			var texture2D = new Texture2D(namelessGame.GraphicsDevice, Constants.ChunkSize, Constants.ChunkSize,false, SurfaceFormat.Vector4);
+
+			Vector4[] tempArr = new Vector4[Constants.ChunkSize * Constants.ChunkSize];
+
+			for (int i = 0; i < Constants.ChunkSize; i++)
+			{
+				for (int j = 0; j < Constants.ChunkSize; j++)
+				{
+					tempArr[i * Constants.ChunkSize + j] = textureData[i, j];
+				}
+			}
+
+			texture2D.SetData<Vector4>(tempArr,0, tempArr.Length);
+
 
 			result.Vertices = points;
 			result.Indices = indices.ToList();
 			result.Bounds = Microsoft.Xna.Framework.BoundingBox.CreateFromPoints(points);
-
+			result.Material = texture2D;
 			result.TriangleTerrainAssociation = tileTriangleAssociations;
 
 			result.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, vertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
