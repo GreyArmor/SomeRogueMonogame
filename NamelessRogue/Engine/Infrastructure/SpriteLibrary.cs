@@ -29,6 +29,9 @@ namespace NamelessRogue.Engine.Infrastructure
 			_addSprite("treeEvergreen", "Doodads\\treeEvergreen.sf");
 			_addSprite("cacti", "Doodads\\cacti.sf");
 			_addSprite("palmTree", "Doodads\\palmTree.sf");
+			_addSprite("stump", "Doodads\\stump.sf");
+			_addSprite("smallTree", "Doodads\\smallTree.sf");
+			_addSprite("stone", "Doodads\\stone.sf");
 		}
 	}
 }

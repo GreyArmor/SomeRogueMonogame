@@ -52,7 +52,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         namelessGame.WorldProvider.ClearTheWay(unit, position.Point);
                     }
 
-					namelessGame.WorldProvider.MoveEntity(flagbearer, nextFlagbearerPoint);
+					namelessGame.WorldProvider.AddEntityToNewLocation(flagbearer, nextFlagbearerPoint);
 
 					foreach (var unit in units)
                     {
