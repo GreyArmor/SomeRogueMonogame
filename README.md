@@ -12,3 +12,5 @@ TinyWorlds Assets Authors:
 Gold icons by Bonsaiheldin | http://bonsaiheld.org
 
 startfish by ARoachIFoundOnMyPillow https://opengameart.org/content/16x16-echinoderms
+
+seashells by schwarnhild https://schwarnhild.itch.io/basic-tileset-and-asset-pack-32x32-pixels
