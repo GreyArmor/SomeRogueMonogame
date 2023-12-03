@@ -64,6 +64,30 @@
 #begin Doodads/palmTree.sf
 /copy:Doodads/palmTree.sf
 
+#begin Doodads/pisaster_ochraceus.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Doodads/pisaster_ochraceus.png
+
+#begin Doodads/seashells.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Doodads/seashells.png
+
 #begin Doodads/treeEvergreen.sf
 /copy:Doodads/treeEvergreen.sf
 

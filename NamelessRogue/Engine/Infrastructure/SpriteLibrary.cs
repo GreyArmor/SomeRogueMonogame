@@ -32,6 +32,8 @@ namespace NamelessRogue.Engine.Infrastructure
 			_addSprite("stump", "Doodads\\stump.sf");
 			_addSprite("smallTree", "Doodads\\smallTree.sf");
 			_addSprite("stone", "Doodads\\stone.sf");
-		}
+            _addSprite("star", "Doodads\\star.sf");
+            _addSprite("seashells1", "Doodads\\seashells1.sf");
+        }
 	}
 }

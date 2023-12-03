@@ -71,7 +71,8 @@ namespace NamelessRogue.Engine.Systems
             List<Vector2> texCoords = new List<Vector2>();
             var frame = sheetAnimation.CurrentFrame;
 
-            var texelWidth = 1f / frame.Texture.Width;
+            float texelWidth = 1f / frame.Texture.Width;
+            float texelHeight = 1f / frame.Texture.Height;
 
             void _addVertice(Vector3 position, Vector2 textureCoords)
             {
@@ -83,10 +84,12 @@ namespace NamelessRogue.Engine.Systems
             var y = frame.Bounds.Y;
             var sizeX = frame.Bounds.Size.X;
             var sizeY = frame.Bounds.Size.Y;
-            _addVertice(_points[3], new Vector2((x + sizeX) * texelWidth, (y + sizeY) * texelWidth));
-            _addVertice(_points[2], new Vector2(x * texelWidth, (y + sizeY) * texelWidth));
-            _addVertice(_points[1], new Vector2(x * texelWidth, y * texelWidth));
-            _addVertice(_points[0], new Vector2((x + sizeX) * texelWidth, y * texelWidth));
+
+            _addVertice(_points[3], new Vector2((x + sizeX) * texelWidth, (y + sizeY) * texelHeight));
+            _addVertice(_points[2], new Vector2(x * texelWidth, (y + sizeY) * texelHeight));
+            _addVertice(_points[1], new Vector2(x * texelWidth, y * texelHeight));
+            _addVertice(_points[0], new Vector2((x + sizeX) * texelWidth, y * texelHeight));
+
 
             geometry3D.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, _points.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
             geometry3D.Buffer.SetData(vertices.ToArray());
@@ -136,7 +139,7 @@ namespace NamelessRogue.Engine.Systems
                         var drawable = entity.GetComponentOfType<Drawable>();
                         var modelShift = Matrix.CreateTranslation(-0.5f, -0.5f, -0.5f);
 
-                        var scaleToTile = Matrix.CreateScale(0.01f);
+                        var scaleToTile = Matrix.Identity;
                         if (drawable != null)
                         {
                             switch (drawable.Representation)
@@ -167,6 +170,12 @@ namespace NamelessRogue.Engine.Systems
                                     }
                                     break;
                                 case 'Q':
+                                    {
+                                        tilePosition = new Point2(x + postionOffsetX, y + postionOffsetY);
+                                        var matrix = Constants.ScaleDownMatrix * scaleToTile * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
+                                        objects.Add(new ModelInstance() { modelId = "seashells1", position = Vector3.Transform(Vector3.One, matrix), tile = tilePosition, IsFlat = true });
+                                    }
+                                    break;                                    
                                 case 'o':
                                     {
                                         tilePosition = new Point2(x + postionOffsetX, y + postionOffsetY);
@@ -385,7 +394,7 @@ namespace NamelessRogue.Engine.Systems
                     instanceBufferCache[group.Key] = instanceBuffer;
                 }
                 var geometry = spriteCache[group.First().modelId];
-                effect.Parameters["tileAtlas"].SetValue(SpriteLibrary.SpritesIdle["cacti"].TextureRegion.Texture);
+                effect.Parameters["tileAtlas"].SetValue(SpriteLibrary.SpritesIdle[group.First().modelId].TextureRegion.Texture);
 
                 //var pos = Vector3.Transform(Vector3.Zero, storedFirst);
                 //var screePos = Vector3.Transform(pos, camera.View * camera.Projection);

@@ -1,8 +1,8 @@
 {
   "textureAtlas": {
-    "texture": "..\\..\\..\\..\\..\\..\\Downloads\\pisaster_ochraceus.png",
-    "regionWidth": 16,
-    "regionHeight": 16
+    "texture": "seashells.png",
+    "regionWidth": 30,
+    "regionHeight": 24
   },
   "cycles": {
     "idleFront": {
