@@ -4,6 +4,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
+using MonoGame.Extended.Timers;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
@@ -15,6 +16,7 @@ using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using static NamelessRogue.Engine.Systems.Ingame.RenderingSystem3D;
 using BoundingFrustum = Microsoft.Xna.Framework.BoundingFrustum;
@@ -37,6 +39,7 @@ namespace NamelessRogue.Engine.Systems
             public string modelId;
             public Point2 tile;
             public bool IsFlat;
+            public bool AffectedByWind;
         }
         public SpriteRenderingSystem(NamelessGame game)
         {
@@ -108,6 +111,9 @@ namespace NamelessRogue.Engine.Systems
 
         List<ModelInstance> objectsToDraw = new List<ModelInstance>();
         bool once = true;
+
+        float windCoef = 0f;
+
         private List<ModelInstance> GetWorldObjectsToDraw(Point positon, IWorldProvider world, out Point2 tilePosition)
         {
             var postionOffsetX = positon.X * Constants.ChunkSize;
@@ -134,12 +140,12 @@ namespace NamelessRogue.Engine.Systems
                             {
                                 case 'T':
                                     {
-                                        objects.Add(new ModelInstance() { modelId = "treeEvergreen", tile = tilePosition });
+                                        objects.Add(new ModelInstance() { modelId = "treeEvergreen", tile = tilePosition, AffectedByWind = true });
                                     }
                                     break;
                                 case 't':
                                     {
-                                        objects.Add(new ModelInstance() { modelId = "smallTree", tile = tilePosition });
+                                        objects.Add(new ModelInstance() { modelId = "smallTree", tile = tilePosition, AffectedByWind = true });
                                     }
                                     break;
                                 case 'u':
@@ -178,6 +184,14 @@ namespace NamelessRogue.Engine.Systems
         const float spriteScaleDownCoef = 0.0001f;
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
+
+            windCoef += Constants.ScaleDownCoeficient*2;
+
+            if (windCoef > 10000)
+            {
+                windCoef = Constants.ScaleDownCoeficient;
+            }
+
             if (once)
             {
                 IEntity worldEntity = namelessGame.TimelineEntity;
@@ -288,7 +302,8 @@ namespace NamelessRogue.Engine.Systems
             effect.Parameters["CameraUp"].SetValue(camera.Up);
             effect.Parameters["CameraRight"].SetValue(camera.Right);
             effect.Parameters["xViewProjection"].SetValue(camera.Projection * camera.View);
-
+            effect.Parameters["windCoef"].SetValue(new Vector2(windCoef));
+            Debug.WriteLine(windCoef);
             var invertedView = Matrix.Invert(camera.View);
             if (camera.View == Matrix.Identity)
             {
@@ -345,6 +360,15 @@ namespace NamelessRogue.Engine.Systems
                 else
                 {
                     effect.Parameters["xBillboard"].SetValue(Matrix.Identity);
+                }
+
+                if (group.First().AffectedByWind)
+                {
+                    effect.Parameters["windFlag"].SetValue(true);
+                }
+                else 
+                {
+                    effect.Parameters["windFlag"].SetValue(false);
                 }
 
 
