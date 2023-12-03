@@ -115,7 +115,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 							if (tile.GetEntities().Count == 0)
                             {
                                 tile.AddEntity(entity);
-                                tile.Terrain = TerrainTypes.Lava;
+                             //   tile.Terrain = TerrainTypes.Lava;
                                 namelessGame.AddEntity(entity);
 
                             }

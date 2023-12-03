@@ -1,5 +1,4 @@
-﻿using Assimp.Configs;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Content;
@@ -8,7 +7,6 @@ using MonoGame.Extended.Sprites;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
-using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Generation.World;
@@ -37,7 +35,6 @@ namespace NamelessRogue.Engine.Systems
         class ModelInstance
         {
             public string modelId;
-            public Vector3 position;
             public Point2 tile;
             public bool IsFlat;
         }
@@ -58,12 +55,10 @@ namespace NamelessRogue.Engine.Systems
         static List<int> _indices = new List<int>();
         Geometry3D CreateSpriteGeometry(NamelessGame namelessGame, SpriteSheetAnimation sheetAnimation)
         {
-
-            var scale = 2f;
-            _points.Add(new Vector3(1, 1, 0) * scale);
-            _points.Add(new Vector3(-1, 1, 0) * scale);
-            _points.Add(new Vector3(-1, -1, 0) * scale);
-            _points.Add(new Vector3(1, -1, 0) * scale);
+            _points.Add(new Vector3(1, 1, 0));
+            _points.Add(new Vector3(-1, 1, 0));
+            _points.Add(new Vector3(-1, -1, 0));
+            _points.Add(new Vector3(1, -1, 0));
 
             _indices.AddRange(new int[6] { 0, 1, 2, 2, 3, 0 });
             var geometry3D = new Geometry3D();
@@ -128,66 +123,43 @@ namespace NamelessRogue.Engine.Systems
                 {
                     Tile tileToDraw = world.GetTile(x + postionOffsetX, y + postionOffsetY);
                     var entities = tileToDraw.GetEntities();
-
-                    if (entities.Count > 1)
-                    {
-                        entities.ToString();
-                    }
                     foreach (var entity in entities)
                     {
-                       // var furniture = entity.GetComponentOfType<Furniture>();
+                        // var furniture = entity.GetComponentOfType<Furniture>();
                         var drawable = entity.GetComponentOfType<Drawable>();
-                        var modelShift = Matrix.CreateTranslation(-0.5f, -0.5f, -0.5f);
-
-                        var scaleToTile = Matrix.Identity;
                         if (drawable != null)
                         {
+                            tilePosition = new Point2(x + postionOffsetX, y + postionOffsetY);
                             switch (drawable.Representation)
                             {
                                 case 'T':
                                     {
-                                        
-                                        tilePosition = new Point2(x + postionOffsetX, y + postionOffsetY);
-                                        var matrix = Constants.ScaleDownMatrix * scaleToTile * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
-                                                                        objects.Add(new ModelInstance() { modelId = "treeEvergreen", position = Vector3.Transform(Vector3.One, matrix), tile = tilePosition });
-                                    } 
+                                        objects.Add(new ModelInstance() { modelId = "treeEvergreen", tile = tilePosition });
+                                    }
                                     break;
                                 case 't':
-
                                     {
-                                        tilePosition = new Point2(x + postionOffsetX, y + postionOffsetY);
-                                        var matrix = Constants.ScaleDownMatrix * scaleToTile * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
-                                                                           objects.Add(new ModelInstance() { modelId = "smallTree", position = Vector3.Transform(Vector3.One, matrix), tile = tilePosition });
-
+                                        objects.Add(new ModelInstance() { modelId = "smallTree", tile = tilePosition });
                                     }
                                     break;
                                 case 'u':
                                     {
-                                        tilePosition = new Point2(x + postionOffsetX, y + postionOffsetY);
-                                        var matrix = Constants.ScaleDownMatrix * scaleToTile * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
-                                          objects.Add(new ModelInstance() { modelId = "stump", position = Vector3.Transform(Vector3.One, matrix), tile = tilePosition });
-
+                                        objects.Add(new ModelInstance() { modelId = "stump", tile = tilePosition });
                                     }
                                     break;
                                 case 'Q':
                                     {
-                                        tilePosition = new Point2(x + postionOffsetX, y + postionOffsetY);
-                                        var matrix = Constants.ScaleDownMatrix * scaleToTile * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
-                                        objects.Add(new ModelInstance() { modelId = "seashells1", position = Vector3.Transform(Vector3.One, matrix), tile = tilePosition, IsFlat = true });
-                                    }
-                                    break;                                    
-                                case 'o':
-                                    {
-                                        tilePosition = new Point2(x + postionOffsetX, y + postionOffsetY);
-                                        var matrix = Constants.ScaleDownMatrix * scaleToTile * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
-                                        objects.Add(new ModelInstance() { modelId = "stone", position = Vector3.Transform(Vector3.One, matrix), tile = tilePosition, IsFlat = true });
+                                        objects.Add(new ModelInstance() { modelId = "seashells1", tile = tilePosition, IsFlat = true });
                                     }
                                     break;
-                                case '★':
+                                case 'o':
                                     {
-                                        tilePosition = new Point2(x + postionOffsetX, y + postionOffsetY);
-                                        var matrix = Constants.ScaleDownMatrix * scaleToTile * Matrix.CreateTranslation(x * Constants.ScaleDownCoeficient, y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);    objects.Add(new ModelInstance() { modelId = "star", position = Vector3.Transform(Vector3.One, matrix), tile = tilePosition, IsFlat = true });
-                                        objects.Add(new ModelInstance() { modelId = "star", position = Vector3.Transform(Vector3.One, matrix), tile = tilePosition, IsFlat = true });
+                                        objects.Add(new ModelInstance() { modelId = "stone", tile = tilePosition, IsFlat = true });
+                                    }
+                                    break;
+                                case 'S':
+                                    {
+                                        objects.Add(new ModelInstance() { modelId = "star", tile = tilePosition, IsFlat = true });
                                     }
                                     break;
 
@@ -225,7 +197,15 @@ namespace NamelessRogue.Engine.Systems
                 {
                     var spriteSheet = namelessGame.Content.Load<SpriteSheet>($@"Doodads\\{group.First().modelId}.sf", new JsonContentLoader());
                     var spr = new AnimatedSprite(spriteSheet);
-                    spriteCache.Add(group.Key, CreateSpriteGeometry(namelessGame, spr.Play("idleFront")));
+
+                    if (group.First().IsFlat)
+                    {
+                        spriteCache.Add(group.Key, CreateSpriteGeometry(namelessGame, spr.Play("idleFront")));
+                    }
+                    else
+                    {
+                        spriteCache.Add(group.Key, CreateSpriteGeometry(namelessGame, spr.Play("idleFront")));
+                    }
                 }
 
                 effect = namelessGame.Content.Load<Effect>("ChunkShader3D");
@@ -383,7 +363,11 @@ namespace NamelessRogue.Engine.Systems
                         var tileToDraw = game.WorldProvider.GetTile((int)gameObject.tile.X, (int)gameObject.tile.Y);
                         var p = gameObject.tile;
                         var position = new Point((int)(p.X - offset), (int)(p.Y - offset));
-                        var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient + (2 * Constants.ScaleDownCoeficient));
+
+                        var shiftToTileCenter = Constants.ScaleDownCoeficient / 2;
+
+                        var billboardShiftUp = gameObject.IsFlat? Constants.ScaleDownCoeficient * 0.1f : Constants.ScaleDownCoeficient;
+                        var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient + shiftToTileCenter, position.Y * Constants.ScaleDownCoeficient + shiftToTileCenter, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient + billboardShiftUp);
                         var worldPos = Vector3.Transform(Vector3.Zero, world);
                         instanceTransforms.Add(new VertexShaderInstanceMatrix(world));
                     }
@@ -413,7 +397,7 @@ namespace NamelessRogue.Engine.Systems
                     pass.Apply();
                     device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, cacheCheckDictionary[group.Key]);
                 }
-            //    break;
+                //    break;
             }
         }
 

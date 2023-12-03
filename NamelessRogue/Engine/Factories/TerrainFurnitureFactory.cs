@@ -67,7 +67,7 @@ namespace NamelessRogue.Engine.Factories
             result.Add(flowerEntity);
 
             starfishEntity.AddComponent(new Description("A starfish", ""));
-            starfishEntity.AddComponent(new Drawable('★', new Color(1f, 0, 0)));
+            starfishEntity.AddComponent(new Drawable('S', new Color(1f, 0, 0)));
 
             shellEntity.AddComponent(new Description("A shell", ""));
             shellEntity.AddComponent(new Drawable('Q', new Color(0.8f, 0.8f, 0.5f)));
@@ -117,16 +117,16 @@ namespace NamelessRogue.Engine.Factories
             {
                 case Biomes.Beach:
                     {
-                        var randomValue = random.Next(0, 100) / 100d;
-                        if (randomValue > 0.997)
+                        var randomValue = random.Next(0, 10000);
+                        if (randomValue > 9997)
                         {
                             result = starfishEntity;
                         }
-                        else if (randomValue > 0.985)
+                        else if (randomValue > 9996)
                         {
                             result = shellEntity;
                         }
-                        else if (randomValue > 0.98)
+                        else if (randomValue > 9995)
                         {
                             result = rockEntity;
                         }
