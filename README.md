@@ -8,3 +8,5 @@ TinyWorlds Assets Authors:
 
   Octoshrimpy [CC0]
   https://octoshrimpy.itch.io/
+
+Gold icons by Bonsaiheldin | http://bonsaiheld.org
