@@ -10,3 +10,5 @@ TinyWorlds Assets Authors:
   https://octoshrimpy.itch.io/
 
 Gold icons by Bonsaiheldin | http://bonsaiheld.org
+
+startfish by ARoachIFoundOnMyPillow https://opengameart.org/content/16x16-echinoderms
