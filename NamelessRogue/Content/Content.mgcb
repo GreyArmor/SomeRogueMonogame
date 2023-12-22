@@ -113,7 +113,7 @@
 #begin Shader.fx
 /importer:EffectImporter
 /processor:EffectProcessor
-/processorParam:DebugMode=Auto
+/processorParam:DebugMode=Debug
 /build:Shader.fx
 
 #begin SideTexture.png

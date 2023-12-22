@@ -63,6 +63,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
     }
 
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    // we use height data for vertex z value, all else is calculated by gpu, we use yaw and pitch to calculate triangle normal
+    public struct TerrainVertex
+    {   
+        // ReSharper disable NotAccessedField.Local
+        public Vector3 vertexHeightYawPitch;
+
+        public TerrainVertex(float height, float yaw, float pitch)
+        {
+            this.vertexHeightYawPitch = new Vector3(height,yaw, pitch);
+        }
+    }
+
 
     public class TileModel { 
         public Vertex[] Vertices { get; }

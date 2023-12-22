@@ -9,6 +9,7 @@ using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems._3DView;
+using NamelessRogue.Engine.UI;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using System;
@@ -34,7 +35,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			new VertexElement(sizeof(float) * 13, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0)
 		);
 
-		public static readonly VertexDeclaration VertexShaderInstanceInput = new VertexDeclaration
+
+
+        public static readonly VertexDeclaration TerrainVertexDeclaration = new VertexDeclaration
+        (
+            new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0)
+        );
+        public static readonly VertexDeclaration VertexShaderInstanceInput = new VertexDeclaration
 		(
 			//this is 4x4 matrix, transferred as instructed in https://learn.microsoft.com/en-us/windows/win32/direct3d9/efficiently-drawing-multiple-instances-of-geometry
 			new VertexElement(0, VertexElementFormat.Vector4, VertexElementUsage.TextureCoordinate, 1),
@@ -160,6 +167,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			game.GraphicsDevice.BlendState = BlendState.Opaque;
 			game.GraphicsDevice.SamplerStates[0] = sampler;
 			game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+			game.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 			
 
 			IEntity worldEntity = game.TimelineEntity;
@@ -177,7 +185,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				SetupDebugDraw(game.GraphicsDevice);
 				once = false;
 				var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
-				var landBounds = Microsoft.Xna.Framework.BoundingBox.CreateFromPoints(chunkGeometries.ChunkGeometries.Values.Select(x => (x.Bounds.Max + x.Bounds.Min) / 2));
+				var landBounds = Microsoft.Xna.Framework.BoundingBox.CreateFromPoints(chunkGeometries.ChunkGeometries.Values.Select(x => (x.Item1.Bounds.Max + x.Item1.Bounds.Min) / 2));
 				LandCenter = (landBounds.Max + landBounds.Min) / 2;
 			}
 
@@ -211,10 +219,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
 			effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
-			//fighting shadow map imprecision with mad skillz, to remove artifacts on terrain border
-			RenderHackBufferToShadowMap(game);
+            var chunkGeometries1 = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 
-			RenderChunksToShadowMap(game);
+
+          //  effect.Parameters["chunkSize"].SetValue(Constants.ChunkSize);
+            effect.Parameters["chunkVerticesCount"].SetValue(chunkGeometries1.ChunkGeometries.First().Value.Item1.Vertices.Count);
+
+			var oldstate = game.GraphicsDevice.RasterizerState;
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.FillMode = FillMode.WireFrame;
+			rasterizerState.CullMode = CullMode.None;
+         //   game.GraphicsDevice.RasterizerState = rasterizerState;
+
+
+            //fighting shadow map imprecision with mad skillz, to remove artifacts on terrain border
+            RenderHackBufferToShadowMap(game);
+
+          //  RenderChunksToShadowMap(game, camera);
 			RenderObjectsToShadowMap(game);
 
 			device.SetRenderTarget(null);
@@ -222,33 +243,22 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 			effect.Parameters["shadowMap"].SetValue(shadowMap);
 			shadedInstancedEffect.Parameters["shadowMap"].SetValue(shadowMap);
+            game.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
+            RenderChunksWithShadows(game,camera);
+            //RenderObjectsWithShadow(game);
 
+            game.GraphicsDevice.RasterizerState = oldstate;
 
-			game.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
-
-			RenderChunksWithShadows(game);
-			//RenderObjectsWithShadow(game);
-			//RenderTestPlayer(game, camera);
-
-			var matrix = Matrix.CreateTranslation(sunLight.Position);
+            var matrix = Matrix.CreateTranslation(sunLight.Position);
 			effect.Parameters["xWorldViewProjection"].SetValue(matrix * camera.View * camera.Projection);
-			RenderDebug(game);
-		//	RenderObjects(game);
 
-			//effect.GraphicsDevice.SamplerStates[0] = SamplerState.Linea	rClamp;
-			//effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+ 
+
+            RenderDebug(game);
 
 			DrawDebugAxis(device, camera);
 
-			//using (SpriteBatch sprite = new SpriteBatch(device))
-			//{
-			//	sprite.Begin();
-			//	sprite.Draw(shadowMap, new Vector2(0, 0), null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(0, 0), 0.2f, SpriteEffects.None, 1);
-			//	sprite.End();
-			//}
-
-
-
+	
 		}
 
 		LineDrawer debugDraw;
@@ -330,56 +340,82 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		{
 			var device = game.GraphicsDevice;
 			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
-			effect.CurrentTechnique = effect.Techniques["ColorTech"];
-			foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
+			effect.CurrentTechnique = effect.Techniques["TerrrainTextureTechShadowMap"];
+			foreach (var geometryTuple in chunkGeometries.ChunkGeometries.Values)
 			{
+				var geometry = geometryTuple.Item1;
+				var terrainGeometry = geometryTuple.Item2;
 				foreach (EffectPass pass in effect.CurrentTechnique.Passes)
 				{
 					pass.Apply();
 
-					device.SetVertexBuffer(geometry.Buffer);
+					device.SetVertexBuffer(terrainGeometry.Buffer);
 					device.Indices = geometry.IndexBuffer;
 
-					device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
+					device.DrawIndexedPrimitives(PrimitiveType.TriangleStrip, 0, 0, geometry.TriangleCount);
 				}
 			}
 		}
 
-		private void RenderChunksWithShadows(NamelessGame game)
+
+        private void RenderChunksToShadowMap(NamelessGame game, Camera3D camera)
+        {
+            var device = game.GraphicsDevice;
+            var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+            effect.CurrentTechnique = effect.Techniques["TerrrainTextureTechShadowMap"];
+         
+            foreach (var geometryTuple in chunkGeometries.ChunkGeometries.Values)
+            {
+
+                var geometry = geometryTuple.Item1;
+                var terrainGeometry = geometryTuple.Item2;
+                effect.Parameters["xWorldViewProjection"].SetValue(terrainGeometry.WorldOffset * camera.View * camera.Projection);
+                EffectPass pass = effect.CurrentTechnique.Passes[0];
+                pass.Apply();
+
+                device.SetVertexBuffer(geometry.Buffer);
+                device.Indices = geometry.IndexBuffer;
+                device.SetVertexBuffer(terrainGeometry.Buffer);
+				device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
+				//device.DrawPrimitives(PrimitiveType.TriangleList, 0, geometry.TriangleCount);
+				break;
+            }
+
+
+        }
+        private void RenderChunksWithShadows(NamelessGame game, Camera3D camera)
 		{
 			var device = game.GraphicsDevice;
 			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
-			effect.CurrentTechnique = effect.Techniques["ColorTechShadowMap"];
-		
-			foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
+			effect.CurrentTechnique = effect.Techniques["TerrrainTextureTechShadowMap"];
+
+			foreach (var geometryTuple in chunkGeometries.ChunkGeometries.Values)
 			{
+
+				//	break;
+
+				//var geometryTuple = chunkGeometries.ChunkGeometries.Values.First();
+				var geometry = geometryTuple.Item1;
+				var terrainGeometry = geometryTuple.Item2;
 				effect.Parameters["tileAtlas"].SetValue(geometry.Material);
-				EffectPass pass = effect.CurrentTechnique.Passes[1];
+				effect.Parameters["xWorldViewProjection"].SetValue(Constants.ScaleDownMatrix * terrainGeometry.WorldOffset * camera.View * camera.Projection);
+
+                effect.Parameters["rowIndexEnd"].SetValue(IngameScreen.rowIndexEnd);
+                effect.Parameters["verticesPerRow"].SetValue(IngameScreen.verticesPerRow);
+                effect.Parameters["substractionCoef"].SetValue(IngameScreen.substractionCoef);
+
+                EffectPass pass = effect.CurrentTechnique.Passes[1];
 				pass.Apply();
 
-				device.SetVertexBuffer(geometry.Buffer);
-				device.Indices = geometry.IndexBuffer;
+				device.SetVertexBuffer(terrainGeometry.Buffer);
+				//   device.Indices = geometry.IndexBuffer;
 
-				device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
+				//device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
+				//544
+				device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, terrainGeometry.VerticesCount-2);
+			//	break;
 			}
-		}
-
-		private void RenderChunksToShadowMap(NamelessGame game)
-		{
-			var device = game.GraphicsDevice;
-			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
-			effect.CurrentTechnique = effect.Techniques["ColorTechShadowMap"];
-			foreach (var geometry in chunkGeometries.ChunkGeometries.Values)
-			{
-				EffectPass pass = effect.CurrentTechnique.Passes[0];
-				pass.Apply();
-
-				device.SetVertexBuffer(geometry.Buffer);
-				device.Indices = geometry.IndexBuffer;
-
-				device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
-			}
-		}
+        }
 
 		private void RenderHackBufferToShadowMap(NamelessGame game)
 		{

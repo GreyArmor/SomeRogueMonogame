@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using NamelessRogue.Engine._3DUtility;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
@@ -32,14 +33,15 @@ namespace NamelessRogue.Engine.Systems._3DView
 			}
 			while (game.Commander.DequeueCommand(out UpdateChunkCommand command))
 			{
-				var geometry = ChunkGeometryGeneratorWeb.GenerateChunkModelTiles(game, command.ChunkToUpdate, chunks, config);
+				var geometry = ChunkGeometryGeneratorWeb.GenerateChunkModelTiles(game, command.ChunkToUpdate, chunks, out var terrainGeometry);
 				var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 				if (chunkGeometries.ChunkGeometries.TryGetValue(command.ChunkToUpdate, out var chunkToRemove))
 				{
 					chunkGeometries.ChunkGeometries.Remove(command.ChunkToUpdate);
-					chunkToRemove.Dispose();
+					chunkToRemove.Item1.Dispose();
+					chunkToRemove.Item2.Dispose();
 				}
-				chunkGeometries.ChunkGeometries.Add(command.ChunkToUpdate, geometry);
+				chunkGeometries.ChunkGeometries.Add(command.ChunkToUpdate, new Tuple<Geometry3D, TerrainGeometry3D>(geometry, terrainGeometry));
 			}
 		}
 	}

@@ -75,7 +75,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				{
 					foreach (var geometryPointPair in chunkGeometries.ChunkGeometries)
 					{
-						var geometry = geometryPointPair.Value;
+						var geometry = geometryPointPair.Value.Item1;
 						if (geometry.TriangleCount > 0)
 						{
 							var distance = r.Intersects(geometry.Bounds);
