@@ -422,28 +422,46 @@ float mod(float x, float y)
     return x - y * floor(x / y);
 }
 
+float trueclamp(float x, float min, float max)
+{
+    if (x < min)
+    {
+        return min;
+    }
+	else if(x > max)
+    {
+        return max;
+    }
+	else
+    {    
+        return x;
+    }
+}
+
 
 float rowIndexEnd = 33;
-float verticesPerRow = 36;
 float substractionCoef = 1;
+float verticesPerRow = 36;
+
 TerrainShadowSceneVertexToPixel TerrainShadowedSceneVertexShader(VSInTerrain input, uint vertexId : SV_VertexID)
 {
     TerrainShadowSceneVertexToPixel Output = (TerrainShadowSceneVertexToPixel) 0;
     //float vertexIdfloat = vertexId;
     float rowIndex = mod(vertexId, verticesPerRow);
-    float clampedIndex = clamp(rowIndex - substractionCoef, 0, rowIndexEnd);
+    float clampedIndex = trueclamp(rowIndex - substractionCoef, 0, rowIndexEnd);
 	
-    float4 position = (float4) 0;
-  	    
-    position.y = floor(clampedIndex / 2);
-    position.x = mod(clampedIndex, 2); 
+    float4 position = (float4) 0;  
+	
+    position.x = floor(clampedIndex / 2);
+    position.y = mod(clampedIndex, 2);
+   
 	
 	//new row
-    float row = floor(vertexId / rowIndexEnd);
-    position.x += row;
+    float row = floor(vertexId / verticesPerRow);
+    position.y += row;
 	
     position.z = 0;
-    position.z = input.vertexHeightYawPitch.x;
+    //position.z = input.vertexHeightYawPitch.x;
 
     position.w = 1;	
 	
@@ -462,8 +480,9 @@ TerrainShadowSceneVertexToPixel TerrainShadowedSceneVertexShader(VSInTerrain inp
     Output.Position = pos; //    mul(position, xWorldViewProjection); //mul(mul(position, xView),xProjection);
     Output.Pos2DAsSeenByLight = mul(pos, xLightsWorldViewProjection);
     Output.Normal = normalize(mul(normal, (float3x3) xWorldMatrix));
-    Output.Position3D = mul(pos, xWorldMatrix);
-    Output.TexCoords = float2(position.y / 32.0, position.x / 32.0);
+    Output.Position3D = mul(position, xWorldMatrix);
+    float chunkSize = rowIndexEnd - 1;
+    Output.TexCoords = float2((chunkSize - position.x) / chunkSize, (chunkSize - position.y) / chunkSize);
     return Output;
 }
 
@@ -548,8 +567,8 @@ SScenePixelToFrame TerrainShadowedScenePixelShader(TerrainShadowSceneVertexToPix
     //    }
     //}
 
-    float2 texCoords = PSIn.Position.xy / 16;
-    float4 baseColor = tileAtlas.Sample(textureSampler, texCoords);
+   // float2 texCoords = PSIn.Position.xy / 16;
+    float4 baseColor = tileAtlas.Sample(textureSampler, PSIn.TexCoords);
   //  Output.Color = baseColor * (diffuseLightingFactor + xAmbient);
     Output.Color = baseColor;
     Output.Color.a = 1;

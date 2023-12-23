@@ -31,7 +31,7 @@
 #begin ChunkShader3D.fx
 /importer:EffectImporter
 /processor:EffectProcessor
-/processorParam:DebugMode=Debug
+/processorParam:DebugMode=Optimize
 /build:ChunkShader3D.fx
 
 #begin DFfont.png

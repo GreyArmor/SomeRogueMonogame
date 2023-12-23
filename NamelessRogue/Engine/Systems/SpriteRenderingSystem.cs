@@ -185,6 +185,8 @@ namespace NamelessRogue.Engine.Systems
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
 
+            return;
+
             windCoef += Constants.ScaleDownCoeficient*2;
 
             if (windCoef > 10000)

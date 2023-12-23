@@ -100,32 +100,30 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
 
-            var justcreated = worldProvider.GetRealityBubbleChunks().Where(x => x.Value.JustCreated);
-            foreach (var realityBubbleChunk in justcreated)
-            {
-                foreach (var tileArray in realityBubbleChunk.Value.GetChunkTiles())
-                {
-                    foreach (var tile in tileArray)
-                    {
-                        var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
-                        if (entity != null)
-                        {
-                            realityBubbleChunk.Value.IsAnyEntities = true;
+   //         var justcreated = worldProvider.GetRealityBubbleChunks().Where(x => x.Value.JustCreated);
+   //         foreach (var realityBubbleChunk in justcreated)
+   //         {
+   //             foreach (var tileArray in realityBubbleChunk.Value.GetChunkTiles())
+   //             {
+   //                 foreach (var tile in tileArray)
+   //                 {
+   //                     var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
+   //                     if (entity != null)
+   //                     {
+   //                         realityBubbleChunk.Value.IsAnyEntities = true;
 
-							if (tile.GetEntities().Count == 0)
-                            {
-                                tile.AddEntity(entity);
-                             //   tile.Terrain = TerrainTypes.Lava;
-                                namelessGame.AddEntity(entity);
+			//				if (tile.GetEntities().Count == 0)
+   //                         {
+   //                             tile.AddEntity(entity);
+   //                          //   tile.Terrain = TerrainTypes.Lava;
+   //                             namelessGame.AddEntity(entity);
 
-                            }
-                        }
-                    }
-                }
-                realityBubbleChunk.Value.JustCreated = false;
-				
-
-			}          
+   //                         }
+   //                     }
+   //                 }
+   //             }
+   //             realityBubbleChunk.Value.JustCreated = false;
+			//}          
 
         }
     }

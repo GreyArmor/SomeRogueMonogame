@@ -167,7 +167,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			game.GraphicsDevice.BlendState = BlendState.Opaque;
 			game.GraphicsDevice.SamplerStates[0] = sampler;
 			game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-			game.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+			game.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
 			
 
 			IEntity worldEntity = game.TimelineEntity;
@@ -222,18 +222,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var chunkGeometries1 = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 
 
-          //  effect.Parameters["chunkSize"].SetValue(Constants.ChunkSize);
+			effect.Parameters["substractionCoef"].SetValue(1);
+            effect.Parameters["rowIndexEnd"].SetValue((Constants.ChunkSize*2)+1);
+            effect.Parameters["verticesPerRow"].SetValue((Constants.ChunkSize * 2) + 4);
             effect.Parameters["chunkVerticesCount"].SetValue(chunkGeometries1.ChunkGeometries.First().Value.Item1.Vertices.Count);
 
-			var oldstate = game.GraphicsDevice.RasterizerState;
-            RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.FillMode = FillMode.WireFrame;
-			rasterizerState.CullMode = CullMode.None;
-         //   game.GraphicsDevice.RasterizerState = rasterizerState;
+			//var oldstate = game.GraphicsDevice.RasterizerState;
+			//RasterizerState rasterizerState = new RasterizerState();
+			//rasterizerState.FillMode = FillMode.WireFrame;
+			//rasterizerState.CullMode = CullMode.None;
+			//game.GraphicsDevice.RasterizerState = rasterizerState;
 
 
-            //fighting shadow map imprecision with mad skillz, to remove artifacts on terrain border
-            RenderHackBufferToShadowMap(game);
+			//fighting shadow map imprecision with mad skillz, to remove artifacts on terrain border
+			RenderHackBufferToShadowMap(game);
 
           //  RenderChunksToShadowMap(game, camera);
 			RenderObjectsToShadowMap(game);
@@ -247,7 +249,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             RenderChunksWithShadows(game,camera);
             //RenderObjectsWithShadow(game);
 
-            game.GraphicsDevice.RasterizerState = oldstate;
+           // game.GraphicsDevice.RasterizerState = oldstate;
 
             var matrix = Matrix.CreateTranslation(sunLight.Position);
 			effect.Parameters["xWorldViewProjection"].SetValue(matrix * camera.View * camera.Projection);
@@ -389,32 +391,29 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 			effect.CurrentTechnique = effect.Techniques["TerrrainTextureTechShadowMap"];
 
-			foreach (var geometryTuple in chunkGeometries.ChunkGeometries.Values)
+			// (var geometryTuple in chunkGeometries.ChunkGeometries.Values)
+			//	{
+
+			for (int i = 0; i < 100; i++)
 			{
+				for (int j = 0; j < 100; j++)
+				{
+                    var geometryTuple = chunkGeometries.ChunkGeometries.Values.First();
+                    var geometry = geometryTuple.Item1;
+                    var terrainGeometry = geometryTuple.Item2;
+                    effect.Parameters["tileAtlas"].SetValue(geometry.Material);
+                    effect.Parameters["xWorldViewProjection"].SetValue(Constants.ScaleDownMatrix * Matrix.CreateTranslation(new Vector3(i* Constants.ChunkSize * Constants.ScaleDownCoeficient, j * Constants.ChunkSize * Constants.ScaleDownCoeficient, 0)) * camera.View * camera.Projection);
 
-				//	break;
+                    EffectPass pass = effect.CurrentTechnique.Passes[1];
+                    pass.Apply();
 
-				//var geometryTuple = chunkGeometries.ChunkGeometries.Values.First();
-				var geometry = geometryTuple.Item1;
-				var terrainGeometry = geometryTuple.Item2;
-				effect.Parameters["tileAtlas"].SetValue(geometry.Material);
-				effect.Parameters["xWorldViewProjection"].SetValue(Constants.ScaleDownMatrix * terrainGeometry.WorldOffset * camera.View * camera.Projection);
 
-                effect.Parameters["rowIndexEnd"].SetValue(IngameScreen.rowIndexEnd);
-                effect.Parameters["verticesPerRow"].SetValue(IngameScreen.verticesPerRow);
-                effect.Parameters["substractionCoef"].SetValue(IngameScreen.substractionCoef);
-
-                EffectPass pass = effect.CurrentTechnique.Passes[1];
-				pass.Apply();
-
-				device.SetVertexBuffer(terrainGeometry.Buffer);
-				//   device.Indices = geometry.IndexBuffer;
-
-				//device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.TriangleCount);
-				//544
-				device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, terrainGeometry.VerticesCount-2);
+                    //
+                    device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, terrainGeometry.VerticesCount-3);
+                }
+			}			
 			//	break;
-			}
+			//}
         }
 
 		private void RenderHackBufferToShadowMap(NamelessGame game)

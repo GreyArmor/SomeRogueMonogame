@@ -37,9 +37,9 @@ namespace NamelessRogue.Engine.UI
 			shiftVector = new System.Numerics.Vector2(0, buttonSpacing.Y + buttonSize.Y);
 			sidebarSize = new System.Numerics.Vector2(game.Settings.HudWidth, shiftVector.Y + buttonSize.Y * buttonCount);
 		}
-		public static int rowIndexEnd = 34;
-		public static int verticesPerRow = 34;
-        public static int substractionCoef = 0;
+		public static int rowIndexEnd = 33;
+		public static int verticesPerRow = 36;
+        public static int substractionCoef = 1;
 
         public override void DrawLayout()
 		{
@@ -63,7 +63,7 @@ namespace NamelessRogue.Engine.UI
                    
 					ImGui.SliderInt("rowIndexEnd", ref rowIndexEnd, 0, 100);
                     ImGui.SliderInt("verticesPerRow", ref verticesPerRow, 0, 100);
-                    ImGui.SliderInt("substractionCoef", ref substractionCoef, 0, 100);
+                    ImGui.SliderInt("substractionCoef", ref substractionCoef, -50, 50);
 
 
                     ImGui.PopFont();

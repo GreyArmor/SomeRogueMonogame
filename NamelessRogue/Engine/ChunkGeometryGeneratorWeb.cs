@@ -91,6 +91,7 @@ namespace NamelessRogue.Engine._3DUtility
            // terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
             for (int x = 0; x < resolution; x++)
             {
+              //  terrainVertices.Enqueue(new TerrainVertex(terrainVertices.Last().vertexHeightYawPitch.X, 0, 0));
                 for (int y = 0; y < resolution + 1; y++)
                 {
 
@@ -110,9 +111,12 @@ namespace NamelessRogue.Engine._3DUtility
                     normT.Y = MathF.Sin(pitch);
                     normT.Z = MathF.Cos(pitch) * MathF.Cos(yaw);
 
-                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), yaw, pitch));
-                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationE), yaw, pitch));
+                    terrainVertices.Enqueue(new TerrainVertex(Constants.ScaleDownCoeficient*10, yaw, pitch));
+                    terrainVertices.Enqueue(new TerrainVertex(Constants.ScaleDownCoeficient*10, yaw, pitch));
                 }
+                terrainVertices.Enqueue(new TerrainVertex(terrainVertices.Last().vertexHeightYawPitch.X, 0, 0));
+                terrainVertices.Enqueue(new TerrainVertex(terrainVertices.Last().vertexHeightYawPitch.X, 0, 0));
+                terrainVertices.Enqueue(new TerrainVertex(terrainVertices.Last().vertexHeightYawPitch.X, 0, 0));
             }
 
         
@@ -260,8 +264,8 @@ namespace NamelessRogue.Engine._3DUtility
 
             terrainGeometry.WorldOffset = Matrix.CreateRotationZ(SharpDX.MathUtil.DegreesToRadians(180)) * Matrix.CreateTranslation(offsetVector);
             terrainGeometry.VerticesCount = terrainVertices.Count;
-            var chunkVerticesCount = vertices.Count;
-            var arr = terrainVertices.ToArray();
+           // var chunkVerticesCount = vertices.Count;
+            //var arr = terrainVertices.ToArray();
 
             //var rowIndexEnd = 34;
             //float verticesPerRow = 36; //its 35 because we have a proxy trinagle between each row
