@@ -34,6 +34,13 @@
 /processorParam:DebugMode=Optimize
 /build:ChunkShader3D.fx
 
+#begin Common.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/processorParam:Defines=
+/build:Common.fx
+
 #begin DFfont.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -217,4 +224,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/townwalls.png
+
+#begin TreeShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:TreeShader.fx
 

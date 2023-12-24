@@ -14,9 +14,15 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\ChunkShader3D.fx" />
+    <None Remove="Content\Common.fx" />
     <None Remove="Content\DFfont.png" />
     <None Remove="Content\Shader.fx" />
+    <None Remove="Content\TreeShader.fx" />
     <None Remove="log4net.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Common.fx" />
+    <Content Include="Content\TreeShader.fx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\ChunkShader3D.fx" />

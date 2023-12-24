@@ -185,7 +185,7 @@ namespace NamelessRogue.Engine.Systems
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
 
-            return;
+           // return;
 
             windCoef += Constants.ScaleDownCoeficient*2;
 
@@ -224,7 +224,7 @@ namespace NamelessRogue.Engine.Systems
                     }
                 }
 
-                effect = namelessGame.Content.Load<Effect>("ChunkShader3D");
+                effect = namelessGame.Content.Load<Effect>("TreeShader");
             }
 
             Camera3D camera = namelessGame.PlayerEntity.GetComponentOfType<Camera3D>();
