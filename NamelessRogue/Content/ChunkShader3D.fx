@@ -214,7 +214,7 @@ TerrainShadowSceneVertexToPixel TerrainShadowedSceneVertexShader(VSInTerrain inp
     position.y += row;
 	
     position.z = 0;
-    //position.z = input.vertexHeightYawPitch.x;
+    position.z = input.vertexHeightYawPitch.x;
 
     position.w = 1;	
 	
@@ -348,6 +348,15 @@ technique TerrrainTextureTechShadowMap
     }
 
     pass Pass1
+    {
+        VertexShader = compile vs_4_0 TerrainShadowedSceneVertexShader();
+        PixelShader = compile ps_4_0 TerrainShadowedScenePixelShader();
+    }
+}
+
+technique TerrrainTextureTechSimple
+{
+    pass Pass0
     {
         VertexShader = compile vs_4_0 TerrainShadowedSceneVertexShader();
         PixelShader = compile ps_4_0 TerrainShadowedScenePixelShader();
