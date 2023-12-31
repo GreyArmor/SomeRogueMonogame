@@ -161,15 +161,6 @@ SMapVertexToPixel ShadowMapVertexShader(float4 inPos : POSITION)
 }
 
 
-
-int chunkVerticesCount;
-SMapVertexToPixel TerrainShadowMapVertexShader(VSInTerrain input, uint vertexId : SV_VertexID)
-{
-    SMapVertexToPixel Output = (SMapVertexToPixel) 0;
-
-    return Output;
-}
-
 float mod(float x, float y)
 {
     return x - y * floor(x / y);
@@ -181,12 +172,12 @@ float trueclamp(float x, float min, float max)
     {
         return min;
     }
-	else if(x > max)
+    else if (x > max)
     {
         return max;
     }
-	else
-    {    
+    else
+    {
         return x;
     }
 }
@@ -196,46 +187,56 @@ float rowIndexEnd = 33;
 float substractionCoef = 1;
 float verticesPerRow = 36;
 
-TerrainShadowSceneVertexToPixel TerrainShadowedSceneVertexShader(VSInTerrain input, uint vertexId : SV_VertexID)
+float4 calculateTerrainVertex(VSInTerrain input, uint vertexId)
 {
-    TerrainShadowSceneVertexToPixel Output = (TerrainShadowSceneVertexToPixel) 0;
-    //float vertexIdfloat = vertexId;
+    float4 position = (float4) 0;
     float rowIndex = mod(vertexId, verticesPerRow);
-    float clampedIndex = trueclamp(rowIndex - substractionCoef, 0, rowIndexEnd);
-	
-    float4 position = (float4) 0;  
-	
+    float clampedIndex = clamp(rowIndex - substractionCoef, 0, rowIndexEnd);
     position.x = floor(clampedIndex / 2);
     position.y = mod(clampedIndex, 2);
-   
-	
 	//new row
     float row = floor(vertexId / verticesPerRow);
     position.y += row;
-	
-   // position.z = 0.5;
     position.z = input.vertexHeightYawPitch.x;
+    position.w = 1;
+    return position;
+}
 
-    position.w = 1;	
+SMapVertexToPixel TerrainShadowMapVertexShader(VSInTerrain input, uint vertexId : SV_VertexID)
+{
+    SMapVertexToPixel Output = (SMapVertexToPixel) 0;
 	
+    float4 position = calculateTerrainVertex(input, vertexId);
+    float4 worldPosition = mul(position, xWorldMatrix);
+    Output.Position = mul(worldPosition, xLightsWorldViewProjection);
+    Output.Position2D = Output.Position;
+    return Output;
+}
+
+
+TerrainShadowSceneVertexToPixel TerrainShadowedSceneVertexShader(VSInTerrain input, uint vertexId : SV_VertexID)
+{
+    TerrainShadowSceneVertexToPixel Output = (TerrainShadowSceneVertexToPixel) 0;
+	
+    float4 position = calculateTerrainVertex(input, vertexId);	
 	float yaw = input.vertexHeightYawPitch.y;
     float pitch = input.vertexHeightYawPitch.z;
 	float3 normal = (float3) 0;
-    normal.x = 0;//    cos(pitch) * sin(yaw);
-    normal.y = 0; //sin(pitch);
-    normal.z = 1; // cos(pitch) * cos(yaw);
+    normal.x = cos(pitch) * sin(yaw);
+    normal.y = sin(pitch);
+    normal.z = cos(pitch) * cos(yaw);
 	
+    float4x4 worldViewProjection = mul(mul(xWorldMatrix, xView), xProjection);
 	
-    //float4 viewPosition = mul(position, xWorldViewProjection);
-
-    float4 pos = mul(position, xWorldViewProjection);
-
+    float4 posW = mul(position, xWorldMatrix);
+    //float4 posV = mul(posW, xView);
+    float4 pos = mul(position, worldViewProjection);
     Output.Position = pos; //    mul(position, xWorldViewProjection); //mul(mul(position, xView),xProjection);
-    Output.Pos2DAsSeenByLight = mul(pos, xLightsWorldViewProjection);
-    Output.Normal = normalize(mul(normal, (float3x3) xWorldMatrix));
-    Output.Position3D = mul(position, xWorldMatrix);
+    Output.Pos2DAsSeenByLight = mul(posW, xLightsWorldViewProjection);
+    Output.Normal = normal;
+    Output.Position3D = posW;
     float chunkSize = rowIndexEnd - 1;
-    Output.TexCoords = float2((chunkSize - position.x) / chunkSize, (chunkSize - position.y) / chunkSize);
+    Output.TexCoords = float2((position.x) / chunkSize, (position.y) / chunkSize);
     return Output;
 }
 
@@ -245,7 +246,6 @@ SMapPixelToFrame ShadowMapPixelShader(SMapVertexToPixel PSIn)
 {
 	SMapPixelToFrame Output = (SMapPixelToFrame)0;
 	Output.Color = PSIn.Position2D.z / PSIn.Position2D.w;
-
 	return Output;
 }
 
@@ -294,27 +294,35 @@ SScenePixelToFrame TerrainShadowedScenePixelShader(TerrainShadowSceneVertexToPix
 {
     SScenePixelToFrame Output = (SScenePixelToFrame) 0;
 
-    //float2 ProjectedTexCoords;
-    //ProjectedTexCoords[0] = PSIn.Pos2DAsSeenByLight.x / PSIn.Pos2DAsSeenByLight.w / 2.0f + 0.5f;
-    //ProjectedTexCoords[1] = -PSIn.Pos2DAsSeenByLight.y / PSIn.Pos2DAsSeenByLight.w / 2.0f + 0.5f;
+    float2 ProjectedTexCoords;
+    ProjectedTexCoords[0] = PSIn.Pos2DAsSeenByLight.x / PSIn.Pos2DAsSeenByLight.w / 2.0f + 0.5f;
+    ProjectedTexCoords[1] = -PSIn.Pos2DAsSeenByLight.y / PSIn.Pos2DAsSeenByLight.w / 2.0f + 0.5f;
 
-    //float diffuseLightingFactor = 0;
-    //if ((saturate(ProjectedTexCoords).x == ProjectedTexCoords.x) && (saturate(ProjectedTexCoords).y == ProjectedTexCoords.y))
-    //{
-    //    float4 shadow = shadowMap.Sample(ShadowMapSampler, ProjectedTexCoords);
-    //    float depthStoredInShadowMap = shadow.r;
-    //    float realDistance = PSIn.Pos2DAsSeenByLight.z / PSIn.Pos2DAsSeenByLight.w;
-    //    if ((realDistance - 1.0f / 100.0f) <= depthStoredInShadowMap)
-    //    {
-    //        diffuseLightingFactor = DotProduct(xLightPos, PSIn.Position3D, PSIn.Normal);
-    //        diffuseLightingFactor = saturate(diffuseLightingFactor);
-    //        diffuseLightingFactor *= xLightPower;
-    //    }
-    //}
+    float diffuseLightingFactor = 0;
+    if ((saturate(ProjectedTexCoords).x == ProjectedTexCoords.x) && (saturate(ProjectedTexCoords).y == ProjectedTexCoords.y))
+    {
+        float4 shadow = shadowMap.Sample(ShadowMapSampler, ProjectedTexCoords);
+        float depthStoredInShadowMap = shadow.r;
+        float realDistance = PSIn.Pos2DAsSeenByLight.z / PSIn.Pos2DAsSeenByLight.w;
+        if ((realDistance - 1.0f / 100.0f) <= depthStoredInShadowMap)
+        {
+            diffuseLightingFactor = DotProduct(xLightPos, PSIn.Position3D, PSIn.Normal);
+            diffuseLightingFactor = saturate(diffuseLightingFactor);
+            diffuseLightingFactor *= xLightPower;
+        }
+    }
 
-   // float2 texCoords = PSIn.Position.xy / 16;
+    float2 texCoords = PSIn.Position.xy / 16;
     float4 baseColor = tileAtlas.Sample(textureSampler, PSIn.TexCoords);
-  //  Output.Color = baseColor * (diffuseLightingFactor + xAmbient);
+    Output.Color = baseColor * (diffuseLightingFactor + xAmbient);
+    Output.Color.a = 1;
+    return Output;
+}
+
+SScenePixelToFrame SimplePixelShaderTerrain(TerrainShadowSceneVertexToPixel PSIn)
+{
+    SScenePixelToFrame Output = (SScenePixelToFrame) 0;
+    float4 baseColor = tileAtlas.Sample(textureSampler, PSIn.TexCoords);
     Output.Color = baseColor;
     Output.Color.a = 1;
     return Output;
@@ -359,7 +367,7 @@ technique TerrrainTextureTechSimple
     pass Pass0
     {
         VertexShader = compile vs_4_0 TerrainShadowedSceneVertexShader();
-        PixelShader = compile ps_4_0 TerrainShadowedScenePixelShader();
+        PixelShader = compile ps_4_0 SimplePixelShaderTerrain();
     }
 }
 

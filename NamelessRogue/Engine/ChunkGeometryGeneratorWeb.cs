@@ -87,74 +87,7 @@ namespace NamelessRogue.Engine._3DUtility
             }
 
 
-            int counter = 0;
-
-            //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-            //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-            //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-            float lastElevation = 0;
-            bool newRow = false;
-            for (int y = 0; y < resolution+1; y += 1)
-            {
-
-                for (int x = 0; x < resolution+1; x += 1)
-                {
-                    var tileX = chunk.WorldPositionBottomLeftCorner.X + x;
-                    var tileY = chunk.WorldPositionBottomLeftCorner.Y + y;
-
-                    Tile tile = chunks.GetTile(tileX, tileY);
-                    Tile tileS = chunks.GetTile(tileX, tileY + 1);
-
-                    float elevation = (float)tile.Elevation;
-                  //  float elevationE = (float)tileW.Elevation;
-                    float elevationN = (float)tileS.Elevation;
-                 //   float elevationNE = (float)tileSE.Elevation;
-
-                    var normal = Vector3.UnitZ;
-                    float pitch = MathF.Asin(-normal.Y);
-                    float yaw = MathF.Atan2(normal.X, normal.Z);
-
-                    Vector3 normT;
-                    normT.X = MathF.Cos(pitch) * MathF.Sin(yaw);
-                    normT.Y = MathF.Sin(pitch);
-                    normT.Z = MathF.Cos(pitch) * MathF.Cos(yaw);
-                    var scale = 0.1f;
-                    //terrainVertices[x, y] = (new TerrainVertex(, yaw, pitch));
-
-                    if (!terrainVertices.Any())
-                    {
-                        terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), 0, 0));
-                    }else if(newRow)
-                    {
-                        newRow = false;
-                        terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(lastElevation), 0, 0));
-                        terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), 0, 0));
-                      
-                    }
-
-                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), 0, 0));
-                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationN), 0, 0));
-                    lastElevation = elevationN;
-                }
-                newRow = true;
-              
-               // terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-            //    terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-                //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-
-
-                //terrainVertices[32, y] = (new TerrainVertex(1, 0, 0));
-                //   terrainVertices[32, y] = (new TerrainVertex(1, 0, 0));
-                // terrainVertices[32, y] = (new TerrainVertex(1, 0, 0));
-                //terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-                //terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-                //terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-
-            }
-
-
-
-
+            Vector3[,] tileNormals = new Vector3[resolution, resolution];
             for (int x = 0; x < resolution; x++)
             {
                 for (int y = 0; y < resolution; y++)
@@ -172,9 +105,6 @@ namespace NamelessRogue.Engine._3DUtility
                     float elevationMedian = (elevation + elevationE + elevationS + elevationSE) / 4;
 
                     tile.ElevationVisual = MathF.Pow((float)(elevationMedian - 0.5f) * worldHeight, 2) * 0.005f;
-
-
-
 
                     //return point adden for normal calculation
                     Vector3 AddPoint(int x, int y, float pointElevation, Tile tile)
@@ -216,15 +146,54 @@ namespace NamelessRogue.Engine._3DUtility
                     transformedPointsNormals.Enqueue(normal);
                     transformedPointsNormals.Enqueue(normal);
                     transformedPointsNormals.Enqueue(normal);
-
-
-
+                    tileNormals[x, y] = normal;
                     for (int i = 0; i < 6; i++)
                     {
                         tileTriangleAssociations.Add(new Point(x, y));
                     }
                 }
             }
+
+
+            float lastElevation = 0;
+            bool newRow = false;
+            for (int y = 0; y < resolution + 1; y += 1)
+            {
+                for (int x = 0; x < resolution + 1; x += 1)
+                {
+                    var tileX = chunk.WorldPositionBottomLeftCorner.X + x;
+                    var tileY = chunk.WorldPositionBottomLeftCorner.Y + y;
+
+                    Tile tile = chunks.GetTile(tileX, tileY);
+                    Tile tileS = chunks.GetTile(tileX, tileY + 1);
+
+                    float elevation = (float)tile.Elevation;
+                    float elevationN = (float)tileS.Elevation;
+
+                    var normal = tileNormals[Math.Clamp(x, 0, resolution-1), Math.Clamp(y, 0, resolution-1)];
+                    float pitch = MathF.Abs(MathF.Asin(-normal.Y));
+                    float yaw = MathF.Abs(MathF.Atan2(normal.X, normal.Z));
+
+                    if (!terrainVertices.Any())
+                    {
+                        terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), yaw, pitch));
+                    }
+                    else if (newRow)
+                    {
+                        newRow = false;
+                        terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(lastElevation), yaw, pitch));
+                        terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), yaw, pitch));
+
+                    }
+
+                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), yaw, pitch));
+                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationN), yaw, pitch));
+                    lastElevation = elevationN;
+                }
+                newRow = true;
+            }
+
+
 
 
 
@@ -281,112 +250,17 @@ namespace NamelessRogue.Engine._3DUtility
             result.IndexBuffer.SetData<int>(indices.ToArray());
             result.TriangleCount = triangleCount;
 
-            //var tempQueue = new Queue<TerrainVertex>();
-            //float arrlenght = resolution * 2 * resolution * 2;
-            //float rowLenght = resolution * 2 + 1 ;
-            //Random tmpR = new Random();
-            //for (int index = 0; index < arrlenght; index += 1)
-            //{
-            //    int clampedIndex = Math.Clamp(index, 0, resolution * 2 - 1);
-            //    int x, y;
-            //    x = (int)Math.Floor(clampedIndex / 2f);
-            //    y = clampedIndex % 2;
-
-
-            //    //new row
-            //    int row = (int)Math.Floor(index / rowLenght);
-            //    y += row;
-
-            //    tempQueue.Enqueue(terrainVertices[x, y]);
-
-            //}
-
-            //for (int y = 0; y < resolution * 2 + 1; y += 1)
-            //{
-            //    for (int x = 0; x < resolution * 2 + 1; x += 1)
-            //    {
-            //        tempQueue.Enqueue(terrainVertices[x, y]);
-            //    }
-            //}
-
             terrainGeometryResult.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.TerrainVertexDeclaration, terrainVertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
             terrainGeometryResult.Buffer.SetData<TerrainVertex>(terrainVertices.ToArray());
             terrainGeometry = terrainGeometryResult;
-
-
 
             var offsetVector = Vector3.Transform(new Vector3(
                 currentCorner.X - originalPointForTest.X,
                 currentCorner.Y - originalPointForTest.Y,
                             0), Constants.ScaleDownMatrix);
 
-
-
             terrainGeometry.WorldOffset = Matrix.CreateTranslation(offsetVector);
             terrainGeometry.VerticesCount = terrainVertices.Count;
-            // var chunkVerticesCount = vertices.Count;
-            //var arr = terrainVertices.ToArray();
-
-            //var rowIndexEnd = 34;
-            //float verticesPerRow = 36; //its 35 because we have a proxy trinagle between each row
-
-            //List<List<float>> rowsX = new List<List<float>>();
-            //List<List<float>> rowsY = new List<List<float>>();
-
-            // List<float> rowX = new List<float>();
-            // List<float> rowY = new List<float>();
-
-            //for (int vertexId = 0; vertexId < terrainVertices.Count; vertexId++)
-            //{
-            //    var vert = arr[vertexId];
-
-
-
-            //    float rowIndex = vertexId % verticesPerRow;
-            //    float clampedIndex = Math.Clamp(rowIndex - 2, 0, rowIndexEnd);
-
-            //    if (clampedIndex / rowIndexEnd == 0)
-            //    {
-            //        rowsX.Add(rowX.ToList());
-            //        rowsY.Add(rowY.ToList());
-
-            //        Debug.Write("rowX=");
-            //        foreach (var item in rowX)
-            //        {
-            //            Debug.Write(" ");
-            //            Debug.Write(item);
-            //        }
-            //        Debug.WriteLine("");
-            //        Debug.Write("rowY=");
-            //        foreach (var item in rowY)
-            //        {
-            //            Debug.Write(" ");
-            //            Debug.Write(item);
-            //        }
-            //        Debug.WriteLine("");
-            //        rowX.Clear(); rowY.Clear();
-            //    }
-
-            //    //float yaw = input.vertexHeightYawPitch.y;
-            //    //float pitch = input.vertexHeightYawPitch.z;
-
-            //    Vector4 position = new Vector4();
-            //    position.X = MathF.Floor(clampedIndex / 2.0f);
-            //    position.Y = clampedIndex % 2.0f;
-
-
-
-            //    //new row
-            //    //    position.Y += MathF.Floor(vertexId / verticesPerRow);
-
-            //    rowX.Add(position.X); rowY.Add(position.Y);
-
-            //    position.Z = vert.vertexHeightYawPitch.X;
-            //    //   Debug.WriteLine($@"rowIndex={rowIndex} position={position}");
-            //}
-
-
-
 
             return result;
         }

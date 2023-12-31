@@ -68,7 +68,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
     public struct TerrainVertex
     {   
         // ReSharper disable NotAccessedField.Local
-        private Vector3 vertexHeightYawPitch;
+        public Vector3 vertexHeightYawPitch;
 
         public TerrainVertex(float height, float yaw, float pitch)
         {
