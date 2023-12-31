@@ -29,7 +29,7 @@ struct VertexShaderBillboardInstanceInput
 struct VSInTerrain
 {
 	//x is our height, y is our yaw and x is out pitch
-	float3 vertexHeightYawPitch : POSITION;
+    float3 vertexHeightYawPitch : TEXCOORD1;
 };
 
 VertexToPixel SimplestVertexShader(VSIn input)
@@ -213,7 +213,7 @@ TerrainShadowSceneVertexToPixel TerrainShadowedSceneVertexShader(VSInTerrain inp
     float row = floor(vertexId / verticesPerRow);
     position.y += row;
 	
-    position.z = 0;
+   // position.z = 0.5;
     position.z = input.vertexHeightYawPitch.x;
 
     position.w = 1;	

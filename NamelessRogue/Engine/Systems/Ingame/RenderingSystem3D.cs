@@ -39,8 +39,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public static readonly VertexDeclaration TerrainVertexDeclaration = new VertexDeclaration
         (
-            new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0)
+            new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.TextureCoordinate, 1)
         );
+
         public static readonly VertexDeclaration VertexShaderInstanceInput = new VertexDeclaration
 		(
 			//this is 4x4 matrix, transferred as instructed in https://learn.microsoft.com/en-us/windows/win32/direct3d9/efficiently-drawing-multiple-instances-of-geometry
@@ -230,15 +231,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			RasterizerState rasterizerState = new RasterizerState();
 			rasterizerState.FillMode = FillMode.WireFrame;
 			rasterizerState.CullMode = CullMode.None;
-			game.GraphicsDevice.RasterizerState = rasterizerState;
+		//	game.GraphicsDevice.RasterizerState = rasterizerState;
 
 
 
 			//fighting shadow map imprecision with mad skillz, to remove artifacts on terrain border
 			//	RenderHackBufferToShadowMap(game);
 
-			//  RenderChunksToShadowMap(game, camera);
-			//	RenderObjectsToShadowMap(game);
+			  RenderChunksToShadowMap(game, camera);
+			//	RenderObjectsToShadowMap(game	);
 
 			device.SetRenderTarget(null);
 			var shadowMap = (Texture2D)sunLight.ShadowMapRenderTarget;
@@ -256,9 +257,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
  
 
-            RenderDebug(game);
+        //    RenderDebug(game);
 
-			DrawDebugAxis(device, camera);
+		//	DrawDebugAxis(device, camera);
 
 	
 		}
@@ -389,19 +390,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		{
 			var device = game.GraphicsDevice;
 			var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
-			effect.CurrentTechnique = effect.Techniques["TerrrainTextureTechShadowMap"];
+			effect.CurrentTechnique = effect.Techniques["TerrrainTextureTechSimple"];
 
 			foreach (var geometryTuple in chunkGeometries.ChunkGeometries.Values)
 			{
 				var geometry = geometryTuple.Item1;
 				var terrainGeometry = geometryTuple.Item2;
-                device.SetVertexBuffer(terrainGeometry.Buffer);
                 effect.Parameters["tileAtlas"].SetValue(geometry.Material);
 				effect.Parameters["xWorldViewProjection"].SetValue(Constants.ScaleDownMatrix * terrainGeometry.WorldOffset * camera.View * camera.Projection);
 
-				EffectPass pass = effect.CurrentTechnique.Passes[1];
+                device.SetVertexBuffer(terrainGeometry.Buffer);
+
+                EffectPass pass = effect.CurrentTechnique.Passes[0];
 				pass.Apply();
-				device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 36 * Constants.ChunkSize);
+
+            
+                device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 36 * 16);
+			//	break;
 			}
 		}
 

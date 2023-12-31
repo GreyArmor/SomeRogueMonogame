@@ -2,13 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
-using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems.Ingame;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
 
@@ -57,7 +55,7 @@ namespace NamelessRogue.Engine._3DUtility
 
             Queue<Vertex3D> vertices = new Queue<Vertex3D>();
 
-            Queue<TerrainVertex> terrainVertices = new Queue<TerrainVertex>();
+            var terrainVertices = new Queue<TerrainVertex>();
 
             Queue<int> indices = new Queue<int>();
             var resolution = Constants.ChunkSize;
@@ -78,8 +76,8 @@ namespace NamelessRogue.Engine._3DUtility
                 var normal = Vector3.Cross(v1, v2);
                 normal.Normalize();
                 return normal;
-            }  
-            
+            }
+
             float _elevationToWorld(float pointElevation)
             {
                 float elevation = pointElevation - 0.5f;
@@ -87,23 +85,30 @@ namespace NamelessRogue.Engine._3DUtility
                 elevation = MathF.Pow(elevation, 2) * 0.005f;
                 return elevation;
             }
-            // terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-            // terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
-            for (int y = 0; y < resolution; y += 2)
+
+
+            int counter = 0;
+
+            //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
+            //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
+            //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
+            float lastElevation = 0;
+            for (int y = 0; y < resolution+1; y += 1)
             {
-                for (int x = 0; x < resolution + 1; x += 2)
+                for (int x = 0; x < resolution+1; x += 1)
                 {
+                    var tileX = chunk.WorldPositionBottomLeftCorner.X + x;
+                    var tileY = chunk.WorldPositionBottomLeftCorner.Y + y;
 
-
-                    Tile tile = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x, chunk.WorldPositionBottomLeftCorner.Y + y);
-                    Tile tileW = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x + 1, chunk.WorldPositionBottomLeftCorner.Y + y);
-                    Tile tileN = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x, chunk.WorldPositionBottomLeftCorner.Y + y - 1);
-                    Tile tileNE = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x + 1, chunk.WorldPositionBottomLeftCorner.Y + y - 1);
+                    Tile tile = chunks.GetTile(tileX, tileY);
+                //    Tile tileW = chunks.GetTile(tileX + 1, tileY);
+                    Tile tileS = chunks.GetTile(tileX, tileY + 1);
+                 //   Tile tileSE = chunks.GetTile(tileX + 1, tileY + 1);
 
                     float elevation = (float)tile.Elevation;
-                    float elevationE = (float)tileW.Elevation;
-                    float elevationN = (float)tileN.Elevation;
-                    float elevationNE = (float)tileNE.Elevation;
+                  //  float elevationE = (float)tileW.Elevation;
+                    float elevationN = (float)tileS.Elevation;
+                 //   float elevationNE = (float)tileSE.Elevation;
 
                     var normal = Vector3.UnitZ;
                     float pitch = MathF.Asin(-normal.Y);
@@ -113,12 +118,34 @@ namespace NamelessRogue.Engine._3DUtility
                     normT.X = MathF.Cos(pitch) * MathF.Sin(yaw);
                     normT.Y = MathF.Sin(pitch);
                     normT.Z = MathF.Cos(pitch) * MathF.Cos(yaw);
+                    var scale = 0.1f;
+                    //terrainVertices[x, y] = (new TerrainVertex(, yaw, pitch));
 
-                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), yaw, pitch));
-                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationN), yaw, pitch));
-                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationE), yaw, pitch));
-                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationNE), yaw, pitch));
+                    if (!terrainVertices.Any())
+                    {
+                        terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), 0, 0));
+                    }
+
+                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), 0, 0));
+                   // terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationE), 0, 0));
+                    terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationN), 0, 0));
+                    lastElevation = elevationN;
+                 //   terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationNE), 0, 0));
                 }
+                terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(lastElevation), 0, 0));
+                terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(lastElevation), 0, 0));
+               // terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
+            //    terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
+                //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
+
+
+                //terrainVertices[32, y] = (new TerrainVertex(1, 0, 0));
+                //   terrainVertices[32, y] = (new TerrainVertex(1, 0, 0));
+                // terrainVertices[32, y] = (new TerrainVertex(1, 0, 0));
+                //terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
+                //terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
+                //terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
+
             }
 
 
@@ -143,7 +170,7 @@ namespace NamelessRogue.Engine._3DUtility
                     tile.ElevationVisual = MathF.Pow((float)(elevationMedian - 0.5f) * worldHeight, 2) * 0.005f;
 
 
-              
+
 
                     //return point adden for normal calculation
                     Vector3 AddPoint(int x, int y, float pointElevation, Tile tile)
@@ -179,7 +206,7 @@ namespace NamelessRogue.Engine._3DUtility
 
 
 
-                    var normal = _calculateNormal(point, vec1, vec2);                
+                    var normal = _calculateNormal(point, vec1, vec2);
 
                     transformedPointsNormals.Enqueue(normal);
                     transformedPointsNormals.Enqueue(normal);
@@ -250,6 +277,33 @@ namespace NamelessRogue.Engine._3DUtility
             result.IndexBuffer.SetData<int>(indices.ToArray());
             result.TriangleCount = triangleCount;
 
+            //var tempQueue = new Queue<TerrainVertex>();
+            //float arrlenght = resolution * 2 * resolution * 2;
+            //float rowLenght = resolution * 2 + 1 ;
+            //Random tmpR = new Random();
+            //for (int index = 0; index < arrlenght; index += 1)
+            //{
+            //    int clampedIndex = Math.Clamp(index, 0, resolution * 2 - 1);
+            //    int x, y;
+            //    x = (int)Math.Floor(clampedIndex / 2f);
+            //    y = clampedIndex % 2;
+
+
+            //    //new row
+            //    int row = (int)Math.Floor(index / rowLenght);
+            //    y += row;
+
+            //    tempQueue.Enqueue(terrainVertices[x, y]);
+
+            //}
+
+            //for (int y = 0; y < resolution * 2 + 1; y += 1)
+            //{
+            //    for (int x = 0; x < resolution * 2 + 1; x += 1)
+            //    {
+            //        tempQueue.Enqueue(terrainVertices[x, y]);
+            //    }
+            //}
 
             terrainGeometryResult.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.TerrainVertexDeclaration, terrainVertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
             terrainGeometryResult.Buffer.SetData<TerrainVertex>(terrainVertices.ToArray());
@@ -266,7 +320,7 @@ namespace NamelessRogue.Engine._3DUtility
 
             terrainGeometry.WorldOffset = Matrix.CreateTranslation(offsetVector);
             terrainGeometry.VerticesCount = terrainVertices.Count;
-           // var chunkVerticesCount = vertices.Count;
+            // var chunkVerticesCount = vertices.Count;
             //var arr = terrainVertices.ToArray();
 
             //var rowIndexEnd = 34;
@@ -275,8 +329,8 @@ namespace NamelessRogue.Engine._3DUtility
             //List<List<float>> rowsX = new List<List<float>>();
             //List<List<float>> rowsY = new List<List<float>>();
 
-           // List<float> rowX = new List<float>();
-           // List<float> rowY = new List<float>();
+            // List<float> rowX = new List<float>();
+            // List<float> rowY = new List<float>();
 
             //for (int vertexId = 0; vertexId < terrainVertices.Count; vertexId++)
             //{
@@ -291,7 +345,7 @@ namespace NamelessRogue.Engine._3DUtility
             //    {
             //        rowsX.Add(rowX.ToList());
             //        rowsY.Add(rowY.ToList());
-                   
+
             //        Debug.Write("rowX=");
             //        foreach (var item in rowX)
             //        {
