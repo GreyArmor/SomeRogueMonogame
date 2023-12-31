@@ -93,17 +93,17 @@ namespace NamelessRogue.Engine._3DUtility
             //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
             //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
             float lastElevation = 0;
+            bool newRow = false;
             for (int y = 0; y < resolution+1; y += 1)
             {
+
                 for (int x = 0; x < resolution+1; x += 1)
                 {
                     var tileX = chunk.WorldPositionBottomLeftCorner.X + x;
                     var tileY = chunk.WorldPositionBottomLeftCorner.Y + y;
 
                     Tile tile = chunks.GetTile(tileX, tileY);
-                //    Tile tileW = chunks.GetTile(tileX + 1, tileY);
                     Tile tileS = chunks.GetTile(tileX, tileY + 1);
-                 //   Tile tileSE = chunks.GetTile(tileX + 1, tileY + 1);
 
                     float elevation = (float)tile.Elevation;
                   //  float elevationE = (float)tileW.Elevation;
@@ -124,16 +124,20 @@ namespace NamelessRogue.Engine._3DUtility
                     if (!terrainVertices.Any())
                     {
                         terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), 0, 0));
+                    }else if(newRow)
+                    {
+                        newRow = false;
+                        terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(lastElevation), 0, 0));
+                        terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), 0, 0));
+                      
                     }
 
                     terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevation), 0, 0));
-                   // terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationE), 0, 0));
                     terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationN), 0, 0));
                     lastElevation = elevationN;
-                 //   terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(elevationNE), 0, 0));
                 }
-                terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(lastElevation), 0, 0));
-                terrainVertices.Enqueue(new TerrainVertex(_elevationToWorld(lastElevation), 0, 0));
+                newRow = true;
+              
                // terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
             //    terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
                 //  terrainVertices.Enqueue(new TerrainVertex(0, 0, 0));
