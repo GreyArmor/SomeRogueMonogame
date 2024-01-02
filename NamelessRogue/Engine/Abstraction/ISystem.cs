@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.shell;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Abstraction
 {
@@ -10,7 +11,7 @@ namespace NamelessRogue.Engine.Abstraction
         void RemoveEntity(IEntity entity);
         void AddEntity(IEntity entity);
         bool IsEntityMatchesSignature(IEntity entity);
-        void Update(GameTime gameTime, NamelessGame namelessGame);
+        void Update(GameTime gameTime, NamelessGame game);
     }
 
 }

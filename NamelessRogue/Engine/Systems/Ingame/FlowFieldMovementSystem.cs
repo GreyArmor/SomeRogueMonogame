@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Components.Interaction;
@@ -26,15 +26,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		double moveDelayMilisecends = 0.01;
 		double milisecondsCounter = 0;
 		public static FlowFieldModel flowField;
-		public override void Update(GameTime gameTime, NamelessGame namelessGame)
+		public override void Update(GameTime gameTime, NamelessGame game)
 		{
 			if (init)
 			{
-				flowField = new FlowFieldModel(namelessGame, namelessGame.WorldProvider);
+				flowField = new FlowFieldModel(game, game.WorldProvider);
 				init = false;
 			}
 
-			while (namelessGame.Commander.DequeueCommand(out FlowFieldMoveCommand mc))
+			while (game.Commander.DequeueCommand(out FlowFieldMoveCommand mc))
 			{
 				var pathId = flowField.ClaculateTo(mc.To, mc.From);
 
@@ -74,11 +74,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 						if (flagbearerTag != null)
 						{
 							var groupToMove = movableEntity.GetComponentOfType<GroupTag>();
-							namelessGame.Commander.EnqueueCommand(new GroupMoveCommand(groupToMove.GroupId, position.Point, nextPoint, flowMoveComponent.To));
+							game.Commander.EnqueueCommand(new GroupMoveCommand(groupToMove.GroupId, position.Point, nextPoint, flowMoveComponent.To));
 						}
 						else
 						{
-							namelessGame.WorldProvider.MoveEntity(movableEntity,
+							game.WorldProvider.MoveEntity(movableEntity,
 							  new Point(nextPoint.X, nextPoint.Y));
 						}
 					}

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualBasic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using SharpDX;
+
+
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
@@ -58,8 +58,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		{
 			Camera3D camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
 			//TODO leaving mouse capture here for now, even if its not correct
-			MouseState currentMouseState = Mouse.GetState();
-			if (currentMouseState.RightButton != ButtonState.Pressed)
+			MouseState currentMouseState = game.Window.MouseState;
+			if (!currentMouseState.RightPressed)
 			{
 				wasPressed = false;
 			}
@@ -69,7 +69,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 				var clickPosition = currentMouseState.Position.ToVector2();
 
-				Ray r = CalculateRay(currentMouseState.Position.ToVector2(), camera.View, camera.Projection, game.GraphicsDevice.Viewport);
+				Ray r = CalculateRay(currentMouseState.Position.ToVector2(), camera.View, camera.Projection, game.Window.Viewport);
 				List <Intersection> intersections = new List<Intersection>();
 				var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 				{
@@ -77,13 +77,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					{
 						var geometry = geometryPointPair.Value.Item1;
 						if (geometry.TriangleCount > 0)
-						{
-							var distance = r.Intersects(geometry.Bounds);
-							if (distance != null)
+						{							
+							if (r.Intersects(ref geometry.Bounds, out float distance))
 							{
 								if (CollisionMath.Intersect(geometry, r, out var triangle))
 								{
-									intersections.Add(new Intersection() { distance = distance.Value, chunkId = geometryPointPair.Key, geometry = geometry, triangle = triangle });
+									intersections.Add(new Intersection() { distance = distance, chunkId = geometryPointPair.Key, geometry = geometry, triangle = triangle });
 								}
 							}
 						}

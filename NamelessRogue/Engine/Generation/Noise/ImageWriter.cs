@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using log4net.Appender;
 using RogueSharp.Random;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using SharpDX;
+
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.shell;
@@ -90,13 +90,13 @@ namespace NamelessRogue.Engine.Generation.Noise
                 }
             }
 
-            Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
-            tex.SetData(arrBytes);
-            using (var str = File.OpenWrite(path))
-            {
-                tex.SaveAsPng(str,resolution,resolution);
-            }
-            tex.Dispose();
+            //Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
+            //tex.SetData(arrBytes);
+            //using (var str = File.OpenWrite(path))
+            //{
+            //    tex.SaveAsPng(str,resolution,resolution);
+            //}
+            //tex.Dispose();
 
 
 
@@ -247,13 +247,13 @@ namespace NamelessRogue.Engine.Generation.Noise
                 }
             }
 
-            Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
-            tex.SetData(arrBytes);
-            using (var str = File.OpenWrite(path))
-            {
-                tex.SaveAsPng(str, resolution, resolution);
-            }
-            tex.Dispose();
+            //Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
+            //tex.SetData(arrBytes);
+            //using (var str = File.OpenWrite(path))
+            //{
+            //    tex.SaveAsPng(str, resolution, resolution);
+            //}
+            //tex.Dispose();
         }
 
 
@@ -297,13 +297,13 @@ namespace NamelessRogue.Engine.Generation.Noise
                 }
             }
 
-            Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
-            tex.SetData(arrBytes);
-            using (var str = File.OpenWrite(path))
-            {
-                tex.SaveAsPng(str, resolution, resolution);
-            }
-            tex.Dispose();
+            //Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
+            //tex.SetData(arrBytes);
+            //using (var str = File.OpenWrite(path))
+            //{
+            //    tex.SaveAsPng(str, resolution, resolution);
+            //}
+            //tex.Dispose();
         }
 
 

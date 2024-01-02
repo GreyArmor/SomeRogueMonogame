@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RogueSharp.Random;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.Settlement;
@@ -17,12 +17,12 @@ namespace NamelessRogue.Engine.Factories
 {
     public static class SettlementFactory
     {
-        public static ConcreteSettlement GenerateSettlement(NamelessGame namelessGame, WorldTile tile, WorldBoard board,
+        public static ConcreteSettlement GenerateSettlement(NamelessGame game, WorldTile tile, WorldBoard board,
             IWorldProvider worldProvider)
         {
             var result = new ConcreteSettlement();
 
-            int chunksPerTile = worldProvider.ChunkResolution / namelessGame.WorldSettings.WorldBoardWidth;
+            int chunksPerTile = worldProvider.ChunkResolution / game.WorldSettings.WorldBoardWidth;
 
             var squareToCheck = 5;
 
@@ -95,7 +95,7 @@ namespace NamelessRogue.Engine.Factories
             
 
 
-            GenerateCityBuildingForTest(center, namelessGame, worldProvider);
+            GenerateCityBuildingForTest(center, game, worldProvider);
 
 
 

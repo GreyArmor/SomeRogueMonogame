@@ -1,6 +1,6 @@
 ﻿using Assimp.Configs;
 using Assimp;
-using Microsoft.Xna.Framework.Graphics;
+
 using NamelessRogue.Engine.Components;
 using NamelessRogue.shell;
 using System;
@@ -9,8 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NamelessRogue.Engine.Systems.Ingame;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using System.Drawing;
+using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
@@ -48,7 +49,7 @@ namespace NamelessRogue.Engine.Infrastructure
 					
 				
 					var normal = new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z);
-					var vecConverted = Vector3.Transform(new Microsoft.Xna.Framework.Vector3(vec.X, vec.Y, vec.Z), modelTrandform);
+					var vecConverted = (Vector3)Vector3.Transform(new Vector3(vec.X, vec.Y, vec.Z), modelTrandform);
 					Vector4 colorConverted = new Vector4(1,1,1,1);
 					if (mesh.VertexColorChannels[0].Any())
 					{
@@ -61,27 +62,25 @@ namespace NamelessRogue.Engine.Infrastructure
 
 				geometry.Vertices = positions.ToList();
 				geometry.Indices = mesh.GetIndices().ToList();
-				geometry.Bounds = Microsoft.Xna.Framework.BoundingBox.CreateFromPoints(positions);
+				geometry.Bounds = BoundingBox.FromPoints(positions.ToArray());
 
 				//result.TriangleTerrainAssociation = tileTriangleAssociations;
 
-				geometry.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(game.GraphicsDevice, RenderingSystem3D.VertexDeclaration, vertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
-				geometry.Buffer.SetData<Vertex3D>(vertices.ToArray());
-				geometry.IndexBuffer = new Microsoft.Xna.Framework.Graphics.IndexBuffer(game.GraphicsDevice, Microsoft.Xna.Framework.Graphics.IndexElementSize.ThirtyTwoBits, geometry.Indices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
-				geometry.IndexBuffer.SetData<int>(geometry.Indices.ToArray());
+				geometry.Buffer = Buffer.Create(game.GraphicsDevice, SharpDX.Direct3D11.BindFlags.VertexBuffer, vertices.ToArray());
+				geometry.IndexBuffer = Buffer.Create(game.GraphicsDevice, SharpDX.Direct3D11.BindFlags.IndexBuffer, geometry.Indices.ToArray());
 				geometry.TriangleCount = geometry.Indices.Count/3;
 
 				importer.Dispose();; 
 
 				Models.Add(id, geometry);
 			}
-			Matrix rotationX = Matrix.CreateRotationX(MathHelper.ToRadians(90f));
-			var modelShiftTree1 = Matrix.CreateTranslation(0.5f, 0.5f, 0);
-			var modelShift = Matrix.CreateTranslation(0.5f, 0.5f, 1.5f);
+			Matrix rotationX = Matrix.RotationX(MathUtil.DegreesToRadians(90f));
+			var modelShiftTree1 = Matrix.Translation(0.5f, 0.5f, 0);
+			var modelShift = Matrix.Translation(0.5f, 0.5f, 1.5f);
 			_addModel("smallTree", "Content\\Models\\smallTree.fbx", modelShift);
 			_addModel("tree", "Content\\Models\\tree.fbx", modelShift);
 			_addModel("tree1", "Content\\Models\\tree1.fbx", rotationX * modelShiftTree1);
-			_addModel("cube", "Content\\Models\\cube.fbx", Matrix.CreateScale(0.01f));
+			_addModel("cube", "Content\\Models\\cube.fbx", Matrix.Scaling(0.01f));
 
 		}
 	}

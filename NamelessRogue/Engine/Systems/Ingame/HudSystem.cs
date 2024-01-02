@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
@@ -26,7 +26,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
             foreach (IEntity entity in RegisteredEntities)
             { 
@@ -35,7 +35,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var stats = entity.GetComponentOfType<Stats>();
 
 
-                var turn = namelessGame.CurrentGame.Turn;
+                var turn = game.CurrentGame.Turn;
 
                 float healthValue = (float) stats.Health.Value / stats.Health.MaxValue;
                 //UIController.HudScreen.HealthBar.Value = (int) (healthValue * 100f);
@@ -55,15 +55,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         case HudAction.OpenWorldMap:
                             var playerPosition = entity.GetComponentOfType<Position>();
-                            namelessGame.ContextToSwitch = ContextFactory.GetWorldBoardContext(namelessGame);
-                            var cursorPosition = namelessGame.CursorEntity
+                            game.ContextToSwitch = ContextFactory.GetWorldBoardContext(game);
+                            var cursorPosition = game.CursorEntity
                                 .GetComponentOfType<Position>();
 
-                            cursorPosition.Point = new Microsoft.Xna.Framework.Point((int)(playerPosition.Point.X / Constants.ChunkSize), (int)(playerPosition.Point.Y / Constants.ChunkSize));
+                            cursorPosition.Point = new Point((int)(playerPosition.Point.X / Constants.ChunkSize), (int)(playerPosition.Point.Y / Constants.ChunkSize));
                             break;
                         case HudAction.OpenInventory:
-                            //namelessGame.ContextToSwitch = ContextFactory.GetInventoryContext(namelessGame);
-                            //UIController.InventoryScreen.FillItems(namelessGame);
+                            //game.ContextToSwitch = ContextFactory.GetInventoryContext(game);
+                            //UIController.InventoryScreen.FillItems(game);
                             //if (UIController.InventoryScreen.ItemBox.Items.Any())
                             //{
                             //    UIController.InventoryScreen.ItemBox.SelectedIndex = 0;
@@ -74,7 +74,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             break;
                     }
                 UIController.Instance.HudScreen.Action = HudAction.None;
-                //while (namelessGame.Commander.DequeueCommand(out HudLogMessageCommand logMessage))
+                //while (game.Commander.DequeueCommand(out HudLogMessageCommand logMessage))
                 //{
                 //    UIController.HudScreen.LogMessage(logMessage.LogMessage);
                 //}

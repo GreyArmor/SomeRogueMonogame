@@ -1,9 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using SharpDX;
 using NamelessRogue.Engine.Systems.Ingame;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FbxSharp;
+using SharpDX.Direct3D11;
+using Vector3 = SharpDX.Vector3;
+using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace NamelessRogue.Engine.Components
 {
@@ -14,11 +17,11 @@ namespace NamelessRogue.Engine.Components
 		public List<Vector3> Vertices { get; set; }
 		public List<int> Indices { get; set; }
 		public int TriangleCount { get; set; }
-		public VertexBuffer Buffer { get; set; }
-		public IndexBuffer IndexBuffer { get; set; }
-		public BoundingBox Bounds { get; set; }
+		public Buffer Buffer { get; set; }
+		public Buffer IndexBuffer { get; set; }
+		public BoundingBox Bounds;
 		public Texture2D Material { get; set; }
-
+		public ShaderResourceView MaterialResourceView { get; set; }
 		public void Dispose()
 		{
 			Buffer?.Dispose();

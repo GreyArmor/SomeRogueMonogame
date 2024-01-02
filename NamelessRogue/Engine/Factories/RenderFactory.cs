@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Infrastructure;

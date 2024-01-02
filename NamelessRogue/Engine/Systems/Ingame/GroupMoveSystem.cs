@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Components.Interaction;
@@ -14,7 +14,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Point = Microsoft.Xna.Framework.Point;
+using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -22,24 +23,24 @@ namespace NamelessRogue.Engine.Systems.Ingame
     {
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
-            while (namelessGame.Commander.DequeueCommand(out GroupMoveCommand command))
+            while (game.Commander.DequeueCommand(out GroupMoveCommand command))
             {
-                var groups = namelessGame.PlayerEntity.GetComponentOfType<GroupsHolder>().Groups.Select(x => x.GetComponentOfType<Group>());
+                var groups = game.PlayerEntity.GetComponentOfType<GroupsHolder>().Groups.Select(x => x.GetComponentOfType<Group>());
 				var group = groups.FirstOrDefault(x=>x.TextId==command.GroupTag);
                 if (group != null)
                 {
                     var flagbearer = group.FlagbearerId;
 
-					var diffPoint = command.NextPoint - command.PreviousPoint;
+					var diffPoint = command.NextPoint.Substract(command.PreviousPoint);
 
                     var units = group.EntitiesInGroup.ToList();
                     units.Remove(flagbearer);
 
 					var nextFlagbearerPoint = command.NextPoint;
 
-					namelessGame.WorldProvider.ClearTheWay(flagbearer, command.PreviousPoint);
+					game.WorldProvider.ClearTheWay(flagbearer, command.PreviousPoint);
 				
 
 					Queue<IEntity> immovableUnits = new Queue<IEntity>();
@@ -48,11 +49,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
 						var groupTag = unit.GetComponentOfType<GroupTag>();
 						var position = unit.GetComponentOfType<Position>();
-                        var nextPoint = nextFlagbearerPoint + groupTag.FormationPositionDisplacement;
-                        namelessGame.WorldProvider.ClearTheWay(unit, position.Point);
+                        var nextPoint = nextFlagbearerPoint.Sum(groupTag.FormationPositionDisplacement);
+                        game.WorldProvider.ClearTheWay(unit, position.Point);
                     }
 
-					namelessGame.WorldProvider.AddEntityToNewLocation(flagbearer, nextFlagbearerPoint);
+					game.WorldProvider.AddEntityToNewLocation(flagbearer, nextFlagbearerPoint);
 
 					foreach (var unit in units)
                     {
@@ -60,8 +61,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         if (groupTag.IsInFormation)
                         {
                             var position = unit.GetComponentOfType<Position>();
-							var nextPoint = nextFlagbearerPoint + groupTag.FormationPositionDisplacement;
-							var canMove = namelessGame.WorldProvider.MoveEntity(unit,
+							var nextPoint = nextFlagbearerPoint.Sum(groupTag.FormationPositionDisplacement);
+							var canMove = game.WorldProvider.MoveEntity(unit,
 							 nextPoint);
 
                             if (!canMove)
@@ -69,7 +70,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 								//var flowMoveComponent = unit.GetComponentOfType<FlowMoveComponent>();
 							//	nextPoint = FlowFieldMovementSystem.flowField.GetNextPoint(flowMoveComponent.PathId, position.Point);
 
-								namelessGame.WorldProvider.MoveEntity(unit,
+								game.WorldProvider.MoveEntity(unit,
 							 new Point(nextPoint.X, nextPoint.Y));
 
 								IEnumerable<Point> nextPointNeighbors = null;
@@ -86,10 +87,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 								var orderedByDistance = nextPointNeighbors.OrderBy(p => DistanceBetweenPoints(p, position.Point)).ToList();
 
-								canMove = namelessGame.WorldProvider.MoveEntity(unit, new Point(orderedByDistance[0].X, orderedByDistance[0].Y));
+								canMove = game.WorldProvider.MoveEntity(unit, new Point(orderedByDistance[0].X, orderedByDistance[0].Y));
 								if (!canMove)
 								{
-									canMove = namelessGame.WorldProvider.MoveEntity(unit, new Point(orderedByDistance[1].X, orderedByDistance[1].Y));
+									canMove = game.WorldProvider.MoveEntity(unit, new Point(orderedByDistance[1].X, orderedByDistance[1].Y));
 
 								}
 							}

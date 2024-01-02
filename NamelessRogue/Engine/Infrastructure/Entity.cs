@@ -5,7 +5,6 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
-using SharpDX.WIC;
 
 namespace NamelessRogue.Engine.Infrastructure
 {

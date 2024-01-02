@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SharpDX;
 using System.Collections.Generic;
 
 namespace NamelessRogue.Engine.Components.AI.Pathfinder

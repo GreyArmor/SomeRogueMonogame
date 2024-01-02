@@ -1,59 +1,76 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using NamelessRogue.shell;
-using SharpDX.Direct2D1;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using NamelessRogue.shell;
+using SharpDX;
+using SharpDX.Direct3D11;
 
 namespace NamelessRogue.Engine.Systems._3DView
 {
-	internal class LightSource
-	{
-		//Texture2D shadowMap;
-		RenderTarget2D shadowMapRenderTarget;
-		Vector3 position;
-		Vector3 lookAtPoint;
-		Matrix lightsViewProjectionMatrix;
-		Vector4 lightColor;
-		int frustrumHeight;
-		int frustrumWidth;
-		float lightPower;
-		float ambient;
-		public LightSource(GraphicsDevice device,int frustrumWidth, int frustrumHeight, Vector3 position, Vector3 lookAtPoint, Vector4 lightColor)
-		{
-			shadowMapRenderTarget = new RenderTarget2D(device, frustrumWidth, frustrumHeight, true, SurfaceFormat.Bgr32SRgb, DepthFormat.Depth24);
-			this.position = position;
-			this.LookAtPoint = lookAtPoint;
-			this.lightColor = lightColor;
-			this.frustrumHeight = frustrumHeight;
-			this.frustrumWidth = frustrumWidth;
-			Matrix view = Matrix.CreateLookAt(position, lookAtPoint, new Vector3(0, 0, 1));
-			Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), 1f, 0.001f, 100f);
-			lightsViewProjectionMatrix = view * projection;
-		}
+    internal class LightSource
+    {
+        //Texture2D shadowMap;
+        Texture2D shadowMapRenderTargetTexture;
+        Vector3 position;
+        Vector3 lookAtPoint;
+        Matrix lightsViewProjectionMatrix;
+        Vector4 lightColor;
+        int frustrumHeight;
+        int frustrumWidth;
+        float lightPower;
+        float ambient;
+        public LightSource(NamelessGame game, int frustrumWidth, int frustrumHeight, Vector3 position, Vector3 lookAtPoint, Vector4 lightColor)
+        {
+            var textureDescription = new Texture2DDescription()
+            {
+                Height = frustrumHeight,
+                Width = frustrumWidth,
+                CpuAccessFlags = CpuAccessFlags.Read,
+                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb,
+                Usage = ResourceUsage.Default,
+                ArraySize = 1,
+                BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
+                OptionFlags = ResourceOptionFlags.None,
+                MipLevels = 0,
+                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
+            };
 
-		public Vector3 Position { get => position; set => position = value; }
-		public Vector3 LookAtPoint { get => lookAtPoint; set => lookAtPoint = value; }
-		public RenderTarget2D ShadowMapRenderTarget { get => shadowMapRenderTarget; set => shadowMapRenderTarget = value; }
-		public float LightPower { get => lightPower; set => lightPower = value; }
-		public float Ambient { get => ambient; set => ambient = value; }
-		public Matrix LightsViewProjectionMatrix { get => lightsViewProjectionMatrix; set => lightsViewProjectionMatrix = value; }
-		public Vector4 LightColor { get => lightColor; set => lightColor = value; }
+            shadowMapRenderTargetTexture = new Texture2D(game.GraphicsDevice, textureDescription);
+            RenderTargetViewDescription renderTargetViewDesc = new RenderTargetViewDescription()
+            {
+                Format = textureDescription.Format,
+                Dimension = RenderTargetViewDimension.Texture2D,               
+            };
 
-		public void RecalculateMatrix()
-		{
-			var dir = -position;
-			dir.Y = 2;
-			dir.Normalize();
-			Matrix view = Matrix.CreateLookAt(position, LookAtPoint, new Vector3(0, 0, 1));
-			Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), 1f, 0.001f, 100f);
-			lightsViewProjectionMatrix = view * projection;
-		}
+            ShadowMapRenderTargetView = new RenderTargetView(game.Window.Device, shadowMapRenderTargetTexture, renderTargetViewDesc);
+            ShadowMapResourceView = new ShaderResourceView(game.Window.Device, shadowMapRenderTargetTexture);
 
-	}
+            this.position = position;
+            this.LookAtPoint = lookAtPoint;
+            this.lightColor = lightColor;
+            this.frustrumHeight = frustrumHeight;
+            this.frustrumWidth = frustrumWidth;
+            Matrix view = Matrix.LookAtLH(position, lookAtPoint, new Vector3(0, 0, 1));
+            Matrix projection = Matrix.PerspectiveFovLH(MathUtil.DegreesToRadians(45f), 1f, 0.001f, 100f);
+            lightsViewProjectionMatrix = view * projection;
+        }
+
+        public Vector3 Position { get => position; set => position = value; }
+        public Vector3 LookAtPoint { get => lookAtPoint; set => lookAtPoint = value; }
+        public Texture2D ShadowMapRenderTargetTexture { get => shadowMapRenderTargetTexture; set => shadowMapRenderTargetTexture = value; }
+        public RenderTargetView ShadowMapRenderTargetView { get; set; }
+        public ShaderResourceView ShadowMapResourceView { get; set; }
+        public float LightPower { get => lightPower; set => lightPower = value; }
+        public float Ambient { get => ambient; set => ambient = value; }
+        public Matrix LightsViewProjectionMatrix { get => lightsViewProjectionMatrix; set => lightsViewProjectionMatrix = value; }
+        public Vector4 LightColor { get => lightColor; set => lightColor = value; }
+
+        public void RecalculateMatrix()
+        {
+            var dir = -position;
+            dir.Y = 2;
+            dir.Normalize();
+            Matrix view = Matrix.LookAtLH (position, LookAtPoint, new Vector3(0, 0, 1));
+            Matrix projection = Matrix.PerspectiveFovLH(MathUtil.DegreesToRadians(45f), 1f, 0.001f, 100f);
+            lightsViewProjectionMatrix = view * projection;
+        }
+
+    }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,8 +30,8 @@ namespace NamelessRogue.Engine.Components._3D
 		public string SpriteId { get; set; }
 		public SpriteModel3D(NamelessGame game, string spritePath)
 		{
-			var spriteSheet = game.Content.Load<SpriteSheet>(spritePath, new JsonContentLoader());
-			Sprite = new AnimatedSprite(spriteSheet);
+		//	var spriteSheet = game.Content.Load<SpriteSheet>(spritePath, new JsonContentLoader());
+		//	Sprite = new AnimatedSprite(spriteSheet);
 			IdleOnly = false;
 		}
 

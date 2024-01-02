@@ -1,6 +1,6 @@
  
 
-using Microsoft.Xna.Framework;
+using SharpDX;
 
 namespace NamelessRogue.Engine.Utility
 {
@@ -58,10 +58,10 @@ namespace NamelessRogue.Engine.Utility
             }
         }
 
-        public Color(Microsoft.Xna.Framework.Color color)
-        {
-            Init((float)color.R/255, (float)color.G/255, (float)color.B/255, (float)color.A/255);
-        }
+        //public Color(Color color)
+        //{
+        //    Init((float)color.R/255, (float)color.G/255, (float)color.B/255, (float)color.A/255);
+        //}
 
         private void Init(float red, float green, float blue, float alpha)
         {
@@ -81,10 +81,10 @@ namespace NamelessRogue.Engine.Utility
             return System.Drawing.Color.FromArgb((int)(Alpha*255), (int)(Red *255), (int)(Green *255), (int)(Blue *255));
         }
 
-        public Microsoft.Xna.Framework.Color ToXnaColor()
-        {
-            return new Microsoft.Xna.Framework.Color((int)(Red * 255f), (int)(Green * 255f), (int)(Blue * 255f), (int)(Alpha * 255f));
-        }
+        //public Color ToXnaColor()
+        //{
+        //    return new Color((int)(Red * 255f), (int)(Green * 255f), (int)(Blue * 255f), (int)(Alpha * 255f));
+        //}
 
         public static Color operator +(Color a, Color b)
         {

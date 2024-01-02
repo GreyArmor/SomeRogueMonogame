@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using SharpDX;
+
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 
@@ -59,7 +59,7 @@ namespace NamelessRogue.Engine.Components.Rendering
 
         public Point GetMouseTilePosition(NamelessGame game)
         {
-            var state = Mouse.GetState();
+            var state = game.Window.MouseState;
             var mouseTileX = state.X / game.GetSettings().GetFontSize();
             var mouseTileY = (game.GetActualHeight() - state.Y) / game.GetSettings().GetFontSize();
 

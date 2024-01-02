@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SharpDX;
 using NamelessRogue.Engine._3DUtility;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-
+using NamelessRogue.Engine.Infrastructure;
 namespace NamelessRogue.Engine.Systems._3DView
 {
 	public class Chunk3DManagementSystem : BaseSystem

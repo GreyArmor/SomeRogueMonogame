@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using SharpDX;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
@@ -34,15 +34,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
-            if (!namelessGame.IsActive) { return; }
+            if (!game.IsActive) { return; }
             foreach (IEntity entity in RegisteredEntities)
             {
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)
                 {
-                    var playerEntity = namelessGame.PlayerEntity;
+                    var playerEntity = game.PlayerEntity;
                     foreach (Intent intent in inputComponent.Intents)
                     {
 
@@ -77,7 +77,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 								{
 									cameraMove.MovesToMake.Add(MoveType.Right);
 								}
-								namelessGame.Commander.EnqueueCommand(cameraMove);
+								game.Commander.EnqueueCommand(cameraMove);
 								break;
 
                             //case IntentEnum.MoveUp:
@@ -108,7 +108,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             //            intent.Intention == IntentEnum.MoveTopRight ? position.Point.Y - 1 :
                             //            position.Point.Y;
 
-                            //        IEntity worldEntity = namelessGame.TimelineEntity;
+                            //        IEntity worldEntity = game.TimelineEntity;
                             //        IWorldProvider worldProvider = null;
                             //        if (worldEntity != null)
                             //        {
@@ -147,7 +147,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             //                    entityThatOccupiedTile.RemoveComponentOfType<BlocksVision>();
                             //                    entityThatOccupiedTile.RemoveComponentOfType<OccupiesTile>();
 
-                            //                    namelessGame.Commander.EnqueueCommand(
+                            //                    game.Commander.EnqueueCommand(
                             //                        new ChangeSwitchStateCommand(simpleSwitch, false));
                             //                    var ap = playerEntity.GetComponentOfType<ActionPoints>();
                             //                    ap.Points -= Constants.ActionsMovementCost;
@@ -168,7 +168,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             //            if (characterComponent != null)
                             //            {
                             //                //TODO: if hostile
-                            //                namelessGame.Commander.EnqueueCommand(new AttackCommand(playerEntity,
+                            //                game.Commander.EnqueueCommand(new AttackCommand(playerEntity,
                             //                    entityThatOccupiedTile));
 
                             //                var ap = playerEntity.GetComponentOfType<ActionPoints>();
@@ -197,7 +197,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 //entity.RemoveComponentOfType<InputReceiver>();
                                 //if (player != null)
                                 //{
-                                //    IEntity cursorEntity = namelessGame.CursorEntity;
+                                //    IEntity cursorEntity = game.CursorEntity;
                                 //    cursorEntity.AddComponent(receiver);
                                 //    Drawable cursorDrawable = cursorEntity.GetComponentOfType<Drawable>();
                                 //    cursorDrawable.setVisible(true);
@@ -209,7 +209,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 //}
                                 //else if (cursor != null)
                                 //{
-                                //    IEntity playerEntity = namelessGame.PlayerEntity;
+                                //    IEntity playerEntity = game.PlayerEntity;
                                 //    playerEntity.AddComponent(receiver);
                                 //    Drawable cursorDrawable = entity.GetComponentOfType<Drawable>();
                                 //    cursorDrawable.setVisible(false);
@@ -223,7 +223,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                 if (actionPoints.Points >= 100)
                                 {
-                                    IEntity worldEntity = namelessGame.TimelineEntity;
+                                    IEntity worldEntity = game.TimelineEntity;
                                     IWorldProvider worldProvider = null;
                                     if (worldEntity != null)
                                     {
@@ -252,9 +252,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             /*
                                             if (itemsToPickUp.Count > 1)
                                             {
-                                                namelessGame.ContextToSwitch =
-                                                    ContextFactory.GetPickUpItemContext(namelessGame);
-                                                UIController.PickUpItemsScreen.FillItems(namelessGame);
+                                                game.ContextToSwitch =
+                                                    ContextFactory.GetPickUpItemContext(game);
+                                                UIController.PickUpItemsScreen.FillItems(game);
                                                 if (UIController.PickUpItemsScreen.ItemsTable.Items.Any())
                                                 {
                                                     UIController.PickUpItemsScreen.ItemsTable.SelectedIndex = 0;
@@ -265,7 +265,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                                 StringBuilder builder = new StringBuilder();
                                                 var itemsCommand = new PickUpItemCommand(itemsToPickUp, itemHolder,
                                                     position.Point);
-                                                namelessGame.Commander.EnqueueCommand(itemsCommand);
+                                                game.Commander.EnqueueCommand(itemsCommand);
 
                                                 foreach (var entity1 in itemsToPickUp)
                                                 {
@@ -278,7 +278,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                                 var logCommand = new HudLogMessageCommand();
                                                 logCommand.LogMessage += builder.ToString();
-                                                namelessGame.Commander.EnqueueCommand(logCommand);
+                                                game.Commander.EnqueueCommand(logCommand);
 
                                             }
 
@@ -302,44 +302,46 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         ap.Points -= Constants.ActionsMovementCost;
                                         var logCommand = new HudLogMessageCommand();
                                         logCommand.LogMessage += "Waiting";
-                                        namelessGame.Commander.EnqueueCommand(logCommand);
+                                        game.Commander.EnqueueCommand(logCommand);
 
                                         //   playerEntity.RemoveComponentOfType<HasTurn>();
                                     }
                             }
                                 break;
                             case IntentEnum.Quicksave:
-                                namelessGame.ScheduleSave();
+                                game.ScheduleSave();
                                 break;
                             case IntentEnum.Quickload:
-                                namelessGame.ScheduleLoad();
+                                game.ScheduleLoad();
                                 break;
                             case IntentEnum.ZoomIn:
                                 var zoomCommand = new ZoomCommand(false);
-                                namelessGame.Commander.EnqueueCommand(zoomCommand);
+                                game.Commander.EnqueueCommand(zoomCommand);
                                 break;
                             case IntentEnum.ZoomOut:
                                 var zoomOutCommand = new ZoomCommand();
-                                namelessGame.Commander.EnqueueCommand(zoomOutCommand);
+                                game.Commander.EnqueueCommand(zoomOutCommand);
                                 break;
                             case IntentEnum.MouseChanged:
 
-								MouseState mouseState = Mouse.GetState();
+                                MouseState mouseState = game.Window.MouseState;
 
-								var player = namelessGame.PlayerEntity;
+                                var mousePosition = new Point(mouseState.X, mouseState.Y);
+
+                                var player = game.PlayerEntity;
 								var selectionData = player.GetComponentOfType<SelectionData>();
 
-                                if (selectionData.SelectionState == SelectionState.None && mouseState.LeftButton == ButtonState.Pressed)
+                                if (selectionData.SelectionState == SelectionState.None && mouseState.LeftPressed)
                                 {
-                                    namelessGame.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Start, mouseState.Position));
+                                    game.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Start, mousePosition));
                                 }
-                                else if ((selectionData.SelectionState == SelectionState.Start || selectionData.SelectionState == SelectionState.Drag) && mouseState.LeftButton == ButtonState.Pressed)
+                                else if ((selectionData.SelectionState == SelectionState.Start || selectionData.SelectionState == SelectionState.Drag) && mouseState.LeftPressed)
                                 {
-                                    namelessGame.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Drag, mouseState.Position));
+                                    game.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Drag, mousePosition));
                                 }
-                                else if (selectionData.SelectionState == SelectionState.Drag && mouseState.LeftButton == ButtonState.Released)
+                                else if (selectionData.SelectionState == SelectionState.Drag && !mouseState.LeftPressed)
                                 {
-									namelessGame.Commander.EnqueueCommand(new SelectionCommand(SelectionState.End, mouseState.Position));
+									game.Commander.EnqueueCommand(new SelectionCommand(SelectionState.End, mousePosition));
 								}
 								break;
                             default:

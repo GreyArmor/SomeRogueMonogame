@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.shell;
-
+using NamelessRogue.Engine.Infrastructure;
 namespace NamelessRogue.Engine.Systems.Map
 {
     public class WorldBoardIntentSystem : BaseSystem
@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Systems.Map
         }
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
             foreach (IEntity entity in RegisteredEntities)
             {
@@ -42,7 +42,7 @@ namespace NamelessRogue.Engine.Systems.Map
                             case IntentEnum.MoveBottomLeft:
                             case IntentEnum.MoveBottomRight:
                             {
-                                var cursorEntity = namelessGame.CursorEntity;
+                                var cursorEntity = game.CursorEntity;
                                 Position position = cursorEntity.GetComponentOfType<Position>();
                                 if (position != null)
                                 {
@@ -67,7 +67,7 @@ namespace NamelessRogue.Engine.Systems.Map
                             case IntentEnum.ZoomOut:
                                 {
                                     var zoomCommand = new ZoomCommand(false);
-                                    namelessGame.Commander.EnqueueCommand(zoomCommand);
+                                    game.Commander.EnqueueCommand(zoomCommand);
                                     break;
                                 }
                             default:

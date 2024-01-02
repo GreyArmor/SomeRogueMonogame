@@ -1,10 +1,10 @@
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Abstraction
 {
     public interface IDrawSystem : ISystem
     {
-        void Draw(NamelessGame namelessGame);
+        void Draw(NamelessGame game);
     }
 }

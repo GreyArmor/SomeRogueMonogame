@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Stats;
@@ -6,6 +6,7 @@ using NamelessRogue.Engine.Components.Status;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -20,7 +21,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
             foreach (IEntity entity in RegisteredEntities)
             {
@@ -29,7 +30,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 health.Value -= damage.DamageValue;
                 if (health.Value <= health.MinValue)
                 {
-                    namelessGame.Commander.EnqueueCommand(new DeathCommand(entity));
+                    game.Commander.EnqueueCommand(new DeathCommand(entity));
                 }
 
                 entity.RemoveComponentOfType<Damage>();

@@ -55,7 +55,7 @@ namespace NamelessRogue.Engine.Utility
         /// <param name="minValue">Inclusive minimum result</param>
         /// <param name="maxValue">Non-inclusive maximum result</param>
         /// <returns>Returns a pseudo-random integer between the specified minValue and maxValue inclusive</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if maxValue equals Int32.MaxValue</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if maxValue equals Int32.MaximumValue</exception>
         public int Next(int minValue, int maxValue)
         {
             _numberGenerated++;

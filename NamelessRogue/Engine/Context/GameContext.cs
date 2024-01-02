@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Context
 {
@@ -38,19 +39,19 @@ namespace NamelessRogue.Engine.Context
             MusicThemeId = musicThemeId;
         }
 
-        public void Update(GameTime gameTime, NamelessGame namelessGame)
+        public void Update(GameTime gameTime, NamelessGame game)
         {
             foreach (var system in Systems)
             {
-                system.Update(gameTime, namelessGame);
+                system.Update(gameTime, game);
             }
         }
 
-        public void RenderingUpdate(GameTime gameTime, NamelessGame namelessGame)
+        public void RenderingUpdate(GameTime gameTime, NamelessGame game)
         {
             foreach (var system in RenderingSystems)
             {
-                system.Update(gameTime, namelessGame);
+                system.Update(gameTime, game);
             }
         }
 

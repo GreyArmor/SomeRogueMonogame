@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Microsoft.Xna.Framework.Input;
+using System.Windows.Forms;
+
 
 namespace NamelessRogue.Engine.Input
 {

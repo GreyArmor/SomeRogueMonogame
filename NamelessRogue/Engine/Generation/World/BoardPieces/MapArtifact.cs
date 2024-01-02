@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Generation.World.Meta;
 
 namespace NamelessRogue.Engine.Generation.World.BoardPieces

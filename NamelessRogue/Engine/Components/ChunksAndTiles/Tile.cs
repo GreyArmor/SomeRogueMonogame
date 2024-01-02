@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Physical;
@@ -87,7 +87,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 			return true;
 		}
 
-		public bool GetBlocksVision(NamelessGame namelessGame)
+		public bool GetBlocksVision(NamelessGame game)
         {
             foreach (var entity in entitiesOnTile)
             {

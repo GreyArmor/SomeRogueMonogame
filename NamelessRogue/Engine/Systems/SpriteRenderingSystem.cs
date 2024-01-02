@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using SharpDX;
 using MonoGame.Extended;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
@@ -19,21 +18,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using static NamelessRogue.Engine.Systems.Ingame.RenderingSystem3D;
-using BoundingFrustum = Microsoft.Xna.Framework.BoundingFrustum;
-using Color = Microsoft.Xna.Framework.Color;
-using Matrix = Microsoft.Xna.Framework.Matrix;
-using Point = Microsoft.Xna.Framework.Point;
-using SamplerState = Microsoft.Xna.Framework.Graphics.SamplerState;
-using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
-using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
-using Vector3 = Microsoft.Xna.Framework.Vector3;
-using VertexBuffer = Microsoft.Xna.Framework.Graphics.VertexBuffer;
 
 namespace NamelessRogue.Engine.Systems
 {
-    internal class SpriteRenderingSystem : BaseSystem
+    /*internal class SpriteRenderingSystem : BaseSystem
     {
+     
         class ModelInstance
         {
             public string modelId;
@@ -43,10 +33,10 @@ namespace NamelessRogue.Engine.Systems
         }
         public SpriteRenderingSystem(NamelessGame game)
         {
-            spriteBatch = new SpriteBatch(game.GraphicsDevice);
+            spriteBatch = new SpriteBatch(NamelessGame.GraphicsDevice);
             //	spriteFont = Content.Load<SpriteFont>("font");
 
-            spriteEffect = new AlphaTestEffect(game.GraphicsDevice)
+            spriteEffect = new AlphaTestEffect(NamelessGame.GraphicsDevice)
             {
                 VertexColorEnabled = true,
             };
@@ -56,7 +46,7 @@ namespace NamelessRogue.Engine.Systems
 
         static List<Vector3> _points = new List<Vector3>();
         static List<int> _indices = new List<int>();
-        Geometry3D CreateSpriteGeometry(NamelessGame namelessGame, SpriteSheetAnimation sheetAnimation)
+        Geometry3D CreateSpriteGeometry(NamelessGame game, SpriteSheetAnimation sheetAnimation)
         {
             _points.Add(new Vector3(1, 1, 0));
             _points.Add(new Vector3(-1, 1, 0));
@@ -89,9 +79,9 @@ namespace NamelessRogue.Engine.Systems
             _addVertice(_points[0], new Vector2((x + sizeX) * texelWidth, y * texelHeight));
 
 
-            geometry3D.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, _points.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
+            geometry3D.Buffer = new Graphics.VertexBuffer(game.GraphicsDevice, RenderingSystem3D.VertexDeclaration, _points.Count, Graphics.BufferUsage.None);
             geometry3D.Buffer.SetData(vertices.ToArray());
-            geometry3D.IndexBuffer = new Microsoft.Xna.Framework.Graphics.IndexBuffer(namelessGame.GraphicsDevice, Microsoft.Xna.Framework.Graphics.IndexElementSize.ThirtyTwoBits, _indices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
+            geometry3D.IndexBuffer = new Graphics.IndexBuffer(game.GraphicsDevice, Graphics.IndexElementSize.ThirtyTwoBits, _indices.Count, Graphics.BufferUsage.None);
             geometry3D.IndexBuffer.SetData<int>(_indices.ToArray());
             geometry3D.TriangleCount = 2;
             geometry3D.Material = frame.Texture;
@@ -182,7 +172,7 @@ namespace NamelessRogue.Engine.Systems
         int offset = Constants.ChunkSize * (300 - Constants.RealityBubbleRangeInChunks);
         Matrix invertY = Matrix.CreateScale(1, -1, 1);
         const float spriteScaleDownCoef = 0.0001f;
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
 
            // return;
@@ -196,7 +186,7 @@ namespace NamelessRogue.Engine.Systems
 
             if (once)
             {
-                IEntity worldEntity = namelessGame.TimelineEntity;
+                IEntity worldEntity = game.TimelineEntity;
                 IWorldProvider worldProvider = null;
                 if (worldEntity != null)
                 {
@@ -211,30 +201,30 @@ namespace NamelessRogue.Engine.Systems
 
                 foreach (var group in objectGroups)
                 {
-                    var spriteSheet = namelessGame.Content.Load<SpriteSheet>($@"Doodads\\{group.First().modelId}.sf", new JsonContentLoader());
+                    var spriteSheet = game.Content.Load<SpriteSheet>($@"Doodads\\{group.First().modelId}.sf", new JsonContentLoader());
                     var spr = new AnimatedSprite(spriteSheet);
 
                     if (group.First().IsFlat)
                     {
-                        spriteCache.Add(group.Key, CreateSpriteGeometry(namelessGame, spr.Play("idleFront")));
+                        spriteCache.Add(group.Key, CreateSpriteGeometry(game, spr.Play("idleFront")));
                     }
                     else
                     {
-                        spriteCache.Add(group.Key, CreateSpriteGeometry(namelessGame, spr.Play("idleFront")));
+                        spriteCache.Add(group.Key, CreateSpriteGeometry(game, spr.Play("idleFront")));
                     }
                 }
 
-                effect = namelessGame.Content.Load<Effect>("TreeShader");
+                effect = game.Content.Load<Effect>("TreeShader");
             }
 
-            Camera3D camera = namelessGame.PlayerEntity.GetComponentOfType<Camera3D>();
+            Camera3D camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
 
-            var player = namelessGame.PlayerEntity;
+            var player = game.PlayerEntity;
             var frustrum = new BoundingFrustum(camera.View * camera.Projection);
 
             spriteEffect.View = Matrix.Identity;
             spriteEffect.Projection = camera.Projection;
-            spriteBatch.Begin(0, BlendState.AlphaBlend, Microsoft.Xna.Framework.Graphics.SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, spriteEffect);
+            spriteBatch.Begin(0, BlendState.AlphaBlend, Graphics.SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, spriteEffect);
             foreach (var entity in RegisteredEntities)
             {
                 var pos3d = entity.GetComponentOfType<Position3D>();
@@ -242,13 +232,13 @@ namespace NamelessRogue.Engine.Systems
 
                 if (pos3d.WorldPosition == null)
                 {
-                    pos3d.InitWorldPosition(namelessGame, offset);
+                    pos3d.InitWorldPosition(game, offset);
                 }
                 var worldPos = pos3d.WorldPosition;
-                if (frustrum.Contains(worldPos.Value) == Microsoft.Xna.Framework.ContainmentType.Contains)
+                if (frustrum.Contains(worldPos.Value) == ContainmentType.Contains)
                 {
                     var spriteModel = entity.GetComponentOfType<SpriteModel3D>();
-                    var viewport = namelessGame.GraphicsDevice.Viewport;
+                    var viewport = game.GraphicsDevice.Viewport;
 
                     if (!spriteModel.IdleOnly)
                     {
@@ -275,7 +265,7 @@ namespace NamelessRogue.Engine.Systems
                         }
 
                         spriteModel.Sprite.Play("walk" + animationSuffix);
-                        spriteModel.Sprite.Update(gameTime);
+                        spriteModel.Sprite.Update(GameTime);
                     }
 
                     Vector3 spritePosition = worldPos.Value;
@@ -316,7 +306,7 @@ namespace NamelessRogue.Engine.Systems
 
 
             //return;
-            RenderStaticObjects(namelessGame, camera);
+            RenderStaticObjects(game, camera);
         }
 
 
@@ -409,7 +399,7 @@ namespace NamelessRogue.Engine.Systems
                 //var pos = Vector3.Transform(Vector3.Zero, storedFirst);
                 //var screePos = Vector3.Transform(pos, camera.View * camera.Projection);
                 //Debug.WriteLine("worldposition in camera" + screePos);
-                //var projected = Project(game.GraphicsDevice.Viewport, pos, camera.Projection, camera.View, Matrix.Identity);
+                //var projected = Project(NamelessGame.GraphicsDevice.Viewport, pos, camera.Projection, camera.View, Matrix.Identity);
                 //Debug.WriteLine(@$"x ={projected.X} y = {projected.Y}  z= {projected.Z}");
 
 
@@ -442,7 +432,7 @@ namespace NamelessRogue.Engine.Systems
 
         //	result.X = (result.X + 1f) * 0.5f * (float)viewport.Width + (float)viewport.X;
         //	result.Y = (0f - result.Y + 1f) * 0.5f * (float)viewport.Height + (float)viewport.Y;
-        //	result.Z = result.Z * (viewport.MaxDepth - viewport.MinDepth) + viewport.MinDepth;
+        //	result.Z = result.Z * (viewport.MaximumDepth - viewport.MinimumDepth) + viewport.MinimumDepth;
         //	return result;
         //}
 
@@ -471,4 +461,5 @@ namespace NamelessRogue.Engine.Systems
 
 
     }
+        */
 }

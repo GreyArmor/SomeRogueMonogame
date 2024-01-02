@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.Interaction;
@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NamelessRogue.Engine.Utility;
+using BoundingBox = SharpDX.BoundingBox;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -18,26 +20,26 @@ namespace NamelessRogue.Engine.Systems.Ingame
 	{
 		public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 		int offset = Constants.ChunkSize * (300 - Constants.RealityBubbleRangeInChunks);
-		public override void Update(GameTime gameTime, NamelessGame namelessGame)
+		public override void Update(GameTime gameTime, NamelessGame game)
 		{
-			var player = namelessGame.PlayerEntity;
+			var player = game.PlayerEntity;
 			var selectionData = player.GetComponentOfType<SelectionData>();
 
 			if (selectionData.SelectionState == SelectionState.End)
 			{
 				//select units here
 
-				var camera = namelessGame.PlayerEntity.GetComponentOfType<Camera3D>();
+				var camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
 
-				var viewport = namelessGame.GraphicsDevice.Viewport;
+			    var viewport = game.Window.Viewport;
 				var vecStart = selectionData.SelectionStart.ToVector2();
 				var vecEnd = selectionData.SelectionEnd.ToVector2();
 				var start = new Vector3(vecStart, 0);
 				var end = new Vector3(vecEnd, 0);
 
-				var box = BoundingBox.CreateFromPoints(new List<Vector3>(){start,end});
+				var box = BoundingBox.FromPoints(new Vector3[]{start,end});
 
-				var units = namelessGame.GetEntitiesByComponentClass<GroupTag>();
+				var units = game.GetEntitiesByComponentClass<GroupTag>();
 
 				List<IEntity> selectedUnits = new List<IEntity>();
 
@@ -47,7 +49,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 					if (position.WorldPosition == null)
 					{
-						position.InitWorldPosition(namelessGame, offset);
+						position.InitWorldPosition(game, offset);
 					}
 
 
@@ -61,7 +63,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 				var groups = selectedUnits.Select(x => x.GetComponentOfType<GroupTag>().GroupId).GroupBy(tag=>tag);
 
-				var selectedGroups = namelessGame.PlayerEntity.GetComponentOfType<SelectedUnitsData>();
+				var selectedGroups = game.PlayerEntity.GetComponentOfType<SelectedUnitsData>();
 
 				if (groups.Any())
 				{
@@ -77,7 +79,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				selectionData.SelectionEnd = Point.Zero;
 			}
 
-			while (namelessGame.Commander.DequeueCommand(out SelectionCommand command))
+			while (game.Commander.DequeueCommand(out SelectionCommand command))
 			{
 				switch (command.State)
 				{

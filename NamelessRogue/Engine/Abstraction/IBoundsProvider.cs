@@ -1,5 +1,4 @@
-using Microsoft.Xna.Framework;
-using BoundingBox = Microsoft.Xna.Framework.BoundingBox;
+using SharpDX;
 
 namespace NamelessRogue.Engine.Abstraction
 {

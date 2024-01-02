@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using RogueSharp.Random;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using SharpDX;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
@@ -22,6 +22,9 @@ using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
 using Color = NamelessRogue.Engine.Utility.Color;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using SharpDX.Direct3D11;
+using Buffer = SharpDX.Direct3D11.Buffer;
+using SharpDX.DXGI;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -66,17 +69,18 @@ namespace NamelessRogue.Engine.Systems.Ingame
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     // we use height data for vertex z value, all else is calculated by gpu, we use yaw and pitch to calculate triangle normal
     public struct TerrainVertex
-    {   
+    {
         // ReSharper disable NotAccessedField.Local
         public Vector3 vertexHeightYawPitch;
 
         public TerrainVertex(float height, float yaw, float pitch)
         {
-            this.vertexHeightYawPitch = new Vector3(height,yaw, pitch);
+            this.vertexHeightYawPitch = new Vector3(height, yaw, pitch);
         }
     }
 
-
+    /*
+   
     public class TileModel { 
         public Vertex[] Vertices { get; }
         public int[] Indices { get; }
@@ -106,13 +110,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
     {
         public override HashSet<Type> Signature { get; }
 
-        public readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
-        (
-            new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
-            new VertexElement(sizeof(float) * 3, VertexElementFormat.Vector4, VertexElementUsage.Color, 0),
-            new VertexElement(sizeof(float) * 7, VertexElementFormat.Vector4, VertexElementUsage.Color, 1),
-            new VertexElement(sizeof(float) * 11, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0)
-        );
+
+
+
+        public readonly InputElement[] VertexDeclaration = new InputElement[] {
+              new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0),
+              new InputElement("COLOR", 0, Format.R32G32B32A32_Float, sizeof(float) * 3, 0),
+              new InputElement("COLOR", 0, Format.R32G32B32A32_Float, sizeof(float) * 7, 1),
+              new InputElement("TEXCOORD", 0, Format.R32G32B32A32_Float, sizeof(float) * 11, 1),
+        };
 
         Dictionary<char, AtlasTileData> characterToTileDictionary;
         private float gameTime;
@@ -120,27 +126,29 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private float step = 0.04f;
         private InternalRandom graphicalRandom = new InternalRandom();
         Effect effect;
-        private VertexBuffer vertexBuffer;
-        private IndexBuffer indexBuffer;
+        private Buffer vertexBuffer;
+        private Buffer indexBuffer;
 
-        SamplerState sampler = new SamplerState()
-        {
-            AddressU = TextureAddressMode.Clamp,
-            AddressV = TextureAddressMode.Clamp,
-            AddressW = TextureAddressMode.Clamp,
-            Filter = TextureFilter.Point,
-            FilterMode = TextureFilterMode.Default,
-            MaxMipLevel = 0,
-            MaxAnisotropy = 0,
+        NamelessGame game;
 
-        };
+        SamplerState sampler;
 
-        public RenderingSystem(GameSettings settings){
+        public RenderingSystem(GameSettings settings, NamelessGame game){
             InitializeCharacterTileDictionary();
 
             Signature = new HashSet<Type>();
             Signature.Add(typeof(Drawable));
             Signature.Add(typeof(Position));
+
+            var ssDescription = new SamplerStateDescription()
+            {
+                AddressU = TextureAddressMode.Clamp,
+                AddressV = TextureAddressMode.Clamp,
+                AddressW = TextureAddressMode.Clamp,
+                Filter = Filter.ComparisonMinLinearMagMipPoint,
+            };
+
+            sampler = new SamplerState(game.GraphicsDevice, ssDescription);
 
         }
 
@@ -222,7 +230,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public override void Update(GameTime gameTime, NamelessGame game)
         {
 
-            this.gameTime = (long)gameTime.TotalGameTime.TotalMilliseconds;
+            this.gameTime = (long)gameTime.TotalGameTime.TotalMiliseconds;
 
             game.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             game.GraphicsDevice.SamplerStates[0] = sampler;
@@ -539,7 +547,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private void RenderScreen(NamelessGame game, Screen screen, GameSettings settings)
         {
             effect.Parameters["tileAtlas"].SetValue(tileAtlas);
-            var projectionMatrix = //Matrix.CreateOrthographic(game.getActualWidth(),game.getActualHeight(),0,1);
+            var projectionMatrix = //Matrix.CreateOrthographic(NamelessGame.getActualWidth(),game.getActualHeight(),0,1);
     Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
 
             effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
@@ -553,7 +561,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 for (int x = 0; x < settings.GetWidthZoomed(); x++)
                 {
-                    DrawTile(game.GraphicsDevice, game, x, y,
+                    DrawTile(NamelessGame.GraphicsDevice, game, x, y,
                         x * settings.GetFontSizeZoomed(),
                         y * settings.GetFontSizeZoomed(),
                         characterToTileDictionary[screen.ScreenBuffer[x, y].Char],
@@ -603,18 +611,18 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
 
-        private Texture InitializeTexture(NamelessGame game)
+        private Texture2D InitializeTexture(NamelessGame game)
         {
 
             tileAtlas = null;
-            tileAtlas = game.Content.Load<Texture2D>("DFfont");
-            effect = game.Content.Load<Effect>("Shader");
+           // tileAtlas = game.Content.Load<Texture2D>("DFfont");
+           // effect = game.Content.Load<Effect>("Shader");
 
-            effect.Parameters["tileAtlas"].SetValue(tileAtlas);
+        //    effect.Parameters["tileAtlas"].SetValue(tileAtlas);
             return tileAtlas;
         }
 
-        void DrawTile(GraphicsDevice device, NamelessGame game, int screenPositionX, int screenPositionY, int positionX, int positionY,
+        void DrawTile(Device device, NamelessGame game, int screenPositionX, int screenPositionY, int positionX, int positionY,
             AtlasTileData atlasTileData,
             Color color, Color backGroundColor, TileModel foregroundModel, TileModel backgroundModel)
         {
@@ -666,4 +674,5 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         }
     }
+    */
 }

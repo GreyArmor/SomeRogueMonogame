@@ -1,7 +1,8 @@
+
 float3 CameraPosition;
 float3 CameraUp;
 float3 CameraRight;
-Texture2D tileAtlas;
+Texture2D tileAtlas : register(t0);
 float4x4 xView;
 float4x4 xProjection;
 float4x4 xViewProjection;
@@ -10,8 +11,7 @@ float4x4 xWorldMatrix;
 float4x4 xBillboard;
 
 float2 windCoef;
-bool windFlag;
-
+bool windFlag;;
 
 struct VSIn
 {

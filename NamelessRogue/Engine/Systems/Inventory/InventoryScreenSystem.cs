@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using SharpDX;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.shell;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Systems.Inventory
 {
@@ -39,19 +40,19 @@ namespace NamelessRogue.Engine.Systems.Inventory
         public override HashSet<Type> Signature { get; }
         public bool InventoryNeedsUpdate { get; private set; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
 
             /*
             if (InventoryNeedsUpdate)
             {
-                UIController.InventoryScreen.FillItems(namelessGame);
+                UIController.InventoryScreen.FillItems(game);
                 InventoryNeedsUpdate = false;
             }
 
             foreach (var action in UIController.InventoryScreen.Actions)
             {
-                action.Invoke(this, namelessGame);
+                action.Invoke(this, game);
             }
 
             UIController.InventoryScreen.Actions.Clear();
@@ -61,7 +62,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)
                 {
-                    var playerEntity = namelessGame.PlayerEntity;
+                    var playerEntity = game.PlayerEntity;
                     foreach (Intent intent in inputComponent.Intents)
                     {
                         if (UIController.InventoryScreen.AmountDialog != null)

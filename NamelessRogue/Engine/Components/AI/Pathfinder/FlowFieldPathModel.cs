@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
@@ -53,15 +53,15 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		
 
-			chunksBox = chunks.Select(x => x.Bounds).Aggregate((a, b) => { return BoundingBox.CreateMerged(a, b); });
+			chunksBox = chunks.Select(x => x.Bounds).Aggregate((a, b) => { return BoundingBox.Merge(a, b); });
 
-			boolsWidth = (int)(chunksBox.Max.X - chunksBox.Min.X);
-			boolsHeight = (int)(chunksBox.Max.Y - chunksBox.Min.Y);
+			boolsWidth = (int)(chunksBox.Maximum.X - chunksBox.Minimum.X);
+			boolsHeight = (int)(chunksBox.Maximum.Y - chunksBox.Minimum.Y);
 			//make the availability map 1 tile wider from both size, to further optimize CalculateTo neighbor tile search
 			bool[,] bools = new bool[boolsWidth+2, boolsHeight+2];
 
-			minX = (int)chunksBox.Min.X;
-			minY = (int)chunksBox.Min.Y;
+			minX = (int)chunksBox.Minimum.X;
+			minY = (int)chunksBox.Minimum.Y;
 
 			Nodes = new Dictionary<Point, FlowNode>(chunks.Count * Constants.ChunkSize * Constants.ChunkSize);
 

@@ -6,7 +6,7 @@ float3 xLightPos;
 float xLightPower;
 float xAmbient;
 
-Texture2D shadowMap;
+Texture2D shadowMap : register(t1);
 
 SamplerState ShadowMapSampler
 {

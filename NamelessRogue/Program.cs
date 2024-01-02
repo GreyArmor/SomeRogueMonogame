@@ -2,7 +2,7 @@
 using NamelessRogue.shell;
 using NamelessRogue.Engine.Serialization;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using Newtonsoft.Json;

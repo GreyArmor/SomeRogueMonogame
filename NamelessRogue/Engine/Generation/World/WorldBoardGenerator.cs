@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Markov;
 using RogueSharp.Random;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.Noise;
@@ -20,6 +20,7 @@ using VoronoiLib;
 using VoronoiLib.Structures;
 using Color = NamelessRogue.Engine.Utility.Color;
 using NamelessRogue.Engine.Generation.World.Denizens;
+using Point = SharpDX.Point;
 
 namespace NamelessRogue.Engine.Generation.World
 {
@@ -143,7 +144,7 @@ namespace NamelessRogue.Engine.Generation.World
 			{
 				for (int y = 0; y < game.WorldSettings.WorldBoardHeight; y++)
 				{
-					var worldTile = new WorldTile(new Microsoft.Xna.Framework.Point(x, y));
+					var worldTile = new WorldTile(new Point(x, y));
 					var tile = game.WorldSettings.TerrainGen.GetTileWithoutRiverWater(x, y, (float)game.WorldSettings.WorldBoardWidth / resolution);
 					worldTile.Terrain = tile.Terrain;
 					worldTile.Biome = tile.Biome;
@@ -391,7 +392,7 @@ namespace NamelessRogue.Engine.Generation.World
 
 			foreach (var borderLine in borderLines)
 			{
-				var line = new WaterBorderLine() { Points = borderLine.Select(p => new Microsoft.Xna.Framework.Point(p.x, p.y)).ToList() };
+				var line = new WaterBorderLine() { Points = borderLine.Select(p => new SharpDX.Point(p.x, p.y)).ToList() };
 				board.BorderLines.Add(line);
 				foreach (var p in line.Points)
 				{
@@ -460,10 +461,9 @@ namespace NamelessRogue.Engine.Generation.World
                     CultureTemplate culture = game.WorldSettings.CultureTemplates[
                         random.Next(game.WorldSettings.CultureTemplates.Count-1)];
 
-                    var civilization = new Civilization(civName, new Microsoft.Xna.Framework.Color(
-                            new Vector4((float)random.Next(0,100)/100,
+                    var civilization = new Civilization(civName, new Color((float)random.Next(0,100)/100,
 								(float)random.Next(0, 100) / 100,
-								(float)random.Next(0, 100) / 100, 1)),
+								(float)random.Next(0, 100) / 100, 1f),
                         culture);
                     timelineLayer.Civilizations.Add(civilization);
 
@@ -563,7 +563,7 @@ namespace NamelessRogue.Engine.Generation.World
         private static List<Region> GetRegions(WorldBoard timelineLayer, NamelessGame game, InternalRandom rand, Func<WorldTile,bool> searchCriterion, Action<WorldTile,Region> onFoundRegion, Func<string> nameGenerator)
         {
             List<Region> regions = new List<Region>();
-            var searchPoint = new Microsoft.Xna.Framework.Point();
+            var searchPoint = new Point();
 
             for (; searchPoint.X < game.WorldSettings.WorldBoardWidth; searchPoint.X++)
             {

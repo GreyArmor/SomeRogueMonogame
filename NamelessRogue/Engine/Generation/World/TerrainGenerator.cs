@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.Noise;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using Color = NamelessRogue.Engine.Utility.Color;
 using System.Drawing;
-using Point = Microsoft.Xna.Framework.Point;
 using VoronoiLib.Structures;
 using VoronoiLib;
 using RogueSharp.Random;
+using Point = System.Drawing.Point;
 
 /**
 * Created by Admin on 04.11.2017.
@@ -115,7 +115,7 @@ namespace NamelessRogue.Engine.Generation.World
 			temperature = temperature / 20;
 			Tuple<Terrain, Biome> terrinBiome =
 				TileNoiseInterpreter.GetTerrain(terrainElevation, forest, swamp, desert, temperature, resolutionZoomed, x, y);
-			return new Tile(terrinBiome.Item1.Type, terrinBiome.Item2.Type, new Point(x, y), terrainElevation);
+			return new Tile(terrinBiome.Item1.Type, terrinBiome.Item2.Type, new SharpDX.Point(x, y), terrainElevation);
 		}
 	}
 }

@@ -14,20 +14,62 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\ChunkShader3D.fx" />
+    <None Remove="Content\citylastnames.txt" />
     <None Remove="Content\Common.fx" />
+    <None Remove="Content\Credits.txt" />
     <None Remove="Content\DFfont.png" />
+    <None Remove="Content\GUI.fx" />
+    <None Remove="Content\Light.fx" />
+    <None Remove="Content\ObjectsShader.fx" />
+    <None Remove="Content\Segoe_UI_15_Bold.spritefont" />
     <None Remove="Content\Shader.fx" />
+    <None Remove="Content\SideTexture.png" />
+    <None Remove="Content\smallTree.fbx" />
     <None Remove="Content\TreeShader.fx" />
     <None Remove="log4net.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Common.fx" />
-    <Content Include="Content\TreeShader.fx" />
+    <Content Include="Content\citylastnames.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Common.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Credits.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GUI.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Light.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ObjectsShader.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Segoe_UI_15_Bold.spritefont">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SideTexture.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\smallTree.fbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\TreeShader.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\ChunkShader3D.fx" />
-    <Content Include="Content\DFfont.png" />
-    <Content Include="Content\Shader.fx" />
+    <Content Include="Content\ChunkShader3D.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\DFfont.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Shader.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="log4net.config" />
@@ -40,10 +82,22 @@
     <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="Markov" Version="2.0.0" />
     <PackageReference Include="MonoGame.Extended" Version="3.8.0" />
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="RogueSharp" Version="4.2.0" />
+    <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Desktop" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11.Effects" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DirectSound" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+    <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
+    <PackageReference Include="SharpDX.RawInput" Version="4.2.0" />
+    <PackageReference Include="SharpDX.XAudio2" Version="4.2.0" />
+    <PackageReference Include="SharpDX.XInput" Version="4.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AstarNavigatorNetCore\AstarNavigatorNetCore.csproj" />
@@ -51,9 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="Content\AnimatedCharacters\EasyChar_2023-10-31T21_44_08.635Z.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Credits.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Doodads\cacti.sf">

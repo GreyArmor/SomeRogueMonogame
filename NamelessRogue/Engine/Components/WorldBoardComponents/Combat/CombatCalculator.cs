@@ -1,4 +1,5 @@
 ﻿using NamelessRogue.Engine.Components.Physical;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Components.WorldBoardComponents.Combat
 {

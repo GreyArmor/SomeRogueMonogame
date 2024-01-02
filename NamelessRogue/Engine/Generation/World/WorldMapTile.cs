@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Generation.World.BoardPieces;
 using NamelessRogue.Engine.Infrastructure;
 

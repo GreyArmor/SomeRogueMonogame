@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Components.Status;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -29,17 +30,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
 
-            var playerEntity = namelessGame.PlayerEntity;
+            var playerEntity = game.PlayerEntity;
             var ap = playerEntity.GetComponentOfType<ActionPoints>();
             if (ap.Points >= 100)
             {
                 return;
             }
 
-            IEntity worldEntity = namelessGame.TimelineEntity;
+            IEntity worldEntity = game.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -56,7 +57,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     if (dead == null && actionPoints.Points >= 100)
                     {
                         BasicAi basicAi = entity.GetComponentOfType<BasicAi>();
-                        Position playerPosition = namelessGame.PlayerEntity
+                        Position playerPosition = game.PlayerEntity
                             .GetComponentOfType<Position>();
 
                         switch (basicAi.State)
@@ -64,7 +65,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             case BasicAiStates.Idle:
                             case BasicAiStates.Moving:
                                 var pPos = playerPosition.Point.ToVector2();
-                                MoveTo(entity, namelessGame, playerPosition.Point, true);
+                                MoveTo(entity, game, playerPosition.Point, true);
                                 var route = basicAi.Route;
                                 if (route.Count == 0)
                                 {
@@ -85,9 +86,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
 
-        public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides)
+        public void MoveTo(IEntity movableEntity, NamelessGame game, Point destination, bool moveBesides)
         {
-            IEntity worldEntity = namelessGame.TimelineEntity;
+            IEntity worldEntity = game.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -103,7 +104,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
                 List<Point> path = pathfinder.FindPath(position.Point,
                     new Point(destination.X, destination.Y), worldProvider,
-                    namelessGame);
+                    game);
                 if (moveBesides)
                 {
                     basicAi.Route = new Queue<Point>(path.Take(path.Count - 1));
@@ -125,7 +126,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
                     List<Point> path = pathfinder.FindPath(position.Point,
-                        destination, worldProvider, namelessGame);
+                        destination, worldProvider, game);
                     path = path.Skip(1)
                         .ToList(); // we dont need the first point in the path because its the point we are standing on currently
                     if (path.Any())

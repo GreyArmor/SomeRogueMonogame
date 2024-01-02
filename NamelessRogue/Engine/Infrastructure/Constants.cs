@@ -1,5 +1,5 @@
 
-using Microsoft.Xna.Framework;
+using SharpDX;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Infrastructure
         public static int CitySquare { get; } = 300;
 
 		public static readonly float ScaleDownCoeficient = 0.001f;
-		public static Matrix ScaleDownMatrix = Matrix.CreateScale(ScaleDownCoeficient);
+		public static Matrix ScaleDownMatrix = Matrix.Scaling(ScaleDownCoeficient);
        
 
 	}

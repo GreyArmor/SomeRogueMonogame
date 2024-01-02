@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SharpDX;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
@@ -20,10 +20,10 @@ namespace NamelessRogue.Engine.Infrastructure
 
 			void _addSprite(string id, string path)
 			{
-				var sprite = new AnimatedSprite(game.Content.Load<SpriteSheet>(path, new JsonContentLoader()));
-				sprite.Play("idleFront");
-				sprite.Update(1);
-				SpritesIdle.Add(id, sprite);
+				//var sprite = new AnimatedSprite(NamelessGame.Content.Load<SpriteSheet>(path, new JsonContentLoader()));
+				//sprite.Play("idleFront");
+				//sprite.Update(1);
+				//SpritesIdle.Add(id, sprite);
 			}
 
 			_addSprite("treeEvergreen", "Doodads\\treeEvergreen.sf");

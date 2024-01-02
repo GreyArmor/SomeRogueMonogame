@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Factories;
@@ -8,7 +8,7 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.Engine.ViewModels;
 using NamelessRogue.shell;
-
+using NamelessRogue.Engine.Infrastructure;
 namespace NamelessRogue.Engine.Systems.Map
 {
     public class WorldBoardScreenSystem : BaseSystem
@@ -23,12 +23,12 @@ namespace NamelessRogue.Engine.Systems.Map
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
-            ConsoleCamera camera = namelessGame.CameraEntity?.GetComponentOfType<ConsoleCamera>();
-            TimeLine timeline = namelessGame.TimelineEntity?.GetComponentOfType<TimeLine>();
-            var tilePosition = camera.GetMouseTilePosition(namelessGame);
-            var settings = namelessGame.WorldSettings;
+            ConsoleCamera camera = game.CameraEntity?.GetComponentOfType<ConsoleCamera>();
+            TimeLine timeline = game.TimelineEntity?.GetComponentOfType<TimeLine>();
+            var tilePosition = camera.GetMouseTilePosition(game);
+            var settings = game.WorldSettings;
 			var mapScreen = UIController.Instance.MapScreen;
 			if (tilePosition.X >= 0 && tilePosition.X < settings.WorldBoardWidth && tilePosition.Y >= 0 && tilePosition.Y < settings.WorldBoardHeight)
             {
@@ -81,34 +81,34 @@ namespace NamelessRogue.Engine.Systems.Map
 
 			switch (mapScreen.Action)
 			{
-				case MapAction.Exit:
-					namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
-					break;
-				case MapAction.RegionsMode:
-					{
-						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Regions;
-					}
-					break;
-				case MapAction.PoliticalMode:
-					{
-						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Political;
-					}
-					break;
-				case MapAction.TerrainMode:
-					{
-						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
-					}
-					break;
-				case MapAction.ArtifactMode:
-					{
-						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
-					}
-					break;
-				default:
-					break;
+				//case MapAction.Exit:
+				//	game.ContextToSwitch = ContextFactory.GetIngameContext(game);
+				//	break;
+				//case MapAction.RegionsMode:
+				//	{
+				//		_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Regions;
+				//	}
+				//	break;
+				//case MapAction.PoliticalMode:
+				//	{
+				//		_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Political;
+				//	}
+				//	break;
+				//case MapAction.TerrainMode:
+				//	{
+				//		_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
+				//	}
+				//	break;
+				//case MapAction.ArtifactMode:
+				//	{
+				//		_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
+				//	}
+				//	break;
+				//default:
+				//	break;
 			}
 
-			_mapRenderSystem.LocalMapRendering = mapScreen.LocalMapDisplay;
+			//_mapRenderSystem.LocalMapRendering = mapScreen.LocalMapDisplay;
 
 			mapScreen.Action = MapAction.None;
 

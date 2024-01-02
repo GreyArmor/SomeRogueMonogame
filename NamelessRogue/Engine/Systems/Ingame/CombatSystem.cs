@@ -7,7 +7,8 @@ using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
-using Microsoft.Xna.Framework;
+using SharpDX;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -19,9 +20,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
-            while (namelessGame.Commander.DequeueCommand(out AttackCommand ac))
+            while (game.Commander.DequeueCommand(out AttackCommand ac))
             {
                 var random = new InternalRandom();
 
@@ -37,11 +38,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 if (targetDescription != null && sourceDescription != null)
                 {
                     var logCommand = new HudLogMessageCommand();
-                    namelessGame.Commander.EnqueueCommand(logCommand);
+                    game.Commander.EnqueueCommand(logCommand);
 
                     logCommand.LogMessage += (sourceDescription.Name + " deals " + (damage) +
                                               " damage to " + targetDescription.Name);
-                    //namelessGame.WriteLineToConsole;
+                    //game.WriteLineToConsole;
                 }
             }
         }

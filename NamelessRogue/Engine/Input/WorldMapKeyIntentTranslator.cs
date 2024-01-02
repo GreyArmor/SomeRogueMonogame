@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Input;
+using System.Windows.Forms;
+
 
 namespace NamelessRogue.Engine.Input
 {
@@ -26,8 +27,8 @@ namespace NamelessRogue.Engine.Input
                     result.Add(intent);
                     switch (keyCode)
                     {
-                        case Keys.Up:
                         case Keys.NumPad8:
+                        case Keys.Up:
                             intent.Intention = IntentEnum.MoveUp;
                             break;
                         case Keys.NumPad2:

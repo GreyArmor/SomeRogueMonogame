@@ -7,12 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using SharpDX;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
-using Color = Microsoft.Xna.Framework.Color;
 using Num = System.Numerics;
 
 namespace NamelessRogue.Engine.Systems
@@ -20,16 +19,16 @@ namespace NamelessRogue.Engine.Systems
     public class UIRenderSystem : BaseSystem
     {
  
-		private SpriteBatch spriteBatch;
+		//private SpriteBatch spriteBatch;
 		NamelessGame game;
         private static ImGuiRenderer _imGuiRendererInstance;
 
-        private Texture2D _xnaTexture;
+       // private Texture2D _xnaTexture;
         private IntPtr _imGuiTexture;
         public UIRenderSystem(NamelessGame game)
         {
             this.game = game;
-            spriteBatch = new SpriteBatch(game.GraphicsDevice);
+          //  spriteBatch = new SpriteBatch(NamelessGame.GraphicsDevice);
 
             if (_imGuiRendererInstance == null)
             {
@@ -37,19 +36,19 @@ namespace NamelessRogue.Engine.Systems
                 _imGuiRendererInstance.RebuildFontAtlas();
             }
 
-            _xnaTexture = CreateTexture(game.GraphicsDevice, game.GetActualWidth(), game.GetActualHeight(), pixel =>
-            {
-                var red = (pixel % 300) / 2;
-                return new Color(red, 1, 1);
-            });
+            //_xnaTexture = CreateTexture(NamelessGame.GraphicsDevice, game.GetActualWidth(), game.GetActualHeight(), pixel =>
+            //{
+            //    var red = (pixel % 300) / 2;
+            //    return new Color(red, 1, 1);
+            //});
 
             // Then, bind it to an ImGui-friendly pointer, that we can use during regular ImGui.** calls (see below)
-            _imGuiTexture = _imGuiRendererInstance.BindTexture(_xnaTexture);
+           // _imGuiTexture = _imGuiRendererInstance.BindTexture(_xnaTexture);
 
         }
         public override HashSet<Type> Signature { get; }  = new HashSet<Type>();
         
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
             _imGuiRendererInstance.BeforeLayout(gameTime);
 
@@ -105,24 +104,24 @@ namespace NamelessRogue.Engine.Systems
             }
         }
 
-        public static Texture2D CreateTexture(GraphicsDevice device, int width, int height, Func<int, Color> paint)
-        {
-            //initialize a texture
-            var texture = new Texture2D(device, width, height);
+        //public static Texture2D CreateTexture(GraphicsDevice device, int width, int height, Func<int, Color> paint)
+        //{
+        //    //initialize a texture
+        //    var texture = new Texture2D(device, width, height);
 
-            //the array holds the color for each pixel in the texture
-            Color[] data = new Color[width * height];
-            for (var pixel = 0; pixel < data.Length; pixel++)
-            {
-                //the function applies the color according to the specified pixel
-                data[pixel] = paint(pixel);
-            }
+        //    //the array holds the color for each pixel in the texture
+        //    Color[] data = new Color[width * height];
+        //    for (var pixel = 0; pixel < data.Length; pixel++)
+        //    {
+        //        //the function applies the color according to the specified pixel
+        //        data[pixel] = paint(pixel);
+        //    }
 
-            //set the color
-            texture.SetData(data);
+        //    //set the color
+        //    texture.SetData(data);
 
-            return texture;
-        }
+        //    return texture;
+        //}
 
     }
 }

@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Interaction;
@@ -23,9 +23,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
-            while (namelessGame.Commander.DequeueCommand(out DeathCommand command))
+            while (game.Commander.DequeueCommand(out DeathCommand command))
             {
 
                 IEntity entityToKill = command.getToKill();
@@ -37,7 +37,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     drawable.Representation = '%';
                 }
 
-                IEntity worldEntity = namelessGame.TimelineEntity;
+                IEntity worldEntity = game.TimelineEntity;
                 IWorldProvider worldProvider = null;
                 if (worldEntity != null)
                 {
@@ -58,7 +58,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 if (d != null)
                 {
-                    // namelessGame.WriteLineToConsole(d.Name + " is dead!");
+                    // game.WriteLineToConsole(d.Name + " is dead!");
                 }
             }
 

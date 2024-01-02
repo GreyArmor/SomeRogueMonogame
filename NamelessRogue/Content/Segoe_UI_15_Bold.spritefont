@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XnaContent xmlns:Graphics="Microsoft.Xna.Framework.Content.Pipeline.Graphics">
+<XnaContent xmlns:Graphics="Content.Pipeline.Graphics">
   <Asset Type="Graphics:FontDescription">
     <!-- Value replaced by generator -->
     <FontName>Segoe UI</FontName>

@@ -1,11 +1,13 @@
 ﻿using ImGuiNET;
-using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
+
 
 namespace NamelessRogue.Engine.Infrastructure
 {
 	public static class DrawVertDeclaration
 	{
-		public static readonly VertexDeclaration Declaration;
+		public static readonly InputElement[] Declaration;
 
 		public static readonly int Size;
 
@@ -13,18 +15,11 @@ namespace NamelessRogue.Engine.Infrastructure
 		{
 			unsafe { Size = sizeof(ImDrawVert); }
 
-			Declaration = new VertexDeclaration(
-				Size,
-
-				// Position
-				new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.Position, 0),
-
-				// UV
-				new VertexElement(8, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0),
-
-				// Color
-				new VertexElement(16, VertexElementFormat.Color, VertexElementUsage.Color, 0)
-			);
+			Declaration =  new InputElement[] {
+			  new InputElement("POSITION", 0, Format.R32G32_Float, 0),
+			  new InputElement("TEXCOORD", 0, Format.R32G32_Float, sizeof(float) * 2, 0),
+			  new InputElement("COLOR", 0, Format.R32G32B32A32_Float, sizeof(float) * 4, 0),
+			};
 		}
 	}
 }

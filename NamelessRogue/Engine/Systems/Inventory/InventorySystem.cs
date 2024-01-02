@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
@@ -23,14 +23,14 @@ namespace NamelessRogue.Engine.Systems.Inventory
 
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
-            IEntity worldEntity = namelessGame.TimelineEntity;
+            IEntity worldEntity = game.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-                while (namelessGame.Commander.DequeueCommand(out DropItemCommand dropCommand))
+                while (game.Commander.DequeueCommand(out DropItemCommand dropCommand))
                 {
                     var tile = worldProvider.GetTile(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y);
 
@@ -43,7 +43,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                         position.Point = new Point(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y);
                     }
                 }
-                while (namelessGame.Commander.DequeueCommand(out PickUpItemCommand pickupCommand))
+                while (game.Commander.DequeueCommand(out PickUpItemCommand pickupCommand))
                 {
                     if (pickupCommand != null)
                     {
@@ -63,7 +63,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                 {
                                     sameTypeItem.GetComponentOfType<Item>().Amount +=
                                         pickupCommandItem.GetComponentOfType<Item>().Amount;
-                                    namelessGame.RemoveEntity(pickupCommandItem);
+                                    game.RemoveEntity(pickupCommandItem);
                                 }
                                 else
                                 {

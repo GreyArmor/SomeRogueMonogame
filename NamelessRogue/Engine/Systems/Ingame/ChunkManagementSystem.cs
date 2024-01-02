@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Interaction;
@@ -18,10 +18,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
     public class ChunkManagementSystem : BaseSystem
     {
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
 
-            IEntity worldEntity = namelessGame.TimelineEntity;
+            IEntity worldEntity = game.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -29,12 +29,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
 
 
-            IEntity playerentity = namelessGame.PlayerEntity;
+            IEntity playerentity = game.PlayerEntity;
             if (playerentity != null)
             {
                     Chunk currentChunk = null;
                 Point? currentChunkKey = null;
-                Position playerPosition = namelessGame.TestMapPosition;
+                Position playerPosition = game.TestMapPosition;
 				//look for current chunk
 				var playerChunkPositon = new Point(playerPosition.Point.X / Constants.ChunkSize, playerPosition.Point.Y / Constants.ChunkSize);
                 if (worldProvider.GetRealityBubbleChunks().TryGetValue(playerChunkPositon, out var ch))
@@ -42,7 +42,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     currentChunk = ch;
                     currentChunkKey = playerChunkPositon;
                 }
-                //if there is none, that means we just loaded the namelessGame, look for current in all chunks
+                //if there is none, that means we just loaded the game, look for current in all chunks
                 else
                 {
 					worldProvider.GetChunks().TryGetValue(playerChunkPositon, out var worldChunk);
@@ -107,7 +107,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
    //             {
    //                 foreach (var tile in tileArray)
    //                 {
-   //                     var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
+   //                     var entity = TerrainFurnitureFactory.GetExteriorEntities(game, tile);
    //                     if (entity != null)
    //                     {
    //                         realityBubbleChunk.Value.IsAnyEntities = true;
@@ -116,7 +116,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
    //                         {
    //                             tile.AddEntity(entity);
    //                          //   tile.Terrain = TerrainTypes.Lava;
-   //                             namelessGame.AddEntity(entity);
+   //                             game.AddEntity(entity);
 
    //                         }
    //                     }

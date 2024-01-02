@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using NamelessRogue.Engine.Components;
+﻿using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems.Ingame;
+using NamelessRogue.shell;
+using SharpDX;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,10 +36,10 @@ namespace NamelessRogue.Engine._3DUtility
         /// 
         static bool firstTime = true;
         static Point originalPointForTest;
-        static Matrix moveToZero = Matrix.CreateTranslation(-(new Vector3(1, 1, 0) / 2));
+        static Matrix moveToZero = Matrix.Translation(-(new Vector3(1, 1, 0) / 2));
 
         static Random random = new Random();
-        public static Geometry3D GenerateChunkModelTiles(Game namelessGame, Point chunkToGenerate, ChunkData chunks, out TerrainGeometry3D terrainGeometry)
+        public static Geometry3D GenerateChunkModelTiles(NamelessGame game, Point chunkToGenerate, ChunkData chunks, out TerrainGeometry3D terrainGeometry)
         {
 
             var result = new Geometry3D();
@@ -113,7 +114,7 @@ namespace NamelessRogue.Engine._3DUtility
                         float elevation = _elevationToWorld(pointElevation);
 
 
-                        var vector = Vector3.Transform(new Vector3(
+                        var vector = (Vector3)Vector3.Transform(new Vector3(
                             x + currentCorner.X - originalPointForTest.X,
                             y + currentCorner.Y - originalPointForTest.Y,
                             elevation), Constants.ScaleDownMatrix);
@@ -170,7 +171,7 @@ namespace NamelessRogue.Engine._3DUtility
                     float elevation = (float)tile.Elevation;
                     float elevationN = (float)tileS.Elevation;
 
-                    var normal = tileNormals[Math.Clamp(x, 0, resolution-1), Math.Clamp(y, 0, resolution-1)];
+                    var normal = tileNormals[Math.Clamp(x, 0, resolution - 1), Math.Clamp(y, 0, resolution - 1)];
                     float pitch = MathF.Abs(MathF.Asin(-normal.Y));
                     float yaw = MathF.Abs(MathF.Atan2(normal.X, normal.Z));
 
@@ -221,9 +222,7 @@ namespace NamelessRogue.Engine._3DUtility
                 color,
                 color, textureCoordinates.Dequeue(), transformedPointsNormals.Dequeue());
                 vertices.Enqueue(vertex);
-            }
-
-            var texture2D = new Texture2D(namelessGame.GraphicsDevice, Constants.ChunkSize, Constants.ChunkSize, false, SurfaceFormat.Vector4);
+            }  
 
             Vector4[] tempArr = new Vector4[Constants.ChunkSize * Constants.ChunkSize];
 
@@ -235,31 +234,46 @@ namespace NamelessRogue.Engine._3DUtility
                 }
             }
 
-            texture2D.SetData<Vector4>(tempArr, 0, tempArr.Length);
+            var textureDescription = new Texture2DDescription()
+            {
+                Height = Constants.ChunkSize,
+                Width = Constants.ChunkSize,
+                CpuAccessFlags = CpuAccessFlags.Read,
+                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb,
+                Usage = ResourceUsage.Default,
+                ArraySize = 1,
+                BindFlags = BindFlags.RenderTarget,
+                OptionFlags = ResourceOptionFlags.None,
+                MipLevels = 0,
+                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
+            };
 
+            DataStream s = DataStream.Create(tempArr, true, true);
+            DataRectangle rect = new DataRectangle(s.DataPointer, Constants.ChunkSize * 4);
+            var texture2D = new Texture2D(game.GraphicsDevice, textureDescription, rect);
+            s.Close();
+            s.Dispose();
 
             result.Vertices = points;
             result.Indices = indices.ToList();
-            result.Bounds = Microsoft.Xna.Framework.BoundingBox.CreateFromPoints(points);
+            result.Bounds = BoundingBox.FromPoints(points.ToArray());
             result.Material = texture2D;
+            result.MaterialResourceView = new SharpDX.Direct3D11.ShaderResourceView(game.GraphicsDevice, result.Material);
             result.TriangleTerrainAssociation = tileTriangleAssociations;
 
-            result.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, vertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
-            result.Buffer.SetData<Vertex3D>(vertices.ToArray());
-            result.IndexBuffer = new Microsoft.Xna.Framework.Graphics.IndexBuffer(namelessGame.GraphicsDevice, Microsoft.Xna.Framework.Graphics.IndexElementSize.ThirtyTwoBits, indices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
-            result.IndexBuffer.SetData<int>(indices.ToArray());
+            result.Buffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.VertexBuffer, vertices.ToArray());
+            result.IndexBuffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.IndexBuffer, indices.ToArray());
             result.TriangleCount = triangleCount;
 
-            terrainGeometryResult.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.TerrainVertexDeclaration, terrainVertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
-            terrainGeometryResult.Buffer.SetData<TerrainVertex>(terrainVertices.ToArray());
+            terrainGeometryResult.Buffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.VertexBuffer, terrainVertices.ToArray());
             terrainGeometry = terrainGeometryResult;
 
-            var offsetVector = Vector3.Transform(new Vector3(
+            var offsetVector =(Vector3)Vector3.Transform(new Vector3(
                 currentCorner.X - originalPointForTest.X,
                 currentCorner.Y - originalPointForTest.Y,
                             0), Constants.ScaleDownMatrix);
 
-            terrainGeometry.WorldOffset = Matrix.CreateTranslation(offsetVector);
+            terrainGeometry.WorldOffset = Matrix.Translation(offsetVector);
             terrainGeometry.VerticesCount = terrainVertices.Count;
 
             return result;

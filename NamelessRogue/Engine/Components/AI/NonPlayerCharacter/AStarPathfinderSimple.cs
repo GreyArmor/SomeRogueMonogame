@@ -5,7 +5,7 @@ using System.Linq;
 using AStarNavigator;
 using AStarNavigator.Algorithms;
 using AStarNavigator.Providers;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.shell;
@@ -94,9 +94,9 @@ namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
         //        }
         //        else if( p.GetCoordinate().X<0||p.GetCoordinate().Y<0)
         //        {
-        //            return double.MaxValue;
+        //            return double.MaximumValue;
         //        }
-        //        return double.MaxValue;
+        //        return double.MaximumValue;
         //    };
 
         //    Console.WriteLine("Going from {0} to {1}", start, destination);

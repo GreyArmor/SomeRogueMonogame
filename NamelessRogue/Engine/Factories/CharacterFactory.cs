@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
@@ -13,6 +13,7 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Linq;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Factories
 {
@@ -167,7 +168,7 @@ namespace NamelessRogue.Engine.Factories
                 }
                 var groupData = unit.GetComponentOfType<GroupTag>();
                 var unitPosition = unit.GetComponentOfType<Position>();
-                groupData.FormationPositionDisplacement = flagbearerPositionPoint - unitPosition.Point;
+                groupData.FormationPositionDisplacement = flagbearerPositionPoint.Substract(unitPosition.Point);
             }
 
 

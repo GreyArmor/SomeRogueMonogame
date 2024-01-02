@@ -12,11 +12,10 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.Utility;
+using SharpDX;
 using SharpDX.DirectWrite;
-using BoundingBox = Microsoft.Xna.Framework.BoundingBox;
-using Color = Microsoft.Xna.Framework.Color;
-using Point = Microsoft.Xna.Framework.Point;
-using Vector3 = Microsoft.Xna.Framework.Vector3;
+using BoundingBox = SharpDX.BoundingBox;
+using Point = SharpDX.Point;
 namespace NamelessRogue.Engine.Components.ChunksAndTiles
 {
     [SkipClassGeneration]
@@ -30,7 +29,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         
         private Tile[][] chunkTiles;
         
-        private Microsoft.Xna.Framework.BoundingBox boundingBox;
+        private BoundingBox boundingBox;
         
         private bool isActive;
         private bool loaded = false;
@@ -93,7 +92,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
 
 
-
+/*
            // if (surroundingChunksWithRivers.Any())
             if(false)
             {
@@ -119,7 +118,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                             p.X == chunkWithRivers.x && p.Y == chunkWithRivers.y);
 
                         var chHalf = Constants.ChunkSize / 2;
-                        var halfV = new Microsoft.Xna.Framework.Vector2(chHalf);
+                        var halfV = new Vector2(chHalf);
                         Point ScalePoint(Point p)
                         {
                             return ((p.ToVector2() * Constants.ChunkSize) + halfV).ToPoint();
@@ -207,6 +206,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                 }
 
             }
+*/
         }
 
         public void FillWithDebugTiles(TerrainGenerator generator)
@@ -239,7 +239,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
         public bool IsPointInside(int x, int y)
         {
-            return x >= boundingBox.Min.X && x < boundingBox.Max.X && y >= boundingBox.Min.Y && y < boundingBox.Max.Y;
+            return x >= boundingBox.Minimum.X && x < boundingBox.Maximum.X && y >= boundingBox.Minimum.Y && y < boundingBox.Maximum.Y;
         }
 
         public Tile GetTile(Point p)

@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Factories
         {
             Entity timepline = new Entity();
 
-            timepline.AddComponent(HistoryGenerator.BuildTimeline(game,new HistoryGenerator.HistoryGenerationSettings()));
+            timepline.AddComponent(HistoryGenerator.BuildTimeline(game, new HistoryGenerator.HistoryGenerationSettings()));
 
             return timepline;
         }

@@ -2,14 +2,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Generation.World.BoardPieces;
 using NamelessRogue.Engine.Generation.World.Diplomacy;
 using NamelessRogue.Engine.Generation.World.Meta;
 using NamelessRogue.Engine.Generation.World.Tech;
 using NamelessRogue.Engine.Serialization;
-
+using Color = NamelessRogue.Engine.Utility.Color;
 namespace NamelessRogue.Engine.Generation.World
 {
     public class Civilization : Component {
@@ -17,7 +17,7 @@ namespace NamelessRogue.Engine.Generation.World
 		{
 		}
 
-		public Civilization(string name, Color civColor,CultureTemplate cultureTemplate)
+		public Civilization(string name, Color civColor, CultureTemplate cultureTemplate)
         {
             Name = name;
             CivColor = civColor;

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using SharpDX;
 
 namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
 {

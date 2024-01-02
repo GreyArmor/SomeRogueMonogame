@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Graphics;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Context;
 using NamelessRogue.Engine.Input;
@@ -51,14 +51,14 @@ namespace NamelessRogue.Engine.Factories
 				systems.Add(new Chunk3DManagementSystem());
                 systems.Add(new SoundPlaySystem());
               
-               // var renderingSystem = new RenderingSystem(game.GetSettings());
+               // var renderingSystem = new RenderingSystem(NamelessGame.GetSettings());
 
                 var renderingSystem = new RenderingSystem3D(game.GetSettings(), game);
                 var uiSystem = new UIRenderSystem(game);
-				var spriteSystem = new SpriteRenderingSystem(game);
+				//var spriteSystem = new SpriteRenderingSystem(game);
 
 
-				IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem, spriteSystem, uiSystem, new SelectionRenderingSystem(game) },
+				IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem, /*spriteSystem,*/ uiSystem, new SelectionRenderingSystem(game) },
                     UIController.Instance.HudScreen, "InGame");
 
                 return IngameContext;

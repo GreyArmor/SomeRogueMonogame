@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using SharpDX;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.shell;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -15,9 +16,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
         public override HashSet<Type> Signature { get; }
 
-        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        public override void Update(GameTime gameTime, NamelessGame game)
         {
-            while (namelessGame.Commander.DequeueCommand(out ChangeSwitchStateCommand command))
+            while (game.Commander.DequeueCommand(out ChangeSwitchStateCommand command))
             {
                 command.getTarget().setSwitchActive(command.isActive());
             }
