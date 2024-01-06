@@ -12,6 +12,9 @@ using SharpDX.RawInput;
 using System.Diagnostics;
 using SharpDX.Windows;
 using System.Windows.Forms;
+using SharpDX.D3DCompiler;
+using Device = SharpDX.Direct3D11.Device;
+using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
@@ -48,181 +51,35 @@ namespace NamelessRogue.Engine.Infrastructure
                 VerticalSyncEnabled = WindowConfiguration.VerticalSyncEnabled;
 
                 // Create a DirectX graphics interface factory.
-                var factory = new Factory1();
-
-                // Use the factory to create an adapter for the primary graphics interface (video card).
-                var adapter = factory.GetAdapter1(0);
-
-                // Get the primary adapter output (monitor).
-                var monitor = adapter.GetOutput(0);
-
-                // Get modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
-                var modes = monitor.GetDisplayModeList(Format.R8G8B8A8_UNorm, DisplayModeEnumerationFlags.Interlaced);
-
-                // Now go through all the display modes and find the one that matches the screen width and height.
-                // When a match is found store the the refresh rate for that monitor, if vertical sync is enabled. 
-                // Otherwise we use maximum refresh rate.
-                var rational = new Rational(0, 1);
-                if (VerticalSyncEnabled)
+                var desc = new SwapChainDescription()
                 {
-                    foreach (var mode in modes)
-                    {
-                        if (mode.Width == configuration.Width && mode.Height == configuration.Height)
-                        {
-                            rational = new Rational(mode.RefreshRate.Numerator, mode.RefreshRate.Denominator);
-                            break;
-                        }
-                    }
-                }
-
-                // Get the adapter (video card) description.
-                var adapterDescription = adapter.Description;
-
-                // Store the dedicated video card memory in megabytes.
-                VideoCardMemory = adapterDescription.DedicatedVideoMemory >> 10 >> 10;
-
-                // Convert the name of the video card to a character array and store it.
-                VideoCardDescription = adapterDescription.Description.Trim('\0');
-
-                // Release the adapter output.
-                monitor.Dispose();
-                // Release the adapter.
-                adapter.Dispose();
-                // Release the factory.
-                factory.Dispose();
-
-                // Initialize the swap chain description.
-                var swapChainDesc = new SwapChainDescription()
-                {
-                    // Set to a single back buffer.
                     BufferCount = 1,
-                    // Set the width and height of the back buffer.
-                    ModeDescription = new ModeDescription(configuration.Width, configuration.Height, rational, Format.R8G8B8A8_UNorm),
-                    // Set the usage of the back buffer.
-                    Usage = Usage.RenderTargetOutput,
-                    // Set the handle for the window to render to.
-                    OutputHandle = windowHandle,
-                    // Turn multisampling off.
+                    ModeDescription =
+                                   new ModeDescription(form.ClientSize.Width, form.ClientSize.Height,
+                                                       new Rational(60, 1), Format.R8G8B8A8_UNorm),
+                    IsWindowed = true,
+                    OutputHandle = form.Handle,
                     SampleDescription = new SampleDescription(1, 0),
-                    // Set to full screen or windowed mode.
-                    IsWindowed = !WindowConfiguration.FullScreen,
-                    // Don't set the advanced flags.
-                    Flags = SwapChainFlags.None,
-                    // Discard the back buffer content after presenting.
-                    SwapEffect = SwapEffect.Discard
+                    SwapEffect = SwapEffect.Discard,
+                    Usage = Usage.RenderTargetOutput
                 };
 
-                // Create the swap chain, Direct3D device, and Direct3D device context.
-                SharpDX.Direct3D11.Device device;
+                // Create Device and SwapChain
+                Device device;
                 SwapChain swapChain;
-                SharpDX.Direct3D11.Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, swapChainDesc, out device, out swapChain);
-
-                Device = device;
+                Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, desc, out device, out swapChain);
                 SwapChain = swapChain;
                 DeviceContext = device.ImmediateContext;
+                Device = device;
+                // Ignore all windows events
+                var factory = swapChain.GetParent<Factory>();
+                factory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll);
 
-                // Get the pointer to the back buffer.
-                var backBuffer = Texture2D.FromSwapChain<Texture2D>(SwapChain, 0);
+                // New RenderTargetView from the backbuffer
+                var backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
+                this.RenderTargetView = new RenderTargetView(device, backBuffer);
 
-                // Create the render target view with the back buffer pointer.
-                RenderTargetView = new RenderTargetView(device, backBuffer);
-
-                // Release pointer to the back buffer as we no longer need it.
-                backBuffer.Dispose();
-
-                // Initialize and set up the description of the depth buffer.
-                var depthBufferDesc = new Texture2DDescription()
-                {
-                    Width = configuration.Width,
-                    Height = configuration.Height,
-                    MipLevels = 1,
-                    ArraySize = 1,
-                    Format = Format.D24_UNorm_S8_UInt,
-                    SampleDescription = new SampleDescription(1, 0),
-                    Usage = ResourceUsage.Default,
-                    BindFlags = BindFlags.DepthStencil,
-                    CpuAccessFlags = CpuAccessFlags.None,
-                    OptionFlags = ResourceOptionFlags.None
-                };
-
-                // Create the texture for the depth buffer using the filled out description.
-                DepthStencilBuffer = new Texture2D(device, depthBufferDesc);
-
-                // Initialize and set up the description of the stencil state.
-                var depthStencilDesc = new DepthStencilStateDescription()
-                {
-                    IsDepthEnabled = true,
-                    DepthWriteMask = DepthWriteMask.All,
-                    DepthComparison = Comparison.Less,
-                    IsStencilEnabled = true,
-                    StencilReadMask = 0xFF,
-                    StencilWriteMask = 0xFF,
-                    // Stencil operation if pixel front-facing.
-                    FrontFace = new DepthStencilOperationDescription()
-                    {
-                        FailOperation = StencilOperation.Keep,
-                        DepthFailOperation = StencilOperation.Increment,
-                        PassOperation = StencilOperation.Keep,
-                        Comparison = Comparison.Always
-                    },
-                    // Stencil operation if pixel is back-facing.
-                    BackFace = new DepthStencilOperationDescription()
-                    {
-                        FailOperation = StencilOperation.Keep,
-                        DepthFailOperation = StencilOperation.Decrement,
-                        PassOperation = StencilOperation.Keep,
-                        Comparison = Comparison.Always
-                    }
-                };
-
-                // Create the depth stencil state.
-                DepthStencilState = new DepthStencilState(Device, depthStencilDesc);
-
-                // Set the depth stencil state.
-                DeviceContext.OutputMerger.SetDepthStencilState(DepthStencilState, 1);
-
-                // Initialize and set up the depth stencil view.
-                var depthStencilViewDesc = new DepthStencilViewDescription()
-                {
-                    Format = Format.D24_UNorm_S8_UInt,
-                    Dimension = DepthStencilViewDimension.Texture2D,
-                    Texture2D = new DepthStencilViewDescription.Texture2DResource()
-                    {
-                        MipSlice = 0
-                    }
-                };
-
-                // Create the depth stencil view.
-                DepthStencilView = new DepthStencilView(Device, DepthStencilBuffer, depthStencilViewDesc);
-
-                // Bind the render target view and depth stencil buffer to the output render pipeline.
-                DeviceContext.OutputMerger.SetTargets(DepthStencilView, RenderTargetView);
-
-                // Setup the raster description which will determine how and what polygon will be drawn.
-                var rasterDesc = new RasterizerStateDescription()
-                {
-                    IsAntialiasedLineEnabled = false,
-                    CullMode = CullMode.Back,
-                    DepthBias = 0,
-                    DepthBiasClamp = .0f,
-                    IsDepthClipEnabled = true,
-                    FillMode = FillMode.Solid,
-                    IsFrontCounterClockwise = false,
-                    IsMultisampleEnabled = false,
-                    IsScissorEnabled = true,
-                    SlopeScaledDepthBias = .0f
-                };
-
-                // Create the rasterizer state from the description we just filled out.
-                RasterState = new RasterizerState(Device, rasterDesc);
-
-                // Now set the rasterizer state.
-                DeviceContext.Rasterizer.State = RasterState;
-
-
-                Viewport = new Viewport(0, 0, configuration.Width, configuration.Height, 0, 1);
-                // Setup and create the viewport for rendering.
-                DeviceContext.Rasterizer.SetViewport(0, 0, configuration.Width, configuration.Height, 0, 1);
+                DeviceContext.OutputMerger.SetTargets(RenderTargetView);
 
 
                 form.MouseMove += MouseInput;

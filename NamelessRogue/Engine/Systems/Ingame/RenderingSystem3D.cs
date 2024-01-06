@@ -290,9 +290,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             //effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
             // effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
-            game.Window.DeviceContext.UpdateSubresource(ref constantBuffer, cbuffer);
-
-       
+            game.Window.DeviceContext.UpdateSubresource(ref constantBuffer, cbuffer);     
          
 
             var chunkGeometries1 = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();

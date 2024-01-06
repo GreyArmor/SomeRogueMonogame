@@ -21,7 +21,8 @@ namespace NamelessRogue.Engine.Infrastructure
             }
             var bytecode = _loadShader(vertexEntryPoint, "vs_4_0");
             if (bytecode != null)
-            { 
+            {
+                VSBytecode = bytecode;
                 VertexShader = new VertexShader(device, bytecode); 
             }
             bytecode = _loadShader(pixelEntrypoint, "ps_4_0");
@@ -43,6 +44,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
         public string ShaderName { get; set; }
 
+        public CompilationResult VSBytecode { get;set; }
         public VertexShader VertexShader { get; set; } = null;
         public PixelShader PixelShader { get; set; } = null;
         public HullShader HullShader { get; set; } = null;
@@ -52,8 +54,8 @@ namespace NamelessRogue.Engine.Infrastructure
         {
             context.PixelShader.Set(PixelShader);
             context.VertexShader.Set(VertexShader);
-            context.HullShader.Set(HullShader);
-            context.GeometryShader.Set(GeometryShader);
+            //context.HullShader.Set(HullShader);
+            //context.GeometryShader.Set(GeometryShader);
         }
     }
 }

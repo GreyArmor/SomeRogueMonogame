@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
-    public class DTexture       
+    public class Texture       
     {
         public ShaderResourceView TextureResource { get; private set; }
 

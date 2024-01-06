@@ -480,8 +480,6 @@ namespace NamelessRogue.shell
         private FrameCounter _frameCounter = new FrameCounter();
         //Label fpsLabel;
         private bool skipNextFrame;
-        private Device graphicsDevice;
-        private RenderTargetView renderView;
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -509,7 +507,6 @@ namespace NamelessRogue.shell
             CurrentContext.RenderingUpdate(GameTime, this);
             Window.EndScene();
             Window.ClearStates();
-
         }
 
         Stopwatch gameTimeStopwatch = new Stopwatch();

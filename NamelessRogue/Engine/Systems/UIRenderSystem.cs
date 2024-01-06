@@ -13,6 +13,8 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using Num = System.Numerics;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 
 namespace NamelessRogue.Engine.Systems
 {
@@ -36,6 +38,23 @@ namespace NamelessRogue.Engine.Systems
                 _imGuiRendererInstance.RebuildFontAtlas();
             }
 
+
+            var textureDescription = new Texture2DDescription()
+            {
+                Width = game.GetActualWidth(),
+                Height = game.GetActualHeight(),
+                ArraySize = 1,
+                BindFlags = SharpDX.Direct3D11.BindFlags.ShaderResource | BindFlags.RenderTarget,
+                Usage = SharpDX.Direct3D11.ResourceUsage.Default,
+                CpuAccessFlags = SharpDX.Direct3D11.CpuAccessFlags.None,
+                Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm,
+                MipLevels = 1,
+                OptionFlags = ResourceOptionFlags.GenerateMipMaps, // ResourceOptionFlags.GenerateMipMap
+                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
+            };
+
+            var texture = new Texture2D(game.GraphicsDevice, textureDescription);
+
             //_xnaTexture = CreateTexture(NamelessGame.GraphicsDevice, game.GetActualWidth(), game.GetActualHeight(), pixel =>
             //{
             //    var red = (pixel % 300) / 2;
@@ -43,7 +62,7 @@ namespace NamelessRogue.Engine.Systems
             //});
 
             // Then, bind it to an ImGui-friendly pointer, that we can use during regular ImGui.** calls (see below)
-           // _imGuiTexture = _imGuiRendererInstance.BindTexture(_xnaTexture);
+             _imGuiTexture = _imGuiRendererInstance.BindTexture(texture);
 
         }
         public override HashSet<Type> Signature { get; }  = new HashSet<Type>();
@@ -51,7 +70,7 @@ namespace NamelessRogue.Engine.Systems
         public override void Update(GameTime gameTime, NamelessGame game)
         {
             _imGuiRendererInstance.BeforeLayout(gameTime);
-
+            
             game.CurrentContext.ContextScreen.DrawLayout();
             // Draw our UI
             //ImGuiLayout();
