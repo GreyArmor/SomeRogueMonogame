@@ -59,24 +59,24 @@ namespace NamelessRogue.Engine.Systems
             var pixels = new byte[textureDescription.Width * textureDescription.Height * (bytesPerPixel)];
 
 
-            for (int y = 0; y < width * height * bytesPerPixel; y++)
-            {
+            //for (int y = 0; y < width * height * bytesPerPixel; y++)
+            //{
 
-                if (y % 3 == 0)
-                {
-                    pixels[y] = (byte)(0);
-                }
-                else
-                {
-                    pixels[y] = (byte)(255);
-                }
+            //    if (y % 3 == 0)
+            //    {
+            //        pixels[y] = (byte)(0);
+            //    }
+            //    else
+            //    {
+            //        pixels[y] = (byte)(255);
+            //    }
 
-            }
+            //}
 
             DataStream s = DataStream.Create(pixels, true, true);
             DataRectangle rect = new DataRectangle(s.DataPointer, width * bytesPerPixel);
 
-            var tex2d = new Texture2D(game.GraphicsDevice, textureDescription, rect);
+            var tex2d = new Texture2D(game.GraphicsDevice, textureDescription);
 
 
             //_xnaTexture = CreateTexture(NamelessGame.GraphicsDevice, game.GetActualWidth(), game.GetActualHeight(), pixel =>
@@ -95,9 +95,9 @@ namespace NamelessRogue.Engine.Systems
         {
             _imGuiRendererInstance.BeforeLayout(gameTime);
             
-            //game.CurrentContext.ContextScreen.DrawLayout();
+            game.CurrentContext.ContextScreen.DrawLayout();
             // Draw our UI
-            ImGuiLayout();
+          //  ImGuiLayout();
 
             // Call AfterLayout now to finish up and draw all the things
             _imGuiRendererInstance.AfterLayout();

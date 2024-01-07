@@ -13,7 +13,7 @@ struct PS_INPUT
 
 float4 PS(PS_INPUT input) : SV_Target
 {
-    float4 out_col = FontTexture.Sample(Sampler, input.uv);
+    float4 out_col = input.col * FontTexture.Sample(Sampler, input.uv);
    // out_col.a = 0.5;
     //out_col.r = input.uv.x;
     //out_col.g = input.uv.y;

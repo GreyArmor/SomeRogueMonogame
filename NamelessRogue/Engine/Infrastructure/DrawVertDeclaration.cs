@@ -18,7 +18,7 @@ namespace NamelessRogue.Engine.Infrastructure
 			Declaration =  new InputElement[] {
 			  new InputElement("POSITION", 0, Format.R32G32_Float, 0),
 			  new InputElement("TEXCOORD", 0, Format.R32G32_Float, sizeof(float) * 2, 0),
-			  new InputElement("COLOR", 0, Format.R32_SInt, sizeof(float) * 4, 0),
+			  new InputElement("COLOR", 0, Format.R32G32B32A32_Float, sizeof(float) * 4, 0),
 			};
 		}
 	}
