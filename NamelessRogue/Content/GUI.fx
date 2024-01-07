@@ -1,7 +1,7 @@
 ﻿
-Texture2D FontTexture : register(t0);
+Texture2D FontTexture : TEXTURE : register(t0);
 float4x4 xProjection;
-SamplerState textureSampler : register(s0);
+SamplerState Sampler : SAMPLER : register(s0);
 
 struct PS_INPUT
 {
@@ -13,7 +13,10 @@ struct PS_INPUT
 
 float4 PS(PS_INPUT input) : SV_Target
 {
-    float4 out_col = input.col * FontTexture.Sample(textureSampler, input.uv);
+    float4 out_col = FontTexture.Sample(Sampler, input.uv);
+   // out_col.a = 0.5;
+    //out_col.r = input.uv.x;
+    //out_col.g = input.uv.y;
     return out_col;
   //  return float4(1, 1, 1, 1);
 }

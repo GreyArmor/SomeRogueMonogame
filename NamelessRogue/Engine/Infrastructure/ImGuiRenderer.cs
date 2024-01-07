@@ -5,15 +5,12 @@ using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using SharpDX.WIC;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Bitmap = System.Drawing.Bitmap;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Color = SharpDX.Color;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
@@ -53,7 +50,6 @@ namespace NamelessRogue.Engine.Infrastructure
         private RasterizerState _rasterizerState;
         private DepthStencilState _depthState;
         private RasterizerStateDescription _rasterizerStateDescription;
-        //SamplerState 
 
 
         private byte[] _vertexData;
@@ -100,7 +96,7 @@ namespace NamelessRogue.Engine.Infrastructure
                 FillMode = SharpDX.Direct3D11.FillMode.Solid,
                 IsFrontCounterClockwise = false,
                 IsMultisampleEnabled = false,
-                IsScissorEnabled = true,
+                IsScissorEnabled = false,
                 SlopeScaledDepthBias = .0f
             };
 
@@ -149,9 +145,23 @@ namespace NamelessRogue.Engine.Infrastructure
             var io = ImGui.GetIO();
             io.Fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int bytesPerPixel);
 
-            // Copy the data to a managed array
-            var pixels = new byte[width * height * bytesPerPixel];
+            // Copy the data to a managed arraybytesPerPixel
+            var pixels = new byte[width * height * (bytesPerPixel)];
             unsafe { Marshal.Copy(new IntPtr(pixelData), pixels, 0, pixels.Length); }
+
+            //for (int y = 0; y < width * height * bytesPerPixel; y++)
+            //{
+
+            //    if (y % 3 == 0)
+            //    {
+            //        pixels[y] = (byte)(0);
+            //    }
+            //    else
+            //    {
+            //        pixels[y] = (byte)(255);
+            //    }
+
+            //}
 
             // Create and register the texture as an XNA texture
             var textureDescription = new Texture2DDescription()
@@ -160,7 +170,7 @@ namespace NamelessRogue.Engine.Infrastructure
                 Height = height,
                 MipLevels = 1,
                 ArraySize = 1,
-                Format = Format.R8G8B8A8_UInt,
+                Format = Format.R8G8B8A8_UNorm,
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = ResourceUsage.Default,
                 BindFlags = BindFlags.ShaderResource,
@@ -169,7 +179,7 @@ namespace NamelessRogue.Engine.Infrastructure
             };
 
             DataStream s = DataStream.Create(pixels, true, true);
-            DataRectangle rect = new DataRectangle(s.DataPointer, width * 4);           
+            DataRectangle rect = new DataRectangle(s.DataPointer, width * bytesPerPixel);
 
             var tex2d = new Texture2D(_graphicsDevice, textureDescription, rect);
 
@@ -179,33 +189,38 @@ namespace NamelessRogue.Engine.Infrastructure
             // Bind the new texture to an ImGui-friendly id
             _fontTextureId = BindTexture(tex2d);
 
+
+            //var bmp = CopyTexture.SaveToBitmap(_graphicsDevice, _graphicsDeviceContext, tex2d);
+
+            //bmp.Save("C:\\test\\test.bmp");
+
             // Let ImGui know where to find the texture
             io.Fonts.SetTexID(_fontTextureId.Value);
             io.Fonts.ClearTexData(); // Clears CPU side texture data
             s.Dispose();
-          
 
-          //  MemoryStream memoryStream = new MemoryStream(pixels);
 
-          ////  Bitmap debugBmp = new Bitmap(memoryStream);
+            //  MemoryStream memoryStream = new MemoryStream(pixels);
 
-          //  BinaryReader reader = new BinaryReader(memoryStream);
+            ////  Bitmap debugBmp = new Bitmap(memoryStream);
 
-          //  List<System.Drawing.Color> colors = new List<System.Drawing.Color>();
-          //  for (int i = 0; i < pixels.Count(); i += 4)
-          //  {
-          //      colors.Add(System.Drawing.Color.FromArgb(pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]));
-          //  }
+            //  BinaryReader reader = new BinaryReader(memoryStream);
 
-          //  for (int y = 0; y < height; y++)
-          //  {
-          //      for (int x = 0; x < width; x++)
-          //      {
-          //          debugBmp.SetPixel(x, y, colors[(y * width) + x]);
-          //      }
-          //  }
+            //  List<System.Drawing.Color> colors = new List<System.Drawing.Color>();
+            //  for (int i = 0; i < pixels.Count(); i += 4)
+            //  {
+            //      colors.Add(System.Drawing.Color.FromArgb(pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]));
+            //  }
 
-          //  debugBmp.Save("C:\\test\\test.bmp");
+            //  for (int y = 0; y < height; y++)
+            //  {
+            //      for (int x = 0; x < width; x++)
+            //      {
+            //          debugBmp.SetPixel(x, y, colors[(y * width) + x]);
+            //      }
+            //  }
+
+            //  debugBmp.Save("C:\\test\\test.bmp");
         }
 
         private static T FromBinaryReader<T>(BinaryReader reader)
@@ -229,16 +244,18 @@ namespace NamelessRogue.Engine.Infrastructure
         {
             var id = new IntPtr(_textureId++);
 
-            ShaderResourceViewDescription desc = new ShaderResourceViewDescription()
+            var desc = new ShaderResourceViewDescription
             {
                 Format = texture.Description.Format,
-                Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture2D,
+                Dimension = ShaderResourceViewDimension.Texture2D,
+                Texture2D = { MipLevels = 1 },
             };
             desc.Texture2D.MostDetailedMip = 0;
             desc.Texture2D.MipLevels = -1;
-
-            _loadedTextures.Add(id, new SharpDX.Direct3D11.ShaderResourceView(_game.GraphicsDevice, texture, desc));
-
+            var srv = new SharpDX.Direct3D11.ShaderResourceView(_game.GraphicsDevice, texture, desc);
+            _graphicsDevice.ImmediateContext.GenerateMips(srv);
+            _loadedTextures.Add(id, srv);
+         
             return id;
         }
 
@@ -329,26 +346,6 @@ namespace NamelessRogue.Engine.Infrastructure
             ImGUI_FontLibrary.AnonymousPro_Regular16 = fontAtlas.AddFontFromFileTTF(@"Content\Fonts\AnonymousPro-Regular.ttf", 16);
             ImGUI_FontLibrary.AnonymousPro_Regular8 = fontAtlas.AddFontFromFileTTF(@"Content\Fonts\AnonymousPro-Regular.ttf", 8);
         }
-
-        /// <summary>
-        /// Updates the <see cref="Effect" /> to the current matrices and texture
-        /// </summary>
-        protected virtual void UpdateEffect(ShaderResourceView texture)
-        {
-            var io = ImGui.GetIO();
-            var constantBuffer = new GUIConstantBuffer() { xProjection = Matrix.Identity } /* Matrix.OrthoOffCenterLH(0f, io.DisplaySize.X, io.DisplaySize.Y, 0f, -1f, 1f) }*/;
-            _game.Window.DeviceContext.UpdateSubresource(ref constantBuffer, _constantBuffer);
-            _effect.Apply(_graphicsDeviceContext);
-            _graphicsDeviceContext.VertexShader.SetShaderResource(0, texture);
-            _graphicsDeviceContext.PixelShader.SetShaderResource(0, texture);
-
-            _game.Window.DeviceContext.VertexShader.SetConstantBuffer(0, _constantBuffer);
-            _game.Window.DeviceContext.PixelShader.SetConstantBuffer(0, _constantBuffer);
-
-            //   _game.Window.DeviceContext.VertexShader.SetShaderResource(0, _constantBuffer);
-            //  _game.Window.DeviceContext.PixelShader.SetConstantBuffer(0, _constantBuffer);
-        }
-
         /// <summary>
         /// Sends XNA input state to ImGui
         /// </summary>
@@ -446,13 +443,13 @@ namespace NamelessRogue.Engine.Infrastructure
 
                 fixed (void* vtxDstPtr = &_vertexData[vtxOffset * DrawVertDeclaration.Size])
                 fixed (void* idxDstPtr = &_indexData[idxOffset * sizeof(ushort)])
-                fixed (void* testDsPtr = &testArray[vtxOffset * DrawVertDeclaration.Size])
-                fixed (void* testIndArrayPtr = &testIndArray[vtxOffset * DrawVertDeclaration.Size])
+                //   fixed (void* testDsPtr = &testArray[vtxOffset * DrawVertDeclaration.Size])
+                //     fixed (void* testIndArrayPtr = &testIndArray[vtxOffset * DrawVertDeclaration.Size])
                 {
                     System.Buffer.MemoryCopy((void*)cmdList.VtxBuffer.Data, vtxDstPtr, _vertexData.Length, cmdList.VtxBuffer.Size * DrawVertDeclaration.Size);
-                    System.Buffer.MemoryCopy((void*)cmdList.VtxBuffer.Data, testDsPtr, _vertexData.Length, cmdList.VtxBuffer.Size * DrawVertDeclaration.Size);
+                    //System.Buffer.MemoryCopy((void*)cmdList.VtxBuffer.Data, testDsPtr, _vertexData.Length, cmdList.VtxBuffer.Size * DrawVertDeclaration.Size);
                     System.Buffer.MemoryCopy((void*)cmdList.IdxBuffer.Data, idxDstPtr, _indexData.Length, cmdList.IdxBuffer.Size * sizeof(ushort));
-                    System.Buffer.MemoryCopy((void*)cmdList.IdxBuffer.Data, testIndArrayPtr, _indexData.Length, cmdList.IdxBuffer.Size * sizeof(ushort));
+                    //System.Buffer.MemoryCopy((void*)cmdList.IdxBuffer.Data, testIndArrayPtr, _indexData.Length, cmdList.IdxBuffer.Size * sizeof(ushort));
 
                 }
 
@@ -506,14 +503,16 @@ namespace NamelessRogue.Engine.Infrastructure
 
             SamplerStateDescription samplerDescription = new SamplerStateDescription()
             {
-                Filter = Filter.MinimumMinMagPointMipLinear,
+                Filter = Filter.MinMagMipLinear,
                 AddressU = TextureAddressMode.Wrap,
                 AddressV = TextureAddressMode.Wrap,
                 AddressW = TextureAddressMode.Wrap,
-                MipLodBias = 0f,
+                MipLodBias = 0,
+                MaximumAnisotropy = 1,
                 ComparisonFunction = Comparison.Always,
-                MinimumLod = 0f,
-                MaximumLod = 0f,
+                BorderColor = new Color4(1, 0, 0, 0),  // Black Border.
+                MinimumLod = 0,
+                MaximumLod = float.MaxValue
             };
 
             SamplerState sampler = new SamplerState(_graphicsDevice, samplerDescription);
@@ -523,6 +522,32 @@ namespace NamelessRogue.Engine.Infrastructure
 
             var depthStencilState = new DepthStencilState(_graphicsDevice, depthDesc);
             _graphicsDeviceContext.OutputMerger.DepthStencilState = depthStencilState;
+
+
+
+
+            var renderTargetDesc = new RenderTargetBlendDescription();
+            renderTargetDesc.IsBlendEnabled = true;
+            renderTargetDesc.SourceBlend = BlendOption.SourceAlpha;
+            renderTargetDesc.DestinationBlend = BlendOption.InverseSourceAlpha;
+            renderTargetDesc.BlendOperation = BlendOperation.Add;
+            renderTargetDesc.SourceAlphaBlend = BlendOption.One;
+            renderTargetDesc.DestinationAlphaBlend = BlendOption.InverseSourceAlpha;
+            renderTargetDesc.AlphaBlendOperation = BlendOperation.Add;
+            renderTargetDesc.RenderTargetWriteMask = ColorWriteMaskFlags.All;
+
+            BlendStateDescription desc = new BlendStateDescription();
+            desc.AlphaToCoverageEnable = false;
+            desc.IndependentBlendEnable = false;
+            desc.RenderTarget[0] = renderTargetDesc;
+
+            var blendStateEnabled = new BlendState(_graphicsDevice, desc);
+
+            var blendFactor = new Color4(1, 1, 1, 1);
+            var iSampleMask = ~0;
+           _graphicsDeviceContext.OutputMerger.SetBlendState(blendStateEnabled, blendFactor, iSampleMask);
+
+
 
             _graphicsDeviceContext.OutputMerger.BlendFactor = new Color(0, 0, 0, 0);
 
@@ -544,7 +569,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
 
 
-            var proj = Matrix.OrthoOffCenterLH(viewport.Width, 0, viewport.Height, 0, -1, 1);
+            var proj = Matrix.OrthoOffCenterLH(0, viewport.Width, viewport.Height, 0, -1, 1);
             //float L = drawData.DisplayPos.X;
             //float R = drawData.DisplayPos.X + drawData.DisplaySize.X;
             //float T = drawData.DisplayPos.Y;
@@ -565,8 +590,9 @@ namespace NamelessRogue.Engine.Infrastructure
             _graphicsDeviceContext.InputAssembler.InputLayout = layout;
             _graphicsDeviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
             _graphicsDeviceContext.VertexShader.SetConstantBuffer(0, _constantBuffer);
-            _graphicsDeviceContext.PixelShader.SetSampler(0, sampler);
-           
+
+        
+
 
             int vtxOffset = 0;
             int idxOffset = 0;
@@ -587,8 +613,14 @@ namespace NamelessRogue.Engine.Infrastructure
                     {
                         throw new InvalidOperationException($"Could not find a texture with id '{drawCmd.TextureId}', please check your bindings");
                     }
-                    _graphicsDeviceContext.PixelShader.SetShaderResource(0, _loadedTextures[drawCmd.TextureId]);
-                   
+
+                 //   var bmp = CopyTexture.SaveToBitmap(_graphicsDevice, _graphicsDeviceContext, _loadedTextures.First().Value);
+
+                   // bmp.Save("C:\\test\\test.bmp");
+
+                    //_graphicsDeviceContext.PixelShader.SetShaderResource(0, _loadedTextures[drawCmd.TextureId]);
+                    _graphicsDeviceContext.PixelShader.SetShaderResource(0, _loadedTextures.First().Value);
+                    _graphicsDeviceContext.PixelShader.SetSampler(0, sampler);
 
                     _graphicsDeviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, sizeof(ImDrawVert), 0));
                     _graphicsDeviceContext.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
@@ -636,7 +668,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
 
 
-                  //  UpdateEffect();
+                    //  UpdateEffect();
 
                     _graphicsDeviceContext.Rasterizer.SetScissorRectangle(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
@@ -678,6 +710,9 @@ namespace NamelessRogue.Engine.Infrastructure
         }
 
         #endregion Internals
+
+
+
     }
 
 }

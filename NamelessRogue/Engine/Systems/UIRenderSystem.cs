@@ -38,22 +38,46 @@ namespace NamelessRogue.Engine.Systems
                 _imGuiRendererInstance.RebuildFontAtlas();
             }
 
-
+            var width = game.GetActualWidth();
+            var height = game.GetActualHeight();
+            int bytesPerPixel = 4;
             var textureDescription = new Texture2DDescription()
             {
-                Width = game.GetActualWidth(),
-                Height = game.GetActualHeight(),
-                ArraySize = 1,
-                BindFlags = SharpDX.Direct3D11.BindFlags.ShaderResource | BindFlags.RenderTarget,
-                Usage = SharpDX.Direct3D11.ResourceUsage.Default,
-                CpuAccessFlags = SharpDX.Direct3D11.CpuAccessFlags.None,
-                Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm,
+                Width = width,
+                Height = height,
                 MipLevels = 1,
-                OptionFlags = ResourceOptionFlags.GenerateMipMaps, // ResourceOptionFlags.GenerateMipMap
-                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
+                ArraySize = 1,
+                Format = Format.R8G8B8A8_UNorm,
+                SampleDescription = new SampleDescription(1, 0),
+                Usage = ResourceUsage.Default,
+                BindFlags = BindFlags.ShaderResource,
+                CpuAccessFlags = CpuAccessFlags.None,
+                OptionFlags = ResourceOptionFlags.None
             };
 
-            var texture = new Texture2D(game.GraphicsDevice, textureDescription);
+
+            var pixels = new byte[textureDescription.Width * textureDescription.Height * (bytesPerPixel)];
+
+
+            for (int y = 0; y < width * height * bytesPerPixel; y++)
+            {
+
+                if (y % 3 == 0)
+                {
+                    pixels[y] = (byte)(0);
+                }
+                else
+                {
+                    pixels[y] = (byte)(255);
+                }
+
+            }
+
+            DataStream s = DataStream.Create(pixels, true, true);
+            DataRectangle rect = new DataRectangle(s.DataPointer, width * bytesPerPixel);
+
+            var tex2d = new Texture2D(game.GraphicsDevice, textureDescription, rect);
+
 
             //_xnaTexture = CreateTexture(NamelessGame.GraphicsDevice, game.GetActualWidth(), game.GetActualHeight(), pixel =>
             //{
@@ -62,7 +86,7 @@ namespace NamelessRogue.Engine.Systems
             //});
 
             // Then, bind it to an ImGui-friendly pointer, that we can use during regular ImGui.** calls (see below)
-             _imGuiTexture = _imGuiRendererInstance.BindTexture(texture);
+            _imGuiTexture = _imGuiRendererInstance.BindTexture(tex2d);
 
         }
         public override HashSet<Type> Signature { get; }  = new HashSet<Type>();
@@ -71,9 +95,9 @@ namespace NamelessRogue.Engine.Systems
         {
             _imGuiRendererInstance.BeforeLayout(gameTime);
             
-            game.CurrentContext.ContextScreen.DrawLayout();
+            //game.CurrentContext.ContextScreen.DrawLayout();
             // Draw our UI
-            //ImGuiLayout();
+            ImGuiLayout();
 
             // Call AfterLayout now to finish up and draw all the things
             _imGuiRendererInstance.AfterLayout();
