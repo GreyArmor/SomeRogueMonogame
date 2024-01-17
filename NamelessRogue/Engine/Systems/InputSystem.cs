@@ -40,50 +40,33 @@ namespace NamelessRogue.Engine.Systems
 		public override void Update(GameTime gameTime, NamelessGame game)
         {
 
-  //          mouseState = game.Window.MouseState;
-  //          keyboardState = game.Window.KeyboardState;
+            mouseState = new MouseState(game.Input);
+            keyboardState = new KeyboardState(game.Input);
 
-		//	if (keyboardState.Keys.Any() || game.Window.MouseStateChanged)
-  //          {
-  //              foreach (IEntity entity in RegisteredEntities)
-  //              {
-		//			InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
-  //                  inputComponent.Intents.AddRange(translator.Translate(keyboardState.Keys.ToArray(), lastCommand, mouseState));
-  //              }
-		//		lastCommand = Char.MinValue;
-		//	}
+            if (keyboardState.Key.Any())
+            {
+                foreach (IEntity entity in RegisteredEntities)
+                {
+                    InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
+                    inputComponent.Intents.AddRange(translator.Translate(keyboardState.Key.ToArray(), lastCommand, mouseState));
+                }
+                lastCommand = Char.MinValue;
+            }
 
-		////	if (gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove > inputsTimeLimit)
-  //          {
-  //              previousGametimeForMove = (long)gameTime.TotalGameTime.TotalMilliseconds;
-  //              foreach (IEntity entity in RegisteredEntities) {
-  //                  InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
-  //                  InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
-  //                  if (receiver != null && inputComponent != null)
-  //                  {
-  //                      inputComponent.Intents.AddRange(translator.Translate(keyboardState.Keys.ToArray(), lastCommand, mouseState));
-  //                      lastCommand = Char.MinValue;
-		//			}
-  //              }
-  //          }
-
+            //	if (gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove > inputsTimeLimit)
+            {
+                previousGametimeForMove = (long)gameTime.TotalGameTime.TotalMilliseconds;
+                foreach (IEntity entity in RegisteredEntities)
+                {
+                    InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
+                    InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
+                    if (receiver != null && inputComponent != null)
+                    {
+                        inputComponent.Intents.AddRange(translator.Translate(keyboardState.Key.ToArray(), lastCommand, mouseState));
+                        lastCommand = Char.MinValue;
+                    }
+                }
+            }
         }
-
-
-        //public void keyPressed(KeyEvent e)
-        //{
-        //    pressedKeys = new List<>();
-        //    pressedKeys.Add(e);
-        //}
-
-        //public void keyReleased(KeyEvent e)
-        //{
-        //    Optional<KeyEvent> key = pressedKeys.stream().filter(x => x.getKeyCode() == e.getKeyCode()).findFirst();
-        //    if (key.isPresent())
-        //    {
-        //        pressedKeys.Remove(key.get());
-        //    }
-        //}
-
     }
 }

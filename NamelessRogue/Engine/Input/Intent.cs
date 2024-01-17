@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Veldrid;
 
 
 namespace NamelessRogue.Engine.Input
@@ -31,12 +32,12 @@ namespace NamelessRogue.Engine.Input
 
     public class Intent
     {
-        public Intent(List<Keys> pressedKeys, char pressedChar)
+        public Intent(List<Key> pressedKey, char pressedChar)
         {
-            this.PressedKeys = pressedKeys;
+            this.PressedKey = pressedKey;
             this.PressedChar = pressedChar;
         }
-        public List<Keys> PressedKeys { get; set; }
+        public List<Key> PressedKey { get; set; }
         public char PressedChar { get; set; }
         public IntentEnum Intention { get; set; }
 

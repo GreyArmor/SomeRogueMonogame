@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using Veldrid;
 
 
 namespace NamelessRogue.Engine.Input
 {
     public class IngameKeyIntentTraslator : IKeyIntentTraslator
     {
-        public virtual List<Intent> Translate(Keys[] keyCodes, char lastCommand, MouseState mouseState)
+        public virtual List<Intent> Translate(Key[] keyCodes, char lastCommand, MouseState mouseState)
         {
             List<Intent> result = new List<Intent>();
             ////TODO: Add dictionary for actions, based on game config files
@@ -25,56 +26,56 @@ namespace NamelessRogue.Engine.Input
                     result.Add(intent);
                     switch (keyCode)
                     {
-                        case Keys.Up:
-                        case Keys.W:
+                        case Key.Up:
+                        case Key.W:
                             intent.Intention = IntentEnum.MoveUp;
                             break;
-                        case Keys.S:
-                        case Keys.Down:
+                        case Key.S:
+                        case Key.Down:
                             intent.Intention = IntentEnum.MoveDown;
                             break;
-                        case Keys.A:
-                        case Keys.Left:
+                        case Key.A:
+                        case Key.Left:
                             intent.Intention = IntentEnum.MoveLeft;
                             break;
-                        case Keys.D:
+                        case Key.D:
                             intent.Intention = IntentEnum.MoveRight;
                             break;
-                        //case Keys.Right:
+                        //case Key.Right:
                         //    intent.Intention = IntentEnum.MoveRight;
                         //    break;
-                        //case Keys.NumPad7:
+                        //case Key.NumPad7:
                         //    intent.Intention = IntentEnum.MoveTopLeft;
                         //    break;
-                        //case Keys.NumPad9:
+                        //case Key.NumPad9:
                         //    intent.Intention = IntentEnum.MoveTopRight;
                         //    break;
-                        //case Keys.NumPad1:
+                        //case Key.NumPad1:
                         //    intent.Intention = IntentEnum.MoveBottomLeft;
                         //    break;
-                        //case Keys.NumPad3:
+                        //case Key.NumPad3:
                         //    intent.Intention = IntentEnum.MoveBottomRight;
                         //    break;
-                        //case Keys.NumPad5:
+                        //case Key.NumPad5:
                         //    intent.Intention = IntentEnum.SkipTurn;
 
                         //    break;
-                        case Keys.Enter:
+                        case Key.Enter:
                             intent.Intention = IntentEnum.Enter;
                             break;
-                        case Keys.F:
+                        case Key.F:
                             intent.Intention = IntentEnum.LookAtMode;
                             break;
-                        case Keys.P:
+                        case Key.P:
                             intent.Intention = IntentEnum.PickUpItem;
                             break;
-                        case Keys.F5:
+                        case Key.F5:
                             intent.Intention = IntentEnum.Quicksave;
                             break;
-                        case Keys.F9:
+                        case Key.F9:
                             intent.Intention = IntentEnum.Quickload;
                             break;
-                        case Keys.Z:
+                        case Key.Z:
                             if (lastCommand == 'z')
                             {
                                 intent.Intention = IntentEnum.ZoomOut;

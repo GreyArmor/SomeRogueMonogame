@@ -40,11 +40,11 @@ namespace NamelessRogue.Engine.Systems._3DView
         {
             //TODO for debug, remove later
    //         KeyboardState keyState = Keyboard.GetState();
-   //         if (keyState.IsKeyDown(Keys.F1))
+   //         if (keyState.IsKeyDown(Key.F1))
    //         {
    //             stopCapturing = true;
    //         }
-   //         if (keyState.IsKeyDown(Keys.F2))
+   //         if (keyState.IsKeyDown(Key.F2))
    //         {
    //             stopCapturing = false;
    //         }
@@ -65,9 +65,9 @@ namespace NamelessRogue.Engine.Systems._3DView
 			//		moveVector += new Vector3(0, -1, 0);
 			//	if (command.MovesToMake.Contains(MoveType.Left))
 			//		moveVector += new Vector3(0, 1, 0);
-			//	//if (keyState.IsKeyDown(Keys.Q))
+			//	//if (keyState.IsKeyDown(Key.Q))
 			//	//	moveVector += new Vector3(0, 0, 1);
-			//	//if (keyState.IsKeyDown(Keys.Z))
+			//	//if (keyState.IsKeyDown(Key.Z))
 			//	//	moveVector += new Vector3(0, 0, -1);
 			//	AddToCameraPosition(moveVector * amount);
 			//}
