@@ -1,4 +1,4 @@
-﻿using SharpDX;
+﻿using Veldrid;
 
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Utility;
@@ -27,26 +27,26 @@ namespace NamelessRogue.Engine.Systems.MainMenu
 		//List<LayeredSprite> _cloudSprites = new List<LayeredSprite>();
 		//List<LayeredSprite> _cloudShadowSprites = new List<LayeredSprite>();
 		//List<LayeredSprite> _distantCloudSprites = new List<LayeredSprite>();
-		//Texture2D clouds;
-		//Texture2D tower;
-		//Texture2D walls;
-		//Texture2D mountains;
-		//Texture2D bgIce;
-		//Texture2D landWithPerspective;
-		//Texture2D cloudShadow;
+		//TextureView clouds;
+		//TextureView tower;
+		//TextureView walls;
+		//TextureView mountains;
+		//TextureView bgIce;
+		//TextureView landWithPerspective;
+		//TextureView cloudShadow;
 		//float counter = 0;
 		public MainMenuBackgroundRenderingSystem(NamelessGame game)
 		{
 			//_spriteBatch = new SpriteBatch(NamelessGame.GraphicsDevice, 6400);
-			//clouds = game.Content.Load<Texture2D>("Sprites\\Clouds");
-			//tower = game.Content.Load<Texture2D>("Sprites\\tower");
-			//walls = game.Content.Load<Texture2D>("Sprites\\townwalls");
-			//mountains = game.Content.Load<Texture2D>("Sprites\\mountains");
-			//landWithPerspective = game.Content.Load<Texture2D>("Sprites\\landwithperspective");
+			//clouds = game.Content.Load<TextureView>("Sprites\\Clouds");
+			//tower = game.Content.Load<TextureView>("Sprites\\tower");
+			//walls = game.Content.Load<TextureView>("Sprites\\townwalls");
+			//mountains = game.Content.Load<TextureView>("Sprites\\mountains");
+			//landWithPerspective = game.Content.Load<TextureView>("Sprites\\landwithperspective");
 
-			//bgIce = game.Content.Load<Texture2D>("Sprites\\ice");
+			//bgIce = game.Content.Load<TextureView>("Sprites\\ice");
 
-			//cloudShadow = game.Content.Load<Texture2D>("Sprites\\Shadow");
+			//cloudShadow = game.Content.Load<TextureView>("Sprites\\Shadow");
 
 			//cloud1 = new Rectangle(0, 0, 128, 32);
 			//cloud2 = new Rectangle(0, 33, 128, 32);

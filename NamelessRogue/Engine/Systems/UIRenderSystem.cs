@@ -1,106 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ImGuiNET;
-using SharpDX;
-
-using NamelessRogue.Engine.Abstraction;
+﻿using ImGuiNET;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
+using System;
+using System.Collections.Generic;
+using Veldrid;
 using Num = System.Numerics;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
 
 namespace NamelessRogue.Engine.Systems
 {
     public class UIRenderSystem : BaseSystem
     {
- 
-		//private SpriteBatch spriteBatch;
-		NamelessGame game;
+
+        //private SpriteBatch spriteBatch;
+        NamelessGame game;
         private static ImGuiRenderer _imGuiRendererInstance;
 
-       // private Texture2D _xnaTexture;
+        // private TextureView _xnaTexture;
         private IntPtr _imGuiTexture;
         public UIRenderSystem(NamelessGame game)
         {
             this.game = game;
-          //  spriteBatch = new SpriteBatch(NamelessGame.GraphicsDevice);
+            //  spriteBatch = new SpriteBatch(NamelessGame.GraphicsDevice);
 
             if (_imGuiRendererInstance == null)
             {
-                _imGuiRendererInstance = new ImGuiRenderer(game);
-                _imGuiRendererInstance.RebuildFontAtlas();
+                _imGuiRendererInstance = new ImGuiRenderer(game.GraphicsDevice, game.GraphicsDevice.MainSwapchain.Framebuffer.OutputDescription,
+                  (int)game.GraphicsDevice.MainSwapchain.Framebuffer.Width, (int)game.GraphicsDevice.MainSwapchain.Framebuffer.Height);
             }
-
-            var width = game.GetActualWidth();
-            var height = game.GetActualHeight();
-            int bytesPerPixel = 4;
-            var textureDescription = new Texture2DDescription()
-            {
-                Width = width,
-                Height = height,
-                MipLevels = 1,
-                ArraySize = 1,
-                Format = Format.R8G8B8A8_UNorm,
-                SampleDescription = new SampleDescription(1, 0),
-                Usage = ResourceUsage.Default,
-                BindFlags = BindFlags.ShaderResource,
-                CpuAccessFlags = CpuAccessFlags.None,
-                OptionFlags = ResourceOptionFlags.None
-            };
-
-
-            var pixels = new byte[textureDescription.Width * textureDescription.Height * (bytesPerPixel)];
-
-
-            //for (int y = 0; y < width * height * bytesPerPixel; y++)
-            //{
-
-            //    if (y % 3 == 0)
-            //    {
-            //        pixels[y] = (byte)(0);
-            //    }
-            //    else
-            //    {
-            //        pixels[y] = (byte)(255);
-            //    }
-
-            //}
-
-            DataStream s = DataStream.Create(pixels, true, true);
-            DataRectangle rect = new DataRectangle(s.DataPointer, width * bytesPerPixel);
-
-            var tex2d = new Texture2D(game.GraphicsDevice, textureDescription);
-
-
-            //_xnaTexture = CreateTexture(NamelessGame.GraphicsDevice, game.GetActualWidth(), game.GetActualHeight(), pixel =>
-            //{
-            //    var red = (pixel % 300) / 2;
-            //    return new Color(red, 1, 1);
-            //});
-
-            // Then, bind it to an ImGui-friendly pointer, that we can use during regular ImGui.** calls (see below)
-            _imGuiTexture = _imGuiRendererInstance.BindTexture(tex2d);
-
         }
-        public override HashSet<Type> Signature { get; }  = new HashSet<Type>();
-        
+        public override HashSet<Type> Signature { get; } = new HashSet<Type>();
+
         public override void Update(GameTime gameTime, NamelessGame game)
         {
-            _imGuiRendererInstance.BeforeLayout(gameTime);
-            
-            game.CurrentContext.ContextScreen.DrawLayout();
-            // Draw our UI
-          //  ImGuiLayout();
 
-            // Call AfterLayout now to finish up and draw all the things
-            _imGuiRendererInstance.AfterLayout();
+            _imGuiRendererInstance.Update((float)gameTime.ElapsedGameTime.TotalMilliseconds, game.Input);
+            game.CurrentContext.ContextScreen.DrawLayout();
+            _imGuiRendererInstance.Render(game.GraphicsDevice, game.CommandList);
         }
 
         // Direct port of the example at https://github.com/ocornut/imgui/blob/master/examples/sdl_opengl2_example/main.cpp
@@ -116,7 +51,7 @@ namespace NamelessRogue.Engine.Systems
             // 1. Show a simple window
             // Tip: if we don't call ImGui.Begin()/ImGui.End() the widgets appears in a window automatically called "Debug"
             {
-                
+
                 ImGui.Text("Hello, world!");
                 ImGui.SliderFloat("float", ref f, 0.0f, 1.0f, string.Empty);
                 ImGui.ColorEdit3("clear color", ref clear_color);
@@ -147,10 +82,10 @@ namespace NamelessRogue.Engine.Systems
             }
         }
 
-        //public static Texture2D CreateTexture(GraphicsDevice device, int width, int height, Func<int, Color> paint)
+        //public static TextureView CreateTexture(GraphicsDevice device, int width, int height, Func<int, Color> paint)
         //{
         //    //initialize a texture
-        //    var texture = new Texture2D(device, width, height);
+        //    var texture = new TextureView(device, width, height);
 
         //    //the array holds the color for each pixel in the texture
         //    Color[] data = new Color[width * height];

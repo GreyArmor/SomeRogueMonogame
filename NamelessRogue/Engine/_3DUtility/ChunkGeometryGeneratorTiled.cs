@@ -1,4 +1,4 @@
-﻿//using SharpDX;
+﻿//using Veldrid;
 //using NamelessRogue.Engine.Components;
 //using NamelessRogue.Engine.Components.ChunksAndTiles;
 //using NamelessRogue.Engine.Generation.World;
@@ -39,21 +39,21 @@
 //		/// 
 //		static bool firstTime = true;
 //		static Point originalPointForTest;
-//		static Matrix moveToZero = Matrix.CreateTranslation(-(new Vector3(1,1,0) / 2));
-//		static Matrix invertedMoveToZero = Matrix.Invert(moveToZero);
-//		static Matrix scaleDown = Matrix.CreateScale(0.01f);
+//		static Matrix4x4 moveToZero = Matrix4x4.CreateCreateTranslation(-(new Vector3(1,1,0) / 2));
+//		static Matrix4x4 invertedMoveToZero = Matrix4x4.Invert(moveToZero);
+//		static Matrix4x4 scaleDown = Matrix4x4.CreateScale(0.01f);
 //		//precalculated out of loop
-//		static Matrix northRot = Matrix.CreateRotationX(MathUtil.DegreesToRadians(90f));
-//		static Matrix northTR = Matrix.CreateTranslation(new Vector3(0, -0.5f, 0.5f));
+//		static Matrix4x4 northRot = Matrix4x4.CreateRotationX(MathUtil.DegreesToRadians(90f));
+//		static Matrix4x4 northTR = Matrix4x4.CreateCreateTranslation(new Vector3(0, -0.5f, 0.5f));
 
-//		static Matrix southRot = Matrix.CreateRotationX(MathUtil.DegreesToRadians(90f));
-//		static Matrix southTR = Matrix.CreateTranslation(new Vector3(0, 0.5f, 0.5f));
+//		static Matrix4x4 southRot = Matrix4x4.CreateRotationX(MathUtil.DegreesToRadians(90f));
+//		static Matrix4x4 southTR = Matrix4x4.CreateCreateTranslation(new Vector3(0, 0.5f, 0.5f));
 
-//		static Matrix eastRot = Matrix.CreateRotationX(MathUtil.DegreesToRadians(90f)) * Matrix.CreateRotationZ(MathUtil.DegreesToRadians(90f));
-//		static Matrix eastTR = Matrix.CreateTranslation(new Vector3(-0.5f, 0, 0.5f));
+//		static Matrix4x4 eastRot = Matrix4x4.CreateRotationX(MathUtil.DegreesToRadians(90f)) * Matrix4x4.CreateRotationZ(MathUtil.DegreesToRadians(90f));
+//		static Matrix4x4 eastTR = Matrix4x4.CreateCreateTranslation(new Vector3(-0.5f, 0, 0.5f));
 
-//		static Matrix westRot = Matrix.CreateRotationX(MathUtil.DegreesToRadians(90f)) * Matrix.CreateRotationZ(MathUtil.DegreesToRadians(90f));
-//		static Matrix westTR = Matrix.CreateTranslation(new Vector3(0.5f, 0, 0.5f));
+//		static Matrix4x4 westRot = Matrix4x4.CreateRotationX(MathUtil.DegreesToRadians(90f)) * Matrix4x4.CreateRotationZ(MathUtil.DegreesToRadians(90f));
+//		static Matrix4x4 westTR = Matrix4x4.CreateCreateTranslation(new Vector3(0.5f, 0, 0.5f));
 
 //		public static Geometry3D GenerateChunkModel(NamelessGame game, Point chunkToGenerate, ChunkData chunks, TileAtlasConfig atlasConfig)
 //		{
@@ -86,13 +86,13 @@
 
 
 //				Vector3 originalNormal = Vector3.UnitZ;
-//				Matrix rotation = Matrix.Identity;
-//				Matrix translation = Matrix.Identity;
+//				Matrix4x4 rotation = Matrix4x4.Identity;
+//				Matrix4x4 translation = Matrix4x4.Identity;
 //				const float worldHeight = 2500;
 //				var sideHeight = Math.Abs(surfaceHeight - neighborHeight);
 //				//if (sideHeight < 0.2f) sideHeight = 0.2f;
-//				var sideMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1 - sideHeight));
-//				sideMatrix = Matrix.Identity;
+//				var sideMatrix4x4 = Matrix4x4.CreateCreateTranslation(new Vector3(0, 0, 1 - sideHeight));
+//				sideMatrix4x4 = Matrix4x4.Identity;
 //				switch (type)
 //				{
 //					case SurfaceType.Top:
@@ -122,9 +122,9 @@
 
 //				}
 
-//				var elevationMatrix = Matrix.CreateTranslation(new Vector3(tilePostion.X, tilePostion.Y, ((surfaceHeight) * worldHeight) - worldHeight));
+//				var elevationMatrix4x4 = Matrix4x4.CreateCreateTranslation(new Vector3(tilePostion.X, tilePostion.Y, ((surfaceHeight) * worldHeight) - worldHeight));
 
-//				var finalMatrix = moveToZero * rotation * translation * elevationMatrix * invertedMoveToZero * sideMatrix * scaleDown;
+//				var finalMatrix4x4 = moveToZero * rotation * translation * elevationMatrix4x4 * invertedMoveToZero * sideMatrix4x4 * scaleDown;
 //				//add transformed position to geometry
 //				var transformedPoints = new Queue<Vector3>();
 

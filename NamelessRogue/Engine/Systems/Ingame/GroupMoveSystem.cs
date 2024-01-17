@@ -1,4 +1,4 @@
-﻿using SharpDX;
+﻿using Veldrid;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Components.Interaction;
@@ -7,7 +7,7 @@ using NamelessRogue.Engine.Components.WorldBoardComponents.Combat;
 using NamelessRogue.Engine.Systems;
 using NamelessRogue.shell;
 using Newtonsoft.Json.Linq;
-using SharpDX;
+using Veldrid;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

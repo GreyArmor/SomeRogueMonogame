@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.Serialization;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Serialization;
@@ -12,10 +13,8 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.Utility;
-using SharpDX;
-using SharpDX.DirectWrite;
-using BoundingBox = SharpDX.BoundingBox;
-using Point = SharpDX.Point;
+using BoundingBox = Veldrid.Utilities.BoundingBox;
+using Point = Veldrid.Point;
 namespace NamelessRogue.Engine.Components.ChunksAndTiles
 {
     [SkipClassGeneration]
@@ -239,7 +238,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
         public bool IsPointInside(int x, int y)
         {
-            return x >= boundingBox.Minimum.X && x < boundingBox.Maximum.X && y >= boundingBox.Minimum.Y && y < boundingBox.Maximum.Y;
+            return x >= boundingBox.Min.X && x < boundingBox.Max.X && y >= boundingBox.Min.Y && y < boundingBox.Max.Y;
         }
 
         public Tile GetTile(Point p)

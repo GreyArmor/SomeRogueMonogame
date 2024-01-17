@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RogueSharp.Random;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.Settlement;
@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using NamelessRogue.Engine.Utility;
+using System.Numerics;
 
 namespace NamelessRogue.Engine.Factories
 {

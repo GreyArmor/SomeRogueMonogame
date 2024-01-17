@@ -1,4 +1,4 @@
-﻿using SharpDX;
+﻿using Veldrid;
 
 using NamelessRogue.shell;
 using System;
@@ -12,7 +12,7 @@ namespace NamelessRogue.Engine.Utility
 {
 	public class LayeredSprite
 	{
-	//	private Texture2D texture;
+	//	private TextureView texture;
 	//	private Vector2 position;
 	//	private float depth;
 	//	private float moveScale;
@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Utility
 
 	//	public Rectangle SpritePositon { get; }
 
-	//	public Texture2D Texture => texture;
+	//	public TextureView Texture => texture;
 
 	//	public Vector2 Position { get => position; set => position = value; }
 
@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Utility
 
  //       public float DefaultSpeed { get; }
 
- //       public LayeredSprite(Texture2D texture, Rectangle spritePositon, float depth, Vector2 initialPosition, float defaultSpeed = 0)
+ //       public LayeredSprite(TextureView texture, Rectangle spritePositon, float depth, Vector2 initialPosition, float defaultSpeed = 0)
 	//	{
 	//		this.texture = texture;
 	//		this.SpritePositon = spritePositon;

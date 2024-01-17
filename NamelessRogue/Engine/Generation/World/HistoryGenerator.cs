@@ -11,8 +11,6 @@ using NamelessRogue.Engine.Generation.World.Meta;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
 using NamelessRogue.shell;
-using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
 
 namespace NamelessRogue.Engine.Generation.World
 {

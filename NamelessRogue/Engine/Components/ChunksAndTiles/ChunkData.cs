@@ -1,4 +1,4 @@
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Generation;
@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.Utility;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace NamelessRogue.Engine.Components.ChunksAndTiles
 {

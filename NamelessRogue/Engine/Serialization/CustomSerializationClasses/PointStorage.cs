@@ -1,5 +1,5 @@
 ﻿using FlatSharp.Attributes;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Serialization.SerializationIfrastructure;
 using System;
 using System.Collections.Generic;

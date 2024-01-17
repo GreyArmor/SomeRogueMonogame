@@ -1,8 +1,10 @@
-﻿using SharpDX;
+﻿using Veldrid;
 using NamelessRogue.Engine.Components;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Numerics;
+using Veldrid.Utilities;
 
 namespace NamelessRogue.Engine.Utility
 {
@@ -49,7 +51,7 @@ namespace NamelessRogue.Engine.Utility
 			invDet = 1.0f / det;
 
 			//calculate distance from p1 to ray origin
-			t = ray.Position - p1;
+			t = ray.Origin - p1;
 
 			//Calculate u parameter
 			u = Vector3.Dot(t, p) * invDet;

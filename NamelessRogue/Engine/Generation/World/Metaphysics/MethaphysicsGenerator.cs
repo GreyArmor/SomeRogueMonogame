@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Generation.World.Meta;
+using System.Drawing;
 
 namespace NamelessRogue.Engine.Generation.World.Metaphysics
 {

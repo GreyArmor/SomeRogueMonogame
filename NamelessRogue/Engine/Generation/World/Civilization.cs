@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Generation.World.BoardPieces;
 using NamelessRogue.Engine.Generation.World.Diplomacy;

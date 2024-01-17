@@ -1,11 +1,10 @@
-﻿using SharpDX;
-
-using NamelessRogue.Engine.Components._3D;
+﻿using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using NamelessRogue.Engine.Infrastructure;
+using System.Numerics;
 
 namespace NamelessRogue.Engine.Systems._3DView
 {
@@ -90,7 +89,7 @@ namespace NamelessRogue.Engine.Systems._3DView
 
         private void AddToCameraPosition(Vector3 vectorToAdd)
         {
-            Matrix cameraRotation = Matrix.RotationY(-camera.UpdownRot) * Matrix.RotationZ(camera.LeftrightRot);
+            Matrix4x4 cameraRotation = Matrix4x4.CreateRotationY(-camera.UpdownRot) * Matrix4x4.CreateRotationZ(camera.LeftrightRot);
             Vector3 rotatedVector = (Vector3)Vector3.Transform(vectorToAdd, cameraRotation);
             camera.Position += camera.MoveSpeed * rotatedVector;
             UpdateViewMatrix();
@@ -98,8 +97,8 @@ namespace NamelessRogue.Engine.Systems._3DView
 
         private void UpdateViewMatrix()
         {
-            var cameraRotationUpDown = Matrix.RotationY(-camera.UpdownRot);
-            var rotationLeftRight = Matrix.RotationZ(camera.LeftrightRot);
+            var cameraRotationUpDown = Matrix4x4.CreateRotationY(-camera.UpdownRot);
+            var rotationLeftRight = Matrix4x4.CreateRotationZ(camera.LeftrightRot);
 
             Vector3 cameraOriginalTarget = new Vector3(1, 0, 0);
             Vector3 cameraOriginalUpVector = new Vector3(0, 0, 1);
@@ -109,7 +108,7 @@ namespace NamelessRogue.Engine.Systems._3DView
 
             Vector3 cameraRotatedUpVector = (Vector3)Vector3.Transform(cameraOriginalUpVector, cameraRotationUpDown * rotationLeftRight);
             camera.Look = cameraRotatedTarget;
-            camera.View = Matrix.LookAtLH(camera.Position, cameraFinalTarget, cameraRotatedUpVector);
+            camera.View = Matrix4x4.CreateLookAt(camera.Position, cameraFinalTarget, cameraRotatedUpVector);
             camera.Up = cameraRotatedUpVector;
         }
     }

@@ -18,22 +18,20 @@ using NamelessRogue.Engine.Systems._3DView;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.Engine.Utility;
-using SharpDX;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using SharpDX.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Windows.Forms;
-using Color = SharpDX.Color;
-using Device = SharpDX.Direct3D11.Device;
-using Point = SharpDX.Point;
-using Rectangle = SharpDX.Rectangle;
+using Veldrid;
+using Veldrid.Sdl2;
+using Veldrid.StartupUtilities;
+using Point = Veldrid.Point;
+using Rectangle = Veldrid.Rectangle;
 
 namespace NamelessRogue.shell
 {
@@ -44,7 +42,7 @@ namespace NamelessRogue.shell
         //RenderTarget2D renderTarget = new RenderTarget2D(
         public GameInstance CurrentGame { get; set; }
 
-        public static Device Grap;
+        public GraphicsDevice GraphicsDevice { get; set; }
 
         public IEntity GetEntity(Guid id)
         {
@@ -96,7 +94,7 @@ namespace NamelessRogue.shell
         private GameSettings settings;
         int windowHeight, windowWidth;
 
-        public RenderForm RenderForm { get; private set; }
+    //    public RenderForm RenderForm { get; private set; }
         public bool IsFullScreen { get; private set; }
 
         public IWorldProvider WorldProvider
@@ -107,7 +105,7 @@ namespace NamelessRogue.shell
             }
         }
 
-        SwapChain swapChain;
+     //   SwapChain swapChain;
 
         public NamelessGame()
         {
@@ -155,7 +153,7 @@ namespace NamelessRogue.shell
 
 
         WorldSettings worldSettings;
-        public Window Window;
+        public Sdl2Window Window;
 
         public ILog Log { get; private set; }
         /// <summary>
@@ -193,17 +191,14 @@ namespace NamelessRogue.shell
             windowWidth = (int)(GetActualCharacterWidth() + settings.HudWidth);
             windowHeight = GetActualCharacterHeight();
 
-            RenderForm = new RenderForm("NamelessGame")
-            {
-                ClientSize = new Size(windowWidth, windowHeight),
-                FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-            };
-            // The form must be showing in order for the handle to be used in Input and Graphics objects.
-            RenderForm.Show();
 
-            WindowConfiguration windCFG = new WindowConfiguration("Nameless game", windowWidth, windowHeight, false, true);
-            Window = new Window();
-            Window.Initialize(windCFG, RenderForm.Handle, RenderForm);
+            VeldridStartup.CreateWindowAndGraphicsDevice(
+                new WindowCreateInfo(100, 100, windowWidth, windowHeight, Veldrid.WindowState.Normal, "NamelessRogue"),
+                out var window,
+                out var gd); 
+              Window =  window;
+            GraphicsDevice = gd;
+            CommandList = gd.ResourceFactory.CreateCommandList();
 
             ModelsLibrary.Initialize(this);
 
@@ -371,7 +366,7 @@ namespace NamelessRogue.shell
             loadScheduled = true;
         }
 
-        public Texture2D RenderTarget { get; set; }
+        public TextureView RenderTarget { get; set; }
 
         //public SpriteBatch Batch
         //{
@@ -385,9 +380,11 @@ namespace NamelessRogue.shell
         }
         public bool IsInitialized { get; internal set; }
         public GameSettings Settings { get => settings; set => settings = value; }
-        public Device GraphicsDevice { get => Window.Device; }
         public bool IsActive { get; internal set; } = true;
         public float AspectRatio { get { return windowWidth / windowHeight; } }
+
+        public CommandList CommandList { get; internal set; }
+        public InputSnapshot Input { get; internal set; }
 
         //public List<IEntity> EntitiesToAdd { get => entitiesToAdd; set => entitiesToAdd = value; }
         //public List<IEntity> EntitiesToRemove { get => entitiesToRemove; set => entitiesToRemove = value; }
@@ -503,10 +500,19 @@ namespace NamelessRogue.shell
 
             IngameScreen.FPS = _frameCounter.AverageFramesPerSecond.ToString();
 
-            Window.BeginScene(0,0,0,1);
+
+            CommandList.Begin();
+            CommandList.SetFramebuffer(GraphicsDevice.MainSwapchain.Framebuffer);
+            CommandList.ClearColorTarget(0, RgbaFloat.Black);
             CurrentContext.RenderingUpdate(GameTime, this);
-            Window.EndScene();
-            Window.ClearStates();
+            CommandList.End();
+            GraphicsDevice.SubmitCommands(CommandList);
+            GraphicsDevice.SwapBuffers(GraphicsDevice.MainSwapchain);
+
+            // Window.BeginScene(0,0,0,1);
+          
+           // Window.EndScene();
+          //  Window.ClearStates();
         }
 
         Stopwatch gameTimeStopwatch = new Stopwatch();
@@ -515,13 +521,15 @@ namespace NamelessRogue.shell
             LoadContent();
             Initialize();
             gameTimeStopwatch.Start();
-            RenderLoop.Run(RenderForm, () =>
+            while (Window.Exists)
             {
+                Input = Window.PumpEvents();
+                if (!Window.Exists) { break; }
                 GameTime.ElapsedGameTime = gameTimeStopwatch.Elapsed - GameTime.TotalGameTime;
                 GameTime.TotalGameTime = gameTimeStopwatch.Elapsed;
                 Update(GameTime);
                 Draw(GameTime);
-            });
+            };
         }
 
 

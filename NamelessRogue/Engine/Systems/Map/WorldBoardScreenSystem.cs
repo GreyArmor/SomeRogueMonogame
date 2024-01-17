@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Factories;
@@ -9,6 +9,7 @@ using NamelessRogue.Engine.UI;
 using NamelessRogue.Engine.ViewModels;
 using NamelessRogue.shell;
 using NamelessRogue.Engine.Infrastructure;
+using MapMode = NamelessRogue.Engine.UI.MapMode;
 namespace NamelessRogue.Engine.Systems.Map
 {
     public class WorldBoardScreenSystem : BaseSystem

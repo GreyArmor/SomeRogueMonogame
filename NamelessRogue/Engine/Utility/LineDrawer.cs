@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-using SharpDX;
+using Veldrid;
 
 namespace NamelessRogue.Engine.Utility
 {
@@ -82,9 +82,9 @@ namespace NamelessRogue.Engine.Utility
 		/// <summary>
 		/// Starts drawing by setting the required render states and camera information
 		/// </summary>
-		public void Begin(Matrix view, Matrix projection)
+		public void Begin(Matrix4x4 view, Matrix4x4 projection)
 		{
-			basicEffect.World = Matrix.Identity;
+			basicEffect.World = Matrix4x4.Identity;
 			basicEffect.View = view;
 			basicEffect.Projection = projection;
 
@@ -268,8 +268,8 @@ namespace NamelessRogue.Engine.Utility
 			// Invert the modelview matrix to get direction vectors
 			// in screen space, so we can draw a circle that always
 			// faces the camera.
-			Matrix view = basicEffect.World * basicEffect.View;
-			Matrix.Transpose(ref view, out view);
+			Matrix4x4 view = basicEffect.World * basicEffect.View;
+			Matrix4x4.Transpose(ref view, out view);
 			DrawRing(sphere.Center, view.Right * sphere.Radius, view.Up * sphere.Radius, color);
 		}
 

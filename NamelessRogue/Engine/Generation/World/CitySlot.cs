@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Abstraction;
+using Veldrid.Utilities;
 
 namespace NamelessRogue.Engine.Generation.World
 {

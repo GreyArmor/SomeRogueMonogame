@@ -7,7 +7,7 @@ using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Systems.Ingame

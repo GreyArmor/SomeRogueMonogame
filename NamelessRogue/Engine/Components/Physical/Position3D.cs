@@ -1,12 +1,13 @@
-﻿using SharpDX;
-using NamelessRogue.Engine.Components.ChunksAndTiles;
+﻿using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Veldrid;
 
 namespace NamelessRogue.Engine.Components.Physical
 {
@@ -38,7 +39,7 @@ namespace NamelessRogue.Engine.Components.Physical
 
 			var tileToDraw = Tile;
 			var position = new Point((int)(Position.X - offset), (int)(Position.Y - offset));
-			var world = Constants.ScaleDownMatrix * Matrix.Translation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
+			var world = Constants.ScaleDownMatrix * Matrix4x4.CreateTranslation(position.X * Constants.ScaleDownCoeficient, position.Y * Constants.ScaleDownCoeficient, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient);
 			WorldPosition = ((Vector3)Vector3.Transform(Vector3.One, world));
 		}
 

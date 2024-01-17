@@ -1,7 +1,4 @@
 ﻿using Microsoft.VisualBasic;
-using SharpDX;
-
-
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
@@ -12,12 +9,14 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems._3DView;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
-using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using System.Numerics;
+using Veldrid;
+using Veldrid.Utilities;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -35,22 +34,25 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		bool wasPressed;
 
 
-		public Ray CalculateRay(Vector2 mouseLocation, Matrix view,	Matrix projection, Viewport viewport)
+		public Ray CalculateRay(Vector2 mouseLocation, Matrix4x4 view, Matrix4x4 projection, Viewport viewport)
 		{
-			Vector3 nearPoint = viewport.Unproject(new Vector3(mouseLocation.X,
+			Vector3 nearPoint = ViewportUtil.Unproject(viewport,
+				new Vector3(mouseLocation.X,
 					mouseLocation.Y, 0.0f),
 					projection,
 					view,
-					Matrix.Identity);
+					Matrix4x4.Identity);
 
-			Vector3 farPoint = viewport.Unproject(new Vector3(mouseLocation.X,
+			Vector3 farPoint = ViewportUtil.Unproject(viewport,
+
+                new Vector3(mouseLocation.X,
 					mouseLocation.Y, 1.0f),
 					projection,
 					view,
-					Matrix.Identity);
+					Matrix4x4.Identity);
 
 			Vector3 direction = farPoint - nearPoint;
-			direction.Normalize();
+            direction = Vector3.Normalize(direction);
 
 			return new Ray(nearPoint, direction);
 		}
@@ -58,7 +60,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		{
 			Camera3D camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
 			//TODO leaving mouse capture here for now, even if its not correct
-			MouseState currentMouseState = game.Window.MouseState;
+			MouseState currentMouseState = new MouseState(game.Input);
 			if (!currentMouseState.RightPressed)
 			{
 				wasPressed = false;
@@ -69,7 +71,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 				var clickPosition = currentMouseState.Position.ToVector2();
 
-				Ray r = CalculateRay(currentMouseState.Position.ToVector2(), camera.View, camera.Projection, game.Window.Viewport);
+				var vp = new Viewport(0,0, game.GetActualWidth(), game.GetActualHeight(), camera.NearPlane, camera.FarPlane);
+				Ray r = CalculateRay(currentMouseState.Position.ToVector2(), camera.View, camera.Projection, vp);
 				List <Intersection> intersections = new List<Intersection>();
 				var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 				{
@@ -77,9 +80,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					{
 						var geometry = geometryPointPair.Value.Item1;
 						if (geometry.TriangleCount > 0)
-						{							
-							if (r.Intersects(ref geometry.Bounds, out float distance))
-							{
+						{
+                            if (RayExtensions.Intersects(r, geometry.Bounds, out float distance))
+                            {
 								if (CollisionMath.Intersect(geometry, r, out var triangle))
 								{
 									intersections.Add(new Intersection() { distance = distance, chunkId = geometryPointPair.Key, geometry = geometry, triangle = triangle });

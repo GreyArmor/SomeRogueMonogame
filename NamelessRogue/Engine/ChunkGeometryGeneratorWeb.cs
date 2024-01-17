@@ -4,11 +4,11 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
-using SharpDX;
-using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
+using Veldrid;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
 
 namespace NamelessRogue.Engine._3DUtility
@@ -36,7 +36,7 @@ namespace NamelessRogue.Engine._3DUtility
         /// 
         static bool firstTime = true;
         static Point originalPointForTest;
-        static Matrix moveToZero = Matrix.Translation(-(new Vector3(1, 1, 0) / 2));
+        static Matrix4x4 moveToZero = Matrix4x4.CreateTranslation(-(new Vector3(1, 1, 0) / 2));
 
         static Random random = new Random();
         public static Geometry3D GenerateChunkModelTiles(NamelessGame game, Point chunkToGenerate, ChunkData chunks, out TerrainGeometry3D terrainGeometry)
@@ -75,7 +75,7 @@ namespace NamelessRogue.Engine._3DUtility
                 var v1 = point - neighbor1;
                 var v2 = point - neightbor2;
                 var normal = Vector3.Cross(v1, v2);
-                normal.Normalize();
+                normal = Vector3.Normalize(normal);
                 return normal;
             }
 
@@ -234,47 +234,47 @@ namespace NamelessRogue.Engine._3DUtility
                 }
             }
 
-            var textureDescription = new Texture2DDescription()
-            {
-                Height = Constants.ChunkSize,
-                Width = Constants.ChunkSize,
-                CpuAccessFlags = CpuAccessFlags.Read,
-                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb,
-                Usage = ResourceUsage.Default,
-                ArraySize = 1,
-                BindFlags = BindFlags.RenderTarget,
-                OptionFlags = ResourceOptionFlags.None,
-                MipLevels = 0,
-                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
-            };
+            //var textureDescription = new TextureViewDescription()
+            //{
+            //    Height = Constants.ChunkSize,
+            //    Width = Constants.ChunkSize,
+            //    CpuAccessFlags = CpuAccessFlags.Read,
+            //    Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb,
+            //    Usage = ResourceUsage.Default,
+            //    ArraySize = 1,
+            //    BindFlags = BindFlags.RenderTarget,
+            //    OptionFlags = ResourceOptionFlags.None,
+            //    MipLevels = 0,
+            //    SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
+            //};
 
-            DataStream s = DataStream.Create(tempArr, true, true);
-            DataRectangle rect = new DataRectangle(s.DataPointer, Constants.ChunkSize * 4);
-            var texture2D = new Texture2D(game.GraphicsDevice, textureDescription, rect);
-            s.Close();
-            s.Dispose();
+            //DataStream s = DataStream.Create(tempArr, true, true);
+            //DataRectangle rect = new DataRectangle(s.DataPointer, Constants.ChunkSize * 4);
+            //var texture2D = new TextureView(game.GraphicsDevice, textureDescription, rect);
+            //s.Close();
+            //s.Dispose();
 
-            result.Vertices = points;
-            result.Indices = indices.ToList();
-            result.Bounds = BoundingBox.FromPoints(points.ToArray());
-            result.Material = texture2D;
-            result.MaterialResourceView = new SharpDX.Direct3D11.ShaderResourceView(game.GraphicsDevice, result.Material);
-            result.TriangleTerrainAssociation = tileTriangleAssociations;
+            //result.Vertices = points;
+            //result.Indices = indices.ToList();
+            //result.Bounds = BoundingBox.FromPoints(points.ToArray());
+            //result.Material = texture2D;
+            //result.MaterialResourceView = new SharpDX.Direct3D11.ShaderResourceView(game.GraphicsDevice, result.Material);
+            //result.TriangleTerrainAssociation = tileTriangleAssociations;
 
-            result.Buffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.VertexBuffer, vertices.ToArray());
-            result.IndexBuffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.IndexBuffer, indices.ToArray());
-            result.TriangleCount = triangleCount;
+            //result.Buffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.VertexBuffer, vertices.ToArray());
+            //result.IndexBuffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.IndexBuffer, indices.ToArray());
+            //result.TriangleCount = triangleCount;
 
-            terrainGeometryResult.Buffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.VertexBuffer, terrainVertices.ToArray());
+            //terrainGeometryResult.Buffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.VertexBuffer, terrainVertices.ToArray());
             terrainGeometry = terrainGeometryResult;
 
-            var offsetVector =(Vector3)Vector3.Transform(new Vector3(
-                currentCorner.X - originalPointForTest.X,
-                currentCorner.Y - originalPointForTest.Y,
-                            0), Constants.ScaleDownMatrix);
+            //var offsetVector =(Vector3)Vector3.Transform(new Vector3(
+            //    currentCorner.X - originalPointForTest.X,
+            //    currentCorner.Y - originalPointForTest.Y,
+            //                0), Constants.ScaleDownMatrix);
 
-            terrainGeometry.WorldOffset = Matrix.Translation(offsetVector);
-            terrainGeometry.VerticesCount = terrainVertices.Count;
+            //terrainGeometry.WorldOffset = Matrix4x4.CreateTranslation(offsetVector);
+            //terrainGeometry.VerticesCount = terrainVertices.Count;
 
             return result;
         }

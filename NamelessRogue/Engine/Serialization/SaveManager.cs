@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using FlatSharp;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ChunksAndTiles;

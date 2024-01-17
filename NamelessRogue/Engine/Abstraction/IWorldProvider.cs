@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
-using SharpDX.Direct2D1.Effects;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
+using Veldrid;
 
 namespace NamelessRogue.Engine.Abstraction
 {

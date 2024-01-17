@@ -1,4 +1,4 @@
-﻿using SharpDX;
+﻿using Veldrid;
 using MonoGame.Extended;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
@@ -41,7 +41,7 @@ namespace NamelessRogue.Engine.Systems
                 VertexColorEnabled = true,
             };
             spriteEffect.World = invertY;
-            spriteEffect.View = Matrix.Identity;
+            spriteEffect.View = Matrix4x4.Identity;
         }
 
         static List<Vector3> _points = new List<Vector3>();
@@ -170,7 +170,7 @@ namespace NamelessRogue.Engine.Systems
             return objects;
         }
         int offset = Constants.ChunkSize * (300 - Constants.RealityBubbleRangeInChunks);
-        Matrix invertY = Matrix.CreateScale(1, -1, 1);
+        Matrix4x4 invertY = Matrix4x4.CreateScale(1, -1, 1);
         const float spriteScaleDownCoef = 0.0001f;
         public override void Update(GameTime gameTime, NamelessGame game)
         {
@@ -222,7 +222,7 @@ namespace NamelessRogue.Engine.Systems
             var player = game.PlayerEntity;
             var frustrum = new BoundingFrustum(camera.View * camera.Projection);
 
-            spriteEffect.View = Matrix.Identity;
+            spriteEffect.View = Matrix4x4.Identity;
             spriteEffect.Projection = camera.Projection;
             spriteBatch.Begin(0, BlendState.AlphaBlend, Graphics.SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, spriteEffect);
             foreach (var entity in RegisteredEntities)
@@ -296,8 +296,8 @@ namespace NamelessRogue.Engine.Systems
             effect.Parameters["xViewProjection"].SetValue(camera.Projection * camera.View);
             effect.Parameters["windCoef"].SetValue(new Vector2(windCoef));
             Debug.WriteLine(windCoef);
-            var invertedView = Matrix.Invert(camera.View);
-            if (camera.View == Matrix.Identity)
+            var invertedView = Matrix4x4.Invert(camera.View);
+            if (camera.View == Matrix4x4.Identity)
             {
                 return;
             }
@@ -315,11 +315,11 @@ namespace NamelessRogue.Engine.Systems
         Dictionary<string, int> cacheCheckDictionary = new Dictionary<string, int>();
         Dictionary<string, VertexBuffer> instanceBufferCache = new Dictionary<string, VertexBuffer>();
         Dictionary<string, Geometry3D> spriteCache = new Dictionary<string, Geometry3D>();
-        Matrix worldtest;
+        Matrix4x4 worldtest;
         List<VertexShaderInstanceMatrix> instanceTransforms;
 
-        bool onceMatrix = true;
-        Matrix storedFirst = Matrix.Identity;
+        bool onceMatrix4x4 = true;
+        Matrix4x4 storedFirst = Matrix4x4.Identity;
         private void RenderStaticObjects(NamelessGame game, Camera3D camera)
         {
 
@@ -335,7 +335,7 @@ namespace NamelessRogue.Engine.Systems
             effect.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 
 
-            var rotZ = Matrix.CreateFromAxisAngle(Vector3.UnitZ, Vector3.Dot(Vector3.UnitX, new Vector3(camera.Look.X, camera.Look.Y, 0)));
+            var rotZ = Matrix4x4.CreateFromAxisAngle(Vector3.UnitZ, Vector3.Dot(Vector3.UnitX, new Vector3(camera.Look.X, camera.Look.Y, 0)));
 
             camera.View.Decompose(out var scale, out var rot, out Vector3 translation);
 
@@ -344,14 +344,14 @@ namespace NamelessRogue.Engine.Systems
 
             foreach (var group in objectGroups)
             {
-                var rotation = Matrix.Invert(Matrix.CreateFromQuaternion(rot));
+                var rotation = Matrix4x4.Invert(Matrix4x4.CreateFromQuaternion(rot));
                 if (!group.First().IsFlat)
                 {
                     effect.Parameters["xBillboard"].SetValue(rotation);
                 }
                 else
                 {
-                    effect.Parameters["xBillboard"].SetValue(Matrix.Identity);
+                    effect.Parameters["xBillboard"].SetValue(Matrix4x4.Identity);
                 }
 
                 if (group.First().AffectedByWind)
@@ -383,7 +383,7 @@ namespace NamelessRogue.Engine.Systems
                         var shiftToTileCenter = Constants.ScaleDownCoeficient / 2;
 
                         var billboardShiftUp = gameObject.IsFlat? Constants.ScaleDownCoeficient * 0.1f : Constants.ScaleDownCoeficient;
-                        var world = Constants.ScaleDownMatrix * Matrix.CreateTranslation(position.X * Constants.ScaleDownCoeficient + shiftToTileCenter, position.Y * Constants.ScaleDownCoeficient + shiftToTileCenter, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient + billboardShiftUp);
+                        var world = Constants.ScaleDownMatrix4x4 * Matrix4x4.CreateCreateTranslation(position.X * Constants.ScaleDownCoeficient + shiftToTileCenter, position.Y * Constants.ScaleDownCoeficient + shiftToTileCenter, tileToDraw.ElevationVisual * Constants.ScaleDownCoeficient + billboardShiftUp);
                         var worldPos = Vector3.Transform(Vector3.Zero, world);
                         instanceTransforms.Add(new VertexShaderInstanceMatrix(world));
                     }
@@ -399,7 +399,7 @@ namespace NamelessRogue.Engine.Systems
                 //var pos = Vector3.Transform(Vector3.Zero, storedFirst);
                 //var screePos = Vector3.Transform(pos, camera.View * camera.Projection);
                 //Debug.WriteLine("worldposition in camera" + screePos);
-                //var projected = Project(NamelessGame.GraphicsDevice.Viewport, pos, camera.Projection, camera.View, Matrix.Identity);
+                //var projected = Project(NamelessGame.GraphicsDevice.Viewport, pos, camera.Projection, camera.View, Matrix4x4.Identity);
                 //Debug.WriteLine(@$"x ={projected.X} y = {projected.Y}  z= {projected.Z}");
 
 
@@ -418,9 +418,9 @@ namespace NamelessRogue.Engine.Systems
         }
 
 
-        //public Vector3 Project(Viewport viewport,  Vector3 source, Matrix projection, Matrix view, Matrix world)
+        //public Vector3 Project(Viewport viewport,  Vector3 source, Matrix4x4 projection, Matrix4x4 view, Matrix4x4 world)
         //{
-        //	Matrix matrix = Matrix.Multiply(Matrix.Multiply(world, view), projection);
+        //	Matrix4x4 matrix = Matrix4x4.Multiply(Matrix4x4.Multiply(world, view), projection);
         //	Vector3 result = Vector3.Transform(source, matrix);
         //	float num = source.X * matrix.M14 + source.Y * matrix.M24 + source.Z * matrix.M34 + matrix.M44;
         //	if (!WithinEpsilon(num, 1f))

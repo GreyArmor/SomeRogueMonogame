@@ -9,9 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NamelessRogue.Engine.Systems.Ingame;
-using SharpDX;
+using Veldrid;
 using System.Drawing;
-using Buffer = SharpDX.Direct3D11.Buffer;
+using Veldrid.Utilities;
+using System.Numerics;
+using Matrix4x4 = System.Numerics.Matrix4x4;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
@@ -22,7 +25,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
 		public static void Initialize(NamelessGame game)
 		{
-			void _addModel(string id, string path, Matrix modelTrandform) {
+			void _addModel(string id, string path, Matrix4x4 modelTrandform) {
 
 				AssimpContext importer = new AssimpContext();
 
@@ -62,25 +65,25 @@ namespace NamelessRogue.Engine.Infrastructure
 
 				geometry.Vertices = positions.ToList();
 				geometry.Indices = mesh.GetIndices().ToList();
-				geometry.Bounds = BoundingBox.FromPoints(positions.ToArray());
+				geometry.Bounds = Veldrid.Utilities.BoundingBox.CreateFromVertices(positions.ToArray());
 
 				//result.TriangleTerrainAssociation = tileTriangleAssociations;
 
-				geometry.Buffer = Buffer.Create(game.GraphicsDevice, SharpDX.Direct3D11.BindFlags.VertexBuffer, vertices.ToArray());
-				geometry.IndexBuffer = Buffer.Create(game.GraphicsDevice, SharpDX.Direct3D11.BindFlags.IndexBuffer, geometry.Indices.ToArray());
-				geometry.TriangleCount = geometry.Indices.Count/3;
+				//geometry.Buffer = Buffer.Create(game.GraphicsDevice, SharpDX.Direct3D11.BindFlags.VertexBuffer, vertices.ToArray());
+				//geometry.IndexBuffer = Buffer.Create(game.GraphicsDevice, SharpDX.Direct3D11.BindFlags.IndexBuffer, geometry.Indices.ToArray());
+				//geometry.TriangleCount = geometry.Indices.Count/3;
 
 				importer.Dispose();; 
 
 				Models.Add(id, geometry);
 			}
-			Matrix rotationX = Matrix.RotationX(MathUtil.DegreesToRadians(90f));
-			var modelShiftTree1 = Matrix.Translation(0.5f, 0.5f, 0);
-			var modelShift = Matrix.Translation(0.5f, 0.5f, 1.5f);
+            Matrix4x4 rotationX = Matrix4x4.CreateRotationX(MathUtil.DegreesToRadians(90f));
+			var modelShiftTree1 = Matrix4x4.CreateTranslation(0.5f, 0.5f, 0);
+			var modelShift = Matrix4x4.CreateTranslation(0.5f, 0.5f, 1.5f);
 			_addModel("smallTree", "Content\\Models\\smallTree.fbx", modelShift);
 			_addModel("tree", "Content\\Models\\tree.fbx", modelShift);
 			_addModel("tree1", "Content\\Models\\tree1.fbx", rotationX * modelShiftTree1);
-			_addModel("cube", "Content\\Models\\cube.fbx", Matrix.Scaling(0.01f));
+			_addModel("cube", "Content\\Models\\cube.fbx", Matrix4x4.CreateScale(0.01f));
 
 		}
 	}

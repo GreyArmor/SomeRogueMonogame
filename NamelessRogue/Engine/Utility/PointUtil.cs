@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using SharpDX;
+using Veldrid;
 
 namespace NamelessRogue.Engine.Utility
 {

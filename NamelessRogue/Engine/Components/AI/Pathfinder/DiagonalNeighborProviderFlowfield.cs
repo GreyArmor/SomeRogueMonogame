@@ -1,5 +1,5 @@
-﻿using SharpDX;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Veldrid;
 
 namespace NamelessRogue.Engine.Components.AI.Pathfinder
 {

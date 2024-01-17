@@ -1,9 +1,10 @@
 ﻿using FlatSharp.Attributes;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Serialization.SerializationIfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Numerics;
 
 namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 {

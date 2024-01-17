@@ -1,4 +1,4 @@
-﻿using SharpDX;
+﻿using Veldrid;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using System.Numerics;
 
 namespace NamelessRogue.Engine.Utility
 {

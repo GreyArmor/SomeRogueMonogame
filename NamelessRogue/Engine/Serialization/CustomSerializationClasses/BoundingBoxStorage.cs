@@ -1,9 +1,9 @@
 ﻿using FlatSharp.Attributes;
-using SharpDX;
 using NamelessRogue.Engine.Serialization.SerializationIfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Veldrid.Utilities;
 
 namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 {
@@ -16,8 +16,8 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		public void FillFrom(BoundingBox component)
 		{
-			Max = component.Maximum;
-			Min = component.Minimum;
+			Max = component.Max;
+			Min = component.Min;
 		}
 
 	
@@ -30,8 +30,8 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 		public static implicit operator BoundingBox(BoundingBoxStorage thisType)
 		{
 			BoundingBox result = new BoundingBox();
-			result.Maximum = thisType.Max;
-			result.Minimum = thisType.Min;
+			result.Max = thisType.Max;
+			result.Min = thisType.Min;
 			return result;
 		}
 

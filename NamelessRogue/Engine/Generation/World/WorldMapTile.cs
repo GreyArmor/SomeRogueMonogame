@@ -2,9 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Generation.World.BoardPieces;
 using NamelessRogue.Engine.Infrastructure;
+using System.Drawing;
+using Point = Veldrid.Point;
 
 namespace NamelessRogue.Engine.Generation.World
 {
@@ -14,7 +16,7 @@ namespace NamelessRogue.Engine.Generation.World
         public Biomes Biome { get; set; }
         public MapBuilding Building { get; set; }
         public MapArtifact Artifact { get; set; }
-        public MetaphysicalForce Affinity { get; set; } = new MetaphysicalForce("",new Color());
+        public MetaphysicalForce Affinity { get; set; } = new MetaphysicalForce("", new Color());
         public Civilization Owner { get; set; }
         public Region Continent { get; set; }
         public Region LandmarkRegion { get; set; }

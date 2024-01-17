@@ -1,6 +1,6 @@
 using System;
-using SharpDX;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using Veldrid;
 
 namespace NamelessRogue.Engine.Utility
 {

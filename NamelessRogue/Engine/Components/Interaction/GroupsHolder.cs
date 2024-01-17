@@ -1,5 +1,4 @@
 ﻿using NamelessRogue.Engine.Infrastructure;
-using SharpDX.MediaFoundation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

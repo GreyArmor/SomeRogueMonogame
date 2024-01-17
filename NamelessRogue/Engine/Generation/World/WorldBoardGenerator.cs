@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Markov;
 using RogueSharp.Random;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.Noise;
@@ -20,7 +20,8 @@ using VoronoiLib;
 using VoronoiLib.Structures;
 using Color = NamelessRogue.Engine.Utility.Color;
 using NamelessRogue.Engine.Generation.World.Denizens;
-using Point = SharpDX.Point;
+using System.Numerics;
+using Point = Veldrid.Point;
 
 namespace NamelessRogue.Engine.Generation.World
 {
@@ -271,7 +272,7 @@ namespace NamelessRogue.Engine.Generation.World
 				var startVector = new Vector2((float)edge.Start.X, (float)edge.Start.Y);
 				var endVector = new Vector2((float)edge.End.X, (float)edge.End.Y);
 				var perpendicular = (endVector - startVector);
-				perpendicular.Normalize();
+				Vector2.Normalize(perpendicular);
 				perpendicular = new Vector2(perpendicular.Y, -perpendicular.X);
 
 
@@ -392,7 +393,7 @@ namespace NamelessRogue.Engine.Generation.World
 
 			foreach (var borderLine in borderLines)
 			{
-				var line = new WaterBorderLine() { Points = borderLine.Select(p => new SharpDX.Point(p.x, p.y)).ToList() };
+				var line = new WaterBorderLine() { Points = borderLine.Select(p => new Point(p.x, p.y)).ToList() };
 				board.BorderLines.Add(line);
 				foreach (var p in line.Points)
 				{

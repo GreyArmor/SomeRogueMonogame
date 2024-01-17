@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using RogueSharp.Random;
-using SharpDX;
+using Veldrid;
 
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
@@ -281,7 +281,7 @@ namespace NamelessRogue.Engine.Systems.Map
 //                            }
 //                        }
 
-//                        Texture2D tex = new Texture2D(NamelessGame.DebugDevice, screen.Width, screen.Height, false,
+//                        TextureView tex = new TextureView(NamelessGame.DebugDevice, screen.Width, screen.Height, false,
 //                            SurfaceFormat.Color);
 //                        tex.SetData(arrBytes);
 ////#if DEBUG
@@ -432,8 +432,8 @@ namespace NamelessRogue.Engine.Systems.Map
             //float textureXend = 1;
 
             //float textureYend = 0;
-            //var projectionMatrix = //Matrix.CreateOrthographic(NamelessGame.getActualWidth(),game.getActualHeight(),0,1);
-            //    Matrix.CreateOrthographicOffCenter(0, gameInstance.GetActualWidth(),
+            //var projectionMatrix4x4 = //Matrix4x4.CreateOrthographic(NamelessGame.getActualWidth(),game.getActualHeight(),0,1);
+            //    Matrix4x4.CreateOrthographicOffCenter(0, gameInstance.GetActualWidth(),
             //        0, gameInstance.GetActualHeight(), 0, 2);
 
             //effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
@@ -498,20 +498,20 @@ namespace NamelessRogue.Engine.Systems.Map
             }
         }
 
-        //Texture2D tileAtlas = null;
-        //Texture2D worldMap  = null;
+        //TextureView tileAtlas = null;
+        //TextureView worldMap  = null;
         //private WorldBoardRenderingSystemMode _mode = WorldBoardRenderingSystemMode.Terrain;
-        //Texture2D whiteRectangle = null;
+        //TextureView whiteRectangle = null;
 
         //private Texture InitializeTexture(NamelessGame game)
         //{
 
         //    tileAtlas = null;
-        //    tileAtlas = game.Content.Load<Texture2D>("DFfont");
+        //    tileAtlas = game.Content.Load<TextureView>("DFfont");
         //    effect = game.Content.Load<Effect>("Shader");
         //    effect.Parameters["tileAtlas"].SetValue(tileAtlas);
 
-        //    whiteRectangle = new Texture2D(NamelessGame.GraphicsDevice, 1, 1);
+        //    whiteRectangle = new TextureView(NamelessGame.GraphicsDevice, 1, 1);
         //    whiteRectangle.SetData(new[] { Color.White });
 
         //    return tileAtlas;
@@ -541,8 +541,8 @@ namespace NamelessRogue.Engine.Systems.Map
 
 
         //    var settings = game.GetSettings();
-        //    var projectionMatrix = //Matrix.CreateOrthographic(NamelessGame.getActualWidth(),game.getActualHeight(),0,1);
-        //        Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(),
+        //    var projectionMatrix4x4 = //Matrix4x4.CreateOrthographic(NamelessGame.getActualWidth(),game.getActualHeight(),0,1);
+        //        Matrix4x4.CreateOrthographicOffCenter(0, game.GetActualWidth(),
         //            0, game.GetActualHeight(), 0, 2);
 
         //    effect.Parameters["xViewProjection"].SetValue(projectionMatrix);

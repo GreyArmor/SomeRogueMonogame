@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using SharpDX;
+using Veldrid;
 
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
@@ -59,18 +59,20 @@ namespace NamelessRogue.Engine.Components.Rendering
 
         public Point GetMouseTilePosition(NamelessGame game)
         {
-            var state = game.Window.MouseState;
-            var mouseTileX = state.X / game.GetSettings().GetFontSize();
-            var mouseTileY = (game.GetActualHeight() - state.Y) / game.GetSettings().GetFontSize();
+            return new Point();
+            //var state = game.Window.MouseState;
+            //var mouseTileX = state.X / game.GetSettings().GetFontSize();
+            //var mouseTileY = (game.GetActualHeight() - state.Y) / game.GetSettings().GetFontSize();
 
-            if (mouseTileX<0||mouseTileX>=game.GetActualCharacterWidth() || mouseTileY < 0 || mouseTileY >= game.GetActualCharacterHeight())
-            {
-                return new Point(-1,-1);
-            }
+            //if (mouseTileX<0||mouseTileX>=game.GetActualCharacterWidth() || mouseTileY < 0 || mouseTileY >= game.GetActualCharacterHeight())
+            //{
+            //    return new Point(-1,-1);
+            //}
 
-            //Debug.WriteLine($"X = {mouseTileX}; Y = {mouseTileY}");
+            ////Debug.WriteLine($"X = {mouseTileX}; Y = {mouseTileY}");
 
-            return new Point(Position.X+mouseTileX,Position.Y+mouseTileY);
+            //return new Point(Position.X+mouseTileX,Position.Y+mouseTileY);
+
         }
 
         public override IComponent Clone()

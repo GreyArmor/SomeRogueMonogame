@@ -5,18 +5,15 @@ using System.IO;
 using System.Linq;
 using log4net.Appender;
 using RogueSharp.Random;
-using SharpDX;
+using Veldrid;
 
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.shell;
-using SharpDX.Direct2D1;
-using SharpDX.WIC;
-using Bitmap = SharpDX.WIC.Bitmap;
 using Color = NamelessRogue.Engine.Utility.Color;
 using Image = System.Drawing.Image;
-using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 using NamelessRogue.Engine.Utility;
+using System.Numerics;
 
 namespace NamelessRogue.Engine.Generation.Noise
 {
@@ -90,7 +87,7 @@ namespace NamelessRogue.Engine.Generation.Noise
                 }
             }
 
-            //Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
+            //TextureView tex = new TextureView(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
             //tex.SetData(arrBytes);
             //using (var str = File.OpenWrite(path))
             //{
@@ -143,7 +140,7 @@ namespace NamelessRogue.Engine.Generation.Noise
             img.Save(path);
 
 
-            // Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
+            // TextureView tex = new TextureView(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
             //tex.SetData(arrBytes);
 
 
@@ -190,7 +187,7 @@ namespace NamelessRogue.Engine.Generation.Noise
             img.Save(path);
 
 
-            // Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
+            // TextureView tex = new TextureView(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
             //tex.SetData(arrBytes);
 
 
@@ -247,7 +244,7 @@ namespace NamelessRogue.Engine.Generation.Noise
                 }
             }
 
-            //Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
+            //TextureView tex = new TextureView(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
             //tex.SetData(arrBytes);
             //using (var str = File.OpenWrite(path))
             //{
@@ -297,7 +294,7 @@ namespace NamelessRogue.Engine.Generation.Noise
                 }
             }
 
-            //Texture2D tex = new Texture2D(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
+            //TextureView tex = new TextureView(NamelessGame.DebugDevice, resolution, resolution, false, SurfaceFormat.Color);
             //tex.SetData(arrBytes);
             //using (var str = File.OpenWrite(path))
             //{

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using SharpDX;
+using Veldrid;
+using Veldrid;
 
 namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
 {

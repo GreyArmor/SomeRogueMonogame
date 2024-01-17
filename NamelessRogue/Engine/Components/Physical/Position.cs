@@ -1,4 +1,4 @@
-using SharpDX;
+using Veldrid;
 
 namespace NamelessRogue.Engine.Components.Physical
 {

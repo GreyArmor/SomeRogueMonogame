@@ -1,5 +1,3 @@
-using SharpDX.DirectWrite;
-
 namespace NamelessRogue.Engine.Components
 {
 	public class GameSettings

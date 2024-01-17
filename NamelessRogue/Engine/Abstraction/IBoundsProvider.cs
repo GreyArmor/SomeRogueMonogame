@@ -1,4 +1,5 @@
-using SharpDX;
+using Veldrid;
+using Veldrid.Utilities;
 
 namespace NamelessRogue.Engine.Abstraction
 {

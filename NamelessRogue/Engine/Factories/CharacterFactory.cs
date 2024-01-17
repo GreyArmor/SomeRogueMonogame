@@ -1,4 +1,4 @@
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
@@ -14,6 +14,8 @@ using NamelessRogue.shell;
 using System;
 using System.Linq;
 using NamelessRogue.Engine.Utility;
+using System.Numerics;
+using Veldrid;
 
 namespace NamelessRogue.Engine.Factories
 {

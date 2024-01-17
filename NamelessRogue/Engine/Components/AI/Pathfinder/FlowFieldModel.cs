@@ -1,7 +1,7 @@
 ﻿using AStarNavigator;
 using AStarNavigator.Algorithms;
 using AStarNavigator.Providers;
-using SharpDX;
+using Veldrid;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.shell;
 using System.Collections.Generic;
@@ -10,7 +10,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Constants = NamelessRogue.Engine.Infrastructure.Constants;
 using NamelessRogue.Engine.Utility;
-using Point = SharpDX.Point;
 
 namespace NamelessRogue.Engine.Components.AI.Pathfinder
 {

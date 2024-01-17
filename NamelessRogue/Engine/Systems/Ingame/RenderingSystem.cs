@@ -1,30 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RogueSharp.Random;
-using SharpDX;
-
-using NamelessRogue.Engine.Abstraction;
-using NamelessRogue.Engine.Components;
-using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
-using NamelessRogue.Engine.Components.ChunksAndTiles;
-using NamelessRogue.Engine.Components.Environment;
-using NamelessRogue.Engine.Components.Interaction;
-using NamelessRogue.Engine.Components.Physical;
-using NamelessRogue.Engine.Components.Rendering;
-using NamelessRogue.Engine.Generation.World;
-using NamelessRogue.Engine.Infrastructure;
-using NamelessRogue.Engine.Utility;
-using NamelessRogue.FieldOfView;
-using NamelessRogue.shell;
-
-using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
-using Color = NamelessRogue.Engine.Utility.Color;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using SharpDX.Direct3D11;
-using Buffer = SharpDX.Direct3D11.Buffer;
-using SharpDX.DXGI;
+﻿using System.Runtime.InteropServices;
+using System.Numerics;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -547,8 +522,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private void RenderScreen(NamelessGame game, Screen screen, GameSettings settings)
         {
             effect.Parameters["tileAtlas"].SetValue(tileAtlas);
-            var projectionMatrix = //Matrix.CreateOrthographic(NamelessGame.getActualWidth(),game.getActualHeight(),0,1);
-    Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
+            var projectionMatrix4x4 = //Matrix4x4.CreateOrthographic(NamelessGame.getActualWidth(),game.getActualHeight(),0,1);
+    Matrix4x4.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
 
             effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
 
@@ -607,15 +582,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        Texture2D tileAtlas = null;
+        TextureView tileAtlas = null;
 
 
 
-        private Texture2D InitializeTexture(NamelessGame game)
+        private TextureView InitializeTexture(NamelessGame game)
         {
 
             tileAtlas = null;
-           // tileAtlas = game.Content.Load<Texture2D>("DFfont");
+           // tileAtlas = game.Content.Load<TextureView>("DFfont");
            // effect = game.Content.Load<Effect>("Shader");
 
         //    effect.Parameters["tileAtlas"].SetValue(tileAtlas);
