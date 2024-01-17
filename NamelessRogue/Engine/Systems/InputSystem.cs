@@ -43,12 +43,12 @@ namespace NamelessRogue.Engine.Systems
             mouseState = new MouseState(game.Input);
             keyboardState = new KeyboardState(game.Input);
 
-            if (keyboardState.Key.Any())
+            if (keyboardState.Keys.Any())
             {
                 foreach (IEntity entity in RegisteredEntities)
                 {
                     InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
-                    inputComponent.Intents.AddRange(translator.Translate(keyboardState.Key.ToArray(), lastCommand, mouseState));
+                    inputComponent.Intents.AddRange(translator.Translate(keyboardState.Keys.ToArray(), lastCommand, mouseState));
                 }
                 lastCommand = Char.MinValue;
             }
@@ -62,7 +62,7 @@ namespace NamelessRogue.Engine.Systems
                     InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
                     if (receiver != null && inputComponent != null)
                     {
-                        inputComponent.Intents.AddRange(translator.Translate(keyboardState.Key.ToArray(), lastCommand, mouseState));
+                        inputComponent.Intents.AddRange(translator.Translate(keyboardState.Keys.ToArray(), lastCommand, mouseState));
                         lastCommand = Char.MinValue;
                     }
                 }

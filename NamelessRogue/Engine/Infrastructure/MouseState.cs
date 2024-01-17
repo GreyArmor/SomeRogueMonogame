@@ -1,11 +1,12 @@
-﻿using Veldrid;
+﻿using System;
+using Veldrid;
 
 public enum ButtonState
 {
     Released, Pressed,
 }
 
-public struct MouseState
+public struct MouseState : IEquatable<MouseState>
 {
     public MouseState(InputSnapshot snapshot)
     {
@@ -24,4 +25,25 @@ public struct MouseState
     public bool MiddlePressed;
     public int MouseWheelDelta;     
     public Point Position { get { return new Point(X, Y); } }
+
+    public bool Equals(MouseState other)
+    {
+        return this == other; 
+    }
+
+    public static bool operator == (MouseState left, MouseState right)
+    {
+        return left.X == right.X && 
+               left.Y == right.Y && 
+               left.RightPressed == right.RightPressed &&
+               left.LeftPressed == right.LeftPressed &&
+               left.MiddlePressed == right.MiddlePressed &&
+               left.MouseWheelDelta == right.MouseWheelDelta;
+    }
+
+    public static bool operator !=(MouseState left, MouseState right)
+    {
+        return !(left == right);
+    }
+
 }

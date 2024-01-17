@@ -10,11 +10,11 @@ namespace NamelessRogue.Engine.Infrastructure
 {
     public struct KeyboardState
     {
-        public List<Key> Key = new List<Key>();
+        public List<Key> Keys = new List<Key>();
         public KeyboardState(){}
 
         public KeyboardState(InputSnapshot snapshot) {
-            Key = snapshot.KeyEvents.Where(ev => ev.Down).Select(x => x.Key).ToList();
+            Keys = snapshot.KeyEvents.Where(ev => ev.Down).Select(x => x.Key).ToList();
         }
     }
 }
