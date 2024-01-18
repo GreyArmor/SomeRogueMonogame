@@ -191,8 +191,17 @@ namespace NamelessRogue.shell
             windowWidth = (int)(GetActualCharacterWidth() + settings.HudWidth);
             windowHeight = GetActualCharacterHeight();
 
+
+            GraphicsDeviceOptions options = new GraphicsDeviceOptions(
+              debug: true,
+              swapchainDepthFormat: PixelFormat.R16_UNorm,
+              syncToVerticalBlank: true,
+              resourceBindingModel: ResourceBindingModel.Improved,
+              preferDepthRangeZeroToOne: true,
+              preferStandardClipSpaceYDirection: true);
+
             var window = VeldridStartup.CreateWindow(new WindowCreateInfo(100, 100, windowWidth, windowHeight, Veldrid.WindowState.Normal, "NamelessRogue"));
-            var gd = VeldridStartup.CreateDefaultD3D11GraphicsDevice(new GraphicsDeviceOptions(true, PixelFormat.R32_G32_B32_A32_Float, true), window);
+            var gd = VeldridStartup.CreateGraphicsDevice(window, options, GraphicsBackend.Direct3D11);
             
             Window =  window;
             GraphicsDevice = gd;
@@ -323,6 +332,10 @@ namespace NamelessRogue.shell
             InitSound();
             PlayMainMenuTheme();
             IsInitialized = true;
+
+
+            //var shadowMapStageShader = new Effect(GraphicsDevice, "Content\\ChunkShader3D.fx", "TerrainShadowMapVertexShader", "ShadowMapPixelShader");
+            //var shadowMapSceneShader = new Effect(GraphicsDevice, "Content\\ChunkShader3D.fx", "TerrainShadowedSceneVertexShader", "TerrainShadowedScenePixelShader");
 
         }
         MusicPack musicPack;

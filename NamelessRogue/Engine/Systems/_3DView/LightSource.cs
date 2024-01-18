@@ -8,7 +8,7 @@ namespace NamelessRogue.Engine.Systems._3DView
     internal class LightSource
     {
         Texture shadowMap;
-        TextureView shadowMapView;
+        Framebuffer shadowMapFramBuffer;
         Vector3 position;
         Vector3 lookAtPoint;
         Matrix4x4 lightsViewProjectionMatrix;
@@ -21,22 +21,21 @@ namespace NamelessRogue.Engine.Systems._3DView
         {
             var factory = game.GraphicsDevice.ResourceFactory;
 
-            TextureDescription textureDescription = new TextureDescription()
-            {
-                Height = (uint)frustrumHeight,
-                Width = (uint)frustrumWidth,
-                Format = PixelFormat.B8_G8_R8_A8_UNorm_SRgb,
-                Usage = TextureUsage.RenderTarget,
-                Depth = 0,
-                ArrayLayers = 1,
-                MipLevels = 0,
-                SampleCount = TextureSampleCount.Count1,
-                Type = TextureType.Texture2D
-            };
+            TextureDescription textureDescription = TextureDescription.Texture2D(
+                (uint)frustrumHeight, (uint)frustrumWidth, 1, 1,
+                 PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.RenderTarget | TextureUsage.Sampled);
+
+            TextureDescription depth = TextureDescription.Texture2D(
+                (uint)frustrumHeight, (uint)frustrumWidth, 1, 1, PixelFormat.R16_UNorm, TextureUsage.DepthStencil);
+
+            var depthTexture = factory.CreateTexture(depth);
 
             shadowMap = factory.CreateTexture(textureDescription);
 
-            shadowMapView = factory.CreateTextureView(shadowMap);        
+            var framebufferDescription = new FramebufferDescription(depthTexture, shadowMap);
+
+            shadowMapFramBuffer = factory.CreateFramebuffer(framebufferDescription);
+            ShadowMapTextureView = factory.CreateTextureView(shadowMap);
 
             this.position = position;
             this.LookAtPoint = lookAtPoint;
@@ -50,7 +49,8 @@ namespace NamelessRogue.Engine.Systems._3DView
 
         public Vector3 Position { get => position; set => position = value; }
         public Vector3 LookAtPoint { get => lookAtPoint; set => lookAtPoint = value; }
-        public TextureView ShadowMapRenderTargetTexture { get => shadowMapView; set => shadowMapView = value; }
+        public TextureView ShadowMapTextureView { get; set; }
+        public Framebuffer ShadowMapRenderTargetTexture { get => shadowMapFramBuffer; set => shadowMapFramBuffer = value; }
         public float LightPower { get => lightPower; set => lightPower = value; }
         public float Ambient { get => ambient; set => ambient = value; }
         public Matrix4x4 LightsViewProjectionMatrix4x4 { get => lightsViewProjectionMatrix; set => lightsViewProjectionMatrix = value; }

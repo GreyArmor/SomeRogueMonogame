@@ -177,26 +177,3 @@ float DotProduct(float3 lightPos, float3 pos3D, float3 normal)
     float3 lightDir = normalize(pos3D - lightPos);
     return dot(-lightDir, normal);
 }
-
-VertexToPixel emptyVs(VSIn input, VertexShaderInstanceInput instanceInput)
-{
-    VertexToPixel output = (VertexToPixel)0;
-
-    return output;
-}
-
-PixelToFrame emptyPs(VertexToPixel PSIn)
-{
-    PixelToFrame Output = (PixelToFrame) 0;
-    return Output;
-}
-
-
-technique StupidMonogameRules
-{
-    pass Pass0
-    {
-        VertexShader = compile vs_4_0 emptyVs();
-        PixelShader = compile ps_4_0 emptyPs();
-    }
-}

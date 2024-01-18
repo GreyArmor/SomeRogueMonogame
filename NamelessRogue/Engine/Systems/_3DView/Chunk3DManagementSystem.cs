@@ -24,6 +24,7 @@ namespace NamelessRogue.Engine.Systems._3DView
 		}
 		public override void Update(GameTime gameTime, NamelessGame game)
 		{
+			return;
 		    //return;
 			IEntity worldEntity = game.TimelineEntity;
 			ChunkData chunks = null;

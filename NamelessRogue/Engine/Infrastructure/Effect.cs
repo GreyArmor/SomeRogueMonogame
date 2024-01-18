@@ -1,5 +1,4 @@
-﻿using SharpDX.D3DCompiler;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,7 +21,7 @@ namespace NamelessRogue.Engine.Infrastructure
             Shader _loadShader(string entryPoint, ShaderStages stage)
             {
                 if (entryPoint == null || !entryPoint.Any()) { return null; }
-                ShaderDescription desc = new ShaderDescription(stage, Encoding.UTF8.GetBytes(shaderText), entryPoint);
+                ShaderDescription desc = new ShaderDescription(stage, Encoding.UTF8.GetBytes(shaderText), entryPoint, true);
                 return device.ResourceFactory.CreateShader(desc);
             }
             VertexShader = _loadShader(vertexEntryPoint, ShaderStages.Vertex);

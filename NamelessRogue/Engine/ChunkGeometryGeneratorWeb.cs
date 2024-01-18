@@ -235,40 +235,26 @@ namespace NamelessRogue.Engine._3DUtility
                 }
             }
 
-            var textureDescription = new TextureViewDescription()
-            {
-                Height = Constants.ChunkSize,
-                Width = Constants.ChunkSize,
-                CpuAccessFlags = CpuAccessFlags.Read,
-                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb,
-                Usage = ResourceUsage.Default,
-                ArraySize = 1,
-                BindFlags = BindFlags.RenderTarget,
-                OptionFlags = ResourceOptionFlags.None,
-                MipLevels = 0,
-                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
-            };
 
-            DataStream s = DataStream.Create(tempArr, true, true);
-            DataRectangle rect = new DataRectangle(s.DataPointer, Constants.ChunkSize * 4);
-            var texture2D = new TextureView(game.GraphicsDevice, textureDescription, rect);
-            s.Close();
-            s.Dispose();
+            TextureDescription textureDescription = TextureDescription.Texture2D(
+                (uint)Constants.ChunkSize, (uint)Constants.ChunkSize, 1, 1,
+                 PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.Sampled);
+            var texture2D = game.GraphicsDevice.ResourceFactory.CreateTexture(textureDescription);
+
+            game.GraphicsDevice.UpdateTexture(texture2D, tempArr.ToArray(), 0, 0, 0, (uint)Constants.ChunkSize, (uint)Constants.ChunkSize, 0, 0, 0);
+
 
             result.Vertices = points;
             result.Indices = indices.ToList();
             result.Bounds = BoundingBox.CreateFromVertices(points.ToArray());
-            result.Material = texture2D;
+            result.Material = game.GraphicsDevice.ResourceFactory.CreateTextureView(texture2D);
             result.TriangleTerrainAssociation = tileTriangleAssociations;
 
             var factory = game.GraphicsDevice.ResourceFactory;
 
             result.Buffer = factory.CreateBuffer(new BufferDescription((uint)(Vertex3D.Size * vertices.Count), BufferUsage.VertexBuffer));
            
-            game.GraphicsDevice.UpdateBuffer(result.Buffer, 0, vertices.ToArray());
-
-
-           
+            game.GraphicsDevice.UpdateBuffer(result.Buffer, 0, vertices.ToArray());           
 
             result.IndexBuffer = factory.CreateBuffer(new BufferDescription((uint)(indices.Count * sizeof(int)), BufferUsage.IndexBuffer));
             game.GraphicsDevice.UpdateBuffer(result.IndexBuffer, 0, indices.ToArray());
