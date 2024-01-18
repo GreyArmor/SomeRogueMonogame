@@ -191,12 +191,10 @@ namespace NamelessRogue.shell
             windowWidth = (int)(GetActualCharacterWidth() + settings.HudWidth);
             windowHeight = GetActualCharacterHeight();
 
-
-            VeldridStartup.CreateWindowAndGraphicsDevice(
-                new WindowCreateInfo(100, 100, windowWidth, windowHeight, Veldrid.WindowState.Normal, "NamelessRogue"),
-                out var window,
-                out var gd); 
-              Window =  window;
+            var window = VeldridStartup.CreateWindow(new WindowCreateInfo(100, 100, windowWidth, windowHeight, Veldrid.WindowState.Normal, "NamelessRogue"));
+            var gd = VeldridStartup.CreateDefaultD3D11GraphicsDevice(new GraphicsDeviceOptions(true, PixelFormat.R32_G32_B32_A32_Float, true), window);
+            
+            Window =  window;
             GraphicsDevice = gd;
             CommandList = gd.ResourceFactory.CreateCommandList();
 

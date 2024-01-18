@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Veldrid;
+using Veldrid.Utilities;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
 
 namespace NamelessRogue.Engine._3DUtility
@@ -234,47 +235,56 @@ namespace NamelessRogue.Engine._3DUtility
                 }
             }
 
-            //var textureDescription = new TextureViewDescription()
-            //{
-            //    Height = Constants.ChunkSize,
-            //    Width = Constants.ChunkSize,
-            //    CpuAccessFlags = CpuAccessFlags.Read,
-            //    Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb,
-            //    Usage = ResourceUsage.Default,
-            //    ArraySize = 1,
-            //    BindFlags = BindFlags.RenderTarget,
-            //    OptionFlags = ResourceOptionFlags.None,
-            //    MipLevels = 0,
-            //    SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
-            //};
+            var textureDescription = new TextureViewDescription()
+            {
+                Height = Constants.ChunkSize,
+                Width = Constants.ChunkSize,
+                CpuAccessFlags = CpuAccessFlags.Read,
+                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb,
+                Usage = ResourceUsage.Default,
+                ArraySize = 1,
+                BindFlags = BindFlags.RenderTarget,
+                OptionFlags = ResourceOptionFlags.None,
+                MipLevels = 0,
+                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
+            };
 
-            //DataStream s = DataStream.Create(tempArr, true, true);
-            //DataRectangle rect = new DataRectangle(s.DataPointer, Constants.ChunkSize * 4);
-            //var texture2D = new TextureView(game.GraphicsDevice, textureDescription, rect);
-            //s.Close();
-            //s.Dispose();
+            DataStream s = DataStream.Create(tempArr, true, true);
+            DataRectangle rect = new DataRectangle(s.DataPointer, Constants.ChunkSize * 4);
+            var texture2D = new TextureView(game.GraphicsDevice, textureDescription, rect);
+            s.Close();
+            s.Dispose();
 
-            //result.Vertices = points;
-            //result.Indices = indices.ToList();
-            //result.Bounds = BoundingBox.FromPoints(points.ToArray());
-            //result.Material = texture2D;
-            //result.MaterialResourceView = new SharpDX.Direct3D11.ShaderResourceView(game.GraphicsDevice, result.Material);
-            //result.TriangleTerrainAssociation = tileTriangleAssociations;
+            result.Vertices = points;
+            result.Indices = indices.ToList();
+            result.Bounds = BoundingBox.CreateFromVertices(points.ToArray());
+            result.Material = texture2D;
+            result.TriangleTerrainAssociation = tileTriangleAssociations;
 
-            //result.Buffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.VertexBuffer, vertices.ToArray());
-            //result.IndexBuffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.IndexBuffer, indices.ToArray());
-            //result.TriangleCount = triangleCount;
+            var factory = game.GraphicsDevice.ResourceFactory;
 
-            //terrainGeometryResult.Buffer = SharpDX.Direct3D11.Buffer.Create(game.GraphicsDevice, BindFlags.VertexBuffer, terrainVertices.ToArray());
+            result.Buffer = factory.CreateBuffer(new BufferDescription((uint)(Vertex3D.Size * vertices.Count), BufferUsage.VertexBuffer));
+           
+            game.GraphicsDevice.UpdateBuffer(result.Buffer, 0, vertices.ToArray());
+
+
+           
+
+            result.IndexBuffer = factory.CreateBuffer(new BufferDescription((uint)(indices.Count * sizeof(int)), BufferUsage.IndexBuffer));
+            game.GraphicsDevice.UpdateBuffer(result.IndexBuffer, 0, indices.ToArray());
+
+            result.TriangleCount = triangleCount;
+            
+            terrainGeometryResult.Buffer = factory.CreateBuffer(new BufferDescription((uint)(TerrainVertex.Size * terrainVertices.Count), BufferUsage.VertexBuffer));
             terrainGeometry = terrainGeometryResult;
 
-            //var offsetVector =(Vector3)Vector3.Transform(new Vector3(
-            //    currentCorner.X - originalPointForTest.X,
-            //    currentCorner.Y - originalPointForTest.Y,
-            //                0), Constants.ScaleDownMatrix);
+            var offsetVector = (Vector3)Vector3.Transform(new Vector3(
+                currentCorner.X - originalPointForTest.X,
+                currentCorner.Y - originalPointForTest.Y,
+                            0), Constants.ScaleDownMatrix);
 
-            //terrainGeometry.WorldOffset = Matrix4x4.CreateTranslation(offsetVector);
-            //terrainGeometry.VerticesCount = terrainVertices.Count;
+            terrainGeometry.WorldOffset = Matrix4x4.CreateTranslation(offsetVector);
+            terrainGeometry.VerticesCount = terrainVertices.Count;
 
             return result;
         }

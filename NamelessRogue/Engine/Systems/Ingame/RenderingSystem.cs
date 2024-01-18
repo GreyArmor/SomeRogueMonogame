@@ -39,6 +39,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
             this.textureCoordinate = textureCoordinate;
             this.normal = normal;
         }
+
+        public static uint Size = 16 * 4;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -52,6 +54,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             this.vertexHeightYawPitch = new Vector3(height, yaw, pitch);
         }
+
+        public static uint Size = 12;
     }
 
     /*
