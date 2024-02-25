@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Reflection.Metadata;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -49,13 +50,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
     {
         // ReSharper disable NotAccessedField.Local
         public Vector3 vertexHeightYawPitch;
-
+        public uint dummyint = 0;
         public TerrainVertex(float height, float yaw, float pitch)
         {
             this.vertexHeightYawPitch = new Vector3(height, yaw, pitch);
         }
 
-        public static uint Size = 12;
+        public const uint Size = 12 + sizeof(uint);
     }
 
     /*

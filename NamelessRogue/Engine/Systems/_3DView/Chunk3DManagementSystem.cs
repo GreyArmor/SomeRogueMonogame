@@ -24,7 +24,6 @@ namespace NamelessRogue.Engine.Systems._3DView
 		}
 		public override void Update(GameTime gameTime, NamelessGame game)
 		{
-			return;
 		    //return;
 			IEntity worldEntity = game.TimelineEntity;
 			ChunkData chunks = null;
@@ -43,6 +42,7 @@ namespace NamelessRogue.Engine.Systems._3DView
 					chunkToRemove.Item2.Dispose();
 				}
 				chunkGeometries.ChunkGeometries.Add(command.ChunkToUpdate, new Tuple<Geometry3D, TerrainGeometry3D>(geometry, terrainGeometry));
+				break;
 			}
 		}
 	}

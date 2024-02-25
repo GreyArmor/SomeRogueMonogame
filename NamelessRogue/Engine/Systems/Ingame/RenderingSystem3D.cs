@@ -13,10 +13,13 @@ using SharpGen.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Text;
 using Veldrid;
+using Veldrid.SPIRV;
 using Veldrid.Utilities;
 using Vulkan;
 using Effect = NamelessRogue.Engine.Infrastructure.Effect;
@@ -45,28 +48,68 @@ namespace NamelessRogue.Engine.Systems.Ingame
             public bool windFlag;
         }
 
+        //cbuffer UnchangeableValiblesBuffer : register(b0)
+        //{
+        //    float3 CameraPosition;
+        //    float3 CameraUp;
+        //    float3 CameraRight;
+
+        //    float4x4 xView;
+        //    float4x4 xProjection;
+        //    float4x4 xViewProjection;
+
+        //    float2 windCoef;
+        //    bool windFlag;
+
+        //    float3 xLightPos;
+        //    float xLightPower;
+        //    float xAmbient;
+
+        //    float rowIndexEnd = 33;
+        //    float substractionCoef = 1;
+        //    float verticesPerRow = 36;
+        //};
+
+        //cbuffer ObjectTransformBuffer : register(b1)
+        //{
+        //    float4x4 xLightsWorldViewProjection;
+        //    float4x4 xWorldViewProjection;
+        //    float4x4 xWorldMatrix;
+        //    float4x4 xBillboard;
+        //};
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct TerrainConstantBuffer
+        public struct TerrainUnchangeableValiblesBuffer
         {
             public Vector3 CameraPosition;
             public Vector3 CameraUp;
             public Vector3 CameraRight;
+
             public Matrix4x4 xView;
             public Matrix4x4 xProjection;
             public Matrix4x4 xViewProjection;
-            public Matrix4x4 xWorldViewProjection;
-            public Matrix4x4 xWorldMatrix;
-            public Matrix4x4 xBillboard;
+
             public Vector2 windCoef;
             public bool windFlag;
-            public Matrix4x4 xLightsWorldViewProjection;
+
             public Vector3 xLightPos;
             public float xLightPower;
             public float xAmbient;
+
+
             internal int substractionCoef;
             internal int rowIndexEnd;
             internal int verticesPerRow;
+
+            public Matrix4x4 xLightsWorldViewProjection;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TerrainObjectValiblesBuffer
+        { 
+            public Matrix4x4 xWorldViewProjection;
+            public Matrix4x4 xWorldMatrix;
+            public Matrix4x4 xBillboard;
         }
 
         public override HashSet<Type> Signature { get; }
@@ -83,7 +126,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         Pipeline _pipeline;
         Pipeline _shadowMapPipeline;
-
+        
         public static int VertexDeclarationSize = 15 * 4;
         VertexLayoutDescription vertexLayout = new VertexLayoutDescription(
                  new VertexElementDescription("POSITION", VertexElementSemantic.Position, VertexElementFormat.Float3),
@@ -91,14 +134,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                  new VertexElementDescription("COLOR1", VertexElementSemantic.Color, VertexElementFormat.Float4),
                  new VertexElementDescription("TEXCOORD", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2),
                  new VertexElementDescription("NORMAL", VertexElementSemantic.Normal, VertexElementFormat.Float3)
-            );
-
-
-    
+            );    
 
         public static int TerrainVertexDeclarationSize = 12;
-        VertexLayoutDescription TerrainVertexDeclaration = new VertexLayoutDescription(
-              new VertexElementDescription("POSITION", VertexElementSemantic.Position, VertexElementFormat.Float3)
+        VertexLayoutDescription TerrainVertexDeclaration = new VertexLayoutDescription(new[] {
+              new VertexElementDescription("Position", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
+              new VertexElementDescription("Color", VertexElementSemantic.TextureCoordinate, VertexElementFormat.UInt1),
+              }
          );
 
         //this is 4x4 matrix, transferred as instructed in https://learn.microsoft.com/en-us/windows/win32/direct3d9/efficiently-drawing-multiple-instances-of-geometry
@@ -153,6 +195,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
         Effect shadowMapSceneShader;
 
         Effect shadedInstancedEffect;
+
+
+
 
         SamplerDescription ssDescription = new SamplerDescription()
         {
@@ -238,25 +283,31 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         Sampler pointSampler;
         Vector3 LandCenter;
-        DeviceBuffer cbuffer = null;
-        TerrainConstantBuffer constantBuffer = new TerrainConstantBuffer();
+        DeviceBuffer unchengeableBuffer = null;
+        DeviceBuffer objectBuffer = null;
+        TerrainUnchangeableValiblesBuffer constantBuffer0 = new TerrainUnchangeableValiblesBuffer();
+        TerrainObjectValiblesBuffer constantBuffer1 = new TerrainObjectValiblesBuffer();
 
         ResourceSet sceneBufferSet;
         ResourceSet shadowMapResourceSet;
         ResourceLayout sceneBufferLayout;
 
-        DeviceBuffer CreateConstantBuffer(GraphicsDevice device)
+        DeviceBuffer CreateConstantBuffer0(GraphicsDevice device)
         {
-            return device.ResourceFactory.CreateBuffer(new BufferDescription((uint)Marshal.SizeOf(typeof(TerrainConstantBuffer)), BufferUsage.UniformBuffer));
-                //, Utilities.SizeOf<TerrainConstantBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
+            return device.ResourceFactory.CreateBuffer(new BufferDescription((uint)Marshal.SizeOf(typeof(TerrainUnchangeableValiblesBuffer)), BufferUsage.UniformBuffer));
+        }
+
+        DeviceBuffer CreateConstantBuffer1(GraphicsDevice device)
+        {
+            return device.ResourceFactory.CreateBuffer(new BufferDescription((uint)Marshal.SizeOf(typeof(TerrainObjectValiblesBuffer)), BufferUsage.UniformBuffer));
         }
         public override void Update(GameTime gameTime, NamelessGame game)
         {
             var device = game.GraphicsDevice;
-            if (cbuffer == null)
+            if (unchengeableBuffer == null)
             {
-                cbuffer = CreateConstantBuffer(device);
-                cbuffer = CreateConstantBuffer(device);
+                unchengeableBuffer = CreateConstantBuffer0(device);
+                objectBuffer = CreateConstantBuffer1(device);
             }
            
             //game.Window.DeviceContext.OutputMerger.BlendState = opaque;
@@ -273,84 +324,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
             if (once)
             {
-                shadowMapStageShader = new Effect(device, "Content\\ChunkShader3D.fx", "TerrainShadowMapVertexShader", "ShadowMapPixelShader");
-                shadowMapSceneShader = new Effect(device, "Content\\ChunkShader3D.fx", "TerrainShadowedSceneVertexShader", "TerrainShadowedScenePixelShader");
-                //   shadedInstancedEffect = new Effect("ObjectsShader", "", "");
-               // objectsToDraw = GetWorldObjectsToDraw(new Point(300, 300), worldProvider);
-                CreateshadowMapEdgeHackMesh(game);
-                //    SetupDebugDraw(game.GraphicsDevice);
-                once = false;
-                var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
-                //  var landBounds = BoundingBox.CreateFromVertices(chunkGeometries.ChunkGeometries.Values.Select(x => (x.Item1.Bounds.Max + x.Item1.Bounds.Min) / 2).ToArray());
-                LandCenter = Vector3.One;// (landBounds.Max + landBounds.Min) / 2;
-
-
-
-                ResourceLayout shadowMapLayout = device.ResourceFactory.CreateResourceLayout(
-                new ResourceLayoutDescription(
-                new ResourceLayoutElementDescription("cbuffer0", ResourceKind.UniformBuffer, ShaderStages.Vertex)
-                ));
-
-                sceneBufferLayout = device.ResourceFactory.CreateResourceLayout(
-                new ResourceLayoutDescription(
-                new ResourceLayoutElementDescription("cbuffer0", ResourceKind.UniformBuffer, ShaderStages.Vertex | ShaderStages.Fragment),
-                new ResourceLayoutElementDescription("tileAtlas", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
-                new ResourceLayoutElementDescription("shadowMapTexture", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
-                new ResourceLayoutElementDescription("textureSampler", ResourceKind.Sampler, ShaderStages.Fragment),
-                new ResourceLayoutElementDescription("ShadowMapSampler", ResourceKind.Sampler, ShaderStages.Fragment)
-                ));
-
-
-
-                GraphicsPipelineDescription pipelineDescription = new GraphicsPipelineDescription();
-
-                pipelineDescription.BlendState = BlendStateDescription.SingleOverrideBlend;
-                pipelineDescription.DepthStencilState = new DepthStencilStateDescription(
-                depthTestEnabled: true,
-                depthWriteEnabled: true,
-                comparisonKind: ComparisonKind.LessEqual);
-
-                pipelineDescription.RasterizerState = new RasterizerStateDescription(
-                cullMode: FaceCullMode.Back,
-                fillMode: PolygonFillMode.Solid,
-                frontFace: FrontFace.Clockwise,
-                depthClipEnabled: true,
-                scissorTestEnabled: false);
-
-                pipelineDescription.DepthStencilState = new DepthStencilStateDescription(
-                depthTestEnabled: true,
-                depthWriteEnabled: true,
-                comparisonKind: ComparisonKind.LessEqual);
-
-                pipelineDescription.ResourceLayouts = new ResourceLayout[] { shadowMapLayout };
-
-                pipelineDescription.ShaderSet = new ShaderSetDescription(
-                vertexLayouts: new VertexLayoutDescription[] { TerrainVertexDeclaration },
-                shaders: new Shader[] { shadowMapSceneShader.VertexShader, shadowMapSceneShader.PixelShader });
-
-                pipelineDescription.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
-                pipelineDescription.ResourceBindingModel = ResourceBindingModel.Default;
-                pipelineDescription.Outputs = sunLight.ShadowMapRenderTargetTexture.OutputDescription;
-
-                _shadowMapPipeline = device.ResourceFactory.CreateGraphicsPipeline(pipelineDescription);
-
-                pipelineDescription.Outputs = device.SwapchainFramebuffer.OutputDescription;
-                pipelineDescription.ResourceLayouts = new ResourceLayout[] { sceneBufferLayout };
-                pipelineDescription.ShaderSet = new ShaderSetDescription(
-                vertexLayouts: new VertexLayoutDescription[] { TerrainVertexDeclaration },
-                shaders: new Shader[] { shadowMapStageShader.VertexShader, shadowMapStageShader.PixelShader });
-
-                _pipeline = device.ResourceFactory.CreateGraphicsPipeline(pipelineDescription);
-
-
-
-
-                shadowMapResourceSet = device.ResourceFactory.CreateResourceSet(new ResourceSetDescription(shadowMapLayout, cbuffer));
-                // sceneBufferSet = device.ResourceFactory.CreateResourceSet(new ResourceSetDescription(sceneBufferLayout, cbuffer, sunLight.ShadowMapTextureView));
-
-
-                pointSampler = device.ResourceFactory.CreateSampler(this.pointSamplerDescription);
-
+                CreateResources(game, device);
             }
 
             game.CommandList.SetPipeline(_shadowMapPipeline);
@@ -362,23 +336,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
             if (angleRotation > 360) angleRotation -= 360;
             CalculateSun(angleRotation, LandCenter);
 
-            constantBuffer.xViewProjection = (camera.View * camera.Projection);
-            constantBuffer.xWorldViewProjection = (camera.View * camera.Projection);
-            constantBuffer.xView = (camera.View);
-            constantBuffer.xProjection = (camera.Projection);
-            constantBuffer.CameraPosition = (camera.Position);
-            constantBuffer.xWorldMatrix = (Matrix4x4.Identity);
-            constantBuffer.xLightPos = (sunLight.Position);
-            constantBuffer.xLightPower = (1f);
-            constantBuffer.xAmbient = (0.2f);
+            constantBuffer0.xViewProjection = (camera.View * camera.Projection);
+         
+            constantBuffer0.xView = (camera.View);
+            constantBuffer0.xProjection = (camera.Projection);
+            constantBuffer0.CameraPosition = (camera.Position);
 
-            constantBuffer.substractionCoef = (1);
-            constantBuffer.rowIndexEnd = (Constants.ChunkSize * 2) + 1;
-            constantBuffer.verticesPerRow = (Constants.ChunkSize * 2) + 4;
+            constantBuffer0.xLightPos = (sunLight.Position);
+            constantBuffer0.xLightPower = (1f);
+            constantBuffer0.xAmbient = (0.2f);        
+
+            constantBuffer0.substractionCoef = (1);
+            constantBuffer0.rowIndexEnd = (Constants.ChunkSize * 2) + 1;
+            constantBuffer0.verticesPerRow = (Constants.ChunkSize * 2) + 4;
 
 
             game.CommandList.SetPipeline(_shadowMapPipeline);
-            device.UpdateBuffer(cbuffer, 0, constantBuffer);
+            device.UpdateBuffer(unchengeableBuffer, 0, constantBuffer0);
             game.CommandList.SetFramebuffer(sunLight.ShadowMapRenderTargetTexture);
             game.CommandList.ClearDepthStencil(0);
             game.CommandList.SetGraphicsResourceSet(0, shadowMapResourceSet);
@@ -389,9 +363,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             // effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
 
-
-
-            var chunkGeometries1 = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+//            var chunkGeometries1 = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 
             //fighting shadow map imprecision with mad skillz, to remove artifacts on terrain border
 
@@ -402,9 +374,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
             //	RenderObjectsToShadowMap(game);
 
             game.CommandList.SetFramebuffer(device.SwapchainFramebuffer);
-            var shadowMap = sunLight.ShadowMapRenderTargetTexture;
-
-            //game.Window.DeviceContext.PixelShader.SetShaderResource(1, shadowMap);
+            game.CommandList.SetPipeline(_pipeline);
+            //var shadowMap = sunLight.ShadowMapRenderTargetTexture;
+            game.CommandList.SetGraphicsResourceSet(0, sceneBufferSet);
+          //  game.Window.DeviceContext.PixelShader.SetShaderResource(1, shadowMap);
             //shadedInstancedEffect.Parameters["shadowMap"].SetValue(shadowMap);
             //game.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
@@ -434,6 +407,103 @@ namespace NamelessRogue.Engine.Systems.Ingame
             //}
 
         }
+
+        struct VertexPositionColor
+        {
+            public Vector2 Position; // This is the position, in normalized device coordinates.
+            public RgbaFloat Color; // This is the color of the vertex.
+            public VertexPositionColor(Vector2 position, RgbaFloat color)
+            {
+                Position = position;
+                Color = color;
+            }
+            public const uint SizeInBytes = 24;
+        }
+
+        private void CreateResources(NamelessGame game, GraphicsDevice device)
+        {
+            shadowMapStageShader = new Effect(device, "Content\\ChunkShader3D.fx", "TerrainShadowMapVertexShader", "ShadowMapPixelShader");
+            shadowMapSceneShader = new Effect(device, "Content\\ChunkShader3D.fx", "TerrainShadowedSceneVertexShader", "TerrainShadowedScenePixelShader");
+            //   shadedInstancedEffect = new Effect("ObjectsShader", "", "");
+            // objectsToDraw = GetWorldObjectsToDraw(new Point(300, 300), worldProvider);
+            CreateshadowMapEdgeHackMesh(game);
+            //    SetupDebugDraw(game.GraphicsDevice);
+            once = false;
+            //    var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+            //  var landBounds = BoundingBox.CreateFromVertices(chunkGeometries.ChunkGeometries.Values.Select(x => (x.Item1.Bounds.Max + x.Item1.Bounds.Min) / 2).ToArray());
+            LandCenter = Vector3.One;// (landBounds.Max + landBounds.Min) / 2;
+            var _shaders = new Shader[] { shadowMapStageShader.VertexShader, shadowMapStageShader.PixelShader };
+
+            ResourceLayout shadowMapLayout = device.ResourceFactory.CreateResourceLayout(
+            new ResourceLayoutDescription(
+                new ResourceLayoutElementDescription("MainBuffer", ResourceKind.UniformBuffer, ShaderStages.Vertex),
+                new ResourceLayoutElementDescription("ObjectBuffer", ResourceKind.UniformBuffer, ShaderStages.Vertex)
+            ));
+
+            sceneBufferLayout = device.ResourceFactory.CreateResourceLayout(
+                new ResourceLayoutDescription(
+                new ResourceLayoutElementDescription("MainBuffer", ResourceKind.UniformBuffer, ShaderStages.Vertex),
+                new ResourceLayoutElementDescription("ObjectBuffer", ResourceKind.UniformBuffer, ShaderStages.Vertex),
+                new ResourceLayoutElementDescription("tileAtlas", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
+                new ResourceLayoutElementDescription("shadowMap", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
+                new ResourceLayoutElementDescription("textureSampler", ResourceKind.Sampler, ShaderStages.Fragment),
+                new ResourceLayoutElementDescription("ShadowMapSampler", ResourceKind.Sampler, ShaderStages.Fragment)
+            ));
+
+
+
+            GraphicsPipelineDescription pipelineDescription = new GraphicsPipelineDescription();
+
+            pipelineDescription.BlendState = BlendStateDescription.SingleOverrideBlend;
+
+            pipelineDescription.DepthStencilState = new DepthStencilStateDescription(
+            depthTestEnabled: true,
+            depthWriteEnabled: true,
+            comparisonKind: ComparisonKind.LessEqual);
+
+            pipelineDescription.RasterizerState = new RasterizerStateDescription(
+            cullMode: FaceCullMode.Back,
+            fillMode: PolygonFillMode.Solid,
+            frontFace: FrontFace.Clockwise,
+            depthClipEnabled: true,
+            scissorTestEnabled: false);
+
+            pipelineDescription.DepthStencilState = new DepthStencilStateDescription(
+            depthTestEnabled: true,
+            depthWriteEnabled: true,
+            comparisonKind: ComparisonKind.LessEqual);
+
+            pointSampler = device.ResourceFactory.CreateSampler(this.pointSamplerDescription);
+
+            shadowMapResourceSet = device.ResourceFactory.CreateResourceSet(new ResourceSetDescription(shadowMapLayout, unchengeableBuffer, objectBuffer));
+            sceneBufferSet = device.ResourceFactory.CreateResourceSet(new ResourceSetDescription(sceneBufferLayout, unchengeableBuffer, objectBuffer, sunLight.ShadowMapTextureView, sunLight.ShadowMapTextureView, pointSampler, pointSampler));
+
+
+            pipelineDescription.ResourceLayouts = new ResourceLayout[] { shadowMapLayout };
+
+            pipelineDescription.ShaderSet = new ShaderSetDescription(
+            vertexLayouts: new VertexLayoutDescription[] { TerrainVertexDeclaration },
+            shaders: _shaders);
+
+            pipelineDescription.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
+            pipelineDescription.ResourceBindingModel = ResourceBindingModel.Default;
+            pipelineDescription.Outputs = sunLight.ShadowMapRenderTargetTexture.OutputDescription;
+
+
+            _shadowMapPipeline = device.ResourceFactory.CreateGraphicsPipeline(pipelineDescription);
+
+
+            pipelineDescription.Outputs = device.SwapchainFramebuffer.OutputDescription;
+            pipelineDescription.ResourceLayouts = new ResourceLayout[] { sceneBufferLayout };
+            pipelineDescription.ShaderSet = new ShaderSetDescription(
+            vertexLayouts: new VertexLayoutDescription[] { TerrainVertexDeclaration },
+            shaders: new Shader[] { shadowMapStageShader.VertexShader, shadowMapStageShader.PixelShader });
+
+            _pipeline = device.ResourceFactory.CreateGraphicsPipeline(pipelineDescription);
+
+        }
+
+
 
         //LineDrawer debugDraw;
         //protected void SetupDebugDraw(GraphicsDevice device)
@@ -547,11 +617,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 var geometry = geometryTuple.Item1;
                 var terrainGeometry = geometryTuple.Item2;
-                constantBuffer.xWorldMatrix = (Constants.ScaleDownMatrix * terrainGeometry.WorldOffset);
-                game.GraphicsDevice.UpdateBuffer(cbuffer, 0, constantBuffer);
+                constantBuffer1.xWorldMatrix = (Constants.ScaleDownMatrix * terrainGeometry.WorldOffset);
+                game.GraphicsDevice.UpdateBuffer(objectBuffer, 0, constantBuffer1);
 
                 game.CommandList.SetVertexBuffer(0, terrainGeometry.Buffer);
                 game.CommandList.Draw((uint)terrainGeometry.VerticesCount);
+                break;
             }
         }
         private void RenderChunksWithShadows(NamelessGame game, Camera3D camera)
@@ -562,15 +633,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 var geometry = geometryTuple.Item1;
                 var terrainGeometry = geometryTuple.Item2;
-                constantBuffer.xWorldMatrix = (Constants.ScaleDownMatrix * terrainGeometry.WorldOffset);
-                game.GraphicsDevice.UpdateBuffer(cbuffer, 0, constantBuffer);
+                constantBuffer1.xWorldMatrix = (Constants.ScaleDownMatrix * terrainGeometry.WorldOffset);
+                game.GraphicsDevice.UpdateBuffer(objectBuffer, 0, constantBuffer1);
 
                 sceneBufferSet = game.GraphicsDevice.ResourceFactory.CreateResourceSet(
-                    new ResourceSetDescription(sceneBufferLayout, cbuffer, geometry.Material, sunLight.ShadowMapTextureView, pointSampler, pointSampler));
+                    new ResourceSetDescription(sceneBufferLayout, unchengeableBuffer, objectBuffer, geometry.Material, sunLight.ShadowMapTextureView, pointSampler, pointSampler));
                 game.CommandList.SetGraphicsResourceSet(0, sceneBufferSet);
 
                 game.CommandList.SetVertexBuffer(0, terrainGeometry.Buffer);
                 game.CommandList.Draw((uint)terrainGeometry.VerticesCount);
+                break;
             }
         }
 

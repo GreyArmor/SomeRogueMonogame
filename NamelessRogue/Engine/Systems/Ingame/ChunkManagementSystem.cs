@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
         public override void Update(GameTime gameTime, NamelessGame game)
         {
-            return;
+            //return;
             IEntity worldEntity = game.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)

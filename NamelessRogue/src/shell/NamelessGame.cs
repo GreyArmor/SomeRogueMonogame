@@ -200,7 +200,7 @@ namespace NamelessRogue.shell
               preferDepthRangeZeroToOne: true,
               preferStandardClipSpaceYDirection: true);
 
-            var window = VeldridStartup.CreateWindow(new WindowCreateInfo(100, 100, windowWidth, windowHeight, Veldrid.WindowState.Normal, "NamelessRogue"));
+            var window = VeldridStartup.CreateWindow(new WindowCreateInfo(50, 50, windowWidth, windowHeight, Veldrid.WindowState.Normal, "NamelessRogue"));
             var gd = VeldridStartup.CreateGraphicsDevice(window, options, GraphicsBackend.Direct3D11);
             
             Window =  window;
@@ -392,7 +392,7 @@ namespace NamelessRogue.shell
         public bool IsInitialized { get; internal set; }
         public GameSettings Settings { get => settings; set => settings = value; }
         public bool IsActive { get; internal set; } = true;
-        public float AspectRatio { get { return windowWidth / windowHeight; } }
+        public float AspectRatio { get { return (float)Window.Width / Window.Height; } }
 
         public CommandList CommandList { get; internal set; }
         public InputSnapshot Input { get; internal set; }
@@ -506,7 +506,7 @@ namespace NamelessRogue.shell
                 return;
             }
 
-            var deltaTime = (float)gameTime.TotalGameTime.TotalSeconds;
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             _frameCounter.Update(deltaTime);
 
             IngameScreen.FPS = _frameCounter.AverageFramesPerSecond.ToString();

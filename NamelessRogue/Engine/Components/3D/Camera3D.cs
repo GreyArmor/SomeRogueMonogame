@@ -21,14 +21,12 @@ namespace NamelessRogue.Engine.Components._3D
         public Vector3 Right { get { return Vector3.Cross(Up,Look); } }
 
 		public float RotationSpeed = 0.3f;
-		public float MoveSpeed = 0.1f;
+		public float MoveSpeed = 1f;
         public float NearPlane = 0.001f;
-        public float FarPlane = 10000.0f;
+        public float FarPlane = 100.0f;
 
         public Camera3D(NamelessGame game) 
         {
-
-
             this.Position = new Vector3(0f, 0f, 0.2f); ;
             this.Projection = 
                 Matrix4x4.CreatePerspectiveFieldOfView(

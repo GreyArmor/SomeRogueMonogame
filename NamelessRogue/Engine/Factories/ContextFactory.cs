@@ -50,10 +50,10 @@ namespace NamelessRogue.Engine.Factories
 				systems.Add(new GroupMoveSystem());
 				systems.Add(new Chunk3DManagementSystem());
                 systems.Add(new SoundPlaySystem());
-              
-               // var renderingSystem = new RenderingSystem(NamelessGame.GetSettings());
 
-                var renderingSystem = new RenderingSystem3D(game.GetSettings(), game);
+                // var renderingSystem = new RenderingSystem(NamelessGame.GetSettings());
+
+                var renderingSystem = new SimpleRenderer(game.GetSettings(), game); //new RenderingSystem3D(game.GetSettings(), game);
                 var uiSystem = new UIRenderSystem(game);
 				//var spriteSystem = new SpriteRenderingSystem(game);
 
@@ -107,9 +107,10 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
                 var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
-			
-				// create and init the UI manager
-				mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIController.Instance.MainMenu, "MainMenu");
+                var renderingSystem = new SimpleRenderer(game.GetSettings(), game); //new RenderingSystem3D(game.GetSettings(), game);
+
+                // create and init the UI manager
+                mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem,}, UIController.Instance.MainMenu, "MainMenu");
                 return mainMenuContext;
             }
         }

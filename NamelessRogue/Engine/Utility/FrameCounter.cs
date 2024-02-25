@@ -23,7 +23,7 @@ namespace NamelessRogue.Engine.Utility
 
         public bool Update(float deltaTime)
         {
-            CurrentFramesPerSecond = 1.0f / deltaTime;
+            CurrentFramesPerSecond = 1.0f / (0.001f * deltaTime);
 
             _sampleBuffer.Enqueue(CurrentFramesPerSecond);
 
