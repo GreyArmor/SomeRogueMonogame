@@ -53,12 +53,12 @@ namespace NamelessRogue.Engine.Factories
 
                 // var renderingSystem = new RenderingSystem(NamelessGame.GetSettings());
 
-                var renderingSystem = new SimpleRenderer(game.GetSettings(), game); //new RenderingSystem3D(game.GetSettings(), game);
+                var renderingSystem = new ChunkRendererSystem(game.GetSettings(), game); //new RenderingSystem3D(game.GetSettings(), game);
                 var uiSystem = new UIRenderSystem(game);
 				//var spriteSystem = new SpriteRenderingSystem(game);
 
 
-				IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem, /*spriteSystem,*/ uiSystem, new SelectionRenderingSystem(game) },
+				IngameContext = new GameContext(systems, new List<ISystem>() {new SimpleRenderer(game.GetSettings(), game), renderingSystem, uiSystem, new SelectionRenderingSystem(game) },
                     UIController.Instance.HudScreen, "InGame");
 
                 return IngameContext;

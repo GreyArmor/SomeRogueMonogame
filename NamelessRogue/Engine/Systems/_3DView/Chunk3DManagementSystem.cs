@@ -33,7 +33,7 @@ namespace NamelessRogue.Engine.Systems._3DView
 			}
 			while (game.Commander.DequeueCommand(out UpdateChunkCommand command))
 			{
-				var geometry = ChunkGeometryGeneratorWeb.GenerateChunkModelTiles(game, command.ChunkToUpdate, chunks, out var terrainGeometry);
+				var geometry = ChunkGeometryGeneratorWeb.GenerateChunkModelTilesOld(game, command.ChunkToUpdate, chunks);
 				var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
 				if (chunkGeometries.ChunkGeometries.TryGetValue(command.ChunkToUpdate, out var chunkToRemove))
 				{
@@ -41,7 +41,7 @@ namespace NamelessRogue.Engine.Systems._3DView
 					chunkToRemove.Item1.Dispose();
 					chunkToRemove.Item2.Dispose();
 				}
-				chunkGeometries.ChunkGeometries.Add(command.ChunkToUpdate, new Tuple<Geometry3D, TerrainGeometry3D>(geometry, terrainGeometry));
+				chunkGeometries.ChunkGeometries.Add(command.ChunkToUpdate, new Tuple<Geometry3D, TerrainGeometry3D>(geometry, null));
 				break;
 			}
 		}

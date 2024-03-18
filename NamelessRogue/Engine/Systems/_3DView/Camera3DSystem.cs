@@ -6,6 +6,8 @@ using System.Text;
 using NamelessRogue.Engine.Infrastructure;
 using System.Numerics;
 using Veldrid;
+using System.Diagnostics;
+using Vortice.Mathematics;
 
 namespace NamelessRogue.Engine.Systems._3DView
 {
@@ -82,6 +84,11 @@ namespace NamelessRogue.Engine.Systems._3DView
                 float yDifference = currentMouseState.Y - originalMouseState.Y;
                 camera.LeftrightRot -= camera.RotationSpeed * xDifference * amount;
                 camera.UpdownRot -= camera.RotationSpeed * yDifference * amount;
+
+                if (camera.UpdownRot > MathHelper.ToRadians(89)) { camera.UpdownRot = MathHelper.ToRadians(89); }
+
+                if (camera.UpdownRot < -MathHelper.ToRadians(89)) { camera.UpdownRot = -MathHelper.ToRadians(89); }
+
                 game.Window.SetMousePosition(game.GetActualWidth() / 2, game.GetActualHeight() / 2);
                 UpdateViewMatrix();
             }

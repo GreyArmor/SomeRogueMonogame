@@ -1,8 +1,10 @@
-﻿using NamelessRogue.Engine.Components;
+﻿using FbxSharp;
+using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems.Ingame;
+using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,11 @@ using System.Linq;
 using System.Numerics;
 using Veldrid;
 using Veldrid.Utilities;
+using BoundingBox = Veldrid.Utilities.BoundingBox;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
+using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
+using Vector4 = System.Numerics.Vector4;
 
 namespace NamelessRogue.Engine._3DUtility
 {
@@ -274,6 +280,165 @@ namespace NamelessRogue.Engine._3DUtility
 
             return result;
         }
+
+
+        public static Geometry3D GenerateChunkModelTilesOld(NamelessGame namelessGame, Point chunkToGenerate, ChunkData chunks)
+        {
+
+            var result = new Geometry3D();
+            Vector4[,] textureData = new Vector4[Constants.ChunkSize, Constants.ChunkSize];
+            var chunk = chunks.Chunks[chunkToGenerate];
+
+            var currentCorner = chunk.WorldPositionBottomLeftCorner;
+            if (firstTime)
+            {
+                firstTime = false;
+                originalPointForTest = currentCorner;
+            }
+
+            Queue<Vertex3D> vertices = new Queue<Vertex3D>();
+            Queue<int> indices = new Queue<int>();
+            var resolution = Constants.ChunkSize;
+            var transformedPoints = new Queue<Vector3>();
+            var transformedPointsNormals = new Queue<Vector3>();
+            var textureCoordinates = new Queue<Vector2>();
+            var colors = new Queue<Vector4>();
+            const float worldHeight = 1300;
+
+            //for terrain collion detection
+            var tileTriangleAssociations = new List<Point>();
+
+            //bool first = true;
+            Vector3 _calculateNormal(Vector3 point, Vector3 neighbor1, Vector3 neightbor2)
+            {
+                var v1 = point - neighbor1;
+                var v2 = point - neightbor2;
+                var normal = Vector3.Cross(v1, v2);
+                normal = Vector3.Normalize(normal);
+                return normal;
+            }
+            for (int x = 0; x < resolution; x++)
+            {
+                for (int y = 0; y < resolution; y++)
+                {
+                    Tile tile = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x, chunk.WorldPositionBottomLeftCorner.Y + y);
+                    Tile tileE = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x + 1, chunk.WorldPositionBottomLeftCorner.Y + y);
+                    Tile tileS = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x, chunk.WorldPositionBottomLeftCorner.Y + y + 1);
+                    Tile tileSE = chunks.GetTile(chunk.WorldPositionBottomLeftCorner.X + x + 1, chunk.WorldPositionBottomLeftCorner.Y + y + 1);
+
+                    float elevation = (float)tile.Elevation;
+                    float elevationE = (float)tileE.Elevation;
+                    float elevationS = (float)tileS.Elevation;
+                    float elevationSE = (float)tileSE.Elevation;
+
+                    float elevationMedian = (elevation + elevationE + elevationS + elevationSE) / 4;
+
+                    tile.ElevationVisual = MathF.Pow((float)(elevationMedian - 0.5f) * worldHeight, 2) * 0.005f;
+
+                    //return point adden for normal calculation
+                    Vector3 AddPoint(int x, int y, float pointElevation, Tile tile)
+                    {
+                        pointElevation = pointElevation - 0.5f;
+                        float elevation = (pointElevation) * worldHeight;
+                        elevation = MathF.Pow(elevation, 2) * 0.005f;
+
+                        var vector = Vector3.Transform(new Vector3(
+                            x + currentCorner.X - originalPointForTest.X,
+                            y + currentCorner.Y - originalPointForTest.Y,
+                            elevation), Constants.ScaleDownMatrix);
+
+                        transformedPoints.Enqueue(vector);
+                        textureCoordinates.Enqueue(new Vector2((float)x / Constants.ChunkSize, (float)y / Constants.ChunkSize));
+
+
+                        //colors.Enqueue();
+                        return vector;
+                    }
+
+                    var tileColor = TerrainLibrary.Terrains[tile.Terrain].Representation.CharColor;
+                    textureData[y, x] = tileColor.ToVector4() * (random.Next(7, 9) / 10f);
+
+
+                    var point = AddPoint(x, y, elevation, tile);
+                    var vec1 = AddPoint(x + 1, y, elevationE, tileE);
+                    var vec2 = AddPoint(x, y + 1, elevationS, tileS);
+                    AddPoint(x + 1, y + 1, elevationSE, tileSE);
+
+                    var normal = _calculateNormal(point, vec1, vec2);
+
+                    transformedPointsNormals.Enqueue(normal);
+                    transformedPointsNormals.Enqueue(normal);
+                    transformedPointsNormals.Enqueue(normal);
+                    transformedPointsNormals.Enqueue(normal);
+
+                    for (int i = 0; i < 6; i++)
+                    {
+                        tileTriangleAssociations.Add(new Point(x, y));
+                    }
+                }
+            }
+
+
+
+            int triangleCount = 0;
+            for (int i = 0; i < transformedPoints.Count - 3; i += 4)
+            {
+                var index = i;
+
+                indices.Enqueue(index);
+                indices.Enqueue(index + 1);
+                indices.Enqueue(index + 2);
+
+                indices.Enqueue(index + 3);
+                indices.Enqueue(index + 2);
+                indices.Enqueue(index + 1);
+
+
+                triangleCount += 2;
+            }
+            var points = transformedPoints.ToList();
+            while (transformedPoints.Any())
+            {
+                Vector3 point = transformedPoints.Dequeue();
+                var color = new Vector4();
+                var vertex = new Systems.Ingame.Vertex3D(point,
+                color,
+                color, textureCoordinates.Dequeue(), transformedPointsNormals.Dequeue());
+                vertices.Enqueue(vertex);
+            }
+
+            //var texture2D = new Texture2D(namelessGame.GraphicsDevice, Constants.ChunkSize, Constants.ChunkSize, false, SurfaceFormat.Vector4);
+
+            //Vector4[] tempArr = new Vector4[Constants.ChunkSize * Constants.ChunkSize];
+
+            //for (int i = 0; i < Constants.ChunkSize; i++)
+            //{
+            //    for (int j = 0; j < Constants.ChunkSize; j++)
+            //    {
+            //        tempArr[i * Constants.ChunkSize + j] = textureData[i, j];
+            //    }
+            //}
+
+            //texture2D.SetData<Vector4>(tempArr, 0, tempArr.Length);
+
+
+            result.Vertices = points;
+            result.Indices = indices.ToList();
+
+            //result.Vertices = points;
+            //result.Indices = indices.ToList();
+            //result.Bounds = Microsoft.Xna.Framework.BoundingBox.CreateFromPoints(points);
+            //result.Material = texture2D;
+            //result.TriangleTerrainAssociation = tileTriangleAssociations;
+
+            //result.Buffer = new Microsoft.Xna.Framework.Graphics.VertexBuffer(namelessGame.GraphicsDevice, RenderingSystem3D.VertexDeclaration, vertices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
+            //result.Buffer.SetData<Vertex3D>(vertices.ToArray());
+            //result.IndexBuffer = new Microsoft.Xna.Framework.Graphics.IndexBuffer(namelessGame.GraphicsDevice, Microsoft.Xna.Framework.Graphics.IndexElementSize.ThirtyTwoBits, indices.Count, Microsoft.Xna.Framework.Graphics.BufferUsage.None);
+            //result.IndexBuffer.SetData<int>(indices.ToArray());
+            //result.TriangleCount = triangleCount;
+            return result;
+        }
+
     }
 
 }

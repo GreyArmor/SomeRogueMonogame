@@ -17,10 +17,10 @@ using Veldrid.SPIRV;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-    internal class SimpleRenderer : RenderingSystem3D
+    internal class ChunkRendererSystem : RenderingSystem3D
     {
-        private readonly VertexPositionTexture[] _vertices;
-        private readonly ushort[] _indices;
+    //    private readonly VertexPositionTexture[] _vertices;
+    //    private readonly ushort[] _indices;
         NamelessGame game;
 
         public Sdl2Window Window { get; private set; }
@@ -40,11 +40,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private float _ticks;
         private ImageSharpTexture imageSharpTexture;
 
-        public SimpleRenderer(GameSettings settings, NamelessGame game) : base(settings, game)
+        public ChunkRendererSystem(GameSettings settings, NamelessGame game) : base(settings, game)
         {
             //_stoneTexData = LoadEmbeddedAsset<ProcessedTexture>("spnza_bricks_a_diff.binary");
-            _vertices = GetCubeVertices();
-            _indices = GetCubeIndices();
+            //_vertices = GetCubeVertices();
+            //_indices = GetCubeIndices();
             Window = game.Window;
             GraphicsDevice = game.GraphicsDevice;
             this.game = game;
@@ -57,18 +57,18 @@ namespace NamelessRogue.Engine.Systems.Ingame
             _viewBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
             _worldBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
 
-            _vertexBuffer = factory.CreateBuffer(new BufferDescription((uint)(VertexPositionTexture.SizeInBytes * _vertices.Length), BufferUsage.VertexBuffer));
-            GraphicsDevice.UpdateBuffer(_vertexBuffer, 0, _vertices);
+            //_vertexBuffer = factory.CreateBuffer(new BufferDescription((uint)(VertexPositionTexture.SizeInBytes * _vertices.Length), BufferUsage.VertexBuffer));
+            //GraphicsDevice.UpdateBuffer(_vertexBuffer, 0, _vertices);
 
-            _indexBuffer = factory.CreateBuffer(new BufferDescription(sizeof(ushort) * (uint)_indices.Length, BufferUsage.IndexBuffer));
-            GraphicsDevice.UpdateBuffer(_indexBuffer, 0, _indices);
+            //_indexBuffer = factory.CreateBuffer(new BufferDescription(sizeof(ushort) * (uint)_indices.Length, BufferUsage.IndexBuffer));
+            //GraphicsDevice.UpdateBuffer(_indexBuffer, 0, _indices);
 
 
             imageSharpTexture = new ImageSharpTexture("Content\\Sprites\\Clouds.png");
 
             _surfaceTexture = imageSharpTexture.CreateDeviceTexture(GraphicsDevice, factory);
 
-         //   _surfaceTexture = _stoneTexData.CreateDeviceTexture(GraphicsDevice, factory, TextureUsage.Sampled);
+            //   _surfaceTexture = _stoneTexData.CreateDeviceTexture(GraphicsDevice, factory, TextureUsage.Sampled);
             _surfaceTextureView = factory.CreateTextureView(_surfaceTexture);
 
             ShaderSetDescription shaderSet = new ShaderSetDescription(
@@ -118,12 +118,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         protected void OnDeviceDestroyed()
         {
-           // base.OnDeviceDestroyed();
+            // base.OnDeviceDestroyed();
         }
 
         public override void Update(GameTime gameTime, NamelessGame game)
         {
-            return;
             _ticks += gameTime.ElapsedGameTime.Milliseconds;
             // _cl.Begin();
 
@@ -139,6 +138,59 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             //_cl.UpdateBuffer(_viewBuffer, 0, Matrix4x4.CreateLookAt(Vector3.UnitZ * 2.5f, Vector3.Zero, Vector3.UnitY));
 
+            var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+            var geometryTuple = chunkGeometries.ChunkGeometries.Values.First();
+
+            var chunk = geometryTuple.Item1;
+            uint verticesCount = (uint)chunk.Vertices.Count();
+            uint indexCount = (uint)chunk.Indices.Count();
+
+            VertexPositionTexture[] vertices = new VertexPositionTexture[verticesCount];
+            for (int i = 0; i < verticesCount; i++)
+            {
+                Vector3 point = chunk.Vertices[i];
+                vertices[i] = new VertexPositionTexture(point, new Vector2(0));
+            }
+
+            //VertexPositionTexture[] vertices = new VertexPositionTexture[]
+            //{
+            //     // Top
+            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, -0.5f), new Vector2(0, 0)),
+            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, -0.5f), new Vector2(1, 0)),
+            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, +0.5f), new Vector2(1, 1)),
+            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, +0.5f), new Vector2(0, 1)),
+            //     // Bottom                                                             
+            //     new VertexPositionTexture(new Vector3(-0.5f,-0.5f, +0.5f),  new Vector2(0, 0)),
+            //     new VertexPositionTexture(new Vector3(+0.5f,-0.5f, +0.5f),  new Vector2(1, 0)),
+            //     new VertexPositionTexture(new Vector3(+0.5f,-0.5f, -0.5f),  new Vector2(1, 1)),
+            //     new VertexPositionTexture(new Vector3(-0.5f,-0.5f, -0.5f),  new Vector2(0, 1)),
+            //     // Left                                                               
+            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, -0.5f), new Vector2(0, 0)),
+            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, +0.5f), new Vector2(1, 0)),
+            //     new VertexPositionTexture(new Vector3(-0.5f, -0.5f, +0.5f), new Vector2(1, 1)),
+            //     new VertexPositionTexture(new Vector3(-0.5f, -0.5f, -0.5f), new Vector2(0, 1)),
+            //     // Right                                                              
+            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, +0.5f), new Vector2(0, 0)),
+            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, -0.5f), new Vector2(1, 0)),
+            //     new VertexPositionTexture(new Vector3(+0.5f, -0.5f, -0.5f), new Vector2(1, 1)),
+            //     new VertexPositionTexture(new Vector3(+0.5f, -0.5f, +0.5f), new Vector2(0, 1)),
+            //     // Back                                                               
+            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, -0.5f), new Vector2(0, 0)),
+            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, -0.5f), new Vector2(1, 0)),
+            //     new VertexPositionTexture(new Vector3(-0.5f, -0.5f, -0.5f), new Vector2(1, 1)),
+            //     new VertexPositionTexture(new Vector3(+0.5f, -0.5f, -0.5f), new Vector2(0, 1)),
+            //     // Front                                                              
+            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, +0.5f), new Vector2(0, 0)),
+            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, +0.5f), new Vector2(1, 0)),
+            //     new VertexPositionTexture(new Vector3(+0.5f, -0.5f, +0.5f), new Vector2(1, 1)),
+            //     new VertexPositionTexture(new Vector3(-0.5f, -0.5f, +0.5f), new Vector2(0, 1)),
+            //};
+
+            _vertexBuffer = game.GraphicsDevice.ResourceFactory.CreateBuffer(new BufferDescription((uint)(VertexPositionTexture.SizeInBytes * verticesCount), BufferUsage.VertexBuffer));
+            game.GraphicsDevice.UpdateBuffer(_vertexBuffer, 0, vertices.Take((int)verticesCount).ToArray());
+
+            _indexBuffer = game.GraphicsDevice.ResourceFactory.CreateBuffer(new BufferDescription(sizeof(int) * (uint)indexCount, BufferUsage.IndexBuffer));
+            game.GraphicsDevice.UpdateBuffer(_indexBuffer, 0, chunk.Indices.Take((int)indexCount).Select(x=>(uint)x).ToArray());
 
 
             _cl.UpdateBuffer(_projectionBuffer, 0, camera.Projection);
@@ -150,16 +202,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
             _cl.UpdateBuffer(_worldBuffer, 0, ref rotation);
 
             _cl.SetFramebuffer(GraphicsDevice.MainSwapchain.Framebuffer);
-          //  _cl.ClearColorTarget(0, RgbaFloat.Black);
+            //  _cl.ClearColorTarget(0, RgbaFloat.Black);
             _cl.ClearDepthStencil(1f);
             _cl.SetPipeline(_pipeline);
             _cl.SetVertexBuffer(0, _vertexBuffer);
-            _cl.SetIndexBuffer(_indexBuffer, IndexFormat.UInt16);
+            _cl.SetIndexBuffer(_indexBuffer, IndexFormat.UInt32);
             _cl.SetGraphicsResourceSet(0, _projViewSet);
             _cl.SetGraphicsResourceSet(1, _worldTextureSet);
-            _cl.DrawIndexed(36, 1, 0, 0, 0);
+            _cl.DrawIndexed(indexCount, 1, 0, 0, 0);
 
-         //   _cl.End();
+            //   _cl.End();
             GraphicsDevice.SubmitCommands(_cl);
             //GraphicsDevice.SwapBuffers((GraphicsDevice.MainSwapchain));
             //GraphicsDevice.WaitForIdle();
@@ -240,6 +292,7 @@ layout(set = 1, binding = 0) uniform WorldBuffer
 layout(location = 0) in vec3 Position;
 layout(location = 1) in vec2 TexCoords;
 layout(location = 0) out vec2 fsin_texCoords;
+layout(location = 1) out vec4 fsin_worldPos;
 
 void main()
 {
@@ -248,12 +301,14 @@ void main()
     vec4 clipPosition = Projection * viewPosition;
     gl_Position = clipPosition;
     fsin_texCoords = TexCoords;
+    fsin_worldPos = worldPosition;
 }";
 
         private const string FragmentCode = @"
 #version 450
 
 layout(location = 0) in vec2 fsin_texCoords;
+layout(location = 1) in vec4 fsin_worldPos;
 layout(location = 0) out vec4 fsout_color;
 
 layout(set = 1, binding = 1) uniform texture2D SurfaceTexture;
@@ -261,35 +316,31 @@ layout(set = 1, binding = 2) uniform sampler SurfaceSampler;
 
 void main()
 {
-    fsout_color =  texture(sampler2D(SurfaceTexture, SurfaceSampler), fsin_texCoords);
+    fsout_color = vec4(0.5, 0, 0, 1);
 }";
 
     }
 
-    public struct VertexPositionTexture
-    {
-        public const uint SizeInBytes = 20;
+    //public struct VertexPositionTexture
+    //{
+    //    public const uint SizeInBytes = 20;
 
-        public float PosX;
-        public float PosY;
-        public float PosZ;
+    //    public float PosX;
+    //    public float PosY;
+    //    public float PosZ;
 
-        public float TexU;
-        public float TexV;
+    //    public float TexU;
+    //    public float TexV;
 
-        public VertexPositionTexture(Vector3 pos, Vector2 uv)
-        {
-            PosX = pos.X;
-            PosY = pos.Y;
-            PosZ = pos.Z;
-            TexU = uv.X;
-            TexV = uv.Y;
-        }
-
-        public override string ToString()
-        {
-            return $@"X={PosX} Y={PosY} Z={PosZ}";
-        }
-    }
+    //    public VertexPositionTexture(Vector3 pos, Vector2 uv)
+    //    {
+    //        PosX = pos.X;
+    //        PosY = pos.Y;
+    //        PosZ = pos.Z;
+    //        TexU = uv.X;
+    //        TexV = uv.Y;
+    //    }
+    //}
 
 }
+
