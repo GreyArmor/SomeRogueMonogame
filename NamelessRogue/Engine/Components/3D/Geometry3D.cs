@@ -19,7 +19,10 @@ namespace NamelessRogue.Engine.Components
 		public DeviceBuffer IndexBuffer { get; set; }
 		public BoundingBox Bounds;
 		public TextureView Material { get; set; }
-		public void Dispose()
+
+        public ResourceSet WorldTextureSet { get; set; }
+
+        public void Dispose()
 		{
 			Buffer?.Dispose();
 			IndexBuffer?.Dispose();

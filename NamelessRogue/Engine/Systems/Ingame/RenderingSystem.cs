@@ -26,11 +26,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
     public struct Vertex3D
     {
         // ReSharper disable NotAccessedField.Local
-        private Vector3 position;
-        private Vector4 color;
-        private Vector4 backgroundColor;
-        private Vector2 textureCoordinate;
-        private Vector3 normal;
+        public Vector3 position;
+        public Vector4 color;
+        public Vector4 backgroundColor;
+        public Vector2 textureCoordinate;
+        public Vector3 normal;
 
         public Vertex3D(Vector3 position, Vector4 color, Vector4 backgroundColor, Vector2 textureCoordinate, Vector3 normal)
         {

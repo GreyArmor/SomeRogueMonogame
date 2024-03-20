@@ -42,7 +42,7 @@ namespace NamelessRogue.Engine.Systems._3DView
 					chunkToRemove.Item2.Dispose();
 				}
 				chunkGeometries.ChunkGeometries.Add(command.ChunkToUpdate, new Tuple<Geometry3D, TerrainGeometry3D>(geometry, null));
-				break;
+				//break;
 			}
 		}
 	}

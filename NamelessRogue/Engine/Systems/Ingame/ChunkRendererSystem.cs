@@ -29,14 +29,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private DeviceBuffer _projectionBuffer;
         private DeviceBuffer _viewBuffer;
         private DeviceBuffer _worldBuffer;
-        private DeviceBuffer _vertexBuffer;
-        private DeviceBuffer _indexBuffer;
         private CommandList _cl;
         private Texture _surfaceTexture;
-        private TextureView _surfaceTextureView;
+        public static TextureView _surfaceTextureView;
         private Pipeline _pipeline;
         private ResourceSet _projViewSet;
-        private ResourceSet _worldTextureSet;
         private float _ticks;
         private ImageSharpTexture imageSharpTexture;
 
@@ -107,12 +104,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 _projectionBuffer,
                 _viewBuffer));
 
-            _worldTextureSet = factory.CreateResourceSet(new ResourceSetDescription(
-                worldTextureLayout,
-                _worldBuffer,
-                _surfaceTextureView,
-                GraphicsDevice.Aniso4xSampler));
-
             _cl = game.CommandList;
         }
 
@@ -125,94 +116,31 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             _ticks += gameTime.ElapsedGameTime.Milliseconds;
             // _cl.Begin();
-
-
-            Camera3D camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
-
-
-            //_cl.UpdateBuffer(_projectionBuffer, 0, Matrix4x4.CreatePerspectiveFieldOfView(
-            //    1.0f,
-            //    (float)Window.Width / Window.Height,
-            //    0.5f,
-            //    100f));
-
-            //_cl.UpdateBuffer(_viewBuffer, 0, Matrix4x4.CreateLookAt(Vector3.UnitZ * 2.5f, Vector3.Zero, Vector3.UnitY));
-
-            var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
-            var geometryTuple = chunkGeometries.ChunkGeometries.Values.First();
-
-            var chunk = geometryTuple.Item1;
-            uint verticesCount = (uint)chunk.Vertices.Count();
-            uint indexCount = (uint)chunk.Indices.Count();
-
-            VertexPositionTexture[] vertices = new VertexPositionTexture[verticesCount];
-            for (int i = 0; i < verticesCount; i++)
-            {
-                Vector3 point = chunk.Vertices[i];
-                vertices[i] = new VertexPositionTexture(point, new Vector2(0));
-            }
-
-            //VertexPositionTexture[] vertices = new VertexPositionTexture[]
-            //{
-            //     // Top
-            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, -0.5f), new Vector2(0, 0)),
-            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, -0.5f), new Vector2(1, 0)),
-            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, +0.5f), new Vector2(1, 1)),
-            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, +0.5f), new Vector2(0, 1)),
-            //     // Bottom                                                             
-            //     new VertexPositionTexture(new Vector3(-0.5f,-0.5f, +0.5f),  new Vector2(0, 0)),
-            //     new VertexPositionTexture(new Vector3(+0.5f,-0.5f, +0.5f),  new Vector2(1, 0)),
-            //     new VertexPositionTexture(new Vector3(+0.5f,-0.5f, -0.5f),  new Vector2(1, 1)),
-            //     new VertexPositionTexture(new Vector3(-0.5f,-0.5f, -0.5f),  new Vector2(0, 1)),
-            //     // Left                                                               
-            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, -0.5f), new Vector2(0, 0)),
-            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, +0.5f), new Vector2(1, 0)),
-            //     new VertexPositionTexture(new Vector3(-0.5f, -0.5f, +0.5f), new Vector2(1, 1)),
-            //     new VertexPositionTexture(new Vector3(-0.5f, -0.5f, -0.5f), new Vector2(0, 1)),
-            //     // Right                                                              
-            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, +0.5f), new Vector2(0, 0)),
-            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, -0.5f), new Vector2(1, 0)),
-            //     new VertexPositionTexture(new Vector3(+0.5f, -0.5f, -0.5f), new Vector2(1, 1)),
-            //     new VertexPositionTexture(new Vector3(+0.5f, -0.5f, +0.5f), new Vector2(0, 1)),
-            //     // Back                                                               
-            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, -0.5f), new Vector2(0, 0)),
-            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, -0.5f), new Vector2(1, 0)),
-            //     new VertexPositionTexture(new Vector3(-0.5f, -0.5f, -0.5f), new Vector2(1, 1)),
-            //     new VertexPositionTexture(new Vector3(+0.5f, -0.5f, -0.5f), new Vector2(0, 1)),
-            //     // Front                                                              
-            //     new VertexPositionTexture(new Vector3(-0.5f, +0.5f, +0.5f), new Vector2(0, 0)),
-            //     new VertexPositionTexture(new Vector3(+0.5f, +0.5f, +0.5f), new Vector2(1, 0)),
-            //     new VertexPositionTexture(new Vector3(+0.5f, -0.5f, +0.5f), new Vector2(1, 1)),
-            //     new VertexPositionTexture(new Vector3(-0.5f, -0.5f, +0.5f), new Vector2(0, 1)),
-            //};
-
-            _vertexBuffer = game.GraphicsDevice.ResourceFactory.CreateBuffer(new BufferDescription((uint)(VertexPositionTexture.SizeInBytes * verticesCount), BufferUsage.VertexBuffer));
-            game.GraphicsDevice.UpdateBuffer(_vertexBuffer, 0, vertices.Take((int)verticesCount).ToArray());
-
-            _indexBuffer = game.GraphicsDevice.ResourceFactory.CreateBuffer(new BufferDescription(sizeof(int) * (uint)indexCount, BufferUsage.IndexBuffer));
-            game.GraphicsDevice.UpdateBuffer(_indexBuffer, 0, chunk.Indices.Take((int)indexCount).Select(x=>(uint)x).ToArray());
-
-
-            _cl.UpdateBuffer(_projectionBuffer, 0, camera.Projection);
-
-            _cl.UpdateBuffer(_viewBuffer, 0, camera.View);
-
-            Matrix4x4 rotation =
-               Matrix4x4.Identity;
-            _cl.UpdateBuffer(_worldBuffer, 0, ref rotation);
-
             _cl.SetFramebuffer(GraphicsDevice.MainSwapchain.Framebuffer);
             //  _cl.ClearColorTarget(0, RgbaFloat.Black);
             _cl.ClearDepthStencil(1f);
             _cl.SetPipeline(_pipeline);
-            _cl.SetVertexBuffer(0, _vertexBuffer);
-            _cl.SetIndexBuffer(_indexBuffer, IndexFormat.UInt32);
-            _cl.SetGraphicsResourceSet(0, _projViewSet);
-            _cl.SetGraphicsResourceSet(1, _worldTextureSet);
-            _cl.DrawIndexed(indexCount, 1, 0, 0, 0);
+
+            Camera3D camera = game.PlayerEntity.GetComponentOfType<Camera3D>();
+            var chunkGeometries = game.ChunkGeometryEntiry.GetComponentOfType<Chunk3dGeometryHolder>();
+            foreach (var geometryTuple in chunkGeometries.ChunkGeometries.Values)
+            {
+                var chunk = geometryTuple.Item1;
+
+                _cl.UpdateBuffer(_projectionBuffer, 0, camera.Projection);
+
+                _cl.UpdateBuffer(_viewBuffer, 0, camera.View);                                    
+
+                _cl.SetVertexBuffer(0, chunk.Buffer);
+                _cl.SetIndexBuffer(chunk.IndexBuffer, IndexFormat.UInt32);
+                _cl.SetGraphicsResourceSet(0, _projViewSet);
+                _cl.SetGraphicsResourceSet(1, chunk.WorldTextureSet);
+                _cl.DrawIndexed((uint)chunk.Indices.Count, 1, 0, 0, 0);
+             //   GraphicsDevice.SubmitCommands(_cl);
+            }
 
             //   _cl.End();
-            GraphicsDevice.SubmitCommands(_cl);
+
             //GraphicsDevice.SwapBuffers((GraphicsDevice.MainSwapchain));
             //GraphicsDevice.WaitForIdle();
         }
@@ -316,7 +244,7 @@ layout(set = 1, binding = 2) uniform sampler SurfaceSampler;
 
 void main()
 {
-    fsout_color = vec4(0.5, 0, 0, 1);
+     fsout_color =  texture(sampler2D(SurfaceTexture, SurfaceSampler), fsin_texCoords);
 }";
 
     }

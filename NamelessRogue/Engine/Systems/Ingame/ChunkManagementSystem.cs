@@ -17,19 +17,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
 {
     public class ChunkManagementSystem : BaseSystem
     {
-        bool once = false;
+     //   bool once = false;
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
         public override void Update(GameTime gameTime, NamelessGame game)
         {
-            if (once)
-            {
-                return;
-            }
+            //if (once)
+            //{
+            //    return;
+            //}
 
-            if (once == false)
-            {
-                once = true; 
-            }
+            //if (once == false)
+            //{
+            //    once = true; 
+            //}
             //return;
             IEntity worldEntity = game.TimelineEntity;
             IWorldProvider worldProvider = null;
