@@ -10,14 +10,14 @@ public enum ButtonState
 
 public class MouseState : IEquatable<MouseState>
 {
-    public MouseState(object snapshot)
+    public MouseState(int x, int y, bool isRightPressed, bool isLeftPressed, bool isMiddlePressed, int middleMouseDelta)
     {
-        //X = (int)snapshot.MousePosition.X;
-        //Y = (int)snapshot.MousePosition.Y;
-        //RightPressed = snapshot.IsMouseDown(MouseButton.Right);
-        //LeftPressed  = snapshot.IsMouseDown(MouseButton.Left);
-        //MiddlePressed = snapshot.IsMouseDown(MouseButton.Middle);
-        //MouseWheelDelta = (int)snapshot.WheelDelta;
+        X = x;
+        Y =  y;
+        RightPressed = isRightPressed;
+        LeftPressed = isLeftPressed;
+        MiddlePressed = isMiddlePressed;
+        MouseWheelDelta = middleMouseDelta;
     }
 
     public int X;

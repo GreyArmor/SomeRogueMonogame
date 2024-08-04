@@ -40,7 +40,7 @@ namespace NamelessRogue.Engine.Systems
 		public override void Update(GameTime gameTime, NamelessGame game)
         {
 
-            mouseState = new MouseState(game.Input);
+            mouseState = new MouseState(0,0, false, false, false, 0);
             keyboardState = new KeyboardState(game.Input);
 
             if (keyboardState.Keys.Any())

@@ -83,6 +83,7 @@
     <PackageReference Include="MonoGame.Extended" Version="3.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RogueSharp" Version="4.2.0" />
+    <PackageReference Include="Silk.NET" Version="2.21.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AstarNavigatorNetCore\AstarNavigatorNetCore.csproj" />

@@ -12,6 +12,7 @@ using NamelessRogue.Engine.GameInstance;
 using NamelessRogue.Engine.Generation;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Infrastructure.Platforms.Silk;
 using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.Sounds;
 using NamelessRogue.Engine.Systems._3DView;
@@ -150,7 +151,7 @@ namespace NamelessRogue.shell
 
 
         WorldSettings worldSettings;
-        public object Window;
+        public IWindowWrapper Window;
 
         public ILog Log { get; private set; }
         /// <summary>
@@ -197,10 +198,10 @@ namespace NamelessRogue.shell
             //  preferDepthRangeZeroToOne: true,
             //  preferStandardClipSpaceYDirection: true);
 
-            //var window = VeldridStartup.CreateWindow(new WindowCreateInfo(50, 50, windowWidth, windowHeight, Veldrid.WindowState.Normal, "NamelessRogue"));
+            var window = new SilkWindow();
             //var gd = VeldridStartup.CreateGraphicsDevice(window, options, GraphicsBackend.Direct3D11);
             
-         //   Window =  window;
+            Window =  window;
          //   GraphicsDevice = gd;
          //   CommandList = gd.ResourceFactory.CreateCommandList();
 

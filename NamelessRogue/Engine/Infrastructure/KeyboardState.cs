@@ -11,14 +11,11 @@ namespace NamelessRogue.Engine.Infrastructure
     public struct KeyboardState
     {
         public List<Key> Keys = new List<Key>();
-        public KeyboardState(){}
+        public KeyboardState() { }
 
-        public KeyboardState(object snapshot) {
-         //   Keys = snapshot.KeyEvents.Where(ev => ev.Down).Select(x => x.Key).ToList();
+        public KeyboardState(List<Key> snapshot)
+        {
+            Keys = snapshot;
         }
-    }
-
-    public class Key
-    {
     }
 }
