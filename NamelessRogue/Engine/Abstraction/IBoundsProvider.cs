@@ -1,11 +1,11 @@
-using Veldrid;
-using Veldrid.Utilities;
+
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Abstraction
 {
     public interface IBoundsProvider
     {
-        BoundingBox Bounds { get; set; }
+        BoundingBox3D Bounds { get; set; }
         bool IsPointInside(Point point);
         bool IsPointInside(int x, int y);
     }

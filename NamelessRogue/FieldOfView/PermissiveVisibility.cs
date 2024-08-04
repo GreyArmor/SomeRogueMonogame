@@ -1,6 +1,7 @@
-﻿using System;
+﻿using NamelessRogue.Engine.Utility;
+using System;
 using System.Collections.Generic;
-using Veldrid;
+
 
 namespace NamelessRogue.FieldOfView
 {

@@ -6,25 +6,16 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Veldrid;
-using Veldrid.ImageSharp;
-using Veldrid.Utilities;
-using BoundingBox = Veldrid.Utilities.BoundingBox;
-using Point = Veldrid.Point;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
-using VertexPositionTexture = NamelessRogue.Engine.Systems.Ingame.VertexPositionTexture;
+//using VertexPositionTexture = NamelessRogue.Engine.Systems.Ingame.VertexPositionTexture;
 
 namespace NamelessRogue.Engine._3DUtility
 {
@@ -250,41 +241,42 @@ namespace NamelessRogue.Engine._3DUtility
             }
 
 
-            TextureDescription textureDescription = TextureDescription.Texture2D(
-                (uint)Constants.ChunkSize, (uint)Constants.ChunkSize, 1, 1,
-                 PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.Sampled);
-            var texture2D = game.GraphicsDevice.ResourceFactory.CreateTexture(textureDescription);
+            //TextureDescription textureDescription = TextureDescription.Texture2D(
+            //    (uint)Constants.ChunkSize, (uint)Constants.ChunkSize, 1, 1,
+            //     PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.Sampled);
+            //var texture2D = game.GraphicsDevice.ResourceFactory.CreateTexture(textureDescription);
 
-            game.GraphicsDevice.UpdateTexture(texture2D, tempArr.ToArray(), 0, 0, 0, (uint)Constants.ChunkSize, (uint)Constants.ChunkSize, 0, 0, 0);
+            //game.GraphicsDevice.UpdateTexture(texture2D, tempArr.ToArray(), 0, 0, 0, (uint)Constants.ChunkSize, (uint)Constants.ChunkSize, 0, 0, 0);
 
+            //result.Vertices = points;
+            //result.Indices = indices.ToList();
+            //result.Bounds = BoundingBox.CreateFromVertices(points.ToArray());
+            //result.Material = game.GraphicsDevice.ResourceFactory.CreateTextureView(texture2D);
+            //result.TriangleTerrainAssociation = tileTriangleAssociations;
 
-            result.Vertices = points;
-            result.Indices = indices.ToList();
-            result.Bounds = BoundingBox.CreateFromVertices(points.ToArray());
-            result.Material = game.GraphicsDevice.ResourceFactory.CreateTextureView(texture2D);
-            result.TriangleTerrainAssociation = tileTriangleAssociations;
+            //var factory = game.GraphicsDevice.ResourceFactory;
 
-            var factory = game.GraphicsDevice.ResourceFactory;
+            //result.Buffer = factory.CreateBuffer(new BufferDescription((uint)(Vertex3D.Size * vertices.Count), BufferUsage.VertexBuffer));
 
-            result.Buffer = factory.CreateBuffer(new BufferDescription((uint)(Vertex3D.Size * vertices.Count), BufferUsage.VertexBuffer));
-           
-            game.GraphicsDevice.UpdateBuffer(result.Buffer, 0, vertices.ToArray());           
+            //game.GraphicsDevice.UpdateBuffer(result.Buffer, 0, vertices.ToArray());           
 
-            result.IndexBuffer = factory.CreateBuffer(new BufferDescription((uint)(indices.Count * sizeof(int)), BufferUsage.IndexBuffer));
-            game.GraphicsDevice.UpdateBuffer(result.IndexBuffer, 0, indices.ToArray());
+            //result.IndexBuffer = factory.CreateBuffer(new BufferDescription((uint)(indices.Count * sizeof(int)), BufferUsage.IndexBuffer));
+            //game.GraphicsDevice.UpdateBuffer(result.IndexBuffer, 0, indices.ToArray());
 
-            result.TriangleCount = triangleCount;
-            
-            terrainGeometryResult.Buffer = factory.CreateBuffer(new BufferDescription((uint)(TerrainVertex.Size * terrainVertices.Count), BufferUsage.VertexBuffer));
-            terrainGeometry = terrainGeometryResult;
+            //result.TriangleCount = triangleCount;
 
-            var offsetVector = (Vector3)Vector3.Transform(new Vector3(
-                currentCorner.X - originalPointForTest.X,
-                currentCorner.Y - originalPointForTest.Y,
-                            0), Constants.ScaleDownMatrix);
+            //terrainGeometryResult.Buffer = factory.CreateBuffer(new BufferDescription((uint)(TerrainVertex.Size * terrainVertices.Count), BufferUsage.VertexBuffer));
+            //terrainGeometry = terrainGeometryResult;
 
-            terrainGeometry.WorldOffset = Matrix4x4.CreateTranslation(offsetVector);
-            terrainGeometry.VerticesCount = terrainVertices.Count;
+            //var offsetVector = (Vector3)Vector3.Transform(new Vector3(
+            //    currentCorner.X - originalPointForTest.X,
+            //    currentCorner.Y - originalPointForTest.Y,
+            //                0), Constants.ScaleDownMatrix);
+
+            //terrainGeometry.WorldOffset = Matrix4x4.CreateTranslation(offsetVector);
+            //terrainGeometry.VerticesCount = terrainVertices.Count;
+
+            terrainGeometry = null;
 
             return result;
         }
@@ -420,66 +412,66 @@ namespace NamelessRogue.Engine._3DUtility
             Vector4[] tempArr = new Vector4[Constants.ChunkSize * Constants.ChunkSize];
 
 
-            var image = new Image<Rgba32>(Constants.ChunkSize, Constants.ChunkSize);
+            //var image = new Image<Rgba32>(Constants.ChunkSize, Constants.ChunkSize);
 
-            for (int i = 0; i < Constants.ChunkSize; i++)
-            {
-                for (int j = 0; j < Constants.ChunkSize; j++)
-                {
-                    image[i,j] = new Rgba32(textureData[j, i].X, textureData[j, i].Y, textureData[j, i].Z, 1);
-                }
-            }
+            //for (int i = 0; i < Constants.ChunkSize; i++)
+            //{
+            //    for (int j = 0; j < Constants.ChunkSize; j++)
+            //    {
+            //        image[i,j] = new Rgba32(textureData[j, i].X, textureData[j, i].Y, textureData[j, i].Z, 1);
+            //    }
+            //}
             
-            var imageSharpTexture = new ImageSharpTexture(image);
-            var texture2D = imageSharpTexture.CreateDeviceTexture(game.GraphicsDevice, game.GraphicsDevice.ResourceFactory);
-            result.Bounds = BoundingBox.CreateFromVertices(points.ToArray());
-            result.Material = game.GraphicsDevice.ResourceFactory.CreateTextureView(texture2D);
-            result.TriangleTerrainAssociation = tileTriangleAssociations;
+            //var imageSharpTexture = new ImageSharpTexture(image);
+            //var texture2D = imageSharpTexture.CreateDeviceTexture(game.GraphicsDevice, game.GraphicsDevice.ResourceFactory);
+            //result.Bounds = BoundingBox.CreateFromVertices(points.ToArray());
+            //result.Material = game.GraphicsDevice.ResourceFactory.CreateTextureView(texture2D);
+            //result.TriangleTerrainAssociation = tileTriangleAssociations;
 
-            result.Vertices = points;                     
-            result.Indices = indices.ToList();
-            uint verticesCount = (uint)result.Vertices.Count();
-            uint indexCount = (uint)result.Indices.Count();
-            VertexPositionTexture[] finalVertices = new VertexPositionTexture[verticesCount];
+            //result.Vertices = points;                     
+            //result.Indices = indices.ToList();
+            //uint verticesCount = (uint)result.Vertices.Count();
+            //uint indexCount = (uint)result.Indices.Count();
+            //VertexPositionTexture[] finalVertices = new VertexPositionTexture[verticesCount];
 
-            var verticesArr = vertices.ToArray();
-            for (int i = 0; i < verticesCount; i++)
-            {
-                Vector3 point = result.Vertices[i];
-                finalVertices[i] = new VertexPositionTexture(point, verticesArr[i].textureCoordinate);
-            }
+            //var verticesArr = vertices.ToArray();
+            //for (int i = 0; i < verticesCount; i++)
+            //{
+            //    Vector3 point = result.Vertices[i];
+            //    finalVertices[i] = new VertexPositionTexture(point, verticesArr[i].textureCoordinate);
+            //}
 
-            var factory = game.GraphicsDevice.ResourceFactory;
+            //var factory = game.GraphicsDevice.ResourceFactory;
 
-            var _worldBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
+            //var _worldBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
 
-            Matrix4x4 indentity = Matrix4x4.Identity;
-            game.CommandList.UpdateBuffer(_worldBuffer, 0, ref indentity);
+            //Matrix4x4 indentity = Matrix4x4.Identity;
+            //game.CommandList.UpdateBuffer(_worldBuffer, 0, ref indentity);
 
-            ResourceLayout worldTextureLayout = factory.CreateResourceLayout(
-              new ResourceLayoutDescription(
-                  new ResourceLayoutElementDescription("WorldBuffer", ResourceKind.UniformBuffer, ShaderStages.Vertex),
-                  new ResourceLayoutElementDescription("SurfaceTexture", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
-                  new ResourceLayoutElementDescription("SurfaceSampler", ResourceKind.Sampler, ShaderStages.Fragment)));
+            //ResourceLayout worldTextureLayout = factory.CreateResourceLayout(
+            //  new ResourceLayoutDescription(
+            //      new ResourceLayoutElementDescription("WorldBuffer", ResourceKind.UniformBuffer, ShaderStages.Vertex),
+            //      new ResourceLayoutElementDescription("SurfaceTexture", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
+            //      new ResourceLayoutElementDescription("SurfaceSampler", ResourceKind.Sampler, ShaderStages.Fragment)));
 
 
 
-            var worldTextureSet = game.GraphicsDevice.ResourceFactory.CreateResourceSet(new ResourceSetDescription(
-                worldTextureLayout,
-                _worldBuffer,
-                result.Material,
-                game.GraphicsDevice.PointSampler));
+            //var worldTextureSet = game.GraphicsDevice.ResourceFactory.CreateResourceSet(new ResourceSetDescription(
+            //    worldTextureLayout,
+            //    _worldBuffer,
+            //    result.Material,
+            //    game.GraphicsDevice.PointSampler));
 
-            result.WorldTextureSet = worldTextureSet;
+            //result.WorldTextureSet = worldTextureSet;
 
-            var _vertexBuffer = game.GraphicsDevice.ResourceFactory.CreateBuffer(new BufferDescription((uint)(VertexPositionTexture.SizeInBytes * verticesCount), BufferUsage.VertexBuffer));
-            game.GraphicsDevice.UpdateBuffer(_vertexBuffer, 0, finalVertices.Take((int)verticesCount).ToArray());
+            //var _vertexBuffer = game.GraphicsDevice.ResourceFactory.CreateBuffer(new BufferDescription((uint)(VertexPositionTexture.SizeInBytes * verticesCount), BufferUsage.VertexBuffer));
+            //game.GraphicsDevice.UpdateBuffer(_vertexBuffer, 0, finalVertices.Take((int)verticesCount).ToArray());
 
-            var _indexBuffer = game.GraphicsDevice.ResourceFactory.CreateBuffer(new BufferDescription(sizeof(int) * (uint)indexCount, BufferUsage.IndexBuffer));
-            game.GraphicsDevice.UpdateBuffer(_indexBuffer, 0, result.Indices.Take((int)indexCount).Select(x => (uint)x).ToArray());
+            //var _indexBuffer = game.GraphicsDevice.ResourceFactory.CreateBuffer(new BufferDescription(sizeof(int) * (uint)indexCount, BufferUsage.IndexBuffer));
+            //game.GraphicsDevice.UpdateBuffer(_indexBuffer, 0, result.Indices.Take((int)indexCount).Select(x => (uint)x).ToArray());
 
-            result.Buffer = _vertexBuffer;
-            result.IndexBuffer = _indexBuffer;
+            //result.Buffer = _vertexBuffer;
+            //result.IndexBuffer = _indexBuffer;
 
             //result.Vertices = points;
             //result.Indices = indices.ToList();

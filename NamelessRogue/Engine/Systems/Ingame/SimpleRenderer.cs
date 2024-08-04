@@ -10,15 +10,13 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using Veldrid;
-using Veldrid.ImageSharp;
-using Veldrid.Sdl2;
-using Veldrid.SPIRV;
+
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
     internal class SimpleRenderer : RenderingSystem3D
     {
+        /*
         private readonly VertexPositionTexture[] _vertices;
         private readonly ushort[] _indices;
         NamelessGame game;
@@ -289,7 +287,7 @@ void main()
         public override string ToString()
         {
             return $@"X={PosX} Y={PosY} Z={PosZ}";
-        }
+        }*/
     }
-
+    
 }

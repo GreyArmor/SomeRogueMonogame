@@ -1,16 +1,16 @@
 ﻿using NamelessRogue.Engine.Components.Physical;
+using NamelessRogue.Engine.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Veldrid.Utilities;
 
 namespace NamelessRogue.Engine.Utility
 {
     public static class RayExtensions
     {
-        public static bool Intersects(this Ray ray, Veldrid.Utilities.BoundingBox box, out float distance)
+        public static bool Intersects(this Ray ray, BoundingBox3D box, out float distance)
         {
             float? dist = Intersects(ray, box);
             if (dist.HasValue)
@@ -25,7 +25,7 @@ namespace NamelessRogue.Engine.Utility
             }
         }
 
-        public static float? Intersects(this Ray ray, Veldrid.Utilities.BoundingBox box)
+        public static float? Intersects(this Ray ray, BoundingBox3D box)
         {
             const float Epsilon = 1e-6f;
 

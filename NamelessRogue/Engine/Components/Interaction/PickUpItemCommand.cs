@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Veldrid;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {

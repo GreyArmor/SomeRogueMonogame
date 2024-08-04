@@ -1,10 +1,9 @@
-﻿using Veldrid;
-using NamelessRogue.Engine.Components;
+﻿using NamelessRogue.Engine.Components;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
-using Veldrid.Utilities;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Utility
 {

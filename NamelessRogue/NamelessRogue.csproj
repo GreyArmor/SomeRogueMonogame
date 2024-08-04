@@ -78,19 +78,11 @@
     <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="FbxSharp" Version="0.9.0" />
     <PackageReference Include="FlatSharp" Version="6.3.5" />
-    <PackageReference Include="ImGui.NET" Version="1.89.6" />
     <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="Markov" Version="2.0.0" />
     <PackageReference Include="MonoGame.Extended" Version="3.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RogueSharp" Version="4.2.0" />
-    <PackageReference Include="Veldrid" Version="4.9.0" />
-    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0" />
-    <PackageReference Include="Veldrid.ImGui" Version="5.72.0" />
-    <PackageReference Include="Veldrid.SDL2" Version="4.9.0" />
-    <PackageReference Include="Veldrid.SPIRV" Version="1.0.15" />
-    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0" />
-    <PackageReference Include="Veldrid.Utilities" Version="4.9.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AstarNavigatorNetCore\AstarNavigatorNetCore.csproj" />

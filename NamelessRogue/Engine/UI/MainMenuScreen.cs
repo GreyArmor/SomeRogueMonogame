@@ -1,5 +1,4 @@
-﻿using ImGuiNET;
-using NamelessRogue.Engine.Infrastructure;
+﻿using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
@@ -36,32 +35,32 @@ namespace NamelessRogue.Engine.UI
 
 		public override void DrawLayout()
 		{
-			menuPosition = new System.Numerics.Vector2((uiSize.X - ((buttonSize.X + buttonSpacing.X) * buttonCount))/2, uiSize.Y * 0.9f);
-			ImGui.SetNextWindowPos(new System.Numerics.Vector2());
-			ImGui.Begin("", ImGuiWindowFlags.NoBackground|ImGuiWindowFlags.NoTitleBar|ImGuiWindowFlags.NoResize|ImGuiWindowFlags.NoScrollbar);
+			//menuPosition = new System.Numerics.Vector2((uiSize.X - ((buttonSize.X + buttonSpacing.X) * buttonCount))/2, uiSize.Y * 0.9f);
+			//ImGui.SetNextWindowPos(new System.Numerics.Vector2());
+			//ImGui.Begin("", ImGuiWindowFlags.NoBackground|ImGuiWindowFlags.NoTitleBar|ImGuiWindowFlags.NoResize|ImGuiWindowFlags.NoScrollbar);
 
-			ImGui.SetWindowSize(uiSize);
+			//ImGui.SetWindowSize(uiSize);
 		
-			ImGui.SetCursorPos(menuPosition);
-			{
-				ImGui.BeginChild("menu", menuSize);
-				{
-					ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-					if (ButtonWithSound("New game", buttonSize)) { Action = MainMenuAction.NewGame; };
+			//ImGui.SetCursorPos(menuPosition);
+			//{
+			//	ImGui.BeginChild("menu", menuSize);
+			//	{
+			//		ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
+			//		if (ButtonWithSound("New game", buttonSize)) { Action = MainMenuAction.NewGame; };
 
-					ImGui.SetCursorPos(shiftVector);
-					if (ButtonWithSound("Load game", buttonSize)) { Action = MainMenuAction.LoadGame; }
+			//		ImGui.SetCursorPos(shiftVector);
+			//		if (ButtonWithSound("Load game", buttonSize)) { Action = MainMenuAction.LoadGame; }
 
-					ImGui.SetCursorPos(shiftVector * 2);
-					if (ButtonWithSound("World generation", buttonSize)) { Action = MainMenuAction.GenerateNewTimeline; }
+			//		ImGui.SetCursorPos(shiftVector * 2);
+			//		if (ButtonWithSound("World generation", buttonSize)) { Action = MainMenuAction.GenerateNewTimeline; }
 
-					ImGui.SetCursorPos(shiftVector * 3);
-					if (ButtonWithSound("Exit", buttonSize)) { Action = MainMenuAction.Exit; }
-					ImGui.PopFont();
-				}
-				ImGui.EndChild();
-			}
-			ImGui.End();
+			//		ImGui.SetCursorPos(shiftVector * 3);
+			//		if (ButtonWithSound("Exit", buttonSize)) { Action = MainMenuAction.Exit; }
+			//		ImGui.PopFont();
+			//	}
+			//	ImGui.EndChild();
+			//}
+			//ImGui.End();
 
 		}
 	}

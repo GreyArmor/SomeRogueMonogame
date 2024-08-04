@@ -44,7 +44,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new DamageHandlingSystem());
                 systems.Add(new DeathSystem());
                 systems.Add(new HudSystem());
-                systems.Add(new Camera3DSystem(game));
+                systems.Add(new Camera3DSystem());
                 systems.Add(new TerrainClickSystem());
                 systems.Add(new SelectionSystem());
 				systems.Add(new GroupMoveSystem());
@@ -53,12 +53,12 @@ namespace NamelessRogue.Engine.Factories
 
                 // var renderingSystem = new RenderingSystem(NamelessGame.GetSettings());
 
-                var renderingSystem = new ChunkRendererSystem(game.GetSettings(), game); //new RenderingSystem3D(game.GetSettings(), game);
-                var uiSystem = new UIRenderSystem(game);
+                var renderingSystem = new ChunkRendererSystem(); //new RenderingSystem3D(game.GetSettings(), game);
+                var uiSystem = new UIRenderSystem();
 				//var spriteSystem = new SpriteRenderingSystem(game);
 
 
-				IngameContext = new GameContext(systems, new List<ISystem>() {new SimpleRenderer(game.GetSettings(), game), renderingSystem, uiSystem, new SelectionRenderingSystem(game) },
+				IngameContext = new GameContext(systems, new List<ISystem>() {new SimpleRenderer(), renderingSystem, uiSystem, new SelectionRenderingSystem(game) },
                     UIController.Instance.HudScreen, "InGame");
 
                 return IngameContext;
@@ -82,7 +82,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new WorldBoardScreenSystem(renderingSystem));
                 systems.Add(new SoundPlaySystem());
 
-                var uiSystem = new UIRenderSystem(game);
+                var uiSystem = new UIRenderSystem();
 
                 // create and init the UI manager
                 WorldBoardContext = new GameContext(systems, new List<ISystem>() { uiSystem, renderingSystem }, UIController.Instance.MapScreen, "WorldMap");
@@ -105,9 +105,9 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(),game ));
                 systems.Add(new MainMenuScreenSystem());
                 systems.Add(new SoundPlaySystem());
-                var uiSystem = new UIRenderSystem(game);
+                var uiSystem = new UIRenderSystem();
                 var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
-                var renderingSystem = new SimpleRenderer(game.GetSettings(), game); //new RenderingSystem3D(game.GetSettings(), game);
+                var renderingSystem = new SimpleRenderer(); //new RenderingSystem3D(game.GetSettings(), game);
 
                 // create and init the UI manager
                 mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem,}, UIController.Instance.MainMenu, "MainMenu");
@@ -131,7 +131,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InventoryScreenSystem());
                 systems.Add(new InventorySystem());
                 systems.Add(new SoundPlaySystem());
-                var uiSystem = new UIRenderSystem(game);
+                var uiSystem = new UIRenderSystem();
 
                 inventoryContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.InventoryScreen, "");
                 return inventoryContext;
@@ -154,7 +154,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new PickUpItemScreenSystem());
                 systems.Add(new InventorySystem());
                 systems.Add(new SoundPlaySystem());
-                var uiSystem = new UIRenderSystem(game);
+                var uiSystem = new UIRenderSystem();
 
                 pickUpContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.MainMenu, "");
                 return pickUpContext;
@@ -176,7 +176,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
                 systems.Add(new WorldGenSystem());
                 systems.Add(new SoundPlaySystem());
-                var uiSystem = new UIRenderSystem(game);
+                var uiSystem = new UIRenderSystem();
 
                 worldGenContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIController.Instance.WorldGenScreen, "NewWorld");
                 return worldGenContext;

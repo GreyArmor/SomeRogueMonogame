@@ -1,4 +1,4 @@
-﻿using Veldrid;
+﻿
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;

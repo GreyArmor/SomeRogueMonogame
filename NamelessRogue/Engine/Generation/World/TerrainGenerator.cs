@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using Veldrid;
+
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.Noise;
 using NamelessRogue.Engine.Infrastructure;
@@ -12,7 +12,7 @@ using System.Drawing;
 using VoronoiLib.Structures;
 using VoronoiLib;
 using RogueSharp.Random;
-using Point = Veldrid.Point;
+using Point = NamelessRogue.Engine.Utility.Point;
 
 /**
 * Created by Admin on 04.11.2017.

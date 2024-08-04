@@ -1,7 +1,7 @@
 ﻿using AStarNavigator;
 using AStarNavigator.Algorithms;
 using AStarNavigator.Providers;
-using Veldrid;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.shell;
 using System.Collections.Generic;

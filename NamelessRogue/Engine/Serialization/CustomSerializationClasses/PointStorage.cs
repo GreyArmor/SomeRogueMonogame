@@ -1,6 +1,7 @@
 ﻿using FlatSharp.Attributes;
-using Veldrid;
+
 using NamelessRogue.Engine.Serialization.SerializationIfrastructure;
+using NamelessRogue.Engine.Utility;
 using System;
 using System.Collections.Generic;
 using System.Text;

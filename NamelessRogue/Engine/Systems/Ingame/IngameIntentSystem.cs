@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Veldrid;
+
 
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
@@ -324,25 +324,25 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 break;
                             case IntentEnum.MouseChanged:
 
-                                var mouseState = game.Input;
+        //                        var mouseState = game.Input;
 
-                                var mousePosition = new Point((int)mouseState.MousePosition.X, (int)mouseState.MousePosition.Y);
+        //                        var mousePosition = new Point((int)mouseState.MousePosition.X, (int)mouseState.MousePosition.Y);
 
-                                var player = game.PlayerEntity;
-								var selectionData = player.GetComponentOfType<SelectionData>();
+        //                        var player = game.PlayerEntity;
+								//var selectionData = player.GetComponentOfType<SelectionData>();
 
-                                if (selectionData.SelectionState == SelectionState.None && mouseState.IsMouseDown(MouseButton.Left))
-                                {
-                                    game.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Start, mousePosition));
-                                }
-                                else if ((selectionData.SelectionState == SelectionState.Start || selectionData.SelectionState == SelectionState.Drag) && mouseState.IsMouseDown(MouseButton.Left))
-                                {
-                                    game.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Drag, mousePosition));
-                                }
-                                else if (selectionData.SelectionState == SelectionState.Drag && !mouseState.IsMouseDown(MouseButton.Left))
-                                {
-									game.Commander.EnqueueCommand(new SelectionCommand(SelectionState.End, mousePosition));
-								}
+        //                        if (selectionData.SelectionState == SelectionState.None && mouseState.IsMouseDown(MouseButton.Left))
+        //                        {
+        //                            game.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Start, mousePosition));
+        //                        }
+        //                        else if ((selectionData.SelectionState == SelectionState.Start || selectionData.SelectionState == SelectionState.Drag) && mouseState.IsMouseDown(MouseButton.Left))
+        //                        {
+        //                            game.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Drag, mousePosition));
+        //                        }
+        //                        else if (selectionData.SelectionState == SelectionState.Drag && !mouseState.IsMouseDown(MouseButton.Left))
+        //                        {
+								//	game.Commander.EnqueueCommand(new SelectionCommand(SelectionState.End, mousePosition));
+								//}
 								break;
                             default:
                                 break;

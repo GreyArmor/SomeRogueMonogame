@@ -1,5 +1,4 @@
-﻿using ImGuiNET;
-using NamelessRogue.Engine.Components.Interaction;
+﻿using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Sounds;
 using NamelessRogue.shell;
@@ -43,34 +42,34 @@ namespace NamelessRogue.Engine.UI
 
         public override void DrawLayout()
 		{
-			menuPosition = new System.Numerics.Vector2(uiSize.X - game.Settings.HudWidth + sidebarSize.X / 2 - buttonSize.X / 2, (uiSize.Y / 2) - (sidebarSize.Y / 2));
-			ImGui.SetNextWindowPos(new System.Numerics.Vector2());
-			ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
+		//	menuPosition = new System.Numerics.Vector2(uiSize.X - game.Settings.HudWidth + sidebarSize.X / 2 - buttonSize.X / 2, (uiSize.Y / 2) - (sidebarSize.Y / 2));
+		//	ImGui.SetNextWindowPos(new System.Numerics.Vector2());
+		//	ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
 
-			ImGui.SetWindowSize(uiSize);
+		//	ImGui.SetWindowSize(uiSize);
 
-			ImGui.Text($@"FPS = {FPS}");
+		//	ImGui.Text($@"FPS = {FPS}");
 
-			ImGui.SetCursorPos(menuPosition);
-			{
-				ImGui.BeginChild("menu", sidebarSize);
-				{
-					ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-					if (ButtonWithSound("Open map", buttonSize)) { Action = HudAction.OpenWorldMap; };
+		//	ImGui.SetCursorPos(menuPosition);
+		//	{
+		//		ImGui.BeginChild("menu", sidebarSize);
+		//		{
+		//			ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
+		//			if (ButtonWithSound("Open map", buttonSize)) { Action = HudAction.OpenWorldMap; };
 
-					ImGui.SetCursorPos(shiftVector);
-					if (ButtonWithSound("Open inventory", buttonSize)) { Action = HudAction.OpenInventory; }
+		//			ImGui.SetCursorPos(shiftVector);
+		//			if (ButtonWithSound("Open inventory", buttonSize)) { Action = HudAction.OpenInventory; }
                    
-					ImGui.SliderInt("rowIndexEnd", ref rowIndexEnd, 0, 100);
-                    ImGui.SliderInt("verticesPerRow", ref verticesPerRow, 0, 100);
-                    ImGui.SliderInt("substractionCoef", ref substractionCoef, -50, 50);
+		//			ImGui.SliderInt("rowIndexEnd", ref rowIndexEnd, 0, 100);
+  //                  ImGui.SliderInt("verticesPerRow", ref verticesPerRow, 0, 100);
+  //                  ImGui.SliderInt("substractionCoef", ref substractionCoef, -50, 50);
 
 
-                    ImGui.PopFont();
-				}
-				ImGui.EndChild();
-			}
-			ImGui.End();
+  //                  ImGui.PopFont();
+		//		}
+		//		ImGui.EndChild();
+		//	}
+		//	ImGui.End();
 
 		}
 	}

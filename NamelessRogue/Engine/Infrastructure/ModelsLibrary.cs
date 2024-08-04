@@ -9,9 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NamelessRogue.Engine.Systems.Ingame;
-using Veldrid;
 using System.Drawing;
-using Veldrid.Utilities;
 using System.Numerics;
 using Matrix4x4 = System.Numerics.Matrix4x4;
 using NamelessRogue.Engine.Utility;
@@ -65,7 +63,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
 				geometry.Vertices = positions.ToList();
 				geometry.Indices = mesh.GetIndices().ToList();
-				geometry.Bounds = Veldrid.Utilities.BoundingBox.CreateFromVertices(positions.ToArray());
+				geometry.Bounds = BoundingBox3D.CreateFromVertices(positions.ToArray());
 
 				//result.TriangleTerrainAssociation = tileTriangleAssociations;
 

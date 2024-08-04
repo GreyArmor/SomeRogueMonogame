@@ -1,5 +1,4 @@
-﻿using ImGuiNET;
-using System.Numerics;
+﻿using System.Numerics;
 
 
 namespace NamelessRogue.Engine.Infrastructure

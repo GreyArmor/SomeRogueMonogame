@@ -5,12 +5,13 @@ using System.Linq;
 using AStarNavigator;
 using AStarNavigator.Algorithms;
 using AStarNavigator.Providers;
-using Veldrid;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
-using Veldrid;
+
 
 namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
 {

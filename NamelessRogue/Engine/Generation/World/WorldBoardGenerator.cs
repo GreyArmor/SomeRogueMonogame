@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Markov;
 using RogueSharp.Random;
-using Veldrid;
+
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.Noise;
@@ -21,7 +21,7 @@ using VoronoiLib.Structures;
 using Color = NamelessRogue.Engine.Utility.Color;
 using NamelessRogue.Engine.Generation.World.Denizens;
 using System.Numerics;
-using Point = Veldrid.Point;
+using Point = NamelessRogue.Engine.Utility.Point;
 
 namespace NamelessRogue.Engine.Generation.World
 {

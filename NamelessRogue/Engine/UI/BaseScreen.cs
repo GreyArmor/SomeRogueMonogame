@@ -1,5 +1,4 @@
-﻿using ImGuiNET;
-using NamelessRogue.Engine.Components.Interaction;
+﻿using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Sounds;
 using NamelessRogue.shell;
 using System;
@@ -23,19 +22,19 @@ namespace NamelessRogue.Engine.UI
 		public bool ButtonWithSound(String text, System.Numerics.Vector2 size, bool enabled = true)
 		{
 			bool clicked = false;
-			if (enabled)
-			{
-				clicked = ImGui.Button(text, size);
-			}
-			else
-			{
-				ImGui.BeginDisabled();
-				ImGui.PushStyleVar(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f);
-				ImGui.Button(text, size);
-				ImGui.PopStyleVar();
-				ImGui.EndDisabled();
-			}
-			if (clicked) { game.Commander.EnqueueCommand(new PlaySoundCommand("ButtonClick", false, 0.5f)); }
+			//if (enabled)
+			//{
+			//	clicked = ImGui.Button(text, size);
+			//}
+			//else
+			//{
+			//	ImGui.BeginDisabled();
+			//	ImGui.PushStyleVar(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f);
+			//	ImGui.Button(text, size);
+			//	ImGui.PopStyleVar();
+			//	ImGui.EndDisabled();
+			//}
+			//if (clicked) { game.Commander.EnqueueCommand(new PlaySoundCommand("ButtonClick", false, 0.5f)); }
 			return clicked;
 		}
 

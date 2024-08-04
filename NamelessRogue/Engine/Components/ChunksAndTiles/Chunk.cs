@@ -13,8 +13,8 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.Utility;
-using BoundingBox = Veldrid.Utilities.BoundingBox;
-using Point = Veldrid.Point;
+using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox3D;
+using Point = NamelessRogue.Engine.Utility.Point;
 namespace NamelessRogue.Engine.Components.ChunksAndTiles
 {
     [SkipClassGeneration]
@@ -28,7 +28,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         
         private Tile[][] chunkTiles;
         
-        private BoundingBox boundingBox;
+        private BoundingBox3D boundingBox;
         
         private bool isActive;
         private bool loaded = false;

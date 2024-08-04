@@ -1,21 +1,23 @@
-﻿using System;
-using Veldrid;
+﻿using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Utility;
+using System;
+
 
 public enum ButtonState
 {
     Released, Pressed,
 }
 
-public struct MouseState : IEquatable<MouseState>
+public class MouseState : IEquatable<MouseState>
 {
-    public MouseState(InputSnapshot snapshot)
+    public MouseState(object snapshot)
     {
-        X = (int)snapshot.MousePosition.X;
-        Y = (int)snapshot.MousePosition.Y;
-        RightPressed = snapshot.IsMouseDown(MouseButton.Right);
-        LeftPressed  = snapshot.IsMouseDown(MouseButton.Left);
-        MiddlePressed = snapshot.IsMouseDown(MouseButton.Middle);
-        MouseWheelDelta = (int)snapshot.WheelDelta;
+        //X = (int)snapshot.MousePosition.X;
+        //Y = (int)snapshot.MousePosition.Y;
+        //RightPressed = snapshot.IsMouseDown(MouseButton.Right);
+        //LeftPressed  = snapshot.IsMouseDown(MouseButton.Left);
+        //MiddlePressed = snapshot.IsMouseDown(MouseButton.Middle);
+        //MouseWheelDelta = (int)snapshot.WheelDelta;
     }
 
     public int X;

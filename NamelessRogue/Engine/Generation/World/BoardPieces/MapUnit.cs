@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Veldrid;
+
 using NamelessRogue.Engine.Components.WorldBoardComponents.Combat;
 using NamelessRogue.Engine.Generation.World.Meta;
 

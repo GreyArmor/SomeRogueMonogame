@@ -2,11 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using Veldrid;
+
 using NamelessRogue.Engine.Generation.World.BoardPieces;
 using NamelessRogue.Engine.Infrastructure;
 using System.Drawing;
-using Point = Veldrid.Point;
+using Point = NamelessRogue.Engine.Utility.Point;
 
 namespace NamelessRogue.Engine.Generation.World
 {

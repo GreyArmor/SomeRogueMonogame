@@ -1,9 +1,9 @@
-﻿using Veldrid;
+﻿
 
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
-using Veldrid;
+
 using System;
 using System.Collections.Generic;
 using NamelessRogue.Engine.Infrastructure;

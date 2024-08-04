@@ -1,5 +1,4 @@
-﻿using ImGuiNET;
-using NamelessRogue.Engine.Infrastructure;
+﻿using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
@@ -42,40 +41,40 @@ namespace NamelessRogue.Engine.UI
 		public override void DrawLayout()
 		{
 			menuPosition = new System.Numerics.Vector2(10, 0);
-			ImGui.SetNextWindowPos(new System.Numerics.Vector2());
-			ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
-			ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-			ImGui.SetWindowSize(uiSize);
+			//ImGui.SetNextWindowPos(new System.Numerics.Vector2());
+			//ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
+			//ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
+			//ImGui.SetWindowSize(uiSize);
 
-			//ImGui.SetCursorPos(menuPosition);
+			////ImGui.SetCursorPos(menuPosition);
+			////{
+			//ImGui.BeginChild("menu", sidebarSize, false);
 			//{
-			ImGui.BeginChild("menu", sidebarSize, false);
-			{
 
-				//"label" is also an ID on InputText, placing ## in front of it makes it invisible while retaining the ID
-				ImGui.Text("Seed");
-				ImGui.InputText("##seedinput", ref _seed, 30);
-				ImGui.Spacing();
-				ImGui.Text("Width");
-				ImGui.InputInt("##widthinput", ref worldWidth, 1, 10);
-				ImGui.Spacing();
-				ImGui.Text("Height");
-				ImGui.InputInt("##Heightinput", ref worldHeight, 1, 10);
+			//	//"label" is also an ID on InputText, placing ## in front of it makes it invisible while retaining the ID
+			//	ImGui.Text("Seed");
+			//	ImGui.InputText("##seedinput", ref _seed, 30);
+			//	ImGui.Spacing();
+			//	ImGui.Text("Width");
+			//	ImGui.InputInt("##widthinput", ref worldWidth, 1, 10);
+			//	ImGui.Spacing();
+			//	ImGui.Text("Height");
+			//	ImGui.InputInt("##Heightinput", ref worldHeight, 1, 10);
 
-				if (worldWidth < 100) worldWidth = 100;
-				if (worldWidth > 1000) worldWidth = 1000;
+			//	if (worldWidth < 100) worldWidth = 100;
+			//	if (worldWidth > 1000) worldWidth = 1000;
 
-				if (worldHeight < 100) worldHeight = 100;
-				if (worldHeight > 1000) worldHeight = 1000;
+			//	if (worldHeight < 100) worldHeight = 100;
+			//	if (worldHeight > 1000) worldHeight = 1000;
 
-				if (ButtonWithSound("Generate", buttonSize, _seed.Any())) { Action = WorldGenAction.Generate; }
-				if (ButtonWithSound("Exit", buttonSize)) { Action = WorldGenAction.Exit; }
-			}
-
-			//ImGui.EndChild();
+			//	if (ButtonWithSound("Generate", buttonSize, _seed.Any())) { Action = WorldGenAction.Generate; }
+			//	if (ButtonWithSound("Exit", buttonSize)) { Action = WorldGenAction.Exit; }
 			//}
-			ImGui.PopFont();
-			ImGui.End();
+
+			////ImGui.EndChild();
+			////}
+			//ImGui.PopFont();
+			//ImGui.End();
 		}
 	}
 }

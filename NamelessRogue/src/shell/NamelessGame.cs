@@ -27,11 +27,8 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Windows.Forms;
-using Veldrid;
-using Veldrid.Sdl2;
-using Veldrid.StartupUtilities;
-using Point = Veldrid.Point;
-using Rectangle = Veldrid.Rectangle;
+using Point = NamelessRogue.Engine.Utility.Point;
+using Rectangle = NamelessRogue.Engine.Utility.Rectangle;
 
 namespace NamelessRogue.shell
 {
@@ -42,7 +39,7 @@ namespace NamelessRogue.shell
         //RenderTarget2D renderTarget = new RenderTarget2D(
         public GameInstance CurrentGame { get; set; }
 
-        public GraphicsDevice GraphicsDevice { get; set; }
+        public object GraphicsDevice { get; set; }
 
         public IEntity GetEntity(Guid id)
         {
@@ -153,7 +150,7 @@ namespace NamelessRogue.shell
 
 
         WorldSettings worldSettings;
-        public Sdl2Window Window;
+        public object Window;
 
         public ILog Log { get; private set; }
         /// <summary>
@@ -192,20 +189,20 @@ namespace NamelessRogue.shell
             windowHeight = GetActualCharacterHeight();
 
 
-            GraphicsDeviceOptions options = new GraphicsDeviceOptions(
-              debug: true,
-              swapchainDepthFormat: PixelFormat.R16_UNorm,
-              syncToVerticalBlank: true,
-              resourceBindingModel: ResourceBindingModel.Improved,
-              preferDepthRangeZeroToOne: true,
-              preferStandardClipSpaceYDirection: true);
+            //GraphicsDeviceOptions options = new GraphicsDeviceOptions(
+            //  debug: true,
+            //  swapchainDepthFormat: PixelFormat.R16_UNorm,
+            //  syncToVerticalBlank: true,
+            //  resourceBindingModel: ResourceBindingModel.Improved,
+            //  preferDepthRangeZeroToOne: true,
+            //  preferStandardClipSpaceYDirection: true);
 
-            var window = VeldridStartup.CreateWindow(new WindowCreateInfo(50, 50, windowWidth, windowHeight, Veldrid.WindowState.Normal, "NamelessRogue"));
-            var gd = VeldridStartup.CreateGraphicsDevice(window, options, GraphicsBackend.Direct3D11);
+            //var window = VeldridStartup.CreateWindow(new WindowCreateInfo(50, 50, windowWidth, windowHeight, Veldrid.WindowState.Normal, "NamelessRogue"));
+            //var gd = VeldridStartup.CreateGraphicsDevice(window, options, GraphicsBackend.Direct3D11);
             
-            Window =  window;
-            GraphicsDevice = gd;
-            CommandList = gd.ResourceFactory.CreateCommandList();
+         //   Window =  window;
+         //   GraphicsDevice = gd;
+         //   CommandList = gd.ResourceFactory.CreateCommandList();
 
             ModelsLibrary.Initialize(this);
 
@@ -377,13 +374,6 @@ namespace NamelessRogue.shell
             loadScheduled = true;
         }
 
-        public TextureView RenderTarget { get; set; }
-
-        //public SpriteBatch Batch
-        //{
-        //	get { return spriteBatch; }
-        //}
-
         public WorldSettings WorldSettings
         {
             get { return worldSettings; }
@@ -392,10 +382,10 @@ namespace NamelessRogue.shell
         public bool IsInitialized { get; internal set; }
         public GameSettings Settings { get => settings; set => settings = value; }
         public bool IsActive { get; internal set; } = true;
-        public float AspectRatio { get { return (float)Window.Width / Window.Height; } }
+        public float AspectRatio { get { return 1; /*(float)Window.Width / Window.Height;*/ } }
 
-        public CommandList CommandList { get; internal set; }
-        public InputSnapshot Input { get; internal set; }
+        public object CommandList { get; internal set; }
+        public object Input { get; internal set; }
 
         //public List<IEntity> EntitiesToAdd { get => entitiesToAdd; set => entitiesToAdd = value; }
         //public List<IEntity> EntitiesToRemove { get => entitiesToRemove; set => entitiesToRemove = value; }
@@ -512,13 +502,13 @@ namespace NamelessRogue.shell
             IngameScreen.FPS = _frameCounter.AverageFramesPerSecond.ToString();
 
 
-            CommandList.Begin();
-            CommandList.SetFramebuffer(GraphicsDevice.MainSwapchain.Framebuffer);
-            CommandList.ClearColorTarget(0, RgbaFloat.Black);
-            CurrentContext.RenderingUpdate(GameTime, this);
-            CommandList.End();
-            GraphicsDevice.SubmitCommands(CommandList);
-            GraphicsDevice.SwapBuffers(GraphicsDevice.MainSwapchain);
+            //CommandList.Begin();
+            //CommandList.SetFramebuffer(GraphicsDevice.MainSwapchain.Framebuffer);
+            //CommandList.ClearColorTarget(0, RgbaFloat.Black);
+            //CurrentContext.RenderingUpdate(GameTime, this);
+            //CommandList.End();
+            //GraphicsDevice.SubmitCommands(CommandList);
+            //GraphicsDevice.SwapBuffers(GraphicsDevice.MainSwapchain);
 
             // Window.BeginScene(0,0,0,1);
           
@@ -532,10 +522,10 @@ namespace NamelessRogue.shell
             LoadContent();
             Initialize();
             gameTimeStopwatch.Start();
-            while (Window.Exists)
+            while (true)
             {
-                Input = Window.PumpEvents();
-                if (!Window.Exists) { break; }
+            //    Input = Window.PumpEvents();
+            //    if (!Window.Exists) { break; }
                 GameTime.ElapsedGameTime = gameTimeStopwatch.Elapsed - GameTime.TotalGameTime;
                 GameTime.TotalGameTime = gameTimeStopwatch.Elapsed;
                 Update(GameTime);

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using Veldrid;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;

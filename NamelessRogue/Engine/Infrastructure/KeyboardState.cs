@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Veldrid;
+
 
 namespace NamelessRogue.Engine.Infrastructure
 {
@@ -13,8 +13,12 @@ namespace NamelessRogue.Engine.Infrastructure
         public List<Key> Keys = new List<Key>();
         public KeyboardState(){}
 
-        public KeyboardState(InputSnapshot snapshot) {
-            Keys = snapshot.KeyEvents.Where(ev => ev.Down).Select(x => x.Key).ToList();
+        public KeyboardState(object snapshot) {
+         //   Keys = snapshot.KeyEvents.Where(ev => ev.Down).Select(x => x.Key).ToList();
         }
+    }
+
+    public class Key
+    {
     }
 }

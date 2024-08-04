@@ -1,6 +1,7 @@
+using NamelessRogue.Engine.Utility;
 using System.Collections.Generic;
-using Veldrid;
-using Veldrid;
+
+
 
 namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
 {

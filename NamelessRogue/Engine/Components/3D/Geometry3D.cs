@@ -1,10 +1,9 @@
-﻿using Veldrid;
-using NamelessRogue.Engine.Systems.Ingame;
+﻿using NamelessRogue.Engine.Systems.Ingame;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Veldrid.Utilities;
 using System.Numerics;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Components
 {
@@ -15,21 +14,21 @@ namespace NamelessRogue.Engine.Components
 		public List<Vector3> Vertices { get; set; }
 		public List<int> Indices { get; set; }
 		public int TriangleCount { get; set; }
-		public DeviceBuffer Buffer { get; set; }
-		public DeviceBuffer IndexBuffer { get; set; }
-		public BoundingBox Bounds;
-		public TextureView Material { get; set; }
+		public object Buffer { get; set; }
+		public object  IndexBuffer { get; set; }
+		public BoundingBox3D Bounds;
+		public object  Material { get; set; }
 
-        public ResourceSet WorldTextureSet { get; set; }
+		public object WorldTextureSet { get; set; }
 
-        public void Dispose()
+		public void Dispose()
 		{
-			Buffer?.Dispose();
-			IndexBuffer?.Dispose();
-			Material?.Dispose();
-			Indices?.Clear();
-			Vertices?.Clear();
-			TriangleTerrainAssociation?.Clear();
+			//Buffer?.Dispose();
+			//IndexBuffer?.Dispose();
+			//Material?.Dispose();
+			//Indices?.Clear();
+			//Vertices?.Clear();
+			//TriangleTerrainAssociation?.Clear();
 		}
 	}
 }

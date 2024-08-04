@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Veldrid;
+
 using NamelessRogue.Engine.Abstraction;
-using Veldrid.Utilities;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Generation.World
 {
@@ -20,11 +20,11 @@ namespace NamelessRogue.Engine.Generation.World
 		{
 		}
 
-		public CitySlot(BoundingBox placement)
+		public CitySlot(BoundingBox3D placement)
         {
             Placement = placement;
         }
-        public BoundingBox Placement { get; set; }
+        public BoundingBox3D Placement { get; set; }
         public bool Occupied { get; set; }
         public IEntity OccupiedBy { get; set; }
     }

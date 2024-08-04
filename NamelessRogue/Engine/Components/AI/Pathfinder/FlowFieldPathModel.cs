@@ -1,9 +1,10 @@
-﻿using Veldrid;
+﻿
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems._3DView;
+using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,8 +13,6 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Windows.Forms;
 using Constants = NamelessRogue.Engine.Infrastructure.Constants;
-using Veldrid.Utilities;
-using Veldrid;
 namespace NamelessRogue.Engine.Components.AI.Pathfinder
 {
 	internal class FlowFieldPathModel
@@ -36,7 +35,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 		Dictionary<Point, FlowNode> Nodes;
 		bool[,] avalabilityArray;
 		int boolsWidth, boolsHeight;
-		BoundingBox chunksBox;
+		BoundingBox3D chunksBox;
 
 		public bool IsCalculated { get; internal set; }
 
@@ -55,7 +54,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		
 
-			chunksBox = chunks.Select(x => x.Bounds).Aggregate((a, b) => { return BoundingBox.Combine(a, b); });
+			chunksBox = chunks.Select(x => x.Bounds).Aggregate((a, b) => { return BoundingBox3D.Combine(a, b); });
 
 			boolsWidth = (int)(chunksBox.Max.X - chunksBox.Min.X);
 			boolsHeight = (int)(chunksBox.Max.Y - chunksBox.Min.Y);
