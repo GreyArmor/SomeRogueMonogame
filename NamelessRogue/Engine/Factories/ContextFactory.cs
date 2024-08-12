@@ -8,7 +8,6 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Context;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.Systems;
-using NamelessRogue.Engine.Systems._3DView;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Systems.Inventory;
 using NamelessRogue.Engine.Systems.MainMenu;
@@ -44,21 +43,15 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new DamageHandlingSystem());
                 systems.Add(new DeathSystem());
                 systems.Add(new HudSystem());
-                systems.Add(new Camera3DSystem(game));
-                systems.Add(new TerrainClickSystem());
-                systems.Add(new SelectionSystem());
-				systems.Add(new GroupMoveSystem());
-				systems.Add(new Chunk3DManagementSystem());
                 systems.Add(new SoundPlaySystem());
               
                // var renderingSystem = new RenderingSystem(game.GetSettings());
 
-                var renderingSystem = new RenderingSystem3D(game.GetSettings(), game);
+                var renderingSystem = new RenderingSystem(game.GetSettings());
                 var uiSystem = new UIRenderSystem(game);
-				var spriteSystem = new SpriteRenderingSystem(game);
 
 
-				IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem, spriteSystem, uiSystem, new SelectionRenderingSystem(game) },
+				IngameContext = new GameContext(systems, new List<ISystem>() {renderingSystem,  uiSystem },
                     UIController.Instance.HudScreen, "InGame");
 
                 return IngameContext;

@@ -18,7 +18,6 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.Serialization;
-using NamelessRogue.Engine.Systems._3DView;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
@@ -49,37 +48,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         switch (intent.Intention)
                         {
 
-                            case IntentEnum.MoveUp:
-                            case IntentEnum.MoveDown:
-                            case IntentEnum.MoveLeft:
-                            case IntentEnum.MoveRight:
-                            case IntentEnum.MoveTopLeft:
-                            case IntentEnum.MoveTopRight:
-                            case IntentEnum.MoveBottomLeft:
-                            case IntentEnum.MoveBottomRight:
-								MoveCamera3dCommand cameraMove = new MoveCamera3dCommand();
-                                if (intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft || intent.Intention == IntentEnum.MoveTopRight)
-                                {
-                                    cameraMove.MovesToMake.Add(MoveType.Forward);
-								}
-								if(intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft || intent.Intention == IntentEnum.MoveBottomRight)
-
-								{
-									cameraMove.MovesToMake.Add(MoveType.Backward);
-								}
-								if(intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveTopLeft || intent.Intention == IntentEnum.MoveBottomLeft)
-
-								{
-									cameraMove.MovesToMake.Add(MoveType.Left);
-								}
-								if(intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveTopRight || intent.Intention == IntentEnum.MoveBottomRight)
-
-								{
-									cameraMove.MovesToMake.Add(MoveType.Right);
-								}
-								namelessGame.Commander.EnqueueCommand(cameraMove);
-								break;
-
                             //case IntentEnum.MoveUp:
                             //case IntentEnum.MoveDown:
                             //case IntentEnum.MoveLeft:
@@ -88,109 +56,140 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             //case IntentEnum.MoveTopRight:
                             //case IntentEnum.MoveBottomLeft:
                             //case IntentEnum.MoveBottomRight:
-                            //{
+								//MoveCamera3dCommand cameraMove = new MoveCamera3dCommand();
+        //                        if (intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft || intent.Intention == IntentEnum.MoveTopRight)
+        //                        {
+        //                            cameraMove.MovesToMake.Add(MoveType.Forward);
+								//}
+								//if(intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft || intent.Intention == IntentEnum.MoveBottomRight)
 
-                            //    Position position = playerEntity.GetComponentOfType<Position>();
-                            //    var actionPoints = playerEntity.GetComponentOfType<ActionPoints>();
-                            //    if (position != null && actionPoints.Points>=100)
-                            //    {
+								//{
+								//	cameraMove.MovesToMake.Add(MoveType.Backward);
+								//}
+								//if(intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveTopLeft || intent.Intention == IntentEnum.MoveBottomLeft)
 
-                            //        int newX =
-                            //            intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
-                            //            intent.Intention == IntentEnum.MoveTopLeft ? position.Point.X - 1 :
-                            //            intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
-                            //            intent.Intention == IntentEnum.MoveTopRight ? position.Point.X + 1 :
-                            //            position.Point.X;
-                            //        int newY =
-                            //            intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
-                            //            intent.Intention == IntentEnum.MoveBottomRight ? position.Point.Y + 1 :
-                            //            intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft ||
-                            //            intent.Intention == IntentEnum.MoveTopRight ? position.Point.Y - 1 :
-                            //            position.Point.Y;
+								//{
+								//	cameraMove.MovesToMake.Add(MoveType.Left);
+								//}
+								//if(intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveTopRight || intent.Intention == IntentEnum.MoveBottomRight)
 
-                            //        IEntity worldEntity = namelessGame.TimelineEntity;
-                            //        IWorldProvider worldProvider = null;
-                            //        if (worldEntity != null)
-                            //        {
-                            //            worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-                            //        }
+								//{
+								//	cameraMove.MovesToMake.Add(MoveType.Right);
+								//}
+								//namelessGame.Commander.EnqueueCommand(cameraMove);
+								//break;
 
-                            //            Tile tileToMoveTo = worldProvider.GetTile(newX, newY);
+                            case IntentEnum.MoveUp:
+                            case IntentEnum.MoveDown:
+                            case IntentEnum.MoveLeft:
+                            case IntentEnum.MoveRight:
+                            case IntentEnum.MoveTopLeft:
+                            case IntentEnum.MoveTopRight:
+                            case IntentEnum.MoveBottomLeft:
+                            case IntentEnum.MoveBottomRight:
+                            {
+
+                                Position position = playerEntity.GetComponentOfType<Position>();
+                                var actionPoints = playerEntity.GetComponentOfType<ActionPoints>();
+                                if (position != null && actionPoints.Points >= 100)
+                                {
+
+                                    int newX =
+                                        intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
+                                        intent.Intention == IntentEnum.MoveTopLeft ? position.Point.X - 1 :
+                                        intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.X + 1 :
+                                        position.Point.X;
+                                    int newY =
+                                        intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
+                                        intent.Intention == IntentEnum.MoveBottomRight ? position.Point.Y + 1 :
+                                        intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft ||
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.Y - 1 :
+                                        position.Point.Y;
+
+                                    IEntity worldEntity = namelessGame.TimelineEntity;
+                                    IWorldProvider worldProvider = null;
+                                    if (worldEntity != null)
+                                    {
+                                        worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+                                    }
+
+                                    Tile tileToMoveTo = worldProvider.GetTile(newX, newY);
 
 
-                            //        IEntity entityThatOccupiedTile = null;
-                            //        foreach (IEntity tileEntity in tileToMoveTo.GetEntities())
-                            //        {
-                            //            OccupiesTile occupiesTile =
-                            //                tileEntity.GetComponentOfType<OccupiesTile>();
-                            //            if (occupiesTile != null)
-                            //            {
-                            //                entityThatOccupiedTile = tileEntity;
-                            //                break;
-                            //            }
-                            //        }
+                                    IEntity entityThatOccupiedTile = null;
+                                    foreach (IEntity tileEntity in tileToMoveTo.GetEntities())
+                                    {
+                                        OccupiesTile occupiesTile =
+                                            tileEntity.GetComponentOfType<OccupiesTile>();
+                                        if (occupiesTile != null)
+                                        {
+                                            entityThatOccupiedTile = tileEntity;
+                                            break;
+                                        }
+                                    }
 
 
-                            //        if (entityThatOccupiedTile != null)
-                            //        {
-                            //            Door door = entityThatOccupiedTile.GetComponentOfType<Door>();
-                            //            Character characterComponent =
-                            //                entityThatOccupiedTile.GetComponentOfType<Character>();
-                            //            if (door != null)
-                            //            {
-                            //                SimpleSwitch simpleSwitch =
-                            //                    entityThatOccupiedTile.GetComponentOfType<SimpleSwitch>();
-                            //                if (simpleSwitch != null == simpleSwitch.isSwitchActive())
-                            //                {
-                            //                    entityThatOccupiedTile.GetComponentOfType<Drawable>()
-                            //                        .Representation = 'o';
-                            //                    entityThatOccupiedTile.RemoveComponentOfType<BlocksVision>();
-                            //                    entityThatOccupiedTile.RemoveComponentOfType<OccupiesTile>();
+                                    if (entityThatOccupiedTile != null)
+                                    {
+                                        Door door = entityThatOccupiedTile.GetComponentOfType<Door>();
+                                        Character characterComponent =
+                                            entityThatOccupiedTile.GetComponentOfType<Character>();
+                                        if (door != null)
+                                        {
+                                            SimpleSwitch simpleSwitch =
+                                                entityThatOccupiedTile.GetComponentOfType<SimpleSwitch>();
+                                            if (simpleSwitch != null == simpleSwitch.isSwitchActive())
+                                            {
+                                                entityThatOccupiedTile.GetComponentOfType<Drawable>()
+                                                    .Representation = 'o';
+                                                entityThatOccupiedTile.RemoveComponentOfType<BlocksVision>();
+                                                entityThatOccupiedTile.RemoveComponentOfType<OccupiesTile>();
 
-                            //                    namelessGame.Commander.EnqueueCommand(
-                            //                        new ChangeSwitchStateCommand(simpleSwitch, false));
-                            //                    var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                            //                    ap.Points -= Constants.ActionsMovementCost;
-                            //                 //   playerEntity.RemoveComponentOfType<HasTurn>();
+                                                namelessGame.Commander.EnqueueCommand(
+                                                    new ChangeSwitchStateCommand(simpleSwitch, false));
+                                                var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                                                ap.Points -= Constants.ActionsMovementCost;
+                                                //   playerEntity.RemoveComponentOfType<HasTurn>();
 
-                            //                }
-                            //                else
-                            //                {
+                                            }
+                                            else
+                                            {
 
-                            //                    worldProvider.MoveEntity(playerEntity,
-                            //                        new Point(newX, newY));
-                            //                    var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                            //                    ap.Points -= Constants.ActionsMovementCost;
+                                                worldProvider.MoveEntity(playerEntity,
+                                                    new Point(newX, newY));
+                                                var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                                                ap.Points -= Constants.ActionsMovementCost;
 
-                            //                }
-                            //            }
+                                            }
+                                        }
 
-                            //            if (characterComponent != null)
-                            //            {
-                            //                //TODO: if hostile
-                            //                namelessGame.Commander.EnqueueCommand(new AttackCommand(playerEntity,
-                            //                    entityThatOccupiedTile));
+                                        if (characterComponent != null)
+                                        {
+                                            //TODO: if hostile
+                                            namelessGame.Commander.EnqueueCommand(new AttackCommand(playerEntity,
+                                                entityThatOccupiedTile));
 
-                            //                var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                            //                ap.Points -= Constants.ActionsAttackCost;
-                            //               // playerEntity.RemoveComponentOfType<HasTurn>();
+                                            var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                                            ap.Points -= Constants.ActionsAttackCost;
+                                            // playerEntity.RemoveComponentOfType<HasTurn>();
 
-                            //                //TODO: do something else if friendly: chat, trade, etc
+                                            //TODO: do something else if friendly: chat, trade, etc
 
-                            //            }
-                            //        }
-                            //        else
-                            //        {
-                            //            worldProvider.MoveEntity(playerEntity,
-                            //                new Point(newX, newY));
-                            //                var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                            //            ap.Points -= Constants.ActionsMovementCost;
-                            //        }
-                            //    }
-                            //}
+                                        }
+                                    }
+                                    else
+                                    {
+                                        worldProvider.MoveEntity(playerEntity,
+                                            new Point(newX, newY));
+                                        var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                                        ap.Points -= Constants.ActionsMovementCost;
+                                    }
+                                }
+                            }
 
-                            //    break;
-                            case IntentEnum.LookAtMode:
+                            break;
+                        case IntentEnum.LookAtMode:
                                 //InputReceiver receiver = new InputReceiver();
                                 //Player player = entity.GetComponentOfType<Player>();
                                 //cursor = entity.GetComponentOfType<Cursor>();

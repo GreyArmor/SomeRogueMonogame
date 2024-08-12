@@ -28,7 +28,6 @@ using System.Runtime.InteropServices;
 using NamelessRogue.Engine.Sounds;
 using Microsoft.Xna.Framework.Audio;
 using NamelessRogue.Engine.Components._3D;
-using NamelessRogue.Engine.Systems._3DView;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework.Media;
 using NamelessRogue.Engine.Components.Interaction;
@@ -223,8 +222,7 @@ namespace NamelessRogue.shell
 			CameraEntity = viewportEntity;
 			
 			if (true)
-			{
-			
+			{			
 				TerrainFurnitureFactory.CreateFurnitureEntities(this);
 				Entity chunksHolder = new Entity();
 				Chunk3dGeometryHolder holder = new Chunk3dGeometryHolder();
@@ -303,6 +301,8 @@ namespace NamelessRogue.shell
 					{
 						anyRivers = true;
 						worldRiverPosition = pos;
+						x = pos.X;
+						y = pos.Y;
 						break;
 					}
 				}
@@ -311,7 +311,7 @@ namespace NamelessRogue.shell
 				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);
 				PlayerEntity = player;
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
-
+/*
 				var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 2, 2);
 
 				CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "1", this);
@@ -331,7 +331,7 @@ namespace NamelessRogue.shell
 
 
 				rect = new Rectangle(TestMapPosition.Point.X + 10, TestMapPosition.Point.Y + 10, 2, 2);
-				
+				*/
 			//	CharacterFactory.CreateNpcField(rect, -Vector2.UnitY, "Blue", "2", this);
 
 			
@@ -340,28 +340,14 @@ namespace NamelessRogue.shell
 
 
 
-				if (false)//if (anyRivers)
+				if (anyRivers)
 				{
 					//move player to some river
-					PlayerEntity.GetComponentOfType<Position>().Point = new Point(200 * Constants.ChunkSize, 200 * Constants.ChunkSize);
+					PlayerEntity.GetComponentOfType<Position>().Point = new Point(x * Constants.ChunkSize, y * Constants.ChunkSize);
 					chunkManagementSystem.Update(zero, this);
 				}
 
 				CursorEntity = GameInitializer.CreateCursor();
-
-				for (int i = x - Constants.RealityBubbleRangeInChunks; i < x + Constants.RealityBubbleRangeInChunks; i++)
-				{
-					for (int j = y - Constants.RealityBubbleRangeInChunks; j < y + Constants.RealityBubbleRangeInChunks; j++)
-					{
-						var p = new Point(i, j);
-						UpdateChunkCommand command = new UpdateChunkCommand(p);
-						Commander.EnqueueCommand(command);
-
-						//var chunk = WorldProvider.GetChunks()[p];
-						//WorldProvider.GetRealityBubbleChunks().Add(p, chunk);
-						//WorldProvider.RealityChunks.Add(chunk);
-					}
-				}
 			}
 
 			CurrentContext = ContextFactory.GetMainMenuContext(this);
@@ -539,7 +525,7 @@ namespace NamelessRogue.shell
 
 			IngameScreen.FPS = _frameCounter.AverageFramesPerSecond.ToString();
 
-			GraphicsDevice.Clear(Color.SkyBlue);
+			GraphicsDevice.Clear(Color.Black);
 			CurrentContext.RenderingUpdate(gameTime, this);
 		}
 	}

@@ -3,7 +3,6 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
-using NamelessRogue.Engine.Systems._3DView;
 using NamelessRogue.shell;
 using System.Collections;
 using System.Collections.Generic;
