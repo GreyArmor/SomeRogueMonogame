@@ -213,7 +213,7 @@ namespace NamelessRogue.shell
 			ModelsLibrary.Initialize(this);
 
 			//12345 123
-			worldSettings = new WorldSettings(4, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
+			worldSettings = new WorldSettings(12345, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
 
 
 			new UIController(this);

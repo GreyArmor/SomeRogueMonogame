@@ -64,8 +64,8 @@ namespace NamelessRogue.Engine.Generation.World
             worldBoard.Chunks = chunkData;
 
             WorldBoardGenerator.PopulateWithInitialData(worldBoard, game);
-            WorldBoardGenerator.AnalizeLandmasses(worldBoard, game);
-            WorldBoardGenerator.PlaceInitialCivilizations(worldBoard, game);
+           // WorldBoardGenerator.AnalizeLandmasses(worldBoard, game);
+           // WorldBoardGenerator.PlaceInitialCivilizations(worldBoard, game);
             //WorldBoardGenerator.PlaceInitialArtifacts(worldBoard, game);
             //WorldBoardGenerator.PlaceResources(worldBoard, game);
             //WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);

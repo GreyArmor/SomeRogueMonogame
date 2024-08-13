@@ -378,7 +378,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
-                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
+                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible && x > 0 && y > 0)
                     {
                         Tile tileToDraw = world.GetTile(x, y);
 
@@ -414,7 +414,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
-                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
+                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible && x>0 && y>0)
                     {
                         Tile tileToDraw = world.GetTile(x, y);
                         GetTerrainTile(screen, TerrainLibrary.Terrains[tileToDraw.Terrain], screenPoint);

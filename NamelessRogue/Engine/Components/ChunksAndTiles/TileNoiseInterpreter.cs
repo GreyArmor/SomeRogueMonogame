@@ -21,6 +21,15 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                 noiseValue=0;
             }
 
+            if (noiseValue <= SeaLevelThreshold)
+            {
+                return new Tuple<Terrain, Biome>(TerrainLibrary.Terrains[TerrainTypes.Water], BiomesLibrary.Biomes[Biomes.Sea]);
+            }
+            else
+            {
+                return new Tuple<Terrain, Biome>(TerrainLibrary.Terrains[TerrainTypes.Grass], BiomesLibrary.Biomes[Biomes.Plains]);
+            }
+
             var temperatureCoef = y / resolutionZoomed + temperature;
 
 

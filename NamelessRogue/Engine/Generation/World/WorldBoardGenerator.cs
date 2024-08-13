@@ -249,6 +249,9 @@ namespace NamelessRogue.Engine.Generation.World
 			var culledEdges = allInlandEdges.Where(edge => random.Next(1, 101) > cullingChance).ToList();
 			culledEdges.AddRange(edgesByTheSea.Where(edge => random.Next(1, 101) > cullingChance));
 
+			//remove edges collapsed to one point
+			culledEdges = culledEdges.Where(x=>x.Start.X!=x.End.X || x.Start.Y != x.End.Y).ToList();
+
 			//remove desert rivers with high probability
 			var cullingDesertChance = 90;
 
@@ -277,7 +280,7 @@ namespace NamelessRogue.Engine.Generation.World
 
 				listVectorEdgePoints.Add(startVector);
 
-				var riverWiggle = 3;
+				var riverWiggle = 1;
 
 				for (int i = 1; i < pointCountForLerpAndRandomization - 1; i++)
 				{
