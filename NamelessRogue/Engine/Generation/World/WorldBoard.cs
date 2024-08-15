@@ -55,7 +55,7 @@ namespace NamelessRogue.Engine.Generation.World
 
 		public List<Waypoints> Roads { get; set; } = new List<Waypoints>();
 
-        public List<CityPart> CityParts { get; set; }
+        //public List<CityPart> CityParts { get; set; }
 
 
 		//used for river/lake generation
@@ -99,7 +99,7 @@ namespace NamelessRogue.Engine.Generation.World
 			}
 
 			RiverBorderLines = new List<Waypoints>();
-			CityParts = new List<CityPart>();
+			//CityParts = new List<CityPart>();
 		}
 
 		public WorldBoard()

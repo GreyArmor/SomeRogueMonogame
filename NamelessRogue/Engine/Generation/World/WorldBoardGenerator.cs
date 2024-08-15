@@ -27,6 +27,7 @@ using AStarNavigator.Providers;
 using AStarNavigator;
 using static NamelessRogue.Engine.Components.AI.NonPlayerCharacter.AStarPathfinderSimple;
 using System.Reflection.Metadata;
+using NamelessRogue.Engine.Generation.World.TerrainFeatures;
 
 namespace NamelessRogue.Engine.Generation.World
 {
@@ -172,82 +173,94 @@ namespace NamelessRogue.Engine.Generation.World
 
 
 
-            board.CityParts = new List<CityPart>();
+            //board.CityParts = new List<CityPart>();
 
             var testCityPart = new CityPart();
 
             testCityPart.Center = new Microsoft.Xna.Framework.Point(200, 200);
 
-            testCityPart.Transform = Matrix.CreateRotationZ(MathHelper.ToRadians(0)) * Matrix.CreateTranslation(200, 200, 0);
+            
 
             //generate random roads here
+
+          
+
+            for (int i = 0; i < 10; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    Vector2 startV = new Vector2((float)i, 0);
+                    Vector2 endV = new Vector2((float)i, 10);
+                    CreateRoad(board, testCityPart.Center.ToVector2(), startV, endV);
+                }
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    Vector2 startV = new Vector2(0, i);
+                    Vector2 endV = new Vector2(10, i);
+                    CreateRoad(board, testCityPart.Center.ToVector2(), startV, endV);
+                }
+            }
+
+            //  board.CityParts.Add(testCityPart);
+
+            OldRiverGeneration(board, game, resolution, random, fillArray);
+        }
+
+        private static void CreateRoad(WorldBoard board, Vector2 center, Vector2 startV, Vector2 endV)
+        {
 
             var navigator = new TileNavigator(
              new EmptyBlockedProvider(),         // Instance of: IBockedProvider
              new DiagonalNeighborProvider(),     // Instance of: INeighborProvider
              new PythagorasAlgorithm(),          // Instance of: IDistanceAlgorithm
              new ManhattanHeuristicAlgorithm()   // Instance of: IDistanceAlgorithm
-            );
+             );
 
+            Waypoints road = new Waypoints();
 
-            for (int i = 0; i < 10; i++)
+            var start = new AStarNavigator.Tile(startV.X, startV.Y);
+            var end = new AStarNavigator.Tile(endV.X, endV.Y);
+
+            var result = navigator.Navigate(start, end);
+
+            foreach (var point in result)
             {
-                //  for (int j = 0; j < 50; j++)
-                // {
-                if (i % 2 == 0)
-                {
-                    Waypoints road = new Waypoints();
-
-                    var start = new AStarNavigator.Tile(i, 0);
-                    var end = new AStarNavigator.Tile(i, 10);
-
-                    var result = navigator.Navigate(start, end);
-
-                    foreach (var point in result)
-                    {
-                        road.Points.Add(new Vector2((float)point.X, (float)point.Y));
-                    }
-
-                    foreach (var point in road.Points.ToList())
-                    {
-                        for (int x = (int)(point.X - 2); x <= point.X + 2; x++)
-                        {
-                            for (int y = (int)(point.Y - 2); y <= point.Y + 2; y++)
-                            {
-                                road.Points.Add(new Vector2(x, y));
-                            }
-                        }
-                    }
-
-                    road.Points = road.Points.Distinct().ToList();
-
-                    testCityPart.Roads.Add(road);
-                }
+                road.Points.Add(new Vector2((float)point.X, (float)point.Y));
             }
 
-            board.CityParts.Add(testCityPart);
-
-            foreach (CityPart part in board.CityParts)
+            foreach (var point in road.Points.ToList())
             {
-                foreach (Waypoints road in part.Roads)
+                for (int x = (int)(point.X - 2); x <= point.X + 2; x++)
                 {
-                    var transformedRoad = new Waypoints();
-                    foreach (var point in road.Points)
+                    for (int y = (int)(point.Y - 2); y <= point.Y + 2; y++)
                     {
-                        transformedRoad.Points.Add(Vector2.Transform(point, part.Transform));
-                    }
-                    board.Roads.Add(transformedRoad);
-
-                    foreach (var p in transformedRoad.Points)
-                    {
-                        board.TerrainFeatures[(int)Math.Round(p.X,0)][(int)(int)Math.Round(p.Y, 0)].Roads.Add(transformedRoad);
+                        road.Points.Add(new Vector2(x, y));
                     }
                 }
             }
 
-            OldRiverGeneration(board, game, resolution, random, fillArray);
+            var transformedRoad = new Waypoints();
+            foreach (var point in road.Points)
+            {
+                transformedRoad.Points.Add(point + center);
+            }
+            board.Roads.Add(transformedRoad);
+
+            var roadTF = new RoadTF(new Vector2((float)start.X, (float)start.Y) + center, new Vector2((float)end.X, (float)end.Y) + center);
+
+            foreach (var p in transformedRoad.Points)
+            {
+                var chunkPoint = new Microsoft.Xna.Framework.Point((int)p.X, (int)p.Y);
+                board.Chunks.GetChunks()[chunkPoint].TerrainFeatures.Add(roadTF);
+                board.TerrainFeatures[(int)Math.Round(p.X, 0)][(int)(int)Math.Round(p.Y, 0)].Roads.Add(transformedRoad);
+            }
         }
 
+       
         private static void InitBoardWithoutFeatures(WorldBoard board, NamelessGame game, int resolution)
         {
             for (int x = 0; x < game.WorldSettings.WorldBoardWidth; x++)
