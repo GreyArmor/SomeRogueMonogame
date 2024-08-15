@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Serialization;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Generation.World;
@@ -52,8 +53,27 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
         public void FillWithTiles(TerrainGenerator generator, WorldBoard board)
         {
+            for (int x = 0; x < Constants.ChunkSize; x++)
+            {
+                for (int y = 0; y < Constants.ChunkSize; y++)
+                {
+                    chunkTiles[x][y] = generator.GetTileWithoutTerrainFeatures(x + worldPositionBottomLeftCorner.X,
+                        y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
 
-            var surroundingChunksWithRivers = new List<TileForInlandWaterConnectivity>();
+                    if (chunkTiles[x][y].Terrain != TerrainTypes.Water)
+                    {
+                        this.NonGroundPassable = false;
+                    }
+                    //if (x == 0 || y == 0 || x == Constants.ChunkSize - 1 || y == Constants.ChunkSize - 1)
+                    //{
+                    //	chunkTiles[x][y].Terrain = TerrainLibrary.Terrains[TerrainTypes.Nothingness];
+                    //}
+                }
+            }
+
+
+            var surroundingChunksWithRivers = new List<TileForPainting>();
+            var surroundingChunksWithRoads = new List<TileForPainting>();
 
             if (ChunkWorldMapLocationPoint.X > 0 && ChunkWorldMapLocationPoint.Y > 0)
             {
@@ -61,42 +81,33 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                 {
                     for (int j = -1; j < 2; j++)
                     {
-                        var tile = board.InlandWaterConnectivity[this.ChunkWorldMapLocationPoint.X + i][this.ChunkWorldMapLocationPoint.Y + j];
+                        var tile = board.TerrainFeatures[this.ChunkWorldMapLocationPoint.X + i][this.ChunkWorldMapLocationPoint.Y + j];
 
                         if (tile.WaterBorderLines.Any())
                         {
                             surroundingChunksWithRivers.Add(tile);
                         }
+                        if (tile.Roads.Any())
+                        {
+                            surroundingChunksWithRoads.Add(tile);
+                        }
                     }
                 }
             }
 
-            for (int x = 0; x < Constants.ChunkSize; x++)
-            {
-                for (int y = 0; y < Constants.ChunkSize; y++)
-                {
-                    chunkTiles[x][y] = generator.GetTileWithoutRiverWater(x + worldPositionBottomLeftCorner.X,
-                        y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
+            PaintWithRivers(surroundingChunksWithRivers);
 
-                    if (chunkTiles[x][y].Terrain != TerrainTypes.Water)
-                    {
-                        this.NonGroundPassable = false;
-                    }
-					//if (x == 0 || y == 0 || x == Constants.ChunkSize - 1 || y == Constants.ChunkSize - 1)
-					//{
-					//	chunkTiles[x][y].Terrain = TerrainLibrary.Terrains[TerrainTypes.Nothingness];
-					//}
-				}
-            }
+            PaintWithRoads(surroundingChunksWithRoads);
 
+        }
 
-
-
-
-
+        private void PaintWithRivers(List<TileForPainting> surroundingChunksWithRivers)
+        {
             if (surroundingChunksWithRivers.Any())
-           // if(false)
+            // if(false)
             {
+                var chunkWorldLocationVector = ChunkWorldMapLocationPoint.ToVector2();
+
                 //TODO this part is really useful for plotting rivers/roads on map, should be moved to its own class
                 // the point is: i must generate a chunk sized bitmap to detect which tiles are river tiles and which are not
                 // in this bitmap, black pixels are ignored, white ones are river tiles 
@@ -120,9 +131,9 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
                         var chHalf = Constants.ChunkSize / 2;
                         var halfV = new Microsoft.Xna.Framework.Vector2(chHalf);
-                        Point ScalePoint(Point p)
+                        Point ScalePoint(Vector2 p)
                         {
-                            return ((p.ToVector2() * Constants.ChunkSize) + halfV).ToPoint();
+                            return ((p * Constants.ChunkSize) + halfV).ToPoint();
                         }
 
                         int curveLenght = 5;
@@ -149,7 +160,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                                 rangeEnd = curveLenght - 1;
 
                                 rangeIndex = 0;
-                                endPoints.Add(ScalePoint(chunkRiverPoints[rangeStart] - ChunkWorldMapLocationPoint).ToPoint());
+                                endPoints.Add(ScalePoint(chunkRiverPoints[rangeStart] - chunkWorldLocationVector).ToPoint());
                             }
 
                             //this chunk is last
@@ -158,15 +169,15 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                                 rangeStart = -curveLenght + 1;
                                 rangeEnd = 0;
 
-                                rangeIndex = chunkRiverPoints.Count-1;
+                                rangeIndex = chunkRiverPoints.Count - 1;
 
-                                endPoints.Add(ScalePoint(chunkRiverPoints[rangeIndex] - ChunkWorldMapLocationPoint).ToPoint());
+                                endPoints.Add(ScalePoint(chunkRiverPoints[rangeIndex] - chunkWorldLocationVector).ToPoint());
                             }
 
 
                             for (int i = rangeStart, pointsIndex = 0; i <= rangeEnd; i++, pointsIndex++)
                             {
-                                curvePoints[pointsIndex] = ScalePoint(chunkRiverPoints[rangeIndex + i] - ChunkWorldMapLocationPoint).ToPoint();
+                                curvePoints[pointsIndex] = ScalePoint(chunkRiverPoints[rangeIndex + i] - chunkWorldLocationVector).ToPoint();
                             }
                         }
                         else
@@ -176,11 +187,9 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
                             for (int i = 0; i < chunkRiverPoints.Count; i++)
                             {
-                                curvePoints[i] = ScalePoint(chunkRiverPoints[i] - ChunkWorldMapLocationPoint).ToPoint();
+                                curvePoints[i] = ScalePoint(chunkRiverPoints[i] - chunkWorldLocationVector).ToPoint();
                             }
-
                         }
-
 
                         graphics.DrawCurve(whitePen, curvePoints);
                         if (endPoints != null)
@@ -205,7 +214,70 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                         }
                     }
                 }
+            }
+        }
 
+        //copypaste for now, refactor later
+        private void PaintWithRoads(List<TileForPainting> surroundingChunksWithRoads)
+        {
+            if(surroundingChunksWithRoads.Any())
+            {
+                var chunkWorldLocationVector = ChunkWorldMapLocationPoint.ToVector2();
+
+               
+
+                Pen asphaultPen = new Pen(System.Drawing.Color.Green, Constants.ChunkSize);
+
+                float[] dashValues = { 5, 3 };
+                Pen paintedAsphaultPen = new Pen(System.Drawing.Color.Red, 2);
+                paintedAsphaultPen.DashPattern = dashValues;
+
+                var asphaultBitmap = new Bitmap(Constants.ChunkSize, Constants.ChunkSize);
+
+                var graphicsAsphault = Graphics.FromImage(asphaultBitmap);
+
+                foreach (var chunkWithRoads in surroundingChunksWithRoads)
+                {
+                    var roadLines = chunkWithRoads.Roads;
+
+                    foreach (var road in roadLines)
+                    {
+                        var roadPoints = road.Points;
+
+                        var chunkPointIndex = roadPoints.FindIndex(p =>
+                            p.X == chunkWithRoads.x && p.Y == chunkWithRoads.y);
+
+
+                        var chHalf = Constants.ChunkSize / 2;
+                        var halfV = new Microsoft.Xna.Framework.Vector2(chHalf);
+                        Point ScalePoint(Vector2 p)
+                        {
+                            return ((p * Constants.ChunkSize) + halfV).ToPoint();
+                        }
+
+                        graphicsAsphault.DrawLine(asphaultPen, ScalePoint(road.Points.First() - chunkWorldLocationVector).ToPoint(), ScalePoint(road.Points.Last() - chunkWorldLocationVector).ToPoint());
+                        graphicsAsphault.DrawLine(paintedAsphaultPen, ScalePoint(road.Points.First() - chunkWorldLocationVector).ToPoint(), ScalePoint(road.Points.Last() - chunkWorldLocationVector).ToPoint());
+
+                    }
+
+                    //then we use the bitmap and fill the chunk
+                    for (int x = 0; x < Constants.ChunkSize; x++)
+                    {
+                        for (int y = 0; y < Constants.ChunkSize; y++)
+                        {
+                            if (asphaultBitmap.GetPixel(x, y).G > 0)
+                            {
+                                chunkTiles[x][y].Biome = Biomes.None;
+                                chunkTiles[x][y].Terrain = TerrainTypes.Rocks;
+                            }
+                            if (asphaultBitmap.GetPixel(x, y).R > 0)
+                            {
+                                chunkTiles[x][y].Biome = Biomes.None;
+                                chunkTiles[x][y].Terrain = TerrainTypes.Snow;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -216,7 +288,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    chunkTiles[x][y] = new Tile(TerrainTypes.HardRocks, Biomes.Mountain,
+                    chunkTiles[x][y] = new Tile(TerrainTypes.HardRocks, Biomes.None,
                         new Point(x + worldPositionBottomLeftCorner.X, y + worldPositionBottomLeftCorner.Y), 0.5);
                 }
             }

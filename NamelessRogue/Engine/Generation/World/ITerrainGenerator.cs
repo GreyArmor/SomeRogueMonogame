@@ -6,11 +6,11 @@ namespace NamelessRogue.Engine.Generation.World
 {
     public interface ITerrainGenerator
     {
-        List<WaterBorderLine> BorderLines { get; set; }
+        List<Waypoints> BorderLines { get; set; }
         InternalRandom Random { get; set; }
 
         float GetHeightNoise(int x, int y, float scale);
-        Tile GetTileWithoutRiverWater(int x, int y, float scale);
+        Tile GetTileWithoutTerrainFeatures(int x, int y, float scale);
         void Init(InternalRandom random);
     }
 }

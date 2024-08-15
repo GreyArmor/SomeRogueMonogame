@@ -54,7 +54,7 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 		public void FillFrom(Generation.World.WorldBoard component)
 		{
 
-			Age = component.Age;
+			Age = 0;
 
 			WorldMapResolution = component.WorldTiles.GetLength(0);
 
@@ -69,20 +69,6 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 					WorldTiles[i* WorldMapResolution + j] = component.WorldTiles[i, j];
 				}
 			}
-
-			Civilizations = new List<CivilizationStorage>(component.Civilizations.Select(x => (CivilizationStorage)x));
-
-			Continents = new List<RegionStorage>(component.Continents.Select(x => (RegionStorage)x));
-
-			Islands = new List<RegionStorage>(component.Islands.Select(x => (RegionStorage)x));
-
-			Mountains = new List<RegionStorage>(component.Mountains.Select(x => (RegionStorage)x));
-
-			Forests = new List<RegionStorage>(component.Forests.Select(x => (RegionStorage)x));
-
-			Deserts = new List<RegionStorage>(component.Deserts.Select(x => (RegionStorage)x));
-
-			Swamps = new List<RegionStorage>(component.Swamps.Select(x => (RegionStorage)x));
 
 			Chunks = component.Chunks;
 
@@ -121,11 +107,11 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 			{
 				for (int j = 0; j < WorldMapResolution; j++)
 				{
-					InlandWaterConnectivity[i * WorldMapResolution + j] = component.InlandWaterConnectivity[i][j];
+					InlandWaterConnectivity[i * WorldMapResolution + j] = component.TerrainFeatures[i][j];
 				}
 			}
 			BorderLines = new List<WaterBorderLineStorage>();
-			foreach (var borderLine in component.BorderLines)
+			foreach (var borderLine in component.RiverBorderLines)
 			{
 				BorderLines.Add(borderLine);
 			}
@@ -134,8 +120,7 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		public void FillTo(Generation.World.WorldBoard component)
 		{
-
-			component.Age = Age;
+		//	component.Age = Age;
 
 			component.WorldTiles = new Generation.World.WorldTile[WorldMapResolution, WorldMapResolution];
 
@@ -146,20 +131,6 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 					component.WorldTiles[i, j] = WorldTiles[i*WorldMapResolution + j];
 				}
 			}
-
-			component.Civilizations = new List<Generation.World.Civilization>(Civilizations.Select(x => (Generation.World.Civilization)x));
-
-			component.Continents = new List<Generation.World.Region>(Continents.Select(x => (Generation.World.Region)x));
-
-			component.Islands = new List<Generation.World.Region>(Islands.Select(x => (Generation.World.Region)x));
-
-			component.Mountains = new List<Generation.World.Region>(Mountains.Select(x => (Generation.World.Region)x));
-
-			component.Forests = new List<Generation.World.Region>(Forests.Select(x => (Generation.World.Region)x));
-
-			component.Deserts = new List<Generation.World.Region>(Deserts.Select(x => (Generation.World.Region)x));
-
-			component.Swamps = new List<Generation.World.Region>(Swamps.Select(x => (Generation.World.Region)x));
 
 			component.Chunks = Chunks;
 
@@ -194,22 +165,22 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 				}
 			}
 
-			component.InlandWaterConnectivity = new TileForInlandWaterConnectivity[WorldMapResolution][];
+			component.TerrainFeatures = new TileForPainting[WorldMapResolution][];
 			for (int i = 0; i < WorldMapResolution; i++)
 			{
-				component.InlandWaterConnectivity[i] = new TileForInlandWaterConnectivity[WorldMapResolution];
+				component.TerrainFeatures[i] = new TileForPainting[WorldMapResolution];
 				for (int j = 0; j < WorldMapResolution; j++)
 				{
-					component.InlandWaterConnectivity[i][j] = InlandWaterConnectivity[i * WorldMapResolution + j];
+					component.TerrainFeatures[i][j] = InlandWaterConnectivity[i * WorldMapResolution + j];
 				}
 			}
 
 
 
-			component.BorderLines = new List<Generation.World.WaterBorderLine>();
+			component.RiverBorderLines = new List<Generation.World.Waypoints>();
 			foreach (var borderLineStorage in BorderLines)
 			{
-				component.BorderLines.Add(borderLineStorage);
+				component.RiverBorderLines.Add(borderLineStorage);
 			}
 		}
 

@@ -213,7 +213,7 @@ namespace NamelessRogue.shell
 			ModelsLibrary.Initialize(this);
 
 			//12345 123
-			worldSettings = new WorldSettings(12345, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
+			worldSettings = new WorldSettings(75924, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
 
 
 			new UIController(this);
@@ -258,16 +258,8 @@ namespace NamelessRogue.shell
 				}
 				else
 				{
-					x = 300;
-					y = 300;
-					//x = 300;
-					//y = 300;
-
-					//x = 400;
-					//y = 300;
-
-					//x = 400;
-					//y = 400;
+					x = 200;
+					y = 200;
 				}
 			
 				ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
@@ -293,10 +285,11 @@ namespace NamelessRogue.shell
 
 				Point worldRiverPosition = new Point();
 				bool anyRivers = false;
+				/*
 				foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
 				{
 					var pos = worldBoardWorldTile.WorldBoardPosiiton;
-					var isWater = timeline.CurrentTimelineLayer.InlandWaterConnectivity[pos.X][pos.Y].isWater;
+					var isWater = timeline.CurrentTimelineLayer.TerrainFeatures[pos.X][pos.Y].isWater;
 					if (isWater)
 					{
 						anyRivers = true;
@@ -305,7 +298,7 @@ namespace NamelessRogue.shell
 						y = pos.Y;
 						break;
 					}
-				}
+				}*/
 
 
 				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);

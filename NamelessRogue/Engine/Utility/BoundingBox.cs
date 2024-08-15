@@ -28,6 +28,8 @@ namespace NamelessRogue.Engine.Utility
             this.max = max;
         }
 
+        public BoundingBox(){ }
+
         public bool IsPointInside(int x, int y)
         {
             return x >= min.X && x < max.X && y >= min.Y && y < max.Y;

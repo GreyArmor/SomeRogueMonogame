@@ -95,15 +95,5 @@ namespace NamelessRogue.Engine.Generation.World
             return worldBoard;
         }
 
-
-        private static WorldBoard ProgressWorldBoard(WorldBoard previousState, WorldSettings settings)
-        {
-            var newState = new WorldBoard(settings.WorldBoardWidth, settings.WorldBoardHeight, previousState.Age + 1);
-
-
-            
-            return newState;
-        }
-
     }
 }

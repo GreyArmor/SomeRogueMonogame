@@ -31,7 +31,7 @@ namespace NamelessRogue.Engine.Generation.World
         int lenght = 100;
         int layer1 = 3000,layer2 = 1000,layer3 = 1000;
         public InternalRandom Random { get; set; }
-        public List<WaterBorderLine> BorderLines { get; set; } = new List<WaterBorderLine>();
+        public List<Waypoints> BorderLines { get; set; } = new List<Waypoints>();
 
         public TerrainGenerator(InternalRandom random)
         {
@@ -93,7 +93,7 @@ namespace NamelessRogue.Engine.Generation.World
             return (float)result;
         }
 
-        public Tile GetTileWithoutRiverWater(int x, int y, float scale)
+        public Tile GetTileWithoutTerrainFeatures(int x, int y, float scale)
         {
             double dX = (double)x / scale;
             double dY = (double)y / scale;

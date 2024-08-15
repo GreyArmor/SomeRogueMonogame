@@ -1,5 +1,8 @@
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Utility;
+using System;
 using System.Collections.Generic;
 
 namespace NamelessRogue.Engine.Generation.World
@@ -14,51 +17,59 @@ namespace NamelessRogue.Engine.Generation.World
 		public TileForGeneration parent;
 	}
 
-	public class TileForInlandWaterConnectivity
+	public class TileForPainting
 	{
 		public int x;
 		public int y;
 		public bool isWater;
-		public List<WaterBorderLine> WaterBorderLines { get; set; } = new List<WaterBorderLine>();
-	}
+		public List<Waypoints> WaterBorderLines { get; set; } = new List<Waypoints>();
+        public List<Waypoints> Roads { get; set; } = new List<Waypoints>();
+    }
 
-	public class WaterBorderLine
+	public class Waypoints
 	{
-		public List<Point> Points { get; set; }
+		public List<Vector2> Points { get; set; } = new List<Vector2>();
 	}
 
-	public class WorldBoard
-    {
-        public int Age { get; set; }
-        public WorldTile[,] WorldTiles { get; set; }
-        public List<Civilization> Civilizations { get; set; }
-        public List<Region> Continents { set; get; }
-        public List<Region> Islands { set; get; }
-        public List<Region> Mountains { set; get; }
-        public List<Region> Forests { get; set; }
-        public List<Region> Deserts { get; set; }
-        public List<Region> Swamps { get; set; }
+	public class CityPart {
 
+        public Matrix Transform { get; set; } = new Matrix();
+
+		public Point Center { get; set; }
+
+		public List<Waypoints> Roads { get; set; } = new List<Waypoints>();
+
+		Utility.BoundingBox Bounds { get; set; } = new Utility.BoundingBox();
+	}
+
+
+    public class WorldBoard
+    {
+        public DateTime CurrentTime { get; set; }
+        public WorldTile[,] WorldTiles { get; set; }
         public ChunkData Chunks { get; set; }
 		public float[][] ElevationMap { get => elevationMap; set => elevationMap = value; }
 		public bool[][] RiverMap { get => riverMap; set => riverMap = value; }
 		public bool[][] RiverBorderMap { get => riverBorderMap; set => riverBorderMap = value; }
-		public List<WaterBorderLine> BorderLines { get; set; }
+		public List<Waypoints> RiverBorderLines { get; set; } = new List<Waypoints>();
+
+		public List<Waypoints> Roads { get; set; } = new List<Waypoints>();
+
+        public List<CityPart> CityParts { get; set; }
 
 
 		//used for river/lake generation
 		private float[][] elevationMap;
 		private bool[][] riverMap;
 		private bool[][] riverBorderMap;
-		public TileForInlandWaterConnectivity[][] InlandWaterConnectivity { get; set; }
+        private bool[][] roadsMap;
+        public TileForPainting[][] TerrainFeatures { get; set; }
 
 
         public WorldBoard(int width, int height, int age)
         {
             WorldTiles = new WorldTile[width, height];
-            Age = age;
-            Civilizations = new List<Civilization>();
-            Continents = new List<Region>();
+            CurrentTime = new DateTime(2050, 5, 14);
 
 
 			var resolution = WorldGenConstants.Resolution;
@@ -81,13 +92,14 @@ namespace NamelessRogue.Engine.Generation.World
 				RiverBorderMap[i] = new bool[resolution];
 			}
 
-			InlandWaterConnectivity = new TileForInlandWaterConnectivity[resolution][];
+			TerrainFeatures = new TileForPainting[resolution][];
 			for (int i = 0; i < resolution; i++)
 			{
-				InlandWaterConnectivity[i] = new TileForInlandWaterConnectivity[resolution];
+				TerrainFeatures[i] = new TileForPainting[resolution];
 			}
 
-			BorderLines = new List<WaterBorderLine>();
+			RiverBorderLines = new List<Waypoints>();
+			CityParts = new List<CityPart>();
 		}
 
 		public WorldBoard()
