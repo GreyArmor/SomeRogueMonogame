@@ -214,10 +214,10 @@ namespace NamelessRogue.Engine.Generation.World
         {
 
             var navigator = new TileNavigator(
-             new EmptyBlockedProvider(),         // Instance of: IBockedProvider
-             new DiagonalNeighborProvider(),     // Instance of: INeighborProvider
-             new PythagorasAlgorithm(),          // Instance of: IDistanceAlgorithm
-             new ManhattanHeuristicAlgorithm()   // Instance of: IDistanceAlgorithm
+             new EmptyBlockedProvider(),         
+             new DiagonalNeighborProvider(),    
+             new PythagorasAlgorithm(),          
+             new ManhattanHeuristicAlgorithm()   
              );
 
             Waypoints road = new Waypoints();

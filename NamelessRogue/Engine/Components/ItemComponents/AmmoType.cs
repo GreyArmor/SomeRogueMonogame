@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Components.ItemComponents
 {
-    public class AmmoType
+    public enum AmmoType
     {
-        public string Name { get; set; }
+        LowCaliber,
+        MediumCaliber,
+        LargeCaliber,
+        FlammableTank,
+        CorrosiveTank,
+        ToxinTank,
+        ElectricitySource,
+
     }
 }

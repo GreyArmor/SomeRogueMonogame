@@ -25,84 +25,7 @@ using System.Runtime.InteropServices;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct Vertex
-    {
-        // ReSharper disable NotAccessedField.Local
-        private Vector3 position;
-        private Vector4 color;
-        private Vector4 backgroundColor;
-        private Vector2 textureCoordinate;
-
-        public Vertex(Vector3 position, Vector4 color, Vector4 backgroundColor, Vector2 textureCoordinate)
-        {
-            this.position = position;
-            this.color = color;
-            this.backgroundColor = backgroundColor;
-            this.textureCoordinate = textureCoordinate;
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct Vertex3D
-    {
-        // ReSharper disable NotAccessedField.Local
-        private Vector3 position;
-        private Vector4 color;
-        private Vector4 backgroundColor;
-        private Vector2 textureCoordinate;
-        private Vector3 normal;
-
-        public Vertex3D(Vector3 position, Vector4 color, Vector4 backgroundColor, Vector2 textureCoordinate, Vector3 normal)
-        {
-            this.position = position;
-            this.color = color;
-            this.backgroundColor = backgroundColor;
-            this.textureCoordinate = textureCoordinate;
-            this.normal = normal;
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    // we use height data for vertex z value, all else is calculated by gpu, we use yaw and pitch to calculate triangle normal
-    public struct TerrainVertex
-    {   
-        // ReSharper disable NotAccessedField.Local
-        public Vector3 vertexHeightYawPitch;
-
-        public TerrainVertex(float height, float yaw, float pitch)
-        {
-            this.vertexHeightYawPitch = new Vector3(height,yaw, pitch);
-        }
-    }
-
-
-    public class TileModel { 
-        public Vertex[] Vertices { get; }
-        public int[] Indices { get; }
-		public TileModel(int height, int width)
-		{
-            Vertices = new Vertex[height * width * 4];
-            Indices = new int[height * width * 6];
-
-            //var indices = new int[6] { 0, 1, 2, 2, 1, 3 };
-            var vertexCounter = 0;
-            for (int i = 0; i < height * width * 6; i+=6)
-			{
-                Indices[i] = vertexCounter;
-                Indices[i + 1] = vertexCounter + 1;
-                Indices[i + 2] = vertexCounter + 2;
-                Indices[i + 3] = vertexCounter + 2;
-                Indices[i + 4] = vertexCounter + 1;
-                Indices[i + 5] = vertexCounter + 3;
-                vertexCounter += 4;
-            }
-		}
-	}
-
-
-
-    public class RenderingSystem : BaseSystem
+    public class SpriteRenderingSystem : BaseSystem
     {
         public override HashSet<Type> Signature { get; }
 
@@ -135,7 +58,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         };
 
-        public RenderingSystem(GameSettings settings){
+        public RenderingSystem(GameSettings settings)
+        {
             InitializeCharacterTileDictionary();
 
             Signature = new HashSet<Type>();
@@ -154,7 +78,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add('.', atlasTileData);
             characterToTileDictionary.Add('@', new AtlasTileData(3, 0));
             characterToTileDictionary.Add('r', atlasTileData);
-            characterToTileDictionary.Add('s', new AtlasTileData(3,1));
+            characterToTileDictionary.Add('s', new AtlasTileData(3, 1));
             characterToTileDictionary.Add('P', atlasTileData);
 
         }
@@ -188,7 +112,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
             Screen screen = entity.GetComponentOfType<Screen>();
             Commander commander = game.Commander;
-            screen = UpdateZoom(game, commander, entity, screen , out bool zoomUpdate);
+            screen = UpdateZoom(game, commander, entity, screen, out bool zoomUpdate);
 
             if (foregroundModel == null || zoomUpdate)
             {
@@ -249,20 +173,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 entity.AddComponent(screen);
                 zoomUpdate = true;
             }
-            
+
             return screen;
         }
 
 
         private void MoveCamera(NamelessGame game, ConsoleCamera camera)
         {
-                Position playerPosition = game.FollowedByCameraEntity
-                    .GetComponentOfType<Position>();
+            Position playerPosition = game.FollowedByCameraEntity
+                .GetComponentOfType<Position>();
 
-                Point p = camera.getPosition();
-                p.X = (playerPosition.Point.X - game.GetSettings().GetWidthZoomed() / 2);
-                p.Y = (playerPosition.Point.Y - game.GetSettings().GetHeightZoomed() / 2);
-                camera.setPosition(p);
+            Point p = camera.getPosition();
+            p.X = (playerPosition.Point.X - game.GetSettings().GetWidthZoomed() / 2);
+            p.Y = (playerPosition.Point.Y - game.GetSettings().GetHeightZoomed() / 2);
+            camera.setPosition(p);
         }
         PermissiveVisibility fov;
         private void FillcharacterBufferVisibility(NamelessGame game, Screen screen, ConsoleCamera camera,
@@ -299,7 +223,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 );
             }
 
-            fov.Compute(playerPosition.Point,60);
+            fov.Compute(playerPosition.Point, 60);
         }
 
 
@@ -356,7 +280,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
-                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible && x>0 && y>0)
+                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible && x > 0 && y > 0)
                     {
                         Tile tileToDraw = world.GetTile(x, y);
                         GetTerrainTile(screen, TerrainLibrary.Terrains[tileToDraw.Terrain], screenPoint);
@@ -373,10 +297,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         void GetTerrainTile(Screen screen, Terrain terrain, Point point)
         {
-         
-                screen.ScreenBuffer[point.X, point.Y].Char = terrain.Representation.Representation;
-                screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.CharColor;
-                screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
+
+            screen.ScreenBuffer[point.X, point.Y].Char = terrain.Representation.Representation;
+            screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.CharColor;
+            screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
         }
 
 
@@ -406,12 +330,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
-                        {                                  
+                        {
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = drawable.Representation;
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
-                        }                                  
-                        else                               
-                        {                                  
+                        }
+                        else
+                        {
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = ' ';
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
@@ -461,12 +385,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
-                        {                                                  
+                        {
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = drawable.Representation;
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
-                        }                                                 
-                        else                                               
-                        {                                                  
+                        }
+                        else
+                        {
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = ' ';
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
@@ -506,15 +430,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
             s.Stop();
             var tileModel = backgroundModel;
-			effect.CurrentTechnique = effect.Techniques["Background"];
-			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-			{
-				pass.Apply();
-				device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
-					 tileModel.Indices.ToArray(), 0, 2, this.VertexDeclaration);
-			}
+            effect.CurrentTechnique = effect.Techniques["Background"];
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
+                     tileModel.Indices.ToArray(), 0, 2, this.VertexDeclaration);
+            }
 
-			effect.CurrentTechnique = effect.Techniques["Point"];
+            effect.CurrentTechnique = effect.Techniques["Point"];
 
             tileModel = foregroundModel;
 
@@ -522,7 +446,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 pass.Apply();
                 device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
-                     tileModel.Indices.ToArray(), 0, tileModel.Indices.Count()/3, this.VertexDeclaration);
+                     tileModel.Indices.ToArray(), 0, tileModel.Indices.Count() / 3, this.VertexDeclaration);
             }
 
 
@@ -575,9 +499,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var onePixelPercentageHeight = 1 / (float)tileAtlas.Height;
 
             float textureX = (atlasTileData.X * (Constants.tileAtlasTileSize / (float)tileAtlas.Width)) + (onePixelPercentageWidth * 1.2f);
-            float textureY = (atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height))+ (onePixelPercentageHeight * 1.2f);
+            float textureY = (atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height)) + (onePixelPercentageHeight * 1.2f);
 
-       
+
 
             float textureXend = ((atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Width)) - (onePixelPercentageWidth * 2.2f);
 

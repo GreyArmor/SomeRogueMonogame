@@ -27,11 +27,11 @@ namespace NamelessRogue.Engine.Generation.World.TerrainFeatures
         {
             var chunkWorldLocationVector = chunkToDrawOn.ChunkWorldMapLocationPoint.ToVector2();
 
-            Pen asphaultPen = new Pen(System.Drawing.Color.Green, Constants.ChunkSize-4);
+            Pen asphaultPen = new Pen(System.Drawing.Color.Green, Constants.ChunkSize-8);
 
             Pen asphaultSidewalkPen = new Pen(System.Drawing.Color.Blue, Constants.ChunkSize);
 
-            float[] dashValues = { 5, 3 };
+            float[] dashValues = { 3, 1 };
             Pen paintedAsphaultPen = new Pen(System.Drawing.Color.Red, 2);
             paintedAsphaultPen.DashPattern = dashValues;
 
@@ -44,6 +44,7 @@ namespace NamelessRogue.Engine.Generation.World.TerrainFeatures
             {
                 return ((p * Constants.ChunkSize) + halfV).ToPoint();
             }
+
             graphicsAsphault.DrawLine(asphaultSidewalkPen, ScalePoint(Start - chunkWorldLocationVector).ToPoint(), ScalePoint(End - chunkWorldLocationVector).ToPoint());
             graphicsAsphault.DrawLine(asphaultPen, ScalePoint(Start - chunkWorldLocationVector).ToPoint(), ScalePoint(End - chunkWorldLocationVector).ToPoint());
             graphicsAsphault.DrawLine(paintedAsphaultPen, ScalePoint(Start - chunkWorldLocationVector).ToPoint(), ScalePoint(End - chunkWorldLocationVector).ToPoint());
@@ -53,20 +54,20 @@ namespace NamelessRogue.Engine.Generation.World.TerrainFeatures
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    if (asphaultBitmap.GetPixel(x, y).G > 0)
+                    if (asphaultBitmap.GetPixel(x, y).G > 0 && chunkToDrawOn.ChunkTiles[x][y].Terrain != TerrainTypes.PaintedAsphault)
                     {
                         chunkToDrawOn.ChunkTiles[x][y].Biome = Biomes.None;
-                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.Rocks;
+                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.Asphault;
                     }
                     if (asphaultBitmap.GetPixel(x, y).R > 0)
                     {
                         chunkToDrawOn.ChunkTiles[x][y].Biome = Biomes.None;
-                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.Snow;
+                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.PaintedAsphault;
                     }
                     if (asphaultBitmap.GetPixel(x, y).B > 0 && chunkToDrawOn.ChunkTiles[x][y].Terrain== TerrainTypes.Grass)
                     {
                         chunkToDrawOn.ChunkTiles[x][y].Biome = Biomes.None;
-                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.Sand;
+                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.Sidewalk;
                     }
                 }
             }

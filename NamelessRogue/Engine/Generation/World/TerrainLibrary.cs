@@ -36,20 +36,20 @@ namespace NamelessRogue.Engine.Generation.World
             Terrains.Add(TerrainTypes.HardRocks,
                 new Terrain(TerrainTypes.HardRocks, new Drawable('.', new Color(0.2, 0.2, 0.2), new Color())));
 
-            Terrains.Add(TerrainTypes.Rocks,
-                new Terrain(TerrainTypes.Rocks, new Drawable('.', new Color(0.8, 0.8, 0.8), new Color())));
+            Terrains.Add(TerrainTypes.Asphault,
+                new Terrain(TerrainTypes.Asphault, new Drawable('r', new Color(0.8, 0.8, 0.8), new Color())));
 
             Terrains.Add(TerrainTypes.LightRocks,
                 new Terrain(TerrainTypes.LightRocks, new Drawable('.', new Color(0.5, 0.5, 0.5), new Color())));
 
-            Terrains.Add(TerrainTypes.Sand,
-                new Terrain(TerrainTypes.Sand, new Drawable('~', new Color(0.4, 0.4, 0), new Color())));
+            Terrains.Add(TerrainTypes.Sidewalk,
+                new Terrain(TerrainTypes.Sidewalk, new Drawable('s', new Color(0.4, 0.4, 0), new Color())));
 
-            Terrains.Add(TerrainTypes.Snow,
-                new Terrain(TerrainTypes.Snow, new Drawable('~', new Color(1f, 1f, 1f), new Color())));
+            Terrains.Add(TerrainTypes.PaintedAsphault,
+                new Terrain(TerrainTypes.PaintedAsphault, new Drawable('P', new Color(1f, 1f, 1f), new Color())));
 
 			Terrains.Add(TerrainTypes.Lava,
-			   new Terrain(TerrainTypes.Lava, new Drawable('~', new Color(0.7f, 0, 0), new Color())));
+			   new Terrain(TerrainTypes.Lava, new Drawable('l', new Color(0.7f, 0, 0), new Color())));
 
 			Terrains.Add(TerrainTypes.Nothingness,
                 new Terrain(TerrainTypes.Nothingness, new Drawable(' ', new Color(), new Color())));

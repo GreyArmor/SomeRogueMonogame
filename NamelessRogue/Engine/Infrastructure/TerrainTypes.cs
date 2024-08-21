@@ -12,10 +12,11 @@ namespace NamelessRogue.Engine.Infrastructure
         Road,
         Water,
         Grass,
-        Snow,
-        Sand,
-        Rocks,
-        LightRocks, HardRocks,
+        PaintedAsphault,
+        Sidewalk,
+        Asphault,
+        LightRocks, 
+        HardRocks,
         Lava,
     }
 }

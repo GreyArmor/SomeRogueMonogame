@@ -268,12 +268,12 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                             if (asphaultBitmap.GetPixel(x, y).G > 0)
                             {
                                 ChunkTiles[x][y].Biome = Biomes.None;
-                                ChunkTiles[x][y].Terrain = TerrainTypes.Rocks;
+                                ChunkTiles[x][y].Terrain = TerrainTypes.Asphault;
                             }
                             if (asphaultBitmap.GetPixel(x, y).R > 0)
                             {
                                 ChunkTiles[x][y].Biome = Biomes.None;
-                                ChunkTiles[x][y].Terrain = TerrainTypes.Snow;
+                                ChunkTiles[x][y].Terrain = TerrainTypes.PaintedAsphault;
                             }
                         }
                     }
