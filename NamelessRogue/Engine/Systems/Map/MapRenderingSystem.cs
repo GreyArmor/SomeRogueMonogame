@@ -201,7 +201,7 @@ namespace NamelessRogue.Engine.Systems.Map
                         screenPoint.X > 0 &&
                         screenPoint.Y < game.GetSettings().GetWidthZoomed())
                     {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Cursor";
                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
                     }
 
@@ -230,7 +230,7 @@ namespace NamelessRogue.Engine.Systems.Map
                             screenPoint.X > 0 &&
                             screenPoint.Y < game.GetSettings().GetWidthZoomed())
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].Char = 'X';
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Cursor";
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color(1f, 1f, 1f, 1f);
                         }
 
@@ -330,7 +330,7 @@ namespace NamelessRogue.Engine.Systems.Map
             {
                 for (int y = 0; y < screen.Height; y++)
                 {
-                    screen.ScreenBuffer[x, y].Char = ' ';
+                    screen.ScreenBuffer[x, y].ObjectId = "Nothingness";
                     screen.ScreenBuffer[x, y].CharColor = new Color();
                     screen.ScreenBuffer[x, y].BackGroundColor = new Color();
                 }
@@ -355,7 +355,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
         void GetTerrainTile(Screen screen, Point point, WorldTile tile)
         {
-            screen.ScreenBuffer[point.X, point.Y].Char = BiomesLibrary.Biomes[tile.Biome].Representation.Representation;
+            screen.ScreenBuffer[point.X, point.Y].ObjectId = BiomesLibrary.Biomes[tile.Biome].Representation.Representation;
             screen.ScreenBuffer[point.X, point.Y].CharColor = BiomesLibrary.Biomes[tile.Biome].Representation.CharColor;
             screen.ScreenBuffer[point.X, point.Y].BackGroundColor = BiomesLibrary.Biomes[tile.Biome].Representation.BackgroundColor;
 
@@ -377,7 +377,7 @@ namespace NamelessRogue.Engine.Systems.Map
                 {
                     if (tile.Settlement != null)
                     {
-                        screen.ScreenBuffer[point.X, point.Y].Char = 'T';
+                        screen.ScreenBuffer[point.X, point.Y].ObjectId = "Town";
                         screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(1, 1, 1, 1);
                     }
 
@@ -385,7 +385,7 @@ namespace NamelessRogue.Engine.Systems.Map
                 }
                 else
                 {
-                    screen.ScreenBuffer[point.X, point.Y].Char = ' ';
+                    screen.ScreenBuffer[point.X, point.Y].ObjectId = "Nothingness";
                     screen.ScreenBuffer[point.X, point.Y].CharColor = new Color(0, 0, 0, 0);
                 }
             }
@@ -393,7 +393,7 @@ namespace NamelessRogue.Engine.Systems.Map
             {
                 if (tile.Artifact != null)
                 {
-                    screen.ScreenBuffer[point.X, point.Y].Char = tile.Artifact.Representation;
+                    screen.ScreenBuffer[point.X, point.Y].ObjectId = "Nothingness";
                     screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Artifact.CharColor;
                 }
             }
@@ -405,13 +405,13 @@ namespace NamelessRogue.Engine.Systems.Map
             {
                 for (int y = 0; y < settings.GetHeightZoomed(); y++)
                 {
-                        DrawTile(gameInstance.GraphicsDevice, gameInstance,
-                            x * settings.GetFontSizeZoomed(),
-                            y * settings.GetFontSizeZoomed(),
-                            characterToTileDictionary[screen.ScreenBuffer[x, y].Char],
-                            screen.ScreenBuffer[x, y].CharColor,
-                            screen.ScreenBuffer[x, y].BackGroundColor
-                            );
+                        //DrawTile(gameInstance.GraphicsDevice, gameInstance,
+                        //    x * settings.GetFontSizeZoomed(),
+                        //    y * settings.GetFontSizeZoomed(),
+                        //    characterToTileDictionary[screen.ScreenBuffer[x, y].ObjectId],
+                        //    screen.ScreenBuffer[x, y].CharColor,
+                        //    screen.ScreenBuffer[x, y].BackGroundColor
+                        //    );
                 }
             }
         }

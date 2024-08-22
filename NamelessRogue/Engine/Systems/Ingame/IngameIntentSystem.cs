@@ -142,7 +142,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             if (simpleSwitch != null == simpleSwitch.isSwitchActive())
                                             {
                                                 entityThatOccupiedTile.GetComponentOfType<Drawable>()
-                                                    .Representation = 'o';
+                                                    .Representation = "ClosedDoor";
                                                 entityThatOccupiedTile.RemoveComponentOfType<BlocksVision>();
                                                 entityThatOccupiedTile.RemoveComponentOfType<OccupiesTile>();
 

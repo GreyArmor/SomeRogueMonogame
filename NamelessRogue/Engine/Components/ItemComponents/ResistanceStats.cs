@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Components.Stats
 {
-    public class ResistanceStat
+    public class ResistanceStat : Component
     {
         public ResistanceStat() { }
 

@@ -22,37 +22,32 @@ namespace NamelessRogue.Engine.Generation.World
 
             Terrains.Add(TerrainTypes.Dirt,
                 new Terrain(TerrainTypes.Dirt,
-                    new Drawable('.', new Color(1f, 1f, 0), new Color())));
+                    new Drawable("Dirt", new Color(1f, 1f, 0), new Color())));
 
             Terrains.Add(TerrainTypes.Road,
-                new Terrain(TerrainTypes.Road, new Drawable('.', new Color(0.5, 0.5, 0.5), new Color())));
+                new Terrain(TerrainTypes.Road, new Drawable("Road", new Color(0.5, 0.5, 0.5), new Color())));
 
             Terrains.Add(TerrainTypes.Water,
-                new Terrain(TerrainTypes.Water, new Drawable('~', new Color(0, 0, 255), new Color(0, 255, 255))));
+                new Terrain(TerrainTypes.Water, new Drawable("Water", new Color(0, 0, 255), new Color(0, 255, 255))));
 
             Terrains.Add(TerrainTypes.Grass,
-                new Terrain(TerrainTypes.Grass, new Drawable('.', new Color(0, 0.4f, 0), new Color())));
+                new Terrain(TerrainTypes.Grass, new Drawable("Grass", new Color(0, 0.4f, 0), new Color())));
 
             Terrains.Add(TerrainTypes.HardRocks,
-                new Terrain(TerrainTypes.HardRocks, new Drawable('.', new Color(0.2, 0.2, 0.2), new Color())));
+                new Terrain(TerrainTypes.HardRocks, new Drawable("HardRocks", new Color(0.2, 0.2, 0.2), new Color())));
 
             Terrains.Add(TerrainTypes.Asphault,
-                new Terrain(TerrainTypes.Asphault, new Drawable('r', new Color(0.8, 0.8, 0.8), new Color())));
-
-            Terrains.Add(TerrainTypes.LightRocks,
-                new Terrain(TerrainTypes.LightRocks, new Drawable('.', new Color(0.5, 0.5, 0.5), new Color())));
+                new Terrain(TerrainTypes.Asphault, new Drawable("Asphault", new Color(0.8, 0.8, 0.8), new Color())));
 
             Terrains.Add(TerrainTypes.Sidewalk,
-                new Terrain(TerrainTypes.Sidewalk, new Drawable('s', new Color(0.4, 0.4, 0), new Color())));
+                new Terrain(TerrainTypes.Sidewalk, new Drawable("Sidewalk", new Color(0.4, 0.4, 0), new Color())));
 
             Terrains.Add(TerrainTypes.PaintedAsphault,
-                new Terrain(TerrainTypes.PaintedAsphault, new Drawable('P', new Color(1f, 1f, 1f), new Color())));
+                new Terrain(TerrainTypes.PaintedAsphault, new Drawable("PaintedAsphault", new Color(1f, 1f, 1f), new Color())));
 
-			Terrains.Add(TerrainTypes.Lava,
-			   new Terrain(TerrainTypes.Lava, new Drawable('l', new Color(0.7f, 0, 0), new Color())));
 
 			Terrains.Add(TerrainTypes.Nothingness,
-                new Terrain(TerrainTypes.Nothingness, new Drawable(' ', new Color(), new Color())));
+                new Terrain(TerrainTypes.Nothingness, new Drawable("Nothingness", new Color(), new Color())));
         }
     }
 }

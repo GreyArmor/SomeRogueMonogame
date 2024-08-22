@@ -28,7 +28,7 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new FollowedByCamera());
             playerCharacter.AddComponent(new InputComponent());
             playerCharacter.AddComponent(position);
-            playerCharacter.AddComponent(new Drawable('@', new Engine.Utility.Color(0.9,0.9,0.9)));
+            playerCharacter.AddComponent(new Drawable("Window", new Engine.Utility.Color(0.9,0.9,0.9)));
             playerCharacter.AddComponent(new Description("Player",""));
             var holder = new ItemsHolder();
             playerCharacter.AddComponent(holder);
@@ -43,15 +43,6 @@ namespace NamelessRogue.Engine.Factories
 			var stats = new Stats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
-
-            stats.Stamina.Value = 100;
-            stats.Stamina.MaxValue = 100;
-
-          
-            stats.Attack.Value = 25;
-            stats.Defence.Value = 10;
-            stats.AttackSpeed.Value = 100;
-            stats.MoveSpeed.Value = 100;
 
             playerCharacter.AddComponent(stats);
 
@@ -79,49 +70,40 @@ namespace NamelessRogue.Engine.Factories
         public static Entity CreateBlankKnight(NamelessGame game, Vector2 facingNormal, Point position, Point formationPosition, bool isFlagbearer, string factionId = "", string groupID = "") {
             Entity npc = new Entity();
 
-            var x = position.X; var y = position.Y;
+   //         var x = position.X; var y = position.Y;
 
 
-			var positioncComponent = new Position(x, y);
-			var position3D = new Position3D(new Vector3(x, y, 0), facingNormal);
-            npc.AddComponent(position3D);
-			npc.AddComponent(new Character());
-            npc.AddComponent(new InputComponent());
-            npc.AddComponent(new Movable());
-            npc.AddComponent(positioncComponent);
-            npc.AddComponent(new Drawable('K', new Engine.Utility.Color(1f, 0, 0)));
-            npc.AddComponent(new Description("Very scary dummy knight",""));
-            npc.AddComponent(new OccupiesTile());
-            npc.AddComponent(new AIControlled());
-            npc.AddComponent(new BasicAi());
-            npc.AddComponent(new GroupTag() { GroupId = groupID, FormationPositionDisplacement = formationPosition });
-			npc.AddComponent(new FlowMoveComponent());
-			if (isFlagbearer) {
-				npc.AddComponent(new FlagBearerTag());
-			}
+			//var positioncComponent = new Position(x, y);
+			//var position3D = new Position3D(new Vector3(x, y, 0), facingNormal);
+   //         npc.AddComponent(position3D);
+			//npc.AddComponent(new Character());
+   //         npc.AddComponent(new InputComponent());
+   //         npc.AddComponent(new Movable());
+   //         npc.AddComponent(positioncComponent);
+   //         npc.AddComponent(new Drawable('K', new Engine.Utility.Color(1f, 0, 0)));
+   //         npc.AddComponent(new Description("Very scary dummy knight",""));
+   //         npc.AddComponent(new OccupiesTile());
+   //         npc.AddComponent(new AIControlled());
+   //         npc.AddComponent(new BasicAi());
+   //         npc.AddComponent(new GroupTag() { GroupId = groupID, FormationPositionDisplacement = formationPosition });
+			//npc.AddComponent(new FlowMoveComponent());
+			//if (isFlagbearer) {
+			//	npc.AddComponent(new FlagBearerTag());
+			//}
 
-            var stats = new Stats();
-            stats.Health.Value = 100;
-            stats.Health.MaxValue = 100;
+   //         var stats = new Stats();
+   //         stats.Health.Value = 100;
+   //         stats.Health.MaxValue = 100;
 
-            stats.Stamina.Value = 100;
-            stats.Stamina.MaxValue = 100;
+   //         stats.VisionRange.Value = 100;
 
+   //         stats.FactionId = factionId;
 
-            stats.Attack.Value = 25;
-            stats.Defence.Value = 10;
-            stats.AttackSpeed.Value = 100;
-            stats.MoveSpeed.Value = 100;
-            stats.AttackRange.Value = 1;
-            stats.VisionRange.Value = 100;
+   //         var sprite = new SpriteModel3D(game, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf");
+   //         npc.AddComponent(sprite);
 
-            stats.FactionId = factionId;
-
-            var sprite = new SpriteModel3D(game, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf");
-            npc.AddComponent(sprite);
-
-			npc.AddComponent(new ActionPoints(){Points = 100});
-         //   game.WorldProvider.MoveEntity(npc, position.Point);
+			//npc.AddComponent(new ActionPoints(){Points = 100});
+   //      //   game.WorldProvider.MoveEntity(npc, position.Point);
             return npc;
         }
 

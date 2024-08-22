@@ -11,6 +11,7 @@ using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
+using NamelessRogue.Engine.Components.Stats;
 
 namespace NamelessRogue.Engine.Generation.Items
 {

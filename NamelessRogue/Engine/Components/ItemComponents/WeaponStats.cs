@@ -18,7 +18,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
 		{
 		}
 
-		public WeaponStats(int minimumDamage, int maximumDamage, int range, AttackType attackType = AttackType.Close, AmmoType ammoType = null,
+		public WeaponStats(int minimumDamage, int maximumDamage, int range, AttackType attackType = AttackType.Close, AmmoType ammoType = default,
             int ammoInClip = 0, int currentAmmo = 0)
         {
             this.MinimumDamage = minimumDamage;

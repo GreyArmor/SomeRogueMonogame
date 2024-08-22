@@ -36,6 +36,7 @@ namespace NamelessRogue.Engine.Factories
         private static Entity flowerEntity = new Entity();
         private static Entity tableEntity = new Entity();
         private static Entity chairEntity = new Entity();
+        private static Entity boxEntity = new Entity();
 
         public static Entity WallEntity { get => (Entity)wallEntity.CloneEntity(); }
         public static Entity WindowEntity { get => (Entity)windowEntity.CloneEntity(); }
@@ -51,6 +52,8 @@ namespace NamelessRogue.Engine.Factories
         public static Entity SmallTreeEntity { get => (Entity)smallTreeEntity.CloneEntity(); }
         public static Entity TreeEntity { get => (Entity)treeEntity.CloneEntity(); }
 
+        public static Entity BoxEntity { get => (Entity)boxEntity.CloneEntity(); }
+
         public static void CreateFurnitureEntities(NamelessGame game)
         {
             var result = new List<Entity>();
@@ -65,41 +68,38 @@ namespace NamelessRogue.Engine.Factories
             result.Add(bedEntity);
             result.Add(barrelEntity);
             result.Add(flowerEntity);
+            result.Add(boxEntity);
 
-            starfishEntity.AddComponent(new Description("A starfish", ""));
-            starfishEntity.AddComponent(new Drawable('S', new Color(1f, 0, 0)));
 
-            shellEntity.AddComponent(new Description("A shell", ""));
-            shellEntity.AddComponent(new Drawable('Q', new Color(0.8f, 0.8f, 0.5f)));
 
             rockEntity.AddComponent(new Description("A rock", ""));
-            rockEntity.AddComponent(new Drawable('o', new Color(0.5f, 0.5f, 0.5f)));
+            rockEntity.AddComponent(new Drawable("Rock", new Color(0.5f, 0.5f, 0.5f)));
             rockEntity.AddComponent(new Item(ItemType.Misc, 2, ItemQuality.Normal, 1, 1, ""));
 
             treeEntity.AddComponent(new Description("A tree", ""));
             treeEntity.AddComponent(new BlocksVision());
             treeEntity.AddComponent(new OccupiesTile());
-            treeEntity.AddComponent(new Drawable('T', new Color(0f, 0.5f, 0f)));
+            treeEntity.AddComponent(new Drawable("Tree", new Color(0f, 0.5f, 0f)));
 
             smallTreeEntity.AddComponent(new Description("A small tree", ""));
-            smallTreeEntity.AddComponent(new Drawable('t', new Color(0f, 0.5f, 0f)));
+            smallTreeEntity.AddComponent(new Drawable("SnallTree", new Color(0f, 0.5f, 0f)));
 
-            treeStumpEntity.AddComponent(new Description("A tree stump", ""));
-            treeStumpEntity.AddComponent(new Drawable('u', new Color(0.5f, 0.5f, 0f)));
-
-            wallEntity.AddComponent(new Drawable('#', new Engine.Utility.Color(0.5f)));
+            wallEntity.AddComponent(new Drawable("Wall", new Engine.Utility.Color(0.5f)));
             wallEntity.AddComponent(new Description("Wall", ""));
             wallEntity.AddComponent(new OccupiesTile());
             wallEntity.AddComponent(new BlocksVision());
 
-            windowEntity.AddComponent(new Drawable('O', new Engine.Utility.Color(0, 0.9, 0.9)));
+            windowEntity.AddComponent(new Drawable("Window", new Engine.Utility.Color(0, 0.9, 0.9)));
             windowEntity.AddComponent(new Description("Window", ""));
 
-            bedEntity.AddComponent(new Drawable('B', new Engine.Utility.Color(139, 69, 19)));
+            bedEntity.AddComponent(new Drawable("Bed", new Engine.Utility.Color(139, 69, 19)));
             bedEntity.AddComponent(new Description("Bed", ""));
 
-            barrelEntity.AddComponent(new Drawable('O', new Engine.Utility.Color(139, 69, 19)));
+            barrelEntity.AddComponent(new Drawable("Barrel", new Engine.Utility.Color(139, 69, 19)));
             barrelEntity.AddComponent(new Description("Barrel", ""));
+
+            boxEntity.AddComponent(new Drawable("Box", new Engine.Utility.Color(139, 69, 19)));
+            boxEntity.AddComponent(new Description("Box", ""));
 
             windowEntity.AddComponent(new OccupiesTile());
             foreach (var entity in result)
@@ -113,58 +113,73 @@ namespace NamelessRogue.Engine.Factories
         {
             var random = game.WorldSettings.GlobalRandom;
             Entity result = null;
-            switch (terrainTile.Biome)
+            //switch (terrainTile.Biome)
+            //{
+            //    case Biomes.Beach:
+            //        {
+            //            var randomValue = random.Next(0, 10000);
+            //            if (randomValue > 9997)
+            //            {
+            //                result = starfishEntity;
+            //            }
+            //            else if (randomValue > 9996)
+            //            {
+            //                result = shellEntity;
+            //            }
+            //            else if (randomValue > 9995)
+            //            {
+            //                result = rockEntity;
+            //            }
+
+            //            break;
+            //        }
+            //    case Biomes.Forest:
+            //        {
+            //            var randomValue = random.Next(0, 100) / 100d;
+            //            if (randomValue > 0.80)
+            //            {
+            //                result = treeEntity;
+            //            }
+            //            else if (randomValue > 0.75)
+            //            {
+            //                result = smallTreeEntity;
+            //            }
+            //            else if (randomValue > 0.74)
+            //            {
+            //                result = treeStumpEntity;
+            //            }
+
+            //            break;
+            //        }
+            //    case Biomes.Desert:
+            //        {
+            //            var randomValue = random.Next(0, 100) / 100d;
+            //            if (randomValue > 0.98)
+            //            {
+            //                result = rockEntity;
+            //            }
+
+            //        }
+            //        break;
+            //    default:
+            //        break; ;
+            //}
+
+
+            switch (terrainTile.Terrain)
             {
-                case Biomes.Beach:
-                    {
-                        var randomValue = random.Next(0, 10000);
-                        if (randomValue > 9997)
-                        {
-                            result = starfishEntity;
-                        }
-                        else if (randomValue > 9996)
-                        {
-                            result = shellEntity;
-                        }
-                        else if (randomValue > 9995)
-                        {
-                            result = rockEntity;
-                        }
-
-                        break;
-                    }
-                case Biomes.Forest:
+                case TerrainTypes.Sidewalk:
                     {
                         var randomValue = random.Next(0, 100) / 100d;
-                        if (randomValue > 0.80)
+                        if (randomValue > 0.97)
                         {
-                            result = treeEntity;
+                            result = boxEntity;
                         }
-                        else if (randomValue > 0.75)
-                        {
-                            result = smallTreeEntity;
-                        }
-                        else if (randomValue > 0.74)
-                        {
-                            result = treeStumpEntity;
-                        }
-
-                        break;
-                    }
-                case Biomes.Desert:
-                    {
-                        var randomValue = random.Next(0, 100) / 100d;
-                        if (randomValue > 0.98)
-                        {
-                            result = rockEntity;
-                        }
-
                     }
                     break;
                 default:
-                    break; ;
+                    break;
             }
-
             if (result == null)
             {
                 return null;

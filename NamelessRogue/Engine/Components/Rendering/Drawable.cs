@@ -7,18 +7,18 @@ namespace NamelessRogue.Engine.Components.Rendering
     public class Drawable : Component {
         
         public Color BackgroundColor { get; set; }
-		public char Representation { get => representation; set => representation = value; }
+		public string Representation { get => representation; set => representation = value; }
 		public bool Visible { get => visible; set => visible = value; }
 		public Color CharColor { get => charColor; set => charColor = value; }
 
-		public Drawable(char representation, Color charColor, Color backgroundColor = null)
+		public Drawable(string representationId, Color charColor, Color backgroundColor = null)
         {
             this.BackgroundColor = backgroundColor;
             if (backgroundColor == null)
             {
                 BackgroundColor = new Color();
             }
-            this.representation= representation;
+            this.representation= representationId;
             this.charColor = charColor;
         }
 
@@ -28,7 +28,7 @@ namespace NamelessRogue.Engine.Components.Rendering
 
 		private bool visible = true;
         
-        private char representation;
+        private string representation;
         
         private Engine.Utility.Color charColor;
 

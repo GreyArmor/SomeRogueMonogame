@@ -1,29 +1,21 @@
-﻿using System;
+﻿using NamelessRogue.Engine.Components.ItemComponents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NamelessRogue.Engine.Components.ItemComponents
+namespace NamelessRogue.Engine.Components.Stats
 {
     public class ArmorStats : Component
     {
-		public ArmorStats()
-		{
-		}
-
-		public ArmorStats(int defenceValue, int evasionValue)
-        {
-            this.DefenceValue = defenceValue;
-            this.EvasionValue = evasionValue;
-        }
-
-        public int DefenceValue { get; set; }
-        public int EvasionValue { get; set; }
+        public ArmorStats() { }
+        public DamageType DamageType { get; set; }
+        public SimpleStat Value { get; set; } = new SimpleStat(0,0,9999);
 
         public override IComponent Clone()
         {
-            return new ArmorStats(DefenceValue, EvasionValue);
+            return new ArmorStats();
         }
     }
 }

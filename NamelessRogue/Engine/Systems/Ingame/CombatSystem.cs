@@ -29,7 +29,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var stats = source.GetComponentOfType<Stats>();
 
                 //TODO: attack damage based on stats, equipment etc.
-                int damage = stats.Attack.Value;
+                int damage = 0;
                 DamageHelper.ApplyDamage(ac.getTarget(), ac.getSource(), damage);
 
                 Description targetDescription = ac.getTarget().GetComponentOfType<Description>();

@@ -230,9 +230,9 @@ namespace NamelessRogue.shell
 				ChunkGeometryEntiry = chunksHolder;
 				TimelineEntity = TimelineFactory.CreateTimeline(this);
 				var libraries = new Entity();
-				var ammoLibrary = new AmmoLibrary();
-				ammoLibrary.AmmoTypes.Add(new AmmoType() { Name = "Revolver ammo" });
-				libraries.AddComponent(ammoLibrary);
+				//var ammoLibrary = new AmmoLibrary();
+				//ammoLibrary.AmmoTypes.Add(new AmmoType() { Name = "Revolver ammo" });
+				//libraries.AddComponent(ammoLibrary);
 
 				var timelinEntity = TimelineEntity;
 				var timeline = timelinEntity.GetComponentOfType<TimeLine>();

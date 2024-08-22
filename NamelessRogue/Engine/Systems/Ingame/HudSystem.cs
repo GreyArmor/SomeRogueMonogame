@@ -40,7 +40,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 float healthValue = (float) stats.Health.Value / stats.Health.MaxValue;
                 //UIController.HudScreen.HealthBar.Value = (int) (healthValue * 100f);
 
-                float staminaValue = (float) stats.Stamina.Value / stats.Stamina.MaxValue;
+               // float staminaValue = (float) stats.Stamina.Value / stats.Stamina.MaxValue;
                // UIController.HudScreen.StaminaBar.Value = (int) (staminaValue * 100f);
 
                 //UIController.HudScreen.StrLabel.Text = $"Str: {stats.Strength.Value}";

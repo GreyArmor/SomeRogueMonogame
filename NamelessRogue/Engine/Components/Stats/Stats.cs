@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NamelessRogue.Engine.Components.ItemComponents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace NamelessRogue.Engine.Components.Stats
         public SimpleStat Speed { get; set; } = new SimpleStat(0, 0, 9999);
         public SimpleStat VisionRange { get; set; } = new SimpleStat(0, 0, 9999);
         public SimpleStat Weight { get; set; } = new SimpleStat(0, 0, 9999);
-        public List<WeaponStat> WeaponStats { get; set; }
+        public List<WeaponStats> WeaponStats { get; set; }
         public List<ResistanceStat> Resistances { get; set; }
         public List<ArmorStats> Armor { get; set;}
 
@@ -26,7 +27,6 @@ namespace NamelessRogue.Engine.Components.Stats
             return new Stats()
             {
                 Health = Health,
-                Stamina = Stamina,
                 VisionRange = VisionRange,
 				FactionId = FactionId,
 			};
