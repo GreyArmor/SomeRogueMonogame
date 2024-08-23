@@ -148,7 +148,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         void InitializeCharacterTileDictionary()
         {
 
-            var atlasTileData = new AtlasTileData(3, 1);
+            var atlasTileData = new AtlasTileData(0, 0);
             characterToTileDictionary = new Dictionary<String, AtlasTileData>();
             characterToTileDictionary.Add("Nothingness", atlasTileData);
             characterToTileDictionary.Add("Grass", atlasTileData);

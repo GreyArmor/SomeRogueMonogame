@@ -40,7 +40,7 @@ namespace NamelessRogue.Engine.Generation.World
                 new Terrain(TerrainTypes.Asphault, new Drawable("Asphault", new Color(0.8, 0.8, 0.8), new Color())));
 
             Terrains.Add(TerrainTypes.Sidewalk,
-                new Terrain(TerrainTypes.Sidewalk, new Drawable("Sidewalk", new Color(0.4, 0.4, 0), new Color())));
+                new Terrain(TerrainTypes.Sidewalk, new Drawable("Sidewalk", new Color(0.6, 0.6, 0.6), new Color())));
 
             Terrains.Add(TerrainTypes.PaintedAsphault,
                 new Terrain(TerrainTypes.PaintedAsphault, new Drawable("PaintedAsphault", new Color(1f, 1f, 1f), new Color())));

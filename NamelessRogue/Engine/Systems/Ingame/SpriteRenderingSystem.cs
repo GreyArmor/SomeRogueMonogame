@@ -346,11 +346,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 for (int x = 0; x < settings.GetWidthZoomed(); x++)
                 {
-                    if (screen.ScreenBuffer[x, y].ObjectId == "Box")
+                    int tileHeight = game.GetSettings().GetFontSizeZoomed();
+                    int tileWidth = game.GetSettings().GetFontSizeZoomed();
+                    if (SpriteLibrary.SpritesStatic.TryGetValue(screen.ScreenBuffer[x, y].ObjectId, out var sprite))
                     {
-                        int tileHeight = game.GetSettings().GetFontSizeZoomed();
-                        int tileWidth = game.GetSettings().GetFontSizeZoomed();
-                        game.Batch.Draw(SpriteLibrary.SpritesStatic["box"].TextureRegion, new Vector2(x * tileHeight, y * tileWidth - (32/ settings.Zoom)), screen.ScreenBuffer[x, y].CharColor.ToXnaColor(), 0, Vector2.Zero, new Vector2(1f / settings.Zoom), SpriteEffects.None, 0);
+                        game.Batch.Draw(sprite.TextureRegion, new Vector2(x * tileHeight, y * tileWidth - (32 / settings.Zoom)), screen.ScreenBuffer[x, y].CharColor.ToXnaColor(), 0, Vector2.Zero, new Vector2(1f / settings.Zoom), SpriteEffects.None, 0);
                     }
                 }
             }

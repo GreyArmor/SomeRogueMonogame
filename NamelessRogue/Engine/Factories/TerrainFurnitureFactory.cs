@@ -37,6 +37,7 @@ namespace NamelessRogue.Engine.Factories
         private static Entity tableEntity = new Entity();
         private static Entity chairEntity = new Entity();
         private static Entity boxEntity = new Entity();
+        private static Entity garbageEntity = new Entity();
 
         public static Entity WallEntity { get => (Entity)wallEntity.CloneEntity(); }
         public static Entity WindowEntity { get => (Entity)windowEntity.CloneEntity(); }
@@ -54,6 +55,8 @@ namespace NamelessRogue.Engine.Factories
 
         public static Entity BoxEntity { get => (Entity)boxEntity.CloneEntity(); }
 
+        public static Entity GarbageEntity { get => (Entity)boxEntity.CloneEntity(); }
+
         public static void CreateFurnitureEntities(NamelessGame game)
         {
             var result = new List<Entity>();
@@ -69,8 +72,7 @@ namespace NamelessRogue.Engine.Factories
             result.Add(barrelEntity);
             result.Add(flowerEntity);
             result.Add(boxEntity);
-
-
+            result.Add(garbageEntity);
 
             rockEntity.AddComponent(new Description("A rock", ""));
             rockEntity.AddComponent(new Drawable("Rock", new Color(0.5f, 0.5f, 0.5f)));
@@ -100,6 +102,8 @@ namespace NamelessRogue.Engine.Factories
 
             boxEntity.AddComponent(new Drawable("Box", new Engine.Utility.Color(139, 69, 19)));
             boxEntity.AddComponent(new Description("Box", ""));
+
+            garbageEntity.AddComponent(new Description("Garbage", ""));
 
             windowEntity.AddComponent(new OccupiesTile());
             foreach (var entity in result)
@@ -171,9 +175,17 @@ namespace NamelessRogue.Engine.Factories
                 case TerrainTypes.Sidewalk:
                     {
                         var randomValue = random.Next(0, 100) / 100d;
-                        if (randomValue > 0.97)
+                        if (randomValue > 0.96)
                         {
-                            result = boxEntity;
+                            var garbage = new Entity();
+
+                            var randomGarbageNumber = random.Next(1, 22);
+
+                            //to get a random sprite
+                            garbage.AddComponent(new Description("Garbage", ""));
+                            garbage.AddComponent(new Drawable(@$"garbage{randomGarbageNumber}", new Engine.Utility.Color(255, 255, 255)));
+                            garbage.AddComponent(new Furniture());
+                            result = garbage;
                         }
                     }
                     break;

@@ -49,6 +49,12 @@ namespace NamelessRogue.Engine.Infrastructure
             _addStaticSprite("box", "Sprites\\box");
             _addStaticSprite("boxMetal", "Sprites\\boxMetal");
             _addStaticSprite("barrel", "Sprites\\barrel");
+
+			for(int i = 1; i <= 22; i++ )
+			{
+                _addStaticSprite($@"garbage{i}", $@"Sprites\\Garbage\\garbage{i}");
+            }
+
         }
 	}
 }
