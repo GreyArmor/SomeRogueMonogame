@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MonoGame.Extended.Content;
-using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Serialization;
 using NamelessRogue.shell;
 using NamelessRogue.Engine.Context;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using MonoGame.Extended.Graphics;
+using MonoGame.Extended.Serialization.Json;
 
 namespace NamelessRogue.Engine.Components._3D
 {

@@ -23,9 +23,8 @@ using Color = NamelessRogue.Engine.Utility.Color;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using MonoGame.Extended.Serialization;
-using MonoGame.Extended.Sprites;
 using SharpDX.Direct2D1;
-using MonoGame.Extended.TextureAtlases;
+using MonoGame.Extended.Graphics;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {

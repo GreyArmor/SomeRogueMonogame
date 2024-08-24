@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Content;
+using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Serialization;
-using MonoGame.Extended.Sprites;
+using MonoGame.Extended.Serialization.Json;
 using NamelessRogue.shell;
 using SharpDX.Direct3D9;
 using System;
@@ -10,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Sprite = MonoGame.Extended.Sprites.Sprite;
+using Sprite = MonoGame.Extended.Graphics.Sprite;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
@@ -25,8 +26,8 @@ namespace NamelessRogue.Engine.Infrastructure
 			void _addAnimatedSprite(string id, string path)
 			{
 				var sprite = new AnimatedSprite(game.Content.Load<SpriteSheet>(path, new JsonContentLoader()));
-				sprite.Play("idleFront");
-				sprite.Update(1);
+				sprite.SetAnimation("idleFront");
+				sprite.Update(new GameTime());
                 SpritesAnimatedIdle.Add(id, sprite);
 			}
 
@@ -37,14 +38,14 @@ namespace NamelessRogue.Engine.Infrastructure
             }
 
 
-            _addAnimatedSprite("treeEvergreen", "Doodads\\treeEvergreen.sf");
-			_addAnimatedSprite("cacti", "Doodads\\cacti.sf");
-			_addAnimatedSprite("palmTree", "Doodads\\palmTree.sf");
-			_addAnimatedSprite("stump", "Doodads\\stump.sf");
-			_addAnimatedSprite("smallTree", "Doodads\\smallTree.sf");
-			_addAnimatedSprite("stone", "Doodads\\stone.sf");
-            _addAnimatedSprite("star", "Doodads\\star.sf");
-            _addAnimatedSprite("seashells1", "Doodads\\seashells1.sf");
+   //         _addAnimatedSprite("treeEvergreen", "Doodads\\treeEvergreen.sf");
+			//_addAnimatedSprite("cacti", "Doodads\\cacti.sf");
+			//_addAnimatedSprite("palmTree", "Doodads\\palmTree.sf");
+			//_addAnimatedSprite("stump", "Doodads\\stump.sf");
+			//_addAnimatedSprite("smallTree", "Doodads\\smallTree.sf");
+			//_addAnimatedSprite("stone", "Doodads\\stone.sf");
+   //         _addAnimatedSprite("star", "Doodads\\star.sf");
+   //         _addAnimatedSprite("seashells1", "Doodads\\seashells1.sf");
 
             _addStaticSprite("box", "Sprites\\box");
             _addStaticSprite("boxMetal", "Sprites\\boxMetal");
