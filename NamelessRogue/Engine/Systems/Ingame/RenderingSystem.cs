@@ -156,6 +156,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("Asphault", atlasTileData);
             characterToTileDictionary.Add("Sidewalk", new AtlasTileData(3,1));
             characterToTileDictionary.Add("PaintedAsphault", atlasTileData);
+            characterToTileDictionary.Add("Wall", new AtlasTileData(5,0));
+            characterToTileDictionary.Add("Door", new AtlasTileData(9, 0));
+            characterToTileDictionary.Add("Window", new AtlasTileData(2, 1));
 
         }
 
@@ -206,7 +209,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 MoveCamera(game, camera);
                 FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
                 FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
-            //    FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
+                FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
             //    FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
                 RenderScreen(game, screen, game.GetSettings());
             }
@@ -501,13 +504,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         objectId = "Nothingness";
                     }
 
-                    DrawTile(game.GraphicsDevice, game, x, y,
-                        x * settings.GetFontSizeZoomed(),
-                        y * settings.GetFontSizeZoomed(),
-                        characterToTileDictionary[objectId],
-                        screen.ScreenBuffer[x, y].CharColor,
-                        screen.ScreenBuffer[x, y].BackGroundColor, foregroundModel, backgroundModel
-                        );
+                    if (characterToTileDictionary.TryGetValue(objectId, out var tileData))
+                    {
+                        DrawTile(game.GraphicsDevice, game, x, y,
+                            x * settings.GetFontSizeZoomed(),
+                            y * settings.GetFontSizeZoomed(),
+                            tileData,
+                            screen.ScreenBuffer[x, y].CharColor,
+                            screen.ScreenBuffer[x, y].BackGroundColor, foregroundModel, backgroundModel
+                            );
+                    }
                 }
             }
             s.Stop();

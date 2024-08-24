@@ -187,7 +187,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                         foreach (var entity in tileToDraw.GetEntities())
                         {
-                            var furniture = entity.GetComponentOfType<Furniture>();
+                            var furniture = entity.GetComponentOfType<SpritedObject>();
                             var drawable = entity.GetComponentOfType<Drawable>();
                             if (furniture != null && drawable != null)
                             {

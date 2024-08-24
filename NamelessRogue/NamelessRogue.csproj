@@ -42,6 +42,7 @@
     <PackageReference Include="ImGui.NET" Version="1.89.4" />
     <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="Markov" Version="2.0.0" />
+    <PackageReference Include="MonoGame.Aseprite" Version="6.0.7" />
     <PackageReference Include="MonoGame.Extended" Version="4.0.1" />
     <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="4.0.1" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.2.1105" />
@@ -49,6 +50,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RogueSharp" Version="4.2.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="TiledCSPlus" Version="4.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AstarNavigatorNetCore\AstarNavigatorNetCore.csproj" />
@@ -56,6 +58,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="Content\AnimatedCharacters\EasyChar_2023-10-31T21_44_08.635Z.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Buildings\ApartmentBlockFloor.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Buildings\Buildings.tiled-project">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Buildings\Buildings.tiled-session">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Buildings\DFfont.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Buildings\symbols.tsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Credits.txt">

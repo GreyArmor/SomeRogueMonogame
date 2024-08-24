@@ -348,8 +348,9 @@ namespace NamelessRogue.shell
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			SpriteLibrary.Initialize(this);
 			InitSound();
-			PlayMainMenuTheme();
-			IsInitialized = true;
+			PlayMainMenuTheme();			
+
+            IsInitialized = true;
 
 		}
 		MusicPack musicPack;

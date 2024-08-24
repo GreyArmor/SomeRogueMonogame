@@ -186,7 +186,7 @@ namespace NamelessRogue.Engine.Factories
                             //to get a random sprite
                             garbage.AddComponent(new Description("Garbage", ""));
                             garbage.AddComponent(new Drawable(@$"garbage{randomGarbageNumber}", new Engine.Utility.Color(255, 255, 255)));
-                            garbage.AddComponent(new Furniture());
+                            garbage.AddComponent(new SpritedObject());
                             result = garbage;
                         }
                     }

@@ -16,6 +16,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
 {
     public class ChunkManagementSystem : BaseSystem
     {
+        private bool once = true;
+
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
@@ -122,6 +124,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }
                 }
                 realityBubbleChunk.Value.JustCreated = false;
+            }
+
+            if (once)
+            {
+                BuildingFactory.CreateDummyBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize, namelessGame);
+                once = false;
             }
 
         }
