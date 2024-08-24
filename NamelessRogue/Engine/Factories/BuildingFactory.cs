@@ -93,7 +93,7 @@ namespace NamelessRogue.Engine.Factories
         }
 
 
-        public static IEntity CreateBuilding(int x, int y, BuildingBlueprint blueprint, NamelessGame namelessGame, IWorldProvider worldProvider, InternalRandom random)
+        public static IEntity CreateBuilding(int x, int y, Generation.Settlement.BuildingBlueprint blueprint, NamelessGame namelessGame, IWorldProvider worldProvider, InternalRandom random)
         {
             IEntity building = new Entity();
 

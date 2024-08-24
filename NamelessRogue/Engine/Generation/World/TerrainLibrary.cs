@@ -36,11 +36,11 @@ namespace NamelessRogue.Engine.Generation.World
             Terrains.Add(TerrainTypes.HardRocks,
                 new Terrain(TerrainTypes.HardRocks, new Drawable("HardRocks", new Color(0.2, 0.2, 0.2), new Color())));
 
-            Terrains.Add(TerrainTypes.Asphault,
-                new Terrain(TerrainTypes.Asphault, new Drawable("Asphault", new Color(0.8, 0.8, 0.8), new Color())));
+            Terrains.Add(TerrainTypes.AsphaultPoor,
+                new Terrain(TerrainTypes.AsphaultPoor, new Drawable("Asphault", new Color(0.8, 0.8, 0.8), new Color())));
 
-            Terrains.Add(TerrainTypes.Sidewalk,
-                new Terrain(TerrainTypes.Sidewalk, new Drawable("Sidewalk", new Color(0.6, 0.6, 0.6), new Color())));
+            Terrains.Add(TerrainTypes.SidewalkPoor,
+                new Terrain(TerrainTypes.SidewalkPoor, new Drawable("Sidewalk", new Color(0.6, 0.6, 0.6), new Color())));
 
             Terrains.Add(TerrainTypes.PaintedAsphault,
                 new Terrain(TerrainTypes.PaintedAsphault, new Drawable("PaintedAsphault", new Color(1f, 1f, 1f), new Color())));

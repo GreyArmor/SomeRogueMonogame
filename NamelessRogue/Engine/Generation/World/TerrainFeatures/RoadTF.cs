@@ -57,7 +57,7 @@ namespace NamelessRogue.Engine.Generation.World.TerrainFeatures
                     if (asphaultBitmap.GetPixel(x, y).G > 0 && chunkToDrawOn.ChunkTiles[x][y].Terrain != TerrainTypes.PaintedAsphault)
                     {
                         chunkToDrawOn.ChunkTiles[x][y].Biome = Biomes.None;
-                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.Asphault;
+                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.AsphaultPoor;
                     }
                     if (asphaultBitmap.GetPixel(x, y).R > 0)
                     {
@@ -67,7 +67,7 @@ namespace NamelessRogue.Engine.Generation.World.TerrainFeatures
                     if (asphaultBitmap.GetPixel(x, y).B > 0 && chunkToDrawOn.ChunkTiles[x][y].Terrain== TerrainTypes.Grass)
                     {
                         chunkToDrawOn.ChunkTiles[x][y].Biome = Biomes.None;
-                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.Sidewalk;
+                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.SidewalkPoor;
                     }
                 }
             }

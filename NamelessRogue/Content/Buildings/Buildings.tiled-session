@@ -1,0 +1,69 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "ApartmentBlockFloor.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "ApartmentBlockFloor.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2010.6060606060605,
+                "y": 1369.6969696969695
+            }
+        },
+        "Visualizer.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 5.5
+        },
+        "surfaces.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 5.5
+        },
+        "symbols.tsx": {
+            "scaleInDock": 0.25,
+            "scaleInEditor": 1
+        },
+        "untitled.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 450,
+                "y": 1027.2727272727273
+            }
+        },
+        "urizen_with_properties.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 5.5
+        }
+    },
+    "last.imagePath": "C:/Users/user/Buildings",
+    "map.height": 64,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "map.width": 64,
+    "openFiles": [
+        "ApartmentBlockFloor.tmx",
+        "symbols.tsx"
+    ],
+    "project": "Buildings.tiled-project",
+    "recentFiles": [
+        "symbols.tsx",
+        "ApartmentBlockFloor.tmx",
+        "untitled.tmx",
+        "surfaces.tsx",
+        "urizen_with_properties.tsx",
+        "Visualizer.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.spacing": 0,
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}

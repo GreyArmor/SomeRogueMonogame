@@ -172,14 +172,16 @@ namespace NamelessRogue.Engine.Factories
 
             switch (terrainTile.Terrain)
             {
-                case TerrainTypes.Sidewalk:
+                case TerrainTypes.SidewalkPoor:
+                case TerrainTypes.AsphaultPoor:
+                case TerrainTypes.PaintedAsphault:
                     {
                         var randomValue = random.Next(0, 100) / 100d;
-                        if (randomValue > 0.96)
+                        if (randomValue > 0.97)
                         {
                             var garbage = new Entity();
 
-                            var randomGarbageNumber = random.Next(1, 22);
+                            var randomGarbageNumber = random.Next(1, 21);
 
                             //to get a random sprite
                             garbage.AddComponent(new Description("Garbage", ""));
