@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AStarNavigator.Providers;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
+using MonoGame.Extended.Timers;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Environment;
@@ -14,6 +16,7 @@ using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Generation.Settlement;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using RogueSharp.Random;
@@ -27,7 +30,7 @@ namespace NamelessRogue.Engine.Factories
         {
             Entity door  = new Entity();
             door.AddComponent(new Position(x, y));
-            door.AddComponent(new Drawable("Door", new Engine.Utility.Color(0.7,0.7,0.7), new Engine.Utility.Color()));
+            door.AddComponent(new Drawable("Door", new Engine.Utility.Color(0.7,0.7,0.7)));
             door.AddComponent(new Description("Door",""));
             door.AddComponent(new Door());
             door.AddComponent(new SimpleSwitch(true));
@@ -37,7 +40,7 @@ namespace NamelessRogue.Engine.Factories
             return door;
         }
 
-        public static Entity CreateWindow(int x, int y, NamelessGame namelessGame)
+        public static Entity CreateWindow(int x, int y)
         {
             Entity window  = new Entity();
             window.AddComponent(new Position(x, y));
@@ -51,6 +54,7 @@ namespace NamelessRogue.Engine.Factories
         public static IEntity CreateDummyBuilding(int x, int y, NamelessGame namelessGame)
         {
 
+            var neigborProvider = new DiagonalNeighborProvider();
 
             IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
@@ -71,59 +75,93 @@ namespace NamelessRogue.Engine.Factories
 
             // Retrieving objects or layers can be done using Linq or a for loop
             var myLayer = map.Layers.First(l => l.Name == "main");
+            int buildingSize = 64;
 
-            for (int i = 0; i < 64; i++)
+            var postProcessingArray = new bool[buildingSize, buildingSize];
+            var tilesetPositions = new string[buildingSize, buildingSize];
+            for (int i = 0; i < buildingSize; i++)
             {
-                for (int j = 0; j<64; j++)
+                for (int j = 0; j< buildingSize; j++)
                 {
-
                     var gameTile = worldProvider.GetTile(x + i, y + j);
-
-                    var tileId = myLayer.Data[j + (i * 64)];
+                    var tileId = myLayer.Data[j + (i * buildingSize)];
                     if(tileId != 0)
                     {
                         var tile = tileset.Tiles[tileId-1];
                         var tileObjectType = tile.Properties[0].Value;
-                        if (tileObjectType != "")
+                        if (tileObjectType == "wall")
                         {
-                            switch (tileObjectType)
-                            {
-                                case "wall":
-                                    var wall = TerrainFurnitureFactory.WallEntity;
-                                    gameTile.AddEntity(wall);
-                                    namelessGame.AddEntity(wall);
-                                    break;
-                                case "door":
-                                    {
-                                        var entity = CreateDoor(x + i, y + j);
-                                        gameTile.AddEntity(entity);
-                                        namelessGame.AddEntity(entity);
-                                    }
-                                    break;
-                                case "window":
-                                    {
-                                        var entity = CreateWindow(x + i, y + j, namelessGame);
-                                        gameTile.AddEntity(entity);
-                                        namelessGame.AddEntity(entity);
-                                    }
-                                    break;
-                                default:
-                                    break;
-                                        
-
-                            }
+                            postProcessingArray[i, j] = true;
                         }
                     }
                 }
             }
 
-
-            // You can use the helper methods to get useful information to generate maps
-            if (map.IsTileFlippedDiagonal(myLayer, 3, 5))
+            for (int i = 0; i < buildingSize; i++)
             {
-                // Do something
+                for (int j = 0; j < buildingSize; j++)
+                {
+                    var cell = postProcessingArray[i, j];
+
+                    var neighbors = neigborProvider.GetNeighbors(new AStarNavigator.Tile(i, j));
+                    string tilesetPosition = "";
+                    foreach (var neighbor in neighbors)
+                    {
+                        if(neighbor.X<0 || neighbor.Y<0 || neighbor.X==buildingSize || neighbor.Y == buildingSize || !postProcessingArray[i,j])
+                        {
+                            tilesetPosition += "0";
+                        }
+                        else
+                        {
+                            tilesetPosition += "1";
+                        }
+                    }
+                    tilesetPositions[i, j] = tilesetPosition;
+                }
+            }
+            for (int i = 0; i < buildingSize; i++)
+            {
+                for (int j = 0; j < buildingSize; j++)
+                {
+                    var gameTile = worldProvider.GetTile(x + i, y + j);
+                    var tileId = myLayer.Data[j + (i * buildingSize)];
+                    if (tileId != 0)
+                    {
+                        var tile = tileset.Tiles[tileId - 1];
+                        var tileObjectType = tile.Properties[0].Value;
+                        switch (tileObjectType)
+                        {
+                            case "wall":
+                                var wall = TerrainFurnitureFactory.WallEntity;
+                                var drawable = wall.GetComponentOfType<Drawable>();
+                                drawable.TilesetPosition = tilesetPositions[i, j];                                
+                                gameTile.AddEntity(wall);
+                                namelessGame.AddEntity(wall);
+                                break;
+                            case "door":
+                                {
+                                    var entity = CreateDoor(x + i, y + j);
+                                    gameTile.AddEntity(entity);
+                                    namelessGame.AddEntity(entity);
+                                }
+                                break;
+                            case "window":
+                                {
+                                    var entity = CreateWindow(x + i, y + j);
+                                    gameTile.AddEntity(entity);
+                                    namelessGame.AddEntity(entity);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
             }
 
+          
+
+            // You can use the helper methods to get useful information to generate maps
 
             //for (int i = 0;i< width; i++)
             //{

@@ -355,7 +355,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
         void GetTerrainTile(Screen screen, Point point, WorldTile tile)
         {
-            screen.ScreenBuffer[point.X, point.Y].ObjectId = BiomesLibrary.Biomes[tile.Biome].Representation.Representation;
+            screen.ScreenBuffer[point.X, point.Y].ObjectId = BiomesLibrary.Biomes[tile.Biome].Representation.ObjectID;
             screen.ScreenBuffer[point.X, point.Y].CharColor = BiomesLibrary.Biomes[tile.Biome].Representation.CharColor;
             screen.ScreenBuffer[point.X, point.Y].BackGroundColor = BiomesLibrary.Biomes[tile.Biome].Representation.BackgroundColor;
 

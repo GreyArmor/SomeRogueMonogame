@@ -34,7 +34,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 Drawable drawable = entityToKill.GetComponentOfType<Drawable>();
                 if (drawable != null)
                 {
-                    drawable.Representation = "DeadBody";
+                    drawable.ObjectID = "DeadBody";
                 }
 
                 IEntity worldEntity = namelessGame.TimelineEntity;

@@ -5,7 +5,7 @@ namespace NamelessRogue.Engine.Infrastructure
 {
     internal class Constants {
         //this size is in constants for now, TODO: move this size into configuration file so users could make their own custom tiles
-        public static int tileAtlasTileSize = 27;
+        public static int tileAtlasTileSize = 32;
         public static int tileAtlasOutlineSize = 1;
         public static int tileAtlasSpacingSize = 1;
         public static int ChunkSize = 32;

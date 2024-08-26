@@ -191,7 +191,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var drawable = entity.GetComponentOfType<Drawable>();
                             if (furniture != null && drawable != null)
                             {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.Representation;
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID;
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                             }
                         }
@@ -235,7 +235,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         void GetTerrainTile(Screen screen, Terrain terrain, Point point)
         {
 
-            screen.ScreenBuffer[point.X, point.Y].ObjectId = terrain.Representation.Representation;
+            screen.ScreenBuffer[point.X, point.Y].ObjectId = terrain.Representation.ObjectID;
             screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.CharColor;
             screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
         }
@@ -268,7 +268,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.Representation;
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID;
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                         }
                         else
@@ -323,7 +323,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.Representation;
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID;
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                         }
                         else

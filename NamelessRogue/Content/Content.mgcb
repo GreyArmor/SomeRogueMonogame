@@ -54,51 +54,6 @@
 /processorParam:TextureFormat=Color
 /build:DFfont.png
 
-#begin Doodads/cacti.sf
-/copy:Doodads/cacti.sf
-
-#begin Doodads/nature.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Doodads/nature.png
-
-#begin Doodads/palmTree.sf
-/copy:Doodads/palmTree.sf
-
-#begin Doodads/pisaster_ochraceus.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Doodads/pisaster_ochraceus.png
-
-#begin Doodads/seashells.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Doodads/seashells.png
-
-#begin Doodads/treeEvergreen.sf
-/copy:Doodads/treeEvergreen.sf
-
 #begin Light.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -549,6 +504,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/surfaces.png
+
+#begin Sprites/tilesetOptimized.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/tilesetOptimized.png
 
 #begin Sprites/tower.png
 /importer:TextureImporter

@@ -25,6 +25,18 @@ using System.Runtime.InteropServices;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
+
+
+    public enum TilesetModifier
+    {
+        Top,
+        Bottom, 
+        Left,
+        Right,
+        Corner,
+        Center,     
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vertex
     {
@@ -148,17 +160,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
         void InitializeCharacterTileDictionary()
         {
 
-            var atlasTileData = new AtlasTileData(0, 0);
+            var atlasTileData = new AtlasTileData(9, 9);
             characterToTileDictionary = new Dictionary<String, AtlasTileData>();
             characterToTileDictionary.Add("Nothingness", atlasTileData);
             characterToTileDictionary.Add("Grass", atlasTileData);
-            characterToTileDictionary.Add("Character", new AtlasTileData(3, 0));
+            characterToTileDictionary.Add("Character", new AtlasTileData(2, 0));
             characterToTileDictionary.Add("Asphault", atlasTileData);
             characterToTileDictionary.Add("Sidewalk", new AtlasTileData(3,1));
             characterToTileDictionary.Add("PaintedAsphault", atlasTileData);
-            characterToTileDictionary.Add("Wall", new AtlasTileData(5,0));
-            characterToTileDictionary.Add("Door", new AtlasTileData(9, 0));
-            characterToTileDictionary.Add("Window", new AtlasTileData(2, 1));
+            characterToTileDictionary.Add("Wall", new AtlasTileData(2,0));
+            characterToTileDictionary.Add("Door", new AtlasTileData(7, 0));
+            characterToTileDictionary.Add("Window", new AtlasTileData(0, 2));
 
         }
 
@@ -333,7 +345,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var drawable = entity.GetComponentOfType<Drawable>();
                             if (furniture != null && drawable != null)
                             {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.Representation;
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID;
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                             }
                         }
@@ -377,7 +389,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         void GetTerrainTile(Screen screen, Terrain terrain, Point point)
         {
          
-                screen.ScreenBuffer[point.X, point.Y].ObjectId = terrain.Representation.Representation;
+                screen.ScreenBuffer[point.X, point.Y].ObjectId = terrain.Representation.ObjectID;
                 screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.CharColor;
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
         }
@@ -410,12 +422,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                         {                                  
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.Representation;
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID;
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                         }                                  
                         else                               
                         {                                  
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.Representation;
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID;
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
                         }
@@ -465,7 +477,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                         {                                                  
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.Representation;
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID;
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                         }                                                 
                         else                                               
@@ -561,7 +573,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
 
             tileAtlas = null;
-            tileAtlas = game.Content.Load<Texture2D>("Sprites/surfaces");
+            tileAtlas = game.Content.Load<Texture2D>("Sprites/tilesetOptimized");
             effect = game.Content.Load<Effect>("Shader");
 
             effect.Parameters["tileAtlas"].SetValue(tileAtlas);
