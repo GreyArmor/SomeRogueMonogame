@@ -53,7 +53,7 @@ namespace NamelessRogue.Engine.Factories
 
         public static IEntity CreateDummyBuilding(int x, int y, NamelessGame namelessGame)
         {
-
+                
             var neigborProvider = new DiagonalNeighborProvider();
 
             IEntity worldEntity = namelessGame.TimelineEntity;
