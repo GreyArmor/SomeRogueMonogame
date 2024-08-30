@@ -46,7 +46,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override void Update(GameTime gameTime, NamelessGame game)
         {
-
+            return;
             this.gameTime = (long)gameTime.TotalGameTime.TotalMilliseconds;
 
 

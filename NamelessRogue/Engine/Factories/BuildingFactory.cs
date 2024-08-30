@@ -20,6 +20,7 @@ using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using RogueSharp.Random;
+using SharpDX.Direct3D11;
 using TiledCSPlus;
 using TiledMap = TiledCSPlus.TiledMap;
 
@@ -54,7 +55,7 @@ namespace NamelessRogue.Engine.Factories
         public static IEntity CreateDummyBuilding(int x, int y, NamelessGame namelessGame)
         {
                 
-            var neigborProvider = new DiagonalNeighborProvider();
+            var neigborProvider = new DiagonalNeighborProviderSelfIncluded();
 
             IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
@@ -79,6 +80,7 @@ namespace NamelessRogue.Engine.Factories
 
             var postProcessingArray = new bool[buildingSize, buildingSize];
             var tilesetPositions = new string[buildingSize, buildingSize];
+            var postprocessingList = new List<Point>();
             for (int i = 0; i < buildingSize; i++)
             {
                 for (int j = 0; j< buildingSize; j++)
@@ -92,33 +94,53 @@ namespace NamelessRogue.Engine.Factories
                         if (tileObjectType == "wall")
                         {
                             postProcessingArray[i, j] = true;
+                            postprocessingList.Add(new Point(i, j)); ;
                         }
                     }
                 }
             }
 
+            ////first determine which walls are corners and intersections
             for (int i = 0; i < buildingSize; i++)
             {
                 for (int j = 0; j < buildingSize; j++)
                 {
                     var cell = postProcessingArray[i, j];
 
-                    var neighbors = neigborProvider.GetNeighbors(new AStarNavigator.Tile(i, j));
+                    var neighbors = neigborProvider.GetNeighbors(new AStarNavigator.Tile(i, j)).ToList();
                     string tilesetPosition = "";
                     foreach (var neighbor in neighbors)
                     {
-                        if(neighbor.X<0 || neighbor.Y<0 || neighbor.X==buildingSize || neighbor.Y == buildingSize || !postProcessingArray[i,j])
+                        if (neighbor.X < 0 || neighbor.Y < 0 || neighbor.X == buildingSize || neighbor.Y == buildingSize || !postProcessingArray[i, j])
                         {
                             tilesetPosition += "0";
                         }
                         else
                         {
-                            tilesetPosition += "1";
+                            if (postProcessingArray[(int)neighbor.Y, (int)neighbor.X])
+                            {
+                                tilesetPosition += "1";
+                            }
+                            else
+                            {
+                                tilesetPosition += "0";
+                            }
                         }
                     }
                     tilesetPositions[i, j] = tilesetPosition;
                 }
             }
+
+
+            //then determine which walls are left, right, top, bottom and which are internal
+            for (int i = 0; i < buildingSize; i++)
+            {
+                for (int j = 0; j < buildingSize; j++)
+                {
+                }
+            }
+
+
             for (int i = 0; i < buildingSize; i++)
             {
                 for (int j = 0; j < buildingSize; j++)
