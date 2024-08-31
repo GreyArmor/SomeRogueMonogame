@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AStarNavigator.Providers;
 using Microsoft.Xna.Framework;
@@ -54,8 +55,8 @@ namespace NamelessRogue.Engine.Factories
 
         public static IEntity CreateDummyBuilding(int x, int y, NamelessGame namelessGame)
         {
-                
-            var neigborProvider = new DiagonalNeighborProviderSelfIncluded();
+            var diagonalNeighbors = new DiagonalNeighborProviderSelfIncluded();
+            var straightNeighbors = new StraightNeighborProviderSelfIncluded();
 
             IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
@@ -72,52 +73,67 @@ namespace NamelessRogue.Engine.Factories
             Building buildingComponent = new Building();
 
             var map = new TiledMap("Content\\Buildings\\ApartmentBlockFloor.tmx");
-            var tileset = new TiledTileset("Content\\Buildings\\symbols.tsx");
+            var tileset = new TiledTileset("Content\\Buildings\\tileset2.tsx");
 
             // Retrieving objects or layers can be done using Linq or a for loop
             var myLayer = map.Layers.First(l => l.Name == "main");
-            int buildingSize = 64;
+            int buildingSize = 60;
 
             var postProcessingArray = new bool[buildingSize, buildingSize];
             var tilesetPositions = new string[buildingSize, buildingSize];
-            var postprocessingList = new List<Point>();
-            for (int i = 0; i < buildingSize; i++)
+            for (int loopY = 0; loopY < buildingSize; loopY++)
             {
-                for (int j = 0; j< buildingSize; j++)
+                for (int loopX = 0; loopX < buildingSize; loopX++)
                 {
-                    var gameTile = worldProvider.GetTile(x + i, y + j);
-                    var tileId = myLayer.Data[j + (i * buildingSize)];
+                    var gameTile = worldProvider.GetTile(x + loopX, y + loopY);
+                    var tileId = myLayer.Data[loopX + (loopY * buildingSize)];
                     if(tileId != 0)
                     {
                         var tile = tileset.Tiles[tileId-1];
                         var tileObjectType = tile.Properties[0].Value;
-                        if (tileObjectType == "wall")
+                        if (tileObjectType == "wall" || tileObjectType == "door" || tileObjectType == "window")
                         {
-                            postProcessingArray[i, j] = true;
-                            postprocessingList.Add(new Point(i, j)); ;
+                            postProcessingArray[loopY, loopX] = true;
                         }
                     }
                 }
             }
 
-            ////first determine which walls are corners and intersections
-            for (int i = 0; i < buildingSize; i++)
+            for (int loopY = 0; loopY < buildingSize; loopY++)
             {
-                for (int j = 0; j < buildingSize; j++)
+                for (int loopX = 0; loopX < buildingSize; loopX++)
                 {
-                    var cell = postProcessingArray[i, j];
+                    Debug.Write(postProcessingArray[loopY, loopX]?1:0);
+                }
+                Debug.Write("\n");
+            }
 
-                    var neighbors = neigborProvider.GetNeighbors(new AStarNavigator.Tile(i, j)).ToList();
-                    string tilesetPosition = "";
-                    foreach (var neighbor in neighbors)
+                    ////first determine which walls are corners and intersections
+            for (int loopY = 0; loopY < buildingSize; loopY++)
+            {
+                for (int loopX = 0; loopX < buildingSize; loopX++)
+                {
+                    var cellValue = postProcessingArray[loopY, loopX];
+
+                    if(!cellValue)
                     {
-                        if (neighbor.X < 0 || neighbor.Y < 0 || neighbor.X == buildingSize || neighbor.Y == buildingSize || !postProcessingArray[i, j])
+                        continue;
+                    }
+
+                    var diagonalCells = diagonalNeighbors.GetNeighbors(new AStarNavigator.Tile(loopX, loopY)).ToList();
+                    var straightCells = straightNeighbors.GetNeighbors(new AStarNavigator.Tile(loopX, loopY)).ToList();
+                    string tilesetPosition = "";
+                    foreach (var neighbor in diagonalCells)
+                    {
+                        //throw away outside of bounds tiles
+                        if (neighbor.X < 0 || neighbor.Y < 0 || neighbor.X == buildingSize || neighbor.Y == buildingSize )
                         {
                             tilesetPosition += "0";
                         }
                         else
                         {
-                            if (postProcessingArray[(int)neighbor.Y, (int)neighbor.X])
+                           // also throw away all diagonal tiles
+                            if (straightCells.Contains(neighbor) && postProcessingArray[(int)neighbor.Y, (int)neighbor.X])
                             {
                                 tilesetPosition += "1";
                             }
@@ -126,8 +142,8 @@ namespace NamelessRogue.Engine.Factories
                                 tilesetPosition += "0";
                             }
                         }
-                    }
-                    tilesetPositions[i, j] = tilesetPosition;
+                    }                    
+                    tilesetPositions[loopY, loopX] = tilesetPosition;
                 }
             }
 
@@ -137,16 +153,17 @@ namespace NamelessRogue.Engine.Factories
             {
                 for (int j = 0; j < buildingSize; j++)
                 {
+                    
                 }
             }
 
 
-            for (int i = 0; i < buildingSize; i++)
+            for (int loopY = 0; loopY < buildingSize; loopY++)
             {
-                for (int j = 0; j < buildingSize; j++)
+                for (int loopX = 0; loopX < buildingSize; loopX++)
                 {
-                    var gameTile = worldProvider.GetTile(x + i, y + j);
-                    var tileId = myLayer.Data[j + (i * buildingSize)];
+                    var gameTile = worldProvider.GetTile(x + loopX, y + loopY);
+                    var tileId = myLayer.Data[loopX + (loopY * buildingSize)];
                     if (tileId != 0)
                     {
                         var tile = tileset.Tiles[tileId - 1];
@@ -154,22 +171,28 @@ namespace NamelessRogue.Engine.Factories
                         switch (tileObjectType)
                         {
                             case "wall":
-                                var wall = TerrainFurnitureFactory.WallEntity;
-                                var drawable = wall.GetComponentOfType<Drawable>();
-                                drawable.TilesetPosition = tilesetPositions[i, j];                                
-                                gameTile.AddEntity(wall);
-                                namelessGame.AddEntity(wall);
+                                {
+                                    var wall = TerrainFurnitureFactory.WallEntity;
+                                    var drawable = wall.GetComponentOfType<Drawable>();
+                                    drawable.TilesetPosition = tilesetPositions[loopY, loopX];
+                                    gameTile.AddEntity(wall);
+                                    namelessGame.AddEntity(wall);
+                                }
                                 break;
                             case "door":
                                 {
-                                    var entity = CreateDoor(x + i, y + j);
+                                    var entity = CreateDoor(x + loopX, y + loopY);
+                                    var drawable = entity.GetComponentOfType<Drawable>();
+                                    drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                     gameTile.AddEntity(entity);
                                     namelessGame.AddEntity(entity);
                                 }
                                 break;
                             case "window":
                                 {
-                                    var entity = CreateWindow(x + i, y + j);
+                                    var entity = CreateWindow(x + loopX, y + loopY);
+                                    var drawable = entity.GetComponentOfType<Drawable>();
+                                    drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                     gameTile.AddEntity(entity);
                                     namelessGame.AddEntity(entity);
                                 }
@@ -181,35 +204,6 @@ namespace NamelessRogue.Engine.Factories
                 }
             }
 
-          
-
-            // You can use the helper methods to get useful information to generate maps
-
-            //for (int i = 0;i< width; i++)
-            //{
-            //    for (int j = 0;j< height; j++)
-            //    {
-            //        var tile = worldProvider.GetTile(x + i, y + j);
-            //        tile.Terrain = TerrainTypes.Road;
-            //        tile.Biome = Biomes.None;
-            //        if (i == 0 || j == 0 || i == width - 1 || j == height - 1)
-            //        {
-            //            if (i == width / 2)
-            //            {
-            //                IEntity door = CreateDoor(x + i, y + j);
-            //                buildingComponent.getBuildingParts().Add(door);
-            //                namelessGame.AddEntity(door);
-            //                tile.AddEntity((Entity) door);
-            //            }
-            //            else
-            //            {
-            //                var wall = TerrainFurnitureFactory.WallEntity;
-            //                tile.AddEntity(wall);
-            //                namelessGame.AddEntity(wall);
-            //            }
-            //        }
-            //    }
-            //}
             building.AddComponent(buildingComponent);
             return building;
 

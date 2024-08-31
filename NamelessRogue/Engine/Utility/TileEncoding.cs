@@ -12,13 +12,29 @@ namespace NamelessRogue.Engine.Utility
                                       "010" +
                                       "000";
 
-        public static string CenterVertical = "010" +
+        public static string WallVertical0 =  "010" +
                                               "010" +
                                               "010";
 
-        public static string CenterHorizontal = "000" +
+        public static string WallVertical1 = "000" +
+                                             "010" +
+                                             "010";
+
+        public static string WallVertical2 =  "010" +
+                                              "010" +
+                                              "000";
+
+        public static string WallHorizontal0 =   "000" +
                                                 "111" +
                                                 "000";
+
+        public static string WallHorizontal1 = "000" +
+                                               "011" +
+                                               "000";
+
+        public static string WallHorizontal2 = "000" +
+                                               "110" +
+                                               "000";
 
         public static string CornerTopRight  = "000" +
                                                "110" +
@@ -55,15 +71,5 @@ namespace NamelessRogue.Engine.Utility
         public static string InterserctionRight =  "010" +
                                                    "110" +
                                                    "010";
-
-        public static string UpAppendix = "_11";
-        public static string DownAppendix = "_00";
-        public static string LeftAppendix = "_10";
-        public static string RightAppendix = "_01";
-        public static string InternalWallApperndix = "IW";
-
-
-
-
     }
 }

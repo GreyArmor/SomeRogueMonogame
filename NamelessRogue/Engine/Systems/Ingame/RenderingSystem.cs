@@ -164,40 +164,63 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary = new Dictionary<String, AtlasTileData>();
             characterToTileDictionary.Add("Nothingness", atlasTileData);
             characterToTileDictionary.Add("Grass", atlasTileData);
-            characterToTileDictionary.Add("Character", atlasTileData);
-            characterToTileDictionary.Add("Asphault", atlasTileData);
-            characterToTileDictionary.Add("Sidewalk", atlasTileData);
-            characterToTileDictionary.Add("PaintedAsphault", atlasTileData);
+            characterToTileDictionary.Add("Character", new AtlasTileData(0,7));
+            characterToTileDictionary.Add("Asphault", new AtlasTileData(1,3));
+            characterToTileDictionary.Add("Sidewalk", new AtlasTileData(0, 3));
+            characterToTileDictionary.Add("PaintedAsphault", new AtlasTileData(2, 3));
             characterToTileDictionary.Add("Wall", atlasTileData);
             characterToTileDictionary.Add("Door", atlasTileData);
             characterToTileDictionary.Add("Window", atlasTileData);
 
-            var wall = new AtlasTileData(0, 0);
-            characterToTileDictionary.Add("Wall"+  TileBitmaskingEncoding.CenterVertical, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CenterHorizontal, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerTopLeft, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerBotLeft, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerTopRight, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerBotRight, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionLeft, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionRight, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionTop, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionBot, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionCenter, wall);
-            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.Pillar, wall);
+            //var wall = new AtlasTileData(0, 0);
+            //characterToTileDictionary.Add("Wall"+  TileBitmaskingEncoding.CenterVertical, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CenterHorizontal, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerTopLeft, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerBotLeft, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerTopRight, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerBotRight, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionLeft, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionRight, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionTop, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionBot, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionCenter, wall);
+            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.Pillar, wall);
 
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CenterVertical, new AtlasTileData(2, 0));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CenterHorizontal, new AtlasTileData(2, 0));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerTopLeft, new AtlasTileData(0, 0));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerBotLeft, new AtlasTileData(0, 1));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerTopRight, new AtlasTileData(0, 0, false, true));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerBotRight, new AtlasTileData(0, 1, false, true));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionLeft, new AtlasTileData(3, 0));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionRight, new AtlasTileData(3, 0));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionTop, new AtlasTileData(3, 0));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionBot, new AtlasTileData(3, 0));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionCenter, new AtlasTileData(3, 1));
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.Pillar, new AtlasTileData(8, 0));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.WallHorizontal0, new AtlasTileData(1, 0));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.WallHorizontal1, new AtlasTileData(1, 0));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.WallHorizontal2, new AtlasTileData(1, 0));
+
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.WallVertical0, new AtlasTileData(0, 1));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.WallVertical1, new AtlasTileData(0, 1));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.WallVertical2, new AtlasTileData(0, 1));
+
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerTopLeft, new AtlasTileData(0, 0));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerBotLeft, new AtlasTileData(0, 2));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerTopRight, new AtlasTileData(2, 0));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerBotRight, new AtlasTileData(2, 2));
+
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionLeft, new AtlasTileData(3, 1));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionRight, new AtlasTileData(3, 1, true));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionTop, new AtlasTileData(3, 0));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionBot, new AtlasTileData(3, 2));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionCenter, new AtlasTileData(4, 2));
+            characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.Pillar, new AtlasTileData(4, 1));
+
+            characterToTileDictionary.Add("Door" + TileBitmaskingEncoding.WallHorizontal0, new AtlasTileData(5, 0));
+            characterToTileDictionary.Add("Door" + TileBitmaskingEncoding.WallHorizontal1, new AtlasTileData(5, 0));
+            characterToTileDictionary.Add("Door" + TileBitmaskingEncoding.WallHorizontal2, new AtlasTileData(5, 0));
+
+            characterToTileDictionary.Add("Door" + TileBitmaskingEncoding.WallVertical0, new AtlasTileData(5, 1));
+            characterToTileDictionary.Add("Door" + TileBitmaskingEncoding.WallVertical1, new AtlasTileData(5, 1));
+            characterToTileDictionary.Add("Door" + TileBitmaskingEncoding.WallVertical2, new AtlasTileData(5, 1));
+
+            characterToTileDictionary.Add("Window" + TileBitmaskingEncoding.WallHorizontal0, new AtlasTileData(6, 0));
+            characterToTileDictionary.Add("Window" + TileBitmaskingEncoding.WallHorizontal1, new AtlasTileData(6, 0));
+            characterToTileDictionary.Add("Window" + TileBitmaskingEncoding.WallHorizontal2, new AtlasTileData(6, 0));
+
+            characterToTileDictionary.Add("Window" + TileBitmaskingEncoding.WallVertical0, new AtlasTileData(6, 1));
+            characterToTileDictionary.Add("Window" + TileBitmaskingEncoding.WallVertical1, new AtlasTileData(6, 1));
+            characterToTileDictionary.Add("Window" + TileBitmaskingEncoding.WallVertical2, new AtlasTileData(6, 1));
 
 
         }
@@ -251,7 +274,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
                 FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
                 FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
-            //    FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
+                FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
                 RenderScreen(game, screen, game.GetSettings());
             }
         }
@@ -531,7 +554,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                         {                                                  
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID + drawable.TilesetPosition;
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Character";
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                         }                                                 
                         else                                               
@@ -569,17 +592,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         objectId = "Nothingness";
                     }
+                    else
+                    {
+                        objectId.ToString();
+                    }
 
                     AtlasTileData tileData;
                     if (!characterToTileDictionary.TryGetValue(objectId, out tileData))
                     {
                         characterToTileDictionary.TryGetValue("Nothingness", out tileData);
                     }
+                    var white = new Color(1f, 1f, 1f, 1f);
                     DrawTile(game.GraphicsDevice, game, x, y,
                         x * settings.GetFontSizeZoomed(),
                         y * settings.GetFontSizeZoomed(),
                         tileData,
-                        screen.ScreenBuffer[x, y].CharColor,
+                        //screen.ScreenBuffer[x, y].CharColor,
+                        white,
                         screen.ScreenBuffer[x, y].BackGroundColor, foregroundModel, backgroundModel
                         );
                 }
@@ -614,18 +643,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
             public int X;
             public int Y;
 
-            public AtlasTileData(int x, int y, bool mirrorVertical = false, bool mirrorHorizontal = false, bool rotate90Degrees = false)
+            public AtlasTileData(int x, int y, bool mirrorVertical = false, bool mirrorHorizontal = false)
             {
                 X = x;
                 Y = y;
                 MirrorVerical = mirrorVertical;
                 MirrorHorizontal = mirrorHorizontal;
-                Rotate90Degrees = rotate90Degrees;
             }
 
             public bool MirrorVerical;
             public bool MirrorHorizontal;
-            public bool Rotate90Degrees;
         }
 
         Texture2D tileAtlas = null;
@@ -636,16 +663,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
 
             tileAtlas = null;
-            tileAtlas = game.Content.Load<Texture2D>("Sprites/tilesetOptimized");
+            tileAtlas = game.Content.Load<Texture2D>("Sprites/tileset2");
             effect = game.Content.Load<Effect>("Shader");
 
             effect.Parameters["tileAtlas"].SetValue(tileAtlas);
             return tileAtlas;
         }
 
+
         void DrawTile(GraphicsDevice device, NamelessGame game, int screenPositionX, int screenPositionY, int positionX, int positionY,
-            AtlasTileData atlasTileData,
-            Color color, Color backGroundColor, TileModel foregroundModel, TileModel backgroundModel)
+    AtlasTileData atlasTileData,
+    Color color, Color backGroundColor, TileModel foregroundModel, TileModel backgroundModel)
         {
 
             if (atlasTileData == null)
@@ -658,21 +686,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
             int tileWidth = game.GetSettings().GetFontSizeZoomed();
 
 
-            var onePixelPercentageWidth = 1 / (float)tileAtlas.Width;
-            var onePixelPercentageHeight = 1 / (float)tileAtlas.Height;
+            float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
+            float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
 
-            float textureX = (atlasTileData.X * (Constants.tileAtlasTileSize / (float)tileAtlas.Width)) + (onePixelPercentageWidth * 1.2f);
-            float textureY = (atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height))+ (onePixelPercentageHeight * 1.2f);
+            float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
 
-       
-
-            float textureXend = ((atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Width)) - (onePixelPercentageWidth * 2.2f);
-
-            float textureYend = ((atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Height)) - (onePixelPercentageHeight * 2.2f);
+            float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
 
             var settings = game.GetSettings();
 
             var arrayPosition = (screenPositionX * 4) + (screenPositionY * settings.GetWidthZoomed() * 4);
+
 
             if (atlasTileData.MirrorVerical)
             {
@@ -710,6 +734,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
             backgroundVertices[arrayPosition + 3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), color.ToVector4(),
                 backGroundColor.ToVector4(), new Vector2(textureXend, textureYend));
 
-        }
+        } 
     }
 }
