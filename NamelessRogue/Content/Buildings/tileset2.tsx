@@ -403,7 +403,7 @@
  </tile>
  <tile id="80">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="shower"/>
   </properties>
  </tile>
  <tile id="81">
@@ -423,17 +423,17 @@
  </tile>
  <tile id="84">
   <properties>
-   <property name="ObjectType" value="wall"/>
+   <property name="ObjectType" value="wall_furniture"/>
   </properties>
  </tile>
  <tile id="85">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="room_furniture"/>
   </properties>
  </tile>
  <tile id="86">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="street_furniture"/>
   </properties>
  </tile>
  <tile id="87">
@@ -463,7 +463,7 @@
  </tile>
  <tile id="92">
   <properties>
-   <property name="ObjectType" value="wall"/>
+   <property name="ObjectType" value="table"/>
   </properties>
  </tile>
  <tile id="93">
@@ -473,17 +473,17 @@
  </tile>
  <tile id="94">
   <properties>
-   <property name="ObjectType" value="wall"/>
+   <property name="ObjectType" value="wall_decoration"/>
   </properties>
  </tile>
  <tile id="95">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="room_decoration"/>
   </properties>
  </tile>
  <tile id="96">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="street_decoration"/>
   </properties>
  </tile>
  <tile id="97">
