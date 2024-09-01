@@ -153,7 +153,7 @@
  </tile>
  <tile id="30">
   <properties>
-   <property name="ObjectType" value="floor1"/>
+   <property name="ObjectType" value=""/>
   </properties>
  </tile>
  <tile id="31">

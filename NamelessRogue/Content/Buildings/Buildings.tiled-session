@@ -7,21 +7,22 @@
     "expandedProjectPaths": [
         "."
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "ApartmentBlockFloor.tmx": {
-            "scale": 0.33,
-            "selectedLayer": 0,
+            "scale": 5.5,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 2012.1212121212122,
-                "y": 1369.6969696969695
+                "x": 960.0909090909091,
+                "y": 959.909090909091
             }
         },
         "ApartmentBlockFloor_backup.tmx": {
             "scale": 0.20827636718749998,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2050.160590786543,
-                "y": 2050.1605907865437
+                "x": 2213.4052279920293,
+                "y": 2047.759934357051
             }
         },
         "Visualizer.tsx": {
@@ -35,6 +36,10 @@
         "symbols.tsx": {
             "scaleInDock": 0.25,
             "scaleInEditor": 1
+        },
+        "tileset2.tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 4
         },
         "untitled.tmx": {
             "scale": 0.33,
@@ -57,10 +62,14 @@
     "map.width": 64,
     "openFiles": [
         "ApartmentBlockFloor.tmx",
-        "symbols.tsx"
+        "symbols.tsx",
+        "ApartmentBlockFloor_backup.tmx",
+        "tileset2.tsx"
     ],
     "project": "Buildings.tiled-project",
     "recentFiles": [
+        "tileset2.tsx",
+        "ApartmentBlockFloor_backup.tmx",
         "symbols.tsx",
         "ApartmentBlockFloor.tmx",
         "untitled.tmx",
