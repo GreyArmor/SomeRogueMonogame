@@ -99,13 +99,16 @@ namespace NamelessRogue.Engine.Factories
                 }
             }
 
-            for (int loopY = 0; loopY < buildingSize; loopY++)
+            if (false)
             {
-                for (int loopX = 0; loopX < buildingSize; loopX++)
+                for (int loopY = 0; loopY < buildingSize; loopY++)
                 {
-                    Debug.Write(postProcessingArray[loopY, loopX]?1:0);
+                    for (int loopX = 0; loopX < buildingSize; loopX++)
+                    {
+                        Debug.Write(postProcessingArray[loopY, loopX] ? 1 : 0);
+                    }
+                    Debug.Write("\n");
                 }
-                Debug.Write("\n");
             }
 
                     ////first determine which walls are corners and intersections

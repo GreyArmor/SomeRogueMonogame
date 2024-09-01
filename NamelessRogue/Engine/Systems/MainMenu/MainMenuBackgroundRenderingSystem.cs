@@ -78,6 +78,8 @@ namespace NamelessRogue.Engine.Systems.MainMenu
 		//basically, clouds far away move slower, flouds in front move faster, clounds far away are smaller and lower to create perspective
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
 		{
+
+			return;
 			int gh = namelessGame.GetActualHeight();
 			counter += gameTime.ElapsedGameTime.Milliseconds;
 			if (counter > 250)

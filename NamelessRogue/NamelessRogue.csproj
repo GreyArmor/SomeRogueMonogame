@@ -113,6 +113,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\Sprites\MainMenuScreen\" />
+    <Folder Include="Content\Sprites\Furniture\" />
     <Folder Include="Engine\Components\Environment\Buildings\" />
     <Folder Include="Engine\_3DUtility\" />
   </ItemGroup>

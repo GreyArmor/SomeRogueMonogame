@@ -10,11 +10,11 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "ApartmentBlockFloor.tmx": {
-            "scale": 5.5,
+            "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 960.0909090909091,
-                "y": 959.909090909091
+                "x": 960.25,
+                "y": 959.75
             }
         },
         "ApartmentBlockFloor_backup.tmx": {
@@ -39,7 +39,7 @@
         },
         "tileset2.tsx": {
             "scaleInDock": 1.5,
-            "scaleInEditor": 4
+            "scaleInEditor": 3
         },
         "untitled.tmx": {
             "scale": 0.33,
