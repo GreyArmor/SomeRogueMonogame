@@ -25,13 +25,12 @@ namespace NamelessRogue.Engine.Factories
         private static Entity treeEntity = new Entity();
         private static Entity smallTreeEntity = new Entity();
         private static Entity rockEntity = new Entity();
-        private static Entity starfishEntity = new Entity();
-        private static Entity shellEntity = new Entity();
-        private static Entity treeStumpEntity = new Entity();
 
         private static Entity wallEntity = new Entity();
         private static Entity windowEntity = new Entity();
         private static Entity bedEntity = new Entity();
+        private static Entity toiletEntity = new Entity();
+        private static Entity showerEntity = new Entity();
         private static Entity barrelEntity = new Entity();
         private static Entity flowerEntity = new Entity();
         private static Entity tableEntity = new Entity();
@@ -42,13 +41,13 @@ namespace NamelessRogue.Engine.Factories
         public static Entity WallEntity { get => (Entity)wallEntity.CloneEntity(); }
         public static Entity WindowEntity { get => (Entity)windowEntity.CloneEntity(); }
         public static Entity BedEntity { get => (Entity)bedEntity.CloneEntity(); }
+
+        public static Entity ToiletEntity { get => (Entity)toiletEntity.CloneEntity(); }
+        public static Entity ShowerEntity { get => (Entity)showerEntity.CloneEntity(); }
         public static Entity BarrelEntity { get => (Entity)barrelEntity.CloneEntity(); }
         public static Entity FlowerEntity { get => (Entity)flowerEntity.CloneEntity(); }
         public static Entity TableEntity { get => (Entity)tableEntity.CloneEntity(); }
         public static Entity ChairEntity { get => (Entity)chairEntity.CloneEntity(); }
-        public static Entity TreeStumpEntity { get => (Entity)treeStumpEntity.CloneEntity(); }
-        public static Entity ShellEntity { get => (Entity)shellEntity.CloneEntity(); }
-        public static Entity StarfishEntity { get => (Entity)starfishEntity.CloneEntity(); }
         public static Entity RockEntity { get => (Entity)rockEntity.CloneEntity(); }
         public static Entity SmallTreeEntity { get => (Entity)smallTreeEntity.CloneEntity(); }
         public static Entity TreeEntity { get => (Entity)treeEntity.CloneEntity(); }
@@ -63,9 +62,6 @@ namespace NamelessRogue.Engine.Factories
             result.Add(treeEntity);
             result.Add(smallTreeEntity);
             result.Add(rockEntity);
-            result.Add(starfishEntity);
-            result.Add(shellEntity);
-            result.Add(treeStumpEntity);
             result.Add(wallEntity);
             result.Add(windowEntity);
             result.Add(bedEntity);
@@ -73,6 +69,8 @@ namespace NamelessRogue.Engine.Factories
             result.Add(flowerEntity);
             result.Add(boxEntity);
             result.Add(garbageEntity);
+            result.Add(toiletEntity);
+            result.Add(showerEntity);
 
             rockEntity.AddComponent(new Description("A rock", ""));
             rockEntity.AddComponent(new Drawable("Rock", new Color(0.5f, 0.5f, 0.5f)));
@@ -91,17 +89,27 @@ namespace NamelessRogue.Engine.Factories
             wallEntity.AddComponent(new OccupiesTile());
             wallEntity.AddComponent(new BlocksVision());
 
-            windowEntity.AddComponent(new Drawable("Window", new Engine.Utility.Color(0, 0.9, 0.9)));
+            windowEntity.AddComponent(new Drawable("Window", new Engine.Utility.Color(255, 255, 255)));
             windowEntity.AddComponent(new Description("Window", ""));
 
-            bedEntity.AddComponent(new Drawable("Bed", new Engine.Utility.Color(139, 69, 19)));
+            bedEntity.AddComponent(new Drawable("Bed", new Engine.Utility.Color(255, 255, 255)));
             bedEntity.AddComponent(new Description("Bed", ""));
+
+            toiletEntity.AddComponent(new Drawable("Toilet", new Engine.Utility.Color(255, 255, 255)));
+            toiletEntity.AddComponent(new Description("Toilet", ""));
+
+            showerEntity.AddComponent(new Drawable("Shower", new Engine.Utility.Color(255, 255, 255)));
+            showerEntity.AddComponent(new Description("Shower", ""));
 
             barrelEntity.AddComponent(new Drawable("Barrel", new Engine.Utility.Color(139, 69, 19)));
             barrelEntity.AddComponent(new Description("Barrel", ""));
 
             boxEntity.AddComponent(new Drawable("Box", new Engine.Utility.Color(139, 69, 19)));
             boxEntity.AddComponent(new Description("Box", ""));
+
+            tableEntity.AddComponent(new Drawable("Table", new Engine.Utility.Color(255, 255, 255)));
+            tableEntity.AddComponent(new Description("Table", ""));
+            tableEntity.AddComponent(new OccupiesTile());
 
             garbageEntity.AddComponent(new Description("Garbage", ""));
 

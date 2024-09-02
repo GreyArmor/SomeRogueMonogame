@@ -200,6 +200,39 @@ namespace NamelessRogue.Engine.Factories
                                     namelessGame.AddEntity(entity);
                                 }
                                 break;
+                            case "table":
+                                {
+                                    var table = TerrainFurnitureFactory.TableEntity;
+                                    var drawable = table.GetComponentOfType<Drawable>();
+                                    gameTile.AddEntity(table);
+                                    namelessGame.AddEntity(table);
+                                }
+                                break;
+                            case "bed":
+                                {
+                                    var table = TerrainFurnitureFactory.BedEntity;
+                                    var drawable = table.GetComponentOfType<Drawable>();
+                                    gameTile.AddEntity(table);
+                                    namelessGame.AddEntity(table);
+                                }
+                                break;
+                            case "toilet":
+                                {
+                                    var table = TerrainFurnitureFactory.ToiletEntity;
+                                    var drawable = table.GetComponentOfType<Drawable>();
+                                    gameTile.AddEntity(table);
+                                    namelessGame.AddEntity(table);
+                                }
+                                break;
+                            case "shower":
+                                {
+                                    var table = TerrainFurnitureFactory.ShowerEntity;
+                                    var drawable = table.GetComponentOfType<Drawable>();
+     
+                                    gameTile.AddEntity(table);
+                                    namelessGame.AddEntity(table);
+                                }
+                                break;
                             default:
                                 break;
                         }

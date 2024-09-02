@@ -418,7 +418,7 @@
  </tile>
  <tile id="83">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="toilet"/>
   </properties>
  </tile>
  <tile id="84">
@@ -498,7 +498,7 @@
  </tile>
  <tile id="99">
   <properties>
-   <property name="ObjectType" value="wall"/>
+   <property name="ObjectType" value="nothingness"/>
   </properties>
  </tile>
 </tileset>

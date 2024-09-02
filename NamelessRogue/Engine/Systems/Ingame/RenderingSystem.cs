@@ -173,19 +173,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("Door", atlasTileData);
             characterToTileDictionary.Add("Window", atlasTileData);
 
-            //var wall = new AtlasTileData(0, 0);
-            //characterToTileDictionary.Add("Wall"+  TileBitmaskingEncoding.CenterVertical, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CenterHorizontal, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerTopLeft, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerBotLeft, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerTopRight, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.CornerBotRight, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionLeft, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionRight, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionTop, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionBot, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.InterserctionCenter, wall);
-            //characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.Pillar, wall);
+            characterToTileDictionary.Add("Table", new AtlasTileData(2, 8));
+
+            characterToTileDictionary.Add("Bed", new AtlasTileData(1, 9));
+
+            characterToTileDictionary.Add("Toilet", new AtlasTileData(3, 8));
+            characterToTileDictionary.Add("Shower", new AtlasTileData(0, 8));
 
             characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.WallHorizontal0, new AtlasTileData(1, 0));
             characterToTileDictionary.Add("Wall" + TileBitmaskingEncoding.WallHorizontal1, new AtlasTileData(1, 0));

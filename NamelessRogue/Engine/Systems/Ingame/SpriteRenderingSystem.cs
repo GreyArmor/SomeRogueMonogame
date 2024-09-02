@@ -132,8 +132,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
             camera.setPosition(p);
         }
         PermissiveVisibility fov;
+        Screen screenCopy;
         private void FillcharacterBufferVisibility(NamelessGame game, Screen screen, ConsoleCamera camera,
-            GameSettings settings, IWorldProvider world)
+             GameSettings settings, IWorldProvider world)
         {
 
             int camX = camera.getPosition().X;
@@ -149,23 +150,22 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     screen.ScreenBuffer[x, y].isVisible = false;
                 }
             }
-
-            //return;
+            screenCopy = screen;
+            // return;
             if (fov == null)
             {
                 fov = new PermissiveVisibility((x, y) => { return !world.GetTile(x, y).GetBlocksVision(game); },
                     (x, y) =>
                     {
                         Point screenPoint = camera.PointToScreen(x, y);
-                        if (screenPoint.X >= 0 && screenPoint.X < settings.GetWidth() && screenPoint.Y >= 0 &&
-                            screenPoint.Y < settings.GetHeight())
+                        if (screenPoint.X >= 0 && screenPoint.X < settings.GetWidthZoomed() && screenPoint.Y >= 0 &&
+                            screenPoint.Y < settings.GetHeightZoomed())
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible = true;
+                            screenCopy.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible = true;
                         }
                     }, (x, y) => { return Math.Abs(x) + Math.Abs(y); }
                 );
             }
-
             fov.Compute(playerPosition.Point, 60);
         }
 

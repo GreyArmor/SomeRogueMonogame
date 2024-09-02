@@ -10,11 +10,11 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "ApartmentBlockFloor.tmx": {
-            "scale": 1,
+            "scale": 0.75,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 411,
-                "y": 1015
+                "x": 960.6666666666665,
+                "y": 959.3333333333333
             }
         },
         "ApartmentBlockFloor_backup.tmx": {
