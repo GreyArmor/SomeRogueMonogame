@@ -333,7 +333,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
                         }
                     }
-
                 }
             }
         }

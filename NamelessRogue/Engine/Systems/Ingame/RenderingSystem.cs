@@ -364,7 +364,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
 
-            return;
+           // return;
             if (fov == null)
             {
                 fov = new PermissiveVisibility((x, y) => { return !world.GetTile(x, y).GetBlocksVision(game); },

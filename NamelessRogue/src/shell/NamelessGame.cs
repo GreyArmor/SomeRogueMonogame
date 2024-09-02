@@ -211,9 +211,11 @@ namespace NamelessRogue.shell
 			graphics.ApplyChanges();
 
 			ModelsLibrary.Initialize(this);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteLibrary.Initialize(this);
 
-			//12345 123
-			worldSettings = new WorldSettings(75924, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
+            //12345 123
+            worldSettings = new WorldSettings(75924, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
 
 
 			new UIController(this);
@@ -345,8 +347,7 @@ namespace NamelessRogue.shell
 
 			CurrentContext = ContextFactory.GetMainMenuContext(this);
 			this.IsMouseVisible = true;
-			spriteBatch = new SpriteBatch(GraphicsDevice);
-			SpriteLibrary.Initialize(this);
+	
 			InitSound();
 			PlayMainMenuTheme();			
 

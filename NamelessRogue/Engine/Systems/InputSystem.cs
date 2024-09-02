@@ -38,7 +38,7 @@ namespace NamelessRogue.Engine.Systems
         long currentgmatime = 0;
         private long previousGametimeForMove = 0;
 
-        int inputsTimeLimit = 20;
+        int inputsTimeLimit = 30;
 
         private char lastCommand = Char.MinValue;
         private KeyboardState lastState;
