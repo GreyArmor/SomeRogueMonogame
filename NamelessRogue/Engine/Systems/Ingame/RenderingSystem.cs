@@ -346,6 +346,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 camera.setPosition(p);
         }
         PermissiveVisibility fov;
+        Screen screenCopy;
         private void FillcharacterBufferVisibility(NamelessGame game, Screen screen, ConsoleCamera camera,
             GameSettings settings, IWorldProvider world)
         {
@@ -360,10 +361,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 for (int y = 0; y < settings.GetHeightZoomed(); y++)
                 {
-                    screen.ScreenBuffer[x, y].isVisible = true;
+                    screen.ScreenBuffer[x, y].isVisible = false;
                 }
             }
-
+            screenCopy = screen;
            // return;
             if (fov == null)
             {
@@ -371,15 +372,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     (x, y) =>
                     {
                         Point screenPoint = camera.PointToScreen(x, y);
-                        if (screenPoint.X >= 0 && screenPoint.X < settings.GetWidth() && screenPoint.Y >= 0 &&
-                            screenPoint.Y < settings.GetHeight())
+                        if (screenPoint.X >= 0 && screenPoint.X < settings.GetWidthZoomed() && screenPoint.Y >= 0 &&
+                            screenPoint.Y < settings.GetHeightZoomed())
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible = true;
+                            screenCopy.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible = true;
                         }
                     }, (x, y) => { return Math.Abs(x) + Math.Abs(y); }
                 );
             }
-
             fov.Compute(playerPosition.Point,60);
         }
 
@@ -387,6 +387,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private void FillcharacterBuffersWithTileObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
             NamelessGame game, IWorldProvider world)
         {
+           // return;
             int camX = camera.getPosition().X;
             int camY = camera.getPosition().Y;
             if (angle > 360)
@@ -495,58 +496,58 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 Drawable drawable = entity.GetComponentOfType<Drawable>();
 
                 var character = entity.GetComponentOfType<Character>();
-                if (character != null)
+                if (character == null)
                 {
-                    characters.Add(entity);
+                   
                     continue;
                 }
+                characters.Add(entity);
+                //Position position = entity.GetComponentOfType<Position>();
 
-                Position position = entity.GetComponentOfType<Position>();
+                //LineToPlayer lineToPlayer = entity.GetComponentOfType<LineToPlayer>();
+                //if (drawable.Visible)
+                //{
+                //    Point screenPoint = camera.PointToScreen(position.Point.X, position.Point.Y);
+                //    int x = screenPoint.X;
+                //    int y = screenPoint.Y;
+                //    if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
+                //    {
+                //        if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
+                //        {                                  
+                //            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID + drawable.TilesetPosition;
+                //            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                //        }                                  
+                //        else                               
+                //        {                                  
+                //            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID + drawable.TilesetPosition;
+                //            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
+                //            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                //        }
+                //    }
 
-                LineToPlayer lineToPlayer = entity.GetComponentOfType<LineToPlayer>();
-                if (drawable.Visible)
-                {
-                    Point screenPoint = camera.PointToScreen(position.Point.X, position.Point.Y);
-                    int x = screenPoint.X;
-                    int y = screenPoint.Y;
-                    if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
-                    {
-                        if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
-                        {                                  
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID + drawable.TilesetPosition;
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
-                        }                                  
-                        else                               
-                        {                                  
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID + drawable.TilesetPosition;
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                        }
-                    }
+                //}
 
-                }
-
-                if (lineToPlayer != null)
-                {
-                    if (drawable.Visible)
-                    {
-                        Position playerPosition =
-                            game.PlayerEntity.GetComponentOfType<Position>();
-                        List<Point> line = PointUtil.getLine(playerPosition.Point, position.Point);
-                        for (int i = 1; i < line.Count - 1; i++)
-                        {
-                            Point p = line[i];
-                            Point screenPoint = camera.PointToScreen(p.X, p.Y);
-                            int x = screenPoint.X;
-                            int y = screenPoint.Y;
-                            if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
-                            {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Cursor";
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
-                            }
-                        }
-                    }
-                }
+                //if (lineToPlayer != null)
+                //{
+                //    if (drawable.Visible)
+                //    {
+                //        Position playerPosition =
+                //            game.PlayerEntity.GetComponentOfType<Position>();
+                //        List<Point> line = PointUtil.getLine(playerPosition.Point, position.Point);
+                //        for (int i = 1; i < line.Count - 1; i++)
+                //        {
+                //            Point p = line[i];
+                //            Point screenPoint = camera.PointToScreen(p.X, p.Y);
+                //            int x = screenPoint.X;
+                //            int y = screenPoint.Y;
+                //            if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
+                //            {
+                //                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Cursor";
+                //                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                //            }
+                //        }
+                //    }
+                //}
             }
 
             foreach (IEntity entity in characters)
@@ -583,7 +584,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-
         private void RenderScreen(NamelessGame game, Screen screen, GameSettings settings)
         {
             effect.Parameters["tileAtlas"].SetValue(tileAtlas);
@@ -606,11 +606,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         objectId = "Nothingness";
                     }
-                    else
-                    {
-                        objectId.ToString();
-                    }
-
                     AtlasTileData tileData;
                     if (!characterToTileDictionary.TryGetValue(objectId, out tileData))
                     {
@@ -647,9 +642,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
                      tileModel.Indices.ToArray(), 0, tileModel.Indices.Count()/3, this.VertexDeclaration);
             }
-
-
-
         }
 
         class AtlasTileData

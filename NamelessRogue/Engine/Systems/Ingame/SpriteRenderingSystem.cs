@@ -146,11 +146,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 for (int y = 0; y < settings.GetHeightZoomed(); y++)
                 {
-                    screen.ScreenBuffer[x, y].isVisible = true;
+                    screen.ScreenBuffer[x, y].isVisible = false;
                 }
             }
 
-            return;
+            //return;
             if (fov == null)
             {
                 fov = new PermissiveVisibility((x, y) => { return !world.GetTile(x, y).GetBlocksVision(game); },
