@@ -13,7 +13,7 @@ namespace NamelessRogue.Engine.Utility
     public static class WorldLineDrawer
     {
   
-        public static List<Tile> PlotLineAA(Point point0, Point point1, IWorldProvider world)
+        public static List<Tile> PlotLineAA(Point point0, Point point1, int z, IWorldProvider world)
         {
             var result = new List<Tile>();
             int dx = Math.Abs(point1.X - point0.X), sx = point0.X < point1.X ? 1 : -1;
@@ -26,7 +26,7 @@ namespace NamelessRogue.Engine.Utility
             {
                 /* pixel loop */
                 //setPixelAA(point0.X, point0.Y, 255 * abs(err - dx + dy) / ed);
-                result.Add(world.GetTile(point0.X, point0.Y));
+                result.Add(world.GetTile(point0.X, point0.Y, z));
                 e2 = err;
                 x2 = point0.X;
                 if (2 * e2 >= -dx)
@@ -35,7 +35,7 @@ namespace NamelessRogue.Engine.Utility
                     if (point0.X == point1.X) break;
                     if (e2 + dy < ed)
                     {
-                        result.Add(world.GetTile(point0.X, point0.Y + sy));
+                        result.Add(world.GetTile(point0.X, point0.Y + sy, z));
                         // setPixelAA(point0.X, point0.Y + sy, 255 * (e2 + dy) / ed);
                     }
 
@@ -49,7 +49,7 @@ namespace NamelessRogue.Engine.Utility
                     if (point0.Y == point1.Y) break;
                     if (dx - e2 < ed)
                     {
-                        result.Add(world.GetTile(x2 + sx, point0.Y + sy));
+                        result.Add(world.GetTile(x2 + sx, point0.Y + sy, z));
                         //  setPixelAA(x2 + sx, point0.Y, 255 * (dx - e2) / ed);
                     }
 
@@ -62,7 +62,7 @@ namespace NamelessRogue.Engine.Utility
         }
 
 
-        public static List<Tile> BezierPath(Point[] points, IWorldProvider world)
+        public static List<Tile> BezierPath(Point[] points, int z, IWorldProvider world)
         {
             var result = new List<Tile>();
             HashSet<Point> foundPoints = new HashSet<Point>();
@@ -83,7 +83,7 @@ namespace NamelessRogue.Engine.Utility
             var foundPointslist = foundPoints.ToList();
             for (int i = 0; i < foundPointslist.Count-1; i++)
             {
-                result.AddRange(PlotLineAA(foundPointslist[i], foundPointslist[i + 1], world));
+                result.AddRange(PlotLineAA(foundPointslist[i], foundPointslist[i + 1], z,  world));
             }
 
             return result;

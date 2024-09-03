@@ -96,7 +96,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 						Nodes.Add(new Point(coordX, coordY), new FlowNode()
 						{
 							Coordinate = new Point(coordX, coordY),
-							Occupied = /* !world.GetTile(coordX, coordY).IsPassableIgnoringCharacters() ||*/ world.GetTile(coordX, coordY).Terrain == TerrainTypes.Water,
+							Occupied = /* !world.GetTile(coordX, coordY).IsPassableIgnoringCharacters() ||*/ world.GetTile(coordX, coordY, 0).Terrain == TerrainTypes.Water,
 							IntegrationValue = int.MaxValue
 						});
 

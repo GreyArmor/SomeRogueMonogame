@@ -303,9 +303,9 @@ namespace NamelessRogue.shell
 				}*/
 
 
-				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, this);
+				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, 0, this);
 				PlayerEntity = player;
-				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize);
+				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
 /*
 				var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 2, 2);
 
@@ -338,7 +338,7 @@ namespace NamelessRogue.shell
 				if (anyRivers)
 				{
 					//move player to some river
-					PlayerEntity.GetComponentOfType<Position>().Point = new Point(x * Constants.ChunkSize, y * Constants.ChunkSize);
+					PlayerEntity.GetComponentOfType<Position>().Point = new Vector3Int(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
 					chunkManagementSystem.Update(zero, this);
 				}
 

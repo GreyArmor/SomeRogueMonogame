@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "ApartmentBlockFloor.tmx",
+    "activeFile": "tileset2.tsx",
     "expandedProjectPaths": [
         "."
     ],
@@ -13,8 +13,8 @@
             "scale": 0.75,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 960.6666666666665,
-                "y": 959.3333333333333
+                "x": 548,
+                "y": 1126.6666666666665
             }
         },
         "ApartmentBlockFloor_backup.tmx": {
@@ -68,10 +68,10 @@
     ],
     "project": "Buildings.tiled-project",
     "recentFiles": [
-        "tileset2.tsx",
-        "ApartmentBlockFloor_backup.tmx",
-        "symbols.tsx",
         "ApartmentBlockFloor.tmx",
+        "symbols.tsx",
+        "ApartmentBlockFloor_backup.tmx",
+        "tileset2.tsx",
         "untitled.tmx",
         "surfaces.tsx",
         "urizen_with_properties.tsx",

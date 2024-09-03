@@ -59,7 +59,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var cursorPosition = namelessGame.CursorEntity
                                 .GetComponentOfType<Position>();
 
-                            cursorPosition.Point = new Microsoft.Xna.Framework.Point((int)(playerPosition.Point.X / Constants.ChunkSize), (int)(playerPosition.Point.Y / Constants.ChunkSize));
+                            cursorPosition.Point = new Utility.Vector3Int((int)(playerPosition.Point.X / Constants.ChunkSize), (int)(playerPosition.Point.Y / Constants.ChunkSize));
                             break;
                         case HudAction.OpenInventory:
                             //namelessGame.ContextToSwitch = ContextFactory.GetInventoryContext(namelessGame);

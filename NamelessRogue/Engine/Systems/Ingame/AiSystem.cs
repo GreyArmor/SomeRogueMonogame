@@ -63,8 +63,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             case BasicAiStates.Idle:
                             case BasicAiStates.Moving:
-                                var pPos = playerPosition.Point.ToVector2();
-                                MoveTo(entity, namelessGame, playerPosition.Point, true);
+                                var pPos = playerPosition.Point;
+                                MoveTo(entity, namelessGame, new Point(pPos.X, pPos.Y), true);
                                 var route = basicAi.Route;
                                 if (route.Count == 0)
                                 {
@@ -101,7 +101,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             if (!route.Any())
             {
                 AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
-                List<Point> path = pathfinder.FindPath(position.Point,
+                List<Point> path = pathfinder.FindPath(position.Point.ToPoint(),
                     new Point(destination.X, destination.Y), worldProvider,
                     namelessGame);
                 if (moveBesides)
@@ -120,11 +120,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
             if (route.Any())
             {
                 Point nextPosition = route.Dequeue();
-                Tile tileToMoveTo = worldProvider.GetTile(nextPosition.X, nextPosition.Y);
+                Tile tileToMoveTo = worldProvider.GetTile(nextPosition.X, nextPosition.Y, 0);
                 if (!tileToMoveTo.IsPassable() || destination != basicAi.DestinationPoint)
                 {
                     AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
-                    List<Point> path = pathfinder.FindPath(position.Point,
+                    List<Point> path = pathfinder.FindPath(position.Point.ToPoint(),
                         destination, worldProvider, namelessGame);
                     path = path.Skip(1)
                         .ToList(); // we dont need the first point in the path because its the point we are standing on currently
@@ -145,14 +145,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     else
                     {
                         basicAi.Route = new Queue<Point>();
-                        nextPosition = position.Point;
+                        nextPosition = position.Point.ToPoint();
                     }
 
                     basicAi.DestinationPoint = destination;
                 }
 
                 worldProvider.MoveEntity(movableEntity,
-                    new Point(nextPosition.X, nextPosition.Y));
+                   nextPosition.X, nextPosition.Y,0);
 
                 var ap = movableEntity.GetComponentOfType<ActionPoints>();
                 ap.Points -= Constants.ActionsMovementCost;

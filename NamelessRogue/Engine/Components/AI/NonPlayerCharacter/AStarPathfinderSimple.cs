@@ -199,7 +199,7 @@ namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
             {
                 counter++;
                 //  return false;
-                var tile = _worlldProvider.GetTile((int)coord.X, (int)coord.Y);
+                var tile = _worlldProvider.GetTile((int)coord.X, (int)coord.Y, 0);
                 if (counter>= maxSearches)
                 {
                     return true;

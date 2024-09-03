@@ -1,3 +1,5 @@
+using Assimp;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Physical;
@@ -6,6 +8,7 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.Utility;
+using SharpDX.Mathematics.Interop;
 using System;
 using System.Collections.Generic;
 
@@ -60,11 +63,6 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 		}
 
 
-		public Tile GetTileAt(Point p)
-		{
-			return GetTile(p.X, p.Y);
-		}
-
 		//TODO: we need to implement quick iteration by using bounding box trees;
 		public int ChunkResolution { get; set; } = WorldGenConstants.Resolution;
 		public WorldBoard WorldBoard { get => worldBoard; set => worldBoard = value; }
@@ -72,7 +70,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 		public Dictionary<Point, Chunk> RealityBubbleChunks { get => realityBubbleChunks; set => realityBubbleChunks = value; }
 		public WorldSettings WorldSettings { get => worldSettings; set => worldSettings = value; }
 
-		public Tile GetTile(int x, int y)
+		public Tile GetTile(int x, int y, int z)
 		{
 
 			Chunk chunkOfPoint = null;
@@ -87,12 +85,12 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 			{
 				return new Tile(TerrainTypes.Nothingness, Biomes.None, new Point(-1, -1), 0.5);
 			}
-			var result = chunkOfPoint.GetTile(x, y);
+			var result = chunkOfPoint.GetTile(x, y, z);
 			return result;
 			//return new Tile(TerrainTypes.Nothingness, Biomes.None, new Point(-1, -1), 0.5); ;
 
 		}
-		public bool SetTile(int x, int y, Tile tile)
+		public bool SetTile(int x, int y, int z, Tile tile)
 		{
 			Chunk chunkOfPoint = null;
 
@@ -108,7 +106,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 				return false;
 			}
 
-			chunkOfPoint.SetTile(x, y, tile);
+			chunkOfPoint.SetTile(x, y, z, tile);
 			return true;
 		}
 
@@ -141,72 +139,39 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 			return Id;
 		}
 
-
-		public void ClearTheWay(IEntity entity, Point moveTo)
-		{
-			Position position = entity.GetComponentOfType<Position>();
-			if (position != null)
-			{
-				Tile oldTile = this.GetTile(position.Point.X, position.Point.Y);
-				oldTile.RemoveEntity((Entity)entity);
-			}
-		}
-
-		public void AddEntityToNewLocation(IEntity entity, Point moveTo)
+		public void AddEntityToNewLocation(IEntity entity, int x, int y, int z)
 		{
 
 			Position position = entity.GetComponentOfType<Position>();
 			if (position != null)
 			{
-				Tile newTile = this.GetTile(moveTo.X, moveTo.Y);
+				Tile newTile = this.GetTile(x, y, z);
 				newTile.AddEntity((Entity)entity);
-
-				var new3dNormal = new Vector2(position.Point.X - moveTo.X, position.Point.Y - moveTo.Y);
-				position.Point = new Point(moveTo.X, moveTo.Y);
-				var pos3d = entity.GetComponentOfType<Position3D>();
-				if (pos3d != null)
-				{
-					pos3d.Tile = newTile;
-					pos3d.Position = new Vector3(moveTo.X, moveTo.Y, newTile.ElevationVisual);
-					pos3d.Normal = new3dNormal;
-
-					pos3d.WorldPosition = null;
-				}
+				position.Point = new Vector3Int(x, y, z);
 			}
 		}
+        public bool MoveEntity(IEntity entity, Vector3Int moveTo)
+		{
+			return MoveEntity(entity, moveTo.X, moveTo.Y, moveTo.Z);
+        }
 
-		public bool MoveEntity(IEntity entity, Point moveTo)
+        public bool MoveEntity(IEntity entity, int x, int y, int z)
 		{
 			Position position = entity.GetComponentOfType<Position>();
 			if (position != null)
 			{
-				IWorldProvider worldProvider = this;
 
-				Tile oldTile = worldProvider.GetTile(position.Point.X, position.Point.Y);
-				Tile newTile = worldProvider.GetTile(moveTo.X, moveTo.Y);
+                IWorldProvider worldProvider = this;
+
+				Tile oldTile = worldProvider.GetTile(position.Point.X, position.Point.Y, position.Point.Z);
+				Tile newTile = worldProvider.GetTile(x, y, z);
 
 				if (newTile.IsPassable())
 				{
 					oldTile.RemoveEntity((Entity)entity);
 					newTile.AddEntity((Entity)entity);
-
-					var new3dNormal = new Vector2(position.Point.X - moveTo.X, position.Point.Y - moveTo.Y);
-
-
-					position.Point = new Point(moveTo.X, moveTo.Y);
-
-					var pos3d = entity.GetComponentOfType<Position3D>();
-
-					if (pos3d != null)
-					{
-						pos3d.Tile = newTile;
-						pos3d.Position = new Vector3(moveTo.X, moveTo.Y, newTile.ElevationVisual);
-						pos3d.Normal = new3dNormal;
-
-						pos3d.WorldPosition = null;
-					}
-
-					return true;
+					position.Point = new Vector3Int(x, y, z);
+                    return true;
 				}
 			}
 

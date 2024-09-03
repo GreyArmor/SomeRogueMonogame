@@ -14,7 +14,7 @@ namespace NamelessRogue.Engine.Factories
         {
             Entity cursor = new Entity();
             cursor.AddComponent(new Cursor());
-            cursor.AddComponent(new Position(0,0));
+            cursor.AddComponent(new Position(0,0,0));
             Drawable dr = new Drawable("Cursor", new Engine.Utility.Color(0.9,0.9,0.9));
             dr.Visible = false;
             cursor.AddComponent(dr);

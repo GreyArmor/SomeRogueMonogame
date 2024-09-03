@@ -195,7 +195,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
                     Position playerPosition = game.CursorEntity
                         .GetComponentOfType<Position>();
-                    var screenPoint = camera.PointToScreen(playerPosition.Point);
+                    var screenPoint = camera.PointToScreen(new Point(playerPosition.Point.X, playerPosition.Point.Y));
 
                     if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().GetWidthZoomed() &&
                         screenPoint.X > 0 &&
@@ -224,7 +224,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
                         Position cursorPosition = game.CursorEntity
                             .GetComponentOfType<Position>();
-                        var screenPoint = camera.PointToScreen(cursorPosition.Point);
+                        var screenPoint = camera.PointToScreen(cursorPosition.Point.ToPoint());
 
                         if (screenPoint.X > 0 && screenPoint.X < game.GetSettings().GetWidthZoomed() &&
                             screenPoint.X > 0 &&

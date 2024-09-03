@@ -1,42 +1,29 @@
 using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Components.Physical
 {
     public class Position : Component {
-        public Position(int x,int y)
+
+        public Vector3Int Point { get; set; }
+        public Position(int x,int y, int z)
         {
-            Point = new Point(x,y);
+           Point = new Vector3Int(x,y,z);
         }
+
+        public int X { get { return Point.X; } }
+
+        public int Y { get { return Point.Y; } }
+
+        public int Z { get { return Point.Z; } }
 
         public Position()
         {
-            Point = new Point();
         }
-        public Point Point { get; set; }
 
         public override IComponent Clone()
         {
-            return new Position(Point.X,Point.Y);
+            return new Position(Point.X, Point.Y, Point.Z);
         }
     }
-
-	public class ChunkPositon : Component
-	{
-		public ChunkPositon(int x, int y)
-		{
-			Point = new Point(x, y);
-		}
-
-		public ChunkPositon()
-		{
-			Point = new Point();
-		}
-		public Point Point { get; set; }
-
-		public override IComponent Clone()
-		{
-			return new ChunkPositon(Point.X, Point.Y);
-		}
-	}
-
 }

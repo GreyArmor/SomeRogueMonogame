@@ -35,7 +35,7 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 				{
 					for (int j = 0; j < ChunkResolution; j++)
 					{
-						Tiles[i * ChunkResolution + j] = tiles[i][j];
+					//	Tiles[i * ChunkResolution + j] = tiles[i][j];
 					}
 				}
 			}			
@@ -62,7 +62,7 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 						tiles[i][j] = Tiles[i* ChunkResolution + j];
 					}
 				}
-				component.SetChunkTiles(tiles);
+			//	component.SetChunkTiles(tiles);
 			}
 
 			//obviously, it was not generated right now

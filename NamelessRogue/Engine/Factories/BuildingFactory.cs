@@ -28,10 +28,10 @@ using TiledMap = TiledCSPlus.TiledMap;
 namespace NamelessRogue.Engine.Factories
 {
     public class BuildingFactory {
-        public static Entity CreateDoor(int x, int y)
+        public static Entity CreateDoor(int x, int y, int z)
         {
             Entity door  = new Entity();
-            door.AddComponent(new Position(x, y));
+            door.AddComponent(new Position(x, y, z));
             door.AddComponent(new Drawable("Door", new Engine.Utility.Color(0.7,0.7,0.7)));
             door.AddComponent(new Description("Door",""));
             door.AddComponent(new Door());
@@ -42,10 +42,10 @@ namespace NamelessRogue.Engine.Factories
             return door;
         }
 
-        public static Entity CreateWindow(int x, int y)
+        public static Entity CreateWindow(int x, int y, int z)
         {
             Entity window  = new Entity();
-            window.AddComponent(new Position(x, y));
+            window.AddComponent(new Position(x, y, z));
             window.AddComponent(new Drawable("Window", new Engine.Utility.Color(0.9,0.9,0.9), new Engine.Utility.Color()));
             window.AddComponent(new Description("Window",""));
             window.AddComponent(new OccupiesTile());
@@ -53,7 +53,7 @@ namespace NamelessRogue.Engine.Factories
             return window;
         }
 
-        public static IEntity CreateDummyBuilding(int x, int y, NamelessGame namelessGame)
+        public static IEntity CreateBuilding(int x, int y, int z, NamelessGame namelessGame)
         {
             var diagonalNeighbors = new DiagonalNeighborProviderSelfIncluded();
             var straightNeighbors = new StraightNeighborProviderSelfIncluded();
@@ -68,7 +68,7 @@ namespace NamelessRogue.Engine.Factories
             IEntity building = new Entity();
 
             building.AddComponent(new Description("",""));
-            building.AddComponent(new Position(x,y));
+            building.AddComponent(new Position(x,y, z));
 
             Building buildingComponent = new Building();
 
@@ -85,7 +85,7 @@ namespace NamelessRogue.Engine.Factories
             {
                 for (int loopX = 0; loopX < buildingSize; loopX++)
                 {
-                    var gameTile = worldProvider.GetTile(x + loopX, y + loopY);
+                    var gameTile = worldProvider.GetTile(x + loopX, y + loopY, z);
                     var tileId = myLayer.Data[loopX + (loopY * buildingSize)];
                     if(tileId != 0)
                     {
@@ -165,7 +165,7 @@ namespace NamelessRogue.Engine.Factories
             {
                 for (int loopX = 0; loopX < buildingSize; loopX++)
                 {
-                    var gameTile = worldProvider.GetTile(x + loopX, y + loopY);
+                    var gameTile = worldProvider.GetTile(x + loopX, y + loopY, z);
                     var tileId = myLayer.Data[loopX + (loopY * buildingSize)];
                     if (tileId != 0)
                     {
@@ -184,7 +184,7 @@ namespace NamelessRogue.Engine.Factories
                                 break;
                             case "door":
                                 {
-                                    var entity = CreateDoor(x + loopX, y + loopY);
+                                    var entity = CreateDoor(x + loopX, y + loopY, z);
                                     var drawable = entity.GetComponentOfType<Drawable>();
                                     drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                     gameTile.AddEntity(entity);
@@ -193,7 +193,7 @@ namespace NamelessRogue.Engine.Factories
                                 break;
                             case "window":
                                 {
-                                    var entity = CreateWindow(x + loopX, y + loopY);
+                                    var entity = CreateWindow(x + loopX, y + loopY, z);
                                     var drawable = entity.GetComponentOfType<Drawable>();
                                     drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                     gameTile.AddEntity(entity);
@@ -251,57 +251,57 @@ namespace NamelessRogue.Engine.Factories
             IEntity building = new Entity();
 
             building.AddComponent(new Description("", ""));
-            building.AddComponent(new Position(x, y));
+            building.AddComponent(new Position(x, y, 0));
 
             Building buildingComponent = new Building();
 
             
 
-            for (int i = 0; i < blueprint.Matrix.Length; i++)
-            {
-                for (int j = 0; j < blueprint.Matrix[i].Length; j++)
-                {
-                    var tile = worldProvider.GetTile(x + j, y + i);
-                    tile.Terrain = TerrainTypes.Road;
-                    tile.Biome = Biomes.None;
+            //for (int i = 0; i < blueprint.Matrix.Length; i++)
+            //{
+            //    for (int j = 0; j < blueprint.Matrix[i].Length; j++)
+            //    {
+            //        var tile = worldProvider.GetTile(x + j, y + i);
+            //        tile.Terrain = TerrainTypes.Road;
+            //        tile.Biome = Biomes.None;
 
-                    var bluepringCell = blueprint.Matrix[i][j];
-                    switch (bluepringCell)
-                    {
-                        case BlueprintCell.Wall:
-                        {
-                            AddToTileAndGame(tile, TerrainFurnitureFactory.WallEntity, namelessGame);
-                                break;
-                        }
-                        case BlueprintCell.Door:
-                        {
-                            IEntity door = CreateDoor(x + j, y + i);
-                            buildingComponent.getBuildingParts().Add(door);
-                            AddToTileAndGame(tile, door, namelessGame);
-                            break;
+            //        var bluepringCell = blueprint.Matrix[i][j];
+            //        switch (bluepringCell)
+            //        {
+            //            case BlueprintCell.Wall:
+            //            {
+            //                AddToTileAndGame(tile, TerrainFurnitureFactory.WallEntity, namelessGame);
+            //                    break;
+            //            }
+            //            case BlueprintCell.Door:
+            //            {
+            //                IEntity door = CreateDoor(x + j, y + i);
+            //                buildingComponent.getBuildingParts().Add(door);
+            //                AddToTileAndGame(tile, door, namelessGame);
+            //                break;
 
-                        }
-                        case BlueprintCell.Window:
-                        {
-                            AddToTileAndGame(tile, TerrainFurnitureFactory.WindowEntity, namelessGame);
-                            break;
-                        }
-                        case BlueprintCell.Bed:
-                        {
-                            AddToTileAndGame(tile, TerrainFurnitureFactory.BedEntity, namelessGame);
-                            break;
-                        }
-                        case BlueprintCell.IndoorsFurniture:
-                        {
-                            AddToTileAndGame(tile, TerrainFurnitureFactory.BedEntity, namelessGame);
-                            break;
-                        }
+            //            }
+            //            case BlueprintCell.Window:
+            //            {
+            //                AddToTileAndGame(tile, TerrainFurnitureFactory.WindowEntity, namelessGame);
+            //                break;
+            //            }
+            //            case BlueprintCell.Bed:
+            //            {
+            //                AddToTileAndGame(tile, TerrainFurnitureFactory.BedEntity, namelessGame);
+            //                break;
+            //            }
+            //            case BlueprintCell.IndoorsFurniture:
+            //            {
+            //                AddToTileAndGame(tile, TerrainFurnitureFactory.BedEntity, namelessGame);
+            //                break;
+            //            }
 
-                    }
+            //        }
 
 
-                }
-            }
+            //    }
+            //}
 
 
             {

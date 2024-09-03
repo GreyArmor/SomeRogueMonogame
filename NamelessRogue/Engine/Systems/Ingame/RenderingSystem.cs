@@ -134,6 +134,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         Effect effect;
         private VertexBuffer vertexBuffer;
         private IndexBuffer indexBuffer;
+        private int playerPosZ;
 
         SamplerState sampler = new SamplerState()
         {
@@ -272,7 +273,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 backgroundModel = new TileModel(screen.Height, screen.Width);
             }
+            Position playerPosition = game.FollowedByCameraEntity
+                   .GetComponentOfType<Position>();
 
+            playerPosZ = playerPosition.Z;
 
             if (camera != null && screen != null && worldProvider != null)
             {
@@ -361,7 +365,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
            // return;
             if (fov == null)
             {
-                fov = new PermissiveVisibility((x, y) => { return !world.GetTile(x, y).GetBlocksVision(game); },
+                fov = new PermissiveVisibility((x, y) => { return !world.GetTile(x, y, playerPosZ).GetBlocksVision(game); },
                     (x, y) =>
                     {
                         Point screenPoint = camera.PointToScreen(x, y);
@@ -373,7 +377,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }, (x, y) => { return Math.Abs(x) + Math.Abs(y); }
                 );
             }
-            fov.Compute(playerPosition.Point,60);
+            fov.Compute(new Point(playerPosition.Point.X, playerPosition.Point.Y), 60);
         }
 
 
@@ -397,7 +401,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     Point screenPoint = camera.PointToScreen(x, y);
                     if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible && x > 0 && y > 0)
                     {
-                        Tile tileToDraw = world.GetTile(x, y);
+                        Tile tileToDraw = world.GetTile(x, y, playerPosZ);
 
                         foreach (var entity in tileToDraw.GetEntities())
                         {
@@ -433,7 +437,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     Point screenPoint = camera.PointToScreen(x, y);
                     if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible && x>0 && y>0)
                     {
-                        Tile tileToDraw = world.GetTile(x, y);
+                        Tile tileToDraw = world.GetTile(x, y, playerPosZ);
                         GetTerrainTile(screen, TerrainLibrary.Terrains[tileToDraw.Terrain], screenPoint);
 
                     }
@@ -500,7 +504,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 //LineToPlayer lineToPlayer = entity.GetComponentOfType<LineToPlayer>();
                 //if (drawable.Visible)
                 //{
-                //    Point screenPoint = camera.PointToScreen(position.Point.X, position.Point.Y);
+                //    Point screenPoint = camera.PointToScreen(position.X, position.Y);
                 //    int x = screenPoint.X;
                 //    int y = screenPoint.Y;
                 //    if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
@@ -555,7 +559,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 Position position = entity.GetComponentOfType<Position>();
                 if (drawable.Visible)
                 {
-                    Point screenPoint = camera.PointToScreen(position.Point.X, position.Point.Y);
+                    Point screenPoint = camera.PointToScreen(position.X, position.Y);
                     int x = screenPoint.X;
                     int y = screenPoint.Y;
                     if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())

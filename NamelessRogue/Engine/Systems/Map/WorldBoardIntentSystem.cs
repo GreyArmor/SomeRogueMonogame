@@ -49,18 +49,18 @@ namespace NamelessRogue.Engine.Systems.Map
 
                                     int newX =
                                         intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                        intent.Intention == IntentEnum.MoveTopLeft ? position.Point.X - 1 :
+                                        intent.Intention == IntentEnum.MoveTopLeft ? position.X - 1 :
                                         intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
-                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.X + 1 :
-                                        position.Point.X;
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.X + 1 :
+                                        position.X;
                                     int newY =
                                         intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                        intent.Intention == IntentEnum.MoveBottomRight ? position.Point.Y - 1 :
+                                        intent.Intention == IntentEnum.MoveBottomRight ? position.Y - 1 :
                                         intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft ||
-                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.Y + 1 :
-                                        position.Point.Y;
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.Y + 1 :
+                                        position.Y;
 
-                                    position.Point = new Point(newX, newY);
+                                    position.Point = new Utility.Vector3Int(newX, newY, position.Z);
                                 }
                                 break;
                             }

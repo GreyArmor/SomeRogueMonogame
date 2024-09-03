@@ -54,20 +54,20 @@ namespace NamelessRogue.Engine.Generation.World.TerrainFeatures
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    if (asphaultBitmap.GetPixel(x, y).G > 0 && chunkToDrawOn.ChunkTiles[x][y].Terrain != TerrainTypes.PaintedAsphault)
+                    if (asphaultBitmap.GetPixel(x, y).G > 0 && chunkToDrawOn.ChunkTiles[x][y][0].Terrain != TerrainTypes.PaintedAsphault)
                     {
-                        chunkToDrawOn.ChunkTiles[x][y].Biome = Biomes.None;
-                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.AsphaultPoor;
+                        chunkToDrawOn.ChunkTiles[x][y][0].Biome = Biomes.None;
+                        chunkToDrawOn.ChunkTiles[x][y][0].Terrain = TerrainTypes.AsphaultPoor;
                     }
                     if (asphaultBitmap.GetPixel(x, y).R > 0)
                     {
-                        chunkToDrawOn.ChunkTiles[x][y].Biome = Biomes.None;
-                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.PaintedAsphault;
+                        chunkToDrawOn.ChunkTiles[x][y][0].Biome = Biomes.None;
+                        chunkToDrawOn.ChunkTiles[x][y][0].Terrain = TerrainTypes.PaintedAsphault;
                     }
-                    if (asphaultBitmap.GetPixel(x, y).B > 0 && chunkToDrawOn.ChunkTiles[x][y].Terrain== TerrainTypes.Grass)
+                    if (asphaultBitmap.GetPixel(x, y).B > 0 && chunkToDrawOn.ChunkTiles[x][y][0].Terrain== TerrainTypes.Grass)
                     {
-                        chunkToDrawOn.ChunkTiles[x][y].Biome = Biomes.None;
-                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.SidewalkPoor;
+                        chunkToDrawOn.ChunkTiles[x][y][0].Biome = Biomes.None;
+                        chunkToDrawOn.ChunkTiles[x][y][0].Terrain = TerrainTypes.SidewalkPoor;
                     }
                 }
             }

@@ -18,6 +18,7 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.Serialization;
+using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
@@ -96,16 +97,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                     int newX =
                                         intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                        intent.Intention == IntentEnum.MoveTopLeft ? position.Point.X - 1 :
+                                        intent.Intention == IntentEnum.MoveTopLeft ? position.X - 1 :
                                         intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
-                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.X + 1 :
-                                        position.Point.X;
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.X + 1 :
+                                        position.X;
                                     int newY =
                                         intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                        intent.Intention == IntentEnum.MoveBottomRight ? position.Point.Y + 1 :
+                                        intent.Intention == IntentEnum.MoveBottomRight ? position.Y + 1 :
                                         intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft ||
-                                        intent.Intention == IntentEnum.MoveTopRight ? position.Point.Y - 1 :
-                                        position.Point.Y;
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.Y - 1 :
+                                        position.Y;
 
                                     IEntity worldEntity = namelessGame.TimelineEntity;
                                     IWorldProvider worldProvider = null;
@@ -114,7 +115,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
                                     }
 
-                                    Tile tileToMoveTo = worldProvider.GetTile(newX, newY);
+                                    Tile tileToMoveTo = worldProvider.GetTile(newX, newY, position.Z);
 
 
                                     IEntity entityThatOccupiedTile = null;
@@ -157,7 +158,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             {
 
                                                 worldProvider.MoveEntity(playerEntity,
-                                                    new Point(newX, newY));
+                                                    new Vector3Int(newX, newY, position.Z));
                                                 var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                                 ap.Points -= Constants.ActionsMovementCost;
 
@@ -181,7 +182,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     else
                                     {
                                         worldProvider.MoveEntity(playerEntity,
-                                            new Point(newX, newY));
+                                            new Vector3Int(newX, newY, position.Z));
                                         var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                         ap.Points -= Constants.ActionsMovementCost;
                                     }
@@ -233,7 +234,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                     var position = playerEntity.GetComponentOfType<Position>();
                                     var itemHolder = playerEntity.GetComponentOfType<ItemsHolder>();
-                                    var tile = worldProvider.GetTile(position.Point.X, position.Point.Y);
+                                    var tile = worldProvider.GetTile(position.X, position.Y, position.Z);
 
                                     List<IEntity> itemsToPickUp = new List<IEntity>();
                                     foreach (var entityOnTIle in tile.GetEntities())

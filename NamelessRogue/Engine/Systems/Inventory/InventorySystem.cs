@@ -32,7 +32,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
                 while (namelessGame.Commander.DequeueCommand(out DropItemCommand dropCommand))
                 {
-                    var tile = worldProvider.GetTile(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y);
+                    var tile = worldProvider.GetTile(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y, 0);
 
                     foreach (var dropCommandItem in dropCommand.Items)
                     {
@@ -40,7 +40,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                         dropCommand.Holder.Items.Remove(dropCommandItem);
                         dropCommandItem.GetComponentOfType<Drawable>().Visible = true;
                         var position = dropCommandItem.GetComponentOfType<Position>();
-                        position.Point = new Point(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y);
+                        position.Point = new Utility.Vector3Int(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y, 0);
                     }
                 }
                 while (namelessGame.Commander.DequeueCommand(out PickUpItemCommand pickupCommand))
@@ -50,7 +50,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                         foreach (var pickupCommandItem in pickupCommand.Items)
                         {
                             var tile = worldProvider.GetTile(pickupCommand.WhereToPickUp.X,
-                                pickupCommand.WhereToPickUp.Y);
+                                pickupCommand.WhereToPickUp.Y, 0);
                             tile.RemoveEntity((Entity) pickupCommandItem);
                             pickupCommandItem.GetComponentOfType<Drawable>().Visible = false;
                             var ammo = pickupCommandItem.GetComponentOfType<Ammo>();

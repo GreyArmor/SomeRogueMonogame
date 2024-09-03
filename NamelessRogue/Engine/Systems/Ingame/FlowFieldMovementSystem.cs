@@ -60,9 +60,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				{
 					Position position = movableEntity.GetComponentOfType<Position>();
 					var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
-					if (!flowMoveComponent.FinishedMoving && position.Point.X > 0 && position.Point.Y > 0)
+					if (!flowMoveComponent.FinishedMoving && position.X > 0 && position.Y > 0)
 					{
-						var nextPoint = flowField.GetNextPoint(flowMoveComponent.PathId, position.Point);
+						var nextPoint = flowField.GetNextPoint(flowMoveComponent.PathId, position.Point.ToPoint());
 
 						if (flowMoveComponent.To == nextPoint)
 						{
@@ -74,12 +74,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 						if (flagbearerTag != null)
 						{
 							var groupToMove = movableEntity.GetComponentOfType<GroupTag>();
-							namelessGame.Commander.EnqueueCommand(new GroupMoveCommand(groupToMove.GroupId, position.Point, nextPoint, flowMoveComponent.To));
+							namelessGame.Commander.EnqueueCommand(new GroupMoveCommand(groupToMove.GroupId, position.Point.ToPoint(), nextPoint, flowMoveComponent.To));
 						}
 						else
 						{
 							namelessGame.WorldProvider.MoveEntity(movableEntity,
-							  new Point(nextPoint.X, nextPoint.Y));
+							  nextPoint.X, nextPoint.Y, 0);
 						}
 					}
 				}

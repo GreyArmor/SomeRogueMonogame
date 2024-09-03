@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         private Point worldPositionBottomLeftCorner;
         private ChunkData chunkContainer;
         
-        private Tile[][] chunkTiles;
+        private Tile[][][] chunkTiles;
         
         private Microsoft.Xna.Framework.BoundingBox boundingBox;
         
@@ -58,10 +58,10 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    ChunkTiles[x][y] = generator.GetTileWithoutTerrainFeatures(x + worldPositionBottomLeftCorner.X,
+                    ChunkTiles[x][y][0] = generator.GetTileWithoutTerrainFeatures(x + worldPositionBottomLeftCorner.X,
                         y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
 
-                    if (ChunkTiles[x][y].Terrain != TerrainTypes.Water)
+                    if (ChunkTiles[x][y][0].Terrain != TerrainTypes.Water)
                     {
                         this.NonGroundPassable = false;
                     }
@@ -208,8 +208,8 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                         {
                             if (waterBitmap.GetPixel(x, y).R > 0)
                             {
-                                ChunkTiles[x][y].Biome = Biomes.River;
-                                ChunkTiles[x][y].Terrain = TerrainTypes.Water;
+                                ChunkTiles[x][y][0].Biome = Biomes.River;
+                                ChunkTiles[x][y][0].Terrain = TerrainTypes.Water;
                             }
                         }
                     }
@@ -267,13 +267,13 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                         {
                             if (asphaultBitmap.GetPixel(x, y).G > 0)
                             {
-                                ChunkTiles[x][y].Biome = Biomes.None;
-                                ChunkTiles[x][y].Terrain = TerrainTypes.AsphaultPoor;
+                                ChunkTiles[x][y][0].Biome = Biomes.None;
+                                ChunkTiles[x][y][0].Terrain = TerrainTypes.AsphaultPoor;
                             }
                             if (asphaultBitmap.GetPixel(x, y).R > 0)
                             {
-                                ChunkTiles[x][y].Biome = Biomes.None;
-                                ChunkTiles[x][y].Terrain = TerrainTypes.PaintedAsphault;
+                                ChunkTiles[x][y][0].Biome = Biomes.None;
+                                ChunkTiles[x][y][0].Terrain = TerrainTypes.PaintedAsphault;
                             }
                         }
                     }
@@ -288,18 +288,18 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    ChunkTiles[x][y] = new Tile(TerrainTypes.HardRocks, Biomes.None,
+                    ChunkTiles[x][y][0] = new Tile(TerrainTypes.HardRocks, Biomes.None,
                         new Point(x + worldPositionBottomLeftCorner.X, y + worldPositionBottomLeftCorner.Y), 0.5);
                 }
             }
         }
 
-        public Tile[][] GetChunkTiles()
+        public Tile[][][] GetChunkTiles()
         {
             return ChunkTiles;
         }
 
-        public void SetChunkTiles(Tile[][] chunkTiles)
+        public void SetChunkTiles(Tile[][][] chunkTiles)
         {
             this.ChunkTiles = chunkTiles;
         }
@@ -319,7 +319,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             return GetTile(p.X, p.Y);
         }
 
-        public Tile GetTile(int x, int y)
+        public Tile GetTile(int x, int y, int z = 0)
         {
 
             if (!isActive)
@@ -333,7 +333,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             int localX = x - bottomLeftX;
             int localY = y - bottomLeftY;
 
-            return ChunkTiles[localX][localY];
+            return ChunkTiles[localX][localY][z];
         }
 
         public void Activate()
@@ -342,10 +342,14 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             isActive = true;
             if (!loaded)
             {
-                ChunkTiles = new Tile[Constants.ChunkSize][];
-                for (var index = 0; index < ChunkTiles.Length; index++)
+                ChunkTiles = new Tile[Constants.ChunkSize][][];
+                for (var index = 0; index < Constants.ChunkSize; index++)
                 {
-                     ChunkTiles[index] = new Tile[Constants.ChunkSize];
+                    ChunkTiles[index] = new Tile[Constants.ChunkSize][];
+                    for (var jindex = 0; jindex < Constants.ChunkSize; jindex++)
+                    {
+                        ChunkTiles[index][jindex] = new Tile[Constants.ChunkHeight];
+                    }
                 }
 
                 if (!LoadFromDisk())
@@ -367,7 +371,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         public bool NonGroundPassable { get; private set; } = true;
 		public bool IsAnyEntities { get; set; } = false;
         public List<ITerrainFeature> TerrainFeatures { get; internal set; } = new List<ITerrainFeature>();
-        public Tile[][] ChunkTiles { get => chunkTiles; set => chunkTiles = value; }
+        public Tile[][][] ChunkTiles { get => chunkTiles; set => chunkTiles = value; }
 
         //TODO: serialization
         private bool LoadFromDisk()
@@ -378,14 +382,17 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
         public void FindIfAnyEntitiesOnChunk()
         {
-            foreach (var arr in ChunkTiles)
+            foreach (var arr0 in ChunkTiles)
             {
-                foreach (Tile tile in arr)
+                foreach (var arr1 in arr0)
                 {
-                    if (tile.AnyEntities())
+                    foreach (var tile in arr1)
                     {
-                        IsAnyEntities = true;
-                        return;
+                        if (tile.AnyEntities())
+                        {
+                            IsAnyEntities = true;
+                            return;
+                        }
                     }
                 }
             }
@@ -405,24 +412,24 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             //	chunkTiles = null;
         }
 
-        public void SetTile(int x, int y, Tile tile)
+        public void SetTile(int x, int y, int z, Tile tile)
         {
             int bottomLeftX = worldPositionBottomLeftCorner.X;
             int bottomLeftY = worldPositionBottomLeftCorner.Y;
 
             int localX = Math.Abs(bottomLeftX - x);
             int localY = Math.Abs(bottomLeftY - y);
-            SetTileLocal(localX, localY, tile);
+            SetTileLocal(localX, localY, z, tile);
 		}
 
-        public void SetTileLocal(int localX, int localY, Tile tile)
+        public void SetTileLocal(int localX, int localY, int z, Tile tile)
         {
-			ChunkTiles[localX][localY] = tile;
+			ChunkTiles[localX][localY][z] = tile;
 		}
 
-		public Tile GetTileLocal(int localX, int localY)
+		public Tile GetTileLocal(int localX, int localY, int z)
 		{
-			return ChunkTiles[localX][localY];
+			return ChunkTiles[localX][localY][z];
 		}
 
 	}

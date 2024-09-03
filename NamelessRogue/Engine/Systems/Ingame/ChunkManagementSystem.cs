@@ -104,21 +104,27 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var justcreated = worldProvider.GetRealityBubbleChunks().Where(x => x.Value.JustCreated);
             foreach (var realityBubbleChunk in justcreated)
             {
-                foreach (var tileArray in realityBubbleChunk.Value.GetChunkTiles())
+                foreach (var tileArray1 in realityBubbleChunk.Value.GetChunkTiles())
                 {
-                    foreach (var tile in tileArray)
+                    foreach (var tileArray2 in tileArray1)
                     {
-                        var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
-                        if (entity != null)
+                        foreach (var tile in tileArray2)
                         {
-                            realityBubbleChunk.Value.IsAnyEntities = true;
-
-                            if (tile.GetEntities().Count == 0)
+                            if (tile != null)
                             {
-                                tile.AddEntity(entity);
-                                //   tile.Terrain = TerrainTypes.Lava;
-                                namelessGame.AddEntity(entity);
+                                var entity = TerrainFurnitureFactory.GetExteriorEntities(namelessGame, tile);
+                                if (entity != null)
+                                {
+                                    realityBubbleChunk.Value.IsAnyEntities = true;
 
+                                    if (tile.GetEntities().Count == 0)
+                                    {
+                                        tile.AddEntity(entity);
+                                        //   tile.Terrain = TerrainTypes.Lava;
+                                        namelessGame.AddEntity(entity);
+
+                                    }
+                                }
                             }
                         }
                     }
@@ -128,7 +134,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             if (once)
             {
-                BuildingFactory.CreateDummyBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize, namelessGame);
+                BuildingFactory.CreateBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize ,0, namelessGame);
                 once = false;
             }
 

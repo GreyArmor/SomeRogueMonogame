@@ -52,13 +52,13 @@ namespace NamelessRogue.Engine.Generation.World.TerrainFeatures
                 {
                     if (asphaultBitmap.GetPixel(x, y).G > 0)
                     {
-                        chunkToDrawOn.ChunkTiles[x][y].Biome = Biomes.None;
-                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.AsphaultPoor;
+                        chunkToDrawOn.ChunkTiles[x][y][0].Biome = Biomes.None;
+                        chunkToDrawOn.ChunkTiles[x][y][0].Terrain = TerrainTypes.AsphaultPoor;
                     }
                     if (asphaultBitmap.GetPixel(x, y).R > 0)
                     {
-                        chunkToDrawOn.ChunkTiles[x][y].Biome = Biomes.None;
-                        chunkToDrawOn.ChunkTiles[x][y].Terrain = TerrainTypes.PaintedAsphault;
+                        chunkToDrawOn.ChunkTiles[x][y][0].Biome = Biomes.None;
+                        chunkToDrawOn.ChunkTiles[x][y][0].Terrain = TerrainTypes.PaintedAsphault;
                     }
                 }
             }
