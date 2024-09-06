@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MonoGame.Extended.ECS;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Environment;
@@ -15,91 +16,54 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
+using static Assimp.Metadata;
 using Entity = NamelessRogue.Engine.Infrastructure.Entity;
 
 namespace NamelessRogue.Engine.Factories
 {
     public static class TerrainFurnitureFactory
     {
+        private static Dictionary<string, Entity> FurnitureDisctionary = new Dictionary<string,Entity>();
 
-        private static Entity wallEntity = new Entity();
-        private static Entity windowEntity = new Entity();
-        private static Entity bedEntity = new Entity();
-        private static Entity toiletEntity = new Entity();
-        private static Entity showerEntity = new Entity();
-        private static Entity barrelEntity = new Entity();
-        private static Entity tableEntity = new Entity();
-        private static Entity chairEntity = new Entity();
-        private static Entity boxEntity = new Entity();
-        private static Entity stairsEntity = new Entity();
-        private static Entity garbageEntity = new Entity();
-
-        public static Entity WallEntity { get => (Entity)wallEntity.CloneEntity(); }
-        public static Entity WindowEntity { get => (Entity)windowEntity.CloneEntity(); }
-        public static Entity BedEntity { get => (Entity)bedEntity.CloneEntity(); }
-
-        public static Entity ToiletEntity { get => (Entity)toiletEntity.CloneEntity(); }
-        public static Entity ShowerEntity { get => (Entity)showerEntity.CloneEntity(); }
-        public static Entity BarrelEntity { get => (Entity)barrelEntity.CloneEntity(); }
-        public static Entity TableEntity { get => (Entity)tableEntity.CloneEntity(); }
-        public static Entity ChairEntity { get => (Entity)chairEntity.CloneEntity(); }
-        public static Entity BoxEntity { get => (Entity)boxEntity.CloneEntity(); }
-        public static Entity GarbageEntity { get => (Entity)boxEntity.CloneEntity(); }
-
-        public static Entity StairsEntity { get => (Entity)stairsEntity.CloneEntity(); }
-
+        public static Entity GetFurniture(string id)
+        {
+            return (Entity)(FurnitureDisctionary.TryGetValue(id, out var entity) ? entity.CloneEntity() : null);
+        }
         public static void CreateFurnitureEntities(NamelessGame game)
         {
-            var result = new List<Entity>();
-            result.Add(wallEntity);
-            result.Add(windowEntity);
-            result.Add(bedEntity);
-            result.Add(barrelEntity);
-            result.Add(boxEntity);
-            result.Add(garbageEntity);
-            result.Add(toiletEntity);
-            result.Add(showerEntity);
-            result.Add(stairsEntity);
 
-            wallEntity.AddComponent(new Drawable("Wall", new Engine.Utility.Color(0.5f)));
-            wallEntity.AddComponent(new Description("Wall", ""));
-            wallEntity.AddComponent(new OccupiesTile());
-            wallEntity.AddComponent(new BlocksVision());
-
-            windowEntity.AddComponent(new Drawable("Window", new Engine.Utility.Color(255, 255, 255)));
-            windowEntity.AddComponent(new Description("Window", ""));
-
-            bedEntity.AddComponent(new Drawable("Bed", new Engine.Utility.Color(255, 255, 255)));
-            bedEntity.AddComponent(new Description("Bed", ""));
-
-            toiletEntity.AddComponent(new Drawable("Toilet", new Engine.Utility.Color(255, 255, 255)));
-            toiletEntity.AddComponent(new Description("Toilet", ""));
-
-            showerEntity.AddComponent(new Drawable("Shower", new Engine.Utility.Color(255, 255, 255)));
-            showerEntity.AddComponent(new Description("Shower", ""));
-
-            barrelEntity.AddComponent(new Drawable("Barrel", new Engine.Utility.Color(139, 69, 19)));
-            barrelEntity.AddComponent(new Description("Barrel", ""));
-
-            boxEntity.AddComponent(new Drawable("Box", new Engine.Utility.Color(139, 69, 19)));
-            boxEntity.AddComponent(new Description("Box", ""));
-
-            tableEntity.AddComponent(new Drawable("Table", new Engine.Utility.Color(255, 255, 255)));
-            tableEntity.AddComponent(new Description("Table", ""));
-            tableEntity.AddComponent(new OccupiesTile());
-
-            stairsEntity.AddComponent(new Drawable("Stairs", new Engine.Utility.Color(139, 69, 19)));
-            stairsEntity.AddComponent(new Description("Stairs", ""));
-            stairsEntity.AddComponent(new StairsComponent());
-
-            garbageEntity.AddComponent(new Description("Garbage", ""));
-
-            windowEntity.AddComponent(new OccupiesTile());
-            foreach (var entity in result)
+            Entity _addFurniture(string id, string descriptionName, bool occupiesTile, bool blocksVision)
             {
+                Entity entity = new Entity();
+                entity.AddComponent(new Drawable(id, new Engine.Utility.Color(1f)));
+                entity.AddComponent(new Description(descriptionName, ""));
+                if (occupiesTile)
+                {
+                    entity.AddComponent(new OccupiesTile());
+                }
+                if (blocksVision)
+                {
+                    entity.AddComponent(new BlocksVision());
+                }
                 entity.AddComponent(new Furniture());
+                FurnitureDisctionary.Add(id, entity);
+                return entity;
             }
 
+
+            _addFurniture("Wall", "Wall", true, true);
+            _addFurniture("Window", "Window", true, false);
+            _addFurniture("Bed", "Bed", false, false);
+            _addFurniture("Toilet", "Toilet", false, false);
+            _addFurniture("Shower", "Shower", false, false);
+            _addFurniture("Barrel", "Barrel", false, false);
+            _addFurniture("Box", "Box", false, false);
+            _addFurniture("Table", "Table", true, false);
+            _addFurniture("Garbage", "Garbage", false, false);
+
+
+            var stairs = _addFurniture("Stairs", "Stairs", false, false);
+            stairs.AddComponent(new StairsComponent());
         }
 
         public static Entity GetExteriorEntities(NamelessGame game, Tile terrainTile)

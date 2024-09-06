@@ -172,6 +172,10 @@ namespace NamelessRogue.Engine.Factories
                         gameTile = new Tile(TerrainTypes.AsphaultPoor, Biomes.None, new Point(x, y), z);
                         worldProvider.SetTile(x + loopX, y + loopY, z, gameTile);
                     }
+                    else
+                    {
+                        gameTile.Terrain = TerrainTypes.AsphaultPoor;
+                    }
 
                     var tileId = myLayer.Data[loopX + (loopY * buildingSize)];
                     if (tileId != 0)
@@ -182,7 +186,7 @@ namespace NamelessRogue.Engine.Factories
                         {
                             case "wall":
                                 {
-                                    var wall = TerrainFurnitureFactory.WallEntity;
+                                    var wall = TerrainFurnitureFactory.GetFurniture("Wall");
                                     var drawable = wall.GetComponentOfType<Drawable>();
                                     drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                     gameTile.AddEntity(wall);
@@ -209,47 +213,42 @@ namespace NamelessRogue.Engine.Factories
                                 break;
                             case "table":
                                 {
-                                    var table = TerrainFurnitureFactory.TableEntity;
-                                    var drawable = table.GetComponentOfType<Drawable>();
-                                    gameTile.AddEntity(table);
-                                    namelessGame.AddEntity(table);
+                                    var entity = TerrainFurnitureFactory.GetFurniture("Table");
+                                    gameTile.AddEntity(entity);
+                                    namelessGame.AddEntity(entity);
                                 }
                                 break;
                             case "bed":
                                 {
-                                    var table = TerrainFurnitureFactory.BedEntity;
-                                    var drawable = table.GetComponentOfType<Drawable>();
-                                    gameTile.AddEntity(table);
-                                    namelessGame.AddEntity(table);
+                                    var entity = TerrainFurnitureFactory.GetFurniture("Bed");
+                                    gameTile.AddEntity(entity);
+                                    namelessGame.AddEntity(entity);
                                 }
                                 break;
                             case "toilet":
                                 {
-                                    var table = TerrainFurnitureFactory.ToiletEntity;
-                                    var drawable = table.GetComponentOfType<Drawable>();
-                                    gameTile.AddEntity(table);
-                                    namelessGame.AddEntity(table);
+                                    var entity = TerrainFurnitureFactory.GetFurniture("Toilet");
+                                    gameTile.AddEntity(entity);
+                                    namelessGame.AddEntity(entity);
                                 }
                                 break;
                             case "shower":
                                 {
-                                    var table = TerrainFurnitureFactory.ShowerEntity;
-                                    var drawable = table.GetComponentOfType<Drawable>();
-     
-                                    gameTile.AddEntity(table);
-                                    namelessGame.AddEntity(table);
+                                    var entity = TerrainFurnitureFactory.GetFurniture("Shower");
+                                    gameTile.AddEntity(entity);
+                                    namelessGame.AddEntity(entity);
                                 }
                                 break;
                             case "stairs_down":
                                 {
-                                    var stairs = TerrainFurnitureFactory.StairsEntity;
+                                    var stairs = TerrainFurnitureFactory.GetFurniture("Stairs");
                                     gameTile.AddEntity(stairs);
                                     namelessGame.AddEntity(stairs);
                                 }
                                 break;
                             case "stairs_up":
                                 {
-                                    var stairs = TerrainFurnitureFactory.ShowerEntity;
+                                    var stairs = TerrainFurnitureFactory.GetFurniture("Stairs");
                                     gameTile.AddEntity(stairs);
                                     namelessGame.AddEntity(stairs);
                                 }
