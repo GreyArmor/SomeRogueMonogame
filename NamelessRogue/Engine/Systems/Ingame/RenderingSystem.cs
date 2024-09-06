@@ -165,11 +165,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var atlasTileData = new AtlasTileData(9, 9);
             characterToTileDictionary = new Dictionary<String, AtlasTileData>();
             characterToTileDictionary.Add("Nothingness", atlasTileData);
-            characterToTileDictionary.Add("Grass", atlasTileData);
+            characterToTileDictionary.Add("Dirt", new AtlasTileData(2, 4));
             characterToTileDictionary.Add("Character", new AtlasTileData(0,7));
             characterToTileDictionary.Add("Asphault", new AtlasTileData(1,3));
             characterToTileDictionary.Add("Sidewalk", new AtlasTileData(0, 3));
             characterToTileDictionary.Add("PaintedAsphault", new AtlasTileData(2, 3));
+            characterToTileDictionary.Add("FloorGrate", new AtlasTileData(0, 4));
             characterToTileDictionary.Add("Wall", atlasTileData);
             characterToTileDictionary.Add("Door", atlasTileData);
             characterToTileDictionary.Add("Window", atlasTileData);

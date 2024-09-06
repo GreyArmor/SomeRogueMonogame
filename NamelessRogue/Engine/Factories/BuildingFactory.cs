@@ -174,7 +174,7 @@ namespace NamelessRogue.Engine.Factories
                     }
                     else
                     {
-                        gameTile.Terrain = TerrainTypes.AsphaultPoor;
+                        gameTile.Terrain = TerrainTypes.FloorGrate;
                     }
 
                     var tileId = myLayer.Data[loopX + (loopY * buildingSize)];

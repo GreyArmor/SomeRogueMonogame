@@ -19,6 +19,7 @@ namespace NamelessRogue.Engine.Infrastructure
         AsphaultPoor,
         AsphaultMiddle,
         AsphaultRich,
+        FloorGrate,
         LightRocks, 
         HardRocks,
         Lava,

@@ -27,7 +27,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             }
             else
             {
-                return new Tuple<Terrain, Biome>(TerrainLibrary.Terrains[TerrainTypes.Grass], BiomesLibrary.Biomes[Biomes.Plains]);
+                return new Tuple<Terrain, Biome>(TerrainLibrary.Terrains[TerrainTypes.Dirt], BiomesLibrary.Biomes[Biomes.Plains]);
             }
 
         //    var temperatureCoef = y / resolutionZoomed + temperature;
