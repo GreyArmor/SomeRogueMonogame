@@ -122,7 +122,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         tile.AddEntity(entity);
                                         //   tile.Terrain = TerrainTypes.Lava;
                                         namelessGame.AddEntity(entity);
-
                                     }
                                 }
                             }
@@ -134,7 +133,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             if (once)
             {
-                BuildingFactory.CreateBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize ,0, namelessGame);
+                BuildingFactory.CreateBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize, 0, namelessGame);
+                BuildingFactory.CreateBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize, 1, namelessGame);
+                BuildingFactory.CreateBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize, 2, namelessGame);
+                BuildingFactory.CreateBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize, 3, namelessGame);
                 once = false;
             }
 

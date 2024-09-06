@@ -84,6 +84,23 @@ namespace NamelessRogue.Engine.Input
                                 intent.Intention = IntentEnum.ZoomIn;
                             }
                             break;
+                        case Keys.OemComma:
+                            {
+                                if(lastCommand=='<')
+                                {
+                                    intent.Intention = IntentEnum.MoveAscent;
+                                }
+                            }
+                            break;
+
+                        case Keys.OemPeriod:
+                            {
+                                if (lastCommand == '>')
+                                {
+                                    intent.Intention = IntentEnum.MoveDescent;
+                                }
+                            }
+                            break;
                     }
                 }
             }

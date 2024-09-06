@@ -26,7 +26,9 @@ namespace NamelessRogue.Engine.Input
         ZoomIn,
         ZoomOut,
         MouseChanged,
-	}
+        MoveAscent,
+        MoveDescent,
+    }
 
     public class Intent
     {

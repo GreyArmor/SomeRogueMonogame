@@ -166,6 +166,13 @@ namespace NamelessRogue.Engine.Factories
                 for (int loopX = 0; loopX < buildingSize; loopX++)
                 {
                     var gameTile = worldProvider.GetTile(x + loopX, y + loopY, z);
+
+                    if(gameTile == null)
+                    {
+                        gameTile = new Tile(TerrainTypes.AsphaultPoor, Biomes.None, new Point(x, y), z);
+                        worldProvider.SetTile(x + loopX, y + loopY, z, gameTile);
+                    }
+
                     var tileId = myLayer.Data[loopX + (loopY * buildingSize)];
                     if (tileId != 0)
                     {

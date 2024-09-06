@@ -365,7 +365,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
            // return;
             if (fov == null)
             {
-                fov = new PermissiveVisibility((x, y) => { return !world.GetTile(x, y, playerPosZ).GetBlocksVision(game); },
+                fov = new PermissiveVisibility((x, y) => {
+                    var worldTile = world.GetTile(x, y, playerPosZ);
+                    if(worldTile == null)
+                    {
+                        return false;
+                    }
+                    return !world.GetTile(x, y, playerPosZ).GetBlocksVision(game); 
+                },
                     (x, y) =>
                     {
                         Point screenPoint = camera.PointToScreen(x, y);
@@ -403,14 +410,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         Tile tileToDraw = world.GetTile(x, y, playerPosZ);
 
-                        foreach (var entity in tileToDraw.GetEntities())
+                        if (tileToDraw != null)
                         {
-                            var furniture = entity.GetComponentOfType<Furniture>();
-                            var drawable = entity.GetComponentOfType<Drawable>();
-                            if (furniture != null && drawable != null)
+                            foreach (var entity in tileToDraw.GetEntities())
                             {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID + drawable.TilesetPosition;
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                                var furniture = entity.GetComponentOfType<Furniture>();
+                                var drawable = entity.GetComponentOfType<Drawable>();
+                                if (furniture != null && drawable != null)
+                                {
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID + drawable.TilesetPosition;
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                                }
                             }
                         }
                     }
@@ -438,7 +448,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible && x>0 && y>0)
                     {
                         Tile tileToDraw = world.GetTile(x, y, playerPosZ);
-                        GetTerrainTile(screen, TerrainLibrary.Terrains[tileToDraw.Terrain], screenPoint);
+
+                        if (tileToDraw != null)
+                        {
+                            GetTerrainTile(screen, TerrainLibrary.Terrains[tileToDraw.Terrain], screenPoint);
+                        }
+                        else
+                        {
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Nothingness";
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                        }
 
                     }
                     else
