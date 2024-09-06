@@ -240,6 +240,20 @@ namespace NamelessRogue.Engine.Factories
                                     namelessGame.AddEntity(table);
                                 }
                                 break;
+                            case "stairs_down":
+                                {
+                                    var stairs = TerrainFurnitureFactory.StairsEntity;
+                                    gameTile.AddEntity(stairs);
+                                    namelessGame.AddEntity(stairs);
+                                }
+                                break;
+                            case "stairs_up":
+                                {
+                                    var stairs = TerrainFurnitureFactory.ShowerEntity;
+                                    gameTile.AddEntity(stairs);
+                                    namelessGame.AddEntity(stairs);
+                                }
+                                break;
                             default:
                                 break;
                         }

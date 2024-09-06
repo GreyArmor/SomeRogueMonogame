@@ -21,10 +21,6 @@ namespace NamelessRogue.Engine.Factories
 {
     public static class TerrainFurnitureFactory
     {
-        //not sure how clear this is
-        private static Entity treeEntity = new Entity();
-        private static Entity smallTreeEntity = new Entity();
-        private static Entity rockEntity = new Entity();
 
         private static Entity wallEntity = new Entity();
         private static Entity windowEntity = new Entity();
@@ -32,10 +28,10 @@ namespace NamelessRogue.Engine.Factories
         private static Entity toiletEntity = new Entity();
         private static Entity showerEntity = new Entity();
         private static Entity barrelEntity = new Entity();
-        private static Entity flowerEntity = new Entity();
         private static Entity tableEntity = new Entity();
         private static Entity chairEntity = new Entity();
         private static Entity boxEntity = new Entity();
+        private static Entity stairsEntity = new Entity();
         private static Entity garbageEntity = new Entity();
 
         public static Entity WallEntity { get => (Entity)wallEntity.CloneEntity(); }
@@ -45,44 +41,25 @@ namespace NamelessRogue.Engine.Factories
         public static Entity ToiletEntity { get => (Entity)toiletEntity.CloneEntity(); }
         public static Entity ShowerEntity { get => (Entity)showerEntity.CloneEntity(); }
         public static Entity BarrelEntity { get => (Entity)barrelEntity.CloneEntity(); }
-        public static Entity FlowerEntity { get => (Entity)flowerEntity.CloneEntity(); }
         public static Entity TableEntity { get => (Entity)tableEntity.CloneEntity(); }
         public static Entity ChairEntity { get => (Entity)chairEntity.CloneEntity(); }
-        public static Entity RockEntity { get => (Entity)rockEntity.CloneEntity(); }
-        public static Entity SmallTreeEntity { get => (Entity)smallTreeEntity.CloneEntity(); }
-        public static Entity TreeEntity { get => (Entity)treeEntity.CloneEntity(); }
-
         public static Entity BoxEntity { get => (Entity)boxEntity.CloneEntity(); }
-
         public static Entity GarbageEntity { get => (Entity)boxEntity.CloneEntity(); }
+
+        public static Entity StairsEntity { get => (Entity)stairsEntity.CloneEntity(); }
 
         public static void CreateFurnitureEntities(NamelessGame game)
         {
             var result = new List<Entity>();
-            result.Add(treeEntity);
-            result.Add(smallTreeEntity);
-            result.Add(rockEntity);
             result.Add(wallEntity);
             result.Add(windowEntity);
             result.Add(bedEntity);
             result.Add(barrelEntity);
-            result.Add(flowerEntity);
             result.Add(boxEntity);
             result.Add(garbageEntity);
             result.Add(toiletEntity);
             result.Add(showerEntity);
-
-            rockEntity.AddComponent(new Description("A rock", ""));
-            rockEntity.AddComponent(new Drawable("Rock", new Color(0.5f, 0.5f, 0.5f)));
-            rockEntity.AddComponent(new Item(ItemType.Misc, 2, ItemQuality.Normal, 1, 1, ""));
-
-            treeEntity.AddComponent(new Description("A tree", ""));
-            treeEntity.AddComponent(new BlocksVision());
-            treeEntity.AddComponent(new OccupiesTile());
-            treeEntity.AddComponent(new Drawable("Tree", new Color(0f, 0.5f, 0f)));
-
-            smallTreeEntity.AddComponent(new Description("A small tree", ""));
-            smallTreeEntity.AddComponent(new Drawable("SnallTree", new Color(0f, 0.5f, 0f)));
+            result.Add(stairsEntity);
 
             wallEntity.AddComponent(new Drawable("Wall", new Engine.Utility.Color(0.5f)));
             wallEntity.AddComponent(new Description("Wall", ""));
@@ -110,6 +87,10 @@ namespace NamelessRogue.Engine.Factories
             tableEntity.AddComponent(new Drawable("Table", new Engine.Utility.Color(255, 255, 255)));
             tableEntity.AddComponent(new Description("Table", ""));
             tableEntity.AddComponent(new OccupiesTile());
+
+            stairsEntity.AddComponent(new Drawable("Stairs", new Engine.Utility.Color(139, 69, 19)));
+            stairsEntity.AddComponent(new Description("Stairs", ""));
+            stairsEntity.AddComponent(new StairsComponent());
 
             garbageEntity.AddComponent(new Description("Garbage", ""));
 

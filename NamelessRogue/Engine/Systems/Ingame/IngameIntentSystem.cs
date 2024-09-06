@@ -82,10 +82,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         int newZ = intent.Intention == IntentEnum.MoveAscent ? position.Z + 1 :
                                                    intent.Intention == IntentEnum.MoveDescent ? position.Z - 1 : position.Z;
 
+                                        bool changingZlevel = intent.Intention == IntentEnum.MoveAscent || intent.Intention == IntentEnum.MoveDescent;
+                                            
                                         if (newZ < 0 || newZ > Constants.ChunkHeight)
                                         {
                                             continue;
                                         }
+
+                                       
 
                                         IEntity worldEntity = namelessGame.TimelineEntity;
                                         IWorldProvider worldProvider = null;
@@ -94,11 +98,31 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
                                         }
 
+
+                                        if (changingZlevel)
+                                        {
+                                            Tile playerTile = worldProvider.GetTile(position.X, position.Y, position.Z);
+                                            StairsComponent stairs = null;
+                                            foreach (IEntity tileEntity in playerTile.GetEntities())
+                                            {
+                                                stairs = tileEntity.GetComponentOfType<StairsComponent>();
+                                                if (stairs != null)
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                            if(stairs==null)
+                                            {
+                                                continue;
+                                            }
+                                        }
+
+
                                         Tile tileToMoveTo = worldProvider.GetTile(newX, newY, newZ);
                                         if (tileToMoveTo == null)
                                         {
-                                            tileToMoveTo = new Tile(TerrainTypes.AsphaultPoor, Biomes.None, new Point(newX, newY), newZ);
-                                            worldProvider.SetTile(newX, newY, newZ, tileToMoveTo);
+                                            continue;
+
                                         }
 
 

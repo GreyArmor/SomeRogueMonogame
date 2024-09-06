@@ -43,7 +43,7 @@
  </tile>
  <tile id="8">
   <properties>
-   <property name="ObjectType" value="wall"/>
+   <property name="ObjectType" value="stairs_down"/>
   </properties>
  </tile>
  <tile id="9">
@@ -93,7 +93,7 @@
  </tile>
  <tile id="18">
   <properties>
-   <property name="ObjectType" value="wall"/>
+   <property name="ObjectType" value="stairs_up"/>
   </properties>
  </tile>
  <tile id="19">

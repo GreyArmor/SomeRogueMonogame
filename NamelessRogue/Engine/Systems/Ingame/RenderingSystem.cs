@@ -173,6 +173,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("Wall", atlasTileData);
             characterToTileDictionary.Add("Door", atlasTileData);
             characterToTileDictionary.Add("Window", atlasTileData);
+            characterToTileDictionary.Add("Stairs", new AtlasTileData(8, 0));
 
             characterToTileDictionary.Add("Table", new AtlasTileData(2, 8));
 
