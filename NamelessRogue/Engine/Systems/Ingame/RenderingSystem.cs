@@ -162,7 +162,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             
 
-            var atlasTileData = new AtlasTileData(9, 9);
+            var atlasTileData = new AtlasTileData(8, 9);
             characterToTileDictionary = new Dictionary<String, AtlasTileData>();
             characterToTileDictionary.Add("Nothingness", atlasTileData);
             characterToTileDictionary.Add("Dirt", new AtlasTileData(2, 4));
@@ -288,7 +288,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
                 FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
                 FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
-                RenderScreen(game, screen, game.GetSettings());
+                RenderScreen(game, screen, game.GetSettings(), true);
+                RenderScreen(game, screen, game.GetSettings(), false);
             }
         }
 
@@ -457,14 +458,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         }
                         else
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Nothingness";
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].TerrainId = "Nothingness";
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
                         }
 
                     }
                     else
                     {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Nothingness";
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].TerrainId = "Nothingness";
                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
                     }
                 }
@@ -499,7 +500,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         void GetTerrainTile(Screen screen, Terrain terrain, Point point)
         {
          
-                screen.ScreenBuffer[point.X, point.Y].ObjectId = terrain.Representation.ObjectID;
+                screen.ScreenBuffer[point.X, point.Y].TerrainId = terrain.Representation.ObjectID;
                 screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.CharColor;
                 screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
         }
@@ -602,7 +603,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        private void RenderScreen(NamelessGame game, Screen screen, GameSettings settings)
+        private void RenderScreen(NamelessGame game, Screen screen, GameSettings settings, bool terrain = true)
         {
             effect.Parameters["tileAtlas"].SetValue(tileAtlas);
             var projectionMatrix = //Matrix.CreateOrthographic(game.getActualWidth(),game.getActualHeight(),0,1);
@@ -614,12 +615,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
             effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             var device = game.GraphicsDevice;
-            Stopwatch s = Stopwatch.StartNew();
+            //Stopwatch s = Stopwatch.StartNew();
             for (int y = 0; y < settings.GetHeightZoomed(); y++)
             {
                 for (int x = 0; x < settings.GetWidthZoomed(); x++)
                 {
-                    string objectId = screen.ScreenBuffer[x, y].ObjectId;
+                    string objectId = terrain? screen.ScreenBuffer[x, y].TerrainId : screen.ScreenBuffer[x, y].ObjectId;
                     if (objectId == null)
                     {
                         objectId = "Nothingness";
@@ -640,7 +641,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         );
                 }
             }
-            s.Stop();
+           //s.Stop();
             var tileModel = backgroundModel;
 			effect.CurrentTechnique = effect.Techniques["Background"];
 			foreach (EffectPass pass in effect.CurrentTechnique.Passes)

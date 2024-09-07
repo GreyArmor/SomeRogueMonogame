@@ -9,6 +9,7 @@ namespace NamelessRogue.Engine.Components.Rendering
             CharColor = new Color(0,0,0,0);
             BackGroundColor = new Color(0,0,0,0);
         }
+        public string TerrainId = "Nothingness";
         public string ObjectId = "Nothingness";
         public  Engine.Utility.Color CharColor;
         public Engine.Utility.Color BackGroundColor;
