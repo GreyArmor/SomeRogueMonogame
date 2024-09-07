@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Sounds;
@@ -30,13 +31,17 @@ namespace NamelessRogue.Engine.UI
 		System.Numerics.Vector2 buttonSize;
 		System.Numerics.Vector2 shiftVector;
 		System.Numerics.Vector2 sidebarSize;
-		int buttonCount = 4;
+        private Texture2D texture;
+        int buttonCount = 4;
 		public IngameScreen(NamelessGame game) : base(game)
 		{
 			buttonSize = new System.Numerics.Vector2(game.Settings.HudWidth - 10, 50);
 			shiftVector = new System.Numerics.Vector2(0, buttonSpacing.Y + buttonSize.Y);
 			sidebarSize = new System.Numerics.Vector2(game.Settings.HudWidth, shiftVector.Y + buttonSize.Y * buttonCount);
-		}
+            
+            texture = game.Content.Load<Texture2D>("DfFont");
+
+        }
 		public static int rowIndexEnd = 33;
 		public static int verticesPerRow = 36;
         public static int substractionCoef = 1;
@@ -60,13 +65,9 @@ namespace NamelessRogue.Engine.UI
 
 					ImGui.SetCursorPos(shiftVector);
 					if (ButtonWithSound("Open inventory", buttonSize)) { Action = HudAction.OpenInventory; }
-                   
-					ImGui.SliderInt("rowIndexEnd", ref rowIndexEnd, 0, 100);
-                    ImGui.SliderInt("verticesPerRow", ref verticesPerRow, 0, 100);
-                    ImGui.SliderInt("substractionCoef", ref substractionCoef, -50, 50);
-
 
                     ImGui.PopFont();
+				
 				}
 				ImGui.EndChild();
 			}
