@@ -10,19 +10,19 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "ApartmentBlockFloor.tmx": {
-            "scale": 0.75,
-            "selectedLayer": 0,
+            "scale": 1.5,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 606.6666666666665,
-                "y": 343.99999999999994
+                "x": 1387.3333333333333,
+                "y": 292.66666666666663
             }
         },
         "ApartmentBlockFloor_backup.tmx": {
             "scale": 0.20827636718749998,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2213.4052279920293,
-                "y": 2047.759934357051
+                "x": 2050.1605907865433,
+                "y": 2050.1605907865437
             }
         },
         "Visualizer.tsx": {

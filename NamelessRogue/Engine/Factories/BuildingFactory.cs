@@ -76,7 +76,8 @@ namespace NamelessRogue.Engine.Factories
             var tileset = new TiledTileset("Content\\Buildings\\tileset2.tsx");
 
             // Retrieving objects or layers can be done using Linq or a for loop
-            var myLayer = map.Layers.First(l => l.Name == "main");
+            var mainLayer = map.Layers.First(l => l.Name == "main");
+            var animatedLayer = map.Layers.First(l => l.Name == "animated");
             int buildingSize = 60;
 
             var postProcessingArray = new bool[buildingSize, buildingSize];
@@ -86,7 +87,7 @@ namespace NamelessRogue.Engine.Factories
                 for (int loopX = 0; loopX < buildingSize; loopX++)
                 {
                     var gameTile = worldProvider.GetTile(x + loopX, y + loopY, z);
-                    var tileId = myLayer.Data[loopX + (loopY * buildingSize)];
+                    var tileId = mainLayer.Data[loopX + (loopY * buildingSize)];
                     if(tileId != 0)
                     {
                         var tile = tileset.Tiles[tileId-1];
@@ -111,7 +112,7 @@ namespace NamelessRogue.Engine.Factories
                 }
             }
 
-                    ////first determine which walls are corners and intersections
+            ////first determine which walls are corners and intersections
             for (int loopY = 0; loopY < buildingSize; loopY++)
             {
                 for (int loopX = 0; loopX < buildingSize; loopX++)
@@ -150,17 +151,6 @@ namespace NamelessRogue.Engine.Factories
                 }
             }
 
-
-            //then determine which walls are left, right, top, bottom and which are internal
-            for (int i = 0; i < buildingSize; i++)
-            {
-                for (int j = 0; j < buildingSize; j++)
-                {
-                    
-                }
-            }
-
-
             for (int loopY = 0; loopY < buildingSize; loopY++)
             {
                 for (int loopX = 0; loopX < buildingSize; loopX++)
@@ -177,7 +167,7 @@ namespace NamelessRogue.Engine.Factories
                         gameTile.Terrain = TerrainTypes.FloorGrate;
                     }
 
-                    var tileId = myLayer.Data[loopX + (loopY * buildingSize)];
+                    var tileId = mainLayer.Data[loopX + (loopY * buildingSize)];
                     if (tileId != 0)
                     {
                         var tile = tileset.Tiles[tileId - 1];
