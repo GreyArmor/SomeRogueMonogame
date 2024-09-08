@@ -167,47 +167,70 @@ namespace NamelessRogue.Engine.Factories
                         gameTile.Terrain = TerrainTypes.FloorGrate;
                     }
 
-                    var tileId = mainLayer.Data[loopX + (loopY * buildingSize)];
-                    if (tileId != 0)
+                    //add static objects
                     {
-                        var tile = tileset.Tiles.First(x=>x.Id == tileId-1);
-                        var tileObjectType = tile.Properties[0].Value;
-                        switch (tileObjectType)
+                        var tileId = mainLayer.Data[loopX + (loopY * buildingSize)];
+                        if (tileId != 0)
                         {
-                            case "wall":
-                                {
-                                    var wall = TerrainFurnitureFactory.GetFurniture("wall");
-                                    var drawable = wall.GetComponentOfType<Drawable>();
-                                    drawable.TilesetPosition = tilesetPositions[loopY, loopX];
-                                    gameTile.AddEntity(wall);
-                                    namelessGame.AddEntity(wall);
-                                }
-                                break;
-                            case "door":
-                                {
-                                    var entity = CreateDoor(x + loopX, y + loopY, z);
-                                    var drawable = entity.GetComponentOfType<Drawable>();
-                                    drawable.TilesetPosition = tilesetPositions[loopY, loopX];
-                                    gameTile.AddEntity(entity);
-                                    namelessGame.AddEntity(entity);
-                                }
-                                break;
-                            case "window":
-                                {
-                                    var entity = CreateWindow(x + loopX, y + loopY, z);
-                                    var drawable = entity.GetComponentOfType<Drawable>();
-                                    drawable.TilesetPosition = tilesetPositions[loopY, loopX];
-                                    gameTile.AddEntity(entity);
-                                    namelessGame.AddEntity(entity);
-                                }
-                                break;
-                            default:
-                                {
-                                    var entity = TerrainFurnitureFactory.GetFurniture(tileObjectType);
-                                    gameTile.AddEntity(entity);
-                                    namelessGame.AddEntity(entity);
-                                }
-                                break;
+                            var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
+                            var tileObjectType = tile.Properties[0].Value;
+                            switch (tileObjectType)
+                            {
+                                case "wall":
+                                    {
+                                        var wall = TerrainFurnitureFactory.GetFurniture("wall");
+                                        var drawable = wall.GetComponentOfType<Drawable>();
+                                        drawable.TilesetPosition = tilesetPositions[loopY, loopX];
+                                        gameTile.AddEntity(wall);
+                                        namelessGame.AddEntity(wall);
+                                    }
+                                    break;
+                                case "door":
+                                    {
+                                        var entity = CreateDoor(x + loopX, y + loopY, z);
+                                        var drawable = entity.GetComponentOfType<Drawable>();
+                                        drawable.TilesetPosition = tilesetPositions[loopY, loopX];
+                                        gameTile.AddEntity(entity);
+                                        namelessGame.AddEntity(entity);
+                                    }
+                                    break;
+                                case "window":
+                                    {
+                                        var entity = CreateWindow(x + loopX, y + loopY, z);
+                                        var drawable = entity.GetComponentOfType<Drawable>();
+                                        drawable.TilesetPosition = tilesetPositions[loopY, loopX];
+                                        gameTile.AddEntity(entity);
+                                        namelessGame.AddEntity(entity);
+                                    }
+                                    break;
+                                default:
+                                    {
+
+                                        var entity = TerrainFurnitureFactory.GetFurniture(tileObjectType);
+                                        if (entity != null)
+                                        {
+                                            gameTile.AddEntity(entity);
+                                            namelessGame.AddEntity(entity);
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    //add animated objects
+                    {
+                        var tileId = animatedLayer.Data[loopX + (loopY * buildingSize)];
+                        if (tileId != 0)
+                        {
+                            var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
+                            var tileObjectType = tile.Properties[0].Value;
+
+                            var entity = TerrainFurnitureFactory.GetAnimatedFurniture(tileObjectType);
+                            if (entity != null)
+                            {
+                                gameTile.AddEntity(entity);
+                                namelessGame.AddEntity(entity);
+                            };                            
                         }
                     }
                 }

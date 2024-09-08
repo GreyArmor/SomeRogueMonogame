@@ -513,7 +513,7 @@
  </tile>
  <tile id="202">
   <properties>
-   <property name="ObjectType" value="Computer"/>
+   <property name="ObjectType" value="computer1"/>
   </properties>
  </tile>
  <tile id="360">

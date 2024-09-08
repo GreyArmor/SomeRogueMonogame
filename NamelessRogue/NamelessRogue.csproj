@@ -111,6 +111,12 @@
     <None Update="Content\MusicPack\World Map.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Sprites\AnimatedFurniture\computer1.ase">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sprites\AnimatedFurniture\computer2.ase">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Sprites\ZeroAndOne.ase">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

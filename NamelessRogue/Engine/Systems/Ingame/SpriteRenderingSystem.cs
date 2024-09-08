@@ -205,45 +205,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings,
-            IWorldProvider world)
-        {
-            int camX = camera.getPosition().X;
-            int camY = camera.getPosition().Y;
-            if (angle > 360)
-            {
-                angle = 0;
-            }
 
-            angle += step;
-
-            for (int x = camX; x < settings.GetWidthZoomed() + camX; x++)
-            {
-                for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
-                {
-                    Point screenPoint = camera.PointToScreen(x, y);
-                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible && x > 0 && y > 0)
-                    {
-                        Tile tileToDraw = world.GetTile(x, y, playerPosZ);
-                        GetTerrainTile(screen, TerrainLibrary.Terrains[tileToDraw.Terrain], screenPoint);
-
-                    }
-                    else
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Nothingness";
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                    }
-                }
-            }
-        }
-
-        void GetTerrainTile(Screen screen, Terrain terrain, Point point)
-        {
-
-            screen.ScreenBuffer[point.X, point.Y].ObjectId = terrain.Representation.ObjectID;
-            screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.CharColor;
-            screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
-        }
 
 
         private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
@@ -353,7 +315,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     int tileWidth = game.GetSettings().GetFontSizeZoomed();
                     if (SpriteLibrary.SpritesStatic.TryGetValue(screen.ScreenBuffer[x, y].ObjectId, out var sprite))
                     {
-                        game.Batch.Draw(sprite.TextureRegion, new Vector2(x * tileHeight, y * tileWidth - (32 / settings.Zoom)), screen.ScreenBuffer[x, y].CharColor.ToXnaColor(), 0, Vector2.Zero, new Vector2(1f / settings.Zoom), SpriteEffects.None, 0);
+                        game.Batch.Draw(sprite.TextureRegion, new Vector2((x * tileWidth), (y * tileHeight) + tileHeight), screen.ScreenBuffer[x, y].CharColor.ToXnaColor(), 0, Vector2.Zero, new Vector2(1f / settings.Zoom), SpriteEffects.None, 0);
                     }
                 }
             }

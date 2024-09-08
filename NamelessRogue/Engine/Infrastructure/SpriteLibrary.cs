@@ -48,7 +48,7 @@ namespace NamelessRogue.Engine.Infrastructure
                     sprite.Add(animTag, animation);
                 }
 
-                sprite.SetCurrent("Idle");
+                sprite.SetCurrent("idle");
                 SpritesAnimatedIdle.Add(id, sprite);
             }
 
@@ -61,6 +61,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
             _addAnimatedSprite("ZeroAndOne", "Content\\Sprites\\ZeroAndOne.ase");
             _addAnimatedSprite("ZeroAndOne2", "Content\\Sprites\\ZeroAndOne2.ase");
+            _addAnimatedSprite("computer1", "Content\\Sprites\\AnimatedFurniture\\computer1.ase");
             //_addAnimatedSprite("cacti", "Doodads\\cacti.sf");
             //_addAnimatedSprite("palmTree", "Doodads\\palmTree.sf");
             //_addAnimatedSprite("stump", "Doodads\\stump.sf");

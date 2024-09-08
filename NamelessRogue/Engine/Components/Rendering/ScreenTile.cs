@@ -11,6 +11,7 @@ namespace NamelessRogue.Engine.Components.Rendering
         }
         public string TerrainId = "Nothingness";
         public string ObjectId = "Nothingness";
+        public string SpriteId = "Nothingness";
         public  Engine.Utility.Color CharColor;
         public Engine.Utility.Color BackGroundColor;
         public bool isVisible;

@@ -22,10 +22,10 @@ using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
 using Color = NamelessRogue.Engine.Utility.Color;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using MonoGame.Extended.Graphics;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-
 
     public enum TilesetModifier
     {
@@ -291,6 +291,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
                 RenderScreen(game, screen, game.GetSettings(), true);
                 RenderScreen(game, screen, game.GetSettings(), false);
+                game.Batch.Begin();
+                RenderSpriteScreen(game, screen, game.GetSettings(), gameTime);
+                game.Batch.End();
             }
         }
 
@@ -420,9 +423,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 var furniture = entity.GetComponentOfType<Furniture>();
                                 var drawable = entity.GetComponentOfType<Drawable>();
-                                if (furniture != null && drawable != null)
+                                var sprited = entity.GetComponentOfType<SpritedObject>();
+                                if (furniture != null && drawable != null && sprited == null)
                                 {
                                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID + drawable.TilesetPosition;
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                                }
+                                else if(furniture != null && drawable != null && sprited != null)
+                                {
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].SpriteId = drawable.ObjectID + drawable.TilesetPosition;
                                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                                 }
                             }
@@ -492,6 +501,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     Point screenPoint = camera.PointToScreen(x, y);
 
                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Nothingness";
+                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].TerrainId = "Nothingness";
+                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].SpriteId = "Nothingness";
                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
 
                 }
@@ -661,6 +672,27 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 pass.Apply();
                 device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
                      tileModel.Indices.ToArray(), 0, tileModel.Indices.Count()/3, this.VertexDeclaration);
+            }
+        }
+
+        private void RenderSpriteScreen(NamelessGame game, Screen screen, GameSettings settings, GameTime gameTime)
+        {
+            for (int y = 0; y < settings.GetHeightZoomed(); y++)
+            {
+                for (int x = 0; x < settings.GetWidthZoomed(); x++)
+                {
+                    if(screen.ScreenBuffer[x, y].SpriteId == "Nothingness")
+                    {
+                        continue;
+                    }
+                    int tileHeight = game.GetSettings().GetFontSizeZoomed();
+                    int tileWidth = game.GetSettings().GetFontSizeZoomed();
+                    if (SpriteLibrary.SpritesAnimatedIdle.TryGetValue(screen.ScreenBuffer[x, y].SpriteId, out var sprite))
+                    {
+                        sprite.Update(gameTime);
+                        sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(1f / settings.Zoom), Microsoft.Xna.Framework.Color.White);
+                    }
+                }
             }
         }
 

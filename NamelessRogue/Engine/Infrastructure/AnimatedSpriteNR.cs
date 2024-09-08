@@ -45,10 +45,20 @@ namespace NamelessRogue.Engine.Infrastructure
             currentAnimation.SetFrame(frame);
         }
 
-        public void Draw(NamelessGame game, GameTime time, Vector2 position, Vector2 scale, Microsoft.Xna.Framework.Color color  = default)
+        public void Draw(NamelessGame game, GameTime time, Vector2 position, Vector2 scale, Microsoft.Xna.Framework.Color color = default)
         {
             currentAnimation.Scale = scale;
-            currentAnimation.Color = color;
+
+            if(color == default)
+            {
+                currentAnimation.Color = Microsoft.Xna.Framework.Color.White;
+            }
+            else
+            {
+                currentAnimation.Color = color;
+            }
+
+           
             currentAnimation.Draw(game.Batch, position);
         }
     }

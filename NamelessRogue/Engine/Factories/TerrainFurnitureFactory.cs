@@ -24,10 +24,15 @@ namespace NamelessRogue.Engine.Factories
     public static class TerrainFurnitureFactory
     {
         private static Dictionary<string, Entity> FurnitureDisctionary = new Dictionary<string,Entity>();
+        private static Dictionary<string, Entity> AnimatedFurnitureDisctionary = new Dictionary<string, Entity>();
 
         public static Entity GetFurniture(string id)
         {
             return (Entity)(FurnitureDisctionary.TryGetValue(id, out var entity) ? entity.CloneEntity() : null);
+        }
+        public static Entity GetAnimatedFurniture(string id)
+        {
+            return (Entity)(AnimatedFurnitureDisctionary.TryGetValue(id, out var entity) ? entity.CloneEntity() : null);
         }
         public static void CreateFurnitureEntities(NamelessGame game)
         {
@@ -50,6 +55,25 @@ namespace NamelessRogue.Engine.Factories
                 return entity;
             }
 
+            Entity _addAnimatedFurniture(string id, string descriptionName, bool occupiesTile, bool blocksVision)
+            {
+                Entity entity = new Entity();
+                entity.AddComponent(new Drawable(id, new Engine.Utility.Color(1f)));
+                entity.AddComponent(new Description(descriptionName, ""));
+                if (occupiesTile)
+                {
+                    entity.AddComponent(new OccupiesTile());
+                }
+                if (blocksVision)
+                {
+                    entity.AddComponent(new BlocksVision());
+                }
+                entity.AddComponent(new Furniture());
+                entity.AddComponent(new SpritedObject());
+                AnimatedFurnitureDisctionary.Add(id, entity);
+                return entity;
+            }
+
 
             _addFurniture("wall", "Wall", true, true);
             _addFurniture("window", "Window", true, false);
@@ -60,6 +84,8 @@ namespace NamelessRogue.Engine.Factories
             _addFurniture("box", "Box", false, false);
             _addFurniture("table", "Table", true, false);
             _addFurniture("garbage", "Garbage", false, false);
+
+            _addAnimatedFurniture("computer1", "Computer", true, false);
 
 
             var stairsDown = _addFurniture("stairs_down", "Stairs", false, false);
