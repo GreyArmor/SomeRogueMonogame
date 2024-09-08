@@ -13,16 +13,16 @@
             "scale": 1.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1387.3333333333333,
-                "y": 292.66666666666663
+                "x": 960.3333333333333,
+                "y": 959.6666666666665
             }
         },
         "ApartmentBlockFloor_backup.tmx": {
             "scale": 0.20827636718749998,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2050.1605907865433,
-                "y": 2050.1605907865437
+                "x": 2047.759934357051,
+                "y": 2047.759934357051
             }
         },
         "Visualizer.tsx": {
@@ -39,7 +39,7 @@
         },
         "tileset2.tsx": {
             "scaleInDock": 1.5,
-            "scaleInEditor": 3
+            "scaleInEditor": 1
         },
         "untitled.tmx": {
             "scale": 0.33,
@@ -62,7 +62,6 @@
     "map.width": 64,
     "openFiles": [
         "ApartmentBlockFloor.tmx",
-        "symbols.tsx",
         "ApartmentBlockFloor_backup.tmx",
         "tileset2.tsx"
     ],
@@ -70,8 +69,8 @@
     "recentFiles": [
         "tileset2.tsx",
         "ApartmentBlockFloor_backup.tmx",
-        "symbols.tsx",
         "ApartmentBlockFloor.tmx",
+        "symbols.tsx",
         "untitled.tmx",
         "surfaces.tsx",
         "urizen_with_properties.tsx",

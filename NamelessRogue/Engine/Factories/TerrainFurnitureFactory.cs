@@ -51,19 +51,21 @@ namespace NamelessRogue.Engine.Factories
             }
 
 
-            _addFurniture("Wall", "Wall", true, true);
-            _addFurniture("Window", "Window", true, false);
-            _addFurniture("Bed", "Bed", false, false);
-            _addFurniture("Toilet", "Toilet", false, false);
-            _addFurniture("Shower", "Shower", false, false);
-            _addFurniture("Barrel", "Barrel", false, false);
-            _addFurniture("Box", "Box", false, false);
-            _addFurniture("Table", "Table", true, false);
-            _addFurniture("Garbage", "Garbage", false, false);
+            _addFurniture("wall", "Wall", true, true);
+            _addFurniture("window", "Window", true, false);
+            _addFurniture("bed", "Bed", false, false);
+            _addFurniture("toilet", "Toilet", false, false);
+            _addFurniture("shower", "Shower", false, false);
+            _addFurniture("barrel", "Barrel", false, false);
+            _addFurniture("box", "Box", false, false);
+            _addFurniture("table", "Table", true, false);
+            _addFurniture("garbage", "Garbage", false, false);
 
 
-            var stairs = _addFurniture("Stairs", "Stairs", false, false);
-            stairs.AddComponent(new StairsComponent());
+            var stairsDown = _addFurniture("stairs_down", "Stairs", false, false);
+            stairsDown.AddComponent(new StairsComponent());
+            var stairsUp = _addFurniture("stairs_up", "Stairs", false, false);
+            stairsUp.AddComponent(new StairsComponent());
         }
 
         public static Entity GetExteriorEntities(NamelessGame game, Tile terrainTile)
