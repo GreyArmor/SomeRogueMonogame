@@ -303,12 +303,12 @@
  </tile>
  <tile id="120">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="targetSmall"/>
   </properties>
  </tile>
  <tile id="121">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="targetBig"/>
   </properties>
  </tile>
  <tile id="122">

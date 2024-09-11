@@ -84,6 +84,11 @@ namespace NamelessRogue.Engine.Input
                                 intent.Intention = IntentEnum.ZoomIn;
                             }
                             break;
+                        case Keys.L:
+                            {
+                                intent.Intention = IntentEnum.LookAtMode;
+                            }
+                            break;
                         case Keys.OemComma:
                             {
                                 if(lastCommand=='<')

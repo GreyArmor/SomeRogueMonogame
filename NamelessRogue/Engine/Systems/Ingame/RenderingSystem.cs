@@ -23,6 +23,8 @@ using Color = NamelessRogue.Engine.Utility.Color;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using MonoGame.Extended.Graphics;
+using MonoGame.Extended.ECS;
+using static Assimp.Metadata;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -171,6 +173,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("Sidewalk", new AtlasTileData(0, 3));
             characterToTileDictionary.Add("PaintedAsphault", new AtlasTileData(2, 3));
             characterToTileDictionary.Add("FloorGrate", new AtlasTileData(0, 4));
+            characterToTileDictionary.Add("smallCursor", new AtlasTileData(0, 6));
+            characterToTileDictionary.Add("Cursor", new AtlasTileData(1, 6));
+
             characterToTileDictionary.Add("wall", atlasTileData);
             characterToTileDictionary.Add("door", atlasTileData);
             characterToTileDictionary.Add("window", atlasTileData);
@@ -521,6 +526,50 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
             NamelessGame game)
         {
+            {
+                var cursorEntity = game.CursorEntity;
+                Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
+
+                LineToPlayer lineToPlayer = cursorEntity.GetComponentOfType<LineToPlayer>();
+                Drawable cursorDrawable = cursorEntity.GetComponentOfType<Drawable>();
+                if (cursorDrawable.Visible)
+                {
+                    {
+                        Point screenPoint = camera.PointToScreen(cursorPosition.X, cursorPosition.Y);
+                        int x = screenPoint.X;
+                        int y = screenPoint.Y;
+                        if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
+                        {
+                            if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
+                            {
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = cursorDrawable.ObjectID;
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = cursorDrawable.CharColor;
+                            }
+                        }
+                    }
+
+                    if (lineToPlayer != null)
+                    {
+                        Position playerPosition =
+                            game.PlayerEntity.GetComponentOfType<Position>();
+                        List<Point> line = PointUtil.getLine(playerPosition.Point.ToPoint(), cursorPosition.Point.ToPoint());
+                        for (int i = 0; i < line.Count - 1; i++)
+                        {
+                            //how is this switched?
+                            Point p = new Point(line[i].Y, line[i].X);
+                            Point screenPoint = camera.PointToScreen(p.X, p.Y);
+                            int x = screenPoint.X;
+                            int y = screenPoint.Y;
+                            if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
+                            {
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = i == (line.Count()-1)? "Cursor" : "smallCursor";
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = cursorDrawable.CharColor;
+                            }
+                        }
+                    }
+                }
+            }
+
             List<IEntity> characters = new List<IEntity>();
             foreach (IEntity entity in RegisteredEntities)
             {
@@ -533,52 +582,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     continue;
                 }
                 characters.Add(entity);
-                //Position position = entity.GetComponentOfType<Position>();
-
-                //LineToPlayer lineToPlayer = entity.GetComponentOfType<LineToPlayer>();
-                //if (drawable.Visible)
-                //{
-                //    Point screenPoint = camera.PointToScreen(position.X, position.Y);
-                //    int x = screenPoint.X;
-                //    int y = screenPoint.Y;
-                //    if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
-                //    {
-                //        if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
-                //        {                                  
-                //            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID + drawable.TilesetPosition;
-                //            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
-                //        }                                  
-                //        else                               
-                //        {                                  
-                //            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = drawable.ObjectID + drawable.TilesetPosition;
-                //            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
-                //            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
-                //        }
-                //    }
-
-                //}
-
-                //if (lineToPlayer != null)
-                //{
-                //    if (drawable.Visible)
-                //    {
-                //        Position playerPosition =
-                //            game.PlayerEntity.GetComponentOfType<Position>();
-                //        List<Point> line = PointUtil.getLine(playerPosition.Point, position.Point);
-                //        for (int i = 1; i < line.Count - 1; i++)
-                //        {
-                //            Point p = line[i];
-                //            Point screenPoint = camera.PointToScreen(p.X, p.Y);
-                //            int x = screenPoint.X;
-                //            int y = screenPoint.Y;
-                //            if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
-                //            {
-                //                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = "Cursor";
-                //                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
-                //            }
-                //        }
-                //    }
-                //}
             }
 
             foreach (IEntity entity in characters)
