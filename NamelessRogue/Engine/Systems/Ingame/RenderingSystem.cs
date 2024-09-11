@@ -538,7 +538,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         Point screenPoint = camera.PointToScreen(cursorPosition.X, cursorPosition.Y);
                         int x = screenPoint.X;
                         int y = screenPoint.Y;
-                        if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
+                        if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
                         {
                             if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                             {
@@ -560,7 +560,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             Point screenPoint = camera.PointToScreen(p.X, p.Y);
                             int x = screenPoint.X;
                             int y = screenPoint.Y;
-                            if (x >= 0 && x < settings.GetWidth() && y >= 0 && y < settings.GetHeight())
+                            if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
                             {
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].ObjectId = i == (line.Count()-1)? "Cursor" : "smallCursor";
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = cursorDrawable.CharColor;
