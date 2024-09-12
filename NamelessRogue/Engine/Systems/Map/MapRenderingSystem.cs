@@ -158,7 +158,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
         public override void Update(GameTime gameTime, NamelessGame game)
         {
-
+            /*
             this.gameTime = (long)gameTime.TotalGameTime.TotalMilliseconds;
 
             game.GraphicsDevice.BlendState = BlendState.AlphaBlend;
@@ -298,7 +298,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
 
 
-            }
+            }*/
 
         }
 
@@ -317,6 +317,7 @@ namespace NamelessRogue.Engine.Systems.Map
             WorldSettings worldSEttings,
             WorldBoard world)
         {
+            /*
             int camX = camera.getPosition().X;
             int camY = camera.getPosition().Y;
             if (angle > 360)
@@ -351,10 +352,12 @@ namespace NamelessRogue.Engine.Systems.Map
                     GetTerrainTile(screen, screenPoint, world.WorldTiles[x, y]);
                 }
             }
+            */
         }
 
         void GetTerrainTile(Screen screen, Point point, WorldTile tile)
         {
+            /*
             screen.ScreenBuffer[point.X, point.Y].ObjectId = BiomesLibrary.Biomes[tile.Biome].Representation.ObjectID;
             screen.ScreenBuffer[point.X, point.Y].CharColor = BiomesLibrary.Biomes[tile.Biome].Representation.CharColor;
             screen.ScreenBuffer[point.X, point.Y].BackGroundColor = BiomesLibrary.Biomes[tile.Biome].Representation.BackgroundColor;
@@ -397,6 +400,7 @@ namespace NamelessRogue.Engine.Systems.Map
                     screen.ScreenBuffer[point.X, point.Y].CharColor = tile.Artifact.CharColor;
                 }
             }
+            */
         }
 
         private void RenderScreen(NamelessGame gameInstance, Screen screen, int tileSize, GameSettings settings)
