@@ -196,7 +196,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                            
             characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.WallVertical0, new AtlasTileData(0, 1));
             characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.WallVertical1, new AtlasTileData(0, 1));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.WallVertical2, new AtlasTileData(0, 1));
+            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.WallVertical2, new AtlasTileData(4, 0));
                                            
             characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.CornerTopLeft, new AtlasTileData(0, 0));
             characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.CornerBotLeft, new AtlasTileData(0, 2));
