@@ -74,11 +74,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     }
                                    
                                     int newX =
-                                              intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                              intent.Intention == IntentEnum.MoveTopLeft ? position.X - 1 :
-                                              intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
-                                              intent.Intention == IntentEnum.MoveTopRight ? position.X + 1 :
-                                              position.X;
+                                        intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
+                                        intent.Intention == IntentEnum.MoveTopLeft ? position.X - 1 :
+                                        intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
+                                        intent.Intention == IntentEnum.MoveTopRight ? position.X + 1 :
+                                        position.X;
                                     int newY =
                                         intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
                                         intent.Intention == IntentEnum.MoveBottomRight ? position.Y + 1 :

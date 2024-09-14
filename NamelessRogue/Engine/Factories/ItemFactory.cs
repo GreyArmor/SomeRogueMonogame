@@ -12,6 +12,28 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Factories
 {
-    public  class ItemFactory {
+    public static class ItemFactory {
+
+        public static Entity CreateGun(NamelessGame game)
+        {
+            Entity entity = new Entity();
+
+
+            entity.AddComponent(new Drawable("gunIcon", new Color(1f)));
+            entity.AddComponent(new Item(ItemType.Weapon, 0, ItemQuality.Normal, 1, 1, "CorpoCorp Inc."));
+            entity.AddComponent(new WeaponStats(1, 10, 10, AttackType.Ranged, AmmoType.LowCaliber, 20, 0));
+          //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
+            return entity;
+        }
+        public static Entity CreateRedGun(NamelessGame game)
+        {
+            Entity entity = new Entity();
+            entity.AddComponent(new Drawable("gunRedIcon", new Color(1f)));
+            entity.AddComponent(new Item(ItemType.Weapon, 0, ItemQuality.Normal, 1, 1, "CorpoCorp Inc."));
+            entity.AddComponent(new WeaponStats(1, 10, 10, AttackType.Ranged, AmmoType.LowCaliber, 20, 0));
+            //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
+            return entity;
+
+        }
     }
 }

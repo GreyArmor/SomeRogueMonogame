@@ -23,9 +23,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
 
     public class EquipmentSlots : Component
     {       
-
         public List<Tuple<Slot, EquipmentSlot>> Slots { get; set; } = new List<Tuple<Slot, EquipmentSlot>>();
-
         public ItemsHolder Holder { get; }
         private NamelessGame Game;
 

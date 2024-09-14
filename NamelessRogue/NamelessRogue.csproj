@@ -78,6 +78,9 @@
     <None Update="Content\Buildings\symbols.tsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Buildings\test.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Buildings\tileset2.tsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

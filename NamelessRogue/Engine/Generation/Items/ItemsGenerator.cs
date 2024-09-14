@@ -48,10 +48,7 @@ namespace NamelessRogue.Engine.Generation.Items
                 Stats = stats;
                 Representation = representation;
                 ItemData = itemData;
-            }
-
-            
-
+            }         
         }
 
         public IEntity GenerateWeapon(WeaponGenerationParameters parameters)

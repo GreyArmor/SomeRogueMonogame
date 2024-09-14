@@ -254,11 +254,9 @@ namespace NamelessRogue.shell
 				int x, y;
 				if (firsTile != null)
 				{
-
 					//place everything at the center of newly generated settlement;
 					x = firsTile.Settlement.Concrete.Center.X;
 					y = firsTile.Settlement.Concrete.Center.Y;
-
 				}
 				else
 				{
@@ -308,29 +306,39 @@ namespace NamelessRogue.shell
 				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, 0, this);
 				PlayerEntity = player;
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
-/*
-				var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 2, 2);
+				/*
+								var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 2, 2);
 
-				CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "1", this);
+								CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "1", this);
 
-				rect = new Rectangle(TestMapPosition.Point.X - 60, TestMapPosition.Point.Y + 10, 20, 10);
+								rect = new Rectangle(TestMapPosition.Point.X - 60, TestMapPosition.Point.Y + 10, 20, 10);
 
-				CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "2", this);
+								CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "2", this);
 
-				rect = new Rectangle(TestMapPosition.Point.X - 80, TestMapPosition.Point.Y + 10, 20, 10);
+								rect = new Rectangle(TestMapPosition.Point.X - 80, TestMapPosition.Point.Y + 10, 20, 10);
 
-				CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "3", this);
+								CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "3", this);
 
-				rect = new Rectangle(TestMapPosition.Point.X - 100, TestMapPosition.Point.Y + 10, 20, 10);
+								rect = new Rectangle(TestMapPosition.Point.X - 100, TestMapPosition.Point.Y + 10, 20, 10);
 
-				CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "4", this);
+								CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "4", this);
 
 
 
-				rect = new Rectangle(TestMapPosition.Point.X + 10, TestMapPosition.Point.Y + 10, 2, 2);
-				*/
-			//	CharacterFactory.CreateNpcField(rect, -Vector2.UnitY, "Blue", "2", this);
+								rect = new Rectangle(TestMapPosition.Point.X + 10, TestMapPosition.Point.Y + 10, 2, 2);
+								*/
+				//	CharacterFactory.CreateNpcField(rect, -Vector2.UnitY, "Blue", "2", this);
+				var itemsHolder = player.GetComponentOfType<ItemsHolder>();
 
+                for (int i = 0; i < 20; i++)
+				{
+					var gun = ItemFactory.CreateGun(this);
+                    itemsHolder.Items.Add(gun);
+
+                    gun = ItemFactory.CreateRedGun(this);
+                    itemsHolder.Items.Add(gun);
+
+                }
 			
 
 				FollowedByCameraEntity = player;

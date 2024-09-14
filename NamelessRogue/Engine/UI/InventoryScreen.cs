@@ -52,6 +52,7 @@ namespace NamelessRogue.Engine.UI
                         break;
                     }
                     var item = itemQueue.Dequeue();
+                    Cells[x, y] = new GridCell();
                     Cells[x, y].GridPosition = new Point(x, y);
                     Cells[x, y].ItemId = item.Id;
                 }
@@ -89,7 +90,7 @@ namespace NamelessRogue.Engine.UI
                         for (int x = 0; x < InventoryGridModel.Width; x++)
                         {
                             var cell = InventoryGridModel.Cells[x, y];
-                            string itemId = "item";
+                            string itemId = "";
                           
                             if (cell != null)
                             {
@@ -106,7 +107,10 @@ namespace NamelessRogue.Engine.UI
                                 ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(32, 32));
                             }
                             ImGui.SetCursorPos(new System.Numerics.Vector2(34 * x, 34 * y));
-                            ImGui.Image(ImGuiImageLibrary.Textures["gunIcon"], new Vector2(32, 32));
+                            if (itemId! != "")
+                            {
+                                ImGui.Image(ImGuiImageLibrary.Textures[itemId], new Vector2(32, 32));
+                            }
 
                         }
                     }
