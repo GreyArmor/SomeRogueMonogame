@@ -11,15 +11,13 @@ namespace NamelessRogue.Engine.Components.ItemComponents
     public enum Slot
     {
         Head,
+        Face,
         Torso,
+        Back,
         LefHand,
         RightHand,
         Legs,
         Feet,
-        Ring1,
-        Ring2,
-        Neck,
-        Hands,
     }
 
 
@@ -35,6 +33,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
         {
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Head, new EquipmentSlot(Slot.Head)));
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Torso, new EquipmentSlot(Slot.Torso)));
+            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Face, new EquipmentSlot(Slot.Torso)));
 
             var slotLeft = new EquipmentSlot(Slot.LefHand);
             var slotRight = new EquipmentSlot(Slot.RightHand);
@@ -44,10 +43,8 @@ namespace NamelessRogue.Engine.Components.ItemComponents
 
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Feet, new EquipmentSlot(Slot.Feet)));
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Legs, new EquipmentSlot(Slot.Legs)));
-            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Neck, new EquipmentSlot(Slot.Neck)));
-            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Ring1, new EquipmentSlot(Slot.Ring1)));
-            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Ring2, new EquipmentSlot(Slot.Ring2)));
-            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Hands, new EquipmentSlot(Slot.Hands)));
+            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Back, new EquipmentSlot(Slot.Back)));
+
 
             Holder = holder;
             Game = game;

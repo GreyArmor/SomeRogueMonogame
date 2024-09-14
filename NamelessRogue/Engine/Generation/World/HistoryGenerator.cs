@@ -30,7 +30,6 @@ namespace NamelessRogue.Engine.Generation.World
         public static List<MapArtifact> Artifacts { get; private set; }
         public static TimeLine BuildTimeline(NamelessGame game, HistoryGenerationSettings settings)
         {
-
             var timeline = new TimeLine(game.WorldSettings.Seed);
             var worldBoard = InitialiseFirstBoard(game,settings);
             //timeline.WorldBoardAtEveryAge.Add(worldBoard);

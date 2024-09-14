@@ -40,8 +40,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 float healthValue = (float) stats.Health.Value / stats.Health.MaxValue;
                 //UIController.HudScreen.HealthBar.Value = (int) (healthValue * 100f);
 
-               // float staminaValue = (float) stats.Stamina.Value / stats.Stamina.MaxValue;
-               // UIController.HudScreen.StaminaBar.Value = (int) (staminaValue * 100f);
+                // float staminaValue = (float) stats.Stamina.Value / stats.Stamina.MaxValue;
+                // UIController.HudScreen.StaminaBar.Value = (int) (staminaValue * 100f);
 
                 //UIController.HudScreen.StrLabel.Text = $"Str: {stats.Strength.Value}";
                 //UIController.HudScreen.ImgLabel.Text = $"Img: {stats.Imagination.Value}";
@@ -51,28 +51,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 //UIController.HudScreen.WitLabel.Text = $"Wit: {stats.Wit.Value}";
                 //UIController.HudScreen.TurnLabel.Text = $"Turn  {turn}";
 
-                    switch (UIController.Instance.HudScreen.Action)
-                    {
-                        case HudAction.OpenWorldMap:
-                            var playerPosition = entity.GetComponentOfType<Position>();
-                            namelessGame.ContextToSwitch = ContextFactory.GetWorldBoardContext(namelessGame);
-                            var cursorPosition = namelessGame.CursorEntity
-                                .GetComponentOfType<Position>();
+                switch (UIController.Instance.HudScreen.Action)
+                {
+                    case HudAction.OpenWorldMap:
+                        var playerPosition = entity.GetComponentOfType<Position>();
+                        namelessGame.ContextToSwitch = ContextFactory.GetWorldBoardContext(namelessGame);
+                        var cursorPosition = namelessGame.CursorEntity
+                            .GetComponentOfType<Position>();
 
-                            cursorPosition.Point = new Utility.Vector3Int((int)(playerPosition.Point.X / Constants.ChunkSize), (int)(playerPosition.Point.Y / Constants.ChunkSize));
-                            break;
-                        case HudAction.OpenInventory:
-                            //namelessGame.ContextToSwitch = ContextFactory.GetInventoryContext(namelessGame);
-                            //UIController.InventoryScreen.FillItems(namelessGame);
-                            //if (UIController.InventoryScreen.ItemBox.Items.Any())
-                            //{
-                            //    UIController.InventoryScreen.ItemBox.SelectedIndex = 0;
-                            //}
-
-                            break;
-                        default:
-                            break;
-                    }
+                        cursorPosition.Point = new Utility.Vector3Int((int)(playerPosition.Point.X / Constants.ChunkSize), (int)(playerPosition.Point.Y / Constants.ChunkSize));
+                        break;
+                    case HudAction.OpenInventory:
+                        namelessGame.ContextToSwitch = ContextFactory.GetInventoryContext(namelessGame);
+                        UIController.Instance.InventoryScreen.Fill();
+                        break;
+                    default:
+                        break;
+                }
                 UIController.Instance.HudScreen.Action = HudAction.None;
                 //while (namelessGame.Commander.DequeueCommand(out HudLogMessageCommand logMessage))
                 //{

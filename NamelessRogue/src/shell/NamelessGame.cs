@@ -230,7 +230,9 @@ namespace NamelessRogue.shell
 				Chunk3dGeometryHolder holder = new Chunk3dGeometryHolder();
 				chunksHolder.AddComponent(holder);
 				ChunkGeometryEntiry = chunksHolder;
+
 				TimelineEntity = TimelineFactory.CreateTimeline(this);
+
 				var libraries = new Entity();
 				//var ammoLibrary = new AmmoLibrary();
 				//ammoLibrary.AmmoTypes.Add(new AmmoType() { Name = "Revolver ammo" });

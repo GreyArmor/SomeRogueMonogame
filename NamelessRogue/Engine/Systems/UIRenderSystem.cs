@@ -35,6 +35,14 @@ namespace NamelessRogue.Engine.Systems
             {
                 _imGuiRendererInstance = new ImGuiRenderer(game);
                 _imGuiRendererInstance.RebuildFontAtlas();
+
+
+                var cellSelected =  game.Content.Load<Texture2D>("Sprites/cellSelected");
+                var cellDeselected = game.Content.Load<Texture2D>("Sprites/cellDeselected");
+                var gunIcon = game.Content.Load<Texture2D>("Sprites/gunIcon");
+                ImGuiImageLibrary.Textures.Add("cellSelected", _imGuiRendererInstance.BindTexture(cellSelected));
+                ImGuiImageLibrary.Textures.Add("cellDeselected", _imGuiRendererInstance.BindTexture(cellDeselected));
+                ImGuiImageLibrary.Textures.Add("gunIcon", _imGuiRendererInstance.BindTexture(gunIcon));
             }
 
             _xnaTexture = CreateTexture(game.GraphicsDevice, game.GetActualWidth(), game.GetActualHeight(), pixel =>
@@ -45,6 +53,7 @@ namespace NamelessRogue.Engine.Systems
 
             // Then, bind it to an ImGui-friendly pointer, that we can use during regular ImGui.** calls (see below)
             _imGuiTexture = _imGuiRendererInstance.BindTexture(_xnaTexture);
+
 
         }
         public override HashSet<Type> Signature { get; }  = new HashSet<Type>();

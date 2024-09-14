@@ -329,7 +329,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                     if (actionPoints.Points >= 100)
                                     {
-                                        var ap = entity.GetComponentOfType<ActionPoints>();
+                                        var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                         ap.Points -= Constants.ActionsMovementCost;
                                         var logCommand = new HudLogMessageCommand();
                                         logCommand.LogMessage += "Waiting";

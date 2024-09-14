@@ -40,7 +40,9 @@ namespace NamelessRogue.Engine.Factories
             Entity _addFurniture(string id, string descriptionName, bool occupiesTile, bool blocksVision)
             {
                 Entity entity = new Entity();
+
                 entity.AddComponent(new Drawable(id, new Engine.Utility.Color(1f)));
+
                 entity.AddComponent(new Description(descriptionName, ""));
                 if (occupiesTile)
                 {
