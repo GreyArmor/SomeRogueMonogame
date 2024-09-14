@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
+using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.UI;
@@ -85,31 +86,37 @@ namespace NamelessRogue.Engine.Systems.Inventory
                        // else
                         {
 
-                            var pos = UIController.Instance.InventoryScreen.SelectedCell;
+                            var position = UIController.Instance.InventoryScreen.SelectedCell;
                             switch (intent.Intention)
                             {
-                                case IntentEnum.MoveDown:
-                                    {
-                                       
-                                        UIController.Instance.InventoryScreen.SelectedCell = new System.Drawing.Point(pos.X, pos.Y+1);
-                                        break;
-                                    }
                                 case IntentEnum.MoveUp:
-                                    {
-                                        UIController.Instance.InventoryScreen.SelectedCell = new System.Drawing.Point(pos.X, pos.Y - 1);
-                                        break;
-                                    }
+                                case IntentEnum.MoveDown:
                                 case IntentEnum.MoveLeft:
-                                    {
-                                        UIController.Instance.InventoryScreen.SelectedCell = new System.Drawing.Point(pos.X - 1 , pos.Y);
-                                        break;
-                                    }
-
                                 case IntentEnum.MoveRight:
+                                case IntentEnum.MoveTopLeft:
+                                case IntentEnum.MoveTopRight:
+                                case IntentEnum.MoveBottomLeft:
+                                case IntentEnum.MoveBottomRight:
+                                case IntentEnum.MoveAscent:
+                                case IntentEnum.MoveDescent:
                                     {
-                                        UIController.Instance.InventoryScreen.SelectedCell = new System.Drawing.Point(pos.X + 1, pos.Y);
-                                        break;
+                                        int newX =
+                                                   intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
+                                                   intent.Intention == IntentEnum.MoveTopLeft ? position.X - 1 :
+                                                   intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
+                                                   intent.Intention == IntentEnum.MoveTopRight ? position.X + 1 :
+                                                   position.X;
+                                        int newY =
+                                            intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
+                                            intent.Intention == IntentEnum.MoveBottomRight ? position.Y + 1 :
+                                            intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft ||
+                                            intent.Intention == IntentEnum.MoveTopRight ? position.Y - 1 :
+                                            position.Y;
+
+                                        UIController.Instance.InventoryScreen.SelectedCell = new System.Drawing.Point(newX, newY);
                                     }
+                                    break;
+        
                                 case IntentEnum.ConetextualHotkeyPressed:
                                     //var selectedItem =
                                     //    UIController.Instance.InventoryScreen.SelectedTable.Items.FirstOrDefault(x =>
