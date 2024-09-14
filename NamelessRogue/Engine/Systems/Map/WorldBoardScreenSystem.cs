@@ -6,7 +6,6 @@ using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.UI;
-using NamelessRogue.Engine.ViewModels;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Map

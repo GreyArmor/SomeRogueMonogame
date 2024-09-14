@@ -1,5 +1,4 @@
-﻿using NamelessRogue.Engine.ViewModels;
-using NamelessRogue.shell;
+﻿using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
 using System.Text;
