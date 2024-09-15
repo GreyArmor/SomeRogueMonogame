@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Web;
 using System.Windows.Forms;
 
 namespace NamelessRogue.Engine.UI
@@ -107,49 +108,32 @@ namespace NamelessRogue.Engine.UI
 
             ImGui.SetWindowSize(uiSize);
 
-            ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, 0));
-            {              
-                    if(ButtonWithSound("All", new Vector2(topMenuButtonWidth, topMenuHeight)))
-                    {
-                        filters.AddRange(Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToList());
-                    }
-                    ImGui.SameLine();
-                    if(ButtonWithSound("Weapons", new Vector2(topMenuButtonWidth, topMenuHeight)))
-                    {
-                        filters.Add(ItemType.Weapon);
-                    }
-                    ImGui.SameLine();
-                    if (ButtonWithSound("Armor", new Vector2(topMenuButtonWidth, topMenuHeight)))
-                    {
-                        filters.Add(ItemType.Armor);
-                    }
-                    ImGui.SameLine();
-                    if (ButtonWithSound("Consumables", new Vector2(topMenuButtonWidth, topMenuHeight)))
-                    {
-                        filters.Add(ItemType.Consumable);
-                    }
-                    ImGui.SameLine();
-                    if (ButtonWithSound("Food", new Vector2(topMenuButtonWidth, topMenuHeight)))
-                    {
-                        filters.Add(ItemType.Food);
-                    }
-                    ImGui.SameLine();
-                    if(ButtonWithSound("Ammo", new Vector2(topMenuButtonWidth, topMenuHeight)))
-                    {
-                        filters.Add(ItemType.Ammo);
-                    }
-                    ImGui.SameLine();
-                    if(ButtonWithSound("Misc", new Vector2(topMenuButtonWidth, topMenuHeight)))
-                    {
-                        filters.Add(ItemType.Misc);
-                    }
-                    ImGui.SameLine();
 
-                    if(filters.Any())
-                    {
-                        Clear();
-                        Fill(filters);
-                    }
+            void _addButtonSameLine(string text, params ItemType[] filter)
+            {
+                if (ButtonWithSound(text, new Vector2(topMenuButtonWidth, topMenuHeight)))
+                {
+                    filters.AddRange(filter);
+                }
+                ImGui.SameLine();
+            }
+
+            ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, 0));
+            {
+                _addButtonSameLine("All", Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToArray());
+                _addButtonSameLine("Weapons", ItemType.Weapon);
+                _addButtonSameLine("Armor", ItemType.Armor);
+                _addButtonSameLine("Consumables", ItemType.Consumable);
+                _addButtonSameLine("Food", ItemType.Food);
+                _addButtonSameLine("Ammo", ItemType.Ammo);
+                _addButtonSameLine("Misc", ItemType.Misc);
+                _addButtonSameLine("Weapons", ItemType.Weapon);
+
+                if(filters.Any())
+                {
+                    Clear();
+                    Fill(filters);
+                }
                 ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, topMenuHeight));
                 ImGui.BeginChild("inventoryGrid", new Vector2(halfsize.X, uiSize.Y));
                 {
