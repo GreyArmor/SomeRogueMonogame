@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Windows.Forms;
 
 namespace NamelessRogue.Engine.UI
 {
@@ -27,6 +28,7 @@ namespace NamelessRogue.Engine.UI
         public Point GridPosition { get; set; }
     }
 
+
     public class InventoryGridModel
     {
         public GridCell[,] Cells { get; set; }
@@ -40,9 +42,9 @@ namespace NamelessRogue.Engine.UI
             Height = height;
         }
 
-        public void Fill(ItemsHolder holder)
+        public void Fill(ItemsHolder holder, List<ItemType> filters)
         {
-            var itemQueue = new Queue<IEntity>(holder.Items.ToList());
+            var itemQueue = new Queue<IEntity>(holder.Items.Where(entity => filters.Contains(entity.GetComponentOfType<Item>().Type)));
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
@@ -52,9 +54,21 @@ namespace NamelessRogue.Engine.UI
                         break;
                     }
                     var item = itemQueue.Dequeue();
-                    Cells[x, y] = new GridCell();
-                    Cells[x, y].GridPosition = new Point(x, y);
-                    Cells[x, y].ItemId = item.Id;
+                    var itemComponent = item.GetComponentOfType<Item>();
+                        Cells[x, y] = new GridCell();
+                        Cells[x, y].GridPosition = new Point(x, y);
+                        Cells[x, y].ItemId = item.Id;
+                }
+            }
+        }
+
+        public void Clear()
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    Cells[x, y] = null;
                 }
             }
         }
@@ -65,25 +79,79 @@ namespace NamelessRogue.Engine.UI
         public InventoryGridModel InventoryGridModel { get; set; }
         public MainMenuAction Action { get; set; } = MainMenuAction.None;
         Vector2 halfsize;
+        int iconSize = 32;
+        int iconSizeWithMargin = 34;
 
+        int topMenuHeight = 40;
+        int topMenuButtonWidth;
+
+        int rightSideWidth;
+        List<ItemType> filters = new List<ItemType>();        
         public Point SelectedCell { get; set; } = new Point();
         public InventoryScreen(NamelessGame game) : base(game)
         {
             uiSize = new System.Numerics.Vector2(game.GetActualWidth(), game.GetActualHeight());
             halfsize = uiSize / 2;
-            InventoryGridModel = new InventoryGridModel(20, 50);
+
+            rightSideWidth = (int)(((halfsize.X / iconSize) - 2) * iconSizeWithMargin);
+
+            InventoryGridModel = new InventoryGridModel((int)(halfsize.X/iconSize) - 2, (int)(halfsize.Y / iconSize) - 2);
+            topMenuButtonWidth = (int)(rightSideWidth / 7);
         }
 
         public override void DrawLayout()
         {
+            filters.Clear();
             ImGui.SetNextWindowPos(new System.Numerics.Vector2());
             ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
 
             ImGui.SetWindowSize(uiSize);
 
             ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, 0));
-            {
-                ImGui.BeginChild("inventoryGrid");
+            {              
+                    if(ButtonWithSound("All", new Vector2(topMenuButtonWidth, topMenuHeight)))
+                    {
+                        filters.AddRange(Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToList());
+                    }
+                    ImGui.SameLine();
+                    if(ButtonWithSound("Weapons", new Vector2(topMenuButtonWidth, topMenuHeight)))
+                    {
+                        filters.Add(ItemType.Weapon);
+                    }
+                    ImGui.SameLine();
+                    if (ButtonWithSound("Armor", new Vector2(topMenuButtonWidth, topMenuHeight)))
+                    {
+                        filters.Add(ItemType.Armor);
+                    }
+                    ImGui.SameLine();
+                    if (ButtonWithSound("Consumables", new Vector2(topMenuButtonWidth, topMenuHeight)))
+                    {
+                        filters.Add(ItemType.Consumable);
+                    }
+                    ImGui.SameLine();
+                    if (ButtonWithSound("Food", new Vector2(topMenuButtonWidth, topMenuHeight)))
+                    {
+                        filters.Add(ItemType.Food);
+                    }
+                    ImGui.SameLine();
+                    if(ButtonWithSound("Ammo", new Vector2(topMenuButtonWidth, topMenuHeight)))
+                    {
+                        filters.Add(ItemType.Ammo);
+                    }
+                    ImGui.SameLine();
+                    if(ButtonWithSound("Misc", new Vector2(topMenuButtonWidth, topMenuHeight)))
+                    {
+                        filters.Add(ItemType.Misc);
+                    }
+                    ImGui.SameLine();
+
+                    if(filters.Any())
+                    {
+                        Clear();
+                        Fill(filters);
+                    }
+                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, topMenuHeight));
+                ImGui.BeginChild("inventoryGrid", new Vector2(halfsize.X, uiSize.Y));
                 {
                     for (int y = 0; y < InventoryGridModel.Height; y++)
                     {
@@ -91,27 +159,30 @@ namespace NamelessRogue.Engine.UI
                         {
                             var cell = InventoryGridModel.Cells[x, y];
                             string itemId = "";
-                          
+
                             if (cell != null)
                             {
                                 var drawable = game.GetEntity(cell.ItemId).GetComponentOfType<Drawable>();
                                 itemId = drawable.ObjectID;
                             }
-                            ImGui.SetCursorPos(new System.Numerics.Vector2(34 * x, 34 * y));
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(34 * x, (iconSizeWithMargin * y)));
                             if (x == SelectedCell.X && y == SelectedCell.Y)
                             {
-                                ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(32, 32));
+                                if ((34 * y) > uiSize.Y)
+                                {
+                                    ImGui.SetScrollY((34 * y) - uiSize.Y);
+                                }                            
+                                ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(iconSize, iconSize));
                             }
                             else
-                            {                                
-                                ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(32, 32));
+                            {
+                                ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
                             }
-                            ImGui.SetCursorPos(new System.Numerics.Vector2(34 * x, 34 * y));
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(34 * x, (iconSizeWithMargin * y)));
                             if (itemId! != "")
                             {
-                                ImGui.Image(ImGuiImageLibrary.Textures[itemId], new Vector2(32, 32));
+                                ImGui.Image(ImGuiImageLibrary.Textures[itemId], new Vector2(iconSize, iconSize));
                             }
-
                         }
                     }
                 }
@@ -120,12 +191,21 @@ namespace NamelessRogue.Engine.UI
             ImGui.End();
         }
 
-        public void Fill()
+        public void Fill(List<ItemType> filters)
         {
             var player = game.PlayerEntity;
             var holder = player.GetComponentOfType<ItemsHolder>();
-            InventoryGridModel.Fill(holder);
+            InventoryGridModel.Fill(holder, filters);
         }
 
+        public void FillAll()
+        {
+            Fill(Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToList());
+        }
+
+        public void Clear()
+        {
+            InventoryGridModel.Clear(); 
+        }
     }
 }
