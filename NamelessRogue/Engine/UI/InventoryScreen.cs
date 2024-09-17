@@ -2,10 +2,12 @@
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.Systems.Inventory;
 using NamelessRogue.shell;
+using RogueSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,6 +16,7 @@ using System.Numerics;
 using System.Text;
 using System.Web;
 using System.Windows.Forms;
+using Point = System.Drawing.Point;
 
 namespace NamelessRogue.Engine.UI
 {
@@ -94,9 +97,9 @@ namespace NamelessRogue.Engine.UI
             uiSize = new System.Numerics.Vector2(game.GetActualWidth(), game.GetActualHeight());
             halfsize = uiSize / 2;
 
-            rightSideWidth = (int)(((halfsize.X / iconSize) - 2) * iconSizeWithMargin);
+            rightSideWidth = (int)(((halfsize.X / iconSizeWithMargin) - 2) * iconSizeWithMargin);
 
-            InventoryGridModel = new InventoryGridModel((int)(halfsize.X/iconSize) - 2, (int)(halfsize.Y / iconSize) - 2);
+            InventoryGridModel = new InventoryGridModel((int)(halfsize.X/ iconSizeWithMargin), (int)(halfsize.Y / iconSizeWithMargin));
             topMenuButtonWidth = (int)(rightSideWidth / 7);
         }
 
@@ -127,7 +130,6 @@ namespace NamelessRogue.Engine.UI
                 _addButtonSameLine("Food", ItemType.Food);
                 _addButtonSameLine("Ammo", ItemType.Ammo);
                 _addButtonSameLine("Misc", ItemType.Misc);
-                _addButtonSameLine("Weapons", ItemType.Weapon);
 
                 if(filters.Any())
                 {
@@ -169,6 +171,46 @@ namespace NamelessRogue.Engine.UI
                             }
                         }
                     }
+                    if (SelectedCell.X >= 0 && SelectedCell.Y >= 0 && SelectedCell.X < InventoryGridModel.Width && SelectedCell.Y < InventoryGridModel.Height)
+                    {
+
+
+                        var selectedCell = InventoryGridModel.Cells[SelectedCell.X, SelectedCell.Y];
+                        if (selectedCell != null)
+                        {
+                            string itemDescription = "";
+
+                            var selectedItem = game.GetEntity(selectedCell.ItemId);
+                            var desccomponent = selectedItem.GetComponentOfType<Description>();
+                            var itemComponent = selectedItem.GetComponentOfType<Item>();
+                            var itemWeaponStats = selectedItem.GetComponentOfType<WeaponStats>();
+
+                            itemDescription += $@"{desccomponent.Name} \n";
+                            itemDescription += $@"{desccomponent.Text} \n";
+                            itemDescription += $@"Manufacturer: {itemComponent.Author} \n";
+                            // itemDescription += $@"Manufacturer: {itemComponent.} \n";
+
+                            if (itemWeaponStats != null)
+                            {
+
+                                itemDescription += $@"Attack type: {itemWeaponStats.AttackType.ToString()} \n";
+                                itemDescription += $@"Attack type: {itemWeaponStats.AttackType.ToString()} \n";
+                                itemDescription += $@"Ammo type:   {itemWeaponStats.AmmoType.ToString()}   \n";
+                                itemDescription += $@"Damage: {itemWeaponStats.MinimumDamage.ToString()} - {itemWeaponStats.MaximumDamage.ToString()} \n";
+                                itemDescription += $@"Range: {itemWeaponStats.Range.ToString()} \n";
+                                itemDescription += $@"Max ammo: {itemWeaponStats.AmmoInClip.ToString()} \n";
+                            }
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
+                            // ImGui.LogText(itemDescription);
+                            var splitSting = itemDescription.Split("\\n");
+                            for (int i = 0; i < splitSting.Count(); i++)
+                            {
+                                ImGui.TextWrapped(splitSting[i]);
+                            }
+                        }
+                    }
+
+
                 }
                 ImGui.EndChild();
             }

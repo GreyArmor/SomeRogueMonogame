@@ -20,6 +20,7 @@ namespace NamelessRogue.Engine.Factories
 
 
             entity.AddComponent(new Drawable("gunIcon", new Color(1f)));
+            entity.AddComponent(new Description("Test gun", "Created to test inventory system in 2024"));
             entity.AddComponent(new Item(ItemType.Weapon, 0, ItemQuality.Normal, 1, 1, "CorpoCorp Inc."));
             entity.AddComponent(new WeaponStats(1, 10, 10, AttackType.Ranged, AmmoType.LowCaliber, 20, 0));
           //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
@@ -29,6 +30,7 @@ namespace NamelessRogue.Engine.Factories
         {
             Entity entity = new Entity();
             entity.AddComponent(new Drawable("gunRedIcon", new Color(1f)));
+            entity.AddComponent(new Description("Red test gun", "The same as Test gun, but red"));
             entity.AddComponent(new Item(ItemType.Weapon, 0, ItemQuality.Normal, 1, 1, "CorpoCorp Inc."));
             entity.AddComponent(new WeaponStats(1, 10, 10, AttackType.Ranged, AmmoType.LowCaliber, 20, 0));
             //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
