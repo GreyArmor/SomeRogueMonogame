@@ -155,6 +155,9 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                     //        .SelectedTable.SelectedItem);
                                     }
                                     break;
+                                case IntentEnum.Escape:
+                                    namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
+                                    break;
                                 default:
                                     break;
                             }

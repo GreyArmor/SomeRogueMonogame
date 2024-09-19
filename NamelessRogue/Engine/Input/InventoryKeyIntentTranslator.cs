@@ -43,7 +43,7 @@ namespace NamelessRogue.Engine.Input
                             intent.Intention = IntentEnum.MoveRight;
                             break;
                         case Keys.NumPad7:
-                            intent.Intention = IntentEnum.MoveTopLeft;
+                            intent.Intention = IntentEnum.MoveTopLeft;  
                             break;
                         case Keys.NumPad9:
                             intent.Intention = IntentEnum.MoveTopRight;

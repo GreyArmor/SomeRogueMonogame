@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.UI;
@@ -8,6 +9,7 @@ using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.Systems.Inventory;
 using NamelessRogue.shell;
 using RogueSharp;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,6 +19,7 @@ using System.Text;
 using System.Web;
 using System.Windows.Forms;
 using Point = System.Drawing.Point;
+using Vector2 = System.Numerics.Vector2;
 
 namespace NamelessRogue.Engine.UI
 {
@@ -78,8 +81,22 @@ namespace NamelessRogue.Engine.UI
         }
     }
 
+
+    public class FilterFlags
+    {
+        public bool All {  get; set; }
+        public bool Weapons { get; set; }
+        public bool Armor { get; set; }
+        public bool Consumables { get; set; }
+        public bool Food { get; set; }
+        public bool Ammo { get; set; }
+
+        public bool Misc { get; set; }
+    }
+
     public class InventoryScreen : BaseScreen
     {
+        FilterFlags flags = new FilterFlags() { All = true };
         public InventoryGridModel InventoryGridModel { get; set; }
         public MainMenuAction Action { get; set; } = MainMenuAction.None;
         Vector2 halfsize;
@@ -110,26 +127,32 @@ namespace NamelessRogue.Engine.UI
             ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
 
             ImGui.SetWindowSize(uiSize);
-
-
-            void _addButtonSameLine(string text, params ItemType[] filter)
+            bool _addSelectableSameLine(string text, bool selected, params ItemType[] filter)
             {
-                if (ButtonWithSound(text, new Vector2(topMenuButtonWidth, topMenuHeight)))
+                var clicked = ImGui.Selectable(text, selected, ImGuiSelectableFlags.None, new System.Numerics.Vector2(topMenuButtonWidth, topMenuHeight));
+                ImGui.SameLine();
+                if (clicked)
+                {
+                    selected = !selected;
+                }
+
+                if(selected)
                 {
                     filters.AddRange(filter);
                 }
-                ImGui.SameLine();
+                return selected;
+                
             }
 
             ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, 0));
             {
-                _addButtonSameLine("All", Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToArray());
-                _addButtonSameLine("Weapons", ItemType.Weapon);
-                _addButtonSameLine("Armor", ItemType.Armor);
-                _addButtonSameLine("Consumables", ItemType.Consumable);
-                _addButtonSameLine("Food", ItemType.Food);
-                _addButtonSameLine("Ammo", ItemType.Ammo);
-                _addButtonSameLine("Misc", ItemType.Misc);
+                flags.All = _addSelectableSameLine("All", flags.All, Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToArray());
+                flags.Weapons = _addSelectableSameLine("Weapons", flags.Weapons, ItemType.Weapon);
+                flags.Armor = _addSelectableSameLine("Armor", flags.Armor, ItemType.Armor);
+                flags.Consumables = _addSelectableSameLine("Consumables", flags.Consumables, ItemType.Consumable);
+                flags.Food = _addSelectableSameLine("Food", flags.Food, ItemType.Food);
+                flags.Ammo = _addSelectableSameLine("Ammo", flags.Ammo, ItemType.Ammo);
+                flags.Misc = _addSelectableSameLine("Misc", flags.Misc, ItemType.Misc);
 
                 if(filters.Any())
                 {
@@ -173,11 +196,12 @@ namespace NamelessRogue.Engine.UI
                     }
                     if (SelectedCell.X >= 0 && SelectedCell.Y >= 0 && SelectedCell.X < InventoryGridModel.Width && SelectedCell.Y < InventoryGridModel.Height)
                     {
-
-
+                        ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
+                        ImGui.BeginChild("inventoryBorder", new Vector2(halfsize.X, halfsize.Y), true);
                         var selectedCell = InventoryGridModel.Cells[SelectedCell.X, SelectedCell.Y];
                         if (selectedCell != null)
                         {
+                            ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
                             string itemDescription = "";
 
                             var selectedItem = game.GetEntity(selectedCell.ItemId);
@@ -192,22 +216,23 @@ namespace NamelessRogue.Engine.UI
 
                             if (itemWeaponStats != null)
                             {
-
-                                itemDescription += $@"Attack type: {itemWeaponStats.AttackType.ToString()} \n";
                                 itemDescription += $@"Attack type: {itemWeaponStats.AttackType.ToString()} \n";
                                 itemDescription += $@"Ammo type:   {itemWeaponStats.AmmoType.ToString()}   \n";
                                 itemDescription += $@"Damage: {itemWeaponStats.MinimumDamage.ToString()} - {itemWeaponStats.MaximumDamage.ToString()} \n";
                                 itemDescription += $@"Range: {itemWeaponStats.Range.ToString()} \n";
                                 itemDescription += $@"Max ammo: {itemWeaponStats.AmmoInClip.ToString()} \n";
+                                itemDescription += $@"Current ammo: {itemWeaponStats.CurrentAmmo.ToString()} \n";
                             }
-                            ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
+                           // ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
                             // ImGui.LogText(itemDescription);
                             var splitSting = itemDescription.Split("\\n");
                             for (int i = 0; i < splitSting.Count(); i++)
                             {
                                 ImGui.TextWrapped(splitSting[i]);
                             }
+                            ImGui.PopFont();
                         }
+                        ImGui.EndChild();
                     }
 
 
