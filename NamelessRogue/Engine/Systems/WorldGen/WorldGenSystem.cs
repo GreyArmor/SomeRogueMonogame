@@ -26,7 +26,7 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
         public override void Update(GameTime gameTime, NamelessGame game)
         {
 
-            switch (UIController.Instance.WorldGenScreen.Action)
+            switch (UIContainer.Instance.WorldGenScreen.Action)
             {
                 case WorldGenAction.Exit:
                     game.ContextToSwitch = ContextFactory.GetMainMenuContext(game);
@@ -36,7 +36,7 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
                 default:
                     break;
             }
-            UIController.Instance.WorldGenScreen.Action = WorldGenAction.None;
+            UIContainer.Instance.WorldGenScreen.Action = WorldGenAction.None;
         }
 
 

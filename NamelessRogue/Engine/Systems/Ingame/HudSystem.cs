@@ -51,7 +51,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 //UIController.HudScreen.WitLabel.Text = $"Wit: {stats.Wit.Value}";
                 //UIController.HudScreen.TurnLabel.Text = $"Turn  {turn}";
 
-                switch (UIController.Instance.HudScreen.Action)
+                switch (UIContainer.Instance.HudScreen.Action)
                 {
                     case HudAction.OpenWorldMap:
                         var playerPosition = entity.GetComponentOfType<Position>();
@@ -63,12 +63,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         break;
                     case HudAction.OpenInventory:
                         namelessGame.ContextToSwitch = ContextFactory.GetInventoryContext(namelessGame);
-                        UIController.Instance.InventoryScreen.FillAll();
+                        UIContainer.Instance.InventoryScreen.FillAll();
                         break;
                     default:
                         break;
                 }
-                UIController.Instance.HudScreen.Action = HudAction.None;
+                UIContainer.Instance.HudScreen.Action = HudAction.None;
                 //while (namelessGame.Commander.DequeueCommand(out HudLogMessageCommand logMessage))
                 //{
                 //    UIController.HudScreen.LogMessage(logMessage.LogMessage);

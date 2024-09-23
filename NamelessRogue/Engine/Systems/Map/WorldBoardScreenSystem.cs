@@ -28,7 +28,7 @@ namespace NamelessRogue.Engine.Systems.Map
             TimeLine timeline = namelessGame.TimelineEntity?.GetComponentOfType<TimeLine>();
             var tilePosition = camera.GetMouseTilePosition(namelessGame);
             var settings = namelessGame.WorldSettings;
-			var mapScreen = UIController.Instance.MapScreen;
+			var mapScreen = UIContainer.Instance.MapScreen;
 			if (tilePosition.X >= 0 && tilePosition.X < settings.WorldBoardWidth && tilePosition.Y >= 0 && tilePosition.Y < settings.WorldBoardHeight)
             {
                 var tile = timeline.CurrentTimelineLayer.WorldTiles[tilePosition.X, tilePosition.Y];

@@ -5,11 +5,9 @@ using System.Text;
 
 namespace NamelessRogue.Engine.UI
 {
-	public class UIController
+	public class UIContainer
 	{
-
-
-		public static UIController Instance { get; private set; } = null;
+		public static UIContainer Instance { get; private set; } = null;
 
 		public MainMenuScreen MainMenu { get; set; }
 		public IngameScreen HudScreen { get; set; }
@@ -18,11 +16,11 @@ namespace NamelessRogue.Engine.UI
 
 		public WorldGenerationUI WorldGenScreen { get; set; }
 
-		public UIController(NamelessGame game)
+		public UIContainer(NamelessGame game)
 		{
 			if (Instance != null)
 			{
-				throw new Exception("Attempted to create multiple instances of a singleton class UIControlle");
+				throw new Exception("Attempted to create multiple instances of a singleton class UIContainer");
 			}
 
 			MainMenu = new MainMenuScreen(game);

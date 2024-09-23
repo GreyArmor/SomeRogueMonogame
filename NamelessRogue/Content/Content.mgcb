@@ -529,6 +529,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/objects.png
 
+#begin Sprites/selectionColor.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/selectionColor.png
+
 #begin Sprites/Shadow.png
 /importer:TextureImporter
 /processor:TextureProcessor

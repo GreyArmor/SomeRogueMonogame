@@ -28,6 +28,10 @@ namespace NamelessRogue.Engine.UI
         None,
     }
 
+    public enum InventoryScreenCursorMode
+    {
+        Items, ItemsFilter, Equipment,
+    }
 
     public class GridCell
     {
@@ -99,6 +103,8 @@ namespace NamelessRogue.Engine.UI
         FilterFlags flags = new FilterFlags() { All = true };
         public InventoryGridModel InventoryGridModel { get; set; }
         public MainMenuAction Action { get; set; } = MainMenuAction.None;
+        public InventoryScreenCursorMode CursorMode { get; set; } = InventoryScreenCursorMode.Items;
+
         Vector2 halfsize;
         int iconSize = 32;
         int iconSizeWithMargin = 34;
@@ -119,6 +125,29 @@ namespace NamelessRogue.Engine.UI
             InventoryGridModel = new InventoryGridModel((int)(halfsize.X/ iconSizeWithMargin), (int)(halfsize.Y / iconSizeWithMargin));
             topMenuButtonWidth = (int)(rightSideWidth / 7);
         }
+        bool _addSelectableSameLine(int index, string text, bool selected, params ItemType[] filter)
+        {
+            bool drawBorder = CursorMode == InventoryScreenCursorMode.ItemsFilter && SelectedCell.X == index;
+
+            if (drawBorder)
+            {
+                var cursorPos = ImGui.GetCursorPos();
+                ImGui.Image(ImGuiImageLibrary.Textures["selectionColor"], new Vector2(topMenuButtonWidth, topMenuHeight));
+                ImGui.SetCursorPos(cursorPos);
+            }
+            var clicked = ImGui.Selectable(text, selected, ImGuiSelectableFlags.None, new System.Numerics.Vector2(topMenuButtonWidth, topMenuHeight));
+            ImGui.SameLine();
+
+            if (clicked)
+            {
+                selected = !selected;
+            }
+            if (selected)
+            {
+                filters.AddRange(filter);
+            }
+            return selected;
+        }
 
         public override void DrawLayout()
         {
@@ -127,38 +156,21 @@ namespace NamelessRogue.Engine.UI
             ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
 
             ImGui.SetWindowSize(uiSize);
-            bool _addSelectableSameLine(string text, bool selected, params ItemType[] filter)
-            {
-                var clicked = ImGui.Selectable(text, selected, ImGuiSelectableFlags.None, new System.Numerics.Vector2(topMenuButtonWidth, topMenuHeight));
-                ImGui.SameLine();
-                if (clicked)
-                {
-                    selected = !selected;
-                }
-
-                if(selected)
-                {
-                    filters.AddRange(filter);
-                }
-                return selected;
-                
-            }
+    
 
             ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, 0));
             {
-                flags.All = _addSelectableSameLine("All", flags.All, Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToArray());
-                flags.Weapons = _addSelectableSameLine("Weapons", flags.Weapons, ItemType.Weapon);
-                flags.Armor = _addSelectableSameLine("Armor", flags.Armor, ItemType.Armor);
-                flags.Consumables = _addSelectableSameLine("Consumables", flags.Consumables, ItemType.Consumable);
-                flags.Food = _addSelectableSameLine("Food", flags.Food, ItemType.Food);
-                flags.Ammo = _addSelectableSameLine("Ammo", flags.Ammo, ItemType.Ammo);
-                flags.Misc = _addSelectableSameLine("Misc", flags.Misc, ItemType.Misc);
+                flags.All = _addSelectableSameLine(0, "All", flags.All, Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToArray());
+                flags.Weapons = _addSelectableSameLine(1, "Weapons", flags.Weapons, ItemType.Weapon);
+                flags.Armor = _addSelectableSameLine(2, "Armor", flags.Armor, ItemType.Armor);
+                flags.Consumables = _addSelectableSameLine(3, "Consumables", flags.Consumables, ItemType.Consumable);
+                flags.Food = _addSelectableSameLine(4, "Food", flags.Food, ItemType.Food);
+                flags.Ammo = _addSelectableSameLine(5, "Ammo", flags.Ammo, ItemType.Ammo);
+                flags.Misc = _addSelectableSameLine(6, "Misc", flags.Misc, ItemType.Misc);
 
-                if(filters.Any())
-                {
-                    Clear();
-                    Fill(filters);
-                }
+                Clear();
+                Fill(filters);
+
                 ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, topMenuHeight));
                 ImGui.BeginChild("inventoryGrid", new Vector2(halfsize.X, uiSize.Y));
                 {
@@ -175,7 +187,7 @@ namespace NamelessRogue.Engine.UI
                                 itemId = drawable.ObjectID;
                             }
                             ImGui.SetCursorPos(new System.Numerics.Vector2(34 * x, (iconSizeWithMargin * y)));
-                            if (x == SelectedCell.X && y == SelectedCell.Y)
+                            if (this.CursorMode == InventoryScreenCursorMode.Items && x == SelectedCell.X && y == SelectedCell.Y )
                             {
                                 if ((34 * y) > uiSize.Y)
                                 {
@@ -194,7 +206,7 @@ namespace NamelessRogue.Engine.UI
                             }
                         }
                     }
-                    if (SelectedCell.X >= 0 && SelectedCell.Y >= 0 && SelectedCell.X < InventoryGridModel.Width && SelectedCell.Y < InventoryGridModel.Height)
+                    if (this.CursorMode == InventoryScreenCursorMode.Items && SelectedCell.X >= 0 && SelectedCell.Y >= 0 && SelectedCell.X < InventoryGridModel.Width && SelectedCell.Y < InventoryGridModel.Height)
                     {
                         ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
                         ImGui.BeginChild("inventoryBorder", new Vector2(halfsize.X, halfsize.Y), true);
@@ -234,8 +246,6 @@ namespace NamelessRogue.Engine.UI
                         }
                         ImGui.EndChild();
                     }
-
-
                 }
                 ImGui.EndChild();
             }

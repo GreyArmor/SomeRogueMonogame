@@ -218,7 +218,7 @@ namespace NamelessRogue.shell
             worldSettings = new WorldSettings(75924, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
 
 
-			new UIController(this);
+			new UIContainer(this);
 			ContextFactory.InitAllContexts(this);
 			var viewportEntity = RenderFactory.CreateViewport(settings);
 			CameraEntity = viewportEntity;

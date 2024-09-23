@@ -14,6 +14,7 @@ using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
+using Point = System.Drawing.Point;
 
 namespace NamelessRogue.Engine.Systems.Inventory
 {
@@ -86,7 +87,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                        // else
                         {
 
-                            var position = UIController.Instance.InventoryScreen.SelectedCell;
+                            var position = UIContainer.Instance.InventoryScreen.SelectedCell;
                             switch (intent.Intention)
                             {
                                 case IntentEnum.MoveUp:
@@ -114,7 +115,46 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                             intent.Intention == IntentEnum.MoveTopRight ? position.Y - 1 :
                                             position.Y;
 
-                                        UIController.Instance.InventoryScreen.SelectedCell = new System.Drawing.Point(newX, newY);
+                                        switch(UIContainer.Instance.InventoryScreen.CursorMode)
+                                        {
+                                            case InventoryScreenCursorMode.Items:
+
+                                                if (newY < 0)
+                                                {
+                                                    UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.ItemsFilter;
+                                                    UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 0);
+                                                }
+                                                else
+                                                {
+                                                    UIContainer.Instance.InventoryScreen.SelectedCell = new Point(newX, newY);
+                                                }
+                                                break;
+                                            case InventoryScreenCursorMode.ItemsFilter:
+                                                if (newY < 0)
+                                                {
+
+                                                }
+                                                else if (newX < 0)
+                                                {
+                                                  //  UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Equipment;
+                                                 //   UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 0);
+                                                }
+                                                else if(newY>0)
+                                                {
+                                                      UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Items;
+                                                      UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 0);
+                                                }
+                                                else
+                                                {
+                                                    UIContainer.Instance.InventoryScreen.SelectedCell = new Point(newX, newY);
+                                                }
+
+                                                break;
+                                            case InventoryScreenCursorMode.Equipment:
+                                                break;
+                                        }
+
+                                       
                                     }
                                     break;
         

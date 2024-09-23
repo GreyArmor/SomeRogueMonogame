@@ -14,7 +14,7 @@ namespace NamelessRogue.Engine.Systems.MainMenu
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-                switch (UIController.Instance.MainMenu.Action)
+                switch (UIContainer.Instance.MainMenu.Action)
                 {
                     case MainMenuAction.GenerateNewTimeline:
                         namelessGame.ContextToSwitch = ContextFactory.GetWorldGenContext(namelessGame);
@@ -33,7 +33,7 @@ namespace NamelessRogue.Engine.Systems.MainMenu
                         break;
                 }
 
-            UIController.Instance.MainMenu.Action = MainMenuAction.None;
+            UIContainer.Instance.MainMenu.Action = MainMenuAction.None;
         }
     }
 
