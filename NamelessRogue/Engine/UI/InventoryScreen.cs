@@ -88,22 +88,28 @@ namespace NamelessRogue.Engine.UI
 
     public class FilterFlags
     {
-        public bool All {  get; set; }
-        public bool Weapons { get; set; }
-        public bool Armor { get; set; }
-        public bool Consumables { get; set; }
-        public bool Food { get; set; }
-        public bool Ammo { get; set; }
+        public bool[] FilterArray = new bool[7];
 
-        public bool Misc { get; set; }
+        public bool All { get { return FilterArray[0]; } set { FilterArray[0] = value; } }
+        public bool Weapons { get { return FilterArray[1]; } set { FilterArray[1] = value; } }
+        public bool Armor { get { return FilterArray[2]; } set { FilterArray[2] = value; } }
+        public bool Consumables { get { return FilterArray[3]; } set { FilterArray[3] = value; } }
+        public bool Food { get { return FilterArray[4]; } set { FilterArray[4] = value; } }
+        public bool Ammo { get { return FilterArray[5]; } set { FilterArray[5] = value; } }
+
+        public bool Misc { get { return FilterArray[6]; } set { FilterArray[6] = value; } }
     }
 
     public class InventoryScreen : BaseScreen
     {
         FilterFlags flags = new FilterFlags() { All = true };
+
+        public FilterFlags Flags { get { return flags; } set { flags = value; } }
         public InventoryGridModel InventoryGridModel { get; set; }
         public MainMenuAction Action { get; set; } = MainMenuAction.None;
         public InventoryScreenCursorMode CursorMode { get; set; } = InventoryScreenCursorMode.Items;
+
+        public readonly int CountOfFilters = 7;
 
         Vector2 halfsize;
         int iconSize = 32;
@@ -206,49 +212,63 @@ namespace NamelessRogue.Engine.UI
                             }
                         }
                     }
-                    if (this.CursorMode == InventoryScreenCursorMode.Items && SelectedCell.X >= 0 && SelectedCell.Y >= 0 && SelectedCell.X < InventoryGridModel.Width && SelectedCell.Y < InventoryGridModel.Height)
+                    ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
+                    ImGui.BeginChild("inventoryBorder", new Vector2(halfsize.X, halfsize.Y), true);
+                    if (SelectedCell.X >= 0 && SelectedCell.Y >= 0 && SelectedCell.X < InventoryGridModel.Width && SelectedCell.Y < InventoryGridModel.Height)
                     {
-                        ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
-                        ImGui.BeginChild("inventoryBorder", new Vector2(halfsize.X, halfsize.Y), true);
-                        var selectedCell = InventoryGridModel.Cells[SelectedCell.X, SelectedCell.Y];
-                        if (selectedCell != null)
+                        if (this.CursorMode == InventoryScreenCursorMode.Items)
                         {
-                            ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-                            string itemDescription = "";
-
-                            var selectedItem = game.GetEntity(selectedCell.ItemId);
-                            var desccomponent = selectedItem.GetComponentOfType<Description>();
-                            var itemComponent = selectedItem.GetComponentOfType<Item>();
-                            var itemWeaponStats = selectedItem.GetComponentOfType<WeaponStats>();
-
-                            itemDescription += $@"{desccomponent.Name} \n";
-                            itemDescription += $@"{desccomponent.Text} \n";
-                            itemDescription += $@"Manufacturer: {itemComponent.Author} \n";
-                            // itemDescription += $@"Manufacturer: {itemComponent.} \n";
-
-                            if (itemWeaponStats != null)
+                            var selectedCell = InventoryGridModel.Cells[SelectedCell.X, SelectedCell.Y];
+                            if (selectedCell != null)
                             {
-                                itemDescription += $@"Attack type: {itemWeaponStats.AttackType.ToString()} \n";
-                                itemDescription += $@"Ammo type:   {itemWeaponStats.AmmoType.ToString()}   \n";
-                                itemDescription += $@"Damage: {itemWeaponStats.MinimumDamage.ToString()} - {itemWeaponStats.MaximumDamage.ToString()} \n";
-                                itemDescription += $@"Range: {itemWeaponStats.Range.ToString()} \n";
-                                itemDescription += $@"Max ammo: {itemWeaponStats.AmmoInClip.ToString()} \n";
-                                itemDescription += $@"Current ammo: {itemWeaponStats.CurrentAmmo.ToString()} \n";
+                                ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
+                                string itemDescription = "";
+
+                                var selectedItem = game.GetEntity(selectedCell.ItemId);
+                                var desccomponent = selectedItem.GetComponentOfType<Description>();
+                                var itemComponent = selectedItem.GetComponentOfType<Item>();
+                                var itemWeaponStats = selectedItem.GetComponentOfType<WeaponStats>();
+
+                                itemDescription += $@"{desccomponent.Name} \n";
+                                itemDescription += $@"{desccomponent.Text} \n";
+                                itemDescription += $@"Manufacturer: {itemComponent.Author} \n";
+                                // itemDescription += $@"Manufacturer: {itemComponent.} \n";
+
+                                if (itemWeaponStats != null)
+                                {
+                                    itemDescription += $@"Attack type: {itemWeaponStats.AttackType.ToString()} \n";
+                                    itemDescription += $@"Ammo type:   {itemWeaponStats.AmmoType.ToString()}   \n";
+                                    itemDescription += $@"Damage: {itemWeaponStats.MinimumDamage.ToString()} - {itemWeaponStats.MaximumDamage.ToString()} \n";
+                                    itemDescription += $@"Range: {itemWeaponStats.Range.ToString()} \n";
+                                    itemDescription += $@"Max ammo: {itemWeaponStats.AmmoInClip.ToString()} \n";
+                                    itemDescription += $@"Current ammo: {itemWeaponStats.CurrentAmmo.ToString()} \n";
+                                }
+                                // ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
+                                // ImGui.LogText(itemDescription);
+                                var splitSting = itemDescription.Split("\\n");
+                                for (int i = 0; i < splitSting.Count(); i++)
+                                {
+                                    ImGui.TextWrapped(splitSting[i]);
+                                }
+                                ImGui.PopFont();
                             }
-                           // ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
-                            // ImGui.LogText(itemDescription);
-                            var splitSting = itemDescription.Split("\\n");
-                            for (int i = 0; i < splitSting.Count(); i++)
-                            {
-                                ImGui.TextWrapped(splitSting[i]);
-                            }
-                            ImGui.PopFont();
-                        }
-                        ImGui.EndChild();
+                        }                       
                     }
+                    ImGui.EndChild();
                 }
                 ImGui.EndChild();
             }
+
+
+            ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, 0));
+            {
+                ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
+
+
+
+                ImGui.EndChild();
+            }
+
             ImGui.End();
         }
 

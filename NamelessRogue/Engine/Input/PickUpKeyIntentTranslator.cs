@@ -58,7 +58,6 @@ namespace NamelessRogue.Engine.Input
                             intent.Intention = IntentEnum.Enter;
                             break;
                         default:
-                            intent.Intention = IntentEnum.ConetextualHotkeyPressed;
                             break;
 
                     }

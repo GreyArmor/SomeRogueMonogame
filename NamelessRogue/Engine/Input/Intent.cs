@@ -20,7 +20,6 @@ namespace NamelessRogue.Engine.Input
         SkipTurn,
         Enter,
         Escape,
-        ConetextualHotkeyPressed,
         Quicksave,
         Quickload,
         ZoomIn,
@@ -28,6 +27,7 @@ namespace NamelessRogue.Engine.Input
         MouseChanged,
         MoveAscent,
         MoveDescent,
+        Interact,
     }
 
     public class Intent

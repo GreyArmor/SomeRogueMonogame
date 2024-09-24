@@ -158,36 +158,25 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                     }
                                     break;
         
-                                case IntentEnum.ConetextualHotkeyPressed:
-                                    //var selectedItem =
-                                    //    UIController.Instance.InventoryScreen.SelectedTable.Items.FirstOrDefault(x =>
-                                    //        x.Hotkey == intent.PressedChar);
-
-                                    //if (selectedItem != null)
-                                    //{
-                                    //    UIController.Instance.SelectedTable.OnItemClick.Invoke(selectedItem);
-                                    //}
-                                    //else if (!UIController.Instance.DialogOpened)
-                                    //{
-                                    //    var selectedInItems =
-                                    //        UIController.Instance.ItemBox.Items.FirstOrDefault(x =>
-                                    //            x.Hotkey == intent.PressedChar);
-                                    //    var selectedInEquipment =
-                                    //        UIController.Instance.InventoryScreen.EquipmentBox.Items.FirstOrDefault(x =>
-                                    //            x.Hotkey == intent.PressedChar);
-
-                                    //    if (selectedInItems != null)
-                                    //    {
-                                    //        UIController.Instance.InventoryScreen.ItemBox.OnItemClick.Invoke(selectedInItems);
-                                    //    }
-
-                                    //    if (selectedInEquipment != null)
-                                    //    {
-                                    //        UIController.Instance.InventoryScreen.EquipmentBox.OnItemClick.Invoke(
-                                    //            selectedInEquipment);
-                                    //    }
-                                    //}
-
+                                case IntentEnum.Interact:
+                                    switch (UIContainer.Instance.InventoryScreen.CursorMode)
+                                    {
+                                        case InventoryScreenCursorMode.Items:
+                                            break;
+                                        case InventoryScreenCursorMode.ItemsFilter:
+                                            {
+                                                var flags = UIContainer.Instance.InventoryScreen.Flags;
+                                                var index = UIContainer.Instance.InventoryScreen.SelectedCell.X;
+                                                if (index >= 0 && index <= UIContainer.Instance.InventoryScreen.CountOfFilters)
+                                                {
+                                                    flags.FilterArray[index] = !flags.FilterArray[index];
+                                                }
+                                            }
+                                            break;
+                                        case InventoryScreenCursorMode.Equipment: 
+                                            break;
+                                       
+                                    }
                                     break;
                                 case IntentEnum.Enter:
                                     {
