@@ -16,6 +16,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
         Back,
         LefHand,
         RightHand,
+        Hands,
         Legs,
         Feet,
     }

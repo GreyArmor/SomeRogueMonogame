@@ -39,6 +39,12 @@ namespace NamelessRogue.Engine.UI
         public Point GridPosition { get; set; }
     }
 
+    public class EquipmentSlot
+    {
+        public Guid ItemId { get; set; }
+        public Point GridPosition { get; set; }
+        public Slot Slot { get; set; }
+    }
 
     public class InventoryGridModel
     {
@@ -85,6 +91,35 @@ namespace NamelessRogue.Engine.UI
         }
     }
 
+    public class InventoryEquipmentVisualModel
+    {
+        public Dictionary<Point, Slot> CursorPositionsDict = new Dictionary<Point, Slot>();
+        public Dictionary<Slot, Vector2> IconPositionsDict = new Dictionary<Slot, Vector2>();
+
+        public InventoryEquipmentVisualModel(Vector2 uiSize, Vector2 halfsize, Vector2 quartersize, int equipmentSize)
+        {
+
+            void _addSlot(Slot slot, Point point, Vector2 position)
+            {
+                CursorPositionsDict.Add(point, slot);
+                IconPositionsDict.Add(slot, position);
+            }
+
+            _addSlot(Slot.Head, new Point(1, 0),        new Vector2(quartersize.X, 0));
+            _addSlot(Slot.Face, new Point(1, 1),        new Vector2(quartersize.X, quartersize.Y / 2));
+            _addSlot(Slot.Torso, new Point(1, 2),       new Vector2(quartersize.X, halfsize.Y - (quartersize.Y / 2)));
+            _addSlot(Slot.Legs, new Point(1, 3),        new Vector2(quartersize.X, halfsize.Y + (quartersize.Y / 2)));
+            _addSlot(Slot.Feet, new Point(1, 4),        new Vector2(quartersize.X, uiSize.Y - equipmentSize));
+  
+            _addSlot(Slot.Hands, new Point(2, 0),       new Vector2(halfsize.X - (equipmentSize * 2), quartersize.Y));
+            _addSlot(Slot.Back, new Point(0, 0),        new Vector2(equipmentSize, quartersize.Y));
+
+            _addSlot(Slot.LefHand, new Point(0, 1), new Vector2(equipmentSize, halfsize.Y));
+            _addSlot(Slot.RightHand, new Point(2, 1), new Vector2(halfsize.X - (equipmentSize * 2), halfsize.Y));
+        }
+
+    }
+
 
     public class FilterFlags
     {
@@ -106,17 +141,22 @@ namespace NamelessRogue.Engine.UI
 
         public FilterFlags Flags { get { return flags; } set { flags = value; } }
         public InventoryGridModel InventoryGridModel { get; set; }
+
+        InventoryEquipmentVisualModel InventoryEquipmentVisualModel { get; set; } 
         public MainMenuAction Action { get; set; } = MainMenuAction.None;
         public InventoryScreenCursorMode CursorMode { get; set; } = InventoryScreenCursorMode.Items;
 
         public readonly int CountOfFilters = 7;
 
         Vector2 halfsize;
+        Vector2 quartersize;
         int iconSize = 32;
         int iconSizeWithMargin = 34;
 
         int topMenuHeight = 40;
         int topMenuButtonWidth;
+
+        int equipmentSize = 64;
 
         int rightSideWidth;
         List<ItemType> filters = new List<ItemType>();        
@@ -125,11 +165,13 @@ namespace NamelessRogue.Engine.UI
         {
             uiSize = new System.Numerics.Vector2(game.GetActualWidth(), game.GetActualHeight());
             halfsize = uiSize / 2;
-
+            quartersize = halfsize / 2;
             rightSideWidth = (int)(((halfsize.X / iconSizeWithMargin) - 2) * iconSizeWithMargin);
 
             InventoryGridModel = new InventoryGridModel((int)(halfsize.X/ iconSizeWithMargin), (int)(halfsize.Y / iconSizeWithMargin));
             topMenuButtonWidth = (int)(rightSideWidth / 7);
+
+            InventoryEquipmentVisualModel = new InventoryEquipmentVisualModel(uiSize, halfsize, quartersize, equipmentSize);
         }
         bool _addSelectableSameLine(int index, string text, bool selected, params ItemType[] filter)
         {
@@ -155,6 +197,12 @@ namespace NamelessRogue.Engine.UI
             return selected;
         }
 
+        void _addEquipmentCell(Vector2 position, string text)
+        {
+            ImGui.SetCursorPos(new System.Numerics.Vector2(quartersize.X, 0));
+            ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(equipmentSize, equipmentSize));
+        }
+
         public override void DrawLayout()
         {
             filters.Clear();
@@ -175,7 +223,7 @@ namespace NamelessRogue.Engine.UI
                 flags.Misc = _addSelectableSameLine(6, "Misc", flags.Misc, ItemType.Misc);
 
                 Clear();
-                Fill(filters);
+                FillInventory(filters);
 
                 ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, topMenuHeight));
                 ImGui.BeginChild("inventoryGrid", new Vector2(halfsize.X, uiSize.Y));
@@ -260,11 +308,30 @@ namespace NamelessRogue.Engine.UI
             }
 
 
+            
             ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, 0));
             {
                 ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
 
+                var hasValue = InventoryEquipmentVisualModel.CursorPositionsDict.TryGetValue(SelectedCell, out var currentSlot);
 
+                foreach (var slot in Enum.GetValues(typeof(Slot)).Cast<Slot>())
+                {
+                    var pos = InventoryEquipmentVisualModel.IconPositionsDict[slot];
+                    ImGui.SetCursorPos(pos);
+                    if (hasValue && currentSlot == slot && CursorMode == InventoryScreenCursorMode.Equipment)
+                    {
+                        ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(equipmentSize, equipmentSize));
+                    }
+                    else
+                    {
+                        ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(equipmentSize, equipmentSize));
+                    }
+                }
+
+                ////head
+                //ImGui.SetCursorPos(new System.Numerics.Vector2(quartersize.X, 0));
+                //ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(equipmentSize, equipmentSize));
 
                 ImGui.EndChild();
             }
@@ -272,16 +339,16 @@ namespace NamelessRogue.Engine.UI
             ImGui.End();
         }
 
-        public void Fill(List<ItemType> filters)
+        public void FillInventory(List<ItemType> filters)
         {
             var player = game.PlayerEntity;
             var holder = player.GetComponentOfType<ItemsHolder>();
             InventoryGridModel.Fill(holder, filters);
         }
 
-        public void FillAll()
+        public void FillInventoryWithAll()
         {
-            Fill(Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToList());
+            FillInventory(Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToList());
         }
 
         public void Clear()

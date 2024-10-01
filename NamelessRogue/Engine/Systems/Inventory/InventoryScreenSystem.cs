@@ -124,6 +124,11 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                     UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.ItemsFilter;
                                                     UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 0);
                                                 }
+                                                if(newX<0)
+                                                {
+                                                    UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Equipment;
+                                                    UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 2);
+                                                }
                                                 else
                                                 {
                                                     UIContainer.Instance.InventoryScreen.SelectedCell = new Point(newX, newY);
@@ -136,8 +141,8 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                 }
                                                 else if (newX < 0)
                                                 {
-                                                  //  UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Equipment;
-                                                 //   UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 0);
+                                                    UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Equipment;
+                                                    UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 2);
                                                 }
                                                 else if(newY>0)
                                                 {
@@ -151,6 +156,28 @@ namespace NamelessRogue.Engine.Systems.Inventory
 
                                                 break;
                                             case InventoryScreenCursorMode.Equipment:
+
+                                                if (newY >= 0 && newX >= 0 && newY <= 5)
+                                                {
+                                                    if (newY > 2)
+                                                    {
+                                                        if (newX == 0 || newX == 2)
+                                                        {
+                                                            newX = 1;
+                                                        }
+                                                    }
+
+                                                    if(newX>=3)
+                                                    {
+                                                        UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Items;
+                                                        UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 0);
+                                                    }
+                                                    else
+                                                    {
+                                                        UIContainer.Instance.InventoryScreen.SelectedCell = new Point(newX, newY);
+                                                    }
+                                                }
+
                                                 break;
                                         }
 
