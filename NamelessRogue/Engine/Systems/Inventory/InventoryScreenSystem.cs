@@ -182,7 +182,6 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                             newX = 1;
                                                         }
                                                     }
-
                                                     if(newX>=3)
                                                     {
                                                         UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Items;
@@ -217,13 +216,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                         case InventoryScreenCursorMode.Equipment: 
                                             break;
                                        
-                                    }
-                                    break;
-                                case IntentEnum.Enter:
-                                    {
-                                    //    UIController.InventoryScreen.SelectedTable.OnItemClick.Invoke(UIController.InventoryScreen
-                                    //        .SelectedTable.SelectedItem);
-                                    }
+                                    }                                    
                                     break;
                                 case IntentEnum.Escape:
                                     namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);

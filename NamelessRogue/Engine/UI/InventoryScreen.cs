@@ -18,6 +18,7 @@ using System.Numerics;
 using System.Text;
 using System.Web;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 using Point = System.Drawing.Point;
 using Vector2 = System.Numerics.Vector2;
 
@@ -110,7 +111,7 @@ namespace NamelessRogue.Engine.UI
             _addSlot(Slot.Face, new Point(1, 1),        new Vector2(quartersize.X, quartersize.Y / 2));
             _addSlot(Slot.Torso, new Point(1, 2),       new Vector2(quartersize.X, halfsize.Y - (quartersize.Y / 2)));
             _addSlot(Slot.Legs, new Point(1, 3),        new Vector2(quartersize.X, halfsize.Y + (quartersize.Y / 2)));
-            _addSlot(Slot.Feet, new Point(1, 4),        new Vector2(quartersize.X, uiSize.Y - equipmentSize));
+            _addSlot(Slot.Feet, new Point(1, 4),        new Vector2(quartersize.X, uiSize.Y - equipmentSize - (32)));
   
             _addSlot(Slot.Hands, new Point(2, 1),       new Vector2(halfsize.X - (equipmentSize * 2), quartersize.Y));
             _addSlot(Slot.Back, new Point(0, 1),        new Vector2(equipmentSize, quartersize.Y));
@@ -326,6 +327,8 @@ namespace NamelessRogue.Engine.UI
                 {
                     var pos = EquipmentVisualModel.IconPositionsDict[slot];
                     ImGui.SetCursorPos(pos);
+                    ImGui.Text(slot.ToString());
+                    ImGui.SetCursorPos(new Vector2(pos.X, pos.Y+(ImGui.GetFontSize()*2)));
                     if (hasValue && currentSlot == slot && CursorMode == InventoryScreenCursorMode.Equipment)
                     {
                         ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(equipmentSize, equipmentSize));
