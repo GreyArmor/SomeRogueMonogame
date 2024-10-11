@@ -87,7 +87,9 @@ namespace NamelessRogue.Engine.Systems.Inventory
                        // else
                         {
 
-                            var position = UIContainer.Instance.InventoryScreen.SelectedCell;
+                            //spaghetti-o
+
+                            Point position = default(Point);
                             switch (intent.Intention)
                             {
                                 case IntentEnum.MoveUp:
@@ -101,6 +103,20 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                 case IntentEnum.MoveAscent:
                                 case IntentEnum.MoveDescent:
                                     {
+
+                                        switch (UIContainer.Instance.InventoryScreen.CursorMode)
+                                        {
+                                            case InventoryScreenCursorMode.Items:
+                                                position = UIContainer.Instance.InventoryScreen.GridModel.SelectedCell;
+                                                break;
+                                            case InventoryScreenCursorMode.Equipment:
+                                                position = UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell;
+                                                break;
+                                            case InventoryScreenCursorMode.ItemsFilter:
+                                                position = UIContainer.Instance.InventoryScreen.FiltersVisualModel.SelectedCell;
+                                                break;
+                                        }
+
                                         int newX =
                                             intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
                                             intent.Intention == IntentEnum.MoveTopLeft ? position.X - 1 :
@@ -122,16 +138,16 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                 if (newY < 0)
                                                 {
                                                     UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.ItemsFilter;
-                                                    UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 0);
+                                                    UIContainer.Instance.InventoryScreen.FiltersVisualModel.SelectedCell = new Point(0, 0);
                                                 }
                                                 if(newX<0)
                                                 {
                                                     UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Equipment;
-                                                    UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 2);
+                                                    UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell = new Point(2, 1);
                                                 }
-                                                else
+                                                if(newY>=0 && newX>=0)
                                                 {
-                                                    UIContainer.Instance.InventoryScreen.SelectedCell = new Point(newX, newY);
+                                                    UIContainer.Instance.InventoryScreen.GridModel.SelectedCell = new Point(newX, newY);
                                                 }
                                                 break;
                                             case InventoryScreenCursorMode.ItemsFilter:
@@ -142,16 +158,16 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                 else if (newX < 0)
                                                 {
                                                     UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Equipment;
-                                                    UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 2);
+                                                    UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell = new Point(2, 1);
                                                 }
                                                 else if(newY>0)
                                                 {
                                                       UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Items;
-                                                      UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 0);
+                                                      UIContainer.Instance.InventoryScreen.GridModel.SelectedCell = new Point(0, 0);
                                                 }
                                                 else
                                                 {
-                                                    UIContainer.Instance.InventoryScreen.SelectedCell = new Point(newX, newY);
+                                                    UIContainer.Instance.InventoryScreen.FiltersVisualModel.SelectedCell = new Point(newX, newY);
                                                 }
 
                                                 break;
@@ -170,18 +186,16 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                     if(newX>=3)
                                                     {
                                                         UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Items;
-                                                        UIContainer.Instance.InventoryScreen.SelectedCell = new Point(0, 0);
+                                                        UIContainer.Instance.InventoryScreen.GridModel.SelectedCell= new Point(0, 0);
                                                     }
                                                     else
                                                     {
-                                                        UIContainer.Instance.InventoryScreen.SelectedCell = new Point(newX, newY);
+                                                        UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell = new Point(newX, newY);
                                                     }
                                                 }
 
                                                 break;
                                         }
-
-                                       
                                     }
                                     break;
         
@@ -193,7 +207,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                         case InventoryScreenCursorMode.ItemsFilter:
                                             {
                                                 var flags = UIContainer.Instance.InventoryScreen.Flags;
-                                                var index = UIContainer.Instance.InventoryScreen.SelectedCell.X;
+                                                var index = UIContainer.Instance.InventoryScreen.FiltersVisualModel.SelectedCell.X;
                                                 if (index >= 0 && index <= UIContainer.Instance.InventoryScreen.CountOfFilters)
                                                 {
                                                     flags.FilterArray[index] = !flags.FilterArray[index];
