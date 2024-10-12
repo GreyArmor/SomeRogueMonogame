@@ -14,6 +14,7 @@ using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
+using SharpDX.DirectWrite;
 using Point = System.Drawing.Point;
 
 namespace NamelessRogue.Engine.Systems.Inventory
@@ -47,7 +48,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
         {
             if (InventoryNeedsUpdate)
             {
-              //  UIController.InventoryScreen.FillItems(namelessGame);
+                //  UIController.InventoryScreen.FillItems(namelessGame);
                 InventoryNeedsUpdate = false;
             }
 
@@ -56,7 +57,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
             //    action.Invoke(this, namelessGame);
             //}
 
-          //  UIController.Instance.InventoryScreen.Actions.Clear();
+            //  UIController.Instance.InventoryScreen.Actions.Clear();
 
             foreach (IEntity entity in RegisteredEntities)
             {
@@ -66,25 +67,25 @@ namespace NamelessRogue.Engine.Systems.Inventory
                     var playerEntity = namelessGame.PlayerEntity;
                     foreach (Intent intent in inputComponent.Intents)
                     {
-                       //// if (UIController.Instance.InventoryScreen.AmountDialog != null)
-                       // {
-                       //     switch (intent.Intention)
-                       //     {
-                       //         case IntentEnum.Enter:
-                       //             {
-                       //                // UIController.Instance.InventoryScreen.AmountDialog.ButtonOk.DoClick();
-                       //             }
-                       //             break;
-                       //         case IntentEnum.Escape:
-                       //             {
-                       //                 //UIController.Instance.InventoryScreen.AmountDialog.ButtonCancel.DoClick();
-                       //             }
-                       //             break;
-                       //         default:
-                       //             break;
-                       //     }
-                       // }
-                       // else
+                        //// if (UIController.Instance.InventoryScreen.AmountDialog != null)
+                        // {
+                        //     switch (intent.Intention)
+                        //     {
+                        //         case IntentEnum.Enter:
+                        //             {
+                        //                // UIController.Instance.InventoryScreen.AmountDialog.ButtonOk.DoClick();
+                        //             }
+                        //             break;
+                        //         case IntentEnum.Escape:
+                        //             {
+                        //                 //UIController.Instance.InventoryScreen.AmountDialog.ButtonCancel.DoClick();
+                        //             }
+                        //             break;
+                        //         default:
+                        //             break;
+                        //     }
+                        // }
+                        // else
                         {
 
                             //spaghetti-o
@@ -103,7 +104,6 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                 case IntentEnum.MoveAscent:
                                 case IntentEnum.MoveDescent:
                                     {
-
                                         switch (UIContainer.Instance.InventoryScreen.CursorMode)
                                         {
                                             case InventoryScreenCursorMode.Items:
@@ -131,7 +131,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                             intent.Intention == IntentEnum.MoveTopRight ? position.Y - 1 :
                                             position.Y;
 
-                                        switch(UIContainer.Instance.InventoryScreen.CursorMode)
+                                        switch (UIContainer.Instance.InventoryScreen.CursorMode)
                                         {
                                             case InventoryScreenCursorMode.Items:
 
@@ -140,12 +140,12 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                     UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.ItemsFilter;
                                                     UIContainer.Instance.InventoryScreen.FiltersVisualModel.SelectedCell = new Point(0, 0);
                                                 }
-                                                if(newX<0)
+                                                if (newX < 0)
                                                 {
                                                     UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Equipment;
                                                     UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell = new Point(2, 1);
                                                 }
-                                                if(newY>=0 && newX>=0)
+                                                if (newY >= 0 && newX >= 0)
                                                 {
                                                     UIContainer.Instance.InventoryScreen.GridModel.SelectedCell = new Point(newX, newY);
                                                 }
@@ -160,10 +160,10 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                     UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Equipment;
                                                     UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell = new Point(2, 1);
                                                 }
-                                                else if(newY>0)
+                                                else if (newY > 0)
                                                 {
-                                                      UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Items;
-                                                      UIContainer.Instance.InventoryScreen.GridModel.SelectedCell = new Point(0, 0);
+                                                    UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Items;
+                                                    UIContainer.Instance.InventoryScreen.GridModel.SelectedCell = new Point(0, 0);
                                                 }
                                                 else
                                                 {
@@ -182,26 +182,53 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                             newX = 1;
                                                         }
                                                     }
-                                                    if(newX>=3)
+                                                    if (newX >= 3)
                                                     {
                                                         UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Items;
-                                                        UIContainer.Instance.InventoryScreen.GridModel.SelectedCell= new Point(0, 0);
+                                                        UIContainer.Instance.InventoryScreen.GridModel.SelectedCell = new Point(0, 0);
                                                     }
                                                     else
                                                     {
                                                         UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell = new Point(newX, newY);
                                                     }
                                                 }
-
                                                 break;
                                         }
                                     }
                                     break;
-        
+
                                 case IntentEnum.Interact:
                                     switch (UIContainer.Instance.InventoryScreen.CursorMode)
                                     {
                                         case InventoryScreenCursorMode.Items:
+                                            {
+                                                var p = UIContainer.Instance.InventoryScreen.GridModel.SelectedCell;
+                                                var itemId = UIContainer.Instance.InventoryScreen.GridModel.Cells[p.X, p.Y]?.ItemId;
+
+                                                if (itemId.HasValue && itemId != Guid.Empty)
+                                                {
+
+                                                    var itemEntity = namelessGame.GetEntity(itemId.Value);
+
+                                                    var equipmentComponent = itemEntity.GetComponentOfType<Equipment>();
+
+                                                    var slot = equipmentComponent.PossibleSlots.First();
+                                                    var playerEquipment = namelessGame.PlayerEntity.GetComponentOfType<EquipmentSlots>();
+                                                    var slotTuple = playerEquipment.Slots.First(x => x.Item1 == slot);
+                                                    EquipmentSlot equipmentSlot = null;
+                                                    //unequip previous item if any
+                                                    if (slotTuple.Item2.Equipment != null)
+                                                    {
+                                                        equipmentSlot = slotTuple.Item2;
+                                                        var takeOffCommand = new EquipOrTakeOffCommand(equipmentSlot.Equipment.ParentEntityId, false);
+                                                        namelessGame.Commander.EnqueueCommand(takeOffCommand);
+                                                    }
+
+                                                    var equipCommand = new EquipOrTakeOffCommand(itemEntity.Id, true, slot);
+                                                    namelessGame.Commander.EnqueueCommand(equipCommand);
+
+                                                }
+                                            }
                                             break;
                                         case InventoryScreenCursorMode.ItemsFilter:
                                             {
@@ -213,13 +240,25 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                 }
                                             }
                                             break;
-                                        case InventoryScreenCursorMode.Equipment: 
+                                        case InventoryScreenCursorMode.Equipment:
+                                            {
+                                                var slot = UIContainer.Instance.InventoryScreen.EquipmentVisualModel.CursorPositionsDict[UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell];
+                                                var playerEquipment = namelessGame.PlayerEntity.GetComponentOfType<EquipmentSlots>();
+                                                var slotTuple = playerEquipment.Slots.First(x => x.Item1 == slot);
+                                                EquipmentSlot equipmentSlot = null;
+                                                if (slotTuple.Item2.Equipment != null)
+                                                {
+                                                    equipmentSlot = slotTuple.Item2;
+                                                    var takeOffCommand = new EquipOrTakeOffCommand(equipmentSlot.Equipment.ParentEntityId, false);
+                                                    namelessGame.Commander.EnqueueCommand(takeOffCommand);
+                                                }
+                                            }
                                             break;
-                                       
-                                    }                                    
+
+                                    }
                                     break;
                                 case IntentEnum.Escape:
-                                    namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
+                                    BackToGame(namelessGame);
                                     break;
                                 default:
                                     break;
@@ -229,9 +268,18 @@ namespace NamelessRogue.Engine.Systems.Inventory
 
                     inputComponent.Intents.Clear();
                 }
+
+
+                bool updated = false;
+                while (namelessGame.Commander.DequeueCommand<UpdateInventoryScreenCommand>(out var equipOrTakeOffCommand))
+                {
+                    if (!updated)
+                    {
+                        updated = true;
+                        UIContainer.Instance.InventoryScreen.FillInventoryWithAll();
+                    }
+                }
             }
-
-
         }
 
         internal void BackToGame(NamelessGame game)
@@ -239,9 +287,5 @@ namespace NamelessRogue.Engine.Systems.Inventory
             game.ContextToSwitch = ContextFactory.GetIngameContext(game);
         }
 
-        internal void ScheduleUpdate()
-        {
-            InventoryNeedsUpdate = true;
-        }
     }
 }

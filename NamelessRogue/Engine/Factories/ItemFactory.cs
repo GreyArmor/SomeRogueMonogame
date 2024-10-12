@@ -23,7 +23,8 @@ namespace NamelessRogue.Engine.Factories
             entity.AddComponent(new Description("Test gun", "Created to test inventory system in 2024"));
             entity.AddComponent(new Item(ItemType.Weapon, 0, ItemQuality.Normal, 1, 1, "CorpoCorp Inc."));
             entity.AddComponent(new WeaponStats(1, 10, 10, AttackType.Ranged, AmmoType.LowCaliber, 20, 0));
-          //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
+            entity.AddComponent(new Equipment(Slot.RightHand, Slot.LefHand));
+            //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
             return entity;
         }
         public static Entity CreateRedGun(NamelessGame game)
@@ -33,6 +34,7 @@ namespace NamelessRogue.Engine.Factories
             entity.AddComponent(new Description("Red test gun", "The same as Test gun, but red"));
             entity.AddComponent(new Item(ItemType.Weapon, 0, ItemQuality.Normal, 1, 1, "CorpoCorp Inc."));
             entity.AddComponent(new WeaponStats(1, 10, 10, AttackType.Ranged, AmmoType.LowCaliber, 20, 0));
+            entity.AddComponent(new Equipment(Slot.RightHand, Slot.LefHand));
             //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
             return entity;
 

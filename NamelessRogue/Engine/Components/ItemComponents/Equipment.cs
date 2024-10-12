@@ -11,8 +11,8 @@ namespace NamelessRogue.Engine.Components.ItemComponents
 
     public class Equipment : Component
     {
-        public List<List<Slot>> PossibleSlots { get; }
-        public Equipment(params List<Slot>[] slots)
+        public List<Slot> PossibleSlots { get; }
+        public Equipment(params Slot[] slots)
         {
             PossibleSlots = slots.ToList();
         }

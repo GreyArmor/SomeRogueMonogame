@@ -53,7 +53,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
 		{
 		}
 
-		public void Equip(Equipment equipment, List<Slot> equipTo)
+		public void Equip(Equipment equipment, Equipment equipmentComponent, List<Slot> equipTo)
         {
             var slots = Slots.Where(x => equipTo.Contains(x.Item1));
             foreach (var tuple in slots)

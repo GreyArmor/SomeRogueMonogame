@@ -10,6 +10,7 @@ using NamelessRogue.Engine.Systems.Inventory;
 using NamelessRogue.shell;
 using RogueSharp;
 using SharpDX;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -40,7 +41,7 @@ namespace NamelessRogue.Engine.UI
         public Point GridPosition { get; set; }
     }
 
-    public class EquipmentSlot
+    public class EquipmentSlotElem
     {
         public Guid ItemId { get; set; }
         public Point GridPosition { get; set; }
@@ -325,6 +326,9 @@ namespace NamelessRogue.Engine.UI
 
                 foreach (var slot in Enum.GetValues(typeof(Slot)).Cast<Slot>())
                 {
+
+                    var playerEquipment = game.PlayerEntity.GetComponentOfType<EquipmentSlots>();                  
+
                     var pos = EquipmentVisualModel.IconPositionsDict[slot];
                     ImGui.SetCursorPos(pos);
                     ImGui.Text(slot.ToString());
@@ -337,6 +341,20 @@ namespace NamelessRogue.Engine.UI
                     {
                         ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(equipmentSize, equipmentSize));
                     }
+
+                    var equipmentSlot = playerEquipment.Slots.FirstOrDefault(x => x.Item1 == slot)?.Item2;
+                    if (equipmentSlot != null && equipmentSlot.Equipment != null)
+                    {
+                        var drawable = game.GetEntity(equipmentSlot.Equipment.ParentEntityId).GetComponentOfType<Drawable>();
+                        var itemId = drawable.ObjectID;
+
+                        ImGui.SetCursorPos(new Vector2(pos.X, pos.Y + (ImGui.GetFontSize() * 2)));
+                        if (itemId! != "")
+                        {
+                            ImGui.Image(ImGuiImageLibrary.Textures[itemId], new Vector2(equipmentSize, equipmentSize));
+                        }
+                    }
+
                 }
 
                 ////head

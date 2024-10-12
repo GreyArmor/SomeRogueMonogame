@@ -39,6 +39,7 @@ namespace NamelessRogue.Engine.Factories
 				systems.Add(new TurnManagementSystem());
                 systems.Add(new CombatSystem());
                 systems.Add(new InventorySystem());
+                systems.Add(new EquipSystem());
                 systems.Add(new SwitchSystem());
                 systems.Add(new DamageHandlingSystem());
                 systems.Add(new DeathSystem());
@@ -122,6 +123,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new InventoryKeyIntentTranslator(), game));
                 systems.Add(new InventoryScreenSystem());
                 systems.Add(new InventorySystem());
+                systems.Add(new EquipSystem());
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
 

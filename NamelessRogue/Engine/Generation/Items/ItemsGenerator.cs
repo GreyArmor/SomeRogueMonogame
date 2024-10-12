@@ -91,7 +91,7 @@ namespace NamelessRogue.Engine.Generation.Items
             weapon.AddComponent(new Description(weaponsName, weaponsDescription));
             weapon.AddComponent((Item)parameters.ItemData.Clone());
             weapon.AddComponent(new Drawable(parameters.Representation.ObjectID, parameters.Representation.CharColor));
-            weapon.AddComponent(new Equipment(new List<Slot>(){}));
+            weapon.AddComponent(new Equipment());
             weapon.AddComponent((WeaponStats)parameters.Stats.Clone());
             return weapon;
 
