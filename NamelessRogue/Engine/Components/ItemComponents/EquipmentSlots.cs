@@ -37,6 +37,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
             var slotLeft = new EquipmentSlot(Slot.LefHand);
             var slotRight = new EquipmentSlot(Slot.RightHand);
 
+            Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Hands, new EquipmentSlot(Slot.Hands)));
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.LefHand, slotLeft));
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.RightHand, slotRight));
 

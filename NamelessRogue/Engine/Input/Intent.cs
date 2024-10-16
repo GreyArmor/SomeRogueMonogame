@@ -28,6 +28,8 @@ namespace NamelessRogue.Engine.Input
         MoveAscent,
         MoveDescent,
         Interact,
+        Add,
+        Substract,
     }
 
     public class Intent

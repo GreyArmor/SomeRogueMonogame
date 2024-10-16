@@ -106,6 +106,10 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                     {
                                         switch (UIContainer.Instance.InventoryScreen.CursorMode)
                                         {
+
+                                            case InventoryScreenCursorMode.PageSwitch:
+                                                position = UIContainer.Instance.InventoryScreen.PageSwitchModel.SelectedCell;
+                                                break;
                                             case InventoryScreenCursorMode.Items:
                                                 position = UIContainer.Instance.InventoryScreen.GridModel.SelectedCell;
                                                 break;
@@ -133,12 +137,31 @@ namespace NamelessRogue.Engine.Systems.Inventory
 
                                         switch (UIContainer.Instance.InventoryScreen.CursorMode)
                                         {
-                                            case InventoryScreenCursorMode.Items:
-
+                                            case InventoryScreenCursorMode.PageSwitch:
                                                 if (newY < 0)
                                                 {
                                                     UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.ItemsFilter;
                                                     UIContainer.Instance.InventoryScreen.FiltersVisualModel.SelectedCell = new Point(0, 0);
+                                                }
+                                                else if (newX < 0 || newX > 1)
+                                                {
+                                                }
+                                                else if (newY > 0)
+                                                {
+                                                    UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Items;
+                                                    UIContainer.Instance.InventoryScreen.GridModel.SelectedCell = new Point(0, 0);
+                                                }
+                                                else
+                                                {
+                                                    UIContainer.Instance.InventoryScreen.PageSwitchModel.SelectedCell = new Point(newX, newY);
+                                                }
+                                                break;
+                                            case InventoryScreenCursorMode.Items:
+
+                                                if (newY < 0)
+                                                {
+                                                    UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.PageSwitch;
+                                                    UIContainer.Instance.InventoryScreen.PageSwitchModel.SelectedCell = new Point(0, 0);
                                                 }
                                                 if (newX < 0)
                                                 {
@@ -162,7 +185,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                 }
                                                 else if (newY > 0)
                                                 {
-                                                    UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.Items;
+                                                    UIContainer.Instance.InventoryScreen.CursorMode = InventoryScreenCursorMode.PageSwitch;
                                                     UIContainer.Instance.InventoryScreen.GridModel.SelectedCell = new Point(0, 0);
                                                 }
                                                 else
@@ -200,10 +223,20 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                 case IntentEnum.Interact:
                                     switch (UIContainer.Instance.InventoryScreen.CursorMode)
                                     {
+                                        case InventoryScreenCursorMode.PageSwitch:
+                                            if (UIContainer.Instance.InventoryScreen.PageSwitchModel.SelectedCell.X == 0)
+                                            {
+                                                UIContainer.Instance.InventoryScreen.PreviousPage();
+                                            }
+                                            else if (UIContainer.Instance.InventoryScreen.PageSwitchModel.SelectedCell.X == 1)
+                                            {
+                                                UIContainer.Instance.InventoryScreen.NextPage();
+                                            }
+                                            break;
                                         case InventoryScreenCursorMode.Items:
                                             {
                                                 var p = UIContainer.Instance.InventoryScreen.GridModel.SelectedCell;
-                                                var itemId = UIContainer.Instance.InventoryScreen.GridModel.Cells[p.X, p.Y]?.ItemId;
+                                                var itemId = UIContainer.Instance.InventoryScreen.GridModel.CurrentPage.Cells[p.X, p.Y]?.ItemId;
 
                                                 if (itemId.HasValue && itemId != Guid.Empty)
                                                 {
@@ -254,11 +287,16 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                 }
                                             }
                                             break;
-
                                     }
                                     break;
                                 case IntentEnum.Escape:
                                     BackToGame(namelessGame);
+                                    break;
+                                case IntentEnum.Add:
+                                    UIContainer.Instance.InventoryScreen.NextPage();
+                                    break;
+                                case IntentEnum.Substract:
+                                    UIContainer.Instance.InventoryScreen.PreviousPage();
                                     break;
                                 default:
                                     break;

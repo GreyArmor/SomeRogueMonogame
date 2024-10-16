@@ -330,7 +330,7 @@ namespace NamelessRogue.shell
 				//	CharacterFactory.CreateNpcField(rect, -Vector2.UnitY, "Blue", "2", this);
 				var itemsHolder = player.GetComponentOfType<ItemsHolder>();
 
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < 2000; i++)
 				{
 					var gun = ItemFactory.CreateGun(this);
                     itemsHolder.Items.Add(gun);

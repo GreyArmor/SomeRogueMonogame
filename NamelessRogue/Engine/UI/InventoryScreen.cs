@@ -32,7 +32,7 @@ namespace NamelessRogue.Engine.UI
 
     public enum InventoryScreenCursorMode
     {
-        Items, ItemsFilter, Equipment,
+        Items, ItemsFilter, Equipment, PageSwitch
     }
 
     public class GridCell
@@ -48,49 +48,90 @@ namespace NamelessRogue.Engine.UI
         public Slot Slot { get; set; }
     }
 
-    public class InventoryGridModel
+    public class InventoryGridModelPage
     {
-        public Point SelectedCell { get; set; } = new Point();
+        public int PageIndex { get; set; }
+
         public GridCell[,] Cells { get; set; }
         public int Width { get; }
         public int Height { get; }
 
-        public InventoryGridModel(int width, int height)
+        public InventoryGridModelPage(int pageIndex, int width, int height)
         {
+            PageIndex = pageIndex;
+            Width = width;
+            Height = height;
             Cells = new GridCell[width, height];
+        }
+    }
+    public class InventoryGridModel
+    {
+        public Point SelectedCell { get; set; } = new Point();
+        public int CurrentPageIndex { get; set; } = 0;
+        public InventoryGridModelPage CurrentPage { get; set; }
+        public List<InventoryGridModelPage> Pages { get; set; } = new List<InventoryGridModelPage>();     
+        public int Width { get; }
+        public int Height { get; }
+        public int ItemsPerPage { get { return Width * Height; } }
+
+        public InventoryGridModel(int width, int height)
+        {       
             Width = width;
             Height = height;
         }
 
         public void Fill(ItemsHolder holder, List<ItemType> filters)
         {
+            Pages.Clear();
+
             var itemQueue = new Queue<IEntity>(holder.Items.Where(entity => filters.Contains(entity.GetComponentOfType<Item>().Type)));
-            for (int y = 0; y < Height; y++)
+            int pageIndex = 0;
+            while (itemQueue.Count > 0)
             {
-                for (int x = 0; x < Width; x++)
+                var inventoryGridModelPage = new InventoryGridModelPage(pageIndex, Width, Height);
+                for (int y = 0; y < Height; y++)
                 {
-                    if (!itemQueue.Any())
+                    for (int x = 0; x < Width; x++)
                     {
-                        break;
+                        if (!itemQueue.Any())
+                        {
+                            break;
+                        }
+                        var item = itemQueue.Dequeue();
+                        var itemComponent = item.GetComponentOfType<Item>();
+                        inventoryGridModelPage.Cells[x, y] = new GridCell();
+                        inventoryGridModelPage.Cells[x, y].GridPosition = new Point(x, y);
+                        inventoryGridModelPage.Cells[x, y].ItemId = item.Id;
                     }
-                    var item = itemQueue.Dequeue();
-                    var itemComponent = item.GetComponentOfType<Item>();
-                        Cells[x, y] = new GridCell();
-                        Cells[x, y].GridPosition = new Point(x, y);
-                        Cells[x, y].ItemId = item.Id;
                 }
+                Pages.Add(inventoryGridModelPage);
+                pageIndex++;
             }
+            if(Pages.Count==0)
+            {
+                Pages.Add(new InventoryGridModelPage(0, Width, Height));
+            }
+            if(CurrentPageIndex>= Pages.Count)
+            {
+                CurrentPageIndex = 0;
+            }
+            CurrentPage = Pages[CurrentPageIndex];
         }
 
         public void Clear()
         {
-            for (int y = 0; y < Height; y++)
+            foreach (var page in Pages)
             {
-                for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
                 {
-                    Cells[x, y] = null;
+                    for (int x = 0; x < Width; x++)
+                    {
+                        page.Cells[x, y] = null;
+                    }
                 }
             }
+            Pages.Clear();
+            Pages.Add(new InventoryGridModelPage(0, Width, Height));
         }
     }
 
@@ -127,30 +168,37 @@ namespace NamelessRogue.Engine.UI
     {
         public Point SelectedCell { get; set; } = new Point();
     }
-    public class FilterFlags
+
+
+    public class InventoryScreenPageSwitchModel    {    
+        public Point SelectedCell { get; set; } = new Point();
+    }
+    public class FilterFlags 
     {
         public bool[] FilterArray = new bool[7];
-
+        public FilterFlags() { }
         public bool All { get { return FilterArray[0]; } set { FilterArray[0] = value; } }
         public bool Weapons { get { return FilterArray[1]; } set { FilterArray[1] = value; } }
         public bool Armor { get { return FilterArray[2]; } set { FilterArray[2] = value; } }
         public bool Consumables { get { return FilterArray[3]; } set { FilterArray[3] = value; } }
         public bool Food { get { return FilterArray[4]; } set { FilterArray[4] = value; } }
         public bool Ammo { get { return FilterArray[5]; } set { FilterArray[5] = value; } }
-
         public bool Misc { get { return FilterArray[6]; } set { FilterArray[6] = value; } }
     }
+
 
     public class InventoryScreen : BaseScreen
     {
         FilterFlags flags = new FilterFlags() { All = true };
-
+        FilterFlags previousFlags = new FilterFlags() { All = true };
         public FilterFlags Flags { get { return flags; } set { flags = value; } }
         public InventoryGridModel GridModel { get; set; }
 
         public InventoryFiltersVisualModel FiltersVisualModel { get; set; }
 
-        public InventoryEquipmentVisualModel EquipmentVisualModel { get; set; } 
+        public InventoryEquipmentVisualModel EquipmentVisualModel { get; set; }
+
+        public InventoryScreenPageSwitchModel PageSwitchModel { get; set; }
         public MainMenuAction Action { get; set; } = MainMenuAction.None;
         public InventoryScreenCursorMode CursorMode { get; set; } = InventoryScreenCursorMode.Items;
 
@@ -163,6 +211,8 @@ namespace NamelessRogue.Engine.UI
 
         int topMenuHeight = 40;
         int topMenuButtonWidth;
+
+        int pageSelecterHeight = 40;
 
         int equipmentSize = 64;
 
@@ -182,6 +232,7 @@ namespace NamelessRogue.Engine.UI
             GridModel = new InventoryGridModel((int)(halfsize.X / iconSizeWithMargin), (int)(halfsize.Y / iconSizeWithMargin));
             EquipmentVisualModel = new InventoryEquipmentVisualModel(uiSize, halfsize, quartersize, equipmentSize);
             FiltersVisualModel = new InventoryFiltersVisualModel();
+            PageSwitchModel = new InventoryScreenPageSwitchModel();
         }
         bool _addSelectableSameLine(int index, string text, bool selected, params ItemType[] filter)
         {
@@ -234,14 +285,48 @@ namespace NamelessRogue.Engine.UI
                 Clear();
                 FillInventory(filters);
 
-                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, topMenuHeight));
+                var textForSizing = $@"Page 999/999";
+                var pageText = $@"Page {GridModel.CurrentPageIndex + 1}/{GridModel.Pages.Count}";
+                var textSize = ImGui.CalcTextSize(pageText);
+                var oneCharSize = ImGui.CalcTextSize("+");
+                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X - (textSize.X / 2) - (iconSize*2), topMenuHeight));
+                if (this.CursorMode == InventoryScreenCursorMode.PageSwitch && PageSwitchModel.SelectedCell.X == 0)
+                {
+                    ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(iconSize, iconSize));
+                }
+                else
+                {
+                    ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
+                }
+                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X - (textSize.X / 2) - (iconSize * 2), topMenuHeight) + oneCharSize);
+                ImGui.Text("-");
+
+
+                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X - (textSize.X / 2), topMenuHeight));
+                ImGui.Text(pageText);
+
+                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X + (textSize.X / 2) + iconSize, topMenuHeight));
+
+                if (this.CursorMode == InventoryScreenCursorMode.PageSwitch && PageSwitchModel.SelectedCell.X == 1)
+                {
+                    ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(iconSize, iconSize));
+                }
+                else
+                {
+                    ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
+                }
+                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X + (textSize.X / 2), topMenuHeight) + oneCharSize);
+                ImGui.Text("+");
+
+
+                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, topMenuHeight + pageSelecterHeight));
                 ImGui.BeginChild("inventoryGrid", new Vector2(halfsize.X, uiSize.Y));
                 {
-                    for (int y = 0; y <GridModel.Height; y++)
+                    for (int y = 0; y < GridModel.Height; y++)
                     {
                         for (int x = 0; x < GridModel.Width; x++)
                         {
-                            var cell = GridModel.Cells[x, y];
+                            var cell = GridModel.CurrentPage.Cells[x, y];
                             string itemId = "";
 
                             if (cell != null)
@@ -249,7 +334,7 @@ namespace NamelessRogue.Engine.UI
                                 var drawable = game.GetEntity(cell.ItemId).GetComponentOfType<Drawable>();
                                 itemId = drawable.ObjectID;
                             }
-                            ImGui.SetCursorPos(new System.Numerics.Vector2(34 * x, (iconSizeWithMargin * y)));
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(iconSizeWithMargin * x, (iconSizeWithMargin * y)));
                             if (this.CursorMode == InventoryScreenCursorMode.Items && x == GridModel.SelectedCell.X && y == GridModel.SelectedCell.Y )
                             {
                                 if ((34 * y) > uiSize.Y)
@@ -262,7 +347,7 @@ namespace NamelessRogue.Engine.UI
                             {
                                 ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
                             }
-                            ImGui.SetCursorPos(new System.Numerics.Vector2(34 * x, (iconSizeWithMargin * y)));
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(iconSizeWithMargin * x, (iconSizeWithMargin * y)));
                             if (itemId! != "")
                             {
                                 ImGui.Image(ImGuiImageLibrary.Textures[itemId], new Vector2(iconSize, iconSize));
@@ -275,7 +360,7 @@ namespace NamelessRogue.Engine.UI
                     {
                         if (this.CursorMode == InventoryScreenCursorMode.Items)
                         {
-                            var selectedCell = GridModel.Cells[GridModel.SelectedCell.X, GridModel.SelectedCell.Y];
+                            var selectedCell = GridModel.CurrentPage.Cells[GridModel.SelectedCell.X, GridModel.SelectedCell.Y];
                             if (selectedCell != null)
                             {
                                 ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
@@ -382,6 +467,24 @@ namespace NamelessRogue.Engine.UI
         public void Clear()
         {
             GridModel.Clear(); 
+        }
+
+        internal void NextPage()
+        {
+            if (GridModel.CurrentPageIndex < GridModel.Pages.Count-1)
+            {
+                GridModel.CurrentPageIndex++;
+                GridModel.CurrentPage = GridModel.Pages[GridModel.CurrentPageIndex];
+            }
+        }
+
+        internal void PreviousPage()
+        {
+            if (GridModel.CurrentPageIndex > 0)
+            {
+                GridModel.CurrentPageIndex--;
+                GridModel.CurrentPage = GridModel.Pages[GridModel.CurrentPageIndex];
+            }
         }
     }
 }
