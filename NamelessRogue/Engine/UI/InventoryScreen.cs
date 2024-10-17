@@ -291,34 +291,41 @@ namespace NamelessRogue.Engine.UI
                 var oneCharSize = ImGui.CalcTextSize("+");
 
                 ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X - (textSize.X / 2) - (iconSize*2), topMenuHeight));
-                if (this.CursorMode == InventoryScreenCursorMode.PageSwitch && PageSwitchModel.SelectedCell.X == 0)
+                ImGui.BeginChild("previousPageswitch", new Vector2(iconSize, iconSize));
                 {
-                    ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(iconSize, iconSize));
+                    if (this.CursorMode == InventoryScreenCursorMode.PageSwitch && PageSwitchModel.SelectedCell.X == 0)
+                    {
+                        ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(iconSize, iconSize));
+                    }
+                    else
+                    {
+                        ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
+                    }
+                    ImGui.SetCursorPos(new System.Numerics.Vector2((iconSize / 2) - (oneCharSize.X / 2), (iconSize / 2) - (oneCharSize.Y / 2)));
+                    ImGui.Text("-");
                 }
-                else
-                {
-                    ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
-                }
+                ImGui.EndChild();
 
-                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X - (textSize.X) - (iconSize / 2) - (oneCharSize.X / 3), topMenuHeight + (iconSize / 2) - (oneCharSize.Y / 2)));
-                ImGui.Text("-");
 
 
                 ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X - (textSize.X / 2), topMenuHeight));
                 ImGui.Text(pageText);
 
                 ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X + (textSize.X / 2) + iconSize, topMenuHeight));
-                if (this.CursorMode == InventoryScreenCursorMode.PageSwitch && PageSwitchModel.SelectedCell.X == 1)
+                ImGui.BeginChild("nextPageSwitch", new Vector2(iconSize, iconSize));
                 {
-                    ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(iconSize, iconSize));
+                    if (this.CursorMode == InventoryScreenCursorMode.PageSwitch && PageSwitchModel.SelectedCell.X == 1)
+                    {
+                        ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(iconSize, iconSize));
+                    }
+                    else
+                    {
+                        ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
+                    }
+                    ImGui.SetCursorPos(new System.Numerics.Vector2((iconSize / 2) - (oneCharSize.X/2), (iconSize / 2) - (oneCharSize.Y / 2)));
+                    ImGui.Text("+");
                 }
-                else
-                {
-                    ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
-                }
-
-                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X + (textSize.X) + (iconSize/2) - (oneCharSize.X/3), topMenuHeight + (iconSize / 2) - (oneCharSize.Y/2)));
-                ImGui.Text("+");
+                ImGui.EndChild();
 
 
                 ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X, topMenuHeight + pageSelecterHeight));
