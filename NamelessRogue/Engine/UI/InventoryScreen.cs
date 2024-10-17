@@ -289,6 +289,7 @@ namespace NamelessRogue.Engine.UI
                 var pageText = $@"Page {GridModel.CurrentPageIndex + 1}/{GridModel.Pages.Count}";
                 var textSize = ImGui.CalcTextSize(pageText);
                 var oneCharSize = ImGui.CalcTextSize("+");
+
                 ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X - (textSize.X / 2) - (iconSize*2), topMenuHeight));
                 if (this.CursorMode == InventoryScreenCursorMode.PageSwitch && PageSwitchModel.SelectedCell.X == 0)
                 {
@@ -298,7 +299,8 @@ namespace NamelessRogue.Engine.UI
                 {
                     ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
                 }
-                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X - (textSize.X / 2) - (iconSize * 2), topMenuHeight) + oneCharSize);
+
+                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X - (textSize.X) - (iconSize / 2) - (oneCharSize.X / 3), topMenuHeight + (iconSize / 2) - (oneCharSize.Y / 2)));
                 ImGui.Text("-");
 
 
@@ -306,7 +308,6 @@ namespace NamelessRogue.Engine.UI
                 ImGui.Text(pageText);
 
                 ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X + (textSize.X / 2) + iconSize, topMenuHeight));
-
                 if (this.CursorMode == InventoryScreenCursorMode.PageSwitch && PageSwitchModel.SelectedCell.X == 1)
                 {
                     ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], new Vector2(iconSize, iconSize));
@@ -315,7 +316,8 @@ namespace NamelessRogue.Engine.UI
                 {
                     ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
                 }
-                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X + (textSize.X / 2), topMenuHeight) + oneCharSize);
+
+                ImGui.SetCursorPos(new System.Numerics.Vector2(halfsize.X + quartersize.X + (textSize.X) + (iconSize/2) - (oneCharSize.X/3), topMenuHeight + (iconSize / 2) - (oneCharSize.Y/2)));
                 ImGui.Text("+");
 
 
