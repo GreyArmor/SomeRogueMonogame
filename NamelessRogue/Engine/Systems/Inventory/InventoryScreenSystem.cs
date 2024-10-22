@@ -212,7 +212,6 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                     }
                                                     else
                                                     {
-
                                                         var newP = new Point(newX, newY);
                                                         if (UIContainer.Instance.InventoryScreen.EquipmentVisualModel.CursorPositionsDict.TryGetValue(newP, out var slot))
                                                         {

@@ -521,8 +521,11 @@ namespace NamelessRogue.Engine.UI
                             var selectedItem = game.GetEntity(equipmentSlot.Equipment.ParentEntityId);
                             var desccomponent = selectedItem.GetComponentOfType<Description>();
                             var itemComponent = selectedItem.GetComponentOfType<Item>();
+                          
                             var itemWeaponStats = selectedItem.GetComponentOfType<WeaponStats>();
 
+                            var itemArmorStats = selectedItem.GetComponentOfType<ArmorStats>();
+                            var itemArmorResistanceStats = selectedItem.GetComponentOfType<ResistanceStat>();
                             itemDescription += $@"{desccomponent.Name} \n";
                             itemDescription += $@"{desccomponent.Text} \n";
                             itemDescription += $@"Manufacturer: {itemComponent.Author} \n";
@@ -536,6 +539,18 @@ namespace NamelessRogue.Engine.UI
                                 itemDescription += $@"Range: {itemWeaponStats.Range.ToString()} \n";
                                 itemDescription += $@"Max ammo: {itemWeaponStats.AmmoInClip.ToString()} \n";
                                 itemDescription += $@"Current ammo: {itemWeaponStats.CurrentAmmo.ToString()} \n";
+                            }
+
+                            if (itemArmorStats != null)
+                            {
+                                itemDescription += $@"Armor type: {itemArmorStats.DamageType.ToString()} \n";
+                                itemDescription += $@"Armor value: {itemArmorStats.Value.Value.ToString()} \n";
+                            }
+
+                            if (itemArmorResistanceStats != null)
+                            {
+                                itemDescription += $@"Armor resistance type: {itemArmorResistanceStats.DamageType.ToString()} \n";
+                                itemDescription += $@"Armor resistance %: {itemArmorResistanceStats.Value.Value.ToString()} \n";
                             }
                             // ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
                             // ImGui.LogText(itemDescription);
