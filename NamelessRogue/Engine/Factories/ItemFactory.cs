@@ -39,5 +39,20 @@ namespace NamelessRogue.Engine.Factories
             return entity;
 
         }
+
+        public static Entity CreateHelmet(NamelessGame game)
+        {
+            Entity entity = new Entity();
+            entity.AddComponent(new Drawable("helmet", new Color(1f)));
+            entity.AddComponent(new Description("Test helmet", "Probably pretty rusty"));
+            entity.AddComponent(new Item(ItemType.Armor, 0, ItemQuality.Normal, 1, 1, "CorpoCorp Inc."));
+            entity.AddComponent(new ArmorStats() { DamageType = DamageType.Physical, Value = new SimpleStat(10,10,10) });
+            entity.AddComponent(new ResistanceStat() { DamageType = DamageType.Physical, Value = new SimpleStat(10, 10, 10) });
+            entity.AddComponent(new Equipment(Slot.Head));
+            //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
+            return entity;
+
+        }
+
     }
 }

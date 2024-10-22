@@ -212,7 +212,12 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                     }
                                                     else
                                                     {
-                                                        UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell = new Point(newX, newY);
+
+                                                        var newP = new Point(newX, newY);
+                                                        if (UIContainer.Instance.InventoryScreen.EquipmentVisualModel.CursorPositionsDict.TryGetValue(newP, out var slot))
+                                                        {
+                                                            UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell = new Point(newX, newY);
+                                                        }
                                                     }
                                                 }
                                                 break;

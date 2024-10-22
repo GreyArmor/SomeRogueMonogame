@@ -338,6 +338,9 @@ namespace NamelessRogue.shell
                     gun = ItemFactory.CreateRedGun(this);
                     itemsHolder.Items.Add(gun);
 
+					var helmet = ItemFactory.CreateHelmet(this);
+                    itemsHolder.Items.Add(helmet);
+
                 }
 			
 

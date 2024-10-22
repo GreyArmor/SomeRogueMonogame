@@ -1,25 +1,14 @@
 ﻿using ImGuiNET;
 using NamelessRogue.Engine.Abstraction;
-using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Infrastructure;
-using NamelessRogue.Engine.Input;
-using NamelessRogue.Engine.Systems.Inventory;
 using NamelessRogue.shell;
-using RogueSharp;
-using SharpDX;
-using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Web;
-using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 using Point = System.Drawing.Point;
 using Vector2 = System.Numerics.Vector2;
 
@@ -139,6 +128,8 @@ namespace NamelessRogue.Engine.UI
     {
         public Dictionary<Point, Slot> CursorPositionsDict = new Dictionary<Point, Slot>();
         public Dictionary<Slot, Vector2> IconPositionsDict = new Dictionary<Slot, Vector2>();
+        public Dictionary<Vector2, Slot> SlotGridPosition = new Dictionary<Vector2, Slot>();
+
         public Point SelectedCell { get; set; } = new Point();
         public InventoryEquipmentVisualModel(Vector2 uiSize, Vector2 halfsize, Vector2 quartersize, int equipmentSize)
         {
@@ -476,6 +467,9 @@ namespace NamelessRogue.Engine.UI
                             var itemComponent = selectedItem.GetComponentOfType<Item>();
                             var itemWeaponStats = selectedItem.GetComponentOfType<WeaponStats>();
 
+                            var itemArmorStats = selectedItem.GetComponentOfType<ArmorStats>();
+                            var itemArmorResistanceStats = selectedItem.GetComponentOfType<ResistanceStat>();
+
                             itemDescription += $@"{desccomponent.Name} \n";
                             itemDescription += $@"{desccomponent.Text} \n";
                             itemDescription += $@"Manufacturer: {itemComponent.Author} \n";
@@ -490,6 +484,20 @@ namespace NamelessRogue.Engine.UI
                                 itemDescription += $@"Max ammo: {itemWeaponStats.AmmoInClip.ToString()} \n";
                                 itemDescription += $@"Current ammo: {itemWeaponStats.CurrentAmmo.ToString()} \n";
                             }
+
+
+                            if (itemArmorStats != null)
+                            {
+                                itemDescription += $@"Armor type: {itemArmorStats.DamageType.ToString()} \n";
+                                itemDescription += $@"Armor value: {itemArmorStats.Value.Value.ToString()} \n";
+                            }
+
+                            if (itemArmorResistanceStats != null)
+                            {
+                                itemDescription += $@"Armor resistance type: {itemArmorResistanceStats.DamageType.ToString()} \n";
+                                itemDescription += $@"Armor resistance %: {itemArmorResistanceStats.Value.Value.ToString()} \n";
+                            }
+
                             // ImGui.SetCursorPos(new System.Numerics.Vector2(0, (iconSizeWithMargin * InventoryGridModel.Height)));
                             // ImGui.LogText(itemDescription);
                             var splitSting = itemDescription.Split("\\n");
