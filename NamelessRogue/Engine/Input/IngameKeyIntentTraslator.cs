@@ -62,9 +62,6 @@ namespace NamelessRogue.Engine.Input
                         case Keys.Enter:
                             intent.Intention = IntentEnum.Enter;
                             break;
-                        case Keys.F:
-                            intent.Intention = IntentEnum.LookAtMode;
-                            break;
                         case Keys.P:
                             intent.Intention = IntentEnum.PickUpItem;
                             break;
@@ -89,9 +86,14 @@ namespace NamelessRogue.Engine.Input
                                 intent.Intention = IntentEnum.LookAtMode;
                             }
                             break;
+                        case Keys.F:
+                            {
+                                intent.Intention = IntentEnum.Fire;
+                            }
+                            break;
                         case Keys.OemComma:
                             {
-                                if(lastCommand=='<')
+                                if (lastCommand == '<')
                                 {
                                     intent.Intention = IntentEnum.MoveAscent;
                                 }
@@ -105,6 +107,14 @@ namespace NamelessRogue.Engine.Input
                                     intent.Intention = IntentEnum.MoveDescent;
                                 }
                             }
+                            break;
+                        case Keys.Escape:
+                            intent.Intention = IntentEnum.Escape;
+                            break;
+                        case Keys.Tab:
+                            intent.Intention = IntentEnum.SwitchTargetl;
+                            break;
+                        default:
                             break;
                     }
                 }

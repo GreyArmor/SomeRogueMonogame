@@ -34,8 +34,10 @@ namespace NamelessRogue.Engine.Factories
 				systems.Add(new ChunkManagementSystem());
 				systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
                 systems.Add(new IngameIntentSystem());
+                systems.Add(new TargetingSystem());
                 systems.Add(new AiSystem());
                 systems.Add(new FlowFieldMovementSystem());
+                systems.Add(new ProjectileSystem());
 				systems.Add(new TurnManagementSystem());
                 systems.Add(new CombatSystem());
                 systems.Add(new InventorySystem());

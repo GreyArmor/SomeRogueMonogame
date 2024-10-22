@@ -301,6 +301,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }               
                 game.Batch.Begin();
                 RenderSpriteScreen(game, screen, game.GetSettings(), gameTime);
+                RenderProjectiles(game, screen, camera, game.GetSettings(), gameTime);
                 game.Batch.End();
             }
         }
@@ -616,6 +617,31 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         }
                     }
 
+                }
+            }
+        }
+
+        private void RenderProjectiles(NamelessGame game, Screen screen, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
+        {
+            foreach (IEntity entity in RegisteredEntities)
+            {
+                var projectileComponent = entity.GetComponentOfType<ProjectileComponent>();
+                if (projectileComponent != null)
+                {
+                    Drawable drawable = entity.GetComponentOfType<Drawable>();
+                    var spriteId = drawable.ObjectID;
+                    if (SpriteLibrary.SpritesStatic.TryGetValue(spriteId, out var sprite))
+                    {
+                        int tileHeight = game.GetSettings().GetFontSizeZoomed();
+                        int tileWidth = game.GetSettings().GetFontSizeZoomed();
+                        var lerpValue = (float)projectileComponent.CurrentFrame / (float)projectileComponent.FramesToReachDestination;
+                        var fromVector = projectileComponent.From.ToPoint().ToVector2();
+                        var toVector = projectileComponent.To.ToPoint().ToVector2();
+                        var interpolatedValue = Vector2.Lerp(fromVector, toVector, lerpValue);
+                        Vector2 screenPoint = new Vector2((interpolatedValue.X - camera.Position.X) * tileWidth, (interpolatedValue.Y - camera.Position.Y) * tileHeight);
+                        game.Batch.Draw(sprite, screenPoint, 0, new Vector2(1f / settings.Zoom));
+                //        sprite.Draw(game.Batch, screenPoint, MathHelper.ToRadians(angle), );
+                    }
                 }
             }
         }

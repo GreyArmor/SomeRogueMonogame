@@ -13,6 +13,7 @@ using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
@@ -231,7 +232,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         Drawable cursorDrawable = cursorEntity.GetComponentOfType<Drawable>();
                                         cursorDrawable.Visible = true;
                                         Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
-                                        Position playerPosition = entity.GetComponentOfType<Position>();
+                                        Position playerPosition = playerEntity.GetComponentOfType<Position>();
                                         cursorPosition.Point = playerPosition.Point;
                                         namelessGame.FollowedByCameraEntity = cursorEntity;
                                         playerEntity.RemoveComponent(playerReceiver);
@@ -373,6 +374,38 @@ namespace NamelessRogue.Engine.Systems.Ingame
 									namelessGame.Commander.EnqueueCommand(new SelectionCommand(SelectionState.End, mouseState.Position));
 								}
 								break;
+                                case IntentEnum.Fire:
+                                {
+                                    if (TargetingSystem.State == TargetingState.NotTargeting)
+                                    {
+                                        var starTargetingCommand = new StartTargetingCommand();
+                                        namelessGame.Commander.EnqueueCommand(starTargetingCommand);
+                                    }
+                                    else
+                                    {
+                                        var playerPosition = playerEntity.GetComponentOfType<Position>();
+                                        Position cursorPosition = namelessGame.CursorEntity.GetComponentOfType<Position>();
+                                        var tile = namelessGame.WorldProvider.GetTile(cursorPosition.X, cursorPosition.Y, cursorPosition.Z);
+                                        if (tile.AnyEntities())
+                                        {
+                                            var firstEntiry = tile.GetEntities().First();
+                                            var combatCommand = new AttackCommand(playerEntity, firstEntiry);
+
+                                        }
+                                        var createProjectileCommand = new CreateProjectileCommand(playerPosition.Point, cursorPosition.Point, DamageType.Ballistic);
+                                        namelessGame.Commander.EnqueueCommand(createProjectileCommand);
+                                    }
+                                }
+                                break;
+                            case IntentEnum.Escape:
+                                {
+                                    if(TargetingSystem.State == TargetingState.Targeting)
+                                    {
+                                        var endTargetingCommand = new EndTargetingCommand();
+                                        namelessGame.Commander.EnqueueCommand(endTargetingCommand);
+                                    }
+                                }
+                                break;
                             default:
                                 break;
                         }
