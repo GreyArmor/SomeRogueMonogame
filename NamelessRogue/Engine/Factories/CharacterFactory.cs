@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Components.WorldBoardComponents;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NamelessRogue.Engine.Factories
@@ -22,7 +23,7 @@ namespace NamelessRogue.Engine.Factories
         {
             var position = new Position(x, y, z);
             Entity playerCharacter = new Entity();
-            playerCharacter.AddComponent(new Character());
+            playerCharacter.AddComponent(new Character("Player"));
             playerCharacter.AddComponent(new Player());
             playerCharacter.AddComponent(new InputReceiver());
             playerCharacter.AddComponent(new FollowedByCamera());
@@ -40,6 +41,32 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new SelectedUnitsData());
 			playerCharacter.AddComponent(new GroupsHolder());
 			var stats = new Stats();
+            stats.Health.Value = 100;
+            stats.Health.MaxValue = 100;
+
+            playerCharacter.AddComponent(stats);
+
+            playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
+            playerCharacter.AddComponent(new Camera3D(game));
+            game.WorldProvider.MoveEntity(playerCharacter, position.Point);
+
+            return playerCharacter;
+        }
+
+        public static Entity CreateDummyrCharacter(int x, int y, int z, NamelessGame game)
+        {
+            var position = new Position(x, y, z);
+            Entity playerCharacter = new Entity();
+            playerCharacter.AddComponent(new Character("Enemy"));
+            playerCharacter.AddComponent(new AIControlled() { Affinity = Affinity.Hostile });
+            playerCharacter.AddComponent(position);
+            playerCharacter.AddComponent(new Drawable("Window", new Engine.Utility.Color(0.9, 0.9, 0.9)));
+            playerCharacter.AddComponent(new Description("Enemy", ""));
+            var holder = new ItemsHolder();
+            playerCharacter.AddComponent(holder);
+            playerCharacter.AddComponent(new OccupiesTile());
+            playerCharacter.AddComponent(new FlowMoveComponent());
+            var stats = new Stats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
 

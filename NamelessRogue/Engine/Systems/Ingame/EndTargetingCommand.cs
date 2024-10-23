@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Systems.Ingame
-{    public class EndTargetingCommand : ICommand
+{
+    public class EndTargetingCommand : ICommand
     {
     }
 }

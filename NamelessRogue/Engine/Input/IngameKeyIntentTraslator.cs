@@ -112,7 +112,7 @@ namespace NamelessRogue.Engine.Input
                             intent.Intention = IntentEnum.Escape;
                             break;
                         case Keys.Tab:
-                            intent.Intention = IntentEnum.SwitchTargetl;
+                            intent.Intention = IntentEnum.SwitchTarget;
                             break;
                         default:
                             break;

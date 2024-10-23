@@ -306,28 +306,16 @@ namespace NamelessRogue.shell
 				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, 0, this);
 				PlayerEntity = player;
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
-				/*
-								var rect = new Rectangle(TestMapPosition.Point.X - 10, TestMapPosition.Point.Y + 10, 2, 2);
 
-								CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "1", this);
-
-								rect = new Rectangle(TestMapPosition.Point.X - 60, TestMapPosition.Point.Y + 10, 20, 10);
-
-								CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "2", this);
-
-								rect = new Rectangle(TestMapPosition.Point.X - 80, TestMapPosition.Point.Y + 10, 20, 10);
-
-								CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "3", this);
-
-								rect = new Rectangle(TestMapPosition.Point.X - 100, TestMapPosition.Point.Y + 10, 20, 10);
-
-								CharacterFactory.CreateNpcFormation(rect, Vector2.UnitY, "Red", "4", this);
+				for (int i = 5; i < 10; i++)
+				{
+					for (int j = 5; j < 6; j++)
+					{
+						CharacterFactory.CreateDummyrCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
+					}
+				}
 
 
-
-								rect = new Rectangle(TestMapPosition.Point.X + 10, TestMapPosition.Point.Y + 10, 2, 2);
-								*/
-				//	CharacterFactory.CreateNpcField(rect, -Vector2.UnitY, "Blue", "2", this);
 				var itemsHolder = player.GetComponentOfType<ItemsHolder>();
 
                 for (int i = 0; i < 500; i++)

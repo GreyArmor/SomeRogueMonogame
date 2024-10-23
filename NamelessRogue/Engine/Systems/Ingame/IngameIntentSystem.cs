@@ -406,6 +406,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     }
                                 }
                                 break;
+                            case IntentEnum.SwitchTarget:
+                                {
+                                    if (TargetingSystem.State == TargetingState.Targeting)
+                                    {
+                                        var tabCommand = new TabTargetingCommand();
+                                        namelessGame.Commander.EnqueueCommand(tabCommand);
+                                    }
+                                }
+                                    break;
                             default:
                                 break;
                         }

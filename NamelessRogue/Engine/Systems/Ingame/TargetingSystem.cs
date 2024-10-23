@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
@@ -17,7 +19,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
     public class TargetingSystem : BaseSystem
     {
         public static TargetingState State { get; set; }  = TargetingState.NotTargeting;
-        public override HashSet<Type> Signature { get; }
+        public override HashSet<Type> Signature { get; } = new HashSet<Type>() {  typeof(AIControlled)};
+
+        int tabulationIndex = -1;
+        public List<IEntity> Targets { get; set; } = new List<IEntity> { };
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
@@ -42,17 +47,50 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             cursorDrawable.Visible = true;
                             Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
                             Position playerPosition = playerEntity.GetComponentOfType<Position>();
-                            cursorPosition.Point = playerPosition.Point;
+              
                             namelessGame.FollowedByCameraEntity = cursorEntity;
                             playerEntity.RemoveComponent(playerReceiver);
 
+                            foreach (var npc in RegisteredEntities)
+                            {
+                                var aiControlled = npc.GetComponentOfType<AIControlled>();
+                                if(aiControlled.Affinity == Affinity.Hostile)
+                                {
+                                    Targets.Add(npc);
+                                }
+                            }
+                            if (Targets.Count > 0)
+                            {
+                                tabulationIndex = 0;
+                                var targetPosition = Targets[tabulationIndex].GetComponentOfType<Position>();
+                                cursorPosition.Point = targetPosition.Point;
+                            }
+                            else
+                            {
+                                cursorPosition.Point = playerPosition.Point;
+                            }
                         }
                     }
                 }
             }
 
+            while (namelessGame.Commander.DequeueCommand(out TabTargetingCommand command))
+            {
+                if (Targets.Count > 0)
+                {
+                    IEntity cursorEntity = namelessGame.CursorEntity;
+                    Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
+                    tabulationIndex++;
+                    if(tabulationIndex >= Targets.Count)
+                    {
+                        tabulationIndex = 0;
+                    }
+                    var targetPosition = Targets[tabulationIndex].GetComponentOfType<Position>();
+                    cursorPosition.Point = targetPosition.Point;
+                }
+            }
 
-            while (namelessGame.Commander.DequeueCommand(out EndTargetingCommand command))
+                while (namelessGame.Commander.DequeueCommand(out EndTargetingCommand command))
             {
                 {
                     if (State == TargetingState.Targeting)
