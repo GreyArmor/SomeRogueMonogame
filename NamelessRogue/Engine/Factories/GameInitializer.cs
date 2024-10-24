@@ -22,5 +22,12 @@ namespace NamelessRogue.Engine.Factories
             cursor.AddComponent(new LineToPlayer());
             return cursor;
         }
+
+        public static IEntity CreateTargeter()
+        {
+            Entity cursor = new Entity();
+            cursor.AddComponent(new TergeterComponent());
+            return cursor;
+        }
     }
 }

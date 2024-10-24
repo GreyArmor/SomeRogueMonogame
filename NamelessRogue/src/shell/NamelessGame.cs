@@ -72,7 +72,9 @@ namespace NamelessRogue.shell
 
 		public IEntity CursorEntity { get; set; }
 
-		public Commander Commander { get; set; }
+        public IEntity TargeterEntity { get; set; }
+
+        public Commander Commander { get; set; }
 
 
 		// this lookup is very expensive, avoid using in loops
@@ -344,7 +346,8 @@ namespace NamelessRogue.shell
 				}
 
 				CursorEntity = GameInitializer.CreateCursor();
-			}
+                TargeterEntity = GameInitializer.CreateTargeter();
+            }
 
 			CurrentContext = ContextFactory.GetMainMenuContext(this);
 			this.IsMouseVisible = true;
