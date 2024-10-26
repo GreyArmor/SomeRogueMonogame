@@ -19,6 +19,7 @@ namespace NamelessRogue.Engine.Systems.Editors
             switch (UIContainer.Instance.EditorsPickerScreen.EditorsPickerScreenActions)
             {
                 case EditorsPickerScreenActions.ItemEditor:
+                    namelessGame.ContextToSwitch = ContextFactory.GetEditorItemContext(namelessGame);
                     break;
                 case EditorsPickerScreenActions.CharacterEditor:
                     break;

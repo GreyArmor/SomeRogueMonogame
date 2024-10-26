@@ -128,6 +128,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\GameObjects\Weapons\" />
     <Folder Include="Content\Sprites\MainMenuScreen\" />
     <Folder Include="Content\Sprites\Furniture\" />
     <Folder Include="Engine\Components\Environment\Buildings\" />

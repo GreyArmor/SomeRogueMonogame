@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>qwerqwerqewr</Name>
+  <Description>qwerqewrqewr</Description>
+  <ItemType>Weapon</ItemType>
+  <ItemQuality>Terrible</ItemQuality>
+  <WeapomTemplateData>
+    <MinimumDamage>0</MinimumDamage>
+    <MaximumDamage>10</MaximumDamage>
+    <Range>1</Range>
+    <AttackType>Close</AttackType>
+    <DamageType>Physical</DamageType>
+    <AmmoType>LowCaliber</AmmoType>
+    <AmmoInClip>0</AmmoInClip>
+  </WeapomTemplateData>
+</ItemTemplateData>

@@ -129,8 +129,29 @@ namespace NamelessRogue.Engine.Factories
                 var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
 
                 // create and init the UI manager
-                editorsPickerContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorsPickerScreen, "EditorsPickerScreen");
+                editorsPickerContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorsPickerScreen, "MainMenu");
                 return editorsPickerContext;
+            }
+        }
+
+        private static GameContext editorItemContext;
+        public static GameContext GetEditorItemContext(NamelessGame game)
+        {
+
+            if (editorItemContext != null)
+            {
+                return editorItemContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new EditorItemScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
+                // create and init the UI manager
+                editorItemContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorItemScreen, "MainMenu");
+                return editorItemContext;
             }
         }
 

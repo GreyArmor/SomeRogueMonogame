@@ -7,7 +7,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
         Weapon,
         Armor,
         Consumable,
-        Food,
+        Supplies,
         Ammo,
         Misc,
     }

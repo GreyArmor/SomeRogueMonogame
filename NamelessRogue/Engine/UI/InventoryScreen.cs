@@ -269,7 +269,7 @@ namespace NamelessRogue.Engine.UI
                 flags.Weapons = _addSelectableSameLine(1, "Weapons", flags.Weapons, ItemType.Weapon);
                 flags.Armor = _addSelectableSameLine(2, "Armor", flags.Armor, ItemType.Armor);
                 flags.Consumables = _addSelectableSameLine(3, "Consumables", flags.Consumables, ItemType.Consumable);
-                flags.Food = _addSelectableSameLine(4, "Food", flags.Food, ItemType.Food);
+                flags.Food = _addSelectableSameLine(4, "Food", flags.Food, ItemType.Supplies);
                 flags.Ammo = _addSelectableSameLine(5, "Ammo", flags.Ammo, ItemType.Ammo);
                 flags.Misc = _addSelectableSameLine(6, "Misc", flags.Misc, ItemType.Misc);
 

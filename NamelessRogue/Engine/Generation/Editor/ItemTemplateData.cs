@@ -11,7 +11,7 @@ namespace NamelessRogue.Engine.Generation.Editor
 {
 
     [XmlRoot]
-    internal class ItemTemplateData
+    public class ItemTemplateData
     {
         [XmlElement]
         public string Name { get; set; }
@@ -31,14 +31,14 @@ namespace NamelessRogue.Engine.Generation.Editor
         public List<Slot> PossibleSlots { get; set; }
 
         [XmlElement]
-        public WeapomTemplateData? WeapomTemplateData { get; set; }
+        public WeaponTemplateData? WeapomTemplateData { get; set; }
         [XmlElement]
-        public WeapomTemplateData? ArmorTemplateData { get; set; }
+        public ArmorTemplateData? ArmorTemplateData { get; set; }
 
     }
 
     [XmlRoot]
-    public class WeapomTemplateData
+    public class WeaponTemplateData
     {
         [XmlElement]
         public int MinimumDamage { get; set; }
@@ -62,10 +62,6 @@ namespace NamelessRogue.Engine.Generation.Editor
         [XmlElement]
         public DamageType DamageType { get; set; }
 
-        [XmlElement]
-        public int MinimumDamage { get; set; }
-        [XmlElement]
-        public int MaximumDamage { get; set; }
         [XmlElement]
         public int ArmorValue { get; set; }
 

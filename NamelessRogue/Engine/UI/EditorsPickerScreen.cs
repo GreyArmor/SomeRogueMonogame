@@ -26,8 +26,7 @@ namespace NamelessRogue.Engine.UI
         }
 
         public override void DrawLayout()
-        {
-          
+        {          
             ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
             {
                 ImGui.SetCursorPos((uiSize / 2) - (buttonSize/2));
