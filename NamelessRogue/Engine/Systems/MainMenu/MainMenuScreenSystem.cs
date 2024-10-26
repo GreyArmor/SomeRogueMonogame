@@ -14,24 +14,27 @@ namespace NamelessRogue.Engine.Systems.MainMenu
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-                switch (UIContainer.Instance.MainMenu.Action)
-                {
-                    case MainMenuAction.GenerateNewTimeline:
-                        namelessGame.ContextToSwitch = ContextFactory.GetWorldGenContext(namelessGame);
-                        break;
-                    case MainMenuAction.NewGame:
-                        namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
-                        break;
-                    case MainMenuAction.Options:
-                        break;
-                    case MainMenuAction.LoadGame:
-                        break;
-                    case MainMenuAction.Exit:
-                        namelessGame.Exit();
-                        break;
-                    default:
-                        break;
-                }
+            switch (UIContainer.Instance.MainMenu.Action)
+            {
+                case MainMenuAction.GenerateNewTimeline:
+                    namelessGame.ContextToSwitch = ContextFactory.GetWorldGenContext(namelessGame);
+                    break;
+                case MainMenuAction.NewGame:
+                    namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
+                    break;
+                case MainMenuAction.Options:
+                    break;
+                case MainMenuAction.LoadGame:
+                    break;
+                case MainMenuAction.Editors:
+                    namelessGame.ContextToSwitch = ContextFactory.GetEditorsPickerContext(namelessGame);
+                    break;
+                case MainMenuAction.Exit:
+                    namelessGame.Exit();
+                    break;
+                default:
+                    break;
+            }
 
             UIContainer.Instance.MainMenu.Action = MainMenuAction.None;
         }

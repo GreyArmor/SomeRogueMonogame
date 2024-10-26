@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Context;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.Systems;
+using NamelessRogue.Engine.Systems.Editors;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.Systems.Inventory;
 using NamelessRogue.Engine.Systems.MainMenu;
@@ -107,6 +108,29 @@ namespace NamelessRogue.Engine.Factories
 				// create and init the UI manager
 				mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.MainMenu, "MainMenu");
                 return mainMenuContext;
+            }
+        }
+
+        private static GameContext editorsPickerContext;
+        public static GameContext GetEditorsPickerContext(NamelessGame game)
+        {
+
+            if (editorsPickerContext != null)
+            {
+                return editorsPickerContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+     //           systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
+                systems.Add(new EditorsPickerScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
+
+                // create and init the UI manager
+                editorsPickerContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorsPickerScreen, "EditorsPickerScreen");
+                return editorsPickerContext;
             }
         }
 

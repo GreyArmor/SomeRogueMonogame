@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NamelessRogue.Engine.Components.Stats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,6 +35,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
         public int MaximumDamage { get; set; }
         public int Range { get; set; }
         public AttackType AttackType { get; set; }
+        public DamageType DamageType { get; set; }
         public AmmoType AmmoType { get; set; }
         public int AmmoInClip { get; set; }
         public int CurrentAmmo { get; set; }
