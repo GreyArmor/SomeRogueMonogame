@@ -148,7 +148,7 @@ namespace NamelessRogue.Engine.UI
                         }
                     }
                     ImGui.EndTabBar();
-                    if (ButtonWithSound("Save", buttonSize))
+                    if (ButtonWithSound("Save", buttonSize) && name.Any())
                     {
                         var directory = "";
                         switch (currentItemType)
@@ -240,6 +240,8 @@ namespace NamelessRogue.Engine.UI
                     ImGui.SameLine();
                     if (ButtonWithSound("Delete", buttonSize))
                     {
+                        File.Delete(currentFilesOfSelectedItemType[currentSelectedFile]);
+                        currentFilesOfSelectedItemType = null;
                     }
 
                     ImGui.SameLine();
