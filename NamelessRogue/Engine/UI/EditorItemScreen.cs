@@ -80,7 +80,7 @@ namespace NamelessRogue.Engine.UI
         string iconPath = string.Empty;
         string iconFileName = string.Empty;
         int currentIconCombpBoxItem = 0;
-
+        string selectedIconFile = "";
         public override void DrawLayout()
         {
 
@@ -121,31 +121,78 @@ namespace NamelessRogue.Engine.UI
             ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove);
             {
                 if (fileIsPicking)
-                {
-                   
+                {                   
                     var fileExtensions = new List<string>() { "*.jpg", "*.ace", "*.png" };
-
-                    List<string> files = new List<string>();
-                    foreach (string extension in fileExtensions)
+            
+                    void _fillTreeRecursive(string path)
                     {
-                        files.AddRange(Directory.GetFiles(contentDirectoryPath, extension, SearchOption.AllDirectories));
-                    }
-                
+                        List<string> topDirectoryFiles = new List<string>();
+                        List<string> subdirectoryFiles = new List<string>();
+                        foreach (string extension in fileExtensions)
+                        {
+                            topDirectoryFiles.AddRange(Directory.GetFiles(path, extension, SearchOption.TopDirectoryOnly));
+                        }
+
+                        foreach (string extension in fileExtensions)
+                        {
+                            subdirectoryFiles.AddRange(Directory.GetFiles(path, extension, SearchOption.AllDirectories));
+                        }
+                        if (topDirectoryFiles.Any() || subdirectoryFiles.Any())
+                        {
+                            ImGui.PushID(path.GetHashCode());
+                            if (ImGui.TreeNode(Path.GetFileName(path)))
+                            {
+                                ImGui.PopID();
+
+                                subdirectoryFiles = subdirectoryFiles.Except(topDirectoryFiles).ToList();
+
+                                foreach (var file in topDirectoryFiles)
+                                {
+                                    ImGui.PushID(path.GetHashCode() + file.GetHashCode());
+
+                                    var flags = file == selectedIconFile ? ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.Leaf;
+                                    ImGui.TreeNodeEx(Path.GetFileName(file), flags);
+                                    if (ImGui.IsItemClicked() && !ImGui.IsItemToggledOpen())
+                                    {
+                                        selectedIconFile = file;
+                                    }
+                                    ImGui.TreePop();
+                                    ImGui.PopID();
+                                }
+
+                                if (subdirectoryFiles.Any())
+                                {
+                                    var subdirectories = Directory.GetDirectories(path);
+                                    foreach (var subdirectory in subdirectories)
+                                    {
+                                        _fillTreeRecursive(subdirectory);
+                                    }
+                                }
+                                ImGui.TreePop();
+                            }
+                        }
+                    }                       
+                    
+
+
                     var previousPos = ImGui.GetCursorPos();
                     var center = ImGui.GetMainViewport().GetCenter();
                     bool p_open = true;
 
                     ImGui.OpenPopup("FilePickerDialogPopup");
-                    ImGui.SetNextWindowPos(center);
+                    ImGui.SetNextWindowPos(new Vector2());
                     //ImGui.SetNextWindowSize(new Vector2(200, 200));
 
                     if (ImGui.BeginPopupModal("FilePickerDialogPopup", ref p_open, ImGuiWindowFlags.AlwaysAutoResize))
                     {
-                        ImGui.Combo("files", ref currentIconCombpBoxItem, files.ToArray(), files.Count);
+
+                        _fillTreeRecursive(contentDirectoryPath);
+
+                       // ImGui.Combo("files", ref currentIconCombpBoxItem, files.ToArray(), files.Count);
                         if (ImGui.Button("Open"))
                         {
                             ImGui.CloseCurrentPopup();
-                            iconPath = files[currentIconCombpBoxItem];
+                            iconPath = selectedIconFile;// files[currentIconCombpBoxItem];
                             FileStream fileStream = new FileStream(iconPath, FileMode.Open);
                             Texture2D texture = Texture2D.FromStream(game.GraphicsDevice, fileStream);
                             iconFileName = Path.GetFileName(iconPath);
@@ -363,18 +410,19 @@ namespace NamelessRogue.Engine.UI
                         ImGui.Text("Description");
                         var inputTextSize = new Vector2((uiSize.X / 3) * 2, 400);
                         ImGui.InputTextMultiline("##Description", ref description, 10000, inputTextSize, ImGuiInputTextFlags.None);
-                      
-                                
-                        if (currentItemType == ItemType.Weapon)
+                       
+                        void _restrainValue(ref int value)
                         {
                             const int minValue = 1;
                             const int maxValue = 999;
+                            value = value <= 0 ? minValue : value;
+                            value = value >= maxValue ? maxValue : value;
+                        }
+                                
+                        if (currentItemType == ItemType.Weapon)
+                        {                    
 
-                            void _restrainValue(ref int value)
-                            {
-                                value = value <=0 ? minValue : value;
-                                value = value >= maxValue ? maxValue : value;
-                            }
+                        
 
 
                             ImGui.Text("Damage type");
@@ -411,8 +459,10 @@ namespace NamelessRogue.Engine.UI
                             ImGui.Combo("##RT", ref currentResistTypeIndex, damageTypesNames, damageTypesNames.Length);
                             ImGui.Text("Armor value");
                             ImGui.DragInt("##armorValue", ref armorValue, 1, 1, 999);
+                            _restrainValue(ref armorValue);
                             ImGui.Text("Resist value");
                             ImGui.DragInt("##resistAalue", ref resistValue, 1, 1, 999);
+                            _restrainValue(ref resistValue);
                         }
                     }
                     ImGui.EndChild();
