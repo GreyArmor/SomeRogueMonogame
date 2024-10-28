@@ -81,10 +81,12 @@ namespace NamelessRogue.Engine.UI
         string iconFileName = string.Empty;
         int currentIconCombpBoxItem = 0;
         string selectedIconFile = "";
+        /// <summary>
+        /// SOMEBODY TOUCHA MY SPAGHET
+        /// </summary>
         public override void DrawLayout()
         {
-
-
+           
             if (currentFilesOfSelectedItemType == null)
             {
                 var directory = "";               
@@ -185,7 +187,7 @@ namespace NamelessRogue.Engine.UI
 
                     if (ImGui.BeginPopupModal("FilePickerDialogPopup", ref p_open, ImGuiWindowFlags.AlwaysAutoResize))
                     {
-
+                        ImGui.SetNextItemOpen(true);
                         _fillTreeRecursive(contentDirectoryPath);
 
                        // ImGui.Combo("files", ref currentIconCombpBoxItem, files.ToArray(), files.Count);
