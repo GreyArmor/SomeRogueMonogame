@@ -35,6 +35,8 @@
   <ItemGroup>
     <EmbeddedResource Include="log4net.config" />
   </ItemGroup>
+		
+	
   <ItemGroup>
     <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="FbxSharp" Version="0.9.0" />
@@ -127,6 +129,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Content\GameObjects\**\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	
   <ItemGroup>
     <Folder Include="Content\GameObjects\Weapons\" />
     <Folder Include="Content\Sprites\MainMenuScreen\" />

@@ -34,7 +34,7 @@ namespace NamelessRogue.Engine.Systems
             if (_imGuiRendererInstance == null)
             {
                 _imGuiRendererInstance = new ImGuiRenderer(game);
-                _imGuiRendererInstance.RebuildFontAtlas();
+                _imGuiRendererInstance.RebuildFontAtlas();            
 
 
                 var cellSelected =  game.Content.Load<Texture2D>("Sprites/cellSelected");
@@ -63,7 +63,8 @@ namespace NamelessRogue.Engine.Systems
 
         }
         public override HashSet<Type> Signature { get; }  = new HashSet<Type>();
-        
+        public static ImGuiRenderer ImGuiRendererInstance { get => _imGuiRendererInstance; set => _imGuiRendererInstance = value; }
+
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             _imGuiRendererInstance.BeforeLayout(gameTime);

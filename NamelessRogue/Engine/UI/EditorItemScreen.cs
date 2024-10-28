@@ -1,7 +1,11 @@
 ﻿using ImGuiNET;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Content.Pipeline;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Generation.Editor;
+using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Systems;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
@@ -10,8 +14,10 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamelessRogue.Engine.UI
 {
@@ -50,6 +56,8 @@ namespace NamelessRogue.Engine.UI
 #endif
         }
 
+        Vector2 iconSize = new Vector2(64, 64);
+
         int currentDamageTypeIndex = 0;
         int currentAttackTypeIndex = 0;
         int currentArmorTypeIndex = 0;
@@ -67,9 +75,15 @@ namespace NamelessRogue.Engine.UI
         int resistValue = 10;
 
         string contentDirectoryPath = string.Empty;
+        bool fileIsPicking = false;
+
+        string iconPath = string.Empty;
+        string iconFileName = string.Empty;
+        int currentIconCombpBoxItem = 0;
 
         public override void DrawLayout()
         {
+
 
             if (currentFilesOfSelectedItemType == null)
             {
@@ -104,198 +118,315 @@ namespace NamelessRogue.Engine.UI
                 currentFilesOfSelectedItemTypeNames = currentFilesOfSelectedItemType.Select(x => Path.GetFileName(x)).ToArray();
             }
 
-        ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove);
+            ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove);
             {
-                ImGui.BeginChild("##fields", new Vector2((uiSize.X / 3) * 2, uiSize.Y));
+                if (fileIsPicking)
                 {
-                    ImGui.BeginTabBar("##itemtabs");
+                   
+                    var fileExtensions = new List<string>() { "*.jpg", "*.ace", "*.png" };
+
+                    List<string> files = new List<string>();
+                    foreach (string extension in fileExtensions)
                     {
-                        var pressed = ImGui.TabItemButton("Weapon");
-                        if (pressed)
-                        {
-                            currentItemType = ItemType.Weapon;
-                            currentFilesOfSelectedItemType = null;
-                        }
-                        pressed = ImGui.TabItemButton("Armor");
-                        if (pressed)
-                        {
-                            currentItemType = ItemType.Armor;
-                            currentFilesOfSelectedItemType = null;
-                        }
-                        pressed = ImGui.TabItemButton("Consumable");
-                        if (pressed)
-                        {
-                            currentItemType = ItemType.Consumable;
-                            currentFilesOfSelectedItemType = null;
-                        }
-                        pressed = ImGui.TabItemButton("Supplies");
-                        if (pressed)
-                        {
-                            currentItemType = ItemType.Supplies;
-                            currentFilesOfSelectedItemType = null;
-                        }
-                        pressed = ImGui.TabItemButton("Ammo");
-                        if (pressed)
-                        {
-                            currentItemType = ItemType.Ammo;
-                            currentFilesOfSelectedItemType = null;
-                        }
-                        pressed = ImGui.TabItemButton("Misc");
-                        if (pressed)
-                        {
-                            currentItemType = ItemType.Misc;
-                            currentFilesOfSelectedItemType = null;
-                        }
+                        files.AddRange(Directory.GetFiles(contentDirectoryPath, extension, SearchOption.AllDirectories));
                     }
-                    ImGui.EndTabBar();
-                    if (ButtonWithSound("Save", buttonSize) && name.Any())
+                
+                    var previousPos = ImGui.GetCursorPos();
+                    var center = ImGui.GetMainViewport().GetCenter();
+                    bool p_open = true;
+
+                    ImGui.OpenPopup("FilePickerDialogPopup");
+                    ImGui.SetNextWindowPos(center);
+                    //ImGui.SetNextWindowSize(new Vector2(200, 200));
+
+                    if (ImGui.BeginPopupModal("FilePickerDialogPopup", ref p_open, ImGuiWindowFlags.AlwaysAutoResize))
                     {
-                        var directory = "";
-                        switch (currentItemType)
+                        ImGui.Combo("files", ref currentIconCombpBoxItem, files.ToArray(), files.Count);
+                        if (ImGui.Button("Open"))
                         {
-                            case ItemType.Weapon:
-                                directory = contentDirectoryPath + "\\GameObjects\\Weapons\\";
-                                break;
-                            case ItemType.Armor:
-                                directory = contentDirectoryPath + "\\GameObjects\\Armor\\";
-                                break;
-                            case ItemType.Consumable:
-                                directory = contentDirectoryPath + "\\GameObjects\\Consumable\\";
-                                break;
-                            case ItemType.Supplies:
-                                directory = contentDirectoryPath + "\\GameObjects\\Supplies\\";
-                                break;
-                            case ItemType.Ammo:
-                                directory = contentDirectoryPath + "\\GameObjects\\Ammo\\";
-                                break;
-                            case ItemType.Misc:
-                                directory = contentDirectoryPath + "\\GameObjects\\Misc\\";
-                                break;
+                            ImGui.CloseCurrentPopup();
+                            iconPath = files[currentIconCombpBoxItem];
+                            FileStream fileStream = new FileStream(iconPath, FileMode.Open);
+                            Texture2D texture = Texture2D.FromStream(game.GraphicsDevice, fileStream);
+                            iconFileName = Path.GetFileName(iconPath);
+                            ImGuiImageLibrary.Textures.Remove(iconFileName);
+                            ImGuiImageLibrary.Textures.Add(iconFileName, UIRenderSystem.ImGuiRendererInstance.BindTexture(texture));
+                            fileStream.Dispose();
+                            fileIsPicking = false;
+                        }
+                        ImGui.SameLine();
+                        if (ImGui.Button("Cancel"))
+                        {
+                            ImGui.CloseCurrentPopup();
+                            fileIsPicking = false;
+                        }
+                        ImGui.EndPopup();
+                    }
+                }
+                var fieldsSizeX = (uiSize.X / 3) * 2;
+          //      if (!fileIsPicking)
+                {
+                    ImGui.BeginChild("##fields", new Vector2(fieldsSizeX, uiSize.Y), false, ImGuiWindowFlags.None);
+                    {
+                        ImGui.BeginTabBar("##itemtabs");
+                        {
+                            var pressed = ImGui.TabItemButton("Weapon");
+                            if (pressed)
+                            {
+                                currentItemType = ItemType.Weapon;
+                                currentFilesOfSelectedItemType = null;
+                            }
+                            pressed = ImGui.TabItemButton("Armor");
+                            if (pressed)
+                            {
+                                currentItemType = ItemType.Armor;
+                                currentFilesOfSelectedItemType = null;
+                            }
+                            pressed = ImGui.TabItemButton("Consumable");
+                            if (pressed)
+                            {
+                                currentItemType = ItemType.Consumable;
+                                currentFilesOfSelectedItemType = null;
+                            }
+                            pressed = ImGui.TabItemButton("Supplies");
+                            if (pressed)
+                            {
+                                currentItemType = ItemType.Supplies;
+                                currentFilesOfSelectedItemType = null;
+                            }
+                            pressed = ImGui.TabItemButton("Ammo");
+                            if (pressed)
+                            {
+                                currentItemType = ItemType.Ammo;
+                                currentFilesOfSelectedItemType = null;
+                            }
+                            pressed = ImGui.TabItemButton("Misc");
+                            if (pressed)
+                            {
+                                currentItemType = ItemType.Misc;
+                                currentFilesOfSelectedItemType = null;
+                            }
+                        }
+                        ImGui.EndTabBar();
+                        if (ButtonWithSound("Save", buttonSize) && name.Any())
+                        {
+                            var directory = "";
+                            switch (currentItemType)
+                            {
+                                case ItemType.Weapon:
+                                    directory = contentDirectoryPath + "\\GameObjects\\Weapons\\";
+                                    break;
+                                case ItemType.Armor:
+                                    directory = contentDirectoryPath + "\\GameObjects\\Armor\\";
+                                    break;
+                                case ItemType.Consumable:
+                                    directory = contentDirectoryPath + "\\GameObjects\\Consumable\\";
+                                    break;
+                                case ItemType.Supplies:
+                                    directory = contentDirectoryPath + "\\GameObjects\\Supplies\\";
+                                    break;
+                                case ItemType.Ammo:
+                                    directory = contentDirectoryPath + "\\GameObjects\\Ammo\\";
+                                    break;
+                                case ItemType.Misc:
+                                    directory = contentDirectoryPath + "\\GameObjects\\Misc\\";
+                                    break;
+                            }
+
+                            ItemTemplateData data = new ItemTemplateData();
+                            data.Name = name;
+                            data.Description = description;
+                            data.ItemType = currentItemType;
+
+                            if (iconPath != string.Empty)
+                            {
+                                if(!Directory.Exists(directory + "\\Icons\\"))
+                                {
+                                    Directory.CreateDirectory(directory + "\\Icons\\");
+                                }
+
+                                File.Copy(iconPath, directory + "\\Icons\\" + iconFileName, true);
+                                data.IconPath = Path.GetRelativePath(directory, directory + "\\Icons\\" + iconFileName);
+                            }
+
+                           
+
+                            if (currentItemType == ItemType.Weapon)
+                            {
+                                var wtd = new WeaponTemplateData();
+                                wtd.DamageType = damageTypes[currentDamageTypeIndex];
+                                wtd.AttackType = attackTypes[currentAttackTypeIndex];
+                                wtd.MinimumDamage = minDamage;
+                                wtd.MaximumDamage = maxDamage;
+                                wtd.AmmoInClip = ammoInClip;
+                                wtd.Range = weaponRange;
+                                wtd.AmmoType = ammoTypes[currentAmmoTypeIndex];
+                                data.WeapomTemplateData = wtd;
+                            }
+                            else if (currentItemType == ItemType.Armor)
+                            {
+                                var atd = new ArmorTemplateData();
+                                atd.ResistValue = resistValue;
+                                atd.ArmorValue = armorValue;
+                                data.ArmorTemplateData = atd;
+                            }
+
+                            using (TextWriter writer = new StreamWriter(directory + name + ".xml"))
+                            {
+                                XmlSerializer ser = new XmlSerializer(typeof(ItemTemplateData));
+                                ser.Serialize(writer, data);
+                                currentFilesOfSelectedItemType = null;
+                            }
+                            // EditorItemScreenActions = EditorItemScreenActions.Back;
+                        }
+                        ImGui.SameLine();
+                        if (ButtonWithSound("Load", buttonSize) && currentFilesOfSelectedItemType.Any())
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));
+                            TextReader reader = new StreamReader(currentFilesOfSelectedItemType[currentSelectedFile]);
+                            var itemData = (ItemTemplateData)serializer.Deserialize(reader);
+
+                            if (itemData.IconPath != null && itemData.IconPath != string.Empty)
+                            {
+                                iconPath = Path.GetDirectoryName(currentFilesOfSelectedItemType[currentSelectedFile])+"\\" + itemData.IconPath;
+                                FileStream fileStream = new FileStream(iconPath, FileMode.Open);
+                                Texture2D texture = Texture2D.FromStream(game.GraphicsDevice, fileStream);
+                                iconFileName = Path.GetFileName(iconPath);
+                                ImGuiImageLibrary.Textures.Remove(iconFileName);
+                                ImGuiImageLibrary.Textures.Add(iconFileName, UIRenderSystem.ImGuiRendererInstance.BindTexture(texture));
+                                fileStream.Dispose();
+                            }
+
+                            name = itemData.Name;
+                            description = itemData.Description;
+                            var wtd = itemData.WeapomTemplateData;
+                            var atd = itemData.ArmorTemplateData;
+
+                            if (wtd != null)
+                            {
+                                currentDamageTypeIndex = Array.IndexOf(damageTypes, wtd.DamageType);
+                                currentAttackTypeIndex = Array.IndexOf(attackTypes, wtd.AttackType);
+                                currentAmmoTypeIndex = Array.IndexOf(ammoTypes, wtd.AmmoType);
+                                minDamage = wtd.MinimumDamage;
+                                maxDamage = wtd.MaximumDamage;
+                                weaponRange = wtd.Range;
+                                ammoInClip = wtd.AmmoInClip;
+                            }
+                            if (atd != null)
+                            {
+                                armorValue = atd.ArmorValue;
+                                resistValue = atd.ResistValue;
+                                currentArmorTypeIndex = Array.IndexOf(damageTypes, atd.DamageType);
+                                currentResistTypeIndex = Array.IndexOf(damageTypes, atd.ResistType);
+                            }
+                            reader.Close();
                         }
 
-                        ItemTemplateData data = new ItemTemplateData();
-                        data.Name = name;
-                        data.Description = description;
-                        data.ItemType = currentItemType;
+                        ImGui.SameLine();
+                        if (ButtonWithSound("Delete", buttonSize))
+                        {
+                            if (currentFilesOfSelectedItemType.Any())
+                            {
+                                File.Delete(currentFilesOfSelectedItemType[currentSelectedFile]);
+                                currentFilesOfSelectedItemType = null;
+                            }
+                        }
+
+                        ImGui.SameLine();
+                        if (ButtonWithSound("Pick icon", buttonSize))
+                        {
+                            fileIsPicking = true;
+                        }
+
+
+                        ImGui.SameLine();
+                        if (ButtonWithSound("Back", buttonSize))
+                        {
+                            EditorItemScreenActions = EditorItemScreenActions.Back;
+                        }
+
+                        if (iconFileName != string.Empty)
+                        {
+                            ImGui.SetCursorPosX(fieldsSizeX / 2 - iconSize.X / 2);
+                            ImGui.BeginChild("##iconFrame", iconSize, true, ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove);
+                            ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], iconSize);
+                            ImGui.SetCursorPos(new Vector2(0));
+                            ImGui.Image(ImGuiImageLibrary.Textures[iconFileName], iconSize);
+                            ImGui.EndChild();
+                        }
+
+
+                        ImGui.Text("Name");
+                        ImGui.SetNextItemWidth(fieldsSizeX);
+                        ImGui.InputText("##Name", ref name, 128);
+                        ImGui.SetNextItemWidth(fieldsSizeX);
+                        ImGui.Text("Description");
+                        var inputTextSize = new Vector2((uiSize.X / 3) * 2, 400);
+                        ImGui.InputTextMultiline("##Description", ref description, 10000, inputTextSize, ImGuiInputTextFlags.None);
+                      
+                                
                         if (currentItemType == ItemType.Weapon)
                         {
-                            var wtd = new WeaponTemplateData();
-                            wtd.DamageType = damageTypes[currentDamageTypeIndex];
-                            wtd.AttackType = attackTypes[currentAttackTypeIndex];
-                            wtd.MinimumDamage = minDamage;
-                            wtd.MaximumDamage = maxDamage;
-                            wtd.AmmoInClip = ammoInClip;
-                            wtd.Range = weaponRange;
-                            wtd.AmmoType = ammoTypes[currentAmmoTypeIndex];
-                            data.WeapomTemplateData = wtd;
+                            const int minValue = 1;
+                            const int maxValue = 999;
+
+                            void _restrainValue(ref int value)
+                            {
+                                value = value <=0 ? minValue : value;
+                                value = value >= maxValue ? maxValue : value;
+                            }
+
+
+                            ImGui.Text("Damage type");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
+                            ImGui.Combo("##DT", ref currentDamageTypeIndex, damageTypesNames, damageTypesNames.Length);
+                            ImGui.Text("Ammo type");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
+                            ImGui.Combo("##ammoT", ref currentAmmoTypeIndex, ammoTypesNames, ammoTypesNames.Length);
+                            ImGui.Text("Attack type");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
+                            ImGui.Combo("##AT", ref currentAttackTypeIndex, attackTypesNames, attackTypes.Length);
+                            ImGui.Text("Minimum damage");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
+                            ImGui.DragInt("##MinD", ref minDamage, 1, 1, 999);
+                            _restrainValue(ref minDamage);
+                            ImGui.Text("Maximum damage");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
+                            ImGui.DragInt("##maxD", ref maxDamage, 1, 1, 999);
+                            _restrainValue(ref maxDamage);
+                            ImGui.Text("Ammo in clip");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
+                            ImGui.DragInt("##ammoInClip", ref ammoInClip, 1, 1, 999);
+                            _restrainValue(ref ammoInClip);
+                            ImGui.Text("Weapon range");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
+                            ImGui.DragInt("##range", ref weaponRange, 1, 1, 999);
+                            _restrainValue(ref weaponRange);
                         }
                         else if (currentItemType == ItemType.Armor)
                         {
-                            var atd = new ArmorTemplateData();
-                            atd.ResistValue = resistValue;
-                            atd.ArmorValue = armorValue;
-                            data.ArmorTemplateData = atd;
+                            ImGui.Text("Armor type");
+                            ImGui.Combo("##AT", ref currentArmorTypeIndex, damageTypesNames, damageTypesNames.Length);
+                            ImGui.Text("Resist type");
+                            ImGui.Combo("##RT", ref currentResistTypeIndex, damageTypesNames, damageTypesNames.Length);
+                            ImGui.Text("Armor value");
+                            ImGui.DragInt("##armorValue", ref armorValue, 1, 1, 999);
+                            ImGui.Text("Resist value");
+                            ImGui.DragInt("##resistAalue", ref resistValue, 1, 1, 999);
                         }
-
-                        using (TextWriter writer = new StreamWriter(directory + name + ".xml"))
-                        {
-                            XmlSerializer ser = new XmlSerializer(typeof(ItemTemplateData));
-                            ser.Serialize(writer, data);
-                            currentFilesOfSelectedItemType = null;
-                        }
-                        // EditorItemScreenActions = EditorItemScreenActions.Back;
                     }
+                    ImGui.EndChild();
                     ImGui.SameLine();
-                    if (ButtonWithSound("Load", buttonSize))
+                    ImGui.BeginChild("##currentItems", new Vector2((uiSize.X / 3 - 100), uiSize.Y - 50), true);
                     {
-                        XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));
-                        TextReader reader = new StreamReader(currentFilesOfSelectedItemType[currentSelectedFile]);
-                        var itemData = (ItemTemplateData)serializer.Deserialize(reader);
-
-                        name = itemData.Name;
-                        description = itemData.Description;
-                        var wtd = itemData.WeapomTemplateData;
-                        var atd = itemData.ArmorTemplateData;
-
-                        if (wtd != null)
+                        ImGui.Text("Items of type");
+                        if (currentFilesOfSelectedItemTypeNames != null)
                         {
-                            currentDamageTypeIndex = Array.IndexOf(damageTypes, wtd.DamageType);
-                            currentAttackTypeIndex = Array.IndexOf(attackTypes, wtd.AttackType);
-                            currentAmmoTypeIndex = Array.IndexOf(ammoTypes, wtd.AmmoType);
-                            minDamage = wtd.MinimumDamage;
-                            maxDamage = wtd.MaximumDamage;
-                            weaponRange = wtd.Range;
-                            ammoInClip = wtd.AmmoInClip;
+                            ImGui.ListBox("##currentItemsByType", ref currentSelectedFile, currentFilesOfSelectedItemTypeNames, currentFilesOfSelectedItemTypeNames.Length);
                         }
-                        if (atd != null)
-                        {
-                            armorValue = atd.ArmorValue;
-                            resistValue = atd.ResistValue;
-                            currentArmorTypeIndex = Array.IndexOf(damageTypes, atd.DamageType);
-                            currentResistTypeIndex = Array.IndexOf(damageTypes, atd.ResistType);
-                        }
-                        reader.Close();
                     }
-
-                    ImGui.SameLine();
-                    if (ButtonWithSound("Delete", buttonSize))
-                    {
-                        File.Delete(currentFilesOfSelectedItemType[currentSelectedFile]);
-                        currentFilesOfSelectedItemType = null;
-                    }
-
-                    ImGui.SameLine();
-                    if (ButtonWithSound("Back", buttonSize))
-                    {
-                        EditorItemScreenActions = EditorItemScreenActions.Back;
-                    }
-                    ImGui.Text("Name");
-                    ImGui.InputText("##Name", ref name, 128);
-                    ImGui.Text("Description");
-                    var inputTextSize = new Vector2((uiSize.X / 3) * 2, 500);
-                    ImGui.InputTextMultiline("##Description", ref description, 10000, inputTextSize, ImGuiInputTextFlags.None);
-
-                    if (currentItemType == ItemType.Weapon)
-                    {
-                        ImGui.Text("Damage type");
-                        ImGui.Combo("##DT", ref currentDamageTypeIndex, damageTypesNames, damageTypesNames.Length);
-                        ImGui.Text("Ammo type");
-                        ImGui.Combo("##ammoT", ref currentAmmoTypeIndex, ammoTypesNames, ammoTypesNames.Length);
-                        ImGui.Text("Attack type");
-                        ImGui.Combo("##AT", ref currentAttackTypeIndex, attackTypesNames, attackTypes.Length);
-                        ImGui.Text("Minimum damage");
-                        ImGui.DragInt("##MinD", ref minDamage, 1, 1, 999);
-                        ImGui.Text("Maximum damage");
-                        ImGui.DragInt("##maxD", ref maxDamage, 1, 1, 999);
-                        ImGui.Text("Ammo in clip");
-                        ImGui.DragInt("##ammoInClip", ref ammoInClip, 1, 1, 999);
-                        ImGui.Text("Weapon range");
-                        ImGui.DragInt("##range", ref weaponRange, 1, 1, 999);
-                    }
-                    else if (currentItemType == ItemType.Armor)
-                    {
-                        ImGui.Text("Armor type");
-                        ImGui.Combo("##AT", ref currentArmorTypeIndex, damageTypesNames, damageTypesNames.Length);
-                        ImGui.Text("Resist type");
-                        ImGui.Combo("##RT", ref currentResistTypeIndex, damageTypesNames, damageTypesNames.Length);
-                        ImGui.Text("Armor value");
-                        ImGui.DragInt("##armorValue", ref armorValue, 1, 1, 999);
-                        ImGui.Text("Resist value");
-                        ImGui.DragInt("##resistAalue", ref resistValue, 1, 1, 999);
-                    }
+                    ImGui.EndChild();
                 }
-                ImGui.EndChild();
-                ImGui.SameLine();
-                //  ImGui.SetCursorPos(new Vector2((uiSize.X / 3) * 2, 0));
-                ImGui.BeginChild("##currentItems", new Vector2((uiSize.X / 3), uiSize.Y), true);
-                {
-                    ImGui.Text("Items of type");
-                    if (currentFilesOfSelectedItemTypeNames != null)
-                    {
-                        ImGui.ListBox("##currentItemsByType", ref currentSelectedFile, currentFilesOfSelectedItemTypeNames, currentFilesOfSelectedItemTypeNames.Length);
-                    }
-                }
-                ImGui.EndChild();
             }
             ImGui.End();
 

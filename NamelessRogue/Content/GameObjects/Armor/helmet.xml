@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>helmet</Name>
+  <Description>rusty helmet</Description>
+  <IconPath>Icons\helmet.png</IconPath>
+  <ItemType>Armor</ItemType>
+  <ItemQuality>Terrible</ItemQuality>
+  <ArmorTemplateData>
+    <DamageType>Physical</DamageType>
+    <ArmorValue>5</ArmorValue>
+    <ResistType>Physical</ResistType>
+    <ResistValue>50</ResistValue>
+  </ArmorTemplateData>
+</ItemTemplateData>
