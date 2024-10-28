@@ -137,6 +137,7 @@
 	</ItemGroup>
 	
   <ItemGroup>
+    <Folder Include="Content\GameObjects\Misc\" />
     <Folder Include="Content\GameObjects\Weapons\" />
     <Folder Include="Content\Sprites\MainMenuScreen\" />
     <Folder Include="Content\Sprites\Furniture\" />
