@@ -209,6 +209,7 @@ namespace NamelessRogue.Engine.Infrastructure
 			_effect.Texture = texture;
 			_effect.VertexColorEnabled = true;
 
+
 			return _effect;
 		}
 
@@ -266,7 +267,7 @@ namespace NamelessRogue.Engine.Infrastructure
 			_graphicsDevice.BlendState = BlendState.NonPremultiplied;
 			_graphicsDevice.RasterizerState = _rasterizerState;
 			_graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
-
+			_graphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 			// Handle cases of screen coordinates != from framebuffer coordinates (e.g. retina displays)
 			drawData.ScaleClipRects(ImGui.GetIO().DisplayFramebufferScale);
 

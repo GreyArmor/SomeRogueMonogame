@@ -36,10 +36,14 @@ namespace NamelessRogue.Engine.UI
         DamageType[] damageTypes = (DamageType[])Enum.GetValues(typeof(DamageType));
         AttackType[] attackTypes = (AttackType[])Enum.GetValues(typeof(AttackType));
         AmmoType[] ammoTypes = (AmmoType[])Enum.GetValues(typeof(AmmoType));
+
+        Slot[] armorSlots = ((Slot[])Enum.GetValues(typeof(Slot))).Except(new List<Slot>() { Slot.LefHand, Slot.RightHand}).ToArray();
+
         string[] itemsTypesNames = Enum.GetNames(typeof(ItemType));
         string[] damageTypesNames = Enum.GetNames(typeof(DamageType));
         string[] attackTypesNames = Enum.GetNames(typeof(AttackType));
         string[] ammoTypesNames = Enum.GetNames(typeof(AmmoType));
+        string[] armorSlotsNames;
 
         ItemType currentItemType = ItemType.Weapon;
         string[] currentFilesOfSelectedItemType = null;
@@ -47,6 +51,9 @@ namespace NamelessRogue.Engine.UI
         public EditorItemScreenActions EditorItemScreenActions { get; set; } = EditorItemScreenActions.None;
         public EditorItemScreen(NamelessGame game) : base(game)
         {
+
+            armorSlotsNames = armorSlots.Select(x => x.ToString()).ToArray();
+
             string workingDirectory = Environment.CurrentDirectory;
 #if DEBUG
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
@@ -63,6 +70,8 @@ namespace NamelessRogue.Engine.UI
         int currentArmorTypeIndex = 0;
         int currentResistTypeIndex = 0;
         int currentAmmoTypeIndex = 0;
+        int currentArmorSlotTypeIndex = 0;
+
         string name = "";
         string description = "";
         int maxDamage = 10;
@@ -296,9 +305,7 @@ namespace NamelessRogue.Engine.UI
 
                                 File.Copy(iconPath, directory + "\\Icons\\" + iconFileName, true);
                                 data.IconPath = Path.GetRelativePath(directory, directory + "\\Icons\\" + iconFileName);
-                            }
-
-                           
+                            }                          
 
                             if (currentItemType == ItemType.Weapon)
                             {
@@ -311,6 +318,7 @@ namespace NamelessRogue.Engine.UI
                                 wtd.Range = weaponRange;
                                 wtd.AmmoType = ammoTypes[currentAmmoTypeIndex];
                                 data.WeapomTemplateData = wtd;
+                                data.PossibleSlots = new List<Slot>() { Slot.LefHand, Slot.RightHand };
                             }
                             else if (currentItemType == ItemType.Armor)
                             {
@@ -318,6 +326,7 @@ namespace NamelessRogue.Engine.UI
                                 atd.ResistValue = resistValue;
                                 atd.ArmorValue = armorValue;
                                 data.ArmorTemplateData = atd;
+                                data.PossibleSlots = new List<Slot>() { armorSlots[currentArmorSlotTypeIndex] };
                             }
 
                             using (TextWriter writer = new StreamWriter(directory + name + ".xml"))
@@ -343,6 +352,7 @@ namespace NamelessRogue.Engine.UI
                                 iconFileName = Path.GetFileName(iconPath);
                                 ImGuiImageLibrary.Textures.Remove(iconFileName);
                                 ImGuiImageLibrary.Textures.Add(iconFileName, UIRenderSystem.ImGuiRendererInstance.BindTexture(texture));
+                                fileStream.Close();
                                 fileStream.Dispose();
                             }
 
@@ -362,11 +372,13 @@ namespace NamelessRogue.Engine.UI
                                 ammoInClip = wtd.AmmoInClip;
                             }
                             if (atd != null)
-                            {
+                            {                                
                                 armorValue = atd.ArmorValue;
                                 resistValue = atd.ResistValue;
                                 currentArmorTypeIndex = Array.IndexOf(damageTypes, atd.DamageType);
                                 currentResistTypeIndex = Array.IndexOf(damageTypes, atd.ResistType);
+
+                                currentArmorSlotTypeIndex = Array.IndexOf(armorSlots, itemData.PossibleSlots[0]);
                             }
                             reader.Close();
                         }
@@ -398,9 +410,10 @@ namespace NamelessRogue.Engine.UI
                         {
                             ImGui.SetCursorPosX(fieldsSizeX / 2 - iconSize.X / 2);
                             ImGui.BeginChild("##iconFrame", iconSize, true, ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove);
-                            ImGui.Image(ImGuiImageLibrary.Textures["cellSelected"], iconSize);
                             ImGui.SetCursorPos(new Vector2(0));
-                            ImGui.Image(ImGuiImageLibrary.Textures[iconFileName], iconSize);
+                            ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], iconSize);
+                            ImGui.SetCursorPos(new Vector2(0));
+                            ImGui.Image(ImGuiImageLibrary.Textures[iconFileName], iconSize, new Vector2(), new Vector2(1), new Vector4(1,1,1,1), new Vector4(1,1,1,1));
                             ImGui.EndChild();
                         }
 
@@ -422,11 +435,7 @@ namespace NamelessRogue.Engine.UI
                         }
                                 
                         if (currentItemType == ItemType.Weapon)
-                        {                    
-
-                        
-
-
+                        {
                             ImGui.Text("Damage type");
                             ImGui.SetNextItemWidth(fieldsSizeX);
                             ImGui.Combo("##DT", ref currentDamageTypeIndex, damageTypesNames, damageTypesNames.Length);
@@ -455,14 +464,21 @@ namespace NamelessRogue.Engine.UI
                         }
                         else if (currentItemType == ItemType.Armor)
                         {
+                            ImGui.Text("Slot");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
+                            ImGui.Combo("##Slot", ref currentArmorSlotTypeIndex, armorSlotsNames, armorSlots.Length);
                             ImGui.Text("Armor type");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
                             ImGui.Combo("##AT", ref currentArmorTypeIndex, damageTypesNames, damageTypesNames.Length);
                             ImGui.Text("Resist type");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
                             ImGui.Combo("##RT", ref currentResistTypeIndex, damageTypesNames, damageTypesNames.Length);
                             ImGui.Text("Armor value");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
                             ImGui.DragInt("##armorValue", ref armorValue, 1, 1, 999);
                             _restrainValue(ref armorValue);
                             ImGui.Text("Resist value");
+                            ImGui.SetNextItemWidth(fieldsSizeX);
                             ImGui.DragInt("##resistAalue", ref resistValue, 1, 1, 999);
                             _restrainValue(ref resistValue);
                         }
@@ -472,9 +488,11 @@ namespace NamelessRogue.Engine.UI
                     ImGui.BeginChild("##currentItems", new Vector2((uiSize.X / 3 - 100), uiSize.Y - 50), true);
                     {
                         ImGui.Text("Items of type");
+                        
                         if (currentFilesOfSelectedItemTypeNames != null)
                         {
-                            ImGui.ListBox("##currentItemsByType", ref currentSelectedFile, currentFilesOfSelectedItemTypeNames, currentFilesOfSelectedItemTypeNames.Length);
+                            ImGui.SetNextItemWidth(uiSize.Y - 50);                            
+                            ImGui.ListBox("##currentItemsByType", ref currentSelectedFile, currentFilesOfSelectedItemTypeNames, currentFilesOfSelectedItemTypeNames.Length, currentFilesOfSelectedItemTypeNames.Length);
                         }
                     }
                     ImGui.EndChild();

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Work pants</Name>
+  <Description>Does the job</Description>
+  <IconPath>Icons\basic_pants.png</IconPath>
+  <ItemType>Armor</ItemType>
+  <ItemQuality>Terrible</ItemQuality>
+  <PossibleSlots>
+    <Slot>Legs</Slot>
+  </PossibleSlots>
+  <ArmorTemplateData>
+    <DamageType>Physical</DamageType>
+    <ArmorValue>1</ArmorValue>
+    <ResistType>Physical</ResistType>
+    <ResistValue>20</ResistValue>
+  </ArmorTemplateData>
+</ItemTemplateData>
