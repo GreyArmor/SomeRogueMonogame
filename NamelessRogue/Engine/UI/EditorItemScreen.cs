@@ -209,6 +209,7 @@ namespace NamelessRogue.Engine.UI
                             iconFileName = Path.GetFileName(iconPath);
                             ImGuiImageLibrary.Textures.Remove(iconFileName);
                             ImGuiImageLibrary.Textures.Add(iconFileName, UIRenderSystem.ImGuiRendererInstance.BindTexture(texture));
+                            fileStream.Close();
                             fileStream.Dispose();
                             fileIsPicking = false;
                         }
@@ -302,8 +303,12 @@ namespace NamelessRogue.Engine.UI
                                 {
                                     Directory.CreateDirectory(directory + "\\Icons\\");
                                 }
+                                // File.Delete(iconPath);
 
-                                File.Copy(iconPath, directory + "\\Icons\\" + iconFileName, true);
+                                var newIconLocation = directory + "Icons\\" + iconFileName;
+                                if (iconPath != newIconLocation) {
+                                    File.Copy(iconPath, newIconLocation, true);
+                                }
                                 data.IconPath = Path.GetRelativePath(directory, directory + "\\Icons\\" + iconFileName);
                             }                          
 

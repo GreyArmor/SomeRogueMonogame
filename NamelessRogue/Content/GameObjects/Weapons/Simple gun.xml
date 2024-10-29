@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Simple gun</Name>
+  <Description>Pew pew</Description>
+  <IconPath>Icons\gunIcon.png</IconPath>
+  <ItemType>Weapon</ItemType>
+  <ItemQuality>Terrible</ItemQuality>
+  <PossibleSlots>
+    <Slot>LefHand</Slot>
+    <Slot>RightHand</Slot>
+  </PossibleSlots>
+  <WeapomTemplateData>
+    <MinimumDamage>1</MinimumDamage>
+    <MaximumDamage>10</MaximumDamage>
+    <Range>10</Range>
+    <AttackType>Close</AttackType>
+    <DamageType>Ballistic</DamageType>
+    <AmmoType>LowCaliber</AmmoType>
+    <AmmoInClip>6</AmmoInClip>
+  </WeapomTemplateData>
+</ItemTemplateData>
