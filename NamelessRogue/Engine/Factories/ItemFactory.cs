@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ItemComponents;
@@ -6,6 +7,7 @@ using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
+using NamelessRogue.Engine.Generation.Editor;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
@@ -49,6 +51,35 @@ namespace NamelessRogue.Engine.Factories
             entity.AddComponent(new ArmorStats() { DamageType = DamageType.Physical, Value = new SimpleStat(10,10,10) });
             entity.AddComponent(new ResistanceStat() { DamageType = DamageType.Physical, Value = new SimpleStat(10, 10, 10) });
             entity.AddComponent(new Equipment(Slot.Head));
+            //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
+            return entity;
+
+        }
+
+        public static Entity CreateItemFromData(NamelessGame game, ItemTemplateData data)
+        {
+            Entity entity = new Entity();
+            entity.AddComponent(new Drawable(Path.GetFileName(data.IconPath), new Color(1f)));
+            entity.AddComponent(new Description(data.Description));
+
+            entity.AddComponent(new Item(data.ItemType, 0, data.ItemQuality, 1, 1, "CorpoCorp Inc."));
+
+            if (data.WeapomTemplateData != null)
+            {
+                var wtd = data.WeapomTemplateData;
+                entity.AddComponent(new Equipment(Slot.LefHand, Slot.RightHand));
+                entity.AddComponent(new WeaponStats(wtd.MinimumDamage, wtd.MaximumDamage, wtd.Range, wtd.AttackType, wtd.AmmoType, wtd.AmmoInClip, 0));
+            }
+
+            if (data.ArmorTemplateData != null)
+            {
+                var atd = data.ArmorTemplateData;
+                entity.AddComponent(new Equipment(data.PossibleSlots.ToArray()));
+                entity.AddComponent(new ArmorStats() { DamageType = atd.DamageType, Value = new SimpleStat(atd.ArmorValue, atd.ArmorValue, atd.ArmorValue) });
+                entity.AddComponent(new ResistanceStat() { DamageType = atd.ResistType, Value = new SimpleStat(atd.ResistValue, atd.ArmorValue, atd.ResistValue) });
+
+
+            }
             //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
             return entity;
 

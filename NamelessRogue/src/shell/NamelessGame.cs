@@ -33,6 +33,7 @@ using Microsoft.Xna.Framework.Media;
 using NamelessRogue.Engine.Components.Interaction;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using SharpDX.MediaFoundation;
+using NamelessRogue.Engine.Generation.Editor;
 
 namespace NamelessRogue.shell
 {
@@ -318,23 +319,51 @@ namespace NamelessRogue.shell
 				}
 
 
-				var itemsHolder = player.GetComponentOfType<ItemsHolder>();
 
-                for (int i = 0; i < 500; i++)
+
+
+				var items = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath, "*.xml", SearchOption.AllDirectories);
+                var itemsHolder = player.GetComponentOfType<ItemsHolder>();
+                foreach (var itemPath in items)
 				{
-					var gun = ItemFactory.CreateGun(this);
-                    itemsHolder.Items.Add(gun);
+                    XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));
+                    TextReader reader = new StreamReader(itemPath);
+                    var itemData = (ItemTemplateData)serializer.Deserialize(reader);
 
-                    gun = ItemFactory.CreateRedGun(this);
-                    itemsHolder.Items.Add(gun);
-
-					var helmet = ItemFactory.CreateHelmet(this);
-                    itemsHolder.Items.Add(helmet);
-
+                    if (itemData.IconPath != null && itemData.IconPath != string.Empty)
+                    {
+                        var iconPath = Path.GetDirectoryName(itemPath) + "\\" + itemData.IconPath;
+                        FileStream fileStream = new FileStream(iconPath, FileMode.Open);
+                        Texture2D texture = Texture2D.FromStream(GraphicsDevice, fileStream);
+                        var iconFileName = Path.GetFileName(iconPath);
+                        ImGuiImageLibrary.Textures.Remove(iconFileName);
+                        ImGuiImageLibrary.Textures.Add(iconFileName, UIRenderSystem.ImGuiRendererInstance.BindTexture(texture));
+                        fileStream.Close();
+                        fileStream.Dispose();
+                    }
+                    var item = ItemFactory.CreateItemFromData(this, itemData);
+                    itemsHolder.Items.Add(item);
                 }
+
 			
 
-				FollowedByCameraEntity = player;
+               //var itemsHolder = player.GetComponentOfType<ItemsHolder>();
+
+               //            for (int i = 0; i < 500; i++)
+               //{
+               //	var gun = ItemFactory.CreateGun(this);
+               //                itemsHolder.Items.Add(gun);
+
+               //                gun = ItemFactory.CreateRedGun(this);
+               //                itemsHolder.Items.Add(gun);
+
+               //	var helmet = ItemFactory.CreateHelmet(this);
+               //                itemsHolder.Items.Add(helmet);
+
+               //            }
+
+
+               FollowedByCameraEntity = player;
 
 
 

@@ -6,7 +6,7 @@
   <ItemType>Armor</ItemType>
   <ItemQuality>Terrible</ItemQuality>
   <PossibleSlots>
-    <Slot>Legs</Slot>
+    <Slot>Hands</Slot>
   </PossibleSlots>
   <ArmorTemplateData>
     <DamageType>Physical</DamageType>
