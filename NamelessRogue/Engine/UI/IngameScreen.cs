@@ -1,11 +1,16 @@
 ﻿using ImGuiNET;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.ECS;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Sounds;
+using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -24,6 +29,8 @@ namespace NamelessRogue.Engine.UI
 	public class IngameScreen : BaseScreen
 	{
 		public static string FPS = "0";
+
+
 		public HudAction Action { get; set; } = HudAction.None;
 
 		System.Numerics.Vector2 menuPosition;
@@ -38,7 +45,6 @@ namespace NamelessRogue.Engine.UI
 			buttonSize = new System.Numerics.Vector2(game.Settings.HudWidth - 10, 50);
 			shiftVector = new System.Numerics.Vector2(0, buttonSpacing.Y + buttonSize.Y);
 			sidebarSize = new System.Numerics.Vector2(game.Settings.HudWidth, shiftVector.Y + buttonSize.Y * buttonCount);
-            
             texture = game.Content.Load<Texture2D>("DfFont");
 
         }
@@ -54,9 +60,19 @@ namespace NamelessRogue.Engine.UI
 
 			ImGui.SetWindowSize(uiSize);
 
-			ImGui.Text($@"FPS = {FPS}");
 
-			ImGui.SetCursorPos(menuPosition);
+            Player player = game.PlayerEntity.GetComponentOfType<Player>();
+            var stats = game.PlayerEntity.GetComponentOfType<Stats>();
+
+			var healthText = stats.Health.Value.ToString() + "//" + (stats.Health.MaxValue.ToString());
+
+
+            var healthTextSize = ImGui.CalcTextSize(healthText);
+			ImGui.SetCursorPos((HudElementsRenderingSystem.HealthPosition - new Microsoft.Xna.Framework.Vector2(0, healthTextSize.Y)).ToNumerics());
+            ImGui.Text(healthText);
+
+
+            ImGui.SetCursorPos(menuPosition);
 			{
 				ImGui.BeginChild("menu", sidebarSize);
 				{

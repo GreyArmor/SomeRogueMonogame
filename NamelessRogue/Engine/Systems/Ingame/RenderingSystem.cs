@@ -304,6 +304,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 RenderProjectiles(game, screen, camera, game.GetSettings(), gameTime);
                 game.Batch.End();
             }
+            game.GraphicsDevice.Clear(ClearOptions.DepthBuffer, new Microsoft.Xna.Framework.Color(1), 1, 0);
         }
 
 

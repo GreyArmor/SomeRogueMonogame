@@ -55,7 +55,7 @@ namespace NamelessRogue.Engine.Factories
                 var uiSystem = new UIRenderSystem(game);
 
 
-				IngameContext = new GameContext(systems, new List<ISystem>() { renderingSystem ,  uiSystem },
+				IngameContext = new GameContext(systems, new List<ISystem>() { renderingSystem,  uiSystem, new HudElementsRenderingSystem(game.Settings) },
                     UIContainer.Instance.HudScreen, "InGame");
 
                 return IngameContext;

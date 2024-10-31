@@ -28,6 +28,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
+
             foreach (IEntity entity in RegisteredEntities)
             { 
                 
@@ -35,10 +36,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var stats = entity.GetComponentOfType<Stats>();
 
 
-                var turn = namelessGame.CurrentGame.Turn;
+                var turn = namelessGame.CurrentGame.Turn;          
 
-                float healthValue = (float) stats.Health.Value / stats.Health.MaxValue;
-                //UIController.HudScreen.HealthBar.Value = (int) (healthValue * 100f);
 
                 // float staminaValue = (float) stats.Stamina.Value / stats.Stamina.MaxValue;
                 // UIController.HudScreen.StaminaBar.Value = (int) (staminaValue * 100f);
@@ -68,6 +67,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     default:
                         break;
                 }
+                
                 UIContainer.Instance.HudScreen.Action = HudAction.None;
                 //while (namelessGame.Commander.DequeueCommand(out HudLogMessageCommand logMessage))
                 //{
@@ -75,6 +75,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 //}
 
             }
+
+
+       
+
         }
 
 	}
