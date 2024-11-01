@@ -355,24 +355,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 namelessGame.Commander.EnqueueCommand(zoomOutCommand);
                                 break;
                             case IntentEnum.MouseChanged:
-
-								MouseState mouseState = Mouse.GetState();
-
-								var player = namelessGame.PlayerEntity;
-								var selectionData = player.GetComponentOfType<SelectionData>();
-
-                                if (selectionData.SelectionState == SelectionState.None && mouseState.LeftButton == ButtonState.Pressed)
-                                {
-                                    namelessGame.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Start, mouseState.Position));
-                                }
-                                else if ((selectionData.SelectionState == SelectionState.Start || selectionData.SelectionState == SelectionState.Drag) && mouseState.LeftButton == ButtonState.Pressed)
-                                {
-                                    namelessGame.Commander.EnqueueCommand(new SelectionCommand(SelectionState.Drag, mouseState.Position));
-                                }
-                                else if (selectionData.SelectionState == SelectionState.Drag && mouseState.LeftButton == ButtonState.Released)
-                                {
-									namelessGame.Commander.EnqueueCommand(new SelectionCommand(SelectionState.End, mouseState.Position));
-								}
 								break;
                                 case IntentEnum.Fire:
                                 {

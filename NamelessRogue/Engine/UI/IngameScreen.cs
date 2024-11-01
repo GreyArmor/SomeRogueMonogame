@@ -66,10 +66,18 @@ namespace NamelessRogue.Engine.UI
 
 			var healthText = stats.Health.Value.ToString() + "//" + (stats.Health.MaxValue.ToString());
 
+            var energyText = stats.Energy.Value.ToString() + "//" + (stats.Energy.MaxValue.ToString());
+
+
 
             var healthTextSize = ImGui.CalcTextSize(healthText);
-			ImGui.SetCursorPos((HudElementsRenderingSystem.HealthPosition - new Microsoft.Xna.Framework.Vector2(0, healthTextSize.Y)).ToNumerics());
+            var energyTextSize = ImGui.CalcTextSize(energyText);
+
+            ImGui.SetCursorPos((HudElementsRenderingSystem.HealthPosition - new Microsoft.Xna.Framework.Vector2(0, healthTextSize.Y)).ToNumerics());
             ImGui.Text(healthText);
+
+            ImGui.SetCursorPos((HudElementsRenderingSystem.EnergyPosition - new Microsoft.Xna.Framework.Vector2(0, energyTextSize.Y)).ToNumerics());
+            ImGui.Text(energyText);
 
 
             ImGui.SetCursorPos(menuPosition);

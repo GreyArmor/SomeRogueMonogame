@@ -12,10 +12,11 @@ namespace NamelessRogue.Engine.Components.Stats
         public Stats()
         {}
 
-        public SimpleStat Health { get; set; } = new SimpleStat(0, 0, 9999);
-        public SimpleStat Speed { get; set; } = new SimpleStat(0, 0, 9999);
-        public SimpleStat VisionRange { get; set; } = new SimpleStat(0, 0, 9999);
-        public SimpleStat Weight { get; set; } = new SimpleStat(0, 0, 9999);
+        public SimpleStat Health { get; set; } = new SimpleStat(0, 0, 999);
+        public SimpleStat Energy { get; set; } = new SimpleStat(500, 0, 999);
+        public SimpleStat Speed { get; set; } = new SimpleStat(0, 0, 999);
+        public SimpleStat VisionRange { get; set; } = new SimpleStat(0, 0, 999);
+        public SimpleStat Weight { get; set; } = new SimpleStat(0, 0, 999);
         public List<WeaponStats> WeaponStats { get; set; }
         public List<ResistanceStat> Resistances { get; set; }
         public List<ArmorStats> Armor { get; set;}

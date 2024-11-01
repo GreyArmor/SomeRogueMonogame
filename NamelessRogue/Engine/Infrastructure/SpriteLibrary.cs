@@ -63,6 +63,7 @@ namespace NamelessRogue.Engine.Infrastructure
             _addAnimatedSprite("ZeroAndOne2", "Content\\Sprites\\ZeroAndOne2.ase");
             _addAnimatedSprite("computer1", "Content\\Sprites\\AnimatedFurniture\\computer1.ase");
             _addAnimatedSprite("healthbar", "Content\\Sprites\\healthbar.ase");
+            _addAnimatedSprite("energybar", "Content\\Sprites\\energybar.ase");
             //_addAnimatedSprite("cacti", "Doodads\\cacti.sf");
             //_addAnimatedSprite("palmTree", "Doodads\\palmTree.sf");
             //_addAnimatedSprite("stump", "Doodads\\stump.sf");

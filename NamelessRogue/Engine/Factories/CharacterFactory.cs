@@ -37,12 +37,11 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new OccupiesTile());
             playerCharacter.AddComponent(new FlowMoveComponent());
 			playerCharacter.AddComponent(new SpriteModel3D(game, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
-			playerCharacter.AddComponent(new SelectionData());
-            playerCharacter.AddComponent(new SelectedUnitsData());
-			playerCharacter.AddComponent(new GroupsHolder());
 			var stats = new Stats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
+            stats.Energy.Value = 100;
+            stats.Energy.MaxValue = 100;
 
             playerCharacter.AddComponent(stats);
 
