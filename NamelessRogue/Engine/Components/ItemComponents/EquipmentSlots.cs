@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 
@@ -26,9 +27,10 @@ namespace NamelessRogue.Engine.Components.ItemComponents
     {       
         public List<Tuple<Slot, EquipmentSlot>> Slots { get; set; } = new List<Tuple<Slot, EquipmentSlot>>();
         public ItemsHolder Holder { get; }
+        public ModifiersCollection ModifiersCollection { get; }
         private NamelessGame Game;
 
-        public EquipmentSlots(ItemsHolder holder, NamelessGame game)
+        public EquipmentSlots(ItemsHolder holder, Interaction.ModifiersCollection modifiersCollection, NamelessGame game)
         {
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Head, new EquipmentSlot(Slot.Head)));
             Slots.Add(new Tuple<Slot, EquipmentSlot>(Slot.Torso, new EquipmentSlot(Slot.Torso)));
@@ -48,6 +50,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
 
             Holder = holder;
             Game = game;
+            ModifiersCollection = modifiersCollection;
         }
 
 		public EquipmentSlots()
@@ -66,6 +69,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
                 }
 
                 slot.Equipment = equipment;
+                ModifiersCollection.ModifierEntities.Add(Game.GetEntity(equipment.ParentEntityId));
             }
 
             Holder.Items.Remove(Holder.Items.FirstOrDefault(x=>x.Id==equipment.ParentEntityId));
@@ -81,6 +85,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
                 if (itemEntity == null)
                 {
                     Holder.Items.Add(Game.GetEntity(equipment.ParentEntityId));
+                    ModifiersCollection.ModifierEntities.Remove(Game.GetEntity(equipment.ParentEntityId));
                 }
             }
         }

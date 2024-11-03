@@ -32,7 +32,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public override void Update(GameTime gameTime, NamelessGame game)
         {
             Player player = game.PlayerEntity.GetComponentOfType<Player>();
-            var stats = game.PlayerEntity.GetComponentOfType<Stats>();
+            var stats = game.PlayerEntity.GetComponentOfType<CharacterStats>();
 
 
             var turn = game.CurrentGame.Turn;
@@ -45,13 +45,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var haealthBarAnimation = healthRatio < 0.1 ? "h0" : healthRatio < 0.2 ? "h1" : healthRatio < 0.3 ? "h2" : healthRatio < 0.4 ? "h3" : healthRatio < 0.5 ? "h4" : healthRatio < 0.6 ? "h5" : healthRatio < 0.7 ? "h6" : healthRatio < 0.8 ? "h7" : healthRatio < 0.9 ? "h8" : healthRatio < 1 ? "h9" : "idle";
             var energyBarAnimation = energyRatio < 0.1 ? "e0" : energyRatio < 0.2 ? "e1" : energyRatio < 0.3 ? "e2" : energyRatio < 0.4 ? "e3" : energyRatio < 0.5 ? "e4" : energyRatio < 0.6 ? "e5" : energyRatio < 0.7 ? "e6" : energyRatio < 0.8 ? "e7" : energyRatio < 0.9 ? "e8" : energyRatio < 1 ? "e9" : "idle";
 
-            // float staminaValue = (float) stats.Stamina.Value / stats.Stamina.MaxValue;
-
             if (Keyboard.GetState().IsKeyDown(Keys.K))
             {
                 stats.Energy.Value--;
             }
-            else if((Keyboard.GetState().IsKeyDown(Keys.I)))
+            else if ((Keyboard.GetState().IsKeyDown(Keys.I)))
             {
                 stats.Energy.Value++;
             }

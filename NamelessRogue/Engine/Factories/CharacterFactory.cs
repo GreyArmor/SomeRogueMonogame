@@ -32,18 +32,28 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new Drawable("Window", new Engine.Utility.Color(0.9,0.9,0.9)));
             playerCharacter.AddComponent(new Description("Player",""));
             var holder = new ItemsHolder();
-            playerCharacter.AddComponent(holder);
-            playerCharacter.AddComponent(new EquipmentSlots(holder, game));
+            playerCharacter.AddComponent(holder);          
             playerCharacter.AddComponent(new OccupiesTile());
             playerCharacter.AddComponent(new FlowMoveComponent());
 			playerCharacter.AddComponent(new SpriteModel3D(game, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
-			var stats = new Stats();
+			var stats = new CharacterStats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
             stats.Energy.Value = 100;
             stats.Energy.MaxValue = 100;
 
             playerCharacter.AddComponent(stats);
+
+            Entity playerAccumulatorEntity = new Entity();
+            playerAccumulatorEntity.AddComponent(new ArmorStats());
+            playerAccumulatorEntity.AddComponent(new WeaponStats());
+            playerAccumulatorEntity.AddComponent(new ResistanceStat());
+            playerAccumulatorEntity.AddComponent(new CharacterStats());
+
+            var modifiersCollection = new ModifiersCollection(playerAccumulatorEntity);
+
+            playerCharacter.AddComponent(modifiersCollection);
+            playerCharacter.AddComponent(new EquipmentSlots(holder, modifiersCollection, game));
 
             playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
             playerCharacter.AddComponent(new Camera3D(game));
@@ -65,11 +75,18 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(holder);
             playerCharacter.AddComponent(new OccupiesTile());
             playerCharacter.AddComponent(new FlowMoveComponent());
-            var stats = new Stats();
+         
+            var stats = new CharacterStats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
 
             playerCharacter.AddComponent(stats);
+
+            Entity playerAccumulatorEntity = new Entity();
+            playerAccumulatorEntity.AddComponent(new CharacterStats());
+
+           
+            playerCharacter.AddComponent(new ModifiersCollection(playerAccumulatorEntity));
 
             playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
             playerCharacter.AddComponent(new Camera3D(game));

@@ -26,7 +26,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var random = new InternalRandom();
 
                 var source = ac.getSource();
-                var stats = source.GetComponentOfType<Stats>();
+                var stats = source.GetComponentOfType<CharacterStats>();
 
                 //TODO: attack damage based on stats, equipment etc.
                 int damage = 0;

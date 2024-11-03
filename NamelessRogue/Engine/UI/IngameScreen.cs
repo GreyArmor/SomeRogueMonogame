@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.ECS;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Sounds;
@@ -54,21 +55,18 @@ namespace NamelessRogue.Engine.UI
 
         public override void DrawLayout()
 		{
-			menuPosition = new System.Numerics.Vector2(uiSize.X - game.Settings.HudWidth + sidebarSize.X / 2 - buttonSize.X / 2, (uiSize.Y / 2) - (sidebarSize.Y / 2));
+			menuPosition = new System.Numerics.Vector2(uiSize.X - game.Settings.HudWidth, 0);
 			ImGui.SetNextWindowPos(new System.Numerics.Vector2());
 			ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
 
 			ImGui.SetWindowSize(uiSize);
 
-
             Player player = game.PlayerEntity.GetComponentOfType<Player>();
-            var stats = game.PlayerEntity.GetComponentOfType<Stats>();
+            var modifiers = game.PlayerEntity.GetComponentOfType<ModifiersCollection>();
+			var stats = modifiers.Accumulator.GetComponentOfType<CharacterStats>();
 
-			var healthText = stats.Health.Value.ToString() + "//" + (stats.Health.MaxValue.ToString());
-
+            var healthText = stats.Health.Value.ToString() + "//" + (stats.Health.MaxValue.ToString());
             var energyText = stats.Energy.Value.ToString() + "//" + (stats.Energy.MaxValue.ToString());
-
-
 
             var healthTextSize = ImGui.CalcTextSize(healthText);
             var energyTextSize = ImGui.CalcTextSize(energyText);
@@ -82,19 +80,56 @@ namespace NamelessRogue.Engine.UI
 
             ImGui.SetCursorPos(menuPosition);
 			{
-				ImGui.BeginChild("menu", sidebarSize);
+				ImGui.BeginChild("sidebar");
 				{
-					ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-					if (ButtonWithSound("Open map", buttonSize)) { Action = HudAction.OpenWorldMap; };
+					ImGui.Text("HP: " + stats.Health.Value);
+					ImGui.SameLine();
+					ImGui.Text("EP: " + stats.Energy.Value);
+					ImGui.Text("Speed: " + stats.Speed.Value);
+					ImGui.Text("Vision range: " + stats.VisionRange.Value);
+					ImGui.Text("Weight: " + stats.Weight.Value);
+					ImGui.Text("Armor:");
+					var armors = stats.GetArmorByTypes();
+					foreach (var armor in armors)
+					{
+						ImGui.Text("     ");
+						ImGui.SameLine();
+						ImGui.Text(armor.Key + ": " + armor.Value);
+					}
 
-					ImGui.SetCursorPos(shiftVector);
-					if (ButtonWithSound("Open inventory", buttonSize)) { Action = HudAction.OpenInventory; }
+                    ImGui.Text("Resistances:");
+                    var resistances = stats.GetArmorByTypes();
+                    foreach (var res in resistances)
+                    {
+                        ImGui.Text("     ");
+                        ImGui.SameLine();
+                        ImGui.Text(res.Key + ": " + res.Value);
+                    }
 
-                    ImGui.PopFont();
-				
+                    ImGui.Text("Damage:");
+                    var weapons = stats.GetWeaponsByTypes();
+					foreach (var weapon in weapons)
+					{
+                        ImGui.Text("     ");
+                        ImGui.SameLine();
+                        ImGui.Text(weapon.Key + ": " + weapon.Value.Item1 + " - " + weapon.Value.Item2);
+                    }	
+
+                    ImGui.BeginChild("menu", sidebarSize);
+					{
+						ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
+						if (ButtonWithSound("Open map", buttonSize)) { Action = HudAction.OpenWorldMap; };
+
+						ImGui.SetCursorPos(shiftVector);
+						if (ButtonWithSound("Open inventory", buttonSize)) { Action = HudAction.OpenInventory; }
+
+						ImGui.PopFont();
+
+					}
+					ImGui.EndChild();
 				}
-				ImGui.EndChild();
-			}
+                ImGui.EndChild();
+            }
 			ImGui.End();
 
 		}

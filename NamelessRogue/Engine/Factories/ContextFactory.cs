@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Context;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.Systems;
@@ -37,12 +38,14 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new IngameIntentSystem());
                 systems.Add(new TargetingSystem());
                 systems.Add(new AiSystem());
-                systems.Add(new FlowFieldMovementSystem());
-                systems.Add(new ProjectileSystem());
-				systems.Add(new TurnManagementSystem());
-                systems.Add(new CombatSystem());
+                systems.Add(new FlowFieldMovementSystem());             
                 systems.Add(new InventorySystem());
                 systems.Add(new EquipSystem());
+                systems.Add(new ProjectileSystem());
+				systems.Add(new TurnManagementSystem()); 
+                systems.Add(new ModifierSystem());
+                systems.Add(new CombatSystem());       
+      
                 systems.Add(new SwitchSystem());
                 systems.Add(new DamageHandlingSystem());
                 systems.Add(new DeathSystem());
@@ -171,6 +174,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InventoryScreenSystem());
                 systems.Add(new InventorySystem());
                 systems.Add(new EquipSystem());
+                systems.Add(new ModifierSystem());
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
 

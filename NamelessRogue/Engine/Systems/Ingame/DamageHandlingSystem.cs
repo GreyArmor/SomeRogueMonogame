@@ -15,7 +15,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             Signature = new HashSet<Type>();
             Signature.Add(typeof(Damage));
-            Signature.Add(typeof(Stats));
+            Signature.Add(typeof(CharacterStats));
         }
 
         public override HashSet<Type> Signature { get; }
@@ -25,7 +25,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             foreach (IEntity entity in RegisteredEntities)
             {
                 Damage damage = entity.GetComponentOfType<Damage>();
-                SimpleStat health = entity.GetComponentOfType<Stats>().Health;
+                SimpleStat health = entity.GetComponentOfType<CharacterStats>().Health;
                 health.Value -= damage.DamageValue;
                 if (health.Value <= health.MinValue)
                 {

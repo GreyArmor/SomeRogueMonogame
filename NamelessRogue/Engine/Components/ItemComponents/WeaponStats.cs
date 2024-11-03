@@ -13,6 +13,11 @@ namespace NamelessRogue.Engine.Components.ItemComponents
         Ranged,
     }
 
+    public class WeaponStatsCollection : Component
+    {
+        public List<WeaponStats> Stats = new List<WeaponStats>();
+        public WeaponStatsCollection() { }
+    }
     public class WeaponStats : Component
     {
 		public WeaponStats()
@@ -45,5 +50,24 @@ namespace NamelessRogue.Engine.Components.ItemComponents
         {
             return new WeaponStats(MinimumDamage, MaximumDamage, Range, AttackType, AmmoType, AmmoInClip, CurrentAmmo);
         }
+
+        public void ResetValue()
+        {
+            MinimumDamage = 0;
+            MaximumDamage = 0;
+            Range = 0;
+            AmmoInClip = 0;
+            CurrentAmmo = 0;
+        }
+
+        public void Add(WeaponStats other)
+        {
+            MinimumDamage += other.MinimumDamage;
+            MaximumDamage += other.MaximumDamage;
+            Range += other.Range;
+            AmmoInClip += other.AmmoInClip;
+            CurrentAmmo += other.CurrentAmmo;
+        }
+
     }
 }

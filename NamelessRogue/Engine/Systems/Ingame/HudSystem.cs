@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             Signature = new HashSet<Type>();
             Signature.Add(typeof(Player));
-            Signature.Add(typeof(Stats));
+            Signature.Add(typeof(CharacterStats));
             Signature.Add(typeof(Position));
         }
 
@@ -33,7 +33,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             { 
                 
                 Player player = entity.GetComponentOfType<Player>();
-                var stats = entity.GetComponentOfType<Stats>();
+                var stats = entity.GetComponentOfType<CharacterStats>();
 
 
                 var turn = namelessGame.CurrentGame.Turn;          
