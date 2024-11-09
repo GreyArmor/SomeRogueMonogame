@@ -92,19 +92,19 @@ namespace NamelessRogue.Engine.Generation.Editor
         public bool IsAppliedImmediately { get; set; }
 
         [XmlElement]
-        public int HealthModificator { get; set; }
+        public int HealthModificator { get; set; } = 0;
 
         [XmlElement]
-        public int EnergyModificator { get; set; }
+        public int EnergyModificator { get; set; } = 0;
 
         [XmlElement]
-        public int ArmorModificator { get; set; }
+        public int ArmorModificator { get; set; } = 0;
 
         [XmlElement]
-        public int ResistanceModificator { get; set; }
+        public int ResistanceModificator { get; set; } = 0;
 
         [XmlElement]
-        public int DamageModificator { get; set; }
+        public int DamageModificator { get; set; } = 0;
 
     }
 

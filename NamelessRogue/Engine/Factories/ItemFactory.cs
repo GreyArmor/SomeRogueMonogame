@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
@@ -80,6 +81,16 @@ namespace NamelessRogue.Engine.Factories
 
 
             }
+
+            if (data.ConsumableItemTemplateData != null)
+            {
+                var citd = data.ConsumableItemTemplateData;
+                if (citd.HealthModificator != 0 || citd.EnergyModificator != 0)
+                {
+                    entity.AddComponent(new CharacterStats() { Health = new SimpleStat(citd.HealthModificator, 0, 999), Energy = new SimpleStat(citd.EnergyModificator, 0, 999), });
+                }
+            }
+
             //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
             return entity;
 

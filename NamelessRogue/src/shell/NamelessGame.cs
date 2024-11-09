@@ -318,10 +318,6 @@ namespace NamelessRogue.shell
 					}
 				}
 
-
-
-
-
 				var items = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath, "*.xml", SearchOption.AllDirectories);
                 var itemsHolder = player.GetComponentOfType<ItemsHolder>();
                 foreach (var itemPath in items)
@@ -364,8 +360,6 @@ namespace NamelessRogue.shell
 
 
                FollowedByCameraEntity = player;
-
-
 
 				if (anyRivers)
 				{

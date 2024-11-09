@@ -248,21 +248,23 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                     var itemEntity = namelessGame.GetEntity(itemId.Value);
 
                                                     var equipmentComponent = itemEntity.GetComponentOfType<Equipment>();
-
-                                                    var slot = equipmentComponent.PossibleSlots.First();
-                                                    var playerEquipment = namelessGame.PlayerEntity.GetComponentOfType<EquipmentSlots>();
-                                                    var slotTuple = playerEquipment.Slots.First(x => x.Item1 == slot);
-                                                    EquipmentSlot equipmentSlot = null;
-                                                    //unequip previous item if any
-                                                    if (slotTuple.Item2.Equipment != null)
+                                                    if (equipmentComponent != null)
                                                     {
-                                                        equipmentSlot = slotTuple.Item2;
-                                                        var takeOffCommand = new EquipOrTakeOffCommand(equipmentSlot.Equipment.ParentEntityId, false);
-                                                        namelessGame.Commander.EnqueueCommand(takeOffCommand);
-                                                    }
+                                                        var slot = equipmentComponent.PossibleSlots.First();
+                                                        var playerEquipment = namelessGame.PlayerEntity.GetComponentOfType<EquipmentSlots>();
+                                                        var slotTuple = playerEquipment.Slots.First(x => x.Item1 == slot);
+                                                        EquipmentSlot equipmentSlot = null;
+                                                        //unequip previous item if any
+                                                        if (slotTuple.Item2.Equipment != null)
+                                                        {
+                                                            equipmentSlot = slotTuple.Item2;
+                                                            var takeOffCommand = new EquipOrTakeOffCommand(equipmentSlot.Equipment.ParentEntityId, false);
+                                                            namelessGame.Commander.EnqueueCommand(takeOffCommand);
+                                                        }
 
-                                                    var equipCommand = new EquipOrTakeOffCommand(itemEntity.Id, true, slot);
-                                                    namelessGame.Commander.EnqueueCommand(equipCommand);
+                                                        var equipCommand = new EquipOrTakeOffCommand(itemEntity.Id, true, slot);
+                                                        namelessGame.Commander.EnqueueCommand(equipCommand);
+                                                    }
 
                                                 }
                                             }
