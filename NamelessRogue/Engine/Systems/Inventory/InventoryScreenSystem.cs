@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Input;
+using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
 using SharpDX.DirectWrite;
@@ -248,6 +249,8 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                                     var itemEntity = namelessGame.GetEntity(itemId.Value);
 
                                                     var equipmentComponent = itemEntity.GetComponentOfType<Equipment>();
+                                                    var consumableComponent = itemEntity.GetComponentOfType<Consumable>();
+
                                                     if (equipmentComponent != null)
                                                     {
                                                         var slot = equipmentComponent.PossibleSlots.First();
@@ -264,6 +267,11 @@ namespace NamelessRogue.Engine.Systems.Inventory
 
                                                         var equipCommand = new EquipOrTakeOffCommand(itemEntity.Id, true, slot);
                                                         namelessGame.Commander.EnqueueCommand(equipCommand);
+                                                    }
+                                                    else if(consumableComponent !=null)
+                                                    {
+                                                        var consumeCommand = new ConsumeCommand(itemEntity);
+                                                        namelessGame.Commander.EnqueueCommand(consumeCommand);
                                                     }
 
                                                 }

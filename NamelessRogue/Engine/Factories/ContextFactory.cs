@@ -42,7 +42,9 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InventorySystem());
                 systems.Add(new EquipSystem());
                 systems.Add(new ProjectileSystem());
-				systems.Add(new TurnManagementSystem()); 
+				systems.Add(new TurnManagementSystem());
+
+                systems.Add(new ConsumableSystem());
                 systems.Add(new ModifierSystem());
                 systems.Add(new CombatSystem());       
       
@@ -173,6 +175,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new InventoryKeyIntentTranslator(), game));
                 systems.Add(new InventoryScreenSystem());
                 systems.Add(new InventorySystem());
+                systems.Add(new ConsumableSystem());
                 systems.Add(new EquipSystem());
                 systems.Add(new ModifierSystem());
                 systems.Add(new SoundPlaySystem());

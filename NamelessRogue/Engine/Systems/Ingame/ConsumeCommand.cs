@@ -1,0 +1,19 @@
+﻿using NamelessRogue.Engine.Abstraction;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace NamelessRogue.Engine.Systems.Ingame
+{
+    internal class ConsumeCommand : ICommand
+    {
+        public ConsumeCommand(IEntity entity)
+        {
+            ItemEntity = entity;
+        }
+
+        public IEntity ItemEntity { get; }
+    }
+}

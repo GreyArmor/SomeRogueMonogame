@@ -84,9 +84,17 @@ namespace NamelessRogue.Engine.Factories
 
             if (data.ConsumableItemTemplateData != null)
             {
+                var consumableComponent = new Consumable();
+                entity.AddComponent(consumableComponent);
                 var citd = data.ConsumableItemTemplateData;
                 if (citd.HealthModificator != 0 || citd.EnergyModificator != 0)
                 {
+                    consumableComponent.Heath = citd.HealthModificator;
+                    consumableComponent.Energy = citd.EnergyModificator;
+                    consumableComponent.Damage = citd.DamageModificator;
+                    consumableComponent.Armor = citd.ArmorModificator;
+                    consumableComponent.Resistance = citd.ResistanceModificator;
+
                     entity.AddComponent(new CharacterStats() { Health = new SimpleStat(citd.HealthModificator, 0, 999), Energy = new SimpleStat(citd.EnergyModificator, 0, 999), });
                 }
             }
