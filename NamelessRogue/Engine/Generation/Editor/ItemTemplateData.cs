@@ -35,6 +35,9 @@ namespace NamelessRogue.Engine.Generation.Editor
         [XmlElement]
         public ArmorTemplateData? ArmorTemplateData { get; set; }
 
+        [XmlElement]
+        public ConsumableItemTemplateData? ConsumableItemTemplateData { get; set; }
+
     }
 
     [XmlRoot]
@@ -71,4 +74,38 @@ namespace NamelessRogue.Engine.Generation.Editor
         [XmlElement]
         public int ResistValue{ get; set; }
     }
+
+
+    [XmlRoot]
+    public class ConsumableItemTemplateData
+    {
+        [XmlElement]
+        public int Charges { get; set; }
+
+        [XmlElement]
+        public int Duration { get; set; }
+
+        [XmlElement]
+        public bool IsThrowable { get; set; }
+
+        [XmlElement]
+        public bool IsAppliedImmediately { get; set; }
+
+        [XmlElement]
+        public int HealthModificator { get; set; }
+
+        [XmlElement]
+        public int EnergyModificator { get; set; }
+
+        [XmlElement]
+        public int ArmorModificator { get; set; }
+
+        [XmlElement]
+        public int ResistanceModificator { get; set; }
+
+        [XmlElement]
+        public int DamageModificator { get; set; }
+
+    }
+
 }

@@ -83,6 +83,21 @@ namespace NamelessRogue.Engine.UI
         int armorValue = 10;
         int resistValue = 10;
 
+        int chargesValue = 1;
+        int duration = 1;
+        int healthModValue = 1;
+        int energyModValue = 1;
+        int damageModValue = 10;
+        int armorModValue = 10;
+        int resistModValue = 10;
+
+        bool isThrowable = false;
+        bool isAppliedImmediately = false;
+
+        bool isResMod = false;
+        bool isArmorMod = false;
+        bool isDamageMod = false;
+
         string contentDirectoryPath = string.Empty;
         bool fileIsPicking = false;
 
@@ -333,6 +348,20 @@ namespace NamelessRogue.Engine.UI
                                 data.ArmorTemplateData = atd;
                                 data.PossibleSlots = new List<Slot>() { armorSlots[currentArmorSlotTypeIndex] };
                             }
+                            else if (currentItemType == ItemType.Consumable)
+                            {
+                                var citd = new ConsumableItemTemplateData();
+                                citd.IsThrowable = isThrowable;
+                                citd.Charges = chargesValue;
+                                citd.Duration = duration;
+                                citd.IsAppliedImmediately = isAppliedImmediately;
+                                citd.HealthModificator = healthModValue;
+                                citd.EnergyModificator = energyModValue;
+                                citd.DamageModificator = damageModValue;
+                                citd.ArmorModificator = armorModValue;
+                                citd.ResistanceModificator = resistModValue;
+                                data.ConsumableItemTemplateData = citd;
+                            }
 
                             using (TextWriter writer = new StreamWriter(directory + name + ".xml"))
                             {
@@ -365,6 +394,7 @@ namespace NamelessRogue.Engine.UI
                             description = itemData.Description;
                             var wtd = itemData.WeapomTemplateData;
                             var atd = itemData.ArmorTemplateData;
+                            var citd = itemData.ConsumableItemTemplateData;
 
                             if (wtd != null)
                             {
@@ -385,7 +415,20 @@ namespace NamelessRogue.Engine.UI
 
                                 currentArmorSlotTypeIndex = Array.IndexOf(armorSlots, itemData.PossibleSlots[0]);
                             }
-                            reader.Close();
+                            if (citd != null)
+                            {
+                                isThrowable = citd.IsThrowable;
+                                isThrowable = citd.IsAppliedImmediately;
+                                chargesValue = citd.Charges;
+                                duration = citd.Duration;
+                                healthModValue = citd.HealthModificator;
+                                energyModValue = citd.EnergyModificator;
+                                damageModValue = citd.DamageModificator;
+                                armorModValue = citd.ArmorModificator;
+                                resistModValue = citd.ResistanceModificator;
+                              
+                            }
+                                reader.Close();
                         }
 
                         ImGui.SameLine();
@@ -431,14 +474,12 @@ namespace NamelessRogue.Engine.UI
                         var inputTextSize = new Vector2((uiSize.X / 3) * 2, 400);
                         ImGui.InputTextMultiline("##Description", ref description, 10000, inputTextSize, ImGuiInputTextFlags.None);
                        
-                        void _restrainValue(ref int value)
+                        void _restrainValue(ref int value, int minValue = 0, int maxValue = 999)
                         {
-                            const int minValue = 1;
-                            const int maxValue = 999;
-                            value = value <= 0 ? minValue : value;
+                            value = value <= minValue ? minValue : value;
                             value = value >= maxValue ? maxValue : value;
                         }
-                                
+
                         if (currentItemType == ItemType.Weapon)
                         {
                             ImGui.Text("Damage type");
@@ -486,6 +527,73 @@ namespace NamelessRogue.Engine.UI
                             ImGui.SetNextItemWidth(fieldsSizeX);
                             ImGui.DragInt("##resistAalue", ref resistValue, 1, 1, 999);
                             _restrainValue(ref resistValue);
+                        }
+                        else if (currentItemType == ItemType.Consumable)
+                        {
+                            ImGui.Checkbox("Throwable?", ref isThrowable);
+                            ImGui.SameLine();
+                            ImGui.Checkbox("Applied immediately?", ref isAppliedImmediately);
+
+                            ImGui.Checkbox("Modifies resources?", ref isResMod);
+                            ImGui.SameLine();
+                            ImGui.Checkbox("Modifies damage?", ref isDamageMod);
+                            ImGui.SameLine();
+                            ImGui.Checkbox("Modifies armor?", ref isArmorMod);
+            
+                    
+                            ImGui.SetNextItemWidth(fieldsSizeX);
+                            ImGui.Text("Charges");
+                            ImGui.DragInt("##Charges", ref chargesValue, 1, 1, 999);
+                            _restrainValue(ref chargesValue);
+
+                            if (!isAppliedImmediately)
+                            {
+                                ImGui.Text("Duration");
+                                ImGui.SetNextItemWidth(fieldsSizeX);
+                                ImGui.DragInt("##duration", ref duration, 1, 1, 999);
+                                _restrainValue(ref duration);
+                            }
+
+                            if(isResMod)
+                            {
+                                ImGui.Separator();
+                                ImGui.Text("Health");
+                                ImGui.SetNextItemWidth(fieldsSizeX);
+                                ImGui.DragInt("##healthModValue", ref healthModValue, 1, -999, 999);
+                                _restrainValue(ref healthModValue, -999, 999);
+
+                                ImGui.Text("Energy");
+                                ImGui.SetNextItemWidth(fieldsSizeX);
+                                ImGui.DragInt("##energyModValue", ref energyModValue, 1, -999, 999);
+                                _restrainValue(ref energyModValue, -999, 999);
+                                ImGui.Separator();
+                            }
+
+                            if (isDamageMod)
+                            {
+                                ImGui.Separator();
+                                ImGui.Text("Damage");
+                                ImGui.SetNextItemWidth(fieldsSizeX);
+                                ImGui.DragInt("##damageModValue", ref damageModValue, 1, -999, 999);
+                                _restrainValue(ref damageModValue, -999, 999);
+                                ImGui.Separator();
+                            }
+
+                            if (isArmorMod)
+                            {
+                                ImGui.Separator();
+                                ImGui.Text("Armor");
+                                ImGui.SetNextItemWidth(fieldsSizeX);
+                                ImGui.DragInt("##armorModValue", ref armorModValue, 1, -999, 999);
+                                _restrainValue(ref armorModValue, -999, 999);
+
+                                ImGui.Text("Resistance");
+                                ImGui.SetNextItemWidth(fieldsSizeX);
+                                ImGui.DragInt("##energyModValue", ref resistModValue, 1, -999, 999);
+                                _restrainValue(ref resistModValue, -999, 999);
+                                ImGui.Separator();
+                            }
+
                         }
                     }
                     ImGui.EndChild();

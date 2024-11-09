@@ -10,11 +10,11 @@ namespace NamelessRogue.Engine.Components.Interaction
 {
 
 
-    public class TimeModifier : Component
+    public class TimedModifier : Component
     {
         public int TurnsToLast { get;set; } 
     }
-    public class InstantModifier : Component
+    public class ConsumableItemModifier : Component
     {}
 
     public class ModifierComponent : Component

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Battery</Name>
+  <Description>For when you need an extra jolt</Description>
+  <IconPath>Icons\battery.png</IconPath>
+  <ItemType>Consumable</ItemType>
+  <ItemQuality>Terrible</ItemQuality>
+  <ConsumableItemTemplateData>
+    <Charges>1</Charges>
+    <Duration>1</Duration>
+    <IsThrowable>true</IsThrowable>
+    <IsAppliedImmediately>true</IsAppliedImmediately>
+    <HealthModificator>0</HealthModificator>
+    <EnergyModificator>30</EnergyModificator>
+    <ArmorModificator>0</ArmorModificator>
+    <ResistanceModificator>0</ResistanceModificator>
+    <DamageModificator>0</DamageModificator>
+  </ConsumableItemTemplateData>
+</ItemTemplateData>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>MedKit</Name>
+  <Description>Standard medkit</Description>
+  <IconPath>Icons\medkit.png</IconPath>
+  <ItemType>Consumable</ItemType>
+  <ItemQuality>Terrible</ItemQuality>
+  <ConsumableItemTemplateData>
+    <Charges>5</Charges>
+    <Duration>59</Duration>
+    <IsThrowable>false</IsThrowable>
+    <IsAppliedImmediately>true</IsAppliedImmediately>
+    <HealthModificator>30</HealthModificator>
+    <EnergyModificator>0</EnergyModificator>
+    <ArmorModificator>0</ArmorModificator>
+    <ResistanceModificator>0</ResistanceModificator>
+    <DamageModificator>0</DamageModificator>
+  </ConsumableItemTemplateData>
+</ItemTemplateData>

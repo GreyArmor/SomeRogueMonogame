@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended.Particles.Modifiers;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Systems;
@@ -23,19 +24,27 @@ namespace NamelessRogue.Engine.Components.Interaction
                 var modifiers = entity.GetComponentOfType<ModifiersCollection>();
                 var accumulatorEntity = modifiers.Accumulator;
 
-                var stats = accumulatorEntity.GetComponentOfType<CharacterStats>();
+                var accumulatedStats = accumulatorEntity.GetComponentOfType<CharacterStats>();
 
-                stats.ResetValue();
+                accumulatedStats.ResetValue();
 
                 var entitstats = entity.GetComponentOfType<CharacterStats>();
 
                 if (entitstats != null)
                 {
-                    stats.Add(entitstats);
+                    accumulatedStats.Add(entitstats);
                 }
-
+                List<IEntity> modifiersToRemove = new List<IEntity>();
                 foreach (var modifier in modifiers.ModifierEntities)
                 {
+                    var timeConstrains = modifier.GetComponentOfType<TimedModifier>();
+                    //skip and remove modifiers that expired
+                    if (timeConstrains != null && timeConstrains.TurnsToLast == 0)
+                    {
+                        modifiersToRemove.Add(modifier);
+                        continue;
+                    }
+
                     var modifierAS = modifier.GetComponentOfType<ArmorStats>();
                     var modifierRS = modifier.GetComponentOfType<ResistanceStat>();
                     var modifierWS = modifier.GetComponentOfType<WeaponStats>();
@@ -43,21 +52,35 @@ namespace NamelessRogue.Engine.Components.Interaction
 
                     if (modifierAS != null)
                     {
-                        stats.Armor.Add(modifierAS);
+                        accumulatedStats.Armor.Add(modifierAS);
                     }
                     if (modifierRS != null)
                     {
-                        stats.Resistances.Add(modifierRS);
+                        accumulatedStats.Resistances.Add(modifierRS);
                     }
                     if (modifierWS != null)
                     {
-                        stats.WeaponStats.Add(modifierWS);
+                        accumulatedStats.WeaponStats.Add(modifierWS);
                     }
                     if (modifierStats != null)
                     {
-                        stats.Add(modifierStats);
+                        accumulatedStats.Add(modifierStats);
                     }
+
+                    var consumableItemModifier = modifier.GetComponentOfType<ConsumableItemModifier>();
+                   
+                    if(consumableItemModifier != null)
+                    {
+                        entitstats.Add(modifierStats);
+                        modifiersToRemove.Add(modifier);
+                    }            
                 }
+
+                foreach (var modifier in modifiersToRemove)
+                {
+                    modifiers.ModifierEntities.Remove(modifier);
+                }
+
             }
         }
     }

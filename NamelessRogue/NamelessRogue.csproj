@@ -141,6 +141,12 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Engine\_3DUtility\**" />
+	  <EmbeddedResource Remove="Engine\_3DUtility\**" />
+	  <None Remove="Engine\_3DUtility\**" />
+	</ItemGroup>
 	
   <ItemGroup>
     <Folder Include="Content\GameObjects\Misc\" />
@@ -148,7 +154,7 @@
     <Folder Include="Content\Sprites\MainMenuScreen\" />
     <Folder Include="Content\Sprites\Furniture\" />
     <Folder Include="Engine\Components\Environment\Buildings\" />
-    <Folder Include="Engine\_3DUtility\" />
+    <Folder Include="Engine\Generation\Items\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

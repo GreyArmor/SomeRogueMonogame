@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Toxic beaker</Name>
+  <Description>Do not consume</Description>
+  <IconPath>Icons\toxic_beaker.png</IconPath>
+  <ItemType>Consumable</ItemType>
+  <ItemQuality>Terrible</ItemQuality>
+  <ConsumableItemTemplateData>
+    <Charges>1</Charges>
+    <Duration>5</Duration>
+    <IsThrowable>false</IsThrowable>
+    <IsAppliedImmediately>true</IsAppliedImmediately>
+    <HealthModificator>-15</HealthModificator>
+    <EnergyModificator>0</EnergyModificator>
+    <ArmorModificator>10</ArmorModificator>
+    <ResistanceModificator>10</ResistanceModificator>
+    <DamageModificator>10</DamageModificator>
+  </ConsumableItemTemplateData>
+</ItemTemplateData>

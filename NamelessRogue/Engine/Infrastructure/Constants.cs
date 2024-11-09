@@ -19,9 +19,6 @@ namespace NamelessRogue.Engine.Infrastructure
         public static int CitySquare { get; } = 300;
 
         public const string GameObjectRelativePath = "\\Content\\GameObjects\\";
-
-		public static readonly float ScaleDownCoeficient = 0.001f;
-		public static Matrix ScaleDownMatrix = Matrix.CreateScale(ScaleDownCoeficient);
        
 
 	}
