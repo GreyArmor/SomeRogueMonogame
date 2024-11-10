@@ -93,6 +93,7 @@ namespace NamelessRogue.Engine.UI
 
         bool isThrowable = false;
         bool isAppliedImmediately = false;
+        bool isDoT = false;
 
         bool isResMod = false;
         bool isArmorMod = false;
@@ -355,6 +356,7 @@ namespace NamelessRogue.Engine.UI
                                 citd.Charges = chargesValue;
                                 citd.Duration = duration;
                                 citd.IsAppliedImmediately = isAppliedImmediately;
+                                citd.IsDamageOverTime = isDoT;
                                 citd.HealthModificator = healthModValue;
                                 citd.EnergyModificator = energyModValue;
                                 citd.DamageModificator = damageModValue;
@@ -418,7 +420,8 @@ namespace NamelessRogue.Engine.UI
                             if (citd != null)
                             {
                                 isThrowable = citd.IsThrowable;
-                                isThrowable = citd.IsAppliedImmediately;
+                                isAppliedImmediately = citd.IsAppliedImmediately;
+                                isDoT = citd.IsDamageOverTime;
                                 chargesValue = citd.Charges;
                                 duration = citd.Duration;
                                 healthModValue = citd.HealthModificator;
@@ -533,6 +536,8 @@ namespace NamelessRogue.Engine.UI
                             ImGui.Checkbox("Throwable?", ref isThrowable);
                             ImGui.SameLine();
                             ImGui.Checkbox("Applied immediately?", ref isAppliedImmediately);
+                            ImGui.SameLine();
+                            ImGui.Checkbox("Damage over time?", ref isDoT);
 
                             ImGui.Checkbox("Modifies resources?", ref isResMod);
                             ImGui.SameLine();

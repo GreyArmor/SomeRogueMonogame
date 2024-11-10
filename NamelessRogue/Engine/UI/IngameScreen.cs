@@ -82,7 +82,9 @@ namespace NamelessRogue.Engine.UI
 			{
 				ImGui.BeginChild("sidebar");
 				{
-					ImGui.Text("HP: " + stats.Health.Value);
+
+					ImGui.Text("Turn: " + game.CurrentGame.Turn);
+                    ImGui.Text("HP: " + stats.Health.Value);
 					ImGui.SameLine();
 					ImGui.Text("EP: " + stats.Energy.Value);
 					ImGui.Text("Speed: " + stats.Speed.Value);

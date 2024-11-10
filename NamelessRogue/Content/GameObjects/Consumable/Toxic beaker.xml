@@ -9,7 +9,8 @@
     <Charges>1</Charges>
     <Duration>5</Duration>
     <IsThrowable>false</IsThrowable>
-    <IsAppliedImmediately>true</IsAppliedImmediately>
+    <IsAppliedImmediately>false</IsAppliedImmediately>
+    <IsDamageOverTime>true</IsDamageOverTime>
     <HealthModificator>-15</HealthModificator>
     <EnergyModificator>0</EnergyModificator>
     <ArmorModificator>10</ArmorModificator>

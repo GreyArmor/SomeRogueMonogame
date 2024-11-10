@@ -14,8 +14,6 @@ namespace NamelessRogue.Engine.Components.Interaction
     {
         public int TurnsToLast { get;set; } 
     }
-    public class ConsumableItemModifier : Component
-    {}
 
     public class ModifierComponent : Component
     {}

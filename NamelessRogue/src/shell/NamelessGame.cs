@@ -337,8 +337,21 @@ namespace NamelessRogue.shell
                         fileStream.Close();
                         fileStream.Dispose();
                     }
-                    var item = ItemFactory.CreateItemFromData(this, itemData);
-                    itemsHolder.Items.Add(item);
+
+					if(itemData.ItemType==ItemType.Consumable)
+					{
+						for (int i = 0;	i<10; i++)
+						{
+                            var item = ItemFactory.CreateItemFromData(this, itemData);
+                            itemsHolder.Items.Add(item);
+                        }					
+					}
+					else 
+					{
+                        var item = ItemFactory.CreateItemFromData(this, itemData);
+                        itemsHolder.Items.Add(item);
+                    }
+                   
                 }
 
 			
@@ -434,16 +447,17 @@ namespace NamelessRogue.shell
 		}
 		public bool IsInitialized { get; internal set; }
 		public GameSettings Settings { get => settings; set => settings = value; }
+        public bool TurnUpdated { get; internal set; }
 
-		//public List<IEntity> EntitiesToAdd { get => entitiesToAdd; set => entitiesToAdd = value; }
-		//public List<IEntity> EntitiesToRemove { get => entitiesToRemove; set => entitiesToRemove = value; }
+        //public List<IEntity> EntitiesToAdd { get => entitiesToAdd; set => entitiesToAdd = value; }
+        //public List<IEntity> EntitiesToRemove { get => entitiesToRemove; set => entitiesToRemove = value; }
 
 
-		/// <summary>
-		/// LoadContent will be called once per game and is the place to load
-		/// all of your content.
-		/// </summary>
-		protected override void LoadContent()
+        /// <summary>
+        /// LoadContent will be called once per game and is the place to load
+        /// all of your content.
+        /// </summary>
+        protected override void LoadContent()
 		{
 
 		}

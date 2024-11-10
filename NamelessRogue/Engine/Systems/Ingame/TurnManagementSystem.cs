@@ -20,8 +20,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
+            namelessGame.TurnUpdated = false;
             var playerEntity = namelessGame.PlayerEntity;
-                var playerAp = playerEntity.GetComponentOfType<ActionPoints>();
+            var playerAp = playerEntity.GetComponentOfType<ActionPoints>();
             if (playerAp.Points < 100)
             {
                 namelessGame.CurrentGame.Turn++;
@@ -33,6 +34,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         ap.Points += 100;
                     }
                 }
+                namelessGame.TurnUpdated = true;
             }
         }
     }

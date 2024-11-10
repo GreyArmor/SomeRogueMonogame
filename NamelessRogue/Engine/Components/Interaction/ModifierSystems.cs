@@ -32,8 +32,27 @@ namespace NamelessRogue.Engine.Components.Interaction
 
                 if (entitstats != null)
                 {
+                    if (namelessGame.TurnUpdated)
+                    {
+                        foreach (var modifier in modifiers.ModifierEntities)
+                        {
+                            var consumable = modifier.GetComponentOfType<Consumable>();
+                            var timeConstrains = modifier.GetComponentOfType<TimedModifier>();
+                            if (timeConstrains != null)
+                            {
+                                if (consumable.IsDamageOverTime)
+                                {
+                                    entitstats.Health.Value += consumable.Health;
+                                    entitstats.Energy.Value += consumable.Energy;
+                                }
+                                timeConstrains.TurnsToLast--;
+                            }            
+                        }
+                    }
                     accumulatedStats.Add(entitstats);
                 }
+
+
                 List<IEntity> modifiersToRemove = new List<IEntity>();
                 foreach (var modifier in modifiers.ModifierEntities)
                 {
@@ -66,14 +85,6 @@ namespace NamelessRogue.Engine.Components.Interaction
                     {
                         accumulatedStats.Add(modifierStats);
                     }
-
-                    var consumableItemModifier = modifier.GetComponentOfType<ConsumableItemModifier>();
-                   
-                    if(consumableItemModifier != null)
-                    {
-                        entitstats.Add(modifierStats);
-                        modifiersToRemove.Add(modifier);
-                    }            
                 }
 
                 foreach (var modifier in modifiersToRemove)

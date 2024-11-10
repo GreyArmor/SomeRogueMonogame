@@ -20,8 +20,6 @@ namespace NamelessRogue.Engine.Factories
         public static Entity CreateGun(NamelessGame game)
         {
             Entity entity = new Entity();
-
-
             entity.AddComponent(new Drawable("gunIcon", new Color(1f)));
             entity.AddComponent(new Description("Test gun", "Created to test inventory system in 2024"));
             entity.AddComponent(new Item(ItemType.Weapon, 0, ItemQuality.Normal, 1, 1, "CorpoCorp Inc."));
@@ -78,8 +76,6 @@ namespace NamelessRogue.Engine.Factories
                 entity.AddComponent(new Equipment(data.PossibleSlots.ToArray()));
                 entity.AddComponent(new ArmorStats() { DamageType = atd.DamageType, Value = new SimpleStat(atd.ArmorValue, atd.ArmorValue, atd.ArmorValue) });
                 entity.AddComponent(new ResistanceStat() { DamageType = atd.ResistType, Value = new SimpleStat(atd.ResistValue, atd.ArmorValue, atd.ResistValue) });
-
-
             }
 
             if (data.ConsumableItemTemplateData != null)
@@ -89,12 +85,14 @@ namespace NamelessRogue.Engine.Factories
                 var citd = data.ConsumableItemTemplateData;
                 if (citd.HealthModificator != 0 || citd.EnergyModificator != 0)
                 {
-                    consumableComponent.Heath = citd.HealthModificator;
+                    consumableComponent.Health = citd.HealthModificator;
                     consumableComponent.Energy = citd.EnergyModificator;
                     consumableComponent.Damage = citd.DamageModificator;
                     consumableComponent.Armor = citd.ArmorModificator;
                     consumableComponent.Resistance = citd.ResistanceModificator;
-
+                    consumableComponent.IsAppliedImmediately = citd.IsAppliedImmediately;
+                    consumableComponent.Duration = citd.Duration;
+                    consumableComponent.IsDamageOverTime = citd.IsDamageOverTime;
                     entity.AddComponent(new CharacterStats() { Health = new SimpleStat(citd.HealthModificator, 0, 999), Energy = new SimpleStat(citd.EnergyModificator, 0, 999), });
                 }
             }

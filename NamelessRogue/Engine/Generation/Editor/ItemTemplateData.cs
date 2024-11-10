@@ -92,6 +92,9 @@ namespace NamelessRogue.Engine.Generation.Editor
         public bool IsAppliedImmediately { get; set; }
 
         [XmlElement]
+        public bool IsDamageOverTime { get; set; }
+
+        [XmlElement]
         public int HealthModificator { get; set; } = 0;
 
         [XmlElement]
@@ -106,6 +109,7 @@ namespace NamelessRogue.Engine.Generation.Editor
         [XmlElement]
         public int DamageModificator { get; set; } = 0;
 
+      
     }
 
 }
