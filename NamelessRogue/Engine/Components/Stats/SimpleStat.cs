@@ -22,7 +22,11 @@ namespace NamelessRogue.Engine.Components.Stats
         public int Value
         {
             get { return value; }
-            set { this.value = value; }
+            set {
+                this.value = value;
+                this.value = this.value > maxValue ? maxValue : this.value;
+                this.value = this.value < minValue ? minValue : this.value;
+            }
         }
 
         public int MinValue
