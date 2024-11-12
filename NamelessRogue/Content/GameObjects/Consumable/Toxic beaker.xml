@@ -7,11 +7,11 @@
   <ItemQuality>Terrible</ItemQuality>
   <ConsumableItemTemplateData>
     <Charges>1</Charges>
-    <Duration>5</Duration>
+    <Duration>50</Duration>
     <IsThrowable>false</IsThrowable>
     <IsAppliedImmediately>false</IsAppliedImmediately>
     <IsDamageOverTime>true</IsDamageOverTime>
-    <HealthModificator>-15</HealthModificator>
+    <HealthModificator>-1</HealthModificator>
     <EnergyModificator>0</EnergyModificator>
     <ArmorModificator>10</ArmorModificator>
     <ResistanceModificator>10</ResistanceModificator>

@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Stats;
@@ -281,6 +282,7 @@ namespace NamelessRogue.Engine.UI
                 DrawEquipment();
             }
         }
+
 
         private void DrawEquipment()
         {

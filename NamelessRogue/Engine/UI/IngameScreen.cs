@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.ECS;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
+using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Sounds;
@@ -53,6 +54,7 @@ namespace NamelessRogue.Engine.UI
 		public static int verticesPerRow = 36;
         public static int substractionCoef = 1;
 
+		int iconSize = 32;
         public override void DrawLayout()
 		{
 			menuPosition = new System.Numerics.Vector2(uiSize.X - game.Settings.HudWidth, 0);
@@ -131,9 +133,60 @@ namespace NamelessRogue.Engine.UI
 					ImGui.EndChild();
 				}
                 ImGui.EndChild();
+
+				DrawBuffs();
+
             }
 			ImGui.End();
 
 		}
-	}
+
+        private void DrawBuffs()
+        {
+            ImGui.SetCursorPos(HudElementsRenderingSystem.EnergyPosition.ToNumerics() + new System.Numerics.Vector2(0, 50));
+            {
+
+                var modifiers = game.PlayerEntity.GetComponentOfType<ModifiersCollection>();
+
+                foreach (var modifier in modifiers.ModifierEntities)
+                {
+                    var drawable = modifier.GetComponentOfType<Drawable>();
+					var equipment = modifier.GetComponentOfType<Equipment>();
+                    var timed = modifier.GetComponentOfType<TimedModifier>();
+                    if (drawable != null && equipment==null)
+                    {	
+						ImGui.BeginChild(modifier.GetHashCode().ToString(), new System.Numerics.Vector2(iconSize+1));
+                        ImGui.Image(ImGuiImageLibrary.Textures[drawable.ObjectID], new System.Numerics.Vector2(iconSize, iconSize));
+						if (timed != null)
+						{
+                            ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
+						
+                            string durationText = timed.TurnsToLast.ToString();
+							var textSize = ImGui.CalcTextSize(durationText);
+							//crude outline	
+							ImGui.PushStyleColor(ImGuiCol.Text, new System.Numerics.Vector4(0, 0, 0, 1));
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(iconSize-1, iconSize) - textSize);
+							ImGui.Text(durationText);
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(iconSize+1, iconSize) - textSize);
+                            ImGui.Text(durationText);
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(iconSize, iconSize-1) - textSize);
+                            ImGui.Text(durationText);
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(iconSize, iconSize+1) - textSize);
+                            ImGui.Text(durationText);
+                            ImGui.PopStyleColor();
+                            //
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(iconSize, iconSize) - textSize);
+                            ImGui.Text(durationText);
+
+                            ImGui.PopFont();
+                        }
+						ImGui.EndChild();
+
+						ImGui.SameLine();
+                    }
+                }
+            }
+        }
+
+    }
 }

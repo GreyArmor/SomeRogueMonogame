@@ -17,10 +17,11 @@ namespace NamelessRogue.Engine.Components.Stats
         public SimpleStat Speed { get; set; } = new SimpleStat(100, 0, 999);
         public SimpleStat VisionRange { get; set; } = new SimpleStat(0, 0, 999);
         public SimpleStat Weight { get; set; } = new SimpleStat(0, 0, 999);
+     
         public List<WeaponStats> WeaponStats { get; set; } = new List<WeaponStats> ();
         public List<ResistanceStat> Resistances { get; set; } = new List<ResistanceStat>();
-        public List<ArmorStats> Armor { get; set;} = new List<ArmorStats> { };
-
+        public List<ArmorStats> Armor { get; set;} = new List<ArmorStats> { }; 
+        public int Money { get; set; } = 0;
         public string FactionId { get; set; }
 
 		public override IComponent Clone()

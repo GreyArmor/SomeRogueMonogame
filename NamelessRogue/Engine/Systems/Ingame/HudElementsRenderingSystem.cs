@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.UI;
@@ -23,6 +24,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public static Vector2 HealthPosition = new Vector2(20) { };
 
         public static Vector2 EnergyPosition = new Vector2(20, 70) { };
+
+        public static Vector2 BuffsPosition = new Vector2(20, 100) { };
         public HudElementsRenderingSystem(GameSettings settings) : base(settings)
         {
             healthBar = SpriteLibrary.SpritesAnimatedIdle["healthbar"];
@@ -53,6 +56,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 stats.Energy.Value++;
             }
+
+           
 
 
             healthBar.SetCurrent(haealthBarAnimation);

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
@@ -57,10 +58,10 @@ namespace NamelessRogue.Engine.Infrastructure
 				FillMode = FillMode.Solid,
 				MultiSampleAntiAlias = false,
 				ScissorTestEnable = true,
-				SlopeScaleDepthBias = 0
-			};
+                SlopeScaleDepthBias = 0
+            };
 
-			SetupInput();
+            SetupInput();
 		}
 
 		#region ImGuiRenderer
