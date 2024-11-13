@@ -143,9 +143,8 @@ namespace NamelessRogue.Engine.UI
 
         private void DrawBuffs()
         {
-            ImGui.SetCursorPos(HudElementsRenderingSystem.EnergyPosition.ToNumerics() + new System.Numerics.Vector2(0, 50));
+            ImGui.SetCursorPos(HudElementsRenderingSystem.HealthPosition.ToNumerics() + new System.Numerics.Vector2(0, 50));
             {
-
                 var modifiers = game.PlayerEntity.GetComponentOfType<ModifiersCollection>();
 
                 foreach (var modifier in modifiers.ModifierEntities)

@@ -422,6 +422,7 @@ namespace NamelessRogue.Engine.UI
                                 isThrowable = citd.IsThrowable;
                                 isAppliedImmediately = citd.IsAppliedImmediately;
                                 isDoT = citd.IsDamageOverTime;
+                                isResMod = citd.HealthModificator != 0 || citd.EnergyModificator != 0;
                                 chargesValue = citd.Charges;
                                 duration = citd.Duration;
                                 healthModValue = citd.HealthModificator;

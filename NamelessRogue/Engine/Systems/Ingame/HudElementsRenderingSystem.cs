@@ -21,9 +21,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
         AnimatedSpriteNR energyBar = null;
         int healthValue = 0;
         string haealthBarAnimation = "h0";
-        public static Vector2 HealthPosition = new Vector2(20) { };
+        public static Vector2 HealthPosition = new Vector2(20, 20) { };
 
-        public static Vector2 EnergyPosition = new Vector2(20, 70) { };
+        public static Vector2 EnergyPosition = new Vector2(150, 20) { };
 
         public static Vector2 BuffsPosition = new Vector2(20, 100) { };
         public HudElementsRenderingSystem(GameSettings settings) : base(settings)
@@ -55,10 +55,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             else if ((Keyboard.GetState().IsKeyDown(Keys.I)))
             {
                 stats.Energy.Value++;
-            }
-
-           
-
+            }               
 
             healthBar.SetCurrent(haealthBarAnimation);
             energyBar.SetCurrent(energyBarAnimation);
