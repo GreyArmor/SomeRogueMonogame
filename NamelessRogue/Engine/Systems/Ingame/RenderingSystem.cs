@@ -364,7 +364,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private void FillcharacterBufferVisibility(NamelessGame game, Screen screen, ConsoleCamera camera,
             GameSettings settings, IWorldProvider world)
         {
-
             int camX = camera.getPosition().X;
             int camY = camera.getPosition().Y;
             Position playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
@@ -376,32 +375,25 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 for (int y = 0; y < settings.GetHeightZoomed(); y++)
                 {
                     screen.ScreenBuffer[x, y].isVisible = false;
+                    screen.ScreenBuffer[x, y].isRemembered = false;
                 }
             }
             screenCopy = screen;
-           // return;
-            if (fov == null)
+            // return;
+
+            for (int x = camX; x < settings.GetWidthZoomed() + camX; x++)
             {
-                fov = new PermissiveVisibility((x, y) => {
-                    var worldTile = world.GetTile(x, y, playerPosZ);
-                    if(worldTile == null)
+                for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
+                {
+                    Point screenPoint = camera.PointToScreen(x, y);
+                    var tile = world.GetTile(x, y, playerPosZ);
+                    if (tile != null)
                     {
-                        return false;
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible = tile.IsVisible;
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isRemembered = tile.IsRemembered;
                     }
-                    return !world.GetTile(x, y, playerPosZ).GetBlocksVision(game); 
-                },
-                    (x, y) =>
-                    {
-                        Point screenPoint = camera.PointToScreen(x, y);
-                        if (screenPoint.X >= 0 && screenPoint.X < settings.GetWidthZoomed() && screenPoint.Y >= 0 &&
-                            screenPoint.Y < settings.GetHeightZoomed())
-                        {
-                            screenCopy.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible = true;
-                        }
-                    }, (x, y) => { return Math.Abs(x) + Math.Abs(y); }
-                );
+                }
             }
-            fov.Compute(new Point(playerPosition.Point.X, playerPosition.Point.Y), 60);
         }
 
 
@@ -423,7 +415,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
-                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible && x > 0 && y > 0)
+                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isRemembered && x > 0 && y > 0)
                     {
                         Tile tileToDraw = world.GetTile(x, y, playerPosZ);
 
@@ -468,7 +460,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
-                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible && x>0 && y>0)
+                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isRemembered && x>0 && y>0)
                     {
                         Tile tileToDraw = world.GetTile(x, y, playerPosZ);
 
@@ -612,7 +604,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         }                                                 
                         else                                               
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
+                            //screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
                         }
@@ -678,12 +670,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 characterToTileDictionary.TryGetValue("Nothingness", out tileData);
                             }
                             var white = new Color(1f, 1f, 1f, 1f);
+                            var grey = new Color(0.5f, 0.5f, 0.5f, 1f);
+
+                            var tileMask = screen.ScreenBuffer[x, y].isRemembered && screen.ScreenBuffer[x, y].isVisible ? white : grey;
+
                             DrawTile(game.GraphicsDevice, game, x, y,
                                 x * settings.GetFontSizeZoomed(),
                                 y * settings.GetFontSizeZoomed(),
                                 tileData,
                                 //screen.ScreenBuffer[x, y].CharColor,
-                                white,
+                                tileMask,
                                 screen.ScreenBuffer[x, y].BackGroundColor, foregroundModel, backgroundModel
                                 );
                         }

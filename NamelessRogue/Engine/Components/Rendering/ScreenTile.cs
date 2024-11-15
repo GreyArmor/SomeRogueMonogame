@@ -41,5 +41,6 @@ namespace NamelessRogue.Engine.Components.Rendering
         public  Engine.Utility.Color CharColor;
         public Engine.Utility.Color BackGroundColor;
         public bool isVisible;
+        internal bool isRemembered;
     }
 }

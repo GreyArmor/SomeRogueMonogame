@@ -17,6 +17,9 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         
         public Biomes Biome { get; set; }
 
+        public bool IsVisible { get; set; } = false;
+        public bool IsRemembered { get; set; } = false;
+
         public Tile(){}
 	
         public Tile(TerrainTypes terrain, Biomes biome, Point coordinate, double elevation)
