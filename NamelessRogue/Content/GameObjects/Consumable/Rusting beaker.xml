@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Name>Toxic beaker</Name>
+  <Name>Rusting beaker</Name>
   <Description>Do not consume</Description>
-  <IconPath>Icons\toxic_beaker.png</IconPath>
+  <IconPath>Icons\rusting_beaker.png</IconPath>
   <ItemType>Consumable</ItemType>
   <ItemQuality>Terrible</ItemQuality>
   <ConsumableItemTemplateData>
@@ -10,10 +10,10 @@
     <Duration>50</Duration>
     <IsThrowable>false</IsThrowable>
     <IsAppliedImmediately>false</IsAppliedImmediately>
-    <IsDamageOverTime>true</IsDamageOverTime>
+    <IsDamageOverTime>false</IsDamageOverTime>
     <HealthModificator>-1</HealthModificator>
     <EnergyModificator>0</EnergyModificator>
-    <ArmorModificator>0</ArmorModificator>
+    <ArmorModificator>-10</ArmorModificator>
     <ResistanceModificator>0</ResistanceModificator>
     <DamageModificator>0</DamageModificator>
   </ConsumableItemTemplateData>

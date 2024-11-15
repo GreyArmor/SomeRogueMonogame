@@ -32,6 +32,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var inventory = player.GetComponentOfType<ItemsHolder>();
                 inventory.Items.Remove(item);
 
+              
+
                 if (consumableComponent.IsAppliedImmediately)
                 {                    
                     playerStats.Health.Value += consumableComponent.Health;
@@ -45,6 +47,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     buffEntity.AddComponent(new ModifierComponent());
                     buffEntity.AddComponent(new TimedModifier() { TurnsToLast = consumableComponent.Duration });
                     buffEntity.AddComponent(consumableClone);
+
+                    if (consumableComponent.Armor != 0)
+                    {
+                        buffEntity.AddComponent(new ArmorStats() { DamageType = DamageType.Physical, Value = new SimpleStat(consumableComponent.Armor, -999, 999) });
+                    }
+                    if(consumableComponent.Resistance != 0)
+                    {
+                        buffEntity.AddComponent(new ResistanceStat() { DamageType = DamageType.Physical, Value = new SimpleStat(consumableComponent.Resistance, -999, 999) });
+                    }
+                    if (consumableComponent.Damage != 0)
+                    {
+                        buffEntity.AddComponent(new WeaponStats() { DamageType = DamageType.Physical, MinimumDamage = consumableComponent.Damage, MaximumDamage = consumableComponent.Damage});
+                    }
 
                     player.GetComponentOfType<ModifiersCollection>().ModifierEntities.Add(buffEntity);
 

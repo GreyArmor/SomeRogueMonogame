@@ -423,6 +423,8 @@ namespace NamelessRogue.Engine.UI
                                 isAppliedImmediately = citd.IsAppliedImmediately;
                                 isDoT = citd.IsDamageOverTime;
                                 isResMod = citd.HealthModificator != 0 || citd.EnergyModificator != 0;
+                                isArmorMod = citd.ArmorModificator != 0;
+                                isDamageMod = citd.DamageModificator != 0;
                                 chargesValue = citd.Charges;
                                 duration = citd.Duration;
                                 healthModValue = citd.HealthModificator;
@@ -595,7 +597,7 @@ namespace NamelessRogue.Engine.UI
 
                                 ImGui.Text("Resistance");
                                 ImGui.SetNextItemWidth(fieldsSizeX);
-                                ImGui.DragInt("##energyModValue", ref resistModValue, 1, -999, 999);
+                                ImGui.DragInt("#resistanceModValue", ref resistModValue, 1, -999, 999);
                                 _restrainValue(ref resistModValue, -999, 999);
                                 ImGui.Separator();
                             }
