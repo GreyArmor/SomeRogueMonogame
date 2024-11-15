@@ -52,8 +52,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         List<IEntity> hostileEntities = new List<IEntity>();
                         foreach (var npc in RegisteredEntities)
                         {
-                            var aiControlled = npc.GetComponentOfType<AIControlled>();                         
-                            if (aiControlled.Affinity == Affinity.Hostile)
+                            var aiControlled = npc.GetComponentOfType<AIControlled>();
+                            var position = npc.GetComponentOfType<Position>();
+                            var tile = namelessGame.WorldProvider.GetTile(position.X, position.Y, position.Z);
+                            if (aiControlled.Affinity == Affinity.Hostile && tile.IsVisible)
                             {
                                 hostileEntities.Add(npc);
                             }
