@@ -49,7 +49,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                fovCleaning.Enqueue(tile);
                            }
 
-                       }, (x, y) => { return Math.Abs(x) + Math.Abs(y); }
+                       }, (x, y) => { return (int)Math.Sqrt(x * x + y * y); }
                    );
             }
 
