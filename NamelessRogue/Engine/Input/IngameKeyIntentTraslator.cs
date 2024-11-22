@@ -91,6 +91,9 @@ namespace NamelessRogue.Engine.Input
                                 intent.Intention = IntentEnum.Fire;
                             }
                             break;
+                        case Keys.E:
+                            intent.Intention = IntentEnum.Interact;
+                            break;
                         case Keys.OemComma:
                             {
                                 if (lastCommand == '<')

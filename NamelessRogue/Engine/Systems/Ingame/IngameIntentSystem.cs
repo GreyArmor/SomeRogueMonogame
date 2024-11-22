@@ -397,6 +397,34 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     }
                                 }
                                     break;
+                            case IntentEnum.Interact:
+                                {
+                                    List<Entity> interactableEntities = new List<Entity>();
+                                    var playerPosition = playerEntity.GetComponentOfType<Position>();
+                                    for (var x = playerPosition.X - 1; x <= playerPosition.X + 1; x++)
+                                    {
+                                        for (var y = playerPosition.Y - 1; y <= playerPosition.Y + 1; y++)
+                                        {
+                                            var tile = namelessGame.WorldProvider.GetTile(x, y, playerPosition.Z);
+                                            var tileEntities = tile.GetEntities();
+                                            foreach(var tileEntity in tileEntities)
+                                            {
+                                                var interactable = tileEntity.GetComponentOfType<Interactable>();
+                                                if(interactable != null)
+                                                {
+                                                    interactableEntities.Add(tileEntity);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if(interactableEntities.Any())
+                                    {
+                                        var interactCommand = new InteractCommand(interactableEntities.First());
+                                        namelessGame.Commander.EnqueueCommand(interactCommand);
+                                    }
+                                }
+                                break;
                             default:
                                 break;
                         }

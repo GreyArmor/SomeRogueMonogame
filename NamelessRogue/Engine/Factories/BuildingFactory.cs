@@ -36,6 +36,7 @@ namespace NamelessRogue.Engine.Factories
             door.AddComponent(new Description("Door",""));
             door.AddComponent(new Door());
             door.AddComponent(new SimpleSwitch(true));
+            door.AddComponent(new Interactable());
             door.AddComponent(new OccupiesTile());
             door.AddComponent(new BlocksVision());
             door.AddComponent(new Furniture());

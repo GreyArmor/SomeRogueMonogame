@@ -61,7 +61,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var player = game.PlayerEntity;
             var pos = player.GetComponentOfType<Position>();
             playerPosZ = pos.Z;
-            fov.Compute(pos.Point.ToPoint(), 60);
+            fov.Compute(pos.Point.ToPoint(), 40);
         }
     }
 }
