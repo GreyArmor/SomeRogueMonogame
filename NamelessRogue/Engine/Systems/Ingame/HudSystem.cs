@@ -30,8 +30,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
 
             foreach (IEntity entity in RegisteredEntities)
-            { 
-                
+            {                 
                 Player player = entity.GetComponentOfType<Player>();
                 var stats = entity.GetComponentOfType<CharacterStats>();
 

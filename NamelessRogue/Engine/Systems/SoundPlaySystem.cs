@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Media;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Sounds;
 using NamelessRogue.shell;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,7 +35,7 @@ namespace NamelessRogue.Engine.Systems
 
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
 		{
-			return;
+			//return;
 
 			if (isFadingIn)
 			{
@@ -46,20 +47,25 @@ namespace NamelessRogue.Engine.Systems
 			{
 				if (command.IsSong)
 				{
-					SoundsHolder.SongDictionary.TryGetValue(command.SoundToPlay, out var sound);
-					MediaPlayer.Stop();
-					
-					MediaPlayer.Play(sound);
-					MediaPlayer.IsRepeating = true;
+					bool soundExists = SoundsHolder.SongDictionary.TryGetValue(command.SoundToPlay, out var sound);
 
-					if (songsFadeIn)
+                    MediaPlayer.Stop();
+                    if (soundExists)
 					{
-						MediaPlayer.Volume = 0;
-						maxVolume = command.Volume;
-						isFadingIn = true;
-					}
-					else {
-						MediaPlayer.Volume = command.Volume;
+
+						MediaPlayer.Play(sound);
+						MediaPlayer.IsRepeating = true;
+
+						if (songsFadeIn)
+						{
+							MediaPlayer.Volume = 0;
+							maxVolume = command.Volume;
+							isFadingIn = true;
+						}
+						else
+						{
+							MediaPlayer.Volume = command.Volume;
+						}
 					}
 					
 				}
@@ -68,7 +74,7 @@ namespace NamelessRogue.Engine.Systems
 					if (!MediaPlayer.IsMuted)
 					{
 						SoundsHolder.SoundDictionary.TryGetValue(command.SoundToPlay, out var sound);
-						sound?.Play(command.Volume, 0, 0);
+						sound?.Play(command.Volume, Random.Shared.NextFloat(0,0.1f), 0);
 					}
 				}
 			}

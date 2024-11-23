@@ -38,6 +38,5 @@ namespace NamelessRogue.Engine.UI
 			if (clicked) { game.Commander.EnqueueCommand(new PlaySoundCommand("ButtonClick", false, 0.5f)); }
 			return clicked;
 		}
-
 	}
 }

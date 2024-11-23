@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "test.tmx",
+    "activeFile": "ApartmentBlockFloor.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -21,8 +21,8 @@
             "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 960.5,
-                "y": 959.5
+                "x": -249,
+                "y": 177.5
             }
         },
         "ApartmentBlockFloor_backup.tmx": {
@@ -49,8 +49,8 @@
             "scale": 0.75,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 369.3333333333333,
-                "y": 427.99999999999994
+                "x": 1006.6666666666665,
+                "y": 960.6666666666665
             }
         },
         "tileset2.tsx": {
@@ -84,10 +84,10 @@
     ],
     "project": "Buildings.tiled-project",
     "recentFiles": [
-        "ApartmentBlockFloor.tmx",
-        "ApartmentBlockFloor_backup.tmx",
-        "tileset2.tsx",
         "test.tmx",
+        "tileset2.tsx",
+        "ApartmentBlockFloor_backup.tmx",
+        "ApartmentBlockFloor.tmx",
         "ApartmentBlockFloor - Copy.tmx",
         "symbols.tsx",
         "untitled.tmx",

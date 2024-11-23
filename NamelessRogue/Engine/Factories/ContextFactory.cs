@@ -69,6 +69,38 @@ namespace NamelessRogue.Engine.Factories
             }
         }
 
+        private static GameContext IngameContextMenu;
+        public static GameContext GetIngameContextMenu(NamelessGame game)
+        {
+
+            if (IngameContextMenu != null)
+            {
+                return IngameContextMenu;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
+                systems.Add(new IngameIntentSystem());
+                systems.Add(new InteractSystem());
+                systems.Add(new VisibilitySystem());
+                systems.Add(new EquipSystem());
+                systems.Add(new TurnManagementSystem());
+                systems.Add(new HudSystem());
+                systems.Add(new SoundPlaySystem());
+
+                var renderingSystem = new RenderingSystem(game.GetSettings());
+                var uiSystem = new UIRenderSystem(game);
+
+
+                IngameContext = new GameContext(systems, new List<ISystem>() { renderingSystem, uiSystem, new HudElementsRenderingSystem(game.Settings) },
+                    UIContainer.Instance.HudScreen, "InGame");
+
+                return IngameContext;
+            }
+        }
+
+
         private static GameContext WorldBoardContext;
         public static GameContext GetWorldBoardContext(NamelessGame game)
         {

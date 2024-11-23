@@ -91,6 +91,12 @@
 /processorParam:TextureFormat=Color
 /build:SideTexture.png
 
+#begin sounds/171705__peepholecircus__sci-fi-door.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/171705__peepholecircus__sci-fi-door.wav
+
 #begin sounds/annabloom_click1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

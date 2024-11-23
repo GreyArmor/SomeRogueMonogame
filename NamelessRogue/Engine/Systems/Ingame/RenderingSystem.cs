@@ -154,9 +154,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public RenderingSystem(GameSettings settings){
             InitializeCharacterTileDictionary();
 
-            Signature = new HashSet<Type>();
-            Signature.Add(typeof(Drawable));
-            Signature.Add(typeof(Position));
+            Signature = [typeof(Drawable), typeof(Position)];
 
         }
 
@@ -567,17 +565,24 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
 
             List<IEntity> characters = new List<IEntity>();
+            List<IEntity> selectorCursors = new List<IEntity>();
             foreach (IEntity entity in RegisteredEntities)
             {
                 Drawable drawable = entity.GetComponentOfType<Drawable>();
 
                 var character = entity.GetComponentOfType<Character>();
-                if (character == null)
+                if (character != null)
                 {
-                   
+                    characters.Add(entity);
                     continue;
                 }
-                characters.Add(entity);
+
+                var interactionSelectorLink = entity.GetComponentOfType<InteractionSelectorLink>();
+                if (interactionSelectorLink != null)
+                {
+                    selectorCursors.Add(entity);
+                    continue;
+                }
             }
 
             foreach (IEntity entity in characters)
@@ -603,6 +608,39 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                         }                                                 
                         else                                               
+                        {
+                            //screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                        }
+                    }
+
+                }
+            }
+
+            foreach (IEntity entity in selectorCursors)
+            {
+                Drawable drawable = entity.GetComponentOfType<Drawable>();
+
+                if (drawable == null)
+                {
+                    continue;
+                }
+
+                Position position = entity.GetComponentOfType<Position>();
+                if (drawable.Visible)
+                {
+                    Point screenPoint = camera.PointToScreen(position.X, position.Y);
+                    int x = screenPoint.X;
+                    int y = screenPoint.Y;
+                    if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
+                    {
+                        if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
+                        {
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Cursor", ScreenObjectSource.Tileset);
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                        }
+                        else
                         {
                             //screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();

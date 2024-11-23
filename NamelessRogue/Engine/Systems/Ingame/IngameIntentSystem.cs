@@ -47,7 +47,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     var playerEntity = namelessGame.PlayerEntity;
                     foreach (Intent intent in inputComponent.Intents)
                     {
-
+                        //probably spaghetti code, but when we interact with more than one object, we create interaction selector items, and when
+                        //we move into them we choose to interact with that object, when we do literally anything else we should terminate the selection process;
+                        bool terminateInteractSelector = true;
                         switch (intent.Intention)
                         {
                             case IntentEnum.MoveUp:
@@ -136,15 +138,37 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             if (tileToMoveTo == null)
                                             {
                                                 continue;
-
                                             }
 
-
-                                            IEntity entityThatOccupiedTile = null;
+                                            InteractionSelectorLink interactionSelectorLink = null;
                                             foreach (IEntity tileEntity in tileToMoveTo.GetEntities())
                                             {
                                                 OccupiesTile occupiesTile =
                                                     tileEntity.GetComponentOfType<OccupiesTile>();
+
+                                                interactionSelectorLink = tileEntity.GetComponentOfType<InteractionSelectorLink>();
+
+                                                if (interactionSelectorLink != null)
+                                                {
+                                                    terminateInteractSelector = false;
+                                                    break;
+                                                }
+                                            }
+
+                                            if(interactionSelectorLink!=null)
+                                            {
+                                                var interactCommand = new InteractCommand(interactionSelectorLink.LinkedEntity);
+                                                namelessGame.Commander.EnqueueCommand(interactCommand);
+                                                continue;
+                                            }
+
+                                            IEntity entityThatOccupiedTile = null;
+       
+                                            foreach (IEntity tileEntity in tileToMoveTo.GetEntities())
+                                            {
+                                                OccupiesTile occupiesTile =
+                                                    tileEntity.GetComponentOfType<OccupiesTile>();
+
                                                 if (occupiesTile != null)
                                                 {
                                                     entityThatOccupiedTile = tileEntity;
@@ -174,6 +198,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                                         var ap = playerEntity.GetComponentOfType<ActionPoints>();
                                                         ap.Points -= Constants.ActionsMovementCost;
                                                         //   playerEntity.RemoveComponentOfType<HasTurn>();
+                                                        namelessGame.Commander.EnqueueCommand(new PlaySoundCommand("DoorOpen", false, 0.1f));
 
                                                     }
                                                     else
@@ -415,10 +440,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                                     interactableEntities.Add(tileEntity);
                                                 }
                                             }
+                                            if(interactableEntities.Count > 1)
+                                            {
+                                                var interactSelectorCommand = new InteractionSelectorCommand(interactableEntities);
+                                                namelessGame.Commander.EnqueueCommand(interactSelectorCommand);
+                                            }
                                         }
                                     }
 
-                                    if(interactableEntities.Any())
+                                    if(interactableEntities.Count==1)
                                     {
                                         var interactCommand = new InteractCommand(interactableEntities.First());
                                         namelessGame.Commander.EnqueueCommand(interactCommand);
@@ -427,6 +457,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 break;
                             default:
                                 break;
+                        }
+
+                        if(terminateInteractSelector)
+                        {
+                            var interactCommand = new TerminateInteractionSelectorCommand();
+                            namelessGame.Commander.EnqueueCommand(interactCommand);
                         }
                     }
 
