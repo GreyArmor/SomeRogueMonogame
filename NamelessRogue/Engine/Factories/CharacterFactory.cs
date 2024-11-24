@@ -68,6 +68,7 @@ namespace NamelessRogue.Engine.Factories
             Entity playerCharacter = new Entity();
             playerCharacter.AddComponent(new Character("Enemy"));
             playerCharacter.AddComponent(new AIControlled() { Affinity = Affinity.Hostile });
+            playerCharacter.AddComponent(new BasicAi());
             playerCharacter.AddComponent(position);
             playerCharacter.AddComponent(new Drawable("Window", new Engine.Utility.Color(0.9, 0.9, 0.9)));
             playerCharacter.AddComponent(new Description("Enemy", ""));

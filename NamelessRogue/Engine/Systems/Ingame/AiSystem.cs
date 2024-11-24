@@ -34,7 +34,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             var playerEntity = namelessGame.PlayerEntity;
             var ap = playerEntity.GetComponentOfType<ActionPoints>();
-            if (ap.Points >= 100)
+            if (!namelessGame.TurnUpdated)
             {
                 return;
             }
@@ -155,13 +155,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                    nextPosition.X, nextPosition.Y,0);
 
                 var ap = movableEntity.GetComponentOfType<ActionPoints>();
-                ap.Points -= Constants.ActionsMovementCost;
+                ap.Points -= Constants.ActionsMovementCost*2;
             }
 
             if (route.Count == 0)
             {
                 var ap = movableEntity.GetComponentOfType<ActionPoints>();
-                ap.Points = 0;
+                ap.Points = -Constants.ActionsMovementCost * 2;
             }
         }
     }

@@ -39,12 +39,13 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InteractSystem());
                 systems.Add(new VisibilitySystem());
                 systems.Add(new TargetingSystem());
-                systems.Add(new AiSystem());
+                
                 systems.Add(new FlowFieldMovementSystem());             
                 systems.Add(new InventorySystem());
                 systems.Add(new EquipSystem());
                 systems.Add(new ProjectileSystem());
 				systems.Add(new TurnManagementSystem());
+                systems.Add(new AiSystem());
 
                 systems.Add(new ConsumableSystem());
                 systems.Add(new ModifierSystem());
