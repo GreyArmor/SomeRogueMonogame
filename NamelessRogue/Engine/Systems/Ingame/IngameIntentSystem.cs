@@ -390,17 +390,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     }
                                     else
                                     {
-                                        var playerPosition = playerEntity.GetComponentOfType<Position>();
-                                        Position cursorPosition = namelessGame.CursorEntity.GetComponentOfType<Position>();
-                                        var tile = namelessGame.WorldProvider.GetTile(cursorPosition.X, cursorPosition.Y, cursorPosition.Z);
-                                        if (tile.AnyEntities())
-                                        {
-                                            var firstEntiry = tile.GetEntities().First();
-                                            var combatCommand = new AttackCommand(playerEntity, firstEntiry);
-
-                                        }
-                                        var createProjectileCommand = new CreateProjectileCommand(playerPosition.Point, cursorPosition.Point, DamageType.Ballistic);
-                                        namelessGame.Commander.EnqueueCommand(createProjectileCommand);
+                                        FireWeaponCommand command = new FireWeaponCommand();
+                                        namelessGame.Commander.EnqueueCommand(command);
                                     }
                                 }
                                 break;

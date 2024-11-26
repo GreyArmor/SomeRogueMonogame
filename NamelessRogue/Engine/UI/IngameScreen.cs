@@ -42,6 +42,7 @@ namespace NamelessRogue.Engine.UI
 		System.Numerics.Vector2 sidebarSize;
         private Texture2D texture;
         int buttonCount = 4;
+		string log = "";
 		public IngameScreen(NamelessGame game) : base(game)
 		{
 			buttonSize = new System.Numerics.Vector2(game.Settings.HudWidth - 10, 50);
@@ -119,7 +120,7 @@ namespace NamelessRogue.Engine.UI
                         ImGui.Text(weapon.Key + ": " + weapon.Value.Item1 + " - " + weapon.Value.Item2);
                     }	
 
-                    ImGui.BeginChild("menu", sidebarSize);
+                    ImGui.BeginChild("menu", sidebarSize, false, ImGuiWindowFlags.NoScrollbar);
 					{
 						ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
 						if (ButtonWithSound("Open map", buttonSize)) { Action = HudAction.OpenWorldMap; };
@@ -127,16 +128,30 @@ namespace NamelessRogue.Engine.UI
 						ImGui.SetCursorPos(shiftVector);
 						if (ButtonWithSound("Open inventory", buttonSize)) { Action = HudAction.OpenInventory; }
 
-						ImGui.PopFont();
+						ImGui.PopFont();						
 
-					}
+
+                    }
 					ImGui.EndChild();
 				}
+                var pos = ImGui.GetCursorPos();
+                var logWindowSize = new System.Numerics.Vector2(sidebarSize.X, uiSize.Y - pos.Y - 50);
+                ImGui.BeginChild("logWindow", logWindowSize, true);
+                {
+                    var splitStr = log.Split('\n');
+                    foreach (var str in splitStr)
+                    {
+                        ImGui.TextUnformatted(str);
+                    }
+                    if (ImGui.GetScrollY() >= ImGui.GetScrollMaxY())
+                    {
+                        ImGui.SetScrollHereY(1.0f);
+                    }
+                }
                 ImGui.EndChild();
-
-				DrawBuffs();
-
             }
+			
+			DrawBuffs();
 			ImGui.End();
 
 		}
@@ -187,5 +202,9 @@ namespace NamelessRogue.Engine.UI
             }
         }
 
+        internal void LogMessage(string logMessage)
+        {
+			log += logMessage + "\n";
+        }
     }
 }

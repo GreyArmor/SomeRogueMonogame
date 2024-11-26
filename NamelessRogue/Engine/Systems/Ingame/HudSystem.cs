@@ -68,10 +68,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
                 
                 UIContainer.Instance.HudScreen.Action = HudAction.None;
-                //while (namelessGame.Commander.DequeueCommand(out HudLogMessageCommand logMessage))
-                //{
-                //    UIController.HudScreen.LogMessage(logMessage.LogMessage);
-                //}
+                while (namelessGame.Commander.DequeueCommand(out HudLogMessageCommand logMessage))
+                {
+                    UIContainer.Instance.HudScreen.LogMessage(logMessage.LogMessage);
+                }
 
             }
 

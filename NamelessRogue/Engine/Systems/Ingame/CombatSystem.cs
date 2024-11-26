@@ -8,6 +8,8 @@ using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended.ECS;
+using System.Linq;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -26,10 +28,32 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var random = new InternalRandom();
 
                 var source = ac.getSource();
-                var stats = source.GetComponentOfType<CharacterStats>();
+             
+                var sourceStats = GetAccumulatedStats(source);
+                var targetStats = GetAccumulatedStats(ac.getTarget());
 
-                //TODO: attack damage based on stats, equipment etc.
-                int damage = 0;
+                var weaponMin = 0;
+                var weaponMax = 0; 
+
+                if(sourceStats.WeaponStats.Any())
+                {
+                    weaponMin = sourceStats.WeaponStats.Select(x => x.MinimumDamage).Aggregate((a, b) => a + b);
+                    weaponMax = sourceStats.WeaponStats.Select(x => x.MaximumDamage).Aggregate((a, b) => a + b);
+                }
+
+                var armor = 0;
+
+                if (targetStats.Armor.Any())
+                {
+                    armor = targetStats.Armor.Select(x => x.Value.Value).Aggregate((a, b) => a + b);
+                }
+
+                int rawDamage = Random.Shared.Next(weaponMin, weaponMax);
+                int damage = rawDamage - armor;
+                if (damage < 0)
+                {
+                    damage = 0;
+                }
                 DamageHelper.ApplyDamage(ac.getTarget(), ac.getSource(), damage);
 
                 Description targetDescription = ac.getTarget().GetComponentOfType<Description>();
@@ -39,11 +63,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     var logCommand = new HudLogMessageCommand();
                     namelessGame.Commander.EnqueueCommand(logCommand);
 
-                    logCommand.LogMessage += (sourceDescription.Name + " deals " + (damage) +
-                                              " damage to " + targetDescription.Name);
+                    logCommand.LogMessage += (sourceDescription.Name + " deals " + (damage) + " damage to " + targetDescription.Name + $@" (Raw {rawDamage} - Armor {armor})");
                     //namelessGame.WriteLineToConsole;
                 }
             }
+        }
+
+        private CharacterStats GetAccumulatedStats(IEntity entity)
+        {
+            var stats = entity.GetComponentOfType<CharacterStats>();
+            var modifiers = entity.GetComponentOfType<ModifiersCollection>();
+            var accumulatorEntity = modifiers.Accumulator;
+            var accumulatedStats = accumulatorEntity.GetComponentOfType<CharacterStats>();
+            return accumulatedStats;
         }
     }
 }

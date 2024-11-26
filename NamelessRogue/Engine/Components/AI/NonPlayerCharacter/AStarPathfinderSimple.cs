@@ -187,7 +187,7 @@ namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
             private readonly Point _destination;
             private readonly Point _start;
             private int counter = 0;
-            private int maxSearches = 600;
+            private int maxSearches = 200;
             public BlockedProvider(IWorldProvider worlldProvider, Point destination, Point start)
             {
                 _worlldProvider = worlldProvider;

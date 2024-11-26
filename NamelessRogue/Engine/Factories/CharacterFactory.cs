@@ -80,6 +80,7 @@ namespace NamelessRogue.Engine.Factories
             var stats = new CharacterStats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
+            stats.Armor.Add(new ArmorStats() { DamageType = DamageType.Physical, Value = new SimpleStat(2, 0, 10) });
 
             playerCharacter.AddComponent(stats);
 

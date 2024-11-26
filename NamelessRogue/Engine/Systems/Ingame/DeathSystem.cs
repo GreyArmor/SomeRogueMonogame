@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
@@ -58,7 +59,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 if (d != null)
                 {
-                    // namelessGame.WriteLineToConsole(d.Name + " is dead!");
+                    var logCommand = new HudLogMessageCommand();
+                    namelessGame.Commander.EnqueueCommand(logCommand);
+                    logCommand.LogMessage += d.Name + " is dead!";
                 }
             }
 

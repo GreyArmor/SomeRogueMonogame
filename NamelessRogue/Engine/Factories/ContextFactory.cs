@@ -43,6 +43,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new FlowFieldMovementSystem());             
                 systems.Add(new InventorySystem());
                 systems.Add(new EquipSystem());
+                systems.Add(new FireWeaponSystem());
                 systems.Add(new ProjectileSystem());
 				systems.Add(new TurnManagementSystem());
                 systems.Add(new AiSystem());
