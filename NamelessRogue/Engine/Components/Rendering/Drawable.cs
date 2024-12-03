@@ -13,8 +13,6 @@ namespace NamelessRogue.Engine.Components.Rendering
 		public bool Visible { get => visible; set => visible = value; }
 		public Color CharColor { get => charColor; set => charColor = value; }
         public string TilesetPosition { get; set; }
-
-        public TilesetModifier TilesetModifier { get; set; }
 		public Drawable(string representationId, Color charColor, Color backgroundColor = null, string tilesetPosition = "")
         {
             this.BackgroundColor = backgroundColor;

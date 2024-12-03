@@ -1,7 +1,9 @@
 using Microsoft.Xna.Framework;
+using MonoGame.Extended.ECS;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
+using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
@@ -14,6 +16,7 @@ using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Entity = NamelessRogue.Engine.Infrastructure.Entity;
 
 namespace NamelessRogue.Engine.Factories
 {
@@ -70,7 +73,8 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new AIControlled() { Affinity = Affinity.Hostile });
             playerCharacter.AddComponent(new BasicAi());
             playerCharacter.AddComponent(position);
-            playerCharacter.AddComponent(new Drawable("Window", new Engine.Utility.Color(0.9, 0.9, 0.9)));
+            playerCharacter.AddComponent(new Drawable("drone_recon", new Engine.Utility.Color(0.9, 0.9, 0.9)));
+            playerCharacter.AddComponent(new SpritedObject(false, "idle_2"));
             playerCharacter.AddComponent(new Description("Enemy", ""));
             var holder = new ItemsHolder();
             playerCharacter.AddComponent(holder);

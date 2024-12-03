@@ -56,6 +56,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new DamageHandlingSystem());
                 systems.Add(new DeathSystem());
                 systems.Add(new HudSystem());
+                systems.Add(new CharacterAnimationSystem());
                 systems.Add(new SoundPlaySystem());
               
                // var renderingSystem = new RenderingSystem(game.GetSettings());

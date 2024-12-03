@@ -57,11 +57,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 stats.Energy.Value++;
             }               
 
-            healthBar.SetCurrent(haealthBarAnimation);
-            energyBar.SetCurrent(energyBarAnimation);
+            healthBar.SetCurrentLoop(haealthBarAnimation);
+            energyBar.SetCurrentLoop(energyBarAnimation);
             game.Batch.Begin();
-            healthBar.Draw(game, gameTime, HealthPosition, new Vector2(1, 1f), Microsoft.Xna.Framework.Color.White);
-            energyBar.Draw(game, gameTime, EnergyPosition, new Vector2(1, 1f), Microsoft.Xna.Framework.Color.White);
+            healthBar.Draw(game, gameTime, HealthPosition, healthBar.Size, new Vector2(1, 1f), Microsoft.Xna.Framework.Color.White);
+            energyBar.Draw(game, gameTime, EnergyPosition, energyBar.Size, new Vector2(1, 1f), Microsoft.Xna.Framework.Color.White);
             game.Batch.End();
         }
     }

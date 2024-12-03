@@ -28,27 +28,31 @@ namespace NamelessRogue.Engine.Infrastructure
 
         public static void Initialize(NamelessGame game)
 		{
-
-
             void _addAnimatedSprite(string id, string path)
-			{
-                AnimatedSpriteNR sprite = new AnimatedSpriteNR();
-
+			{ 
                 AsepriteFile aseFile;
                 using (Stream stream = TitleContainer.OpenStream(path))
                 {
                     aseFile = AsepriteFileLoader.FromStream(Path.GetFileName(path), stream, preMultiplyAlpha: true);
                 }
 
+                AnimatedSpriteNR sprite = new AnimatedSpriteNR(aseFile.CanvasWidth, aseFile.CanvasHeight);
+
                 var spriteSheet = aseFile.CreateSpriteSheet(game.GraphicsDevice);
+
+                var firstAnimation = "";
 
                 foreach (var animTag in spriteSheet.GetAnimationTagNames())
                 { 
+                    if(firstAnimation == "")
+                    {
+                        firstAnimation = animTag;
+                    }
                     var animation = spriteSheet.CreateAnimatedSprite(animTag);
                     sprite.Add(animTag, animation);
                 }
 
-                sprite.SetCurrent("idle");
+                sprite.SetCurrentLoop(firstAnimation);
                 SpritesAnimatedIdle.Add(id, sprite);
             }
 
@@ -64,6 +68,7 @@ namespace NamelessRogue.Engine.Infrastructure
             _addAnimatedSprite("computer1", "Content\\Sprites\\AnimatedFurniture\\computer1.ase");
             _addAnimatedSprite("healthbar", "Content\\Sprites\\healthbar.ase");
             _addAnimatedSprite("energybar", "Content\\Sprites\\energybar.ase");
+            _addAnimatedSprite("drone_recon", "Content\\Sprites\\drone_recon.ase");
             //_addAnimatedSprite("cacti", "Doodads\\cacti.sf");
             //_addAnimatedSprite("palmTree", "Doodads\\palmTree.sf");
             //_addAnimatedSprite("stump", "Doodads\\stump.sf");

@@ -18,10 +18,13 @@ namespace NamelessRogue.Engine.Components.Rendering
     {
         public string Id { get; set; }
         public ScreenObjectSource Type { get; set; }
-        public StackedObject(string id, ScreenObjectSource type)
+        public string AnimationName { get; }
+
+        public StackedObject(string id, ScreenObjectSource type, string animationName = "")
         {
             Id = id;
             Type = type;
+            AnimationName = animationName;
         }
 
     }
@@ -33,9 +36,9 @@ namespace NamelessRogue.Engine.Components.Rendering
             BackGroundColor = new Color(0,0,0,0);
         }
         
-        public void AddObject(string id, ScreenObjectSource type)
+        public void AddObject(string id, ScreenObjectSource type, string animationName = "")
         {
-            StackedObjects.Add(new StackedObject(id, type));
+            StackedObjects.Add(new StackedObject(id, type, animationName));
         }
         public List<StackedObject> StackedObjects { get; set; } = new List<StackedObject> ();
         public  Engine.Utility.Color CharColor;

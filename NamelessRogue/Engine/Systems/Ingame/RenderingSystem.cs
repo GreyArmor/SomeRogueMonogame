@@ -291,13 +291,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 ClearScreen(screen, camera, game.GetSettings(), worldProvider);
                 FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
                 FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
-                FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, worldProvider);
-                FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game);
+                FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, gameTime, worldProvider);
+                FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game, gameTime);
                 int stackDepth = 0;
                 while (RenderScreen(game, screen, game.GetSettings(), stackDepth)) {
                     stackDepth++;
                 }               
-                game.Batch.Begin();
+                game.Batch.Begin(samplerState: SamplerState.PointClamp);               
                 RenderSpriteScreen(game, screen, game.GetSettings(), gameTime);
                 RenderProjectiles(game, screen, camera, game.GetSettings(), gameTime);
                 game.Batch.End();
@@ -396,7 +396,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
         private void FillcharacterBuffersWithTileObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
-            NamelessGame game, IWorldProvider world)
+            NamelessGame game, GameTime gameTime, IWorldProvider world)
         {
            // return;
             int camX = camera.getPosition().X;
@@ -431,7 +431,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 }
                                 else if(furniture != null && drawable != null && sprited != null)
                                 {
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite);
+                                    var animation = sprited.IdleAnimation;
+
+                                    if (sprited.CurrentAnimationTimeLeft > 0)
+                                    {
+                                        animation = sprited.CurrentAnimation;
+                                        sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
+                                    }
+
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, animation);
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                                 }
                             }
@@ -517,7 +526,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
         private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
-            NamelessGame game)
+            NamelessGame game, GameTime gameTime)
         {
             {
                 var cursorEntity = game.CursorEntity;
@@ -604,9 +613,26 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Character", ScreenObjectSource.Tileset);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
-                        }                                                 
+                            var sprited = entity.GetComponentOfType<SpritedObject>();
+                            if (sprited == null)
+                            {
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Character", ScreenObjectSource.Tileset);
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                            }
+                            else
+                            {
+                                var animation = sprited.IdleAnimation;
+
+                                if(sprited.CurrentAnimationTimeLeft>0)
+                                {
+                                    animation = sprited.CurrentAnimation;
+                                    sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
+                                }
+
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, animation);
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                            }
+                        }
                         else                                               
                         {
                             //screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
@@ -747,7 +773,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
             return moreItemsToRender;
         }
-
+        
         private void RenderSpriteScreen(NamelessGame game, Screen screen, GameSettings settings, GameTime gameTime)
         {
             for (int y = 0; y < settings.GetHeightZoomed(); y++)
@@ -762,9 +788,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             int tileHeight = game.GetSettings().GetFontSizeZoomed();
                             int tileWidth = game.GetSettings().GetFontSizeZoomed();
                             if (SpriteLibrary.SpritesAnimatedIdle.TryGetValue(spriteId, out var sprite))
-                            {
+                            {                                
+                                sprite.SetCurrentLoop(objectToDraw.AnimationName);
                                 sprite.Update(gameTime);
-                                sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(1f / settings.Zoom), Microsoft.Xna.Framework.Color.White);
+                                sprite.Draw(game, gameTime, new Vector2((x * tileWidth)+5, (y * tileHeight) + 5), new Vector2(tileWidth, tileHeight), new Vector2(1f / settings.Zoom), Microsoft.Xna.Framework.Color.Black);
+
+                                sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(tileWidth, tileHeight) , new Vector2(1f / settings.Zoom), Microsoft.Xna.Framework.Color.White);
                             }
                         }
                     }

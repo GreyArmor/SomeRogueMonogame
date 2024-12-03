@@ -31,7 +31,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-
             var playerEntity = namelessGame.PlayerEntity;
             var ap = playerEntity.GetComponentOfType<ActionPoints>();
             if (!namelessGame.TurnUpdated)
@@ -82,9 +81,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
         }
-
-
-
         public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides)
         {
             IEntity worldEntity = namelessGame.TimelineEntity;

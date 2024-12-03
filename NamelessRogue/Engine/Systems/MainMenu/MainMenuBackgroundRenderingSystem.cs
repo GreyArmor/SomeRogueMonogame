@@ -79,7 +79,7 @@ namespace NamelessRogue.Engine.Systems.MainMenu
 			{
 				var sprite = positions[i].StartFrame? ZeroAndOne: ZeroAndOne2;
 
-                sprite.Draw(namelessGame, gameTime, positions[i].Position, positions[i].Scale, Microsoft.Xna.Framework.Color.DarkGreen);
+                sprite.Draw(namelessGame, gameTime, positions[i].Position, sprite.Size, positions[i].Scale, Microsoft.Xna.Framework.Color.DarkGreen);
 				positions[i].Position.Y += positions[i].Speed;
             }
 			foreach (var position in positions.ToList())

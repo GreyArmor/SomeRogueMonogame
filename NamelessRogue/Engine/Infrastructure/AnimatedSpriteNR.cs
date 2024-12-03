@@ -7,13 +7,20 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
     internal class AnimatedSpriteNR
     {
-
-        public AnimatedSpriteNR() {}
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public Vector2 Size { get; private set; } 
+        public AnimatedSpriteNR(int width, int height) {
+            Width = width;
+            Height = height;
+            Size = new Vector2(width, height);
+        }
 
         public Dictionary<string, AnimatedSprite> _animations = new Dictionary<string, AnimatedSprite>();
 
@@ -28,10 +35,9 @@ namespace NamelessRogue.Engine.Infrastructure
             _animations.Remove(name);
         }
 
-        public void SetCurrent(string animationName)
+        public void SetCurrentLoop(string animationName)
         {
             currentAnimation = _animations[animationName];
-            currentAnimation.Reset();
             currentAnimation.Play();
         }
 
@@ -45,10 +51,9 @@ namespace NamelessRogue.Engine.Infrastructure
             currentAnimation.SetFrame(frame);
         }
 
-        public void Draw(NamelessGame game, GameTime time, Vector2 position, Vector2 scale, Microsoft.Xna.Framework.Color color = default)
+        public void Draw(NamelessGame game, GameTime time, Vector2 position, Vector2 size, Vector2 scale, Microsoft.Xna.Framework.Color color = default)
         {
             currentAnimation.Scale = scale;
-
             if(color == default)
             {
                 currentAnimation.Color = Microsoft.Xna.Framework.Color.White;
@@ -57,9 +62,9 @@ namespace NamelessRogue.Engine.Infrastructure
             {
                 currentAnimation.Color = color;
             }
+            
+            game.Batch.Draw(currentAnimation.TextureRegion, new Microsoft.Xna.Framework.Rectangle(position.ToPoint(), (size * scale).ToPoint()), color);
 
-           
-            currentAnimation.Draw(game.Batch, position);
         }
     }
 }
