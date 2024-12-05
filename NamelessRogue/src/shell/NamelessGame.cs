@@ -186,8 +186,8 @@ namespace NamelessRogue.shell
 			CurrentGame = new GameInstance();
 			DebugDevice = this.GraphicsDevice;
 			//TODO: move to config later
-			int width = 40;
-			int height = 30;
+			int width = 20;
+			int height = 15;
 
 
 			var commanderEntity = new Entity();

@@ -32,11 +32,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             var playerEntity = namelessGame.PlayerEntity;
-            var ap = playerEntity.GetComponentOfType<ActionPoints>();
-            if (!namelessGame.TurnUpdated)
-            {
-                return;
-            }
+            //if (namelessGame.TurnUpdated)
+            //{
+            //    foreach (IEntity entity in this.RegisteredEntities)
+            //    {
+            //        var npcAP = entity.GetComponentOfType<ActionPoints>();
+            //        npcAP.Points = 100;
+            //    }
+            //}
 
             IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
@@ -52,7 +55,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     AIControlled ac = entity.GetComponentOfType<AIControlled>();
                     Dead dead = entity.GetComponentOfType<Dead>();
                     var actionPoints = entity.GetComponentOfType<ActionPoints>();
-                    if (dead == null && actionPoints.Points >= 100)
+                    if (dead == null && actionPoints.Points >= 0)
                     {
                         BasicAi basicAi = entity.GetComponentOfType<BasicAi>();
                         Position playerPosition = namelessGame.PlayerEntity
@@ -151,13 +154,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                    nextPosition.X, nextPosition.Y,0);
 
                 var ap = movableEntity.GetComponentOfType<ActionPoints>();
-                ap.Points -= Constants.ActionsMovementCost*2;
+                ap.Points -= 200;
             }
 
             if (route.Count == 0)
             {
                 var ap = movableEntity.GetComponentOfType<ActionPoints>();
-                ap.Points = -Constants.ActionsMovementCost * 2;
+                ap.Points -= 200;
             }
         }
     }

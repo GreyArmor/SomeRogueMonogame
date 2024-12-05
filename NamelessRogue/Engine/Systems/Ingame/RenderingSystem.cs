@@ -29,7 +29,6 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-
     public enum TilesetModifier
     {
         Top,
@@ -696,8 +695,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         var toVector = projectileComponent.To.ToPoint().ToVector2();
                         var interpolatedValue = Vector2.Lerp(fromVector, toVector, lerpValue);
                         Vector2 screenPoint = new Vector2((interpolatedValue.X - camera.Position.X) * tileWidth, (interpolatedValue.Y - camera.Position.Y) * tileHeight);
-                        game.Batch.Draw(sprite, screenPoint, 0, new Vector2(1f / settings.Zoom));
-                //        sprite.Draw(game.Batch, screenPoint, MathHelper.ToRadians(angle), );
+                        var rect = new Rectangle(screenPoint.ToPoint(), new Vector2(tileWidth, tileHeight).ToPoint());
+                        game.Batch.Draw(sprite.TextureRegion, rect, Microsoft.Xna.Framework.Color.White);
+                     //   sprite.Draw(game, gameTime, new Vector2((x * tileWidth) + 5, (y * tileHeight) + 5), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.Black);
+
+                        //        sprite.Draw(game.Batch, screenPoint, MathHelper.ToRadians(angle), );
                     }
                 }
             }
@@ -791,9 +793,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {                                
                                 sprite.SetCurrentLoop(objectToDraw.AnimationName);
                                 sprite.Update(gameTime);
-                                sprite.Draw(game, gameTime, new Vector2((x * tileWidth)+5, (y * tileHeight) + 5), new Vector2(tileWidth, tileHeight), new Vector2(1f / settings.Zoom), Microsoft.Xna.Framework.Color.Black);
+                                sprite.Draw(game, gameTime, new Vector2((x * tileWidth)+5, (y * tileHeight) + 5), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.Black);
 
-                                sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(tileWidth, tileHeight) , new Vector2(1f / settings.Zoom), Microsoft.Xna.Framework.Color.White);
+                                sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(tileWidth, tileHeight) , new Vector2(1f), Microsoft.Xna.Framework.Color.White);
                             }
                         }
                     }
@@ -848,13 +850,22 @@ namespace NamelessRogue.Engine.Systems.Ingame
             int tileHeight = game.GetSettings().GetFontSizeZoomed();
             int tileWidth = game.GetSettings().GetFontSizeZoomed();
 
+            float hackCoef = 0.001f * game.GetSettings().Zoom;
+            if (game.GetSettings().Zoom != 1)
+            {
+                hackCoef = 0;
+            }
 
-            float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
-            float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
+          
 
-            float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
+          
 
-            float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
+            float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float)tileAtlas.Width) + hackCoef;
+            float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height) + hackCoef;
+
+            float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Width) - hackCoef;
+
+            float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Height) - hackCoef;
 
             var settings = game.GetSettings();
 
