@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>qwerqewr</Name>
+  <Description>qqqqqqq desc goes here</Description>
+  <IconPath>Icons\work_gloves.png</IconPath>
+  <ItemType>Armor</ItemType>
+  <ItemQuality>Terrible</ItemQuality>
+  <PossibleSlots>
+    <Slot>Feet</Slot>
+  </PossibleSlots>
+  <ArmorTemplateData>
+    <DamageType>Physical</DamageType>
+    <ArmorValue>183</ArmorValue>
+    <ResistType>Physical</ResistType>
+    <ResistValue>99</ResistValue>
+  </ArmorTemplateData>
+</ItemTemplateData>

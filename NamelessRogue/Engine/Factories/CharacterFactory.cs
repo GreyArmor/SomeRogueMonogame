@@ -73,7 +73,7 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new AIControlled() { Affinity = Affinity.Hostile });
             playerCharacter.AddComponent(new BasicAi());
             playerCharacter.AddComponent(position);
-            playerCharacter.AddComponent(new Drawable("drone_recon", new Engine.Utility.Color(0.9, 0.9, 0.9)));
+            playerCharacter.AddComponent(new Drawable("drone_recon", new Engine.Utility.Color(0.9, 0.9, 0.9), castsShadow:true));
             playerCharacter.AddComponent(new SpritedObject(false, "idle_2"));
             playerCharacter.AddComponent(new Description("Enemy", ""));
             var holder = new ItemsHolder();

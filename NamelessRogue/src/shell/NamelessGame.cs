@@ -310,11 +310,11 @@ namespace NamelessRogue.shell
 				PlayerEntity = player;
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
 
-				for (int i = 5; i < 10; i++)
+				for (int i = 5; i < 50; i++)
 				{
 					for (int j = 5; j < 6; j++)
 					{
-						CharacterFactory.CreateDummyrCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
+				//		CharacterFactory.CreateDummyrCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
 					}
 				}
 

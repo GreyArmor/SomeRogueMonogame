@@ -29,16 +29,6 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-    public enum TilesetModifier
-    {
-        Top,
-        Bottom, 
-        Left,
-        Right,
-        Corner,
-        Center,     
-    }
-
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vertex
     {
@@ -425,7 +415,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 var sprited = entity.GetComponentOfType<SpritedObject>();
                                 if (furniture != null && drawable != null && sprited == null)
                                 {
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.Tileset);
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.Tileset, drawable.CastsShadow);
                                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                                 }
                                 else if(furniture != null && drawable != null && sprited != null)
@@ -438,7 +428,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
                                     }
 
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, animation);
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CastsShadow, animation);
                                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                                 }
@@ -476,14 +466,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         }
                         else
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset, false);
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
                         }
 
                     }
                     else
                     {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset, false);
                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
                     }
                 }
@@ -518,7 +508,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         void GetTerrainTile(Screen screen, Terrain terrain, Point point)
         {
 
-            screen.ScreenBuffer[point.X, point.Y].AddObject(terrain.Representation.ObjectID, ScreenObjectSource.Tileset);
+            screen.ScreenBuffer[point.X, point.Y].AddObject(terrain.Representation.ObjectID, ScreenObjectSource.Tileset, false);
             screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.CharColor;
             screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
         }
@@ -543,7 +533,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                             {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(cursorDrawable.ObjectID, ScreenObjectSource.Tileset);
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(cursorDrawable.ObjectID, ScreenObjectSource.Tileset, false);
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = cursorDrawable.CharColor;
                             }
                         }
@@ -564,7 +554,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
                             {
                                 string objectId = i == (line.Count() - 1) ? "Cursor" : "smallCursor";
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(objectId, ScreenObjectSource.Tileset);
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(objectId, ScreenObjectSource.Tileset, false);
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = cursorDrawable.CharColor;
                             }
                         }
@@ -615,7 +605,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var sprited = entity.GetComponentOfType<SpritedObject>();
                             if (sprited == null)
                             {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Character", ScreenObjectSource.Tileset);
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Character", ScreenObjectSource.Tileset, false);
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                             }
                             else
@@ -628,7 +618,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
                                 }
 
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, animation);
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CastsShadow, animation);
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                             }
                         }
@@ -662,7 +652,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Cursor", ScreenObjectSource.Tileset);
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Cursor", ScreenObjectSource.Tileset, false);
                             screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
                         }
                         else
@@ -793,8 +783,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {                                
                                 sprite.SetCurrentLoop(objectToDraw.AnimationName);
                                 sprite.Update(gameTime);
-                                sprite.Draw(game, gameTime, new Vector2((x * tileWidth)+5, (y * tileHeight) + 5), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.Black);
-
+                                if(objectToDraw.HasShadow)
+                                {
+                                    sprite.Draw(game, gameTime, new Vector2((x * tileWidth) + 5, (y * tileHeight) + 5), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.Black);
+                                }
                                 sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(tileWidth, tileHeight) , new Vector2(1f), Microsoft.Xna.Framework.Color.White);
                             }
                         }

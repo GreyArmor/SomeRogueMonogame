@@ -13,7 +13,9 @@ namespace NamelessRogue.Engine.Components.Rendering
 		public bool Visible { get => visible; set => visible = value; }
 		public Color CharColor { get => charColor; set => charColor = value; }
         public string TilesetPosition { get; set; }
-		public Drawable(string representationId, Color charColor, Color backgroundColor = null, string tilesetPosition = "")
+
+        public bool CastsShadow { get; set; }
+		public Drawable(string representationId, Color charColor, Color backgroundColor = null, string tilesetPosition = "", bool castsShadow = false)
         {
             this.BackgroundColor = backgroundColor;
             if (backgroundColor == null)
@@ -23,6 +25,7 @@ namespace NamelessRogue.Engine.Components.Rendering
             this.objectID= representationId;
             this.charColor = charColor;
             TilesetPosition = tilesetPosition;
+            CastsShadow = castsShadow;
         }
 
 		public Drawable()
