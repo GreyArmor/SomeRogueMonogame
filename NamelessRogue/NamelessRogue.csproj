@@ -59,9 +59,6 @@
     <ProjectReference Include="..\VoronoiLib\VoronoiLib.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Content\AnimatedCharacters\EasyChar_2023-10-31T21_44_08.635Z.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Content\Buildings\ApartmentBlockFloor.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -90,18 +87,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Fonts\AnonymousPro-Regular.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Models\cube.fbx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Models\smallTree.fbx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Models\tree.fbx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Models\tree1.fbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\MusicPack\PackConfigSample.xml">
@@ -154,6 +139,8 @@
   <ItemGroup>
     <Folder Include="Content\GameObjects\Misc\" />
     <Folder Include="Content\GameObjects\Weapons\" />
+    <Folder Include="Content\Models\" />
+    <Folder Include="Content\obj\Windows\AnimatedCharacters\" />
     <Folder Include="Content\Sprites\MainMenuScreen\" />
     <Folder Include="Content\Sprites\Furniture\" />
     <Folder Include="Engine\Components\Environment\Buildings\" />
