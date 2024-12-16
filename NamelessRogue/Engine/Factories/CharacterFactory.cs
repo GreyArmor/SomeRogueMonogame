@@ -106,8 +106,7 @@ namespace NamelessRogue.Engine.Factories
             Entity playerCharacter = new Entity();
             playerCharacter.AddComponent(new Player());
             playerCharacter.AddComponent(new InputReceiver());
-            playerCharacter.AddComponent(new FollowedByCamera());
-            playerCharacter.AddComponent(new InputComponent());
+            playerCharacter.AddComponent(new FollowedByCamera());   
             playerCharacter.AddComponent(new Position(x, y, z));
             playerCharacter.AddComponent(new WorldBoardPlayer());
 

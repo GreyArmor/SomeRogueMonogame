@@ -125,7 +125,7 @@ namespace NamelessRogue.Engine.Input
 
             Intent mouseIntent = new Intent(keyCodes.ToList(), lastCommand);
 			mouseIntent.Intention = IntentEnum.MouseChanged;
-            result.Add(mouseIntent);
+            //result.Add(mouseIntent);
 
             return result;
         }

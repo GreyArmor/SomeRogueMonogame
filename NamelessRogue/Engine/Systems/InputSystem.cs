@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Abstraction;
@@ -9,6 +12,16 @@ using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems
 {
+
+    enum DelayState
+    {
+        FirstDelay,
+        SecondDelay,
+        ThirdDelay,
+        NotDelayed,
+            
+    }
+
     public class InputSystem : BaseSystem
     {
 
@@ -21,7 +34,6 @@ namespace NamelessRogue.Engine.Systems
             this.namelessGame = namelessGame;
             namelessGame.Window.TextInput += WindowOnTextInput;
             namelessGame.Window.KeyDown += Window_KeyDown;
-
             Signature.Add(typeof(InputComponent));
             Signature.Add(typeof(InputReceiver));
         }
@@ -32,11 +44,16 @@ namespace NamelessRogue.Engine.Systems
             {
                 return;
             }
-            lastState = Keyboard.GetState();
         }
 
         long currentgmatime = 0;
         private long previousGametimeForMove = 0;
+
+        private int firstDelayTime = 0;
+        private int secondDelayTime = 400;
+        private int thirdDelayTime = 200;
+        private int noDelayTime = 30;
+        DelayState delayState = DelayState.FirstDelay;
 
         int inputsTimeLimit = 30;
 
@@ -47,21 +64,51 @@ namespace NamelessRogue.Engine.Systems
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            if (gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove > inputsTimeLimit)
+
+            int delayTime = 0;
+            switch (delayState)
             {
+                case DelayState.FirstDelay:
+                    delayTime = firstDelayTime;
+                    break;
+                case DelayState.SecondDelay:
+                    delayTime = secondDelayTime;
+                    break;
+                case DelayState.ThirdDelay:
+                    delayTime = thirdDelayTime;
+                    break;
+                default:
+                    delayTime = noDelayTime;
+                    break;
+            }
+            lastState = Keyboard.GetState();
+            InputComponent inputComponent = namelessGame.PlayerEntity.GetComponentOfType<InputComponent>();
+            if (gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove > delayTime)
+            {
+                inputComponent.IsDelayed = false;
                 previousGametimeForMove = (long)gameTime.TotalGameTime.TotalMilliseconds;
-                foreach (IEntity entity in RegisteredEntities)
+           
+                if (inputComponent != null)
                 {
-                    InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
-                    InputReceiver receiver = entity.GetComponentOfType<InputReceiver>();
-                    if (receiver != null && inputComponent != null && lastState != default)
-                    {
-                        inputComponent.Intents.AddRange(translator.Translate(lastState.GetPressedKeys(), lastCommand, Mouse.GetState()));
-                        lastCommand = Char.MinValue;
-                        lastState = default;
-                    }
+                    inputComponent.Intents.AddRange(translator.Translate(lastState.GetPressedKeys(), lastCommand, Mouse.GetState()));
+                    lastCommand = Char.MinValue;
+                }
+
+                if (delayState != DelayState.NotDelayed)
+                {
+                    delayState++;
                 }
             }
+            else
+            {
+                inputComponent.IsDelayed = true;
+            }
+            if (lastState.GetPressedKeyCount() == 0)
+            {
+                delayState = DelayState.FirstDelay;
+            }
+            Debug.WriteLine(delayState);
+            lastState = (default);
 
         }
 
@@ -75,21 +122,5 @@ namespace NamelessRogue.Engine.Systems
             lastCommand = e.Character;
             lastState = Keyboard.GetState();
         }
-
-        //public void keyPressed(KeyEvent e)
-        //{
-        //    pressedKeys = new List<>();
-        //    pressedKeys.Add(e);
-        //}
-
-        //public void keyReleased(KeyEvent e)
-        //{
-        //    Optional<KeyEvent> key = pressedKeys.stream().filter(x => x.getKeyCode() == e.getKeyCode()).findFirst();
-        //    if (key.isPresent())
-        //    {
-        //        pressedKeys.Remove(key.get());
-        //    }
-        //}
-
     }
 }

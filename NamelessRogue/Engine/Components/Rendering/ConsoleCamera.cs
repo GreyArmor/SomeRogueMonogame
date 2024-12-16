@@ -49,7 +49,7 @@ namespace NamelessRogue.Engine.Components.Rendering
 
         public void setPosition(Point position) {
             this.Position = position;
-            Debug.WriteLine($@"x = {position.X} y={ position.Y }");
+         //   Debug.WriteLine($@"x = {position.X} y={ position.Y }");
         }
 	
         public void setPosition(int x, int y)

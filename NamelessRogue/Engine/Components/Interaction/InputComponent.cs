@@ -11,6 +11,8 @@ namespace NamelessRogue.Engine.Components.Interaction
         }
         public List<Intent> Intents;
 
+        public bool IsDelayed { get; internal set; }
+
         public override IComponent Clone()
         {
            return new InputComponent(){ Intents = this.Intents};
