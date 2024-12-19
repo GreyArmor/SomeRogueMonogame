@@ -52,9 +52,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         continue;
                     }
 
-                    //probably spaghetti code, but when we interact with more than one object, we create interaction selector items, and when
-                    //we move into them we choose to interact with that object, when we do literally anything else we should terminate the selection process;
-                    bool terminateInteractSelector = true;
                     switch (intent.Intention)
                     {
                         case IntentEnum.MoveUp:
@@ -68,181 +65,53 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         case IntentEnum.MoveAscent:
                         case IntentEnum.MoveDescent:
                             {
-                                //TODO: REFACTORING move to another dedicated system
                                 var playerReceiver = playerEntity.GetComponentOfType<InputReceiver>();
                                 var cursorReceiver = namelessGame.CursorEntity.GetComponentOfType<InputReceiver>();
+
+                                IEntity entityToMove = null;
+
                                 Position position = null;
+                                bool playerMovement = true;
+
                                 if (playerReceiver != null)
                                 {
                                     position = playerEntity.GetComponentOfType<Position>();
+                                    entityToMove = playerEntity;
                                 }
                                 else if (cursorReceiver != null)
                                 {
                                     position = namelessGame.CursorEntity.GetComponentOfType<Position>();
+                                    entityToMove = namelessGame.CursorEntity;
+                                    playerMovement = false;
                                 }
 
-                                int newX =
+                                MovementDirection newX =
                                     intent.Intention == IntentEnum.MoveLeft || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                    intent.Intention == IntentEnum.MoveTopLeft ? position.X - 1 :
+                                    intent.Intention == IntentEnum.MoveTopLeft ? MovementDirection.Left :
                                     intent.Intention == IntentEnum.MoveRight || intent.Intention == IntentEnum.MoveBottomRight ||
-                                    intent.Intention == IntentEnum.MoveTopRight ? position.X + 1 :
-                                    position.X;
-                                int newY =
+                                    intent.Intention == IntentEnum.MoveTopRight ? MovementDirection.Right :
+                                    MovementDirection.None;
+                                MovementDirection newY =
                                     intent.Intention == IntentEnum.MoveDown || intent.Intention == IntentEnum.MoveBottomLeft ||
-                                    intent.Intention == IntentEnum.MoveBottomRight ? position.Y + 1 :
+                                    intent.Intention == IntentEnum.MoveBottomRight ? MovementDirection.Bottom :
                                     intent.Intention == IntentEnum.MoveUp || intent.Intention == IntentEnum.MoveTopLeft ||
-                                    intent.Intention == IntentEnum.MoveTopRight ? position.Y - 1 :
-                                    position.Y;
+                                    intent.Intention == IntentEnum.MoveTopRight ? MovementDirection.Top :
+                                   MovementDirection.None;
 
-                                int newZ = intent.Intention == IntentEnum.MoveAscent ? position.Z + 1 :
-                                           intent.Intention == IntentEnum.MoveDescent ? position.Z - 1 : position.Z;
+                                MovementDirection newZ = intent.Intention == IntentEnum.MoveAscent ? MovementDirection.Up :
+                                           intent.Intention == IntentEnum.MoveDescent ? MovementDirection.Down : MovementDirection.None;
 
-                                bool changingZlevel = intent.Intention == IntentEnum.MoveAscent || intent.Intention == IntentEnum.MoveDescent;
-
-
-
-                                if (playerReceiver != null)
+                                var directions = new List<MovementDirection>() { newX, newY, newZ };
+                                directions.RemoveAll(x => x == MovementDirection.None);
+                                if(playerMovement)
                                 {
-
-                                    var actionPoints = playerEntity.GetComponentOfType<ActionPoints>();
-                                    if (actionPoints.Points >= 100)
-                                    {
-                                        if (newZ < 0 || newZ > Constants.ChunkHeight)
-                                        {
-                                            continue;
-                                        }
-
-                                        IEntity worldEntity = namelessGame.TimelineEntity;
-                                        IWorldProvider worldProvider = null;
-                                        if (worldEntity != null)
-                                        {
-                                            worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-                                        }
-
-
-                                        if (changingZlevel)
-                                        {
-                                            Tile playerTile = worldProvider.GetTile(position.X, position.Y, position.Z);
-                                            StairsComponent stairs = null;
-                                            foreach (IEntity tileEntity in playerTile.GetEntities())
-                                            {
-                                                stairs = tileEntity.GetComponentOfType<StairsComponent>();
-                                                if (stairs != null)
-                                                {
-                                                    break;
-                                                }
-                                            }
-                                            if (stairs == null)
-                                            {
-                                                continue;
-                                            }
-                                        }
-
-
-                                        Tile tileToMoveTo = worldProvider.GetTile(newX, newY, newZ);
-                                        if (tileToMoveTo == null)
-                                        {
-                                            continue;
-                                        }
-
-                                        InteractionSelectorLink interactionSelectorLink = null;
-                                        foreach (IEntity tileEntity in tileToMoveTo.GetEntities())
-                                        {
-                                            OccupiesTile occupiesTile =
-                                                tileEntity.GetComponentOfType<OccupiesTile>();
-
-                                            interactionSelectorLink = tileEntity.GetComponentOfType<InteractionSelectorLink>();
-
-                                            if (interactionSelectorLink != null)
-                                            {
-                                                terminateInteractSelector = false;
-                                                break;
-                                            }
-                                        }
-
-                                        if (interactionSelectorLink != null)
-                                        {
-                                            var interactCommand = new InteractCommand(interactionSelectorLink.LinkedEntity);
-                                            namelessGame.Commander.EnqueueCommand(interactCommand);
-                                            continue;
-                                        }
-
-                                        IEntity entityThatOccupiedTile = null;
-
-                                        foreach (IEntity tileEntity in tileToMoveTo.GetEntities())
-                                        {
-                                            OccupiesTile occupiesTile =
-                                                tileEntity.GetComponentOfType<OccupiesTile>();
-
-                                            if (occupiesTile != null)
-                                            {
-                                                entityThatOccupiedTile = tileEntity;
-                                                break;
-                                            }
-                                        }
-
-
-                                        if (entityThatOccupiedTile != null)
-                                        {
-                                            Door door = entityThatOccupiedTile.GetComponentOfType<Door>();
-                                            Character characterComponent =
-                                                entityThatOccupiedTile.GetComponentOfType<Character>();
-                                            if (door != null)
-                                            {
-                                                SimpleSwitch simpleSwitch =
-                                                    entityThatOccupiedTile.GetComponentOfType<SimpleSwitch>();
-                                                if (simpleSwitch != null == simpleSwitch.isSwitchActive())
-                                                {
-                                                    entityThatOccupiedTile.GetComponentOfType<Drawable>()
-                                                        .ObjectID = "openDoor";
-                                                    entityThatOccupiedTile.RemoveComponentOfType<BlocksVision>();
-                                                    entityThatOccupiedTile.RemoveComponentOfType<OccupiesTile>();
-
-                                                    namelessGame.Commander.EnqueueCommand(
-                                                        new ChangeSwitchStateCommand(simpleSwitch, false));
-                                                    var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                                                    ap.Points -= Constants.ActionsMovementCost;
-                                                    //   playerEntity.RemoveComponentOfType<HasTurn>();
-                                                    namelessGame.Commander.EnqueueCommand(new PlaySoundCommand("DoorOpen", false, 0.1f));
-
-                                                }
-                                                else
-                                                {
-
-                                                    worldProvider.MoveEntity(playerEntity,
-                                                        new Vector3Int(newX, newY, position.Z));
-                                                    var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                                                    ap.Points -= Constants.ActionsMovementCost;
-
-                                                }
-                                            }
-
-                                            if (characterComponent != null)
-                                            {
-                                                //TODO: if hostile
-                                                namelessGame.Commander.EnqueueCommand(new AttackCommand(playerEntity,
-                                                    entityThatOccupiedTile));
-
-                                                var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                                                ap.Points -= Constants.ActionsAttackCost;
-                                                // playerEntity.RemoveComponentOfType<HasTurn>();
-
-                                                //TODO: do something else if friendly: chat, trade, etc
-
-                                            }
-                                        }
-                                        else
-                                        {
-                                            worldProvider.MoveEntity(playerEntity,
-                                                new Vector3Int(newX, newY, newZ));
-                                            var ap = playerEntity.GetComponentOfType<ActionPoints>();
-                                            ap.Points -= Constants.ActionsMovementCost;
-                                        }
-                                    }
+                                    var movementCommand = new PlayerMovementCommand(directions);
+                                    namelessGame.Commander.EnqueueCommand(movementCommand);
                                 }
-                                else if (cursorReceiver != null)
+                                else
                                 {
-                                    position.Point = new Vector3Int(newX, newY, newZ);
+                                    var movementCommand = new CursorMovementCommand(directions);
+                                    namelessGame.Commander.EnqueueCommand(movementCommand);
                                 }
                             }
                             break;
@@ -456,13 +325,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             break;
                         default:
                             break;
-                    }
-
-                    if (terminateInteractSelector)
-                    {
-                        var interactCommand = new TerminateInteractionSelectorCommand();
-                        namelessGame.Commander.EnqueueCommand(interactCommand);
-                    }
+                    }                 
                 }
 
                 foreach (var intent in SingleKeyPressIntents.ToList())

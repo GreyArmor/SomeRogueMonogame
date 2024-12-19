@@ -10,6 +10,7 @@ using NamelessRogue.shell;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.ECS;
 using System.Linq;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -66,6 +67,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     logCommand.LogMessage += (sourceDescription.Name + " deals " + (damage) + " damage to " + targetDescription.Name + $@" (Raw {rawDamage} - Armor {armor})");
                     //namelessGame.WriteLineToConsole;
                 }
+
+                var ap = source.GetComponentOfType<ActionPoints>();
+                ap.Points -= Constants.ActionsAttackCost;
             }
         }
 
