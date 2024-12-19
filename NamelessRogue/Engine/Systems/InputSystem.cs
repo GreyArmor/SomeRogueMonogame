@@ -9,6 +9,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.shell;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace NamelessRogue.Engine.Systems
 {
@@ -59,6 +60,7 @@ namespace NamelessRogue.Engine.Systems
 
         private char lastCommand = Char.MinValue;
         private KeyboardState lastState;
+        private Keys[] lastKeys = Array.Empty<Keys>();
 
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
@@ -82,6 +84,31 @@ namespace NamelessRogue.Engine.Systems
                     break;
             }
             lastState = Keyboard.GetState();
+            var newKeys = lastState.GetPressedKeys();
+            var sameKeys = true;
+
+            if (lastKeys.Length == newKeys.Length)
+            {
+                foreach (Keys key in newKeys)
+                {
+                    {
+                        if (!lastKeys.Contains(key))
+                        {
+                            sameKeys = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if(!sameKeys)
+            {
+                delayState = DelayState.FirstDelay;
+                delayTime = 0;
+            }
+
+            lastKeys = lastState.GetPressedKeys();
+
             InputComponent inputComponent = namelessGame.PlayerEntity.GetComponentOfType<InputComponent>();
             if (gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove > delayTime)
             {
@@ -90,7 +117,7 @@ namespace NamelessRogue.Engine.Systems
            
                 if (inputComponent != null)
                 {
-                    inputComponent.Intents.AddRange(translator.Translate(lastState.GetPressedKeys(), lastCommand, Mouse.GetState()));
+                    inputComponent.Intents.AddRange(translator.Translate(lastKeys, lastCommand, Mouse.GetState()));
                     lastCommand = Char.MinValue;
                 }
 
