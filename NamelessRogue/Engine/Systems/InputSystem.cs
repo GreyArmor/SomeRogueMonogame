@@ -134,7 +134,7 @@ namespace NamelessRogue.Engine.Systems
             {
                 delayState = DelayState.FirstDelay;
             }
-            Debug.WriteLine(delayState);
+          //  Debug.WriteLine(delayState);
             lastState = (default);
 
         }
