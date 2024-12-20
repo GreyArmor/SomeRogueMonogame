@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.ECS;
@@ -85,8 +86,8 @@ namespace NamelessRogue.Engine.UI
 			{
 				ImGui.BeginChild("sidebar");
 				{
-
-					ImGui.Text("Turn: " + game.CurrentGame.Turn);
+                    DrawBuffs();                    
+                    ImGui.Text("Turn: " + game.CurrentGame.Turn);
                     ImGui.Text("HP: " + stats.Health.Value);
 					ImGui.SameLine();
 					ImGui.Text("EP: " + stats.Energy.Value);
@@ -151,16 +152,18 @@ namespace NamelessRogue.Engine.UI
                 ImGui.EndChild();
             }
 			
-			DrawBuffs();
+		
 			ImGui.End();
 
 		}
 
         private void DrawBuffs()
         {
-            ImGui.SetCursorPos(HudElementsRenderingSystem.HealthPosition.ToNumerics() + new System.Numerics.Vector2(0, 50));
+            ImGui.SetCursorPos(new System.Numerics.Vector2(0, 0));
             {
                 var modifiers = game.PlayerEntity.GetComponentOfType<ModifiersCollection>();
+
+                bool noBuffs = true;
 
                 foreach (var modifier in modifiers.ModifierEntities)
                 {
@@ -168,8 +171,12 @@ namespace NamelessRogue.Engine.UI
 					var equipment = modifier.GetComponentOfType<Equipment>();
                     var timed = modifier.GetComponentOfType<TimedModifier>();
                     if (drawable != null && equipment==null)
-                    {	
-						ImGui.BeginChild(modifier.GetHashCode().ToString(), new System.Numerics.Vector2(iconSize+1));
+                    {
+                        noBuffs = false;
+
+                        ImGui.BeginChild(modifier.GetHashCode().ToString(), new System.Numerics.Vector2(iconSize+1));
+                        ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new System.Numerics.Vector2(iconSize, iconSize));
+                        ImGui.SetCursorPos(new System.Numerics.Vector2(0));
                         ImGui.Image(ImGuiImageLibrary.Textures[drawable.ObjectID], new System.Numerics.Vector2(iconSize, iconSize));
 						if (timed != null)
 						{
@@ -195,10 +202,16 @@ namespace NamelessRogue.Engine.UI
                             ImGui.PopFont();
                         }
 						ImGui.EndChild();
-
 						ImGui.SameLine();
                     }
                 }
+
+                if (noBuffs)
+                {
+                    ImGui.SetCursorPosY(iconSize);
+                }
+
+                ImGui.NewLine();
             }
         }
 
