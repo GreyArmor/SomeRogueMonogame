@@ -3,6 +3,7 @@ using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Stats;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
@@ -25,16 +26,24 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var cursorPosition = namelessGame.CursorEntity.GetComponentOfType<Position>();
                 var tile = namelessGame.WorldProvider.GetTile(cursorPosition.X, cursorPosition.Y, cursorPosition.Z);
                 if (tile.AnyEntities())
-                { 
-                    var character = tile.GetEntities().FirstOrDefault(x=>x.GetComponentOfType<Character>()!=null);
-                    if (character != null)
+                {
+                    var tileEntity = tile.GetEntities().FirstOrDefault();
+                    if (tileEntity != null && tileEntity.Id != playerEntity.Id)
                     {
-                        var combatCommand = new AttackCommand(playerEntity, character);
-                        namelessGame.Commander.EnqueueCommand(combatCommand);
+                        var character = tile.GetEntities().FirstOrDefault(x => x.GetComponentOfType<Character>() != null);
+                        if (character != null)
+                        {
+                            var combatCommand = new AttackCommand(playerEntity, character);
+                            namelessGame.Commander.EnqueueCommand(combatCommand);
+                        }
                     }
                 }
                 var createProjectileCommand = new CreateProjectileCommand(playerPosition.Point, cursorPosition.Point, DamageType.Ballistic);
                 namelessGame.Commander.EnqueueCommand(createProjectileCommand);
+
+
+                var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                ap.Points -= Constants.ActionsMovementCost;
             }
         }
     }
