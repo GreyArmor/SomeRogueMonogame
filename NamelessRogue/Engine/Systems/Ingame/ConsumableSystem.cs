@@ -30,9 +30,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var drawable = item.GetComponentOfType<Drawable>();
 
                 var inventory = player.GetComponentOfType<ItemsHolder>();
-                inventory.Items.Remove(item);
-
-              
+                inventory.Items.Remove(item);              
 
                 if (consumableComponent.IsAppliedImmediately)
                 {                    

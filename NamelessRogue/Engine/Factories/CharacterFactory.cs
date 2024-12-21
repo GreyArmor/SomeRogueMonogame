@@ -37,8 +37,6 @@ namespace NamelessRogue.Engine.Factories
             var holder = new ItemsHolder();
             playerCharacter.AddComponent(holder);          
             playerCharacter.AddComponent(new OccupiesTile());
-            playerCharacter.AddComponent(new FlowMoveComponent());
-			playerCharacter.AddComponent(new SpriteModel3D(game, "AnimatedCharacters\\EasyChar_2023-10-31T21_44_08.635Z.sf"));
 			var stats = new CharacterStats();
             stats.Health.Value = 100;
             stats.Health.MaxValue = 100;
@@ -58,6 +56,9 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(modifiersCollection);
             playerCharacter.AddComponent(new EquipmentSlots(holder, modifiersCollection, game));
 
+            playerCharacter.AddComponent(new AbilityHolder());
+            playerCharacter.AddComponent(new AbilityBinder());
+
             playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
             playerCharacter.AddComponent(new Camera3D(game));
             game.WorldProvider.MoveEntity(playerCharacter, position.Point);
@@ -65,7 +66,7 @@ namespace NamelessRogue.Engine.Factories
             return playerCharacter;
         }
 
-        public static Entity CreateDummyrCharacter(int x, int y, int z, NamelessGame game)
+        public static Entity CreateDummyCharacter(int x, int y, int z, NamelessGame game)
         {
             var position = new Position(x, y, z);
             Entity playerCharacter = new Entity();

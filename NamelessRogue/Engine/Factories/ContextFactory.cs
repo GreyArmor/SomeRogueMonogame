@@ -38,6 +38,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new IngameIntentSystem());
                 systems.Add(new PlayerMovementSystem());
                 systems.Add(new InteractSystem());
+                systems.Add(new AbilitySystem());
                 systems.Add(new VisibilitySystem());
                 systems.Add(new TargetingSystem());
                 

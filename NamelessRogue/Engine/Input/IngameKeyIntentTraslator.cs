@@ -117,6 +117,9 @@ namespace NamelessRogue.Engine.Input
                         case Keys.Tab:
                             intent.Intention = IntentEnum.SwitchTarget;
                             break;
+                        case Keys.D1:
+                            intent.Intention = IntentEnum.ActivateAbility;
+                            break;
                         default:
                             break;
                     }

@@ -354,7 +354,14 @@ namespace NamelessRogue.shell
                    
                 }
 
-			
+				var abilityHolder = PlayerEntity.GetComponentOfType<AbilityHolder>();
+                var abilityBinder = PlayerEntity.GetComponentOfType<AbilityBinder>();
+
+                var ability = AbilityFactory.CreateDummyAbility();
+
+				abilityHolder.Abilities.Add(ability);
+
+				abilityBinder.AbilityBindings.Add(1, ability);
 
                //var itemsHolder = player.GetComponentOfType<ItemsHolder>();
 

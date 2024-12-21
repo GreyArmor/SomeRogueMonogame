@@ -22,7 +22,6 @@ namespace NamelessRogue.Engine.Systems
         NotDelayed,
             
     }
-
     public class InputSystem : BaseSystem
     {
 
