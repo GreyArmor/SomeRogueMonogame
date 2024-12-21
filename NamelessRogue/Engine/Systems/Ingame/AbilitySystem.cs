@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            while (namelessGame.Commander.DequeueCommand(out ActivateAbilityCommand command))
+            while (namelessGame.Commander.DequeueCommand(out ActivateTargetedAbilityCommand command))
             {
                 var abilityParameters = command.Ability.GetComponentOfType<AbilityParameters>();
 
@@ -26,6 +26,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     var cursorPos = cursorEntity.GetComponentOfType<Position>();
 
                //     abilityParameters.
+                }
+            }
+
+
+            while (namelessGame.Commander.DequeueCommand(out ActivateSelfAbilityCommand command))
+            {
+                var abilityParameters = command.Ability.GetComponentOfType<AbilityParameters>();
+
+                if (abilityParameters.TargetMode == TargetMode.Targeted)
+                {
+                    var player = namelessGame.PlayerEntity;
+                    var playerPos = player.GetComponentOfType<Position>();
+                                      
                 }
             }
         }

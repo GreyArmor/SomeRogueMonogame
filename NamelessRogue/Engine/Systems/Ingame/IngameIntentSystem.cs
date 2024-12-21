@@ -227,14 +227,44 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     break;
                 case IntentEnum.ActivateAbility:
 
-                    if (TargetingSystem.State == TargetingState.NotTargeting)
-                    {
-                        var starTargetingCommand = new StartTargetingCommand();
-                        namelessGame.Commander.EnqueueCommand(starTargetingCommand);
+                    int abilityIndex = (int)intent.PressedChar;
+                    var abilityBinder = playerEntity.GetComponentOfType<AbilityBinder>();
+                    var ability = abilityBinder.AbilityBindings[abilityIndex];
 
-                        var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.ActivatedAbility);
-                        namelessGame.Commander.EnqueueCommand(switchModeCommand);
-                    }                   
+                    var abilityParams = ability.GetComponentOfType<AbilityParameters>();
+
+                    switch (abilityParams.ActivationMode)
+                    {
+                        case ActivationMode.Passive:
+                            break;
+                        case ActivationMode.Toggle:
+                            abilityParams.IsActive = !abilityParams.IsActive;
+                            break;
+                        case ActivationMode.Activatable:
+                            {
+                                switch (abilityParams.TargetMode)
+                                {
+                                    case TargetMode.None:
+                                        break;
+                                    case TargetMode.Self:
+
+                                        break;
+                                    case TargetMode.Targeted:
+                                        if (TargetingSystem.State == TargetingState.NotTargeting)
+                                        {
+                                            var starTargetingCommand = new StartTargetingCommand();
+                                            namelessGame.Commander.EnqueueCommand(starTargetingCommand);
+
+                                            var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.ActivatedAbility);
+                                            namelessGame.Commander.EnqueueCommand(switchModeCommand);
+                                        }
+                                        break;
+                                }                               
+                            }
+                            break;
+                    }
+
+
                     break;
                 case IntentEnum.Fire:
                     {
@@ -394,6 +424,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
     public class AbilityTargetingSubProcessor : IngameIntentSystemSubProcessor
     {
+        public int AbilityIndex { get; set; } = 0;
         public void Process(NamelessGame namelessGame, IngameIntentSystem system, Intent intent)
         {
             var playerEntity = namelessGame.PlayerEntity;
@@ -458,8 +489,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 case IntentEnum.Fire:
                     {
                         var abilityBinder = playerEntity.GetComponentOfType<AbilityBinder>();
-                        var ability = abilityBinder.AbilityBindings[1];
-                        var activateAbility = new ActivateAbilityCommand(playerEntity, ability);
+                        var ability = abilityBinder.AbilityBindings[AbilityIndex];
+                        var activateAbility = new ActivateTargetedAbilityCommand(playerEntity, ability);
                         namelessGame.Commander.EnqueueCommand(activateAbility);
 
                         if (TargetingSystem.State == TargetingState.Targeting)
