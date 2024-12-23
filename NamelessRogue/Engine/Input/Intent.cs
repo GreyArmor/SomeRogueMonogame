@@ -32,7 +32,7 @@ namespace NamelessRogue.Engine.Input
         Substract,
         Fire,
         SwitchTarget,
-        ActivateAbility,
+        QuickBarPress,
     }
 
     public class Intent

@@ -225,46 +225,51 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     break;
                 case IntentEnum.MouseChanged:
                     break;
-                case IntentEnum.ActivateAbility:
+                case IntentEnum.QuickBarPress:
 
-                    int abilityIndex = (int)intent.PressedChar;
-                    var abilityBinder = playerEntity.GetComponentOfType<AbilityBinder>();
-                    var ability = abilityBinder.AbilityBindings[abilityIndex];
-
-                    var abilityParams = ability.GetComponentOfType<AbilityParameters>();
-
-                    switch (abilityParams.ActivationMode)
+                    var parsed = int.TryParse(intent.PressedChar.ToString(), out int abilityIndex);
+                    if (parsed)
                     {
-                        case ActivationMode.Passive:
-                            break;
-                        case ActivationMode.Toggle:
-                            abilityParams.IsActive = !abilityParams.IsActive;
-                            break;
-                        case ActivationMode.Activatable:
+                        var abilityBinder = playerEntity.GetComponentOfType<AbilityBinder>();
+                        var hasAbilityBound = abilityBinder.AbilityBindings.TryGetValue(abilityIndex, out var ability);
+
+                        if (hasAbilityBound)
+                        {
+                            var abilityParams = ability.GetComponentOfType<AbilityParameters>();
+
+                            switch (abilityParams.ActivationMode)
                             {
-                                switch (abilityParams.TargetMode)
-                                {
-                                    case TargetMode.None:
-                                        break;
-                                    case TargetMode.Self:
-
-                                        break;
-                                    case TargetMode.Targeted:
-                                        if (TargetingSystem.State == TargetingState.NotTargeting)
+                                case ActivationMode.Passive:
+                                    break;
+                                case ActivationMode.Toggle:
+                                    abilityParams.IsActive = !abilityParams.IsActive;
+                                    break;
+                                case ActivationMode.Activatable:
+                                    {
+                                        switch (abilityParams.TargetMode)
                                         {
-                                            var starTargetingCommand = new StartTargetingCommand();
-                                            namelessGame.Commander.EnqueueCommand(starTargetingCommand);
+                                            case TargetMode.None:
+                                                break;
+                                            case TargetMode.Self:
 
-                                            var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.ActivatedAbility);
-                                            namelessGame.Commander.EnqueueCommand(switchModeCommand);
+                                                break;
+                                            case TargetMode.Targeted:
+                                                if (TargetingSystem.State == TargetingState.NotTargeting)
+                                                {
+                                                    var starTargetingCommand = new StartTargetingCommand();
+                                                    namelessGame.Commander.EnqueueCommand(starTargetingCommand);
+
+                                                    var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.QuickBarAiming, abilityIndex);
+                                                    namelessGame.Commander.EnqueueCommand(switchModeCommand);
+                                                    
+                                                }
+                                                break;
                                         }
-                                        break;
-                                }                               
+                                    }
+                                    break;
                             }
-                            break;
+                        }
                     }
-
-
                     break;
                 case IntentEnum.Fire:
                     {
@@ -566,12 +571,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     case IngameIntentSystemMode.FireWeapon:
                         currentSubProcessor = weaponTargetingSubProcessor;
                         break;
-                    case IngameIntentSystemMode.ActivatedAbility:
-                        currentSubProcessor = abilityTargetingSubProcessor;
+                    case IngameIntentSystemMode.QuickBarAiming:
+                        currentSubProcessor = abilityTargetingSubProcessor;           
+                        //TODO: refactor
+                        abilityTargetingSubProcessor.AbilityIndex = (int)command.CommandData;
                         break;
                 }
             }
-
 
             var playerEntity = namelessGame.PlayerEntity;
             InputComponent inputComponent = playerEntity.GetComponentOfType<InputComponent>();

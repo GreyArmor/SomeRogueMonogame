@@ -396,7 +396,10 @@ namespace NamelessRogue.shell
 			this.IsMouseVisible = true;
 	
 			InitSound();
-			PlayMainMenuTheme();			
+			PlayMainMenuTheme();
+
+			AbilityLogicLibrary.Init(this);
+
 
             IsInitialized = true;
 

@@ -9,15 +9,18 @@ namespace NamelessRogue.Engine.Systems.Ingame
 {
     public enum IngameIntentSystemMode
     {
-        PlayerMovement, FireWeapon, ActivatedAbility
+        PlayerMovement, FireWeapon, QuickBarAiming
     }
     internal class IngameIntentSystemModeSwitchCommand : ICommand
     {
-        public IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode mode)
+        //TODO: could be way better, refactor
+        public IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode mode, object commandData = null)
         {
             Mode = mode;
+            CommandData = commandData;
         }
 
         public IngameIntentSystemMode Mode { get; }
+        public object CommandData { get; }
     }
 }

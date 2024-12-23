@@ -230,7 +230,9 @@ namespace NamelessRogue.Engine.UI
 
                     ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular16);
 
-                    string idText = i.ToString();
+                    var idValue = i + 1;
+                    idValue = idValue > 9 ? 0 : idValue;
+                    string idText = idValue.ToString();
                     var textSize = ImGui.CalcTextSize(idText);
                     //crude outline	
                     ImGui.PushStyleColor(ImGuiCol.Text, new System.Numerics.Vector4(0, 0, 0, 1));

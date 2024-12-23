@@ -82,6 +82,7 @@ namespace NamelessRogue.Engine.Systems
                     delayTime = noDelayTime;
                     break;
             }
+
             lastState = Keyboard.GetState();
             var newKeys = lastState.GetPressedKeys();
             var sameKeys = true;

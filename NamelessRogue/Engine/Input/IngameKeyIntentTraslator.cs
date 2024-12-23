@@ -118,7 +118,16 @@ namespace NamelessRogue.Engine.Input
                             intent.Intention = IntentEnum.SwitchTarget;
                             break;
                         case Keys.D1:
-                            intent.Intention = IntentEnum.ActivateAbility;
+                        case Keys.D2:
+                        case Keys.D3:
+                        case Keys.D4:
+                        case Keys.D5:
+                        case Keys.D6:
+                        case Keys.D7:
+                        case Keys.D8:
+                        case Keys.D9:
+                        case Keys.D0:
+                            intent.Intention = IntentEnum.QuickBarPress;
                             break;
                         default:
                             break;
