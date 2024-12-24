@@ -7,6 +7,7 @@ using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Stats;
+using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Sounds;
 using NamelessRogue.Engine.Systems.Ingame;
@@ -219,18 +220,41 @@ namespace NamelessRogue.Engine.UI
 
         private void DrawAbilityBar()
         {
+
+            var abilityBinder = game.PlayerEntity.GetComponentOfType<AbilityBinder>();
+            
+            
+
+
             ImGui.SetCursorPos(new System.Numerics.Vector2(iconSize, uiSize.Y - (iconSize*2)));
             {
                 for (int i = 0; i < 10; i++)
                 {
+                    var idValue = i + 1;
+                    var isAbilityBound = abilityBinder.AbilityBindings.TryGetValue(idValue, out var binding);
+
                     ImGui.BeginChild(i + "abilityBind", new System.Numerics.Vector2(iconSize + 1));
                     ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new System.Numerics.Vector2(iconSize, iconSize));
-                    ImGui.SetCursorPos(new System.Numerics.Vector2(0));
-                    //     ImGui.Image(ImGuiImageLibrary.Textures[drawable.ObjectID], new System.Numerics.Vector2(iconSize, iconSize));
+                    if (isAbilityBound)
+                    {
+                        var drawable = binding.GetComponentOfType<Drawable>();
+                        if (drawable != null)
+                        {
+                            ImGui.SetCursorPos(new System.Numerics.Vector2(0));
+                            ImGui.Image(ImGuiImageLibrary.Textures[drawable.ObjectID], new System.Numerics.Vector2(iconSize, iconSize));
+                            if (ImGui.IsItemHovered())
+                            {
+                                var description = binding.GetComponentOfType<Description>();
+                                if (description != null)
+                                {
+                                    ImGui.SetTooltip(description.Text);
+                                }
+                            }
 
+                        }
+                    }
                     ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular16);
-
-                    var idValue = i + 1;
+                   
                     idValue = idValue > 9 ? 0 : idValue;
                     string idText = idValue.ToString();
                     var textSize = ImGui.CalcTextSize(idText);

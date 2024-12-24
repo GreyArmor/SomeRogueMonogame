@@ -310,11 +310,11 @@ namespace NamelessRogue.shell
 				PlayerEntity = player;
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
 
-				for (int i = 5; i < 50; i++)
+				for (int i = 5; i < 20; i++)
 				{
 					for (int j = 5; j < 6; j++)
 					{
-				//		CharacterFactory.CreateDummyrCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
+						CharacterFactory.CreateDummyCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
 					}
 				}
 
@@ -357,29 +357,33 @@ namespace NamelessRogue.shell
 				var abilityHolder = PlayerEntity.GetComponentOfType<AbilityHolder>();
                 var abilityBinder = PlayerEntity.GetComponentOfType<AbilityBinder>();
 
-                var ability = AbilityFactory.CreateDummyAbility();
+                var jump = AbilityFactory.CreateJumpAbility();
 
-				abilityHolder.Abilities.Add(ability);
+				abilityHolder.Abilities.Add(jump);
 
-				abilityBinder.AbilityBindings.Add(1, ability);
+				abilityBinder.AbilityBindings.Add(1, jump);
 
-               //var itemsHolder = player.GetComponentOfType<ItemsHolder>();
+                var jumpSlash = AbilityFactory.CreateLeapSlashAbility();
+                abilityHolder.Abilities.Add(jumpSlash);
+                abilityBinder.AbilityBindings.Add(2, jumpSlash);
 
-               //            for (int i = 0; i < 500; i++)
-               //{
-               //	var gun = ItemFactory.CreateGun(this);
-               //                itemsHolder.Items.Add(gun);
+                //var itemsHolder = player.GetComponentOfType<ItemsHolder>();
 
-               //                gun = ItemFactory.CreateRedGun(this);
-               //                itemsHolder.Items.Add(gun);
+                //            for (int i = 0; i < 500; i++)
+                //{
+                //	var gun = ItemFactory.CreateGun(this);
+                //                itemsHolder.Items.Add(gun);
 
-               //	var helmet = ItemFactory.CreateHelmet(this);
-               //                itemsHolder.Items.Add(helmet);
+                //                gun = ItemFactory.CreateRedGun(this);
+                //                itemsHolder.Items.Add(gun);
 
-               //            }
+                //	var helmet = ItemFactory.CreateHelmet(this);
+                //                itemsHolder.Items.Add(helmet);
+
+                //            }
 
 
-               FollowedByCameraEntity = player;
+                FollowedByCameraEntity = player;
 
 				if (anyRivers)
 				{

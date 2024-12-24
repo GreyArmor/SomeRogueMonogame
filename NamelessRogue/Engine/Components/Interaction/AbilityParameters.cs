@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {
-    public enum TargetMode
+    public enum TargetMode : int
     {
-        None, Self, Targeted, 
+        None, Self, Targeted, TargetEnemies, TargetFriends
     }
 
-    public enum ActivationMode
+    public enum ActivationMode : int
     {
         Passive, Toggle, Activatable,
+    }
+
+    public enum AbilityAction : int
+    {
+        JumpToTarget, JumpBesidesTarget, AttackTargetMelee, AttackTargetRanged, StartFire, 
     }
 
     public class AbilityParameters : Component
@@ -25,6 +30,14 @@ namespace NamelessRogue.Engine.Components.Interaction
         public int AreaOfEffect { get; set; } = 0;
 
         public bool IsActive { get; set; }
+
+        public int Range { get; set; } = 0;
+
+        public int CooldownTurns { get; set; } = 0;
+
+        public int EnergyCost { get; set; } = 0;
+
+        public List<AbilityAction> AbilityActions { get; set; } = new List<AbilityAction>();
 
         public AbilityParameters() { }
     }

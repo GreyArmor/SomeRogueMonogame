@@ -131,8 +131,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Content\Sprites\Furniture\**" />
+	  <Compile Remove="Content\Sprites\MainMenuScreen\**" />
 	  <Compile Remove="Engine\_3DUtility\**" />
+	  <EmbeddedResource Remove="Content\Sprites\Furniture\**" />
+	  <EmbeddedResource Remove="Content\Sprites\MainMenuScreen\**" />
 	  <EmbeddedResource Remove="Engine\_3DUtility\**" />
+	  <None Remove="Content\Sprites\Furniture\**" />
+	  <None Remove="Content\Sprites\MainMenuScreen\**" />
 	  <None Remove="Engine\_3DUtility\**" />
 	</ItemGroup>
 	
@@ -141,8 +147,6 @@
     <Folder Include="Content\GameObjects\Weapons\" />
     <Folder Include="Content\Models\" />
     <Folder Include="Content\obj\Windows\AnimatedCharacters\" />
-    <Folder Include="Content\Sprites\MainMenuScreen\" />
-    <Folder Include="Content\Sprites\Furniture\" />
     <Folder Include="Engine\Components\Environment\Buildings\" />
     <Folder Include="Engine\Generation\Items\" />
   </ItemGroup>

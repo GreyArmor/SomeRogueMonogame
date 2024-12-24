@@ -7,8 +7,18 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
+    public enum TargetingMode
+    {
+        Enemies, Friends, None
+    }
     public class StartTargetingCommand : ICommand
     {
+        public TargetingMode TargetingMode { get; set; } = TargetingMode.None;
+
+        public StartTargetingCommand(TargetingMode targetingMode)
+        {
+            TargetingMode = targetingMode;
+        }
     }
 
    

@@ -251,17 +251,31 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             case TargetMode.None:
                                                 break;
                                             case TargetMode.Self:
-
                                                 break;
-                                            case TargetMode.Targeted:
+                                            case TargetMode.Targeted: 
+                                            case TargetMode.TargetEnemies: 
+                                            case TargetMode.TargetFriends:
                                                 if (TargetingSystem.State == TargetingState.NotTargeting)
                                                 {
-                                                    var starTargetingCommand = new StartTargetingCommand();
+                                                    var targetingMode = TargetingMode.None;
+                                                    switch (abilityParams.TargetMode)
+                                                    {
+                                                        case TargetMode.Targeted:
+                                                            targetingMode = TargetingMode.None;
+                                                            break;
+                                                        case TargetMode.TargetEnemies:
+                                                            targetingMode = TargetingMode.Enemies;
+                                                            break;
+                                                        case TargetMode.TargetFriends:
+                                                            targetingMode = TargetingMode.Friends;
+                                                            break;
+                                                    }
+                                                    var starTargetingCommand = new StartTargetingCommand(targetingMode);
                                                     namelessGame.Commander.EnqueueCommand(starTargetingCommand);
 
                                                     var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.QuickBarAiming, abilityIndex);
                                                     namelessGame.Commander.EnqueueCommand(switchModeCommand);
-                                                    
+
                                                 }
                                                 break;
                                         }
@@ -275,7 +289,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         if (TargetingSystem.State == TargetingState.NotTargeting)
                         {
-                            var starTargetingCommand = new StartTargetingCommand();
+                            var starTargetingCommand = new StartTargetingCommand(TargetingMode.Enemies);
                             namelessGame.Commander.EnqueueCommand(starTargetingCommand);
 
                             var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.FireWeapon);
@@ -491,6 +505,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     break;
                 case IntentEnum.MouseChanged:
                     break;
+                case IntentEnum.QuickBarPress:
+                    system.SingleKeyPressIntents.Add(IntentEnum.QuickBarPress);
+                    var parsed = int.TryParse(intent.PressedChar.ToString(), out int abilityIndex);
+                    if (parsed && abilityIndex == this.AbilityIndex)
+                    {
+                        //fall through explicitly, apparently this is how its done in c#;
+                        goto case IntentEnum.Fire;
+                    }
+                    break;                  
                 case IntentEnum.Fire:
                     {
                         var abilityBinder = playerEntity.GetComponentOfType<AbilityBinder>();

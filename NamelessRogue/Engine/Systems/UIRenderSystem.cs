@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
@@ -35,20 +36,36 @@ namespace NamelessRogue.Engine.Systems
             {
                 _imGuiRendererInstance = new ImGuiRenderer(game);
                 _imGuiRendererInstance.RebuildFontAtlas();            
+                           
+                void _loadTexture(string path)
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(path);
+                    var texture = game.Content.Load<Texture2D>("Sprites\\" +fileName);
+                    ImGuiImageLibrary.Textures.Add(fileName, _imGuiRendererInstance.BindTexture(texture));
+
+                }
+
+                var files = Directory.GetFiles(game.Content.RootDirectory+ "\\Sprites\\", "*.xnb");
+
+                foreach (var file in files)
+                {
+                    _loadTexture(file);
+                }
 
 
-                var cellSelected =  game.Content.Load<Texture2D>("Sprites/cellSelected");
-                var cellDeselected = game.Content.Load<Texture2D>("Sprites/cellDeselected");
-                var gunIcon = game.Content.Load<Texture2D>("Sprites/gunIcon");
-                var gunRedIcon = game.Content.Load<Texture2D>("Sprites/gunRedIcon");
-                var selectionColor = game.Content.Load<Texture2D>("Sprites/selectionColor");
-                var helmet = game.Content.Load<Texture2D>("Sprites/helmet");
-                ImGuiImageLibrary.Textures.Add("cellSelected", _imGuiRendererInstance.BindTexture(cellSelected));
-                ImGuiImageLibrary.Textures.Add("cellDeselected", _imGuiRendererInstance.BindTexture(cellDeselected));
-                ImGuiImageLibrary.Textures.Add("gunIcon", _imGuiRendererInstance.BindTexture(gunIcon));
-                ImGuiImageLibrary.Textures.Add("gunRedIcon", _imGuiRendererInstance.BindTexture(gunRedIcon));
-                ImGuiImageLibrary.Textures.Add("selectionColor", _imGuiRendererInstance.BindTexture(selectionColor));
-                ImGuiImageLibrary.Textures.Add("helmet", _imGuiRendererInstance.BindTexture(helmet));
+                //var cellSelected =  game.Content.Load<Texture2D>("Sprites/cellSelected");
+                //var cellDeselected = game.Content.Load<Texture2D>("Sprites/cellDeselected");
+                //var gunIcon = game.Content.Load<Texture2D>("Sprites/gunIcon");
+                //var gunRedIcon = game.Content.Load<Texture2D>("Sprites/gunRedIcon");
+                //var selectionColor = game.Content.Load<Texture2D>("Sprites/selectionColor");
+                //var helmet = game.Content.Load<Texture2D>("Sprites/helmet");
+                //ImGuiImageLibrary.Textures.Add("cellSelected", _imGuiRendererInstance.BindTexture(cellSelected));
+                //ImGuiImageLibrary.Textures.Add("cellDeselected", _imGuiRendererInstance.BindTexture(cellDeselected));
+                //ImGuiImageLibrary.Textures.Add("gunIcon", _imGuiRendererInstance.BindTexture(gunIcon));
+                //ImGuiImageLibrary.Textures.Add("gunRedIcon", _imGuiRendererInstance.BindTexture(gunRedIcon));
+                //ImGuiImageLibrary.Textures.Add("selectionColor", _imGuiRendererInstance.BindTexture(selectionColor));
+                //ImGuiImageLibrary.Textures.Add("helmet", _imGuiRendererInstance.BindTexture(helmet));
+
             }
 
             _xnaTexture = CreateTexture(game.GraphicsDevice, game.GetActualWidth(), game.GetActualHeight(), pixel =>

@@ -18,7 +18,7 @@ namespace NamelessRogue.Engine.Infrastructure
         }
         public static void Jump(IEntity jumpingEntity, Vector3Int destination)
         {
-            
+            Game.WorldProvider.MoveEntity(jumpingEntity, destination);            
         }
     }
 }

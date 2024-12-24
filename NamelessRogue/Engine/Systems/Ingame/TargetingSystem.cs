@@ -49,21 +49,49 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                         namelessGame.FollowedByCameraEntity = cursorEntity;
                         playerEntity.RemoveComponent(playerReceiver);
-                        List<IEntity> hostileEntities = new List<IEntity>();
-                        foreach (var npc in RegisteredEntities)
+
+                        switch (command.TargetingMode)
                         {
-                            var aiControlled = npc.GetComponentOfType<AIControlled>();
-                            var position = npc.GetComponentOfType<Position>();
-                            var tile = namelessGame.WorldProvider.GetTile(position.X, position.Y, position.Z);
-                            if (aiControlled.Affinity == Affinity.Hostile && tile.IsVisible)
-                            {
-                                hostileEntities.Add(npc);
-                            }
+                            case TargetingMode.Enemies:
+                                List<IEntity> hostileEntities = new List<IEntity>();
+                                foreach (var npc in RegisteredEntities)
+                                {
+                                    var aiControlled = npc.GetComponentOfType<AIControlled>();
+                                    var position = npc.GetComponentOfType<Position>();
+                                    var tile = namelessGame.WorldProvider.GetTile(position.X, position.Y, position.Z);
+                                    if (aiControlled.Affinity == Affinity.Hostile && tile.IsVisible)
+                                    {
+                                        hostileEntities.Add(npc);
+                                    }
+                                }
+
+                                hostileEntities = hostileEntities.OrderBy(entity => (entity.GetComponentOfType<Position>().Point - playerPosition.Point).Length()).ToList();
+
+                                targeter.Targets.AddRange(hostileEntities);
+                                break;
+                            case TargetingMode.Friends:
+                                //TODO: copypaste, can be steamlined with proper filtering;
+                                List<IEntity> friendlyEntities = new List<IEntity>();
+                                foreach (var npc in RegisteredEntities)
+                                {
+                                    var aiControlled = npc.GetComponentOfType<AIControlled>();
+                                    var position = npc.GetComponentOfType<Position>();
+                                    var tile = namelessGame.WorldProvider.GetTile(position.X, position.Y, position.Z);
+                                    if (aiControlled.Affinity == Affinity.Friendly && tile.IsVisible)
+                                    {
+                                        friendlyEntities.Add(npc);
+                                    }
+                                }
+
+                                hostileEntities = friendlyEntities.OrderBy(entity => (entity.GetComponentOfType<Position>().Point - playerPosition.Point).Length()).ToList();
+
+                                targeter.Targets.AddRange(hostileEntities);
+
+                                break;
+                            case TargetingMode.None:
+                                break;
                         }
-
-                        hostileEntities = hostileEntities.OrderBy(entity => (entity.GetComponentOfType<Position>().Point - playerPosition.Point).Length()).ToList();
-
-                        targeter.Targets.AddRange(hostileEntities);
+                       
 
                         if (targeter.Targets.Count > 0)
                         {
