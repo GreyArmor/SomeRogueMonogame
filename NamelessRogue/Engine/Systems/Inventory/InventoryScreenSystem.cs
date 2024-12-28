@@ -56,7 +56,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
             switch (UIContainer.Instance.InventoryScreen.Action)
             {
                 case InventoryScreeAction.EquipDragItem:
-                    EquipItem(namelessGame);
+                    InteractWithItem(namelessGame);
                     break; 
                 case InventoryScreeAction.UnEquipDragItem:
                     UnEquip(namelessGame);
@@ -248,7 +248,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                             break;
                                         case InventoryScreenCursorMode.Items:
                                             {
-                                                EquipItem(namelessGame);
+                                                InteractWithItem(namelessGame);
                                             }
                                             break;
                                         case InventoryScreenCursorMode.ItemsFilter:
@@ -313,7 +313,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
             }
         }
 
-        private static void EquipItem(NamelessGame namelessGame)
+        private static void InteractWithItem(NamelessGame namelessGame)
         {
             var p = UIContainer.Instance.InventoryScreen.GridModel.SelectedCell;
             var itemId = UIContainer.Instance.InventoryScreen.GridModel.CurrentPage.Cells[p.X, p.Y]?.ItemId;
