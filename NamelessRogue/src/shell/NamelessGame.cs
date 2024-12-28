@@ -574,7 +574,7 @@ namespace NamelessRogue.shell
 			var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 			_frameCounter.Update(deltaTime);
 
-			IngameScreen.FPS = _frameCounter.AverageFramesPerSecond.ToString();
+			IngameScreen.FPS = ((int)_frameCounter.AverageFramesPerSecond).ToString();
 
 			GraphicsDevice.Clear(Color.Black);
 			CurrentContext.RenderingUpdate(gameTime, this);

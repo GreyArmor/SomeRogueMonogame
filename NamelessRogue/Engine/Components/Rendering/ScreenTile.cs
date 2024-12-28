@@ -20,13 +20,15 @@ namespace NamelessRogue.Engine.Components.Rendering
         public ScreenObjectSource Type { get; set; }
         public string AnimationName { get; }
         public bool HasShadow { get; internal set; }
+        public Engine.Utility.Color CharColor { get; set; }
 
-        public StackedObject(string id, ScreenObjectSource type, string animationName = "", bool hasShadow = false)
+        public StackedObject(string id, ScreenObjectSource type, Color color, string animationName = "", bool hasShadow = false)
         {
             Id = id;
             Type = type;
             AnimationName = animationName;
             HasShadow = hasShadow;
+            CharColor = color;
         }
 
     }
@@ -34,17 +36,13 @@ namespace NamelessRogue.Engine.Components.Rendering
     public class ScreenTile {
         public ScreenTile()
         {
-            CharColor = new Color(0,0,0,0);
-            BackGroundColor = new Color(0,0,0,0);
         }
         
-        public void AddObject(string id, ScreenObjectSource type, bool hasShadow, string animationName = "")
+        public void AddObject(string id, ScreenObjectSource type, Color color, bool hasShadow, string animationName = "")
         {
-            StackedObjects.Add(new StackedObject(id, type, animationName, hasShadow));
+            StackedObjects.Add(new StackedObject(id, type, color, animationName, hasShadow));
         }
         public List<StackedObject> StackedObjects { get; set; } = new List<StackedObject> ();
-        public  Engine.Utility.Color CharColor;
-        public Engine.Utility.Color BackGroundColor;
         public bool isVisible;
         internal bool isRemembered;
     }

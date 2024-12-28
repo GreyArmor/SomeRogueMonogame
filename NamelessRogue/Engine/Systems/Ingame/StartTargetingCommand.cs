@@ -14,10 +14,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
     public class StartTargetingCommand : ICommand
     {
         public TargetingMode TargetingMode { get; set; } = TargetingMode.None;
+        public int Range { get; }
 
-        public StartTargetingCommand(TargetingMode targetingMode)
+        public StartTargetingCommand(TargetingMode targetingMode, int range)
         {
             TargetingMode = targetingMode;
+            Range = range;
         }
     }
 

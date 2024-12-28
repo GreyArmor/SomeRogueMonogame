@@ -21,7 +21,7 @@ namespace NamelessRogue.Engine.Factories
             ability.AddComponent(new Description() { Name = "Jump", Text = "Jump to target location" });
             ability.AddComponent(new Drawable() { ObjectID = "jump" });
             ability.AddComponent(new AbilityComponent());
-            ability.AddComponent(new AbilityParameters() { ActivationMode = ActivationMode.Activatable, TargetMode = TargetMode.Targeted, AreaOfEffect = 1,
+            ability.AddComponent(new AbilityParameters() { ActivationMode = ActivationMode.Activatable, TargetMode = TargetMode.Targeted, AreaOfEffect = 1, Range = 6, 
                 AbilityActions = new List<AbilityAction>() { AbilityAction.JumpToTarget }}); 
             return ability;
         }
@@ -37,6 +37,7 @@ namespace NamelessRogue.Engine.Factories
                 ActivationMode = ActivationMode.Activatable,
                 TargetMode = TargetMode.TargetEnemies,
                 AreaOfEffect = 1,
+                Range = 6,
                 AbilityActions = new List<AbilityAction>() { AbilityAction.JumpBesidesTarget, AbilityAction.AttackTargetMelee }
             });
             return ability;

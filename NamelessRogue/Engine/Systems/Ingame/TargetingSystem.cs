@@ -20,8 +20,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
     public class TargetingSystem : BaseSystem
     {
         public static TargetingState State { get; set; } = TargetingState.NotTargeting;
+     
         public override HashSet<Type> Signature { get; } = new HashSet<Type>() { typeof(AIControlled) };
 
+        IEntity AttachedTarget { get; set; }
+        bool IsAttached { get; set; }
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
@@ -46,7 +49,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         cursorDrawable.Visible = true;
                         Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
                         Position playerPosition = playerEntity.GetComponentOfType<Position>();
-
+                        targeter.CurrentTargetingRange = command.Range;
                         namelessGame.FollowedByCameraEntity = cursorEntity;
                         playerEntity.RemoveComponent(playerReceiver);
 
@@ -91,7 +94,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             case TargetingMode.None:
                                 break;
                         }
-                       
+
 
                         if (targeter.Targets.Count > 0)
                         {
@@ -143,6 +146,32 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         cursorEntity.RemoveComponent(cursorReceiver);
                         namelessGame.FollowedByCameraEntity = playerEntity;
                     }
+                }
+            }
+
+
+
+            while (namelessGame.Commander.DequeueCommand(out DetachFromToTargetCommand command))
+            {
+                AttachedTarget = null;
+                IsAttached = false;
+            }
+
+                while (namelessGame.Commander.DequeueCommand(out AttachToTargetCommand command))
+            {
+                AttachedTarget = command.TileEntity;
+                IsAttached = true;
+            }
+
+
+            if (IsAttached)
+            {
+                IEntity cursorEntity = namelessGame.CursorEntity;
+                Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
+                var targetPosition = AttachedTarget.GetComponentOfType<Position>();
+                if (cursorPosition.Point != targetPosition.Point)
+                {
+                    cursorPosition.Point = targetPosition.Point;
                 }
             }
         }

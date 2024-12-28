@@ -11,6 +11,7 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
+using SharpDX.MediaFoundation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -172,10 +173,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
             while (namelessGame.Commander.DequeueCommand(out CursorMovementCommand command))
             {
                 var entityToMove = namelessGame.CursorEntity;
+                var playerPosition = namelessGame.PlayerEntity.GetComponentOfType<Position>();
                 var position = entityToMove.GetComponentOfType<Position>();
                 var point = new Vector3Int(position.Point.X, position.Point.Y, position.Point.Z);
                 bool changingZlevel = false;
                 GetNewPosition(command.Directions, ref point, ref changingZlevel);
+                var targeter = namelessGame.TargeterEntity.GetComponentOfType<TergeterComponent>();
+                var distance = (playerPosition.Point - point).Length();
 
                 if (point.Z < 0 || point.Z > Constants.ChunkHeight)
                 {
@@ -183,6 +187,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
 
                 position.Point = point;
+
+                namelessGame.Commander.EnqueueCommand(new DetachFromToTargetCommand());
+
             }
         }
 

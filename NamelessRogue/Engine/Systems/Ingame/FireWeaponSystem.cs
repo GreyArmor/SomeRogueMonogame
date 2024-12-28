@@ -35,12 +35,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             var combatCommand = new AttackCommand(playerEntity, character);
                             namelessGame.Commander.EnqueueCommand(combatCommand);
+
+                            AttachToTargetCommand snapToTarget = new AttachToTargetCommand(tileEntity);
+                            namelessGame.Commander.EnqueueCommand(snapToTarget);
+
                         }
                     }
                 }
                 var createProjectileCommand = new CreateProjectileCommand(playerPosition.Point, cursorPosition.Point, DamageType.Ballistic);
                 namelessGame.Commander.EnqueueCommand(createProjectileCommand);
-
 
                 var ap = playerEntity.GetComponentOfType<ActionPoints>();
                 ap.Points -= Constants.ActionsMovementCost;

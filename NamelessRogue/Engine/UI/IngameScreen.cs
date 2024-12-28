@@ -88,6 +88,7 @@ namespace NamelessRogue.Engine.UI
                 ImGui.BeginChild("sidebar");
                 {
                     DrawBuffs();
+                    ImGui.Text("FPS " + FPS);
                     ImGui.Text("Turn: " + game.CurrentGame.Turn);
                     ImGui.Text("HP: " + stats.Health.Value);
                     ImGui.SameLine();

@@ -11,5 +11,7 @@ namespace NamelessRogue.Engine.Components.Interaction
     {
         public int TabulationIndex { get; set; } = -1;
         public List<IEntity> Targets { get; set; } = new List<IEntity>();
+
+        public int CurrentTargetingRange { get; set; } = 0;
     }
 }

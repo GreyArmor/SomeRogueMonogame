@@ -26,6 +26,9 @@ using MonoGame.Extended.Graphics;
 using MonoGame.Extended.ECS;
 using static Assimp.Metadata;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Drawing;
+using Point = Microsoft.Xna.Framework.Point;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -415,8 +418,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 var sprited = entity.GetComponentOfType<SpritedObject>();
                                 if (furniture != null && drawable != null && sprited == null)
                                 {
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.Tileset, drawable.CastsShadow);
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.Tileset, drawable.CharColor,  drawable.CastsShadow);
                                 }
                                 else if(furniture != null && drawable != null && sprited != null)
                                 {
@@ -428,9 +430,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
                                     }
 
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CastsShadow, animation);
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, animation);
                                 }
                             }
                         }
@@ -466,15 +466,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         }
                         else
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset, false);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset, new Color(), false);
                         }
 
                     }
                     else
                     {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset, false);
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
+                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset, new Color(), false);
                     }
                 }
             }
@@ -499,7 +497,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     Point screenPoint = camera.PointToScreen(x, y);
 
                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].StackedObjects.Clear();
-                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
 
                 }
             }
@@ -508,9 +505,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         void GetTerrainTile(Screen screen, Terrain terrain, Point point)
         {
 
-            screen.ScreenBuffer[point.X, point.Y].AddObject(terrain.Representation.ObjectID, ScreenObjectSource.Tileset, false);
-            screen.ScreenBuffer[point.X, point.Y].CharColor = terrain.Representation.CharColor;
-            screen.ScreenBuffer[point.X, point.Y].BackGroundColor = terrain.Representation.BackgroundColor;
+            screen.ScreenBuffer[point.X, point.Y].AddObject(terrain.Representation.ObjectID, ScreenObjectSource.Tileset, new Color(255,255,255), false);
         }
 
 
@@ -519,43 +514,63 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             {
                 var cursorEntity = game.CursorEntity;
-                Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
+                Position cursorPosition = cursorEntity.GetComponentOfType<Position>(); 
+                Position playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
 
                 LineToPlayer lineToPlayer = cursorEntity.GetComponentOfType<LineToPlayer>();
                 Drawable cursorDrawable = cursorEntity.GetComponentOfType<Drawable>();
+                var targeter = game.TargeterEntity.GetComponentOfType<TergeterComponent>();
                 if (cursorDrawable.Visible)
                 {
-                    {
-                        Point screenPoint = camera.PointToScreen(cursorPosition.X, cursorPosition.Y);
+                    {                      
+                        var distance = (cursorPosition.Point - playerPosition.Point).Length();
+                        var screenPoint = camera.PointToScreen(cursorPosition.X, cursorPosition.Y);
                         int x = screenPoint.X;
                         int y = screenPoint.Y;
                         if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
                         {
                             if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                             {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(cursorDrawable.ObjectID, ScreenObjectSource.Tileset, false);
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = cursorDrawable.CharColor;
+
+                                var color = new Color(255, 255, 255);
+
+                                if (distance > targeter.CurrentTargetingRange)
+                                {
+                                    color = new Color(200, 0, 0);
+                                }
+
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(cursorDrawable.ObjectID, ScreenObjectSource.Tileset, color, false);
+
                             }
                         }
                     }
 
                     if (lineToPlayer != null)
                     {
-                        Position playerPosition =
-                            game.PlayerEntity.GetComponentOfType<Position>();
+                     
                         List<Point> line = PointUtil.getLine(playerPosition.Point.ToPoint(), cursorPosition.Point.ToPoint());
                         for (int i = 0; i < line.Count - 1; i++)
                         {
-                            //how is this switched?
+                            //X and Y are siwtched, but whatever
                             Point p = new Point(line[i].Y, line[i].X);
                             Point screenPoint = camera.PointToScreen(p.X, p.Y);
+
+                            var distance = (p - playerPosition.Point.ToPoint()).ToVector2().Length();
+
                             int x = screenPoint.X;
                             int y = screenPoint.Y;
                             if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
                             {
+
+                                var color = new Color(255, 255, 255);
+                                if (distance > targeter.CurrentTargetingRange)
+                                {
+                                    color = new Color(200, 0, 0);
+                                }
+
                                 string objectId = i == (line.Count() - 1) ? "Cursor" : "smallCursor";
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(objectId, ScreenObjectSource.Tileset, false);
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = cursorDrawable.CharColor;
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(objectId, ScreenObjectSource.Tileset, color, false);
+   
                             }
                         }
                     }
@@ -605,8 +620,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var sprited = entity.GetComponentOfType<SpritedObject>();
                             if (sprited == null)
                             {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Character", ScreenObjectSource.Tileset, false);
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Character", ScreenObjectSource.Tileset, drawable.CharColor, false);
                             }
                             else
                             {
@@ -618,15 +632,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
                                 }
 
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CastsShadow, animation);
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, animation);
                             }
                         }
                         else                                               
                         {
                             //screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
                         }
                     }
 
@@ -652,14 +663,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Cursor", ScreenObjectSource.Tileset, false);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = drawable.CharColor;
+                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Cursor", ScreenObjectSource.Tileset, drawable.CharColor, false);
                         }
                         else
                         {
                             //screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].CharColor = new Color();
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].BackGroundColor = new Color();
                         }
                     }
 
@@ -728,15 +736,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var white = new Color(1f, 1f, 1f, 1f);
                             var grey = new Color(0.5f, 0.5f, 0.5f, 1f);
 
-                            var tileMask = screen.ScreenBuffer[x, y].isRemembered && screen.ScreenBuffer[x, y].isVisible ? white : grey;
+                            var tileMask = screen.ScreenBuffer[x, y].isRemembered && screen.ScreenBuffer[x, y].isVisible ? objectToDraw.CharColor : grey;
 
                             DrawTile(game.GraphicsDevice, game, x, y,
                                 x * settings.GetFontSizeZoomed(),
                                 y * settings.GetFontSizeZoomed(),
                                 tileData,
-                                //screen.ScreenBuffer[x, y].CharColor,
+                            
                                 tileMask,
-                                screen.ScreenBuffer[x, y].BackGroundColor, foregroundModel, backgroundModel
+                                tileMask, foregroundModel, backgroundModel
                                 );
                         }
                     }
