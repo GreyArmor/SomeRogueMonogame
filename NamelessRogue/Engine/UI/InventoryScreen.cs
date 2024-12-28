@@ -281,6 +281,7 @@ namespace NamelessRogue.Engine.UI
                 DrawInventoryGrid();
                 DrawEquipment();
             }
+            ImGui.End();
         }
 
 
@@ -332,7 +333,7 @@ namespace NamelessRogue.Engine.UI
                 ImGui.EndChild();
             }
 
-            ImGui.End();
+      
         }
 
         private void DrawPageSelector()

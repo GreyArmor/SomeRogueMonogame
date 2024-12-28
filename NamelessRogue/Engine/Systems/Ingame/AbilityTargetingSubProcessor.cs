@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
@@ -83,21 +84,32 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     break;                  
                 case IntentEnum.Fire:
                     {
-                        var abilityBinder = playerEntity.GetComponentOfType<AbilityBinder>();
-                        var ability = abilityBinder.AbilityBindings[AbilityIndex];
-                        var activateAbility = new ActivateTargetedAbilityCommand(playerEntity, ability);
-                        namelessGame.Commander.EnqueueCommand(activateAbility);
+           
 
-                        if (TargetingSystem.State == TargetingState.Targeting)
+                        Position cursorPosition = namelessGame.CursorEntity.GetComponentOfType<Position>();
+                        Position playerPosition = namelessGame.PlayerEntity.GetComponentOfType<Position>();
+                        var targeter = namelessGame.TargeterEntity.GetComponentOfType<TergeterComponent>();
+
+                        var distance = (cursorPosition.Point - playerPosition.Point).Length();
+
+                        if (targeter.CurrentTargetingRange >= distance)
                         {
-                            var endTargetingCommand = new EndTargetingCommand();
-                            namelessGame.Commander.EnqueueCommand(endTargetingCommand);
+                            var abilityBinder = playerEntity.GetComponentOfType<AbilityBinder>();
+                            var ability = abilityBinder.AbilityBindings[AbilityIndex];
+                            var activateAbility = new ActivateTargetedAbilityCommand(playerEntity, ability);
+                            namelessGame.Commander.EnqueueCommand(activateAbility);
+
+                            if (TargetingSystem.State == TargetingState.Targeting)
+                            {
+                                var endTargetingCommand = new EndTargetingCommand();
+                                namelessGame.Commander.EnqueueCommand(endTargetingCommand);
+                            }
+
+                            var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.PlayerMovement);
+                            namelessGame.Commander.EnqueueCommand(switchModeCommand);
+
+                            system.SingleKeyPressIntents.Add(IntentEnum.Fire);
                         }
-
-                        var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.PlayerMovement);
-                        namelessGame.Commander.EnqueueCommand(switchModeCommand);
-
-                        system.SingleKeyPressIntents.Add(IntentEnum.Fire);
                     }
                     break;
                 case IntentEnum.Escape:

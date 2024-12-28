@@ -63,6 +63,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         namelessGame.ContextToSwitch = ContextFactory.GetInventoryContext(namelessGame);
                         UIContainer.Instance.InventoryScreen.FillInventoryWithAll();
                         break;
+                    case HudAction.OpenAbilities:
+                        namelessGame.ContextToSwitch = ContextFactory.GetAbilityScreenContext(namelessGame);
+                        break;
                     default:
                         break;
                 }

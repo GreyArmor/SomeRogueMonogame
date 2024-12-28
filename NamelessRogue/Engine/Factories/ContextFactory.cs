@@ -226,6 +226,28 @@ namespace NamelessRogue.Engine.Factories
             }
         }
 
+        private static GameContext abilityScreenContext;
+        public static GameContext GetAbilityScreenContext(NamelessGame game)
+        {
+
+            if (abilityScreenContext != null)
+            {
+                return abilityScreenContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem(new AbilityKeyIntentTranslator(), game));
+                systems.Add(new AbilityScreenSystem());
+                systems.Add(new ModifierSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+
+                abilityScreenContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIContainer.Instance.AbilityScreen, "");
+                return abilityScreenContext;
+            }
+        }
+
 
         private static GameContext pickUpContext;
         public static GameContext GetPickUpItemContext(NamelessGame game)

@@ -26,8 +26,10 @@ namespace NamelessRogue.Engine.UI
         OpenWorldMap,
         OpenInventory,
         Options,
-        LoadGame,
-        Exit
+        LoadGame, 
+        OpenAbilities,
+        Exit,
+  
     }
 
     public class IngameScreen : BaseScreen
@@ -131,6 +133,10 @@ namespace NamelessRogue.Engine.UI
                         ImGui.SetCursorPos(shiftVector);
                         if (ButtonWithSound("Open inventory", buttonSize)) { Action = HudAction.OpenInventory; }
 
+                        ImGui.SetCursorPos(shiftVector*2);
+                        if (ButtonWithSound("Abilities", buttonSize)) { Action = HudAction.OpenAbilities; }
+
+
                         ImGui.PopFont();
 
 
@@ -224,9 +230,6 @@ namespace NamelessRogue.Engine.UI
 
             var abilityBinder = game.PlayerEntity.GetComponentOfType<AbilityBinder>();
             
-            
-
-
             ImGui.SetCursorPos(new System.Numerics.Vector2(iconSize, uiSize.Y - (iconSize*2)));
             {
                 for (int i = 0; i < 10; i++)
