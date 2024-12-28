@@ -536,7 +536,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                 if (distance > targeter.CurrentTargetingRange)
                                 {
-                                    color = new Color(200, 0, 0);
+                                    color = new Color(255, 0, 0);
                                 }
 
                                 screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(cursorDrawable.ObjectID, ScreenObjectSource.Tileset, color, false);
@@ -565,7 +565,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 var color = new Color(255, 255, 255);
                                 if (distance > targeter.CurrentTargetingRange)
                                 {
-                                    color = new Color(200, 0, 0);
+                                    color = new Color(255, 0, 0);
                                 }
 
                                 string objectId = i == (line.Count() - 1) ? "Cursor" : "smallCursor";
@@ -584,7 +584,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 Drawable drawable = entity.GetComponentOfType<Drawable>();
 
                 var character = entity.GetComponentOfType<Character>();
-                if (character != null)
+                var characterPosition = entity.GetComponentOfType<Position>();
+
+                if (character != null && characterPosition.Z == playerPosZ)
                 {
                     characters.Add(entity);
                     continue;

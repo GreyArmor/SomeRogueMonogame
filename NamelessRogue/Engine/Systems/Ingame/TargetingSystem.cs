@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Components.Status;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
@@ -62,7 +63,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     var aiControlled = npc.GetComponentOfType<AIControlled>();
                                     var position = npc.GetComponentOfType<Position>();
                                     var tile = namelessGame.WorldProvider.GetTile(position.X, position.Y, position.Z);
-                                    if (aiControlled.Affinity == Affinity.Hostile && tile.IsVisible)
+                                    var dead = npc.GetComponentOfType<Dead>();
+                                    if (dead == null && aiControlled.Affinity == Affinity.Hostile && tile.IsVisible)
                                     {
                                         hostileEntities.Add(npc);
                                     }
@@ -80,15 +82,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     var aiControlled = npc.GetComponentOfType<AIControlled>();
                                     var position = npc.GetComponentOfType<Position>();
                                     var tile = namelessGame.WorldProvider.GetTile(position.X, position.Y, position.Z);
-                                    if (aiControlled.Affinity == Affinity.Friendly && tile.IsVisible)
+                                    var dead = npc.GetComponentOfType<Dead>();
+                                    if (dead == null && aiControlled.Affinity == Affinity.Friendly && tile.IsVisible)
                                     {
                                         friendlyEntities.Add(npc);
                                     }
                                 }
 
-                                hostileEntities = friendlyEntities.OrderBy(entity => (entity.GetComponentOfType<Position>().Point - playerPosition.Point).Length()).ToList();
+                                friendlyEntities = friendlyEntities.OrderBy(entity => (entity.GetComponentOfType<Position>().Point - playerPosition.Point).Length()).ToList();
 
-                                targeter.Targets.AddRange(hostileEntities);
+                                targeter.Targets.AddRange(friendlyEntities);
 
                                 break;
                             case TargetingMode.None:
@@ -157,7 +160,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 IsAttached = false;
             }
 
-                while (namelessGame.Commander.DequeueCommand(out AttachToTargetCommand command))
+            while (namelessGame.Commander.DequeueCommand(out AttachToTargetCommand command))
             {
                 AttachedTarget = command.TileEntity;
                 IsAttached = true;
