@@ -53,12 +53,20 @@ namespace NamelessRogue.Engine.Systems.Inventory
                 InventoryNeedsUpdate = false;
             }
 
-            //foreach (var action in UIController.Instance.InventoryScreen.Actions)
-            //{
-            //    action.Invoke(this, namelessGame);
-            //}
+            switch (UIContainer.Instance.InventoryScreen.Action)
+            {
+                case InventoryScreeAction.EquipDragItem:
+                    EquipItem(namelessGame);
+                    break; 
+                case InventoryScreeAction.UnEquipDragItem:
+                    UnEquip(namelessGame);
+                    break;
+                case InventoryScreeAction.None:
+                    break;
+               
+            }
 
-            //  UIController.Instance.InventoryScreen.Actions.Clear();
+            UIContainer.Instance.InventoryScreen.Action = InventoryScreeAction.None;
 
             foreach (IEntity entity in RegisteredEntities)
             {
@@ -240,41 +248,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                             break;
                                         case InventoryScreenCursorMode.Items:
                                             {
-                                                var p = UIContainer.Instance.InventoryScreen.GridModel.SelectedCell;
-                                                var itemId = UIContainer.Instance.InventoryScreen.GridModel.CurrentPage.Cells[p.X, p.Y]?.ItemId;
-
-                                                if (itemId.HasValue && itemId != Guid.Empty)
-                                                {
-
-                                                    var itemEntity = namelessGame.GetEntity(itemId.Value);
-
-                                                    var equipmentComponent = itemEntity.GetComponentOfType<Equipment>();
-                                                    var consumableComponent = itemEntity.GetComponentOfType<Consumable>();
-
-                                                    if (equipmentComponent != null)
-                                                    {
-                                                        var slot = equipmentComponent.PossibleSlots.First();
-                                                        var playerEquipment = namelessGame.PlayerEntity.GetComponentOfType<EquipmentSlots>();
-                                                        var slotTuple = playerEquipment.Slots.First(x => x.Item1 == slot);
-                                                        EquipmentSlot equipmentSlot = null;
-                                                        //unequip previous item if any
-                                                        if (slotTuple.Item2.Equipment != null)
-                                                        {
-                                                            equipmentSlot = slotTuple.Item2;
-                                                            var takeOffCommand = new EquipOrTakeOffCommand(equipmentSlot.Equipment.ParentEntityId, false);
-                                                            namelessGame.Commander.EnqueueCommand(takeOffCommand);
-                                                        }
-
-                                                        var equipCommand = new EquipOrTakeOffCommand(itemEntity.Id, true, slot);
-                                                        namelessGame.Commander.EnqueueCommand(equipCommand);
-                                                    }
-                                                    else if(consumableComponent !=null)
-                                                    {
-                                                        var consumeCommand = new ConsumeCommand(itemEntity);
-                                                        namelessGame.Commander.EnqueueCommand(consumeCommand);
-                                                    }
-
-                                                }
+                                                EquipItem(namelessGame);
                                             }
                                             break;
                                         case InventoryScreenCursorMode.ItemsFilter:
@@ -289,16 +263,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                                             break;
                                         case InventoryScreenCursorMode.Equipment:
                                             {
-                                                var slot = UIContainer.Instance.InventoryScreen.EquipmentVisualModel.CursorPositionsDict[UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell];
-                                                var playerEquipment = namelessGame.PlayerEntity.GetComponentOfType<EquipmentSlots>();
-                                                var slotTuple = playerEquipment.Slots.First(x => x.Item1 == slot);
-                                                EquipmentSlot equipmentSlot = null;
-                                                if (slotTuple.Item2.Equipment != null)
-                                                {
-                                                    equipmentSlot = slotTuple.Item2;
-                                                    var takeOffCommand = new EquipOrTakeOffCommand(equipmentSlot.Equipment.ParentEntityId, false);
-                                                    namelessGame.Commander.EnqueueCommand(takeOffCommand);
-                                                }
+                                                UnEquip(namelessGame);
                                             }
                                             break;
                                     }
@@ -331,6 +296,59 @@ namespace NamelessRogue.Engine.Systems.Inventory
                         UIContainer.Instance.InventoryScreen.FillInventoryWithAll();
                     }
                 }
+            }
+        }
+
+        private static void UnEquip(NamelessGame namelessGame)
+        {
+            var slot = UIContainer.Instance.InventoryScreen.EquipmentVisualModel.CursorPositionsDict[UIContainer.Instance.InventoryScreen.EquipmentVisualModel.SelectedCell];
+            var playerEquipment = namelessGame.PlayerEntity.GetComponentOfType<EquipmentSlots>();
+            var slotTuple = playerEquipment.Slots.First(x => x.Item1 == slot);
+            EquipmentSlot equipmentSlot = null;
+            if (slotTuple.Item2.Equipment != null)
+            {
+                equipmentSlot = slotTuple.Item2;
+                var takeOffCommand = new EquipOrTakeOffCommand(equipmentSlot.Equipment.ParentEntityId, false);
+                namelessGame.Commander.EnqueueCommand(takeOffCommand);
+            }
+        }
+
+        private static void EquipItem(NamelessGame namelessGame)
+        {
+            var p = UIContainer.Instance.InventoryScreen.GridModel.SelectedCell;
+            var itemId = UIContainer.Instance.InventoryScreen.GridModel.CurrentPage.Cells[p.X, p.Y]?.ItemId;
+
+            if (itemId.HasValue && itemId != Guid.Empty)
+            {
+
+                var itemEntity = namelessGame.GetEntity(itemId.Value);
+
+                var equipmentComponent = itemEntity.GetComponentOfType<Equipment>();
+                var consumableComponent = itemEntity.GetComponentOfType<Consumable>();
+
+                if (equipmentComponent != null)
+                {
+                    var slot = equipmentComponent.PossibleSlots.First();
+                    var playerEquipment = namelessGame.PlayerEntity.GetComponentOfType<EquipmentSlots>();
+                    var slotTuple = playerEquipment.Slots.First(x => x.Item1 == slot);
+                    EquipmentSlot equipmentSlot = null;
+                    //unequip previous item if any
+                    if (slotTuple.Item2.Equipment != null)
+                    {
+                        equipmentSlot = slotTuple.Item2;
+                        var takeOffCommand = new EquipOrTakeOffCommand(equipmentSlot.Equipment.ParentEntityId, false);
+                        namelessGame.Commander.EnqueueCommand(takeOffCommand);
+                    }
+
+                    var equipCommand = new EquipOrTakeOffCommand(itemEntity.Id, true, slot);
+                    namelessGame.Commander.EnqueueCommand(equipCommand);
+                }
+                else if (consumableComponent != null)
+                {
+                    var consumeCommand = new ConsumeCommand(itemEntity);
+                    namelessGame.Commander.EnqueueCommand(consumeCommand);
+                }
+
             }
         }
 

@@ -9,7 +9,9 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using Point = System.Drawing.Point;
 using Vector2 = System.Numerics.Vector2;
 
@@ -17,6 +19,8 @@ namespace NamelessRogue.Engine.UI
 {
     public enum InventoryScreeAction
     {
+        EquipDragItem,
+        UnEquipDragItem,
         None,
     }
 
@@ -191,7 +195,7 @@ namespace NamelessRogue.Engine.UI
         public InventoryEquipmentVisualModel EquipmentVisualModel { get; set; }
 
         public InventoryScreenPageSwitchModel PageSwitchModel { get; set; }
-        public MainMenuAction Action { get; set; } = MainMenuAction.None;
+        public InventoryScreeAction Action { get; set; } = InventoryScreeAction.None;
         public InventoryScreenCursorMode CursorMode { get; set; } = InventoryScreenCursorMode.Items;
 
         public readonly int CountOfFilters = 7;
@@ -210,6 +214,9 @@ namespace NamelessRogue.Engine.UI
 
         int rightSideWidth;
         List<ItemType> filters = new List<ItemType>();
+
+        string clickedItemId = "";
+        string clickedEquipmentId = "";
 
         public InventoryScreen(NamelessGame game) : base(game)
         {
@@ -256,11 +263,77 @@ namespace NamelessRogue.Engine.UI
             ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(equipmentSize, equipmentSize));
         }
 
+        private static uint ColorToUInt(Color color)
+        {
+            return (uint)((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
+        }
+
         public override void DrawLayout()
         {
             filters.Clear();
+         
+            
+           
             ImGui.SetNextWindowPos(new System.Numerics.Vector2());
             ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
+
+
+            if (CursorMode == InventoryScreenCursorMode.Items)
+            {
+                if (ImGui.IsMouseDragging(ImGuiMouseButton.Left, 0))
+                {
+                    if (clickedItemId != "")
+                    {
+                        var iconPos = ImGui.GetMousePos() - new Vector2(iconSize / 2);
+                        ImGui.GetForegroundDrawList().AddImage(ImGuiImageLibrary.Textures["cellDeselected"], iconPos, iconPos + new Vector2(iconSize), Vector2.Zero, Vector2.One, ColorToUInt(Color.FromArgb(128, Color.White)));
+                        ImGui.GetForegroundDrawList().AddImage(ImGuiImageLibrary.Textures[clickedItemId], iconPos, iconPos + new Vector2(iconSize), Vector2.Zero, Vector2.One, ColorToUInt(Color.FromArgb(128, Color.White)));
+                    }
+                }
+                else
+                {
+                    if (clickedItemId != "")
+                    {
+                        var mousePosition = ImGui.GetMousePos();
+
+                        //if we dragged an item to the equipment side of the screen we try to equip it
+                        if (mousePosition.X < halfsize.X)
+                        {
+                            Action = InventoryScreeAction.EquipDragItem;
+                        }
+
+                        clickedItemId = "";
+                    }
+                }
+            }
+            else if(CursorMode == InventoryScreenCursorMode.Equipment)
+            {
+                if (ImGui.IsMouseDragging(ImGuiMouseButton.Left, 0))
+                {
+                    if (clickedEquipmentId != "")
+                    {
+                        var iconPos = ImGui.GetMousePos() - new Vector2(iconSize / 2);
+                        ImGui.GetForegroundDrawList().AddImage(ImGuiImageLibrary.Textures["cellDeselected"], iconPos, iconPos + new Vector2(iconSize), Vector2.Zero, Vector2.One, ColorToUInt(Color.FromArgb(128, Color.White)));
+                        ImGui.GetForegroundDrawList().AddImage(ImGuiImageLibrary.Textures[clickedEquipmentId], iconPos, iconPos + new Vector2(iconSize), Vector2.Zero, Vector2.One, ColorToUInt(Color.FromArgb(128, Color.White)));
+                    }
+                }
+                else
+                {
+                    if (clickedEquipmentId != "")
+                    {
+                        var mousePosition = ImGui.GetMousePos();
+
+                        //the other way around
+                        if (mousePosition.X > halfsize.X)
+                        {
+                            Action = InventoryScreeAction.UnEquipDragItem;
+                        }
+
+                        clickedEquipmentId = "";
+                    }
+                }
+            }
+            
+
 
             ImGui.SetWindowSize(uiSize);
 
@@ -280,7 +353,11 @@ namespace NamelessRogue.Engine.UI
                 DrawPageSelector();
                 DrawInventoryGrid();
                 DrawEquipment();
+             
             }
+
+          
+
             ImGui.End();
         }
 
@@ -321,6 +398,21 @@ namespace NamelessRogue.Engine.UI
                         if (itemId! != "")
                         {
                             ImGui.Image(ImGuiImageLibrary.Textures[itemId], new Vector2(equipmentSize, equipmentSize));
+
+                            if (ImGui.IsItemClicked())
+                            {
+                                if(ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                                {
+                                    Action = InventoryScreeAction.UnEquipDragItem;
+                                }
+                                else
+                                {
+                                    clickedEquipmentId = itemId;
+                                }                               
+                                var point = EquipmentVisualModel.CursorPositionsDict.First(x=>x.Value == slot);
+                                EquipmentVisualModel.SelectedCell = point.Key;
+                                this.CursorMode = InventoryScreenCursorMode.Equipment;
+                            }
                         }
                     }
 
@@ -450,6 +542,21 @@ namespace NamelessRogue.Engine.UI
                         if (itemId! != "")
                         {
                             ImGui.Image(ImGuiImageLibrary.Textures[itemId], new Vector2(iconSize, iconSize));
+
+
+                            if (ImGui.IsItemClicked())
+                            {
+                                if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                                {
+                                    Action = InventoryScreeAction.EquipDragItem;
+                                }
+                                else
+                                {
+                                    clickedItemId = itemId;
+                                }
+                                GridModel.SelectedCell = new Point(x, y);
+                                this.CursorMode = InventoryScreenCursorMode.Items;
+                            }
                         }
                     }
                 }
