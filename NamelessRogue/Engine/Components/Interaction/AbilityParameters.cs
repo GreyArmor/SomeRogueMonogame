@@ -21,6 +21,11 @@ namespace NamelessRogue.Engine.Components.Interaction
         JumpToTarget, JumpBesidesTarget, AttackTargetMelee, AttackTargetRanged, StartFire, 
     }
 
+    public enum Category
+    {
+        Generic, Improvisation, Hacking, Tech, StreetSmarts, 
+    }
+
     public class AbilityParameters : Component
     {
         public TargetMode TargetMode { get; set; }

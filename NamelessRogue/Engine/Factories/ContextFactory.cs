@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
@@ -200,6 +201,26 @@ namespace NamelessRogue.Engine.Factories
             }
         }
 
+        private static GameContext editorCharacterContext;
+        internal static GameContext GetEditorCharacterContext(NamelessGame game)
+        {
+            if (editorCharacterContext != null)
+            {
+                return editorCharacterContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new EditorCharacterScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
+                // create and init the UI manager
+                editorCharacterContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem, new EditorCharacterScreenSpriteRenderSystem() }, UIContainer.Instance.EditorCharacterScreen, "MainMenu");
+                return editorCharacterContext;
+            }
+        }
+
 
         private static GameContext inventoryContext;
         public static GameContext GetInventoryContext(NamelessGame game)
@@ -312,5 +333,6 @@ namespace NamelessRogue.Engine.Factories
             WorldBoardContext = null;
         }
 
+      
     }
 }

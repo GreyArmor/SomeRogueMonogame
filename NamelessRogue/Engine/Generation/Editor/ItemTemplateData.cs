@@ -31,7 +31,7 @@ namespace NamelessRogue.Engine.Generation.Editor
         public List<Slot> PossibleSlots { get; set; }
 
         [XmlElement]
-        public WeaponTemplateData? WeapomTemplateData { get; set; }
+        public WeaponTemplateData? WeaponTemplateData { get; set; }
         [XmlElement]
         public ArmorTemplateData? ArmorTemplateData { get; set; }
 

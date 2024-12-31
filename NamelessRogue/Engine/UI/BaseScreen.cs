@@ -4,12 +4,13 @@ using NamelessRogue.Engine.Sounds;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace NamelessRogue.Engine.UI
 {
 
-	public abstract class BaseScreen : IBaseGuiScreen
+    public abstract class BaseScreen : IBaseGuiScreen
 	{
 		protected NamelessGame game;
 		protected System.Numerics.Vector2 uiSize;
@@ -38,5 +39,10 @@ namespace NamelessRogue.Engine.UI
 			if (clicked) { game.Commander.EnqueueCommand(new PlaySoundCommand("ButtonClick", false, 0.5f)); }
 			return clicked;
 		}
+
+        protected static uint ColorToUInt(Color color)
+        {
+            return (uint)((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
+        }
 	}
 }

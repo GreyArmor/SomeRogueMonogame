@@ -324,9 +324,16 @@ namespace NamelessRogue.shell
 				{
                     XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));
                     TextReader reader = new StreamReader(itemPath);
-                    var itemData = (ItemTemplateData)serializer.Deserialize(reader);
 
-                    if (itemData.IconPath != null && itemData.IconPath != string.Empty)
+					//TODO: refactor
+					if (itemPath.Contains("GameObjects\\Characters"))
+					{
+						continue;
+					}
+
+                    var itemData = (ItemTemplateData)serializer?.Deserialize(reader);
+
+                    if (itemData!=null && itemData.IconPath != null && itemData.IconPath != string.Empty)
                     {
                         var iconPath = Path.GetDirectoryName(itemPath) + "\\" + itemData.IconPath;
                         FileStream fileStream = new FileStream(iconPath, FileMode.Open);

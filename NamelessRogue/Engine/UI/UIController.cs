@@ -18,6 +18,7 @@ namespace NamelessRogue.Engine.UI
 
         public EditorsPickerScreen EditorsPickerScreen { get; set; }
         public EditorItemScreen EditorItemScreen { get; set; }
+        public EditorCharacterScreen EditorCharacterScreen { get; set; }
         public WorldGenerationUI WorldGenScreen { get; set; }
 
 		public UIContainer(NamelessGame game)
@@ -35,7 +36,8 @@ namespace NamelessRogue.Engine.UI
 			WorldGenScreen = new WorldGenerationUI(game);
             EditorsPickerScreen = new EditorsPickerScreen(game);
             EditorItemScreen = new EditorItemScreen(game);
-			AbilityScreen = new AbilityScreen(game);
+            EditorCharacterScreen = new EditorCharacterScreen(game);
+            AbilityScreen = new AbilityScreen(game);
             Instance = this;
 
 		}

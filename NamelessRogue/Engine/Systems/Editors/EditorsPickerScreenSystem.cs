@@ -21,11 +21,18 @@ namespace NamelessRogue.Engine.Systems.Editors
                 case EditorsPickerScreenActions.ItemEditor:
                     namelessGame.ContextToSwitch = ContextFactory.GetEditorItemContext(namelessGame);
                     break;
+                case EditorsPickerScreenActions.AbilityEditor:
+             
+                    break;
                 case EditorsPickerScreenActions.CharacterEditor:
+                    namelessGame.ContextToSwitch = ContextFactory.GetEditorCharacterContext(namelessGame);
                     break;
                 case EditorsPickerScreenActions.Back:
                     namelessGame.ContextToSwitch = ContextFactory.GetMainMenuContext(namelessGame);
                     break;
+                case EditorsPickerScreenActions.None:
+                    break;
+               ;
                 default:
                     break;
             }

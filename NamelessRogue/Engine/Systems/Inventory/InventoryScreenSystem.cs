@@ -286,7 +286,6 @@ namespace NamelessRogue.Engine.Systems.Inventory
                     inputComponent.Intents.Clear();
                 }
 
-
                 bool updated = false;
                 while (namelessGame.Commander.DequeueCommand<UpdateInventoryScreenCommand>(out var equipOrTakeOffCommand))
                 {

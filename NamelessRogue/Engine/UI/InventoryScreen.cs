@@ -263,11 +263,6 @@ namespace NamelessRogue.Engine.UI
             ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(equipmentSize, equipmentSize));
         }
 
-        private static uint ColorToUInt(Color color)
-        {
-            return (uint)((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
-        }
-
         public override void DrawLayout()
         {
             filters.Clear();

@@ -25,68 +25,66 @@ namespace NamelessRogue.Engine.Infrastructure
 	{
 		public static readonly Dictionary<string, AnimatedSpriteNR> SpritesAnimatedIdle = new Dictionary<string, AnimatedSpriteNR>();
         public static readonly Dictionary<string, Sprite> SpritesStatic = new Dictionary<string, Sprite>();
+        static NamelessGame game;
 
-        public static void Initialize(NamelessGame game)
-		{
-            void _addAnimatedSprite(string id, string path)
-			{ 
-                AsepriteFile aseFile;
-                using (Stream stream = TitleContainer.OpenStream(path))
-                {
-                    aseFile = AsepriteFileLoader.FromStream(Path.GetFileName(path), stream, preMultiplyAlpha: true);
-                }
-
-                AnimatedSpriteNR sprite = new AnimatedSpriteNR(aseFile.CanvasWidth, aseFile.CanvasHeight);
-
-                var spriteSheet = aseFile.CreateSpriteSheet(game.GraphicsDevice);
-
-                var firstAnimation = "";
-
-                foreach (var animTag in spriteSheet.GetAnimationTagNames())
-                { 
-                    if(firstAnimation == "")
-                    {
-                        firstAnimation = animTag;
-                    }
-                    var animation = spriteSheet.CreateAnimatedSprite(animTag);
-                    sprite.Add(animTag, animation);
-                }
-
-                sprite.SetCurrentLoop(firstAnimation);
-                SpritesAnimatedIdle.Add(id, sprite);
-            }
-
-            void _addStaticSprite(string id, string path)
+        public static void AddAnimatedSprite(string id, string path)
+        {
+            AsepriteFile aseFile;
+            using (Stream stream = TitleContainer.OpenStream(path))
             {
-                var sprite = new Sprite(game.Content.Load<Texture2D>(path));
-                SpritesStatic.Add(id, sprite);
+                aseFile = AsepriteFileLoader.FromStream(Path.GetFileName(path), stream, preMultiplyAlpha: true);
             }
 
+            AnimatedSpriteNR sprite = new AnimatedSpriteNR(aseFile.CanvasWidth, aseFile.CanvasHeight);
 
-            _addAnimatedSprite("ZeroAndOne", "Content\\Sprites\\ZeroAndOne.ase");
-            _addAnimatedSprite("ZeroAndOne2", "Content\\Sprites\\ZeroAndOne2.ase");
-            _addAnimatedSprite("computer1", "Content\\Sprites\\AnimatedFurniture\\computer1.ase");
-            _addAnimatedSprite("healthbar", "Content\\Sprites\\healthbar.ase");
-            _addAnimatedSprite("energybar", "Content\\Sprites\\energybar.ase");
-            _addAnimatedSprite("drone_recon", "Content\\Sprites\\drone_recon.ase");
-            //_addAnimatedSprite("cacti", "Doodads\\cacti.sf");
-            //_addAnimatedSprite("palmTree", "Doodads\\palmTree.sf");
-            //_addAnimatedSprite("stump", "Doodads\\stump.sf");
-            //_addAnimatedSprite("smallTree", "Doodads\\smallTree.sf");
-            //_addAnimatedSprite("stone", "Doodads\\stone.sf");
-            //         _addAnimatedSprite("star", "Doodads\\star.sf");
-            //         _addAnimatedSprite("seashells1", "Doodads\\seashells1.sf");
+            var spriteSheet = aseFile.CreateSpriteSheet(game.GraphicsDevice);
 
-            _addStaticSprite("box", "Sprites\\box");
-            _addStaticSprite("boxMetal", "Sprites\\boxMetal");
-            _addStaticSprite("barrel", "Sprites\\barrel");
-            _addStaticSprite("bullet", "Sprites\\bullet");
+            var firstAnimation = "";
 
-            for (int i = 1; i <= 21; i++ )
-			{
-                _addStaticSprite($@"garbage{i}", $@"Sprites\\Garbage\\garbage{i}");
+            foreach (var animTag in spriteSheet.GetAnimationTagNames())
+            {
+                if (firstAnimation == "")
+                {
+                    firstAnimation = animTag;
+                }
+                var animation = spriteSheet.CreateAnimatedSprite(animTag);
+                sprite.Add(animTag, animation);
             }
 
+            sprite.SetCurrentLoop(firstAnimation);
+            SpritesAnimatedIdle.Add(id, sprite);
+        }
+
+        public static void RemoveAnimatedSprite(string id)
+        {
+            SpritesAnimatedIdle.Remove(id);
+        }
+
+            public static void AddStaticSprite(string id, string path)
+        {
+            var sprite = new Sprite(game.Content.Load<Texture2D>(path));
+            SpritesStatic.Add(id, sprite);
+        }
+
+        public static void Initialize(NamelessGame namelessGame)
+        {
+            game = namelessGame;
+            AddAnimatedSprite("ZeroAndOne", "Content\\Sprites\\ZeroAndOne.ase");
+            AddAnimatedSprite("ZeroAndOne2", "Content\\Sprites\\ZeroAndOne2.ase");
+            AddAnimatedSprite("computer1", "Content\\Sprites\\AnimatedFurniture\\computer1.ase");
+            AddAnimatedSprite("healthbar", "Content\\Sprites\\healthbar.ase");
+            AddAnimatedSprite("energybar", "Content\\Sprites\\energybar.ase");
+            AddAnimatedSprite("drone_recon", "Content\\Sprites\\drone_recon.ase");
+
+            AddStaticSprite("box", "Sprites\\box");
+            AddStaticSprite("boxMetal", "Sprites\\boxMetal");
+            AddStaticSprite("barrel", "Sprites\\barrel");
+            AddStaticSprite("bullet", "Sprites\\bullet");
+
+            for (int i = 1; i <= 21; i++)
+            {
+                AddStaticSprite($@"garbage{i}", $@"Sprites\\Garbage\\garbage{i}");
+            }
         }
 	}
 }

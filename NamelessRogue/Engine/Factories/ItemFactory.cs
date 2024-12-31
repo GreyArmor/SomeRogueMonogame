@@ -63,9 +63,9 @@ namespace NamelessRogue.Engine.Factories
 
             entity.AddComponent(new Item(data.ItemType, 0, data.ItemQuality, 1, 1, "CorpoCorp Inc."));
 
-            if (data.WeapomTemplateData != null)
+            if (data.WeaponTemplateData != null)
             {
-                var wtd = data.WeapomTemplateData;
+                var wtd = data.WeaponTemplateData;
                 entity.AddComponent(new Equipment(Slot.LefHand, Slot.RightHand));
                 entity.AddComponent(new WeaponStats(wtd.MinimumDamage, wtd.MaximumDamage, wtd.Range, wtd.AttackType, wtd.AmmoType, wtd.AmmoInClip, 0));
             }

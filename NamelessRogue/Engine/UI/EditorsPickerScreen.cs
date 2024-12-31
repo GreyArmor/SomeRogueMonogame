@@ -15,6 +15,7 @@ namespace NamelessRogue.Engine.UI
         ItemEditor,
         CharacterEditor,
         Back,
+        AbilityEditor,
     }
     public class EditorsPickerScreen : BaseScreen
     {
@@ -31,14 +32,22 @@ namespace NamelessRogue.Engine.UI
             {
                 ImGui.SetCursorPos((uiSize / 2) - (buttonSize/2));
                 ImGui.BeginChild("EditorPicker");
-                if (ButtonWithSound("Item editor", buttonSize))
-                {
-                    EditorsPickerScreenActions = EditorsPickerScreenActions.ItemEditor;
-                }
+                
                 if (ButtonWithSound("Character editor", buttonSize))
                 {
                     EditorsPickerScreenActions = EditorsPickerScreenActions.CharacterEditor;
                 }
+                if (ButtonWithSound("Item editor", buttonSize))
+                {
+                    EditorsPickerScreenActions = EditorsPickerScreenActions.ItemEditor;
+                }
+
+                if (ButtonWithSound("Ability editor", buttonSize))
+                {
+                    EditorsPickerScreenActions = EditorsPickerScreenActions.AbilityEditor;
+                }
+
+               
                 if (ButtonWithSound("Back", buttonSize))
                 {
                     EditorsPickerScreenActions = EditorsPickerScreenActions.Back;

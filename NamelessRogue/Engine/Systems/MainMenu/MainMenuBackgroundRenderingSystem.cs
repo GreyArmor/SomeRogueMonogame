@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Systems.MainMenu
 	{
 		private SpriteBatch _spriteBatch;
 
-		public override HashSet<Type> Signature => new HashSet<Type>();
+		public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
 		List<Rectangle> cloudRectangles;
 		Random random = new Random();

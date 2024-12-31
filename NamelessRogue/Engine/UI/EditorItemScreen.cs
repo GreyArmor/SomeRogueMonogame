@@ -338,7 +338,7 @@ namespace NamelessRogue.Engine.UI
                                 wtd.AmmoInClip = ammoInClip;
                                 wtd.Range = weaponRange;
                                 wtd.AmmoType = ammoTypes[currentAmmoTypeIndex];
-                                data.WeapomTemplateData = wtd;
+                                data.WeaponTemplateData = wtd;
                                 data.PossibleSlots = new List<Slot>() { Slot.LefHand, Slot.RightHand };
                             }
                             else if (currentItemType == ItemType.Armor)
@@ -394,7 +394,7 @@ namespace NamelessRogue.Engine.UI
 
                             name = itemData.Name;
                             description = itemData.Description;
-                            var wtd = itemData.WeapomTemplateData;
+                            var wtd = itemData.WeaponTemplateData;
                             var atd = itemData.ArmorTemplateData;
                             var citd = itemData.ConsumableItemTemplateData;
 
