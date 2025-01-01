@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Name>Drone attacker</Name>
-  <Description>test</Description>
+  <Name>drone11</Name>
+  <Description />
   <SpritePath>Sprites\drone_recon.ase</SpritePath>
   <WeaponTemplateData>
     <MinimumDamage>0</MinimumDamage>

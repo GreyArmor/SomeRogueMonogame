@@ -206,7 +206,7 @@ namespace NamelessRogue.Engine.UI
                             spritePath = selectedIconFile;// files[currentIconCombpBoxItem];
                             spriteFileName = Path.GetFileName(spritePath);
                             SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
-                            SpriteLibrary.AddAnimatedSprite(spriteFileName, Path.GetRelativePath(game.Content.RootDirectory , spritePath));
+                            SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);
 
                             var sprite = SpriteLibrary.SpritesAnimatedIdle[spriteFileName];
                             currentSpriteAnimations = sprite._animations.Keys.ToArray();
@@ -239,7 +239,7 @@ namespace NamelessRogue.Engine.UI
 
                             if (spritePath != string.Empty)
                             {
-                                if (!Directory.Exists(directory + "\\Spritse\\"))
+                                if (!Directory.Exists(directory + "\\Sprites\\"))
                                 {
                                     Directory.CreateDirectory(directory + "\\Sprites\\");
                                 }                             
@@ -284,7 +284,7 @@ namespace NamelessRogue.Engine.UI
 
                             if (data.SpritePath != null && data.SpritePath != string.Empty)
                             {
-                                spritePath = "Content\\" + data.SpritePath;
+                                spritePath = contentDirectoryPath + "\\" + data.SpritePath;
                                 spriteFileName = Path.GetFileName(spritePath);
                                 SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
                                 SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);

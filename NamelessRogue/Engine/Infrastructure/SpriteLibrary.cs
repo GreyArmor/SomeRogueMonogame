@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Infrastructure
         public static void AddAnimatedSprite(string id, string path)
         {
             AsepriteFile aseFile;
-            using (Stream stream = TitleContainer.OpenStream(path))
+            using (Stream stream = File.OpenRead(path))
             {
                 aseFile = AsepriteFileLoader.FromStream(Path.GetFileName(path), stream, preMultiplyAlpha: true);
             }

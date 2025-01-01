@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Name>Angry puter</Name>
-  <Description>test</Description>
-  <SpritePath>Sprites\computer1.ase</SpritePath>
+  <Name>drone11111</Name>
+  <Description />
+  <SpritePath>Sprites\ZeroAndOne2.ase</SpritePath>
   <WeaponTemplateData>
     <MinimumDamage>0</MinimumDamage>
     <MaximumDamage>10</MaximumDamage>
