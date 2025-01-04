@@ -121,7 +121,7 @@ namespace NamelessRogue.Engine.Factories
         public static Entity CreateCharacterFromData(NamelessGame game, Vector3Int position, CharacterTemplateData data)
         {
 
-            var spritePath = data.SpritePath;
+            var spritePath = "Content\\" + data.SpritePath;
             var spriteFileName = Path.GetFileName(spritePath);
             SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
             SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);

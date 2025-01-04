@@ -112,8 +112,6 @@ namespace NamelessRogue.shell
 			Content.RootDirectory = "Content";
 		}
 
-
-
 		public int GetActualCharacterWidth()
 		{
 			return settings.GetWidth() * settings.GetFontSize();
@@ -134,24 +132,15 @@ namespace NamelessRogue.shell
 			return graphics.PreferredBackBufferHeight;
 		}
 
-
-
-
-
 		public GameSettings GetSettings()
 		{
 			return settings;
 		}
 
-
-
 		void SetSettings(GameSettings settings)
 		{
 			this.settings = settings;
 		}
-
-
-
 
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
@@ -165,7 +154,6 @@ namespace NamelessRogue.shell
 		/// </summary>
 		protected override void Initialize()
 		{
-
 			var assembly = Assembly.GetExecutingAssembly();
 			var resourceName = "NamelessRogue.log4net.config";
 
@@ -310,13 +298,29 @@ namespace NamelessRogue.shell
 				PlayerEntity = player;
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
 
-				for (int i = 5; i < 20; i++)
+
+                var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.xml", SearchOption.AllDirectories);
+
+
+				Vector2 characterCreationOffset = new Vector2(0);
+				
+				foreach (var charactersFile in characters)
 				{
-					for (int j = 5; j < 6; j++)
-					{
-						CharacterFactory.CreateDummyCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
-					}
-				}
+					characterCreationOffset.Y++;
+                    characterCreationOffset.Y++;
+                    XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
+                    TextReader reader = new StreamReader(charactersFile);
+                    var data = (CharacterTemplateData)serializer.Deserialize(reader);
+					CharacterFactory.CreateCharacterFromData(this, new Vector3Int((int)(characterCreationOffset.X + (x* Constants.ChunkSize)), (int)(characterCreationOffset.Y + (y* Constants.ChunkSize)), 0), data);
+                }
+
+    //            for (int i = 5; i < 20; i++)
+				//{
+				//	for (int j = 5; j < 6; j++)
+				//	{
+				//		CharacterFactory.CreateDummyCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
+				//	}
+				//}
 
 				var items = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath, "*.xml", SearchOption.AllDirectories);
                 var itemsHolder = player.GetComponentOfType<ItemsHolder>();

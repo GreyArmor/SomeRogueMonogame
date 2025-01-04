@@ -2,6 +2,7 @@
 <CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Name>Drone recon</Name>
   <Description />
+  <SpritePath>Sprites\drone_recon.ase</SpritePath>
   <CastsShadow>true</CastsShadow>
   <Health>10</Health>
   <Energy>10</Energy>
