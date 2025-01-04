@@ -80,6 +80,8 @@ namespace NamelessRogue.Engine.UI
 
         string name = "";
         string description = "";
+        int health = 10;
+        int energy = 0;
         int maxDamage = 10;
         int minDamage = 0;
         int ammoInClip = 0;
@@ -97,13 +99,7 @@ namespace NamelessRogue.Engine.UI
         int armorModValue = 10;
         int resistModValue = 10;
 
-        bool isThrowable = false;
-        bool isAppliedImmediately = false;
-        bool isDoT = false;
-
-        bool isResMod = false;
-        bool isArmorMod = false;
-        bool isDamageMod = false;
+        bool castsShadow = false;
 
         string contentDirectoryPath = string.Empty;
         bool fileIsPicking = false;
@@ -118,7 +114,8 @@ namespace NamelessRogue.Engine.UI
         string[] currentSpriteAnimations = null;
         int currentAnimationIndex = 0;
 
-        bool droppableItemPickerDialog = true;
+        bool droppableItemPickerDialog = false;
+        int selectedDroppableIndex = 0;
 
         void _fillTreeRecursive(string path, IEnumerable<string> fileExtensions, ref string selectedFile)
         {
@@ -234,95 +231,12 @@ namespace NamelessRogue.Engine.UI
                     {
                         if (ButtonWithSound("Save", buttonSize) && name.Any())
                         {
-
-                            CharacterTemplateData data = new CharacterTemplateData();
-                            data.Name = name;
-                            data.Description = description;
-
-                            if (spritePath != string.Empty)
-                            {
-                                if (!Directory.Exists(directory + "\\Sprites\\"))
-                                {
-                                    Directory.CreateDirectory(directory + "\\Sprites\\");
-                                }                             
-
-                                var newIconLocation = directory + "\\Sprites\\" + spriteFileName;
-                                File.Delete(newIconLocation);
-                                if (spritePath != newIconLocation)
-                                {
-                                    File.Copy(spritePath, newIconLocation, true);
-                                }
-                                data.SpritePath = Path.GetRelativePath(directory, directory + "\\Sprites\\" + spriteFileName);
-                            }
-                            var wtd = new WeaponTemplateData();
-                            wtd.DamageType = damageTypes[currentDamageTypeIndex];
-                            wtd.AttackType = attackTypes[currentAttackTypeIndex];
-                            wtd.MinimumDamage = minDamage;
-                            wtd.MaximumDamage = maxDamage;
-                            wtd.AmmoInClip = ammoInClip;
-                            wtd.Range = weaponRange;
-                            wtd.AmmoType = ammoTypes[currentAmmoTypeIndex];
-                            data.WeaponTemplateData = wtd;
-
-                            var atd = new ArmorTemplateData();
-                            atd.ResistValue = resistValue;
-                            atd.ArmorValue = armorValue;
-                            data.ArmorTemplateData = atd;
-
-                            using (TextWriter writer = new StreamWriter(directory + name + ".xml"))
-                            {
-                                XmlSerializer ser = new XmlSerializer(typeof(CharacterTemplateData));
-                                ser.Serialize(writer, data);
-                                currentFilesOfSelectedItemType = null;
-                            }
-                            // EditorItemScreenActions = EditorItemScreenActions.Back;
+                            Save(directory);
                         }
                         ImGui.SameLine();
                         if (ButtonWithSound("Load", buttonSize) && currentFilesOfSelectedItemType.Any())
                         {
-                            XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
-                            TextReader reader = new StreamReader(currentFilesOfSelectedItemType[currentSelectedFile]);
-                            var data = (CharacterTemplateData)serializer.Deserialize(reader);
-
-                            if (data.SpritePath != null && data.SpritePath != string.Empty)
-                            {
-                                spritePath = contentDirectoryPath + "\\" + data.SpritePath;
-                                spriteFileName = Path.GetFileName(spritePath);
-                                SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
-                                SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);
-
-                                var sprite = SpriteLibrary.SpritesAnimatedIdle[spriteFileName];
-                                currentSpriteAnimations = sprite._animations.Keys.ToArray();
-
-                                var changeSpriteCommand = new CharacterScreeChangeSpriteCommand(spriteFileName);
-                                game.Commander.EnqueueCommand(changeSpriteCommand);
-                            }
-
-                            name = data.Name;
-                            description = data.Description;
-                            var wtd = data.WeaponTemplateData;
-                            var atd = data.ArmorTemplateData;
-
-                            if (wtd != null)
-                            {
-                                currentDamageTypeIndex = Array.IndexOf(damageTypes, wtd.DamageType);
-                                currentAttackTypeIndex = Array.IndexOf(attackTypes, wtd.AttackType);
-                                currentAmmoTypeIndex = Array.IndexOf(ammoTypes, wtd.AmmoType);
-                                minDamage = wtd.MinimumDamage;
-                                maxDamage = wtd.MaximumDamage;
-                                weaponRange = wtd.Range;
-                                ammoInClip = wtd.AmmoInClip;
-                            }
-                            if (atd != null)
-                            {
-                                armorValue = atd.ArmorValue;
-                                resistValue = atd.ResistValue;
-                                currentArmorTypeIndex = Array.IndexOf(damageTypes, atd.DamageType);
-                                currentResistTypeIndex = Array.IndexOf(damageTypes, atd.ResistType);
-
-                                //currentArmorSlotTypeIndex = Array.IndexOf(armorSlots, itemData.PossibleSlots[0]);
-                            }
-                            reader.Close();
+                            Load();
                         }
 
                         ImGui.SameLine();
@@ -337,7 +251,7 @@ namespace NamelessRogue.Engine.UI
                         }
 
                         ImGui.SameLine();
-                        if (ButtonWithSound("Pick icon", buttonSize))
+                        if (ButtonWithSound("Pick sprite", buttonSize))
                         {
                             fileIsPicking = true;
                         }
@@ -361,18 +275,15 @@ namespace NamelessRogue.Engine.UI
 
                         if (currentSpriteAnimations != null)
                         {
-                         
                             ImGui.BeginChild("emptySpace", iconSize);
-                            ImGui.EndChild(); 
-                            
-                            
+                            ImGui.EndChild();
+
                             var marginVector = new Vector2(7);
                             var cursorPos = ImGui.GetItemRectMin();
                             var spritePos = new Vector2(fieldsSizeX / 2 - iconSize.X / 2, cursorPos.Y) + marginVector;
                             ImGui.Text("Animations");
                             ImGui.SetNextItemWidth(fieldsSizeX);
 
-                         
                             var itemChanged = ImGui.Combo("##AmP", ref currentAnimationIndex, currentSpriteAnimations, currentSpriteAnimations.Length);
                             if (itemChanged)
                             {
@@ -380,14 +291,10 @@ namespace NamelessRogue.Engine.UI
                                 game.Commander.EnqueueCommand(changeSpriteCommand);
                             }
 
-                          
-
                             ImGui.GetBackgroundDrawList().AddRectFilled(spritePos, spritePos + iconSize, ColorToUInt(System.Drawing.Color.Black));
-
 
                             EditorCharacterScreenSpriteRenderSystem.SpritePosition = spritePos;
                             EditorCharacterScreenSpriteRenderSystem.SpriteSize = iconSize;
-
                         }
 
                         void _restrainValue(ref int value, int minValue = 0, int maxValue = 999)
@@ -395,6 +302,18 @@ namespace NamelessRogue.Engine.UI
                             value = value <= minValue ? minValue : value;
                             value = value >= maxValue ? maxValue : value;
                         }
+
+                        ImGui.Text("Health");
+                        ImGui.SetNextItemWidth(fieldsSizeX);
+                        ImGui.DragInt("##HealthValue", ref health, 1, 1, 999);
+
+                        ImGui.Text("Energy");
+                        ImGui.SetNextItemWidth(fieldsSizeX);
+                        ImGui.DragInt("##EnergyValue", ref energy, 1, 1, 999);
+
+                        ImGui.Text("Casts shadow?");
+                        ImGui.SetNextItemWidth(fieldsSizeX);
+                        ImGui.Checkbox("##CastsShadowValue", ref castsShadow);
 
                         ImGui.Text("Damage type");
                         ImGui.SetNextItemWidth(fieldsSizeX);
@@ -435,7 +354,10 @@ namespace NamelessRogue.Engine.UI
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.DragInt("##resistValue", ref resistValue, 1, 1, 999);
                         _restrainValue(ref resistValue);
-                       
+
+                        ImGui.Separator();
+                        ImGui.Text("Droppable items (Name - Probability)");
+
                         var fileExtensions = new List<string>() { "*.xml" };
                         if (ButtonWithSound("Add", buttonSize, true))
                         {
@@ -446,8 +368,8 @@ namespace NamelessRogue.Engine.UI
                         {
                             ImGui.OpenPopup("Droppable item picker dialog");
                             ImGui.SetNextWindowPos(new Vector2());
-
-                            if (ImGui.BeginPopupModal("Droppable item picker dialog", ref droppableItemPickerDialog, ImGuiWindowFlags.AlwaysAutoResize))
+                            bool drop_open = true;
+                            if (ImGui.BeginPopupModal("Droppable item picker dialog", ref drop_open, ImGuiWindowFlags.AlwaysAutoResize))
                             {
                                 ImGui.SetNextItemOpen(true);
                                 _fillTreeRecursive(contentDirectoryPath, fileExtensions, ref selectedDroppableItemFile);
@@ -470,23 +392,34 @@ namespace NamelessRogue.Engine.UI
                         }
 
                         ImGui.SameLine();
-                        ButtonWithSound("Delete", buttonSize, true);
-                        foreach (var droppableItem in DroppedItems)
+                        ImGui.Separator();
+                        ImGui.SetNextItemWidth(fieldsSizeX);
+
+                        foreach (var droppableItem in DroppedItems.ToList())
                         {
-                            ImGui.SetNextItemWidth(fieldsSizeX/2);
+                            ImGui.Separator();
+                            ImGui.SetNextItemWidth(fieldsSizeX / 2);
+                            ImGui.BeginChild("##itemDropText" + droppableItem.Path, new Vector2(fieldsSizeX / 2, buttonSize.Y / 2));
                             ImGui.Text(Path.GetFileName(droppableItem.Path));
+                            ImGui.EndChild();
                             ImGui.SameLine();
 
-                            ImGui.SetNextItemWidth(fieldsSizeX/2);
+                            ImGui.SetNextItemWidth(fieldsSizeX / 2 - buttonSize.X);
                             int probability = droppableItem.Probability;
-                            ImGui.DragInt("##itemDropProbability"+ droppableItem.Path, ref probability, 1, 1, 100);
+                            ImGui.DragInt("##itemDropProbability" + droppableItem.Path, ref probability, 1, 1, 100);
                             droppableItem.Probability = probability;
+                            ImGui.SameLine();
+                            if (ButtonWithSound("Remove", buttonSize / 2, true))
+                            {
+                                DroppedItems.Remove(droppableItem);
+                            }
                         }
-                    }
+                    }                   
                     ImGui.EndChild();
                     ImGui.SameLine();
                     ImGui.BeginChild("##currentCharacters", new Vector2((uiSize.X / 3 - 100), uiSize.Y - 50), true);
                     {
+                    
                         ImGui.Text("Characters");
 
                         if (currentFilesOfSelectedItemTypeNames != null)
@@ -500,6 +433,109 @@ namespace NamelessRogue.Engine.UI
             }
             ImGui.End();
 
+        }
+
+        private void Load()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
+            TextReader reader = new StreamReader(currentFilesOfSelectedItemType[currentSelectedFile]);
+            var data = (CharacterTemplateData)serializer.Deserialize(reader);
+
+            if (data.SpritePath != null && data.SpritePath != string.Empty)
+            {
+                spritePath = contentDirectoryPath + "\\" + data.SpritePath;
+                spriteFileName = Path.GetFileName(spritePath);
+                SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
+                SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);
+
+                var sprite = SpriteLibrary.SpritesAnimatedIdle[spriteFileName];
+                currentSpriteAnimations = sprite._animations.Keys.ToArray();
+
+                var changeSpriteCommand = new CharacterScreeChangeSpriteCommand(spriteFileName);
+                game.Commander.EnqueueCommand(changeSpriteCommand);
+            }
+
+            name = data.Name;
+            description = data.Description;
+            health = data.Health;
+            energy = data.Energy;
+            castsShadow = data.CastsShadow;
+            var wtd = data.WeaponTemplateData;
+            var atd = data.ArmorTemplateData;
+
+            if (wtd != null)
+            {
+                currentDamageTypeIndex = Array.IndexOf(damageTypes, wtd.DamageType);
+                currentAttackTypeIndex = Array.IndexOf(attackTypes, wtd.AttackType);
+                currentAmmoTypeIndex = Array.IndexOf(ammoTypes, wtd.AmmoType);
+                minDamage = wtd.MinimumDamage;
+                maxDamage = wtd.MaximumDamage;
+                weaponRange = wtd.Range;
+                ammoInClip = wtd.AmmoInClip;
+            }
+            if (atd != null)
+            {
+                armorValue = atd.ArmorValue;
+                resistValue = atd.ResistValue;
+                currentArmorTypeIndex = Array.IndexOf(damageTypes, atd.DamageType);
+                currentResistTypeIndex = Array.IndexOf(damageTypes, atd.ResistType);
+
+                //currentArmorSlotTypeIndex = Array.IndexOf(armorSlots, itemData.PossibleSlots[0]);
+            }
+
+            DroppedItems = data.DroppedItems;
+
+            reader.Close();
+        }
+
+        private void Save(string directory)
+        {
+            CharacterTemplateData data = new CharacterTemplateData();
+            data.Name = name;
+            data.Description = description;
+
+            data.Health = health;
+            data.Energy = energy;
+            data.CastsShadow = castsShadow;
+
+            if (spritePath != string.Empty)
+            {
+                if (!Directory.Exists(directory + "\\Sprites\\"))
+                {
+                    Directory.CreateDirectory(directory + "\\Sprites\\");
+                }
+
+                var newIconLocation = directory + "\\Sprites\\" + spriteFileName;
+                if (spritePath != newIconLocation)                {
+                    
+                    File.Delete(newIconLocation);
+                    File.Copy(spritePath, newIconLocation, true);
+                }
+                data.SpritePath = Path.GetRelativePath(directory, directory + "\\Sprites\\" + spriteFileName);
+            }
+            var wtd = new WeaponTemplateData();
+            wtd.DamageType = damageTypes[currentDamageTypeIndex];
+            wtd.AttackType = attackTypes[currentAttackTypeIndex];
+            wtd.MinimumDamage = minDamage;
+            wtd.MaximumDamage = maxDamage;
+            wtd.AmmoInClip = ammoInClip;
+            wtd.Range = weaponRange;
+            wtd.AmmoType = ammoTypes[currentAmmoTypeIndex];
+            data.WeaponTemplateData = wtd;
+
+            var atd = new ArmorTemplateData();
+            atd.ResistValue = resistValue;
+            atd.ArmorValue = armorValue;
+            data.ArmorTemplateData = atd;
+
+            data.DroppedItems = DroppedItems;
+
+            using (TextWriter writer = new StreamWriter(directory + name + ".xml"))
+            {
+                XmlSerializer ser = new XmlSerializer(typeof(CharacterTemplateData));
+                ser.Serialize(writer, data);
+                currentFilesOfSelectedItemType = null;
+            }
         }
     }
 }

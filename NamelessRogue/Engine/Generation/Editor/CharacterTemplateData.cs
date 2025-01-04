@@ -21,6 +21,18 @@ namespace NamelessRogue.Engine.Generation.Editor
         [XmlElement]
         public string SpritePath { get; set; }
 
+        [XmlElement]
+        public bool CastsShadow { get; set; }
+       
+        [XmlElement]
+        public int Health { get; set; }
+
+        [XmlElement]
+        public int Energy { get; set; }
+
+        [XmlElement]
+        public string FactionId { get; set; }
+
         [XmlArray]
         public List<DroppedItem> DroppedItems { get; set; }
 
@@ -28,6 +40,7 @@ namespace NamelessRogue.Engine.Generation.Editor
         public WeaponTemplateData WeaponTemplateData { get; set; }
         [XmlElement]
         public ArmorTemplateData ArmorTemplateData { get; set; }
+
     }
 
     [XmlRoot]

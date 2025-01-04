@@ -11,10 +11,13 @@ using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Components.WorldBoardComponents;
+using NamelessRogue.Engine.Generation.Editor;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Entity = NamelessRogue.Engine.Infrastructure.Entity;
 
@@ -113,5 +116,54 @@ namespace NamelessRogue.Engine.Factories
 
 			return playerCharacter;
         }
+
+
+        public static Entity CreateCharacterFromData(NamelessGame game, Vector3Int position, CharacterTemplateData data)
+        {
+
+            var spritePath = data.SpritePath;
+            var spriteFileName = Path.GetFileName(spritePath);
+            SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
+            SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);
+
+            var sprite = SpriteLibrary.SpritesAnimatedIdle[spriteFileName];;
+
+            var pos = new Position(position.X,position.Y, position.Z);
+            Entity character = new Entity();
+            character.AddComponent(new Character(data.FactionId));
+            character.AddComponent(new AIControlled() { Affinity = Affinity.Hostile });
+            character.AddComponent(new BasicAi());
+            character.AddComponent(pos);
+            character.AddComponent(new Drawable(Path.GetFileName(data.SpritePath), new Engine.Utility.Color(1), castsShadow: data.CastsShadow));
+            character.AddComponent(new SpritedObject(false, sprite._animations.Keys.First()));
+            character.AddComponent(new Description(data.Name, data.Description));
+            var holder = new ItemsHolder();
+            character.AddComponent(holder);
+            character.AddComponent(new OccupiesTile());
+            character.AddComponent(new FlowMoveComponent());
+
+            var stats = new CharacterStats();
+            stats.Health.Value = data.Health;
+            stats.Health.MaxValue = data.Energy;
+            var atd = data.ArmorTemplateData;
+            var wtd = data.WeaponTemplateData;           
+            stats.Armor.Add(new ArmorStats() { DamageType = atd.DamageType, Value = new SimpleStat(atd.ArmorValue, 0, 999) });
+            stats.WeaponStats.Add(new WeaponStats(wtd.MinimumDamage, wtd.MaximumDamage, wtd.Range, wtd.AttackType));
+
+            character.AddComponent(stats);
+
+            Entity accumulatorEntiry = new Entity();
+            accumulatorEntiry.AddComponent(new CharacterStats());
+
+
+            character.AddComponent(new ModifiersCollection(accumulatorEntiry));
+
+            character.AddComponent(new ActionPoints() { Points = 100 });
+            game.WorldProvider.MoveEntity(character, position);
+
+            return character;
+
+        }
+
     }
 }
