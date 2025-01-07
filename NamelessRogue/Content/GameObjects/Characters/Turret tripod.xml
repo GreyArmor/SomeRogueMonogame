@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Name>Drone recon</Name>
+  <Name>Turret tripod</Name>
   <Description />
-  <SpritePath>Sprites\drone_recon.ase</SpritePath>
+  <SpritePath>Sprites\turret_tripod.ase</SpritePath>
   <CastsShadow>true</CastsShadow>
-  <Immobile>false</Immobile>
+  <Immobile>true</Immobile>
   <Health>10</Health>
-  <Energy>10</Energy>
-  <MovementSpeed>49</MovementSpeed>
+  <Energy>0</Energy>
+  <MovementSpeed>1</MovementSpeed>
   <DroppedItems>
     <DroppedItem>
       <Path>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\GameObjects\Consumable\Battery.xml</Path>
-      <Probability>100</Probability>
-    </DroppedItem>
-    <DroppedItem>
-      <Path>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\GameObjects\Consumable\Toxic beaker.xml</Path>
-      <Probability>50</Probability>
+      <Probability>90</Probability>
     </DroppedItem>
   </DroppedItems>
   <WeaponTemplateData>
     <MinimumDamage>0</MinimumDamage>
     <MaximumDamage>10</MaximumDamage>
     <Range>1</Range>
-    <AttackType>Close</AttackType>
+    <AttackType>Ranged</AttackType>
     <DamageType>Physical</DamageType>
     <AmmoType>LowCaliber</AmmoType>
     <AmmoInClip>0</AmmoInClip>

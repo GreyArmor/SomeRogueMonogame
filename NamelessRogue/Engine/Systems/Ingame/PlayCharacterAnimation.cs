@@ -1,20 +1,23 @@
 ﻿using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components._3D;
+using NamelessRogue.Engine.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AnimationType = NamelessRogue.Engine.Infrastructure.AnimationType;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
     internal class PlayCharacterAnimationCommand : ICommand
     {
-        public PlayCharacterAnimationCommand(IEntity entity, string animationName) {
+        public PlayCharacterAnimationCommand(IEntity entity, AnimationType type) {
             Entity = entity;
-            AnimationName = animationName;
+            Type = type;
         }
 
         public IEntity Entity { get; }
-        public string AnimationName { get; }
+        public AnimationType Type { get; }
     }
 }

@@ -789,13 +789,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var spriteId = objectToDraw.Id;
                             int tileHeight = game.GetSettings().GetFontSizeZoomed();
                             int tileWidth = game.GetSettings().GetFontSizeZoomed();
-                            if (SpriteLibrary.SpritesAnimatedIdle.TryGetValue(spriteId, out var sprite))
+                            if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
                             {                                
                                 sprite.SetCurrentLoop(objectToDraw.AnimationName);
                                 sprite.Update(gameTime);
-                                if(objectToDraw.HasShadow)
+                                int shadowOffset = 5 / game.GetSettings().Zoom;
+                                if (objectToDraw.HasShadow)
                                 {
-                                    sprite.Draw(game, gameTime, new Vector2((x * tileWidth) + 5, (y * tileHeight) + 5), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.Black);
+                                    sprite.Draw(game, gameTime, new Vector2((x * tileWidth) + shadowOffset, (y * tileHeight) + shadowOffset), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.Black);
                                 }
                                 sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(tileWidth, tileHeight) , new Vector2(1f), Microsoft.Xna.Framework.Color.White);
                             }

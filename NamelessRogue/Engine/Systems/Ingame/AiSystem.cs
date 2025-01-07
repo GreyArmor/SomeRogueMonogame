@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
+using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.Status;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
@@ -54,6 +55,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     AIControlled ac = entity.GetComponentOfType<AIControlled>();
                     Dead dead = entity.GetComponentOfType<Dead>();
+
+                    var stats = entity.GetComponentOfType<CharacterStats>();
+
+                    if(stats != null && stats.Immobile)
+                    {
+                        continue;
+                    }
+
                     var actionPoints = entity.GetComponentOfType<ActionPoints>();
                     if (dead == null && actionPoints.Points >= 0)
                     {

@@ -82,6 +82,7 @@ namespace NamelessRogue.Engine.UI
         string description = "";
         int health = 10;
         int energy = 0;
+        int movementSpeed = 50;
         int maxDamage = 10;
         int minDamage = 0;
         int ammoInClip = 0;
@@ -100,6 +101,7 @@ namespace NamelessRogue.Engine.UI
         int resistModValue = 10;
 
         bool castsShadow = false;
+        bool immobile = false;
 
         string contentDirectoryPath = string.Empty;
         bool fileIsPicking = false;
@@ -207,7 +209,7 @@ namespace NamelessRogue.Engine.UI
                             SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
                             SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);
 
-                            var sprite = SpriteLibrary.SpritesAnimatedIdle[spriteFileName];
+                            var sprite = SpriteLibrary.SpritesAnimated[spriteFileName];
                             currentSpriteAnimations = sprite._animations.Keys.ToArray();
 
                             var changeSpriteCommand = new CharacterScreeChangeSpriteCommand(spriteFileName);
@@ -303,6 +305,16 @@ namespace NamelessRogue.Engine.UI
                             value = value >= maxValue ? maxValue : value;
                         }
 
+                        ImGui.Text("Casts shadow?");
+                        ImGui.SameLine();
+                        ImGui.Checkbox("##CastsShadowValue", ref castsShadow);
+
+                        ImGui.SameLine();
+
+                        ImGui.Text("Immobile?"); 
+                        ImGui.SameLine();
+                        ImGui.Checkbox("##ImmobileValue", ref immobile);
+
                         ImGui.Text("Health");
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.DragInt("##HealthValue", ref health, 1, 1, 999);
@@ -311,9 +323,11 @@ namespace NamelessRogue.Engine.UI
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.DragInt("##EnergyValue", ref energy, 1, 1, 999);
 
-                        ImGui.Text("Casts shadow?");
+                       
+                        ImGui.Text("Movement speed");
                         ImGui.SetNextItemWidth(fieldsSizeX);
-                        ImGui.Checkbox("##CastsShadowValue", ref castsShadow);
+                        ImGui.DragInt("##MovementSpeed", ref movementSpeed, 1, 1, 999);
+
 
                         ImGui.Text("Damage type");
                         ImGui.SetNextItemWidth(fieldsSizeX);
@@ -448,7 +462,7 @@ namespace NamelessRogue.Engine.UI
                 SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
                 SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);
 
-                var sprite = SpriteLibrary.SpritesAnimatedIdle[spriteFileName];
+                var sprite = SpriteLibrary.SpritesAnimated[spriteFileName];
                 currentSpriteAnimations = sprite._animations.Keys.ToArray();
 
                 var changeSpriteCommand = new CharacterScreeChangeSpriteCommand(spriteFileName);
@@ -459,7 +473,9 @@ namespace NamelessRogue.Engine.UI
             description = data.Description;
             health = data.Health;
             energy = data.Energy;
+            movementSpeed = data.MovementSpeed;
             castsShadow = data.CastsShadow;
+            immobile = data.Immobile;
             var wtd = data.WeaponTemplateData;
             var atd = data.ArmorTemplateData;
 
@@ -496,8 +512,9 @@ namespace NamelessRogue.Engine.UI
 
             data.Health = health;
             data.Energy = energy;
+            data.MovementSpeed = movementSpeed;
             data.CastsShadow = castsShadow;
-
+            data.Immobile = immobile;
             if (spritePath != string.Empty)
             {
                 if (!Directory.Exists(directory + "\\Sprites\\"))

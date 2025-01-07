@@ -46,8 +46,8 @@ namespace NamelessRogue.Engine.Systems.MainMenu
         public MainMenuBackgroundRenderingSystem(NamelessGame game)
 		{
 			_spriteBatch = new SpriteBatch(game.GraphicsDevice, 6400);
-			ZeroAndOne = SpriteLibrary.SpritesAnimatedIdle["ZeroAndOne"];
-            ZeroAndOne2 = SpriteLibrary.SpritesAnimatedIdle["ZeroAndOne2"];
+			ZeroAndOne = SpriteLibrary.SpritesAnimated["ZeroAndOne"];
+            ZeroAndOne2 = SpriteLibrary.SpritesAnimated["ZeroAndOne2"];
             screenWidth = game.GetActualWidth();
             for (int i = 0; i < 10; i++)
 			{

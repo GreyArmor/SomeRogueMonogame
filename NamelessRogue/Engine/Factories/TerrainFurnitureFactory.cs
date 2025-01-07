@@ -71,7 +71,7 @@ namespace NamelessRogue.Engine.Factories
                     entity.AddComponent(new BlocksVision());
                 }
                 entity.AddComponent(new Furniture());
-                entity.AddComponent(new SpritedObject(true, "idle"));
+                entity.AddComponent(new SpritedObject(true, id, "idle"));
                 AnimatedFurnitureDisctionary.Add(id, entity);
                 return entity;
             }

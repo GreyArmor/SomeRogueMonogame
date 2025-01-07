@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Aseprite;
+using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.shell;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,6 +13,15 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
+
+    public enum AnimationType
+    {
+        Idle,
+        Attack,
+        Death,
+        Dead,
+    }
+
     internal class AnimatedSpriteNR
     {
         public int Width { get; private set; }
@@ -20,19 +31,43 @@ namespace NamelessRogue.Engine.Infrastructure
             Width = width;
             Height = height;
             Size = new Vector2(width, height);
+
+            foreach (AnimationType enumValue in Enum.GetValues(typeof(AnimationType)))
+            {
+                _animationsByType[enumValue] = new List<string>();
+            }
         }
 
         public Dictionary<string, AnimatedSprite> _animations = new Dictionary<string, AnimatedSprite>();
+
+        public Dictionary<AnimationType, List<string>> _animationsByType = new Dictionary<AnimationType, List<string>>();
 
         AnimatedSprite currentAnimation;
         public void Add(string name, AnimatedSprite sprite)
         {
             _animations.Add(name, sprite);
+
+            AddToTypeCollactionIfAppropriate(name, "idle", AnimationType.Idle);
+            AddToTypeCollactionIfAppropriate(name, "attack", AnimationType.Attack);
+            AddToTypeCollactionIfAppropriate(name, "death", AnimationType.Death);
+            AddToTypeCollactionIfAppropriate(name, "dead", AnimationType.Dead);
+        }
+
+        private void AddToTypeCollactionIfAppropriate(string name, string type, AnimationType animationType)
+        {
+            if (name.Contains(type))
+            {
+                _animationsByType[animationType].Add(name);
+            }
         }
 
         public void Remove(string name)
         {
             _animations.Remove(name);
+            foreach (var animationList in _animationsByType.Values)
+            {
+                animationList.Remove(name);
+            }
         }
 
         public void SetCurrentLoop(string animationName)
@@ -61,10 +96,8 @@ namespace NamelessRogue.Engine.Infrastructure
             else
             {
                 currentAnimation.Color = color;
-            }
-            
+            }            
             game.Batch.Draw(currentAnimation.TextureRegion, new Microsoft.Xna.Framework.Rectangle(position.ToPoint(), (size * scale).ToPoint()), color);
-
         }
     }
 }

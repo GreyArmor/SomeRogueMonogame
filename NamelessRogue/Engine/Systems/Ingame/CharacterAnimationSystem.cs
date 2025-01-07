@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using MonoGame.Extended.ECS.Systems;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Environment;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
 using System;
@@ -23,20 +25,33 @@ namespace NamelessRogue.Engine.Systems.Ingame
             foreach (var entity in RegisteredEntities)
             {
                 var sprited = entity.GetComponentOfType<SpritedObject>();
-                if (sprited.CurrentAnimationTimeLeft<=0)
-                { 
-                    sprited.CurrentAnimationTimeLeft = 1000;
-                    var idleIndex = Random.Shared.Next(1, 3);
-                    sprited.CurrentAnimation = @$"idle_{idleIndex}";
+                if (!sprited.IsStatic)
+                {
+                    if (sprited.CurrentAnimationTimeLeft <= 0)
+                    {
+                        sprited.CurrentAnimationTimeLeft = 1000;
+
+                        var sprite = SpriteLibrary.SpritesAnimated[sprited.SpriteId];
+
+                        var index = Random.Shared.Next(0, sprite._animationsByType[AnimationType.Idle].Count);
+                        var animationName = sprite._animationsByType[AnimationType.Idle][index];
+                        
+                        sprited.CurrentAnimation = animationName;
+                    }
                 }
             }
-
 
             while (namelessGame.Commander.DequeueCommand(out PlayCharacterAnimationCommand command))
             {
                 var entity = command.Entity;
                 var sprited = entity.GetComponentOfType<SpritedObject>();
-                sprited.CurrentAnimation = "attack_2";
+
+                var sprite = SpriteLibrary.SpritesAnimated[sprited.SpriteId];
+
+                var index = Random.Shared.Next(0, sprite._animationsByType[command.Type].Count);
+                var animationName = sprite._animationsByType[command.Type][index];
+
+                sprited.CurrentAnimation = animationName;
                 sprited.CurrentAnimationTimeLeft = 1000;
             }
         }

@@ -21,9 +21,10 @@ using AnimatedSprite = MonoGame.Aseprite.AnimatedSprite;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
+
 	internal class SpriteLibrary
 	{
-		public static readonly Dictionary<string, AnimatedSpriteNR> SpritesAnimatedIdle = new Dictionary<string, AnimatedSpriteNR>();
+		public static readonly Dictionary<string, AnimatedSpriteNR> SpritesAnimated = new Dictionary<string, AnimatedSpriteNR>();
         public static readonly Dictionary<string, Sprite> SpritesStatic = new Dictionary<string, Sprite>();
         static NamelessGame game;
 
@@ -52,12 +53,12 @@ namespace NamelessRogue.Engine.Infrastructure
             }
 
             sprite.SetCurrentLoop(firstAnimation);
-            SpritesAnimatedIdle.Add(id, sprite);
+            SpritesAnimated.Add(id, sprite);
         }
 
         public static void RemoveAnimatedSprite(string id)
         {
-            SpritesAnimatedIdle.Remove(id);
+            SpritesAnimated.Remove(id);
         }
 
             public static void AddStaticSprite(string id, string path)

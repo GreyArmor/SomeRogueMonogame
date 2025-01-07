@@ -21,7 +21,7 @@ namespace NamelessRogue.Engine.Systems.Editors
         {
             while (namelessGame.Commander.DequeueCommand(out CharacterScreeChangeSpriteCommand command))
             {
-                currentSprite = SpriteLibrary.SpritesAnimatedIdle[command.SpriteId];
+                currentSprite = SpriteLibrary.SpritesAnimated[command.SpriteId];
             }
 
             while (namelessGame.Commander.DequeueCommand(out CharacterScreeChangeSpriteAnimationCommand command))

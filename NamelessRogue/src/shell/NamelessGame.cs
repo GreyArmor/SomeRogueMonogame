@@ -306,8 +306,8 @@ namespace NamelessRogue.shell
 				
 				foreach (var charactersFile in characters)
 				{
-					characterCreationOffset.Y++;
-                    characterCreationOffset.Y++;
+					characterCreationOffset.Y--;
+                    characterCreationOffset.Y--;
                     XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
                     TextReader reader = new StreamReader(charactersFile);
                     var data = (CharacterTemplateData)serializer.Deserialize(reader);

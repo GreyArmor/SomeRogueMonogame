@@ -28,8 +28,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public static Vector2 BuffsPosition = new Vector2(20, 100) { };
         public HudElementsRenderingSystem(GameSettings settings) : base(settings)
         {
-            healthBar = SpriteLibrary.SpritesAnimatedIdle["healthbar"];
-            energyBar = SpriteLibrary.SpritesAnimatedIdle["energybar"];
+            healthBar = SpriteLibrary.SpritesAnimated["healthbar"];
+            energyBar = SpriteLibrary.SpritesAnimated["energybar"];
         }
 
         public override void Update(GameTime gameTime, NamelessGame game)

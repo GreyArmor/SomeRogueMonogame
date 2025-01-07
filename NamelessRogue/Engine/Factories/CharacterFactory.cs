@@ -120,13 +120,12 @@ namespace NamelessRogue.Engine.Factories
 
         public static Entity CreateCharacterFromData(NamelessGame game, Vector3Int position, CharacterTemplateData data)
         {
-
-            var spritePath = "Content\\" + data.SpritePath;
+            var spritePath = "Content\\GameObjects\\Characters\\" + data.SpritePath;
             var spriteFileName = Path.GetFileName(spritePath);
             SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
             SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);
 
-            var sprite = SpriteLibrary.SpritesAnimatedIdle[spriteFileName];;
+            var sprite = SpriteLibrary.SpritesAnimated[spriteFileName];;
 
             var pos = new Position(position.X,position.Y, position.Z);
             Entity character = new Entity();
@@ -135,7 +134,7 @@ namespace NamelessRogue.Engine.Factories
             character.AddComponent(new BasicAi());
             character.AddComponent(pos);
             character.AddComponent(new Drawable(Path.GetFileName(data.SpritePath), new Engine.Utility.Color(1), castsShadow: data.CastsShadow));
-            character.AddComponent(new SpritedObject(false, sprite._animations.Keys.First()));
+            character.AddComponent(new SpritedObject(false, spriteFileName, sprite._animations.Keys.First()));
             character.AddComponent(new Description(data.Name, data.Description));
             var holder = new ItemsHolder();
             character.AddComponent(holder);
@@ -145,6 +144,8 @@ namespace NamelessRogue.Engine.Factories
             var stats = new CharacterStats();
             stats.Health.Value = data.Health;
             stats.Health.MaxValue = data.Energy;
+            stats.MovementSpeed.Value = data.MovementSpeed;
+            stats.Immobile = data.Immobile;
             var atd = data.ArmorTemplateData;
             var wtd = data.WeaponTemplateData;           
             stats.Armor.Add(new ArmorStats() { DamageType = atd.DamageType, Value = new SimpleStat(atd.ArmorValue, 0, 999) });
@@ -155,14 +156,12 @@ namespace NamelessRogue.Engine.Factories
             Entity accumulatorEntiry = new Entity();
             accumulatorEntiry.AddComponent(new CharacterStats());
 
-
             character.AddComponent(new ModifiersCollection(accumulatorEntiry));
 
             character.AddComponent(new ActionPoints() { Points = 100 });
             game.WorldProvider.MoveEntity(character, position);
 
             return character;
-
         }
 
     }

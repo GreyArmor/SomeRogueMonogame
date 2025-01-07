@@ -8,13 +8,16 @@ namespace NamelessRogue.Engine.Components.Environment
 {
     public class SpritedObject : Component
     {
-        public SpritedObject(bool isStatic, string idleAnimation = "")
+        public SpritedObject(bool isStatic, string spriteId = "", string idleAnimation = "")
         {
             IsStatic = isStatic;
+            SpriteId = spriteId;
             IdleAnimation = idleAnimation;
+            CurrentAnimation = idleAnimation;
         }
 
         public bool IsStatic { get; }
+        public string SpriteId { get; }
         public string IdleAnimation { get; set; }
 
         public string CurrentAnimation { get; set; }
@@ -22,7 +25,7 @@ namespace NamelessRogue.Engine.Components.Environment
         public float CurrentAnimationTimeLeft { get; set; }
         public override IComponent Clone()
         {
-            return new SpritedObject(IsStatic, IdleAnimation);
+            return new SpritedObject(IsStatic, SpriteId, IdleAnimation);
         }
     }
 }
