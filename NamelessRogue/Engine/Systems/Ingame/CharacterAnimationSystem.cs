@@ -46,13 +46,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var entity = command.Entity;
                 var sprited = entity.GetComponentOfType<SpritedObject>();
 
-                var sprite = SpriteLibrary.SpritesAnimated[sprited.SpriteId];
+                if (sprited!=null && !sprited.IsStatic)
+                {
+                    var sprite = SpriteLibrary.SpritesAnimated[sprited.SpriteId];
 
-                var index = Random.Shared.Next(0, sprite._animationsByType[command.Type].Count);
-                var animationName = sprite._animationsByType[command.Type][index];
+                    var index = Random.Shared.Next(0, sprite._animationsByType[command.Type].Count);
+                    var animationName = sprite._animationsByType[command.Type][index];
 
-                sprited.CurrentAnimation = animationName;
-                sprited.CurrentAnimationTimeLeft = 1000;
+                    sprited.CurrentAnimation = animationName;
+                    sprited.CurrentAnimationTimeLeft = 1000;
+                }
             }
         }
     }

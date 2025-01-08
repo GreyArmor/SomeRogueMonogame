@@ -63,9 +63,9 @@ namespace NamelessRogue.Engine.UI
             string workingDirectory = Environment.CurrentDirectory;
 #if DEBUG
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-            contentDirectoryPath = projectDirectory + "\\Content";
+            contentDirectoryPath = projectDirectory + "\\Content\\GameObjects\\Characters";
 #else
-            contentDirectoryPath = workingDirectory+"\\Content";
+            contentDirectoryPath = workingDirectory + "\\Content\\GameObjects\\Characters\\";
 #endif
         }
 
@@ -176,7 +176,7 @@ namespace NamelessRogue.Engine.UI
         /// </summary>
         public override void DrawLayout()
         {
-            var directory = contentDirectoryPath + "\\GameObjects\\Characters\\";
+            var directory = contentDirectoryPath;
 
                 if (!Directory.Exists(directory))
                 {
