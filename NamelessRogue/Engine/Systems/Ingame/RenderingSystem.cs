@@ -793,7 +793,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {                                
                                 sprite.SetCurrentLoop(objectToDraw.AnimationName);
                                 sprite.Update(gameTime);
-                                int shadowOffset = 5 / game.GetSettings().Zoom;
+                                int shadowOffset = 10 / game.GetSettings().Zoom;
                                 if (objectToDraw.HasShadow)
                                 {
                                     sprite.Draw(game, gameTime, new Vector2((x * tileWidth) + shadowOffset, (y * tileHeight) + shadowOffset), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.Black);
