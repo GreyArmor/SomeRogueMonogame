@@ -9,13 +9,13 @@
     <Slot>LefHand</Slot>
     <Slot>RightHand</Slot>
   </PossibleSlots>
-  <WeapomTemplateData>
-    <MinimumDamage>1</MinimumDamage>
+  <WeaponTemplateData>
+    <MinimumDamage>0</MinimumDamage>
     <MaximumDamage>10</MaximumDamage>
-    <Range>10</Range>
-    <AttackType>Close</AttackType>
-    <DamageType>Ballistic</DamageType>
+    <Range>21</Range>
+    <AttackType>Ranged</AttackType>
+    <DamageType>Physical</DamageType>
     <AmmoType>LowCaliber</AmmoType>
-    <AmmoInClip>6</AmmoInClip>
-  </WeapomTemplateData>
+    <AmmoInClip>0</AmmoInClip>
+  </WeaponTemplateData>
 </ItemTemplateData>

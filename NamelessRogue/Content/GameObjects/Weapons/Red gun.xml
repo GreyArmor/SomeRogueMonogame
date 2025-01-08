@@ -12,8 +12,8 @@
   <WeaponTemplateData>
     <MinimumDamage>0</MinimumDamage>
     <MaximumDamage>10</MaximumDamage>
-    <Range>1</Range>
-    <AttackType>Close</AttackType>
+    <Range>26</Range>
+    <AttackType>Ranged</AttackType>
     <DamageType>Physical</DamageType>
     <AmmoType>LowCaliber</AmmoType>
     <AmmoInClip>0</AmmoInClip>
