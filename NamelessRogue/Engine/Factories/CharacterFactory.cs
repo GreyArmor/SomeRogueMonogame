@@ -75,7 +75,7 @@ namespace NamelessRogue.Engine.Factories
             Entity playerCharacter = new Entity();
             playerCharacter.AddComponent(new Character("Enemy"));
             playerCharacter.AddComponent(new AIControlled() { Affinity = Affinity.Hostile });
-            playerCharacter.AddComponent(new BasicAi());
+            playerCharacter.AddComponent(new FollowPlayerAi());
             playerCharacter.AddComponent(position);
             playerCharacter.AddComponent(new Drawable("drone_recon", new Engine.Utility.Color(0.9, 0.9, 0.9), castsShadow:true));
             playerCharacter.AddComponent(new SpritedObject(false, "idle_2"));
@@ -131,7 +131,7 @@ namespace NamelessRogue.Engine.Factories
             Entity character = new Entity();
             character.AddComponent(new Character(data.FactionId));
             character.AddComponent(new AIControlled() { Affinity = Affinity.Hostile });
-            character.AddComponent(new BasicAi());
+           
             character.AddComponent(pos);
             character.AddComponent(new Drawable(Path.GetFileName(data.SpritePath), new Engine.Utility.Color(1), castsShadow: data.CastsShadow));
             character.AddComponent(new SpritedObject(false, spriteFileName, sprite._animations.Keys.First()));
@@ -139,13 +139,27 @@ namespace NamelessRogue.Engine.Factories
             var holder = new ItemsHolder();
             character.AddComponent(holder);
             character.AddComponent(new OccupiesTile());
-            character.AddComponent(new FlowMoveComponent());
+            character.AddComponent(new FlowMoveComponent()); 
+            
+            
+            
+         
 
             var stats = new CharacterStats();
             stats.Health.Value = data.Health;
             stats.Health.MaxValue = data.Energy;
             stats.MovementSpeed.Value = data.MovementSpeed;
             stats.Immobile = data.Immobile;
+
+            if(stats.Immobile)
+            {
+                character.AddComponent(new HostileTurretAI());
+            }
+            else
+            {
+                character.AddComponent(new FollowPlayerAi());
+            }
+
             var atd = data.ArmorTemplateData;
             var wtd = data.WeaponTemplateData;           
             stats.Armor.Add(new ArmorStats() { DamageType = atd.DamageType, Value = new SimpleStat(atd.ArmorValue, 0, 999) });

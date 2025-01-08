@@ -24,7 +24,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
             Signature = new HashSet<Type>();
             Signature.Add(typeof(AIControlled));
             Signature.Add(typeof(ActionPoints));
-            Signature.Add(typeof(BasicAi));
         }
 
 
@@ -58,36 +57,72 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                     var stats = entity.GetComponentOfType<CharacterStats>();
 
-                    if(stats != null && stats.Immobile)
-                    {
-                        continue;
-                    }
-
                     var actionPoints = entity.GetComponentOfType<ActionPoints>();
                     if (dead == null && actionPoints.Points >= 0)
                     {
-                        BasicAi basicAi = entity.GetComponentOfType<BasicAi>();
+                        FollowPlayerAi basicAi = entity.GetComponentOfType<FollowPlayerAi>();
+                        HostileTurretAI hostileTurretAI = entity.GetComponentOfType<HostileTurretAI>();
+
                         Position playerPosition = namelessGame.PlayerEntity
                             .GetComponentOfType<Position>();
 
-                        switch (basicAi.State)
+
+                        if (basicAi != null)
                         {
-                            case BasicAiStates.Idle:
-                            case BasicAiStates.Moving:
-                                var pPos = playerPosition.Point;
-                                MoveTo(entity, namelessGame, new Point(pPos.X, pPos.Y), true);
-                                var route = basicAi.Route;
-                                if (route.Count == 0)
-                                {
-                                    basicAi.State = (BasicAiStates.Idle);
-                                }
+                            switch (basicAi.State)
+                            {
+                                case BasicAiStates.Idle:
+                                case BasicAiStates.Moving:
+                                    var pPos = playerPosition.Point;
+                                    MoveTo(entity, namelessGame, new Point(pPos.X, pPos.Y), true);
+                                    var route = basicAi.Route;
+                                    if (route.Count == 0)
+                                    {
+                                        basicAi.State = (BasicAiStates.Idle);
+                                    }
+                                    break;
+                                default:
+                                    break;
 
-                                break;
-                            case BasicAiStates.Attacking:
-                                break;
-                            default:
-                                break;
+                            }
+                        }
+                        else if (hostileTurretAI != null)
+                        {
+                            switch (hostileTurretAI.State)
+                            {
+                                case HostileTurretState.Idle:
+                                    {
+                                        var pPos = playerPosition.Point;
+                                        var entityPos = entity.GetComponentOfType<Position>().Point;
+                                        var distance = (pPos - entityPos).Length();
 
+                                        var visionRange = 6;
+                                        if (distance <= visionRange)
+                                        {
+                                            hostileTurretAI.Target = playerEntity;
+                                            hostileTurretAI.State = HostileTurretState.Attacking;
+                                            goto case HostileTurretState.Attacking;
+                                        }
+                                    }
+                                    break;
+                                case HostileTurretState.Attacking:
+                                    {
+                                        var targetPos = hostileTurretAI.Target.GetComponentOfType<Position>().Point;
+                                        var entityPos = entity.GetComponentOfType<Position>().Point;
+                                        var distance = (targetPos - entityPos).Length();
+                                        var visionRange = 6;
+
+                                        if (distance <= visionRange)
+                                        {
+                                            FireWeaponCommand command = new FireWeaponCommand(entity, targetPos);
+                                            namelessGame.Commander.EnqueueCommand(command);
+
+                                            entity.GetComponentOfType<ActionPoints>().Points = -100;
+                                        }
+
+                                    }
+                                    break;
+                            }
                         }
                     }
                 }
@@ -103,7 +138,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
 
             Position position = movableEntity.GetComponentOfType<Position>();
-            BasicAi basicAi = movableEntity.GetComponentOfType<BasicAi>();
+            FollowPlayerAi basicAi = movableEntity.GetComponentOfType<FollowPlayerAi>();
             var route = basicAi.Route;
 
             if (!route.Any())

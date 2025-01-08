@@ -1,5 +1,6 @@
 ﻿using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
 {
     internal class FireWeaponCommand : Abstraction.ICommand
     {
+        public FireWeaponCommand(IEntity source, Vector3Int target)
+        {
+            Source = source;
+            Target = target;
+        }
+
+        public IEntity Source { get; }
+        public Vector3Int Target { get; }
     }
 
     internal class AttachToTargetCommand : Abstraction.ICommand

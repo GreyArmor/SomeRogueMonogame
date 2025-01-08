@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
 {
-    public class BasicAi : Component {
+    public class FollowPlayerAi : Component {
         private Queue<Point> route;
 
         private BasicAiStates state;
-        public BasicAi() {
+        public FollowPlayerAi() {
             route = new Queue<Point>();
             state = BasicAiStates.Idle;
         }
@@ -28,7 +29,7 @@ namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
 
         public override IComponent Clone()
         {
-           return new BasicAi()
+           return new FollowPlayerAi()
            {
                DestinationPoint = this.DestinationPoint,
                State = this.State,

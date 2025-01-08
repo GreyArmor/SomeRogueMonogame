@@ -30,8 +30,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
 
                 IEntity entityToKill = command.getToKill();
-                entityToKill.AddComponent(new Dead());
 
+                var dead = entityToKill.GetComponentOfType<Dead>();
+                if (dead == null)
+                {
+                    entityToKill.AddComponent(new Dead());
+                }
                 Drawable drawable = entityToKill.GetComponentOfType<Drawable>();
                 if (drawable != null)
                 {

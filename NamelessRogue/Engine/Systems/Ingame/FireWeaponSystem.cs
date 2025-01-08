@@ -21,31 +21,30 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             while (namelessGame.Commander.DequeueCommand(out FireWeaponCommand command))
             {
-                var playerEntity = namelessGame.PlayerEntity;
-                var playerPosition = playerEntity.GetComponentOfType<Position>();
-                var cursorPosition = namelessGame.CursorEntity.GetComponentOfType<Position>();
+                var sourceEntity = command.Source;
+                var sourcePosition = sourceEntity.GetComponentOfType<Position>();
+                var cursorPosition = command.Target;
                 var tile = namelessGame.WorldProvider.GetTile(cursorPosition.X, cursorPosition.Y, cursorPosition.Z);
                 if (tile.AnyEntities())
                 {
                     var tileEntity = tile.GetEntities().FirstOrDefault();
-                    if (tileEntity != null && tileEntity.Id != playerEntity.Id)
+                    if (tileEntity != null && tileEntity.Id != sourceEntity.Id)
                     {
                         var character = tile.GetEntities().FirstOrDefault(x => x.GetComponentOfType<Character>() != null);
                         if (character != null)
                         {
-                            var combatCommand = new AttackCommand(playerEntity, character);
+                            var combatCommand = new AttackCommand(sourceEntity, character);
                             namelessGame.Commander.EnqueueCommand(combatCommand);
 
                             AttachToTargetCommand snapToTarget = new AttachToTargetCommand(tileEntity);
                             namelessGame.Commander.EnqueueCommand(snapToTarget);
-
                         }
                     }
                 }
-                var createProjectileCommand = new CreateProjectileCommand(playerPosition.Point, cursorPosition.Point, DamageType.Ballistic);
+                var createProjectileCommand = new CreateProjectileCommand(sourcePosition.Point, cursorPosition, DamageType.Ballistic);
                 namelessGame.Commander.EnqueueCommand(createProjectileCommand);
 
-                var ap = playerEntity.GetComponentOfType<ActionPoints>();
+                var ap = sourceEntity.GetComponentOfType<ActionPoints>();
                 ap.Points -= Constants.ActionsMovementCost;
             }
         }
