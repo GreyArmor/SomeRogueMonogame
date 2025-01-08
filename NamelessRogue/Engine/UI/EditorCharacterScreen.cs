@@ -503,7 +503,8 @@ namespace NamelessRogue.Engine.UI
 
             reader.Close();
         }
-
+        //"C:\\Users\\user\\source\\repos\\SomeRogueMonogame\\NamelessRogue\\Content\\GameObjects\\Characters"
+        // C:\\Users\\user\\source\\repos\\SomeRogueMonogame\\NamelessRogue\\Content\\GameObjects\\Characters
         private void Save(string directory)
         {
             CharacterTemplateData data = new CharacterTemplateData();
@@ -547,7 +548,7 @@ namespace NamelessRogue.Engine.UI
 
             data.DroppedItems = DroppedItems;
 
-            using (TextWriter writer = new StreamWriter(directory + name + ".xml"))
+            using (TextWriter writer = new StreamWriter(directory + "\\" + name + ".xml"))
             {
                 XmlSerializer ser = new XmlSerializer(typeof(CharacterTemplateData));
                 ser.Serialize(writer, data);
