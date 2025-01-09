@@ -20,7 +20,7 @@
   </DroppedItems>
   <WeaponTemplateData>
     <MinimumDamage>0</MinimumDamage>
-    <MaximumDamage>10</MaximumDamage>
+    <MaximumDamage>9</MaximumDamage>
     <Range>1</Range>
     <AttackType>Close</AttackType>
     <DamageType>Physical</DamageType>
@@ -29,7 +29,7 @@
   </WeaponTemplateData>
   <ArmorTemplateData>
     <DamageType>Physical</DamageType>
-    <ArmorValue>10</ArmorValue>
+    <ArmorValue>1</ArmorValue>
     <ResistType>Physical</ResistType>
     <ResistValue>10</ResistValue>
   </ArmorTemplateData>

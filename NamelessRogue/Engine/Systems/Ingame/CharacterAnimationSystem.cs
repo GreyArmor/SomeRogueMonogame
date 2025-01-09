@@ -3,6 +3,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.ECS.Systems;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Environment;
+using NamelessRogue.Engine.Components.Status;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
@@ -26,16 +27,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 var sprited = entity.GetComponentOfType<SpritedObject>();
                 if (!sprited.IsStatic)
-                {
+                {                
+
                     if (sprited.CurrentAnimationTimeLeft <= 0)
-                    {
+                    {                       
                         sprited.CurrentAnimationTimeLeft = 1000;
+                        
+                        var isDead = entity.GetComponentOfType<Dead>() != null;
 
                         var sprite = SpriteLibrary.SpritesAnimated[sprited.SpriteId];
 
-                        var index = Random.Shared.Next(0, sprite._animationsByType[AnimationType.Idle].Count);
-                        var animationName = sprite._animationsByType[AnimationType.Idle][index];
-                        
+                        var index = Random.Shared.Next(0, sprite._animationsByType[isDead ? AnimationType.Dead : AnimationType.Idle].Count);
+                        var animationName = sprite._animationsByType[isDead ? AnimationType.Dead : AnimationType.Idle][index];
+
                         sprited.CurrentAnimation = animationName;
                     }
                 }

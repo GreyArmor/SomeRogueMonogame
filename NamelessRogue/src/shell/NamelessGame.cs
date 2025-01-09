@@ -299,7 +299,7 @@ namespace NamelessRogue.shell
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
 
 
-                var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.xml", SearchOption.AllDirectories);
+                var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.nrcf", SearchOption.AllDirectories);
 
 
 				Vector2 characterCreationOffset = new Vector2(0);
@@ -322,18 +322,12 @@ namespace NamelessRogue.shell
 				//	}
 				//}
 
-				var items = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath, "*.xml", SearchOption.AllDirectories);
+				var items = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath, "*.nrif", SearchOption.AllDirectories);
                 var itemsHolder = player.GetComponentOfType<ItemsHolder>();
                 foreach (var itemPath in items)
 				{
                     XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));
                     TextReader reader = new StreamReader(itemPath);
-
-					//TODO: refactor
-					if (itemPath.Contains("GameObjects\\Characters"))
-					{
-						continue;
-					}
 
                     var itemData = (ItemTemplateData)serializer?.Deserialize(reader);
 

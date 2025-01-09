@@ -36,11 +36,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     entityToKill.AddComponent(new Dead());
                 }
-                Drawable drawable = entityToKill.GetComponentOfType<Drawable>();
-                if (drawable != null)
-                {
-                    drawable.ObjectID = "DeadBody";
-                }
+
+                var playAttackAnimationCommand = new PlayCharacterAnimationCommand(entityToKill, AnimationType.Death, 100);
+                namelessGame.Commander.EnqueueCommand(playAttackAnimationCommand);
 
                 IEntity worldEntity = namelessGame.TimelineEntity;
                 IWorldProvider worldProvider = null;

@@ -203,7 +203,7 @@ namespace NamelessRogue.Engine.UI
                     if (ImGui.BeginPopupModal("FilePickerDialogPopup", ref p_open, ImGuiWindowFlags.AlwaysAutoResize))
                     {
                         ImGui.SetNextItemOpen(true);
-                        _fillTreeRecursive(contentCharacterDirectoryPath, fileExtensions, ref selectedIconFile);
+                        _fillTreeRecursive(contentDirectoryPath, fileExtensions, ref selectedIconFile);
                         if (ImGui.Button("Open"))
                         {
                             ImGui.CloseCurrentPopup();
@@ -550,7 +550,7 @@ namespace NamelessRogue.Engine.UI
 
             data.DroppedItems = DroppedItems;
 
-            using (TextWriter writer = new StreamWriter(directory + "\\" + name + ".xml"))
+            using (TextWriter writer = new StreamWriter(directory + "\\" + name + ".nrcf"))
             {
                 XmlSerializer ser = new XmlSerializer(typeof(CharacterTemplateData));
                 ser.Serialize(writer, data);

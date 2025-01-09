@@ -12,12 +12,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
 {
     internal class PlayCharacterAnimationCommand : ICommand
     {
-        public PlayCharacterAnimationCommand(IEntity entity, AnimationType type) {
+        public PlayCharacterAnimationCommand(IEntity entity, AnimationType type, int durationMilisecods) {
             Entity = entity;
             Type = type;
+            DurationMilisecods = durationMilisecods;
         }
 
         public IEntity Entity { get; }
         public AnimationType Type { get; }
+        public int DurationMilisecods { get; }
     }
 }
