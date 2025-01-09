@@ -144,7 +144,6 @@
 	
   <ItemGroup>
     <Folder Include="Content\GameObjects\Misc\" />
-    <Folder Include="Content\GameObjects\Weapons\" />
     <Folder Include="Content\Models\" />
     <Folder Include="Content\obj\Windows\AnimatedCharacters\" />
     <Folder Include="Engine\Components\Environment\Buildings\" />

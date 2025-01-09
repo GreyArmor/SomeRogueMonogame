@@ -10,12 +10,12 @@
   <MovementSpeed>49</MovementSpeed>
   <DroppedItems>
     <DroppedItem>
-      <Path>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\GameObjects\Consumable\Battery.xml</Path>
+      <Path>..\Consumable\Battery.xml</Path>
       <Probability>100</Probability>
     </DroppedItem>
     <DroppedItem>
-      <Path>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\GameObjects\Consumable\Toxic beaker.xml</Path>
-      <Probability>50</Probability>
+      <Path>..\Consumable\MedKit.xml</Path>
+      <Probability>100</Probability>
     </DroppedItem>
   </DroppedItems>
   <WeaponTemplateData>

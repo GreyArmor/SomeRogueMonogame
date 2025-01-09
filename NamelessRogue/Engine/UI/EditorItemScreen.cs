@@ -149,7 +149,7 @@ namespace NamelessRogue.Engine.UI
             {
                 if (fileIsPicking)
                 {                   
-                    var fileExtensions = new List<string>() { "*.jpg", "*.ace", "*.png" };
+                    var fileExtensions = new List<string>() { "*.jpg", "*.png" };
             
                     void _fillTreeRecursive(string path)
                     {
@@ -365,7 +365,7 @@ namespace NamelessRogue.Engine.UI
                                 data.ConsumableItemTemplateData = citd;
                             }
 
-                            using (TextWriter writer = new StreamWriter(directory + name + ".xml"))
+                            using (TextWriter writer = new StreamWriter(directory + name + ".nrif"))
                             {
                                 XmlSerializer ser = new XmlSerializer(typeof(ItemTemplateData));
                                 ser.Serialize(writer, data);

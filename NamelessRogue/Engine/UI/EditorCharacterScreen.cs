@@ -63,9 +63,11 @@ namespace NamelessRogue.Engine.UI
             string workingDirectory = Environment.CurrentDirectory;
 #if DEBUG
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-            contentDirectoryPath = projectDirectory + "\\Content\\GameObjects\\Characters";
+            contentCharacterDirectoryPath = projectDirectory + "\\Content\\GameObjects\\Characters";
+            contentDirectoryPath = projectDirectory + "\\Content\\";
 #else
             contentDirectoryPath = workingDirectory + "\\Content\\GameObjects\\Characters\\";
+            contentDirectoryPath = workingDirectory + "\\Content\\";
 #endif
         }
 
@@ -103,6 +105,7 @@ namespace NamelessRogue.Engine.UI
         bool castsShadow = false;
         bool immobile = false;
 
+        string contentCharacterDirectoryPath = string.Empty;
         string contentDirectoryPath = string.Empty;
         bool fileIsPicking = false;
 
@@ -176,7 +179,7 @@ namespace NamelessRogue.Engine.UI
         /// </summary>
         public override void DrawLayout()
         {
-            var directory = contentDirectoryPath;
+            var directory = contentCharacterDirectoryPath;
 
                 if (!Directory.Exists(directory))
                 {
@@ -200,7 +203,7 @@ namespace NamelessRogue.Engine.UI
                     if (ImGui.BeginPopupModal("FilePickerDialogPopup", ref p_open, ImGuiWindowFlags.AlwaysAutoResize))
                     {
                         ImGui.SetNextItemOpen(true);
-                        _fillTreeRecursive(contentDirectoryPath, fileExtensions, ref selectedIconFile);
+                        _fillTreeRecursive(contentCharacterDirectoryPath, fileExtensions, ref selectedIconFile);
                         if (ImGui.Button("Open"))
                         {
                             ImGui.CloseCurrentPopup();
@@ -258,14 +261,11 @@ namespace NamelessRogue.Engine.UI
                             fileIsPicking = true;
                         }
 
-
                         ImGui.SameLine();
                         if (ButtonWithSound("Back", buttonSize))
                         {
                             EditorCharacterScreenActions = EditorCharacterScreenActions.Back;
                         }
-
-
 
                         ImGui.Text("Name");
                         ImGui.SetNextItemWidth(fieldsSizeX);
@@ -372,7 +372,7 @@ namespace NamelessRogue.Engine.UI
                         ImGui.Separator();
                         ImGui.Text("Droppable items (Name - Probability)");
 
-                        var fileExtensions = new List<string>() { "*.xml" };
+                        var fileExtensions = new List<string>() { "*.nrif" };
                         if (ButtonWithSound("Add", buttonSize, true))
                         {
                             droppableItemPickerDialog = true;
@@ -391,7 +391,7 @@ namespace NamelessRogue.Engine.UI
                                 // ImGui.Combo("files", ref currentIconCombpBoxItem, files.ToArray(), files.Count);
                                 if (ImGui.Button("Open"))
                                 {
-                                    DroppedItems.Add(new DroppedItem() { Path = selectedDroppableItemFile, Probability = 0 });
+                                    DroppedItems.Add(new DroppedItem() { Path = Path.GetRelativePath(directory, selectedDroppableItemFile), Probability = 0 });
                                     droppableItemPickerDialog = false;
                                     ImGui.CloseCurrentPopup();
                                 }
@@ -409,11 +409,12 @@ namespace NamelessRogue.Engine.UI
                         ImGui.Separator();
                         ImGui.SetNextItemWidth(fieldsSizeX);
 
+                        int droppableItemCounter = 0;
                         foreach (var droppableItem in DroppedItems.ToList())
                         {
                             ImGui.Separator();
                             ImGui.SetNextItemWidth(fieldsSizeX / 2);
-                            ImGui.BeginChild("##itemDropText" + droppableItem.Path, new Vector2(fieldsSizeX / 2, buttonSize.Y / 2));
+                            ImGui.BeginChild("##itemDropText" + droppableItemCounter, new Vector2(fieldsSizeX / 2, buttonSize.Y / 2));
                             ImGui.Text(Path.GetFileName(droppableItem.Path));
                             ImGui.EndChild();
                             ImGui.SameLine();
@@ -423,10 +424,11 @@ namespace NamelessRogue.Engine.UI
                             ImGui.DragInt("##itemDropProbability" + droppableItem.Path, ref probability, 1, 1, 100);
                             droppableItem.Probability = probability;
                             ImGui.SameLine();
-                            if (ButtonWithSound("Remove", buttonSize / 2, true))
+                            if (ButtonWithSound("Remove ##" + droppableItemCounter, buttonSize / 2, true))
                             {
                                 DroppedItems.Remove(droppableItem);
                             }
+                            droppableItemCounter++;
                         }
                     }                   
                     ImGui.EndChild();
@@ -457,7 +459,7 @@ namespace NamelessRogue.Engine.UI
 
             if (data.SpritePath != null && data.SpritePath != string.Empty)
             {
-                spritePath = contentDirectoryPath + "\\" + data.SpritePath;
+                spritePath = contentCharacterDirectoryPath + "\\" + data.SpritePath;
                 spriteFileName = Path.GetFileName(spritePath);
                 SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
                 SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);
