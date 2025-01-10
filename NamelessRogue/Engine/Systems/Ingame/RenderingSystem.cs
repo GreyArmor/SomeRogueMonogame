@@ -29,6 +29,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
 using Point = Microsoft.Xna.Framework.Point;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using NamelessRogue.Engine.Components.ItemComponents;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -413,9 +414,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             foreach (var entity in tileToDraw.GetEntities())
                             {
+                                var item = entity.GetComponentOfType<Item>();
                                 var furniture = entity.GetComponentOfType<Furniture>();
                                 var drawable = entity.GetComponentOfType<Drawable>();
                                 var sprited = entity.GetComponentOfType<SpritedObject>();
+
+                                if (item != null)
+                                {
+                                    item.ToString();
+                                }
+
                                 if (furniture != null && drawable != null && sprited == null)
                                 {
                                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.Tileset, drawable.CharColor,  drawable.CastsShadow);

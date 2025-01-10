@@ -7,6 +7,7 @@ using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Status;
 using NamelessRogue.Engine.Components.UI;
+using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
@@ -56,6 +57,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
 
                 entityToKill.RemoveComponentOfType<OccupiesTile>();
+
+
+                var droppedItems = entityToKill.GetComponentOfType<DroppedItemscomponent>();
+                if (droppedItems != null)
+                {
+                    foreach (var itemId in droppedItems.DroppedItemIds)
+                    {
+                        Tile tile = worldProvider.GetTile(position.Point.X, position.Point.Y, position.Point.Z);
+                        bool itemExists = ItemFactory.ItemDataById.TryGetValue(itemId, out var item);
+                        if (itemExists)
+                        {
+                            var itemEntity = ItemFactory.CreateItemFromData(namelessGame, item);
+                            tile.AddEntity(itemEntity);
+                        }
+
+                    }
+                }
 
                 Description d = entityToKill.GetComponentOfType<Description>();
 

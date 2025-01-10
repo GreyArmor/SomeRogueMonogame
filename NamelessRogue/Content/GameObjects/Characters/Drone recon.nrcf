@@ -11,11 +11,13 @@
   <MovementSpeed>49</MovementSpeed>
   <DroppedItems>
     <DroppedItem>
-      <Path>..\Consumable\Battery.xml</Path>
+      <ItemId>1586eec3-e2b6-45e0-aa4d-9e3e3305fe59</ItemId>
+      <Path>..\Consumable\Battery.nrif</Path>
       <Probability>100</Probability>
     </DroppedItem>
     <DroppedItem>
-      <Path>..\Consumable\MedKit.xml</Path>
+      <ItemId>ad4f9a93-ca18-45ab-99f5-7edc43edae2d</ItemId>
+      <Path>..\Consumable\MedKit.nrif</Path>
       <Probability>100</Probability>
     </DroppedItem>
   </DroppedItems>

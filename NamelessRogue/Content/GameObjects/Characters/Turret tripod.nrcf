@@ -11,8 +11,9 @@
   <MovementSpeed>1</MovementSpeed>
   <DroppedItems>
     <DroppedItem>
-      <Path>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\GameObjects\Consumable\Battery.xml</Path>
-      <Probability>90</Probability>
+      <ItemId>1586eec3-e2b6-45e0-aa4d-9e3e3305fe59</ItemId>
+      <Path>..\Consumable\Battery.nrif</Path>
+      <Probability>100</Probability>
     </DroppedItem>
   </DroppedItems>
   <WeaponTemplateData>

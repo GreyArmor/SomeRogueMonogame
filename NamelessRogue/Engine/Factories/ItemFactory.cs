@@ -22,6 +22,7 @@ namespace NamelessRogue.Engine.Factories
 {
     public static class ItemFactory {
         public static List<ItemTemplateData> ItemData = new List<ItemTemplateData>();
+        public static Dictionary<string, ItemTemplateData> ItemDataById = new Dictionary<string, ItemTemplateData>();
         public static void LoadItemData(NamelessGame game)
         {
             var items = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath, "*.nrif", SearchOption.AllDirectories);
@@ -46,12 +47,14 @@ namespace NamelessRogue.Engine.Factories
                 }
 
                 ItemData.Add(itemData);
+                ItemDataById.Add(itemData.Id, itemData);
             }
         }
 
         public static void ClearData()
         {
             ItemData.Clear();
+            ItemDataById.Clear();
         }
 
         public static Entity CreateItemFromData(NamelessGame game, ItemTemplateData data)

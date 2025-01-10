@@ -19,12 +19,35 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 using Entity = NamelessRogue.Engine.Infrastructure.Entity;
 
 namespace NamelessRogue.Engine.Factories
 {
     public class CharacterFactory {
-        
+        public static List<CharacterTemplateData> CharacterData = new List<CharacterTemplateData>();
+        public static Dictionary<string, CharacterTemplateData> CharacterDataById = new Dictionary<string, CharacterTemplateData>();
+
+
+        public static void LoadCharacters()
+        {
+            var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.nrcf", SearchOption.AllDirectories);
+            foreach (var charactersFile in characters)
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
+                TextReader reader = new StreamReader(charactersFile);
+                var data = (CharacterTemplateData)serializer.Deserialize(reader);
+                CharacterData.Add(data);
+                CharacterDataById.Add(data.Id, data);
+            }
+        }
+
+        public static void ClearData()
+        {
+            CharacterData.Clear();
+            CharacterDataById.Clear();
+        }
+
         public static Entity CreateSimplePlayerCharacter(int x,int y, int z, NamelessGame game)
         {
             var position = new Position(x, y, z);
@@ -63,43 +86,6 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new AbilityBinder());
 
             playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
-            playerCharacter.AddComponent(new Camera3D(game));
-            game.WorldProvider.MoveEntity(playerCharacter, position.Point);
-
-            return playerCharacter;
-        }
-
-        public static Entity CreateDummyCharacter(int x, int y, int z, NamelessGame game)
-        {
-            var position = new Position(x, y, z);
-            Entity playerCharacter = new Entity();
-            playerCharacter.AddComponent(new Character("Enemy"));
-            playerCharacter.AddComponent(new AIControlled() { Affinity = Affinity.Hostile });
-            playerCharacter.AddComponent(new FollowPlayerAi());
-            playerCharacter.AddComponent(position);
-            playerCharacter.AddComponent(new Drawable("drone_recon", new Engine.Utility.Color(0.9, 0.9, 0.9), castsShadow:true));
-            playerCharacter.AddComponent(new SpritedObject(false, "idle_2"));
-            playerCharacter.AddComponent(new Description("Enemy", ""));
-            var holder = new ItemsHolder();
-            playerCharacter.AddComponent(holder);
-            playerCharacter.AddComponent(new OccupiesTile());
-            playerCharacter.AddComponent(new FlowMoveComponent());
-         
-            var stats = new CharacterStats();
-            stats.Health.Value = 100;
-            stats.Health.MaxValue = 100;
-            stats.Armor.Add(new ArmorStats() { DamageType = DamageType.Physical, Value = new SimpleStat(2, 0, 10) });
-
-            playerCharacter.AddComponent(stats);
-
-            Entity playerAccumulatorEntity = new Entity();
-            playerAccumulatorEntity.AddComponent(new CharacterStats());
-
-           
-            playerCharacter.AddComponent(new ModifiersCollection(playerAccumulatorEntity));
-
-            playerCharacter.AddComponent(new ActionPoints() { Points = 100 });
-            playerCharacter.AddComponent(new Camera3D(game));
             game.WorldProvider.MoveEntity(playerCharacter, position.Point);
 
             return playerCharacter;
@@ -141,9 +127,6 @@ namespace NamelessRogue.Engine.Factories
             character.AddComponent(new OccupiesTile());
             character.AddComponent(new FlowMoveComponent()); 
             
-            
-            
-         
 
             var stats = new CharacterStats();
             stats.Health.Value = data.Health;
@@ -166,6 +149,9 @@ namespace NamelessRogue.Engine.Factories
             stats.WeaponStats.Add(new WeaponStats(wtd.MinimumDamage, wtd.MaximumDamage, wtd.Range, wtd.AttackType));
 
             character.AddComponent(stats);
+
+
+            character.AddComponent(new DroppedItemscomponent(data.DroppedItems.Select(x => x.ItemId)));
 
             Entity accumulatorEntiry = new Entity();
             accumulatorEntiry.AddComponent(new CharacterStats());
