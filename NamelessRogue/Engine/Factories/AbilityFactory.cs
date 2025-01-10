@@ -19,7 +19,7 @@ namespace NamelessRogue.Engine.Factories
         {
             Entity ability = new Entity();
             ability.AddComponent(new Description() { Name = "Jump", Text = "Jump to target location" });
-            ability.AddComponent(new Drawable() { ObjectID = "jump" });
+            ability.AddComponent(new UiIconComponent("jump"));
             ability.AddComponent(new AbilityComponent());
             ability.AddComponent(new AbilityParameters() { ActivationMode = ActivationMode.Activatable, TargetMode = TargetMode.Targeted, AreaOfEffect = 1, Range = 6, 
                 AbilityActions = new List<AbilityAction>() { AbilityAction.JumpToTarget }}); 
@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Factories
         {
             Entity ability = new Entity();
             ability.AddComponent(new Description() { Name = "Leap slash", Text = "Jump to target location and slash the enemy with your weapon" });
-            ability.AddComponent(new Drawable() { ObjectID = "jump_slash" });
+            ability.AddComponent(new UiIconComponent("jump_slash"));
             ability.AddComponent(new AbilityComponent());
             ability.AddComponent(new AbilityParameters()
             {

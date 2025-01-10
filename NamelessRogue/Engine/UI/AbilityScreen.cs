@@ -59,12 +59,12 @@ namespace NamelessRogue.Engine.UI
                         foreach (var ability in abilityHolder.Abilities)
                         {
                             var abilityDesc = ability.GetComponentOfType<Description>();
-                            var drawable = ability.GetComponentOfType<Drawable>();
+                            var icon = ability.GetComponentOfType<UiIconComponent>();
 
                             var cursorPosition = ImGui.GetCursorPos();
                             ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new System.Numerics.Vector2(iconSize, iconSize));
                             ImGui.SetCursorPos(cursorPosition);
-                            ImGui.Image(ImGuiImageLibrary.Textures[drawable.ObjectID], new System.Numerics.Vector2(iconSize, iconSize));
+                            ImGui.Image(ImGuiImageLibrary.Textures[icon.IconId], new System.Numerics.Vector2(iconSize, iconSize));
                             ImGui.Text(abilityDesc.Name);
                             ImGui.Text("    " + abilityDesc.Text);
                             ImGui.Separator();
@@ -97,11 +97,11 @@ namespace NamelessRogue.Engine.UI
                     ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new System.Numerics.Vector2(iconSize, iconSize));
                     if (isAbilityBound)
                     {
-                        var drawable = binding.GetComponentOfType<Drawable>();
-                        if (drawable != null)
+                        var icon = binding.GetComponentOfType<UiIconComponent>();
+                        if (icon != null)
                         {
                             ImGui.SetCursorPos(new System.Numerics.Vector2(0));
-                            ImGui.Image(ImGuiImageLibrary.Textures[drawable.ObjectID], new System.Numerics.Vector2(iconSize, iconSize));
+                            ImGui.Image(ImGuiImageLibrary.Textures[icon.IconId], new System.Numerics.Vector2(iconSize, iconSize));
                             if (ImGui.IsItemHovered())
                             {
                                 var description = binding.GetComponentOfType<Description>();

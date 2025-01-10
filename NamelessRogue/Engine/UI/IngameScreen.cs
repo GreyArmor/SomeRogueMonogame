@@ -14,6 +14,7 @@ using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
@@ -177,17 +178,17 @@ namespace NamelessRogue.Engine.UI
 
                 foreach (var modifier in modifiers.ModifierEntities)
                 {
-                    var drawable = modifier.GetComponentOfType<Drawable>();
+                    var icon = modifier.GetComponentOfType<UiIconComponent>();
                     var equipment = modifier.GetComponentOfType<Equipment>();
                     var timed = modifier.GetComponentOfType<TimedModifier>();
-                    if (drawable != null && equipment == null)
+                    if (icon != null && equipment == null)
                     {
                         noBuffs = false;
 
                         ImGui.BeginChild(modifier.GetHashCode().ToString(), new System.Numerics.Vector2(iconSize + 1));
                         ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new System.Numerics.Vector2(iconSize, iconSize));
                         ImGui.SetCursorPos(new System.Numerics.Vector2(0));
-                        ImGui.Image(ImGuiImageLibrary.Textures[drawable.ObjectID], new System.Numerics.Vector2(iconSize, iconSize));
+                        ImGui.Image(ImGuiImageLibrary.Textures[icon.IconId], new System.Numerics.Vector2(iconSize, iconSize));
                         if (timed != null)
                         {
                             ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
@@ -241,11 +242,11 @@ namespace NamelessRogue.Engine.UI
                     ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new System.Numerics.Vector2(iconSize, iconSize));
                     if (isAbilityBound)
                     {
-                        var drawable = binding.GetComponentOfType<Drawable>();
-                        if (drawable != null)
+                        var icon = binding.GetComponentOfType<UiIconComponent>();
+                        if (icon != null)
                         {
                             ImGui.SetCursorPos(new System.Numerics.Vector2(0));
-                            ImGui.Image(ImGuiImageLibrary.Textures[drawable.ObjectID], new System.Numerics.Vector2(iconSize, iconSize));
+                            ImGui.Image(ImGuiImageLibrary.Textures[icon.IconId], new System.Numerics.Vector2(iconSize, iconSize));
                             if (ImGui.IsItemHovered())
                             {
                                 var description = binding.GetComponentOfType<Description>();

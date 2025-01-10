@@ -27,7 +27,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var consumableComponent = item.GetComponentOfType<Consumable>();
                 var playerStats = player.GetComponentOfType<CharacterStats>();
 
-                var drawable = item.GetComponentOfType<Drawable>();
+                var iconComponent = item.GetComponentOfType<UiIconComponent>();
 
                 var inventory = player.GetComponentOfType<ItemsHolder>();
                 inventory.Items.Remove(item);              
@@ -41,7 +41,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     var buffEntity = new Entity();
                     var consumableClone = consumableComponent.Clone();
-                    buffEntity.AddComponent((Drawable)drawable.Clone());
+                    buffEntity.AddComponent((UiIconComponent)iconComponent.Clone());
                     buffEntity.AddComponent(new ModifierComponent());
                     buffEntity.AddComponent(new TimedModifier() { TurnsToLast = consumableComponent.Duration });
                     buffEntity.AddComponent(consumableClone);

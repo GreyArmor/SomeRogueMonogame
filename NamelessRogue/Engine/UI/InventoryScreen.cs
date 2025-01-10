@@ -386,8 +386,8 @@ namespace NamelessRogue.Engine.UI
                     var equipmentSlot = playerEquipment.Slots.FirstOrDefault(x => x.Item1 == slot)?.Item2;
                     if (equipmentSlot != null && equipmentSlot.Equipment != null)
                     {
-                        var drawable = game.GetEntity(equipmentSlot.Equipment.ParentEntityId).GetComponentOfType<Drawable>();
-                        var itemId = drawable.ObjectID;
+                        var icon = game.GetEntity(equipmentSlot.Equipment.ParentEntityId).GetComponentOfType<UiIconComponent>();
+                        var itemId = icon.IconId;
 
                         ImGui.SetCursorPos(new Vector2(pos.X, pos.Y + (ImGui.GetFontSize() * 2)));
                         if (itemId! != "")
@@ -517,8 +517,8 @@ namespace NamelessRogue.Engine.UI
 
                         if (cell != null)
                         {
-                            var drawable = game.GetEntity(cell.ItemId).GetComponentOfType<Drawable>();
-                            itemId = drawable.ObjectID;
+                            var icon = game.GetEntity(cell.ItemId).GetComponentOfType<UiIconComponent>();
+                            itemId = icon.IconId;
                         }
                         ImGui.SetCursorPos(new System.Numerics.Vector2(iconSizeWithMargin * x, (iconSizeWithMargin * y)));
                         if (this.CursorMode == InventoryScreenCursorMode.Items && x == GridModel.SelectedCell.X && y == GridModel.SelectedCell.Y)

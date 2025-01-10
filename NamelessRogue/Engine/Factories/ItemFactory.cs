@@ -60,7 +60,7 @@ namespace NamelessRogue.Engine.Factories
         public static Entity CreateItemFromData(NamelessGame game, ItemTemplateData data)
         {
             Entity entity = new Entity();
-            entity.AddComponent(new Drawable(Path.GetFileName(data.IconPath), new Color(1f)));
+            entity.AddComponent(new UiIconComponent(Path.GetFileName(data.IconPath)));
             entity.AddComponent(new Description(data.Description));
 
             entity.AddComponent(new Item(data.ItemType, 0, data.ItemQuality, 1, 1, "CorpoCorp Inc."));
