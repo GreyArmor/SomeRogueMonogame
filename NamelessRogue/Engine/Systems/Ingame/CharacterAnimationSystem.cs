@@ -22,12 +22,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
         bool once = false;
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-
             foreach (var entity in RegisteredEntities)
             {
                 var sprited = entity.GetComponentOfType<SpritedObject>();
                 if (!sprited.IsStatic)
-                {                
+                {              
 
                     if (sprited.CurrentAnimationTimeLeft <= 0)
                     {                       

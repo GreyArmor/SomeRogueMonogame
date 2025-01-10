@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>7f907c43-047a-4ee8-bb95-65efa66ee146</Id>
   <Name>Red gun</Name>
   <Description>Pew pew but red</Description>
   <IconPath>Icons\gunRedIcon.png</IconPath>

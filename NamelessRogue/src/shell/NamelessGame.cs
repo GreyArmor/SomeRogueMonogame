@@ -314,35 +314,19 @@ namespace NamelessRogue.shell
 					CharacterFactory.CreateCharacterFromData(this, new Vector3Int((int)(characterCreationOffset.X + (x* Constants.ChunkSize)), (int)(characterCreationOffset.Y + (y* Constants.ChunkSize)), 0), data);
                 }
 
-    //            for (int i = 5; i < 20; i++)
-				//{
-				//	for (int j = 5; j < 6; j++)
-				//	{
-				//		CharacterFactory.CreateDummyCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
-				//	}
-				//}
+                //            for (int i = 5; i < 20; i++)
+                //{
+                //	for (int j = 5; j < 6; j++)
+                //	{
+                //		CharacterFactory.CreateDummyCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
+                //	}
+                //}
 
-				var items = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath, "*.nrif", SearchOption.AllDirectories);
+                ItemFactory.ClearData();
+                ItemFactory.LoadItemData(this);
                 var itemsHolder = player.GetComponentOfType<ItemsHolder>();
-                foreach (var itemPath in items)
+                foreach (var itemData in ItemFactory.ItemData)
 				{
-                    XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));
-                    TextReader reader = new StreamReader(itemPath);
-
-                    var itemData = (ItemTemplateData)serializer?.Deserialize(reader);
-
-                    if (itemData!=null && itemData.IconPath != null && itemData.IconPath != string.Empty)
-                    {
-                        var iconPath = Path.GetDirectoryName(itemPath) + "\\" + itemData.IconPath;
-                        FileStream fileStream = new FileStream(iconPath, FileMode.Open);
-                        Texture2D texture = Texture2D.FromStream(GraphicsDevice, fileStream);
-                        var iconFileName = Path.GetFileName(iconPath);
-                        ImGuiImageLibrary.Textures.Remove(iconFileName);
-                        ImGuiImageLibrary.Textures.Add(iconFileName, UIRenderSystem.ImGuiRendererInstance.BindTexture(texture));
-                        fileStream.Close();
-                        fileStream.Dispose();
-                    }
-
 					if(itemData.ItemType==ItemType.Consumable)
 					{
 						for (int i = 0;	i<10; i++)
@@ -355,8 +339,7 @@ namespace NamelessRogue.shell
 					{
                         var item = ItemFactory.CreateItemFromData(this, itemData);
                         itemsHolder.Items.Add(item);
-                    }
-                   
+                    }                   
                 }
 
 				var abilityHolder = PlayerEntity.GetComponentOfType<AbilityHolder>();

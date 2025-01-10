@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>4921d27e-e629-4b6e-a60c-a28a575758cf</Id>
   <Name>Simple boot</Name>
   <Description>it does its jib</Description>
   <IconPath>Icons\boot.png</IconPath>

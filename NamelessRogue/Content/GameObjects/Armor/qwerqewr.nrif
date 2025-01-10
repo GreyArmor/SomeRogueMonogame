@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>aa6dad47-4aea-4a43-a370-529f3ef3b9b9</Id>
   <Name>qwerqewr</Name>
   <Description>qqqqqqq desc goes here</Description>
   <IconPath>Icons\work_gloves.png</IconPath>

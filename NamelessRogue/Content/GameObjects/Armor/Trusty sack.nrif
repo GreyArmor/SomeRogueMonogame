@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>1c80695b-0b69-464a-b857-55bd45078ad1</Id>
   <Name>Trusty sack</Name>
   <Description>For whe you really need to increase storage space</Description>
   <IconPath>Icons\trusty_sack.png</IconPath>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>029b3f19-fdb0-4763-b7cb-780309fdc4d3</Id>
   <Name>Turret tripod</Name>
   <Description />
   <SpritePath>Sprites\turret_tripod.ase</SpritePath>

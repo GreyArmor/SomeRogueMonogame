@@ -109,6 +109,8 @@ namespace NamelessRogue.Engine.UI
         string contentDirectoryPath = string.Empty;
         bool fileIsPicking = false;
 
+        string characterId = "";
+
         string spritePath = string.Empty;
         string spriteFileName = string.Empty;
         int currentIconCombpBoxItem = 0;
@@ -267,6 +269,11 @@ namespace NamelessRogue.Engine.UI
                             EditorCharacterScreenActions = EditorCharacterScreenActions.Back;
                         }
 
+                        if(characterId!="" || characterId == null)
+                        {
+                            ImGui.Text($@"Character Id = {characterId}");
+                        }
+
                         ImGui.Text("Name");
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.InputText("##Name", ref name, 128);
@@ -391,7 +398,12 @@ namespace NamelessRogue.Engine.UI
                                 // ImGui.Combo("files", ref currentIconCombpBoxItem, files.ToArray(), files.Count);
                                 if (ImGui.Button("Open"))
                                 {
-                                    DroppedItems.Add(new DroppedItem() { Path = Path.GetRelativePath(directory, selectedDroppableItemFile), Probability = 0 });
+                                    XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));
+                                    TextReader reader = new StreamReader(selectedDroppableItemFile);
+
+                                    var itemData = (ItemTemplateData)serializer?.Deserialize(reader);
+
+                                    DroppedItems.Add(new DroppedItem() { ItemId = itemData.Id, Path = Path.GetRelativePath(directory, selectedDroppableItemFile), Probability = 0 });
                                     droppableItemPickerDialog = false;
                                     ImGui.CloseCurrentPopup();
                                 }
@@ -471,6 +483,7 @@ namespace NamelessRogue.Engine.UI
                 game.Commander.EnqueueCommand(changeSpriteCommand);
             }
 
+            characterId = data.Id;
             name = data.Name;
             description = data.Description;
             health = data.Health;
@@ -509,9 +522,42 @@ namespace NamelessRogue.Engine.UI
         // C:\\Users\\user\\source\\repos\\SomeRogueMonogame\\NamelessRogue\\Content\\GameObjects\\Characters
         private void Save(string directory)
         {
-            CharacterTemplateData data = new CharacterTemplateData();
+
+            var newCharacterPath = directory + "\\" + name + ".nrcf";
+
+            if (File.Exists(newCharacterPath))
+            {
+                TextReader reader = null;
+                try
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
+                    reader  = new StreamReader(currentFilesOfSelectedItemType[currentSelectedFile]);
+                    var oldData = (CharacterTemplateData)serializer.Deserialize(reader);
+                    characterId = oldData.Id;
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    if(reader != null)
+                    {
+                        reader.Close();
+                    }    
+                    characterId = "";
+                }
+            }
+
+            CharacterTemplateData data = new CharacterTemplateData(); 
+                      
+            if(characterId == "" || characterId ==null)
+            {
+                characterId = Guid.NewGuid().ToString();
+            }
+
+            data.Id = characterId;
             data.Name = name;
             data.Description = description;
+
+        
 
             data.Health = health;
             data.Energy = energy;
@@ -550,7 +596,7 @@ namespace NamelessRogue.Engine.UI
 
             data.DroppedItems = DroppedItems;
 
-            using (TextWriter writer = new StreamWriter(directory + "\\" + name + ".nrcf"))
+            using (TextWriter writer = new StreamWriter(newCharacterPath))
             {
                 XmlSerializer ser = new XmlSerializer(typeof(CharacterTemplateData));
                 ser.Serialize(writer, data);

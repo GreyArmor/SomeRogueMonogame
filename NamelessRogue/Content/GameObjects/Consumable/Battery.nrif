@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>1586eec3-e2b6-45e0-aa4d-9e3e3305fe59</Id>
   <Name>Battery</Name>
   <Description>For when you need an extra jolt</Description>
   <IconPath>Icons\battery.png</IconPath>
@@ -10,6 +11,7 @@
     <Duration>1</Duration>
     <IsThrowable>true</IsThrowable>
     <IsAppliedImmediately>true</IsAppliedImmediately>
+    <IsDamageOverTime>false</IsDamageOverTime>
     <HealthModificator>0</HealthModificator>
     <EnergyModificator>30</EnergyModificator>
     <ArmorModificator>0</ArmorModificator>

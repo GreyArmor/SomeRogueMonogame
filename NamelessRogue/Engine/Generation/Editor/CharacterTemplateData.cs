@@ -14,6 +14,8 @@ namespace NamelessRogue.Engine.Generation.Editor
     public class CharacterTemplateData
     {
         [XmlElement]
+        public string Id { get; set; }
+        [XmlElement]
         public string Name { get; set; }
         [XmlElement]
         public string Description { get; set; }
@@ -53,6 +55,9 @@ namespace NamelessRogue.Engine.Generation.Editor
     [XmlRoot]
     public class DroppedItem
     {
+
+        [XmlElement]
+        public string ItemId { get; set; }
         [XmlElement]
         public string Path { get; set; }
         /// <summary>

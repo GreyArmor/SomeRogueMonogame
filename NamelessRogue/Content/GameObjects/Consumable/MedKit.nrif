@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>ad4f9a93-ca18-45ab-99f5-7edc43edae2d</Id>
   <Name>MedKit</Name>
   <Description>Standard medkit</Description>
   <IconPath>Icons\medkit.png</IconPath>
@@ -10,6 +11,7 @@
     <Duration>59</Duration>
     <IsThrowable>false</IsThrowable>
     <IsAppliedImmediately>true</IsAppliedImmediately>
+    <IsDamageOverTime>false</IsDamageOverTime>
     <HealthModificator>30</HealthModificator>
     <EnergyModificator>0</EnergyModificator>
     <ArmorModificator>0</ArmorModificator>

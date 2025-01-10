@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>0181a89d-4292-4c91-be21-5860bafeedcd</Id>
   <Name>Basic armor</Name>
   <Description>"Protection"</Description>
   <IconPath>Icons\basic_bodyarmors.png</IconPath>

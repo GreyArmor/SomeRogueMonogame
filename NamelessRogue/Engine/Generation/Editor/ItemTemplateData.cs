@@ -14,6 +14,8 @@ namespace NamelessRogue.Engine.Generation.Editor
     public class ItemTemplateData
     {
         [XmlElement]
+        public string Id { get; set; }
+        [XmlElement]
         public string Name { get; set; }
         [XmlElement]
         public string Description { get; set; }

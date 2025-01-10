@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>e65bc87d-2378-425e-88af-ec48b3635d84</Id>
   <Name>Gas mask</Name>
   <Description>Enviromentally unfriendly enviromental protection</Description>
   <IconPath>Icons\gas_mask.png</IconPath>

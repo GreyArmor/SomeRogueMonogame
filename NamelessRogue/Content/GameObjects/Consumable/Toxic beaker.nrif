@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>3609652b-170a-4309-b4a7-a71c8e50917b</Id>
   <Name>Toxic beaker</Name>
   <Description>Do not consume</Description>
   <IconPath>Icons\toxic_beaker.png</IconPath>
