@@ -151,7 +151,7 @@ namespace NamelessRogue.Engine.Factories
             character.AddComponent(stats);
 
 
-            character.AddComponent(new DroppedItemscomponent(data.DroppedItems.Select(x => x.ItemId)));
+            character.AddComponent(new DroppedItemsComponent(data.DroppedItems.Select(x => new DroppedItem() { ItemId = x.ItemId, Probability = x.Probability})));
 
             Entity accumulatorEntiry = new Entity();
             accumulatorEntiry.AddComponent(new CharacterStats());

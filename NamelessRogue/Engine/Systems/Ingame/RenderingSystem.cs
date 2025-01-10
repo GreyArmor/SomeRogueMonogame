@@ -30,6 +30,8 @@ using System.Drawing;
 using Point = Microsoft.Xna.Framework.Point;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using NamelessRogue.Engine.Components.ItemComponents;
+using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
+using NamelessRogue.Engine.Components.Status;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -416,29 +418,32 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 var item = entity.GetComponentOfType<Item>();
                                 var furniture = entity.GetComponentOfType<Furniture>();
+
+                                bool isTileObject = item != null || furniture != null;
+
                                 var drawable = entity.GetComponentOfType<Drawable>();
                                 var sprited = entity.GetComponentOfType<SpritedObject>();
 
-                                if (item != null)
-                                {
-                                    item.ToString();
-                                }
-
-                                if (furniture != null && drawable != null && sprited == null)
+                                if (isTileObject && drawable != null && sprited == null)
                                 {
                                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.Tileset, drawable.CharColor,  drawable.CastsShadow);
                                 }
-                                else if(furniture != null && drawable != null && sprited != null)
+                                else if(isTileObject && drawable != null && sprited != null)
                                 {
-                                    var animation = sprited.IdleAnimation;
-
-                                    if (sprited.CurrentAnimationTimeLeft > 0)
+                                    if (sprited.IsStatic)
                                     {
-                                        animation = sprited.CurrentAnimation;
-                                        sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
+                                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.StaticSprite, drawable.CharColor, drawable.CastsShadow);
                                     }
-
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, animation);
+                                    else
+                                    {
+                                        var animation = sprited.IdleAnimation;
+                                        if (sprited.CurrentAnimationTimeLeft > 0)
+                                        {
+                                            animation = sprited.CurrentAnimation;
+                                            sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
+                                        }
+                                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, animation);
+                                    }
                                 }
                             }
                         }
@@ -642,7 +647,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
                                 }
 
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, animation);
+                                if (entity.GetComponentOfType<Dead>() != null)
+                                {
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObjectToBottom(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, animation);
+
+                                }
+                                else
+                                {
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, animation);
+                                }
                             }
                         }
                         else                                               
@@ -792,22 +805,47 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     foreach (var objectToDraw in screen.ScreenBuffer[x, y].StackedObjects)
                     {
-                        if (objectToDraw.Type == ScreenObjectSource.AnimatedSprite)
+
+                        if (objectToDraw.Type == ScreenObjectSource.AnimatedSprite || objectToDraw.Type == ScreenObjectSource.StaticSprite)
                         {
                             var spriteId = objectToDraw.Id;
                             int tileHeight = game.GetSettings().GetFontSizeZoomed();
                             int tileWidth = game.GetSettings().GetFontSizeZoomed();
-                            if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
-                            {                                
-                                sprite.SetCurrentLoop(objectToDraw.AnimationName);
-                                sprite.Update(gameTime);
-                                int shadowOffset = 10 / game.GetSettings().Zoom;
-                                if (objectToDraw.HasShadow)
+                            if (objectToDraw.Type == ScreenObjectSource.AnimatedSprite)
+                            {
+                                if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
                                 {
-                                    sprite.Draw(game, gameTime, new Vector2((x * tileWidth) + shadowOffset, (y * tileHeight) + shadowOffset), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.Black);
+                                    sprite.SetCurrentLoop(objectToDraw.AnimationName);
+                                    sprite.Update(gameTime);
+                                    int shadowOffset = 10 / game.GetSettings().Zoom;
+                                    if (objectToDraw.HasShadow)
+                                    {
+                                        sprite.Draw(game, gameTime, new Vector2((x * tileWidth) + shadowOffset, (y * tileHeight) + shadowOffset), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.Black);
+                                    }
+                                    sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.White);
                                 }
-                                sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(tileWidth, tileHeight) , new Vector2(1f), Microsoft.Xna.Framework.Color.White);
                             }
+                            else
+                            {
+                                if (SpriteLibrary.SpritesStatic.TryGetValue(spriteId, out var sprite))
+                                {
+                                    int shadowOffset = 10 / game.GetSettings().Zoom;
+                                    if (objectToDraw.HasShadow)
+                                    {
+                                        
+                                        var position = new Vector2((x * tileWidth) + shadowOffset, (y * tileHeight) + shadowOffset);
+                                        var size = new Vector2(tileWidth, tileHeight);
+                                        var scale = Vector2.One;
+                                        game.Batch.Draw(sprite.TextureRegion, new Microsoft.Xna.Framework.Rectangle(position.ToPoint(), (size * scale).ToPoint()), Microsoft.Xna.Framework.Color.White);
+                                    }
+                                    {
+                                        var position = new Vector2((x * tileWidth), (y * tileHeight));
+                                        var size = new Vector2(tileWidth, tileHeight);
+                                        var scale = Vector2.One;
+                                        game.Batch.Draw(sprite.TextureRegion, new Microsoft.Xna.Framework.Rectangle(position.ToPoint(), (size * scale).ToPoint()), Microsoft.Xna.Framework.Color.White);
+                                    }
+                                }
+                            }                                           
                         }
                     }
                 }

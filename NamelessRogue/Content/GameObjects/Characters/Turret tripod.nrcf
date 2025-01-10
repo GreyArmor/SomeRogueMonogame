@@ -10,11 +10,11 @@
   <Energy>0</Energy>
   <MovementSpeed>1</MovementSpeed>
   <DroppedItems>
-    <DroppedItem>
-      <ItemId>1586eec3-e2b6-45e0-aa4d-9e3e3305fe59</ItemId>
-      <Path>..\Consumable\Battery.nrif</Path>
-      <Probability>100</Probability>
-    </DroppedItem>
+    <DroppedItemTemplate>
+      <ItemId>c7fa99db-347d-4677-ad9b-b7e72b587de9</ItemId>
+      <Path>..\Consumable\Rusting beaker.nrif</Path>
+      <Probability>70</Probability>
+    </DroppedItemTemplate>
   </DroppedItems>
   <WeaponTemplateData>
     <MinimumDamage>0</MinimumDamage>

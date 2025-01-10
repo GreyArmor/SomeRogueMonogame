@@ -42,7 +42,7 @@ namespace NamelessRogue.Engine.Generation.Editor
         public string FactionId { get; set; }
 
         [XmlArray]
-        public List<DroppedItem> DroppedItems { get; set; }
+        public List<DroppedItemTemplate> DroppedItems { get; set; }
 
         [XmlElement]
         public WeaponTemplateData WeaponTemplateData { get; set; }
@@ -53,7 +53,7 @@ namespace NamelessRogue.Engine.Generation.Editor
     }
 
     [XmlRoot]
-    public class DroppedItem
+    public class DroppedItemTemplate
     {
 
         [XmlElement]

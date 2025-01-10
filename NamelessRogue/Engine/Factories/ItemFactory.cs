@@ -17,6 +17,7 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
+using NamelessRogue.Engine.Components.Environment;
 
 namespace NamelessRogue.Engine.Factories
 {
@@ -42,6 +43,11 @@ namespace NamelessRogue.Engine.Factories
                     var iconFileName = Path.GetFileName(iconPath);
                     ImGuiImageLibrary.Textures.Remove(iconFileName);
                     ImGuiImageLibrary.Textures.Add(iconFileName, UIRenderSystem.ImGuiRendererInstance.BindTexture(texture));
+
+                    SpriteLibrary.RemoveStaticSprite(iconFileName);
+                    SpriteLibrary.AddStaticSprite(iconFileName, texture);
+
+
                     fileStream.Close();
                     fileStream.Dispose();
                 }
@@ -60,7 +66,12 @@ namespace NamelessRogue.Engine.Factories
         public static Entity CreateItemFromData(NamelessGame game, ItemTemplateData data)
         {
             Entity entity = new Entity();
-            entity.AddComponent(new UiIconComponent(Path.GetFileName(data.IconPath)));
+
+            var iconFileName = Path.GetFileName(data.IconPath);
+            entity.AddComponent(new UiIconComponent(iconFileName));
+            entity.AddComponent(new Drawable(iconFileName, new Color(1f)));
+            entity.AddComponent(new SpritedObject(true, iconFileName));
+
             entity.AddComponent(new Description(data.Description));
 
             entity.AddComponent(new Item(data.ItemType, 0, data.ItemQuality, 1, 1, "CorpoCorp Inc."));

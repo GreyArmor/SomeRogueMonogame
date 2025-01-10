@@ -61,9 +61,19 @@ namespace NamelessRogue.Engine.Infrastructure
             SpritesAnimated.Remove(id);
         }
 
-            public static void AddStaticSprite(string id, string path)
+        public static void RemoveStaticSprite(string id)
         {
-            var sprite = new Sprite(game.Content.Load<Texture2D>(path));
+            SpritesStatic.Remove(id);
+        }
+
+        public static void AddStaticSprite(string id, string path)
+        {
+            AddStaticSprite(id, game.Content.Load<Texture2D>(path));
+        }
+
+        public static void AddStaticSprite(string id, Texture2D texture)
+        {
+            var sprite = new Sprite(texture);
             SpritesStatic.Add(id, sprite);
         }
 

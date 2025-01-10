@@ -53,7 +53,7 @@ namespace NamelessRogue.Engine.UI
         string[] currentFilesOfSelectedItemTypeNames = null;
         public EditorCharacterScreenActions EditorCharacterScreenActions { get; set; } = EditorCharacterScreenActions.None;
 
-        public List<DroppedItem> DroppedItems { get; set; } = new List<DroppedItem>();
+        public List<DroppedItemTemplate> DroppedItems { get; set; } = new List<DroppedItemTemplate>();
 
         public EditorCharacterScreen(NamelessGame game) : base(game)
         {
@@ -403,7 +403,7 @@ namespace NamelessRogue.Engine.UI
 
                                     var itemData = (ItemTemplateData)serializer?.Deserialize(reader);
 
-                                    DroppedItems.Add(new DroppedItem() { ItemId = itemData.Id, Path = Path.GetRelativePath(directory, selectedDroppableItemFile), Probability = 0 });
+                                    DroppedItems.Add(new DroppedItemTemplate() { ItemId = itemData.Id, Path = Path.GetRelativePath(directory, selectedDroppableItemFile), Probability = 0 });
                                     droppableItemPickerDialog = false;
                                     ImGui.CloseCurrentPopup();
                                 }

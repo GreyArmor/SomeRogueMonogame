@@ -59,19 +59,24 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 entityToKill.RemoveComponentOfType<OccupiesTile>();
 
 
-                var droppedItems = entityToKill.GetComponentOfType<DroppedItemscomponent>();
+                var droppedItems = entityToKill.GetComponentOfType<DroppedItemsComponent>();
                 if (droppedItems != null)
                 {
-                    foreach (var itemId in droppedItems.DroppedItemIds)
+                    foreach (var droppedItem in droppedItems.DroppedItems)
                     {
+                        var isDropping = Random.Shared.Next(100) <= droppedItem.Probability;
+
+                        if(!isDropping)
+                        {
+                            continue;
+                        }
                         Tile tile = worldProvider.GetTile(position.Point.X, position.Point.Y, position.Point.Z);
-                        bool itemExists = ItemFactory.ItemDataById.TryGetValue(itemId, out var item);
+                        bool itemExists = ItemFactory.ItemDataById.TryGetValue(droppedItem.ItemId, out var item);
                         if (itemExists)
                         {
                             var itemEntity = ItemFactory.CreateItemFromData(namelessGame, item);
                             tile.AddEntity(itemEntity);
                         }
-
                     }
                 }
 

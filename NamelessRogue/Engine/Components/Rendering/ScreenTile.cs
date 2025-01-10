@@ -42,6 +42,11 @@ namespace NamelessRogue.Engine.Components.Rendering
         {
             StackedObjects.Add(new StackedObject(id, type, color, animationName, hasShadow));
         }
+
+        public void AddObjectToBottom(string id, ScreenObjectSource type, Color color, bool hasShadow, string animationName = "")
+        {
+            StackedObjects.Insert(0, new StackedObject(id, type, color, animationName, hasShadow));
+        }
         public List<StackedObject> StackedObjects { get; set; } = new List<StackedObject> ();
         public bool isVisible;
         internal bool isRemembered;
