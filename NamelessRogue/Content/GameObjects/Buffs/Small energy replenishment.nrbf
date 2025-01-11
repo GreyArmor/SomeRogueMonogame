@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BuffTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>55f934ae-4bf3-4f4b-a8eb-eb0f0de5938f</Id>
+  <Name>Small energy replenishment</Name>
+  <Description />
+  <IconPath>Icons\battery.png</IconPath>
+  <Duration>5</Duration>
+  <IsAppliedImmediately>true</IsAppliedImmediately>
+  <IsDamageOverTime>false</IsDamageOverTime>
+  <HealthModificator>0</HealthModificator>
+  <EnergyModificator>15</EnergyModificator>
+  <ArmorModificator>-10</ArmorModificator>
+  <ResistanceModificator>-10</ResistanceModificator>
+  <DamageModificator>10</DamageModificator>
+</BuffTemplateData>

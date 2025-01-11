@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
+using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Generation.Editor;
@@ -100,59 +101,7 @@ namespace NamelessRogue.Engine.UI
         string selectedIconFile = "";
         private string itemId;
         private string[] currentFilesOfSelectedItemType;
-        private string[] currentFilesOfSelectedItemTypeNames;
-
-        void _fillTreeRecursive(string path, IEnumerable<string> fileExtensions, ref string selectedFile)
-        {
-            ImGui.SetNextItemOpen(true);
-            List<string> topDirectoryFiles = new List<string>();
-            List<string> subdirectoryFiles = new List<string>();
-            foreach (string extension in fileExtensions)
-            {
-                topDirectoryFiles.AddRange(Directory.GetFiles(path, extension, SearchOption.TopDirectoryOnly));
-            }
-
-            foreach (string extension in fileExtensions)
-            {
-                subdirectoryFiles.AddRange(Directory.GetFiles(path, extension, SearchOption.AllDirectories));
-            }
-            if (topDirectoryFiles.Any() || subdirectoryFiles.Any())
-            {
-                ImGui.PushID(path.GetHashCode());
-                if (ImGui.TreeNode(Path.GetFileName(path)))
-                {
-                    ImGui.PopID();
-
-                    subdirectoryFiles = subdirectoryFiles.Except(topDirectoryFiles).ToList();
-
-                    foreach (var file in topDirectoryFiles)
-                    {
-                        ImGui.PushID(path.GetHashCode() + file.GetHashCode());
-
-                        var flags = file == selectedIconFile ? ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.Leaf;
-                        ImGui.TreeNodeEx(Path.GetFileName(file), flags);
-                        if (ImGui.IsItemClicked() && !ImGui.IsItemToggledOpen())
-                        {
-                            selectedFile = file;
-                        }
-                        ImGui.TreePop();
-                        ImGui.PopID();
-                    }
-
-                    if (subdirectoryFiles.Any())
-                    {
-                        var subdirectories = Directory.GetDirectories(path);
-                        foreach (var subdirectory in subdirectories)
-                        {
-                            _fillTreeRecursive(subdirectory, fileExtensions, ref selectedFile);
-                        }
-                    }
-                    ImGui.TreePop();
-                }
-            }
-        }
-
-
+        private string[] currentFilesOfSelectedItemTypeNames;   
 
         /// <summary>
         /// SOMEBODY TOUCHA MY SPAGHET

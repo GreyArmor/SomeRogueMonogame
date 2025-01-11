@@ -66,5 +66,4 @@ namespace NamelessRogue.Engine.Generation.Editor
         [XmlElement]
         public int Probability { get; set; } = 0;
     }
-
 }

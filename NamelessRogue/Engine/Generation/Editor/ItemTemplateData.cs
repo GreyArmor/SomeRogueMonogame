@@ -40,6 +40,10 @@ namespace NamelessRogue.Engine.Generation.Editor
         [XmlElement]
         public ConsumableItemTemplateData? ConsumableItemTemplateData { get; set; }
 
+        [XmlElement]
+        public List<AssociatedBuff> AssociatedBuffs { get; set; } = new List<AssociatedBuff>();
+
+
     }
 
     [XmlRoot]

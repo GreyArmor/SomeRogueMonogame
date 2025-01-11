@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Id>c7fa99db-347d-4677-ad9b-b7e72b587de9</Id>
+  <Id>ad4f9a93-ca18-45ab-99f5-7edc43edae2d</Id>
   <Name>Rusting beaker</Name>
   <Description>Do not consume</Description>
   <IconPath>Icons\rusting_beaker.png</IconPath>
@@ -18,4 +18,8 @@
     <ResistanceModificator>0</ResistanceModificator>
     <DamageModificator>0</DamageModificator>
   </ConsumableItemTemplateData>
+  <AssociatedBuffs>
+    <BuffId>55f934ae-4bf3-4f4b-a8eb-eb0f0de5938f</BuffId>
+    <Path>GameObjects\Buffs\Rusting.nrbf</Path>
+  </AssociatedBuffs>
 </ItemTemplateData>

@@ -109,15 +109,19 @@ namespace NamelessRogue.Engine.UI
         string selectedIconFile = "";
         private string itemId;
 
+        private List<AssociatedBuff> AssociatedBuffs = new List<AssociatedBuff>();
+        private bool buffsPickerDialogue;
+        private string selectedBuffFile;
+
         /// <summary>
         /// SOMEBODY TOUCHA MY SPAGHET
         /// </summary>
         public override void DrawLayout()
         {
-           
+            var directory = "";
             if (currentFilesOfSelectedItemType == null)
             {
-                var directory = "";               
+                            
                 switch (currentItemType)
                 {
                     case ItemType.Weapon:
@@ -148,62 +152,11 @@ namespace NamelessRogue.Engine.UI
                 currentFilesOfSelectedItemTypeNames = currentFilesOfSelectedItemType.Select(x => Path.GetFileName(x)).ToArray();
             }
 
-            ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove);
+            ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollWithMouse);
             {
                 if (fileIsPicking)
                 {                   
-                    var fileExtensions = new List<string>() { "*.jpg", "*.png" };
-            
-                    void _fillTreeRecursive(string path)
-                    {
-                        List<string> topDirectoryFiles = new List<string>();
-                        List<string> subdirectoryFiles = new List<string>();
-                        foreach (string extension in fileExtensions)
-                        {
-                            topDirectoryFiles.AddRange(Directory.GetFiles(path, extension, SearchOption.TopDirectoryOnly));
-                        }
-
-                        foreach (string extension in fileExtensions)
-                        {
-                            subdirectoryFiles.AddRange(Directory.GetFiles(path, extension, SearchOption.AllDirectories));
-                        }
-                        if (topDirectoryFiles.Any() || subdirectoryFiles.Any())
-                        {
-                            ImGui.PushID(path.GetHashCode());
-                            if (ImGui.TreeNode(Path.GetFileName(path)))
-                            {
-                                ImGui.PopID();
-
-                                subdirectoryFiles = subdirectoryFiles.Except(topDirectoryFiles).ToList();
-
-                                foreach (var file in topDirectoryFiles)
-                                {
-                                    ImGui.PushID(path.GetHashCode() + file.GetHashCode());
-
-                                    var flags = file == selectedIconFile ? ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.Leaf;
-                                    ImGui.TreeNodeEx(Path.GetFileName(file), flags);
-                                    if (ImGui.IsItemClicked() && !ImGui.IsItemToggledOpen())
-                                    {
-                                        selectedIconFile = file;
-                                    }
-                                    ImGui.TreePop();
-                                    ImGui.PopID();
-                                }
-
-                                if (subdirectoryFiles.Any())
-                                {
-                                    var subdirectories = Directory.GetDirectories(path);
-                                    foreach (var subdirectory in subdirectories)
-                                    {
-                                        _fillTreeRecursive(subdirectory);
-                                    }
-                                }
-                                ImGui.TreePop();
-                            }
-                        }
-                    }                       
-                    
-
+                    var fileExtensions = new List<string>() { "*.jpg", "*.png" };       
 
                     var previousPos = ImGui.GetCursorPos();
                     var center = ImGui.GetMainViewport().GetCenter();
@@ -216,7 +169,7 @@ namespace NamelessRogue.Engine.UI
                     if (ImGui.BeginPopupModal("FilePickerDialogPopup", ref p_open, ImGuiWindowFlags.AlwaysAutoResize))
                     {
                         ImGui.SetNextItemOpen(true);
-                        _fillTreeRecursive(contentDirectoryPath);
+                        _fillTreeRecursive(contentDirectoryPath, fileExtensions, ref selectedIconFile);
 
                        // ImGui.Combo("files", ref currentIconCombpBoxItem, files.ToArray(), files.Count);
                         if (ImGui.Button("Open"))
@@ -244,7 +197,7 @@ namespace NamelessRogue.Engine.UI
                 var fieldsSizeX = (uiSize.X / 3) * 2;
           //      if (!fileIsPicking)
                 {
-                    ImGui.BeginChild("##fields", new Vector2(fieldsSizeX, uiSize.Y), false, ImGuiWindowFlags.None);
+                    ImGui.BeginChild("##fields", new Vector2(fieldsSizeX, uiSize.Y - 100), false, ImGuiWindowFlags.None);
                     {
                         ImGui.BeginTabBar("##itemtabs");
                         {
@@ -474,8 +427,75 @@ namespace NamelessRogue.Engine.UI
 
                         }
                     }
+
+                    ImGui.Separator();
+                    ImGui.Text("Buffs - Weapons apply associated buffs on hit, consumable items apply buffs to affected targets");
+                    ImGui.Separator();
+
+                    var fileExtensions = new List<string>() { "*.nrbf" };
+                    if (ButtonWithSound("Add", buttonSize, true))
+                    {
+                        buffsPickerDialogue = true;
+                    }
+
+                    if (buffsPickerDialogue)
+                    {
+                        ImGui.OpenPopup("Buff picker dialog");
+                        ImGui.SetNextWindowPos(new Vector2());
+                        bool drop_open = true;
+                        if (ImGui.BeginPopupModal("Buff picker dialog", ref drop_open, ImGuiWindowFlags.AlwaysAutoResize))
+                        {
+                            ImGui.SetNextItemOpen(true);
+                            _fillTreeRecursive(contentDirectoryPath, fileExtensions, ref selectedBuffFile);
+
+                            // ImGui.Combo("files", ref currentIconCombpBoxItem, files.ToArray(), files.Count);
+                            if (ImGui.Button("Open"))
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(BuffTemplateData));
+                                TextReader reader = new StreamReader(selectedBuffFile);
+
+                                var buffData = (BuffTemplateData)serializer?.Deserialize(reader);
+
+                                AssociatedBuffs.Add(new AssociatedBuff() { BuffId = buffData.Id, Path = Path.GetRelativePath(contentDirectoryPath, selectedBuffFile)});
+                                buffsPickerDialogue = false;
+                                reader.Close();
+                                ImGui.CloseCurrentPopup();
+                            }
+                            ImGui.SameLine();
+                            if (ImGui.Button("Cancel"))
+                            {
+                                buffsPickerDialogue = false;
+                                ImGui.CloseCurrentPopup();
+                            }
+                            ImGui.EndPopup();
+                        }
+                    }
+
+                    ImGui.SameLine();
+                    ImGui.Separator();
+                    ImGui.SetNextItemWidth(fieldsSizeX);
+
+                    ImGui.SetNextItemWidth(fieldsSizeX);
+
+                    int counter = 0;
+                    foreach (var associatedBuff in AssociatedBuffs.ToList())
+                    {
+                        ImGui.Separator();
+                        ImGui.SetNextItemWidth(fieldsSizeX / 2);
+                        ImGui.BeginChild("##associatedBuffText" + counter, new Vector2(fieldsSizeX / 2, buttonSize.Y / 2));
+                        ImGui.Text(Path.GetFileName(associatedBuff.Path));
+                        ImGui.EndChild();
+                        ImGui.SameLine();
+                        if (ButtonWithSound("Remove ##" + counter, buttonSize / 2, true))
+                        {
+                            AssociatedBuffs.Remove(associatedBuff);
+                        }
+                        counter++;
+                    }
+
                     ImGui.EndChild();
                     ImGui.SameLine();
+
                     ImGui.BeginChild("##currentItems", new Vector2((uiSize.X / 3 - 100), uiSize.Y - 50), true);
                     {
                         ImGui.Text("Items of type");
@@ -606,6 +626,8 @@ namespace NamelessRogue.Engine.UI
                 data.ConsumableItemTemplateData = citd;
             }
 
+            data.AssociatedBuffs = AssociatedBuffs.ToList();
+
             using (TextWriter writer = new StreamWriter(newItemPath))
             {
                 XmlSerializer ser = new XmlSerializer(typeof(ItemTemplateData));
@@ -674,6 +696,9 @@ namespace NamelessRogue.Engine.UI
                 resistModValue = citd.ResistanceModificator;
 
             }
+
+            AssociatedBuffs = itemData.AssociatedBuffs.ToList();
+
             reader.Close();
         }
     }

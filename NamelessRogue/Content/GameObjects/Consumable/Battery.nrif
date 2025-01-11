@@ -18,4 +18,8 @@
     <ResistanceModificator>0</ResistanceModificator>
     <DamageModificator>0</DamageModificator>
   </ConsumableItemTemplateData>
+  <AssociatedBuffs>
+    <BuffId>55f934ae-4bf3-4f4b-a8eb-eb0f0de5938f</BuffId>
+    <Path>GameObjects\Buffs\Small energy replenishment.nrbf</Path>
+  </AssociatedBuffs>
 </ItemTemplateData>

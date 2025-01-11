@@ -26,7 +26,7 @@ namespace NamelessRogue.Engine.Systems.Editors
                     break;
             }
 
-            UIContainer.Instance.EditorCharacterScreen.EditorCharacterScreenActions = EditorCharacterScreenActions.None;
+            UIContainer.Instance.EditorBuffScreen.EditorBuffScreenActions = EditorBuffScreenActions.None;
         }
     }
 }

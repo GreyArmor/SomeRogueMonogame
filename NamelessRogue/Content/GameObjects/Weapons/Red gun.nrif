@@ -19,4 +19,8 @@
     <AmmoType>LowCaliber</AmmoType>
     <AmmoInClip>0</AmmoInClip>
   </WeaponTemplateData>
+  <AssociatedBuffs>
+    <BuffId>dbc57d01-86bd-44f1-8d94-8e318c6829bb</BuffId>
+    <Path>GameObjects\Buffs\Toxic.nrbf</Path>
+  </AssociatedBuffs>
 </ItemTemplateData>
