@@ -31,16 +31,15 @@ namespace NamelessRogue.Engine.UI
         LoadItem,
         Back,
     }
+
     public class EditorCharacterScreen : BaseScreen
     {
         Vector2 buttonSize = new Vector2(200, 50);
-
-        ItemType[] itemTypes = (ItemType[])Enum.GetValues(typeof(ItemType));
         DamageType[] damageTypes = (DamageType[])Enum.GetValues(typeof(DamageType));
         AttackType[] attackTypes = (AttackType[])Enum.GetValues(typeof(AttackType));
         AmmoType[] ammoTypes = (AmmoType[])Enum.GetValues(typeof(AmmoType));
 
-        Slot[] armorSlots = ((Slot[])Enum.GetValues(typeof(Slot))).Except(new List<Slot>() { Slot.LefHand, Slot.RightHand }).ToArray();
+
 
         string[] itemsTypesNames = Enum.GetNames(typeof(ItemType));
         string[] damageTypesNames = Enum.GetNames(typeof(DamageType));
@@ -57,16 +56,13 @@ namespace NamelessRogue.Engine.UI
 
         public EditorCharacterScreen(NamelessGame game) : base(game)
         {
-
-            armorSlotsNames = armorSlots.Select(x => x.ToString()).ToArray();
-
             string workingDirectory = Environment.CurrentDirectory;
 #if DEBUG
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
             contentCharacterDirectoryPath = projectDirectory + "\\Content\\GameObjects\\Characters";
             contentDirectoryPath = projectDirectory + "\\Content\\";
 #else
-            contentDirectoryPath = workingDirectory + "\\Content\\GameObjects\\Characters\\";
+            contentCharacterDirectoryPath = workingDirectory + "\\Content\\GameObjects\\Characters\\";
             contentDirectoryPath = workingDirectory + "\\Content\\";
 #endif
         }

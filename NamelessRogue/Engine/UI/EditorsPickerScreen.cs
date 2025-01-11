@@ -16,6 +16,7 @@ namespace NamelessRogue.Engine.UI
         CharacterEditor,
         Back,
         AbilityEditor,
+        BuffEditor,
     }
     public class EditorsPickerScreen : BaseScreen
     {
@@ -47,7 +48,12 @@ namespace NamelessRogue.Engine.UI
                     EditorsPickerScreenActions = EditorsPickerScreenActions.AbilityEditor;
                 }
 
-               
+                if (ButtonWithSound("Buff editor", buttonSize))
+                {
+                    EditorsPickerScreenActions = EditorsPickerScreenActions.BuffEditor;
+                }
+
+
                 if (ButtonWithSound("Back", buttonSize))
                 {
                     EditorsPickerScreenActions = EditorsPickerScreenActions.Back;

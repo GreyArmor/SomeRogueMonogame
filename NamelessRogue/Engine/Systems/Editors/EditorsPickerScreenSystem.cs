@@ -22,7 +22,7 @@ namespace NamelessRogue.Engine.Systems.Editors
                     namelessGame.ContextToSwitch = ContextFactory.GetEditorItemContext(namelessGame);
                     break;
                 case EditorsPickerScreenActions.AbilityEditor:
-             
+
                     break;
                 case EditorsPickerScreenActions.CharacterEditor:
                     namelessGame.ContextToSwitch = ContextFactory.GetEditorCharacterContext(namelessGame);
@@ -32,7 +32,9 @@ namespace NamelessRogue.Engine.Systems.Editors
                     break;
                 case EditorsPickerScreenActions.None:
                     break;
-               ;
+                case EditorsPickerScreenActions.BuffEditor:
+                    namelessGame.ContextToSwitch = ContextFactory.GetEditorBuffContext(namelessGame);
+                    break;
                 default:
                     break;
             }

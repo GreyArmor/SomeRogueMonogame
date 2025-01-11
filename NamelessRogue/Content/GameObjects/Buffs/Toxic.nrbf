@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BuffTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>dbc57d01-86bd-44f1-8d94-8e318c6829bb</Id>
+  <Name>Toxic</Name>
+  <Description />
+  <IconPath>Icons\toxic_beaker.png</IconPath>
+  <Duration>3</Duration>
+  <IsAppliedImmediately>false</IsAppliedImmediately>
+  <IsDamageOverTime>false</IsDamageOverTime>
+  <HealthModificator>-10</HealthModificator>
+  <EnergyModificator>0</EnergyModificator>
+  <ArmorModificator>0</ArmorModificator>
+  <ResistanceModificator>0</ResistanceModificator>
+  <DamageModificator>0</DamageModificator>
+</BuffTemplateData>
