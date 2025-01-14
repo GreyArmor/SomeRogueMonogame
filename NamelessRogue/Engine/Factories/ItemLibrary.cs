@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using System.Xml.Serialization;
 using NamelessRogue.Engine.Components;
-using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
@@ -21,7 +20,7 @@ using NamelessRogue.Engine.Components.Environment;
 
 namespace NamelessRogue.Engine.Factories
 {
-    public static class ItemFactory {
+    public static class ItemLibrary {
         public static List<ItemTemplateData> ItemData = new List<ItemTemplateData>();
         public static Dictionary<string, ItemTemplateData> ItemDataById = new Dictionary<string, ItemTemplateData>();
         public static void LoadItemData(NamelessGame game)
@@ -89,25 +88,12 @@ namespace NamelessRogue.Engine.Factories
                 entity.AddComponent(new Equipment(data.PossibleSlots.ToArray()));
                 entity.AddComponent(new ArmorStats() { DamageType = atd.DamageType, Value = new SimpleStat(atd.ArmorValue, atd.ArmorValue, atd.ArmorValue) });
                 entity.AddComponent(new ResistanceStat() { DamageType = atd.ResistType, Value = new SimpleStat(atd.ResistValue, atd.ArmorValue, atd.ResistValue) });
-            }
+            }        
 
-            if (data.ConsumableItemTemplateData != null)
+            if (data.AssociatedBuffs.Any())
             {
-                var consumableComponent = new Consumable();
+                var consumableComponent = new Consumable(data.AssociatedBuffs.Select(x=>x.BuffId));
                 entity.AddComponent(consumableComponent);
-                var citd = data.ConsumableItemTemplateData;
-                if (citd.HealthModificator != 0 || citd.EnergyModificator != 0)
-                {
-                    consumableComponent.Health = citd.HealthModificator;
-                    consumableComponent.Energy = citd.EnergyModificator;
-                    consumableComponent.Damage = citd.DamageModificator;
-                    consumableComponent.Armor = citd.ArmorModificator;
-                    consumableComponent.Resistance = citd.ResistanceModificator;
-                    consumableComponent.IsAppliedImmediately = citd.IsAppliedImmediately;
-                    consumableComponent.Duration = citd.Duration;
-                    consumableComponent.IsDamageOverTime = citd.IsDamageOverTime;
-                    entity.AddComponent(new CharacterStats() { Health = new SimpleStat(citd.HealthModificator, 0, 999), Energy = new SimpleStat(citd.EnergyModificator, 0, 999), });
-                }
             }
 
             //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
@@ -117,3 +103,4 @@ namespace NamelessRogue.Engine.Factories
 
     }
 }
+

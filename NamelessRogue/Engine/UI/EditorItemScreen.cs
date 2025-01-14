@@ -547,7 +547,7 @@ namespace NamelessRogue.Engine.UI
                 try
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));
-                    reader = new StreamReader(currentFilesOfSelectedItemType[currentSelectedFile]);
+                    reader = new StreamReader(newItemPath);
                     var oldData = (ItemTemplateData)serializer.Deserialize(reader);
                     itemId = oldData.Id;
                     reader.Close();

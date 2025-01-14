@@ -71,10 +71,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             continue;
                         }
                         Tile tile = worldProvider.GetTile(position.Point.X, position.Point.Y, position.Point.Z);
-                        bool itemExists = ItemFactory.ItemDataById.TryGetValue(droppedItem.ItemId, out var item);
+                        bool itemExists = ItemLibrary.ItemDataById.TryGetValue(droppedItem.ItemId, out var item);
                         if (itemExists)
                         {
-                            var itemEntity = ItemFactory.CreateItemFromData(namelessGame, item);
+                            var itemEntity = ItemLibrary.CreateItemFromData(namelessGame, item);
                             tile.AddEntity(itemEntity);
                         }
                     }

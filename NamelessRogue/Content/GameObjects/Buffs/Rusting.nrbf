@@ -6,10 +6,11 @@
   <IconPath>Icons\rusting_beaker.png</IconPath>
   <Duration>10</Duration>
   <IsAppliedImmediately>false</IsAppliedImmediately>
+  <PermanentModifier>false</PermanentModifier>
   <IsDamageOverTime>false</IsDamageOverTime>
-  <HealthModificator>1</HealthModificator>
-  <EnergyModificator>1</EnergyModificator>
+  <HealthModificator>0</HealthModificator>
+  <EnergyModificator>0</EnergyModificator>
   <ArmorModificator>-10</ArmorModificator>
   <ResistanceModificator>-10</ResistanceModificator>
-  <DamageModificator>10</DamageModificator>
+  <DamageModificator>0</DamageModificator>
 </BuffTemplateData>

@@ -4,6 +4,8 @@ using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Stats;
+using NamelessRogue.Engine.Factories;
+using NamelessRogue.Engine.Generation.Editor;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
@@ -30,37 +32,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var iconComponent = item.GetComponentOfType<UiIconComponent>();
 
                 var inventory = player.GetComponentOfType<ItemsHolder>();
-                inventory.Items.Remove(item);              
+                inventory.Items.Remove(item);
 
-                if (consumableComponent.IsAppliedImmediately)
-                {                    
-                    playerStats.Health.Value += consumableComponent.Health;
-                    playerStats.Energy.Value += consumableComponent.Energy;
-                }
-                else
+                foreach (var buffId in consumableComponent.BuffIds)
                 {
-                    var buffEntity = new Entity();
-                    var consumableClone = consumableComponent.Clone();
-                    buffEntity.AddComponent((UiIconComponent)iconComponent.Clone());
-                    buffEntity.AddComponent(new ModifierComponent());
-                    buffEntity.AddComponent(new TimedModifier() { TurnsToLast = consumableComponent.Duration });
-                    buffEntity.AddComponent(consumableClone);
-
-                    if (consumableComponent.Armor != 0)
-                    {
-                        buffEntity.AddComponent(new ArmorStats() { DamageType = DamageType.Physical, Value = new SimpleStat(consumableComponent.Armor, -999, 999) });
-                    }
-                    if(consumableComponent.Resistance != 0)
-                    {
-                        buffEntity.AddComponent(new ResistanceStat() { DamageType = DamageType.Physical, Value = new SimpleStat(consumableComponent.Resistance, -999, 999) });
-                    }
-                    if (consumableComponent.Damage != 0)
-                    {
-                        buffEntity.AddComponent(new WeaponStats() { DamageType = DamageType.Physical, MinimumDamage = consumableComponent.Damage, MaximumDamage = consumableComponent.Damage});
-                    }
-
-                    player.GetComponentOfType<ModifiersCollection>().ModifierEntities.Add(buffEntity);
-
+                    var buffTemplateData = BuffLibrary.DataById[buffId];
+                    var buffEntity = BuffLibrary.CreateBuffFromData(namelessGame, BuffLibrary.DataById[buffId]);
+                    player.GetComponentOfType<ModifiersCollection>().ModifierEntities.Add(buffEntity); 
                 }
             }
         }

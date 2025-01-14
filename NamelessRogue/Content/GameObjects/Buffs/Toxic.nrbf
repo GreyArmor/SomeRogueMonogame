@@ -6,7 +6,8 @@
   <IconPath>Icons\toxic_beaker.png</IconPath>
   <Duration>3</Duration>
   <IsAppliedImmediately>false</IsAppliedImmediately>
-  <IsDamageOverTime>false</IsDamageOverTime>
+  <PermanentModifier>true</PermanentModifier>
+  <IsDamageOverTime>true</IsDamageOverTime>
   <HealthModificator>-10</HealthModificator>
   <EnergyModificator>0</EnergyModificator>
   <ArmorModificator>0</ArmorModificator>

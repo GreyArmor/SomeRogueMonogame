@@ -26,6 +26,9 @@ namespace NamelessRogue.Engine.Generation.Editor
         public bool IsAppliedImmediately { get; set; }
 
         [XmlElement]
+        public bool PermanentModifier { get; set; }
+
+        [XmlElement]
         public bool IsDamageOverTime { get; set; }
 
         [XmlElement]

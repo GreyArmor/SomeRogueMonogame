@@ -28,40 +28,33 @@ namespace NamelessRogue.Engine.Components.Interaction
 
                 accumulatedStats.ResetValue();
 
-                var entitstats = entity.GetComponentOfType<CharacterStats>();
+                var entitStats = entity.GetComponentOfType<CharacterStats>();
 
-                if (entitstats != null)
-                {
-                    if (namelessGame.TurnUpdated)
-                    {
-                        foreach (var modifier in modifiers.ModifierEntities)
-                        {
-                            var consumable = modifier.GetComponentOfType<Consumable>();
-                            var timeConstrains = modifier.GetComponentOfType<TimedModifier>();
-                            if (timeConstrains != null)
-                            {
-                                if (consumable.IsDamageOverTime)
-                                {
-                                    entitstats.Health.Value += consumable.Health;
-                                    entitstats.Energy.Value += consumable.Energy;
-                                }
-                                timeConstrains.TurnsToLast--;
-                            }            
-                        }
-                    }
-                    accumulatedStats.Add(entitstats);
-                }
-
-
+               
                 List<IEntity> modifiersToRemove = new List<IEntity>();
                 foreach (var modifier in modifiers.ModifierEntities)
                 {
                     var timeConstrains = modifier.GetComponentOfType<TimedModifier>();
-                    //skip and remove modifiers that expired
+                    var buff = modifier.GetComponentOfType<Buff>();
+
+
                     if (timeConstrains != null && timeConstrains.TurnsToLast == 0)
                     {
                         modifiersToRemove.Add(modifier);
                         continue;
+                    }
+
+                    if (buff.IsDamageOverTime && !namelessGame.TurnUpdated)
+                    {
+                        continue;
+                    }
+
+                    if (namelessGame.TurnUpdated)
+                    {
+                        if (timeConstrains != null)
+                        {
+                            timeConstrains.TurnsToLast--;
+                        }
                     }
 
                     var modifierAS = modifier.GetComponentOfType<ArmorStats>();
@@ -69,22 +62,56 @@ namespace NamelessRogue.Engine.Components.Interaction
                     var modifierWS = modifier.GetComponentOfType<WeaponStats>();
                     var modifierStats = modifier.GetComponentOfType<CharacterStats>();
 
-                    if (modifierAS != null)
+
+                    if (buff.PermanentModifier)
                     {
-                        accumulatedStats.Armor.Add(modifierAS);
+                        if (modifierAS != null)
+                        {
+                            entitStats.Armor.Add(modifierAS);
+                        }
+                        if (modifierRS != null)
+                        {
+                            entitStats.Resistances.Add(modifierRS);
+                        }
+                        if (modifierWS != null)
+                        {
+                            entitStats.WeaponStats.Add(modifierWS);
+                        }
+                        if (modifierStats != null)
+                        {
+                            entitStats.Add(modifierStats);
+                        }
                     }
-                    if (modifierRS != null)
+                    else
                     {
-                        accumulatedStats.Resistances.Add(modifierRS);
+                        if (modifierAS != null)
+                        {
+                            accumulatedStats.Armor.Add(modifierAS);
+                        }
+                        if (modifierRS != null)
+                        {
+                            accumulatedStats.Resistances.Add(modifierRS);
+                        }
+                        if (modifierWS != null)
+                        {
+                            accumulatedStats.WeaponStats.Add(modifierWS);
+                        }
+                        if (modifierStats != null)
+                        {
+                            accumulatedStats.Add(modifierStats);
+                        }
                     }
-                    if (modifierWS != null)
+
+                    if ((buff != null && buff.IsAppliedImmediately))
                     {
-                        accumulatedStats.WeaponStats.Add(modifierWS);
+                        modifiersToRemove.Add(modifier);
                     }
-                    if (modifierStats != null)
-                    {
-                        accumulatedStats.Add(modifierStats);
-                    }
+
+                }
+
+                if (entitStats != null)
+                {                   
+                    accumulatedStats.Add(entitStats);
                 }
 
                 foreach (var modifier in modifiersToRemove)

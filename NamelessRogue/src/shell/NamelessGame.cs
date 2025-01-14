@@ -320,24 +320,31 @@ namespace NamelessRogue.shell
                 //	{
                 //		CharacterFactory.CreateDummyCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
                 //	}
-                //}
+                //}	
+				//
+				//
+				BuffLibrary.ClearData();
+				BuffLibrary.LoadData(this);
 
-                ItemFactory.ClearData();
-                ItemFactory.LoadItemData(this);
+                ItemLibrary.ClearData();
+                ItemLibrary.LoadItemData(this);
+
+	
+
                 var itemsHolder = player.GetComponentOfType<ItemsHolder>();
-                foreach (var itemData in ItemFactory.ItemData)
+                foreach (var itemData in ItemLibrary.ItemData)
 				{
 					if(itemData.ItemType==ItemType.Consumable)
 					{
 						for (int i = 0;	i<10; i++)
 						{
-                            var item = ItemFactory.CreateItemFromData(this, itemData);
+                            var item = ItemLibrary.CreateItemFromData(this, itemData);
                             itemsHolder.Items.Add(item);
                         }					
 					}
 					else 
 					{
-                        var item = ItemFactory.CreateItemFromData(this, itemData);
+                        var item = ItemLibrary.CreateItemFromData(this, itemData);
                         itemsHolder.Items.Add(item);
                     }                   
                 }

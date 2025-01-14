@@ -534,7 +534,7 @@ namespace NamelessRogue.Engine.UI
                             ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(iconSize, iconSize));
                         }
                         ImGui.SetCursorPos(new System.Numerics.Vector2(iconSizeWithMargin * x, (iconSizeWithMargin * y)));
-                        if (itemId! != "")
+                        if (itemId! != "" && itemId != null)
                         {
                             ImGui.Image(ImGuiImageLibrary.Textures[itemId], new Vector2(iconSize, iconSize));
 

@@ -86,6 +86,7 @@ namespace NamelessRogue.Engine.UI
         int resistModValue = 10;
 
         bool isAppliedImmediately = false;
+        bool permanentModifier = false;
         bool isDoT = false;
 
         bool isResMod = false;
@@ -101,7 +102,8 @@ namespace NamelessRogue.Engine.UI
         string selectedIconFile = "";
         private string itemId;
         private string[] currentFilesOfSelectedItemType;
-        private string[] currentFilesOfSelectedItemTypeNames;   
+        private string[] currentFilesOfSelectedItemTypeNames;
+        private string currentFilePath;
 
         /// <summary>
         /// SOMEBODY TOUCHA MY SPAGHET
@@ -239,7 +241,6 @@ namespace NamelessRogue.Engine.UI
                             fileIsPicking = true;
                         }
 
-
                         ImGui.SameLine();
                         if (ButtonWithSound("Back", buttonSize))
                         {
@@ -278,7 +279,8 @@ namespace NamelessRogue.Engine.UI
 
                          
                         {
-
+                            ImGui.Checkbox("Is a permanent modifier?", ref permanentModifier);
+                            ImGui.SameLine();
                             ImGui.Checkbox("Applied immediately?", ref isAppliedImmediately);
                             ImGui.SameLine();
                             ImGui.Checkbox("Damage over time?", ref isDoT);
@@ -369,7 +371,7 @@ namespace NamelessRogue.Engine.UI
                 try
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(BuffTemplateData));
-                    reader = new StreamReader(currentFilesOfSelectedItemType[currentSelectedFile]);
+                    reader = new StreamReader(newItemPath);
                     var oldData = (BuffTemplateData)serializer.Deserialize(reader);
                     itemId = oldData.Id;
                     reader.Close();
@@ -411,6 +413,7 @@ namespace NamelessRogue.Engine.UI
             }
             data.Duration = duration;
             data.IsAppliedImmediately = isAppliedImmediately;
+            data.PermanentModifier = isAppliedImmediately;
             data.IsDamageOverTime = isDoT;
             data.HealthModificator = healthModValue;
             data.EnergyModificator = energyModValue;
@@ -429,7 +432,10 @@ namespace NamelessRogue.Engine.UI
         private void Load()
         {
             XmlSerializer serializer = new XmlSerializer(typeof(BuffTemplateData));
-            TextReader reader = new StreamReader(currentFilesOfSelectedItemType[currentSelectedFile]);
+
+            currentFilePath = currentFilesOfSelectedItemType[currentSelectedFile];
+
+            TextReader reader = new StreamReader(currentFilePath);
             var btd = (BuffTemplateData)serializer.Deserialize(reader);
 
             if (btd.IconPath != null && btd.IconPath != string.Empty)
@@ -447,6 +453,7 @@ namespace NamelessRogue.Engine.UI
             name = btd.Name;
             description = btd.Description;
             isAppliedImmediately = btd.IsAppliedImmediately;
+            permanentModifier = btd.PermanentModifier;
             isDoT = btd.IsDamageOverTime;
             isResMod = btd.HealthModificator != 0 || btd.EnergyModificator != 0;
             isArmorMod = btd.ArmorModificator != 0;

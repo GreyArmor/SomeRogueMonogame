@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Id>ad4f9a93-ca18-45ab-99f5-7edc43edae2d</Id>
-  <Name>MedKit</Name>
-  <Description>Standard medkit</Description>
+  <Id>cc5a9c20-4fe7-437b-8496-a017ea1a9636</Id>
+  <Name>Medkit</Name>
+  <Description />
   <IconPath>Icons\medkit.png</IconPath>
   <ItemType>Consumable</ItemType>
   <ItemQuality>Terrible</ItemQuality>
   <ConsumableItemTemplateData>
-    <Charges>5</Charges>
-    <Duration>59</Duration>
+    <Charges>1</Charges>
+    <Duration>1</Duration>
     <IsThrowable>false</IsThrowable>
-    <IsAppliedImmediately>true</IsAppliedImmediately>
+    <IsAppliedImmediately>false</IsAppliedImmediately>
     <IsDamageOverTime>false</IsDamageOverTime>
-    <HealthModificator>30</HealthModificator>
-    <EnergyModificator>0</EnergyModificator>
-    <ArmorModificator>0</ArmorModificator>
-    <ResistanceModificator>0</ResistanceModificator>
-    <DamageModificator>0</DamageModificator>
+    <HealthModificator>1</HealthModificator>
+    <EnergyModificator>1</EnergyModificator>
+    <ArmorModificator>10</ArmorModificator>
+    <ResistanceModificator>10</ResistanceModificator>
+    <DamageModificator>10</DamageModificator>
   </ConsumableItemTemplateData>
   <AssociatedBuffs>
-    <BuffId>55f934ae-4bf3-4f4b-a8eb-eb0f0de5938f</BuffId>
+    <BuffId>1e808f98-981a-481d-a2ee-fd637398a99e</BuffId>
     <Path>GameObjects\Buffs\Small heal.nrbf</Path>
   </AssociatedBuffs>
 </ItemTemplateData>
