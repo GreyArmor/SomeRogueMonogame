@@ -33,7 +33,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var combatCommand = new AttackCommand(sourceEntity, character);
                             namelessGame.Commander.EnqueueCommand(combatCommand);
 
-                            AttachToTargetCommand snapToTarget = new AttachToTargetCommand(tileEntity);
+                            AttachToTargetCommand snapToTarget = new AttachToTargetCommand(character);
                             namelessGame.Commander.EnqueueCommand(snapToTarget);
                         }
                 }
