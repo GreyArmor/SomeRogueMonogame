@@ -63,7 +63,7 @@ namespace NamelessRogue.Engine.Factories
 
             var iconFileName = Path.GetFileName(buff.IconPath);
             entity.AddComponent(new UiIconComponent(iconFileName));
-            entity.AddComponent(new Description(buff.Description));
+            entity.AddComponent(new Description(buff.Name, buff.Description));
             entity.AddComponent(new ModifierComponent());
             if (!buff.IsAppliedImmediately)
             {

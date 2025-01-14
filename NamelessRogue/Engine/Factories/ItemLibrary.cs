@@ -71,7 +71,7 @@ namespace NamelessRogue.Engine.Factories
             entity.AddComponent(new Drawable(iconFileName, new Color(1f)));
             entity.AddComponent(new SpritedObject(true, iconFileName));
 
-            entity.AddComponent(new Description(data.Description));
+            entity.AddComponent(new Description(data.Name, data.Description));
 
             entity.AddComponent(new Item(data.ItemType, 0, data.ItemQuality, 1, 1, "CorpoCorp Inc."));
 
@@ -92,8 +92,16 @@ namespace NamelessRogue.Engine.Factories
 
             if (data.AssociatedBuffs.Any())
             {
-                var consumableComponent = new Consumable(data.AssociatedBuffs.Select(x=>x.BuffId));
-                entity.AddComponent(consumableComponent);
+                if (data.ItemType == ItemType.Consumable)
+                {
+                    var consumableComponent = new Consumable(data.AssociatedBuffs.Select(x => x.BuffId));
+                    entity.AddComponent(consumableComponent);
+                }
+                else
+                {
+                    var onHitBuffs = new OnHitBuffs(data.AssociatedBuffs.Select(x => x.BuffId));
+                    entity.AddComponent(onHitBuffs);
+                }
             }
 
             //  entity.AddComponent(new EquipmentSlot(Slot.RightHand));
