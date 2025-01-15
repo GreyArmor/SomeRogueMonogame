@@ -7,9 +7,11 @@ using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Inventory
@@ -47,32 +49,44 @@ namespace NamelessRogue.Engine.Systems.Inventory
                 {
                     if (pickupCommand != null)
                     {
-                        foreach (var pickupCommandItem in pickupCommand.Items)
+                        if(pickupCommand.Items.Count()>1)
                         {
-                            var tile = worldProvider.GetTile(pickupCommand.WhereToPickUp.X,
-                                pickupCommand.WhereToPickUp.Y, 0);
-                            tile.RemoveEntity((Entity) pickupCommandItem);
-                            pickupCommandItem.GetComponentOfType<Drawable>().Visible = false;
-                            var ammo = pickupCommandItem.GetComponentOfType<Ammo>();
-                            if (ammo != null)
+                            var itemsToPickup = pickupCommand.Items.Select(x=>x.GetComponentOfType<Description>().Name).ToList();
+                            namelessGame.CurrentContext.ContextScreen.OpenOptionsPopUp(itemsToPickup, namelessGame.CurrentContext.ContextScreen.UiSize / 2);
+                            namelessGame.Commander.EnqueueCommand(new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.OptionsPopup));
+                        }
+                        else
+                        {
+                            foreach (var pickupCommandItem in pickupCommand.Items)
                             {
-                                var itemsEntities = pickupCommand.Holder.Items;
-                                var itemsWithAmmo = itemsEntities.Select(x=>x).Where(i => i.GetComponentOfType<Ammo>() != null);
-                                //var sameTypeItem = itemsWithAmmo.FirstOrDefault(x => x.GetComponentOfType<Ammo>().Type.Name == ammo.Type.Name);
-                                //if (sameTypeItem != null)
-                                //{
-                                //    sameTypeItem.GetComponentOfType<Item>().Amount +=
-                                //        pickupCommandItem.GetComponentOfType<Item>().Amount;
-                                //    namelessGame.RemoveEntity(pickupCommandItem);
-                                //}
-                                //else
+                                var itemPosition = pickupCommandItem.GetComponentOfType<Position>().Point;
+
+                                var tile = worldProvider.GetTile(itemPosition.X,
+                                    itemPosition.Y, itemPosition.Z);
+                                tile.RemoveEntity((Entity)pickupCommandItem);
+                                pickupCommandItem.GetComponentOfType<Drawable>().Visible = false;
+                                var ammo = pickupCommandItem.GetComponentOfType<Ammo>();
+                                if (ammo != null)
+                                {
+                                    var itemsEntities = pickupCommand.Holder.Items;
+                                    var itemsWithAmmo = itemsEntities.Select(x => x).Where(i => i.GetComponentOfType<Ammo>() != null);
+                                    //var sameTypeItem = itemsWithAmmo.FirstOrDefault(x => x.GetComponentOfType<Ammo>().Type.Name == ammo.Type.Name);
+                                    //if (sameTypeItem != null)
+                                    //{
+                                    //    sameTypeItem.GetComponentOfType<Item>().Amount +=
+                                    //        pickupCommandItem.GetComponentOfType<Item>().Amount;
+                                    //    namelessGame.RemoveEntity(pickupCommandItem);
+                                    //}
+                                    //else
+                                    {
+                                        pickupCommand.Holder.Items.Add(pickupCommandItem);
+                                    }
+                                }
+
+                                else
                                 {
                                     pickupCommand.Holder.Items.Add(pickupCommandItem);
                                 }
-                            }
-                            else
-                            {
-                                pickupCommand.Holder.Items.Add(pickupCommandItem);
                             }
                         }
                     }

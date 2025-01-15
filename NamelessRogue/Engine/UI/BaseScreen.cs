@@ -1,13 +1,19 @@
 ﻿using ImGuiNET;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Generation.Editor;
 using NamelessRogue.Engine.Sounds;
+using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace NamelessRogue.Engine.UI
 {
@@ -15,8 +21,8 @@ namespace NamelessRogue.Engine.UI
     public abstract class BaseScreen : IBaseGuiScreen
 	{
 		protected NamelessGame game;
-		protected System.Numerics.Vector2 uiSize;
-		public BaseScreen(NamelessGame game)
+        protected System.Numerics.Vector2 uiSize;
+        public BaseScreen(NamelessGame game)
 		{
 			this.game = game;
 			uiSize = new System.Numerics.Vector2(game.GetActualWidth(), game.GetActualHeight());
@@ -97,6 +103,74 @@ namespace NamelessRogue.Engine.UI
             }
         }
 
+        int optionsPopupCurrentItem = -1;
+        string[] optionsPopupItems = null;
+        bool openOptionPopup = false;
+        Vector2 optionsPopupPosition = Vector2.Zero;
 
+        public int CurrentOptionsItem
+        {
+            get { return optionsPopupCurrentItem; }
+            set
+            {
+                optionsPopupCurrentItem = value;
+                if (optionsPopupCurrentItem < 0)
+                {
+                    optionsPopupCurrentItem = 0;
+                }
+                else if(optionsPopupCurrentItem >= optionsPopupItems.Length)
+                {
+                    optionsPopupCurrentItem = optionsPopupItems.Length - 1;
+                }
+            }
+        }
+
+        public Vector2 UiSize { get => uiSize; set => uiSize = value; }
+
+        public void OpenOptionsPopUp(IEnumerable<string> options, Vector2 position)
+        {
+            openOptionPopup = true;
+            optionsPopupItems = options.ToArray();
+            optionsPopupCurrentItem = 0;
+            optionsPopupPosition = position;
+        }
+
+        public void CloseOptionsPopUp()
+        {
+            openOptionPopup = false;
+            optionsPopupCurrentItem = -1;
+            optionsPopupItems = null;
+            optionsPopupPosition = Vector2.Zero;
+        }
+
+        public void DrawOptionsPopup()
+        {
+            if (openOptionPopup)
+            {
+                ImGui.OpenPopup("##OptionsPopup");
+                ImGui.SetNextWindowPos(uiSize / 2);
+                bool drop_open = true;
+                if (ImGui.BeginPopupModal("##OptionsPopup", ref drop_open, ImGuiWindowFlags.AlwaysAutoResize))
+                {
+                    bool clicked = ImGui.ListBox("##listboOptions", ref optionsPopupCurrentItem, optionsPopupItems, optionsPopupItems.Length);
+                    if (clicked)
+                    {
+                        game.Commander.EnqueueCommand(new OptionsPopupChooseOptionCommand(optionsPopupCurrentItem));
+                        openOptionPopup = false;
+                        ImGui.CloseCurrentPopup();
+                    }
+                }
+            }
+        }
+    }
+
+    internal class OptionsPopupChooseOptionCommand : ICommand
+    {
+        public OptionsPopupChooseOptionCommand(int optionsPopupCurrentItem)
+        {
+            OptionsPopupCurrentItem = optionsPopupCurrentItem;
+        }
+
+        public int OptionsPopupCurrentItem { get; }
     }
 }

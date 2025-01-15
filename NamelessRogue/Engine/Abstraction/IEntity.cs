@@ -24,5 +24,7 @@ namespace NamelessRogue.Engine.Abstraction
         void AppendDelayedComponents();
         
         IEntity CloneEntity();
+
+        List<IComponent> AllComponents { get; }
     }
 }

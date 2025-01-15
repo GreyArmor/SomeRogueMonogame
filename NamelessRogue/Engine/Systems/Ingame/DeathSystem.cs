@@ -75,6 +75,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         if (itemExists)
                         {
                             var itemEntity = ItemLibrary.CreateItemFromData(namelessGame, item);
+                            itemEntity.AddComponent(new Position() { Point = position.Point});
+                            itemEntity.AddComponent(new Interactable());
                             tile.AddEntity(itemEntity);
                         }
                     }

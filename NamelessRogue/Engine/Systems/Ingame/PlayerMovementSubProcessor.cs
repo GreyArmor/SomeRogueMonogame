@@ -311,12 +311,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         interactableEntities.Add(tileEntity);
                                     }
                                 }
-                                if (interactableEntities.Count > 1)
-                                {
-                                    var interactSelectorCommand = new InteractionSelectorCommand(interactableEntities);
-                                    namelessGame.Commander.EnqueueCommand(interactSelectorCommand);
-                                }
+
                             }
+                        }
+                        if (interactableEntities.Count > 1)
+                        {
+                            var interactSelectorCommand = new InteractionSelectorCommand(interactableEntities);
+                            namelessGame.Commander.EnqueueCommand(interactSelectorCommand);
                         }
 
                         if (interactableEntities.Count == 1)

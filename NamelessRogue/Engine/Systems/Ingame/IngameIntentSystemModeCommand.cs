@@ -9,7 +9,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
 {
     public enum IngameIntentSystemMode
     {
-        PlayerMovement, FireWeapon, QuickBarAiming
+        PlayerMovement, FireWeapon, QuickBarAiming,
+        OptionsPopup
     }
     internal class IngameIntentSystemModeSwitchCommand : ICommand
     {

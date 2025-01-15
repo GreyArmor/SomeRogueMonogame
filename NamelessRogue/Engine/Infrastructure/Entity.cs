@@ -77,7 +77,9 @@ namespace NamelessRogue.Engine.Infrastructure
 
 		public Guid Id { get; set; }
 
-		public void AddComponentDelayed<T>(T component) where T : IComponent
+        public List<IComponent> AllComponents { get { return GetAllComponents(); } }
+
+        public void AddComponentDelayed<T>(T component) where T : IComponent
         {
             delayedAddComponents.Add(component);
         }

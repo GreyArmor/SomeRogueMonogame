@@ -53,7 +53,7 @@ namespace NamelessRogue.Engine.Factories
         {          
             var position = new Position(x, y, z);
             Entity playerCharacter = new Entity();
-            playerCharacter.AddComponent(new Drawable("Xelanoi", new Engine.Utility.Color(1)));
+            playerCharacter.AddComponent(new Drawable("Xelanoi", new Engine.Utility.Color(1),null, "", true));
             playerCharacter.AddComponent(new SpritedObject(false, "Xelanoi", SpriteLibrary.SpritesAnimated["Xelanoi"]._animations.First().Key));
             playerCharacter.AddComponent(new Character("Xelanoi"));
             playerCharacter.AddComponent(new Player());

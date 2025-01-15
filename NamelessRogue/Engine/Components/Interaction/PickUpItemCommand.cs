@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {
@@ -14,13 +15,11 @@ namespace NamelessRogue.Engine.Components.Interaction
     {
         public IEnumerable<IEntity> Items { get; }
         public ItemsHolder Holder { get; }
-        public Point WhereToPickUp { get; }
 
-        public PickUpItemCommand(IEnumerable<IEntity> items, ItemsHolder holder, Point whereToPickUp)
+        public PickUpItemCommand(IEnumerable<IEntity> items, ItemsHolder holder)
         {
             Items = items;
             Holder = holder;
-            WhereToPickUp = whereToPickUp;
         }
     }
 }

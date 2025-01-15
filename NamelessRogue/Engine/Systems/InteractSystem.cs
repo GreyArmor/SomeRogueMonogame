@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Infrastructure;
@@ -29,7 +31,7 @@ namespace NamelessRogue.Engine.Systems
                 }
             }
 
-                while (namelessGame.Commander.DequeueCommand(out InteractionSelectorCommand command))
+            while (namelessGame.Commander.DequeueCommand(out InteractionSelectorCommand command))
             {
                 foreach (var entity in command.InteractableEntities)
                 {
@@ -38,7 +40,7 @@ namespace NamelessRogue.Engine.Systems
                     Drawable dr = new Drawable("Cursor", new Engine.Utility.Color(0.9, 0.9, 0.9));
                     dr.Visible = true;
                     selectorEntity.AddComponent(dr);
-                
+
                     var entityPositionClone = (Position)entity.GetComponentOfType<Position>().Clone();
                     selectorEntity.AddComponent(entityPositionClone);
 
@@ -59,8 +61,10 @@ namespace NamelessRogue.Engine.Systems
 
 
                 var interactionEntity = command.InteractableEntity;
-
+                var interactionEntityPosition = command.InteractableEntity.GetComponentOfType<Position>();
                 var door = interactionEntity.GetComponentOfType<Door>();
+                var item = interactionEntity.GetComponentOfType<Item>();
+
                 if (door != null)
                 {
                     SimpleSwitch simpleSwitch = interactionEntity.GetComponentOfType<SimpleSwitch>();
@@ -89,6 +93,25 @@ namespace NamelessRogue.Engine.Systems
                         ap.Points -= Constants.ActionsMovementCost;
                     }
                     namelessGame.Commander.EnqueueCommand(new PlaySoundCommand("DoorOpen", false, 0.1f));
+                }
+
+
+                if(item!=null)
+                {                   
+
+                    var tile = namelessGame.WorldProvider.GetTile(interactionEntityPosition.X, interactionEntityPosition.Y, interactionEntityPosition.Z);
+                    var tileEntities = tile.GetEntities();
+                    var tileItems = new List<IEntity>();
+                    foreach (var tileEntity in tileEntities)
+                    {
+                        var interactionItem = tileEntity.GetComponentOfType<Item>();
+                        if (interactionItem != null)
+                        {
+                            tileItems.Add(tileEntity);
+                        }
+                    }
+
+                    namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(tileItems, namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));
                 }
             }
         }
