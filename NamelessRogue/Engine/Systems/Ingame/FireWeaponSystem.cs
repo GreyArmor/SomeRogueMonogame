@@ -27,19 +27,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var tile = namelessGame.WorldProvider.GetTile(cursorPosition.X, cursorPosition.Y, cursorPosition.Z);
                 if (tile.AnyEntities())
                 {
-                    var tileEntity = tile.GetEntities().FirstOrDefault();
-                    if (tileEntity != null && tileEntity.Id != sourceEntity.Id)
-                    {
                         var character = tile.GetEntities().FirstOrDefault(x => x.GetComponentOfType<Character>() != null);
-                        if (character != null)
+                        if (character != null && character.Id != sourceEntity.Id)
                         {
                             var combatCommand = new AttackCommand(sourceEntity, character);
                             namelessGame.Commander.EnqueueCommand(combatCommand);
 
-                            AttachToTargetCommand snapToTarget = new AttachToTargetCommand(tileEntity);
+                            AttachToTargetCommand snapToTarget = new AttachToTargetCommand(character);
                             namelessGame.Commander.EnqueueCommand(snapToTarget);
                         }
-                    }
                 }
                 var createProjectileCommand = new CreateProjectileCommand(sourcePosition.Point, cursorPosition, DamageType.Ballistic);
                 namelessGame.Commander.EnqueueCommand(createProjectileCommand);

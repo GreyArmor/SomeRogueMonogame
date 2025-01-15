@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended.ECS;
 using System.Linq;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Components.ItemComponents;
+using NamelessRogue.Engine.Factories;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -29,9 +31,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var random = new InternalRandom();
 
                 var source = ac.getSource();
-             
+                var target = ac.getTarget();
                 var sourceStats = GetAccumulatedStats(source);
                 var targetStats = GetAccumulatedStats(ac.getTarget());
+                var onHiBuffIds = GetOnHitBuffIds(source, namelessGame);
 
                 var weaponMin = 0;
                 var weaponMax = 0; 
@@ -68,6 +71,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     //namelessGame.WriteLineToConsole;
                 }
 
+                if (onHiBuffIds != null)
+                {
+                    foreach (string id in onHiBuffIds)
+                    {
+                        var buff = BuffLibrary.CreateBuffFromData(namelessGame, BuffLibrary.DataById[id]);
+                        target.GetComponentOfType<ModifiersCollection>().ModifierEntities.Add(buff);
+                    }
+                }
+
                 var ap = source.GetComponentOfType<ActionPoints>();
                 ap.Points -= Constants.ActionsAttackCost;
 
@@ -83,6 +95,35 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var accumulatorEntity = modifiers.Accumulator;
             var accumulatedStats = accumulatorEntity.GetComponentOfType<CharacterStats>();
             return accumulatedStats;
+        }
+
+        private List<string> GetOnHitBuffIds(IEntity entity, NamelessGame game)
+        {
+
+            var equipment = entity.GetComponentOfType<EquipmentSlots>();
+            if (equipment == null) {
+                return null;
+            }
+
+            var ids = new List<string>();
+
+            var weapons = new List<EquipmentSlot>();
+            weapons.Add(equipment.Slots.FirstOrDefault(x => x.Item1 == Slot.LefHand)?.Item2);
+            weapons.Add(equipment.Slots.FirstOrDefault(x => x.Item1 == Slot.RightHand)?.Item2);
+            foreach (var weapon in weapons)
+            {
+                if (weapon.Equipment != null)
+                {
+                    var weaponEntity = game.GetEntity(weapon.Equipment.ParentEntityId);
+                    var onHitBuffs =weaponEntity.GetComponentOfType<OnHitBuffs>();
+                    if(onHitBuffs != null)
+                    {
+                        ids.AddRange(onHitBuffs.BuffIds);
+                    }
+                }
+            }
+
+            return ids;
         }
     }
 }
