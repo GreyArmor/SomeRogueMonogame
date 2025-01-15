@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>1eece995-fc1b-4862-9cf0-b810cf04d8fe</Id>
+  <Name>Xelanoi</Name>
+  <Description>Supposedly invulnerable</Description>
+  <SpritePath>Sprites\Xelanoi.ase</SpritePath>
+  <CastsShadow>false</CastsShadow>
+  <Immobile>true</Immobile>
+  <Health>900</Health>
+  <Energy>900</Energy>
+  <MovementSpeed>50</MovementSpeed>
+  <DroppedItems />
+  <WeaponTemplateData>
+    <MinimumDamage>999</MinimumDamage>
+    <MaximumDamage>999</MaximumDamage>
+    <Range>100</Range>
+    <AttackType>Ranged</AttackType>
+    <DamageType>Physical</DamageType>
+    <AmmoType>LowCaliber</AmmoType>
+    <AmmoInClip>0</AmmoInClip>
+  </WeaponTemplateData>
+  <ArmorTemplateData>
+    <DamageType>Physical</DamageType>
+    <ArmorValue>999</ArmorValue>
+    <ResistType>Physical</ResistType>
+    <ResistValue>100</ResistValue>
+  </ArmorTemplateData>
+</CharacterTemplateData>
