@@ -86,6 +86,7 @@ namespace NamelessRogue.Engine.Infrastructure
             AddAnimatedSprite("healthbar", "Content\\Sprites\\healthbar.ase");
             AddAnimatedSprite("energybar", "Content\\Sprites\\energybar.ase");
             AddAnimatedSprite("drone_recon", "Content\\Sprites\\drone_recon.ase");
+            AddAnimatedSprite("Xelanoi", "Content\\Sprites\\Xelanoi.ase");
 
             AddStaticSprite("box", "Sprites\\box");
             AddStaticSprite("boxMetal", "Sprites\\boxMetal");

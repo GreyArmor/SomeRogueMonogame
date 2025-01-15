@@ -116,6 +116,9 @@
     <None Update="Content\Sprites\healthbar.ase">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Sprites\Xelanoi.ase">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Sprites\ZeroAndOne.ase">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

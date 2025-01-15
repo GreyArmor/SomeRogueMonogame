@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using Entity = NamelessRogue.Engine.Infrastructure.Entity;
 
 namespace NamelessRogue.Engine.Factories
@@ -49,16 +50,17 @@ namespace NamelessRogue.Engine.Factories
         }
 
         public static Entity CreateSimplePlayerCharacter(int x,int y, int z, NamelessGame game)
-        {
+        {          
             var position = new Position(x, y, z);
             Entity playerCharacter = new Entity();
-            playerCharacter.AddComponent(new Character("Player"));
+            playerCharacter.AddComponent(new Drawable("Xelanoi", new Engine.Utility.Color(1)));
+            playerCharacter.AddComponent(new SpritedObject(false, "Xelanoi", SpriteLibrary.SpritesAnimated["Xelanoi"]._animations.First().Key));
+            playerCharacter.AddComponent(new Character("Xelanoi"));
             playerCharacter.AddComponent(new Player());
             playerCharacter.AddComponent(new InputReceiver());
             playerCharacter.AddComponent(new FollowedByCamera());
             playerCharacter.AddComponent(new InputComponent());
             playerCharacter.AddComponent(position);
-            playerCharacter.AddComponent(new Drawable("Window", new Engine.Utility.Color(0.9,0.9,0.9)));
             playerCharacter.AddComponent(new Description("Player",""));
             var holder = new ItemsHolder();
             playerCharacter.AddComponent(holder);          
