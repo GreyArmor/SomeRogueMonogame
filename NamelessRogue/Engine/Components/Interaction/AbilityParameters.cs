@@ -42,6 +42,8 @@ namespace NamelessRogue.Engine.Components.Interaction
 
         public int EnergyCost { get; set; } = 0;
 
+        public int ActionPointsCost { get; set; } = 0;
+
         public List<AbilityAction> AbilityActions { get; set; } = new List<AbilityAction>();
 
         public AbilityParameters() { }

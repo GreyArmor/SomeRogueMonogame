@@ -20,10 +20,12 @@ namespace NamelessRogue.Engine.UI
         public EditorItemScreen EditorItemScreen { get; set; }
         public EditorCharacterScreen EditorCharacterScreen { get; set; }
 
-        public EditorBuffScreen EditorBuffScreen { get; set; }
+        public EditorBuffScreen EditorBuffScreen { get; set; }   
+		public EditorAbilityScreen EditorAbilityScreen { get;  set; }
         public WorldGenerationUI WorldGenScreen { get; set; }
+     
 
-		public UIContainer(NamelessGame game)
+        public UIContainer(NamelessGame game)
 		{
 			if (Instance != null)
 			{
@@ -40,7 +42,9 @@ namespace NamelessRogue.Engine.UI
             EditorItemScreen = new EditorItemScreen(game);
             EditorCharacterScreen = new EditorCharacterScreen(game);
             EditorBuffScreen = new EditorBuffScreen(game);
+            EditorAbilityScreen = new EditorAbilityScreen(game);
             AbilityScreen = new AbilityScreen(game);
+
             Instance = this;
 
 		}

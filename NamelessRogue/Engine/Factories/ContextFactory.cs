@@ -240,6 +240,26 @@ namespace NamelessRogue.Engine.Factories
             }
         }
 
+        private static GameContext editorAbilityContext;
+        internal static GameContext GetEditorAbilityContext(NamelessGame game)
+        {
+            if (editorAbilityContext != null)
+            {
+                return editorAbilityContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new EditorAbilityScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
+                // create and init the UI manager
+                editorAbilityContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorAbilityScreen, "MainMenu");
+                return editorAbilityContext;
+            }
+        }
+
 
         private static GameContext inventoryContext;
         public static GameContext GetInventoryContext(NamelessGame game)
