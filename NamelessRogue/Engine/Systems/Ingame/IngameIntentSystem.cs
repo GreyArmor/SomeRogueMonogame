@@ -58,6 +58,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         break;
                     case IngameIntentSystemMode.OptionsPopup:
                         currentSubProcessor = OptionsPopupSubprocessor;
+                        OptionsPopupSubprocessor.OptionItems = (List<Abstraction.IEntity>)command.CommandData;
 
                         break;
                 }

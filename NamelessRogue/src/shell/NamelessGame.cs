@@ -421,6 +421,7 @@ namespace NamelessRogue.shell
 					}
 				}
 			}
+			//TODO: automate the loading
 			SoundsHolder.SoundDictionary.Add("ButtonClick", Content.Load<SoundEffect>("sounds\\annabloom_click1"));
             SoundsHolder.SoundDictionary.Add("DoorOpen", Content.Load<SoundEffect>("sounds\\171705__peepholecircus__sci-fi-door"));
         }

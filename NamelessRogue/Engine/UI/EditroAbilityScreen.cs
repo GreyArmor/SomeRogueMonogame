@@ -241,7 +241,6 @@ namespace NamelessRogue.Engine.UI
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.DragInt("##abilityEnergyCost", ref energyCost);
 
-
                         ImGui.Text("Action points cost");
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.DragInt("##abilityActionCost", ref actionPointsCost);
@@ -384,7 +383,7 @@ namespace NamelessRogue.Engine.UI
             if (iconPath != string.Empty)
             {
                 if (!Directory.Exists(directory + "\\Icons\\"))
-                {
+                { 
                     Directory.CreateDirectory(directory + "\\Icons\\");
                 }
                 // File.Delete(iconPath);
@@ -434,9 +433,6 @@ namespace NamelessRogue.Engine.UI
                 fileStream.Close();
                 fileStream.Dispose();
             }
-            itemId = data.Id;
-            name = data.Name;
-            description = data.Description;
 
             AssociatedBuffs = data.AssociatedBuffs.ToList();
 

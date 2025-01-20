@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 
 namespace NamelessRogue.Engine.Generation.Editor
 {
+    [XmlRoot]
     public class AbilityTemplateData
     {
         [XmlElement]
@@ -36,5 +37,7 @@ namespace NamelessRogue.Engine.Generation.Editor
         public int CooldownTurns { get; set; } = 0;
         [XmlArray]
         public List<AssociatedBuff> AssociatedBuffs { get; set; }
+        [XmlArray]
+        public List<AbilityAction> AbilityActions { get; set; }
     }
 }

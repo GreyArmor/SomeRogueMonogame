@@ -79,6 +79,8 @@ namespace NamelessRogue.Engine.Infrastructure
 
         public static void Initialize(NamelessGame namelessGame)
         {
+
+            //TODO: AUTOMATE THE LOADING
             game = namelessGame;
             AddAnimatedSprite("ZeroAndOne", "Content\\Sprites\\ZeroAndOne.ase");
             AddAnimatedSprite("ZeroAndOne2", "Content\\Sprites\\ZeroAndOne2.ase");

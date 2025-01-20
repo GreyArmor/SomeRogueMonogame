@@ -56,7 +56,7 @@ namespace NamelessRogue.Engine.Systems
                 foreach (var entity in selectorEntities)
                 {
                     namelessGame.RemoveEntity(entity);
-                }            
+                }         
 
 
 
@@ -97,7 +97,7 @@ namespace NamelessRogue.Engine.Systems
 
 
                 if(item!=null)
-                {                   
+                {                 
 
                     var tile = namelessGame.WorldProvider.GetTile(interactionEntityPosition.X, interactionEntityPosition.Y, interactionEntityPosition.Z);
                     var tileEntities = tile.GetEntities();

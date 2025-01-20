@@ -14,8 +14,7 @@ namespace NamelessRogue.Engine.Generation.World
         public int Seed { get; }
 
         public TimeLine()
-        {
-        }
+        {        }
         public TimeLine(int seed)
         {
             Seed = seed;

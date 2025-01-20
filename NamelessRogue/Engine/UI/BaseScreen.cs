@@ -149,9 +149,11 @@ namespace NamelessRogue.Engine.UI
             {
                 ImGui.OpenPopup("##OptionsPopup");
                 ImGui.SetNextWindowPos(uiSize / 2);
+
                 bool drop_open = true;
-                if (ImGui.BeginPopupModal("##OptionsPopup", ref drop_open, ImGuiWindowFlags.AlwaysAutoResize))
+                if (ImGui.BeginPopupModal("##OptionsPopup", ref drop_open, ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize))
                 {
+                    var size = ImGui.GetItemRectSize();
                     bool clicked = ImGui.ListBox("##listboOptions", ref optionsPopupCurrentItem, optionsPopupItems, optionsPopupItems.Length);
                     if (clicked)
                     {
@@ -160,6 +162,7 @@ namespace NamelessRogue.Engine.UI
                         ImGui.CloseCurrentPopup();
                     }
                 }
+                ImGui.EndPopup();
             }
         }
     }
