@@ -58,8 +58,6 @@ namespace NamelessRogue.Engine.Systems
                     namelessGame.RemoveEntity(entity);
                 }         
 
-
-
                 var interactionEntity = command.InteractableEntity;
                 var interactionEntityPosition = command.InteractableEntity.GetComponentOfType<Position>();
                 var door = interactionEntity.GetComponentOfType<Door>();
@@ -97,7 +95,7 @@ namespace NamelessRogue.Engine.Systems
 
 
                 if(item!=null)
-                {                 
+                {                
 
                     var tile = namelessGame.WorldProvider.GetTile(interactionEntityPosition.X, interactionEntityPosition.Y, interactionEntityPosition.Z);
                     var tileEntities = tile.GetEntities();
@@ -111,7 +109,7 @@ namespace NamelessRogue.Engine.Systems
                         }
                     }
 
-                    namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(tileItems, namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));
+                    namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(tileItems, namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>(), true));
                 }
             }
         }

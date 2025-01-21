@@ -15,11 +15,13 @@ namespace NamelessRogue.Engine.Components.Interaction
     {
         public IEnumerable<IEntity> Items { get; }
         public ItemsHolder Holder { get; }
+        public bool CallMultipleChoiceDialog { get; }
 
-        public PickUpItemCommand(IEnumerable<IEntity> items, ItemsHolder holder)
+        public PickUpItemCommand(IEnumerable<IEntity> items, ItemsHolder holder, bool callMultipleChoiceDialog = false)
         {
             Items = items;
             Holder = holder;
+            CallMultipleChoiceDialog = callMultipleChoiceDialog;
         }
     }
 }

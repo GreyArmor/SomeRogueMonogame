@@ -6,6 +6,7 @@ using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.shell;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -39,23 +40,40 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 case IntentEnum.MouseChanged:
                     break;
                 case IntentEnum.QuickBarPress:
-                    system.SingleKeyPressIntents.Add(IntentEnum.QuickBarPress);
-                    var parsed = int.TryParse(intent.PressedChar.ToString(), out int abilityIndex);
-                    if(parsed && abilityIndex > 0 && abilityIndex < OptionItems.Count )
                     {
-                        var chosenOptionEntity = OptionItems[abilityIndex];
-                        namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(new List<IEntity>() { chosenOptionEntity }, namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));
+                        system.SingleKeyPressIntents.Add(IntentEnum.QuickBarPress);
+                        var parsed = int.TryParse(intent.PressedChar.ToString(), out int abilityIndex);
+                        if (!parsed)
+                        {
+                            break;
+                        }
+
+                        if (abilityIndex == 0)
+                        {
+                            namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(OptionItems.ToList(), namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));
+                        }
+                        else if (abilityIndex > 0 && abilityIndex < OptionItems.Count)
+                        {
+                            var chosenOptionEntity = OptionItems[abilityIndex];
+                            namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(new List<IEntity>() { chosenOptionEntity }, namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));
+                        }
                         var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.PlayerMovement);
+
                         namelessGame.Commander.EnqueueCommand(switchModeCommand);
                         namelessGame.CurrentContext.ContextScreen.CloseOptionsPopUp();
-
                     }
                     break;
                 case IntentEnum.Interact:
                     {
-                        var chosenOptionEntity = OptionItems[namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem];
-                        namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(new List<IEntity>() { chosenOptionEntity }, namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));
-
+                        if (namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem == 0)
+                        {
+                            namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(OptionItems.ToList(), namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));
+                        }
+                        else
+                        {
+                            var chosenOptionEntity = OptionItems[namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem - 1];
+                            namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(new List<IEntity>() { chosenOptionEntity }, namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));     
+                        }
                         var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.PlayerMovement);
                         namelessGame.Commander.EnqueueCommand(switchModeCommand);
                         namelessGame.CurrentContext.ContextScreen.CloseOptionsPopUp();

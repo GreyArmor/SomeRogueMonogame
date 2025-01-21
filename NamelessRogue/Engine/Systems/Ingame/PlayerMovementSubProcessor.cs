@@ -309,6 +309,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     if (interactable != null)
                                     {
                                         interactableEntities.Add(tileEntity);
+                                        break;
                                     }
                                 }
 

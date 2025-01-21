@@ -17,7 +17,6 @@ using System.Xml.Serialization;
 
 namespace NamelessRogue.Engine.UI
 {
-
     public abstract class BaseScreen : IBaseGuiScreen
 	{
 		protected NamelessGame game;
@@ -148,10 +147,21 @@ namespace NamelessRogue.Engine.UI
             if (openOptionPopup)
             {
                 ImGui.OpenPopup("##OptionsPopup");
-                ImGui.SetNextWindowPos(uiSize / 2);
 
+                var popupWidth = 0;
+                foreach (var option in optionsPopupItems)
+                {
+                    var textsize = ImGui.CalcTextSize(option);
+                    if (popupWidth < textsize.X)
+                    {
+                        popupWidth = (int)textsize.X;
+                    }
+                }
+                ImGui.SetNextWindowPos(new Vector2(-popupWidth/2, 0) + uiSize / 2);           
+
+                //ImGui.SetNextWindowSize(new Vector2(100 + popupWidth, 100 + height * optionsPopupItems.Count()));
                 bool drop_open = true;
-                if (ImGui.BeginPopupModal("##OptionsPopup", ref drop_open, ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize))
+                if (ImGui.BeginPopupModal("##OptionsPopup", ref drop_open, ImGuiWindowFlags.NoMove))
                 {
                     var size = ImGui.GetItemRectSize();
                     bool clicked = ImGui.ListBox("##listboOptions", ref optionsPopupCurrentItem, optionsPopupItems, optionsPopupItems.Length);
