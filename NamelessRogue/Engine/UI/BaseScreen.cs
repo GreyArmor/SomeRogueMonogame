@@ -1,7 +1,9 @@
 ﻿using ImGuiNET;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Generation.Editor;
 using NamelessRogue.Engine.Sounds;
 using NamelessRogue.Engine.Systems.Ingame;
@@ -14,6 +16,8 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Xml.Serialization;
+using Color = System.Drawing.Color;
+using Vector2 = System.Numerics.Vector2;
 
 namespace NamelessRogue.Engine.UI
 {
@@ -174,6 +178,28 @@ namespace NamelessRogue.Engine.UI
                 }
                 ImGui.EndPopup();
             }
+        }
+
+
+        protected void DrawCooldownCircle(Vector2 position, int radius, float percentageLeft)
+        {
+            const int pointsCount = 30;
+            var angle = -90f;
+            List<Vector2> polygon = new List<Vector2>();
+            polygon.Add(position);
+            var percentageOfCircleLeft = percentageLeft * pointsCount + 1;
+
+            for (int i = 0; i < percentageOfCircleLeft; i++)
+            {
+                var x = MathF.Cos(MathHelper.ToRadians(angle));
+                var y = MathF.Sin(MathHelper.ToRadians(angle));
+                angle -= 360f / pointsCount;
+                polygon.Add(new Vector2(position.X + (x * radius), position.Y + (y * radius)));
+            }
+
+            polygon.Add(position);
+            var polygonArray = polygon.ToArray();
+            ImGui.GetForegroundDrawList().AddConvexPolyFilled(ref polygonArray[0], polygon.Count(), ColorToUInt(Color.FromArgb(96, 0, 0, 0)));
         }
     }
 

@@ -246,10 +246,20 @@ namespace NamelessRogue.Engine.UI
                     if (isAbilityBound)
                     {
                         var icon = binding.GetComponentOfType<UiIconComponent>();
+                        var abilityParams = binding.GetComponentOfType<AbilityParameters>();
+                        float cooldownPercentage = (float)abilityParams.CooldownTurnsRemaining / abilityParams.CooldownTurns;
                         if (icon != null)
                         {
                             ImGui.SetCursorPos(new System.Numerics.Vector2(0));
                             ImGui.Image(ImGuiImageLibrary.Textures[icon.IconId], new System.Numerics.Vector2(iconSize, iconSize));
+                            var elemPos = ImGui.GetItemRectMin();
+                            if (cooldownPercentage > 0)
+                            {
+                                ImGui.SetCursorPos(new System.Numerics.Vector2(0));
+                                DrawCooldownCircle(elemPos + new System.Numerics.Vector2(iconSize / 2), iconSize / 2, cooldownPercentage);
+                            }
+                          //  ImGui.GetForegroundDrawList().addpol(, ColorToUInt(System.Drawing.Color.FromArgb(96,0,0,0)));
+
                             if (ImGui.IsItemHovered())
                             {
                                 var description = binding.GetComponentOfType<Description>();
@@ -288,9 +298,7 @@ namespace NamelessRogue.Engine.UI
                 }
             }
             ImGui.NewLine();
-        }
-    
-
+        }   
 
         internal void LogMessage(string logMessage)
         {

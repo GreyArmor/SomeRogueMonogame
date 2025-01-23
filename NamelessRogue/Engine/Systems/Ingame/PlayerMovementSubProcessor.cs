@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Stats;
+using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Input;
@@ -217,6 +219,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         if (hasAbilityBound)
                         {
                             var abilityParams = ability.GetComponentOfType<AbilityParameters>();
+
+                            if(abilityParams.CooldownTurnsRemaining>0)
+                            {
+                                var desc = ability.GetComponentOfType<Description>();
+                                var logMessage = new HudLogMessageCommand($@"Ability {desc.Name} is not ready!");
+                                namelessGame.Commander.EnqueueCommand(logMessage);
+                                break;
+                            }
 
                             switch (abilityParams.ActivationMode)
                             {

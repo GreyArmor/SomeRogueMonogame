@@ -40,6 +40,8 @@ namespace NamelessRogue.Engine.Components.Interaction
 
         public int CooldownTurns { get; set; } = 0;
 
+        public int CooldownTurnsRemaining { get; set; } = 0;
+
         public int EnergyCost { get; set; } = 0;
 
         public int ActionPointsCost { get; set; } = 0;

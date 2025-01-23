@@ -28,6 +28,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var abilityParameters = command.Ability.GetComponentOfType<AbilityParameters>();
                 var abilityBuffs = command.Ability.GetComponentOfType<AssociatedBuffs>();
 
+                abilityParameters.CooldownTurnsRemaining = abilityParameters.CooldownTurns;
+
                 var cursorEntity = namelessGame.CursorEntity;
                 var cursorPos = cursorEntity.GetComponentOfType<Position>();
 
@@ -56,12 +58,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
 
-
             while (namelessGame.Commander.DequeueCommand(out ActivateSelfAbilityCommand command))
             {
                 var abilityParameters = command.Ability.GetComponentOfType<AbilityParameters>();
                 var abilityBuffs = command.Ability.GetComponentOfType<AssociatedBuffs>();
-
+                abilityParameters.CooldownTurnsRemaining = abilityParameters.CooldownTurns;
 
                 if (abilityParameters.TargetMode == TargetMode.Self)
                 {

@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
@@ -34,6 +35,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         ap.Points += 100;
                     }
                 }
+
+                //reduce cooldowns of all abilities by one when the turn passes
+                foreach(var ability in EntityInfrastructureManager.Components[typeof(AbilityParameters)])
+                {
+                    var abilitiParams = (AbilityParameters)ability.Value;
+                    if (abilitiParams.CooldownTurnsRemaining > 0)
+                    {
+                        abilitiParams.CooldownTurnsRemaining--;
+                    }
+                }
+
                 namelessGame.TurnUpdated = true;
             }
         }

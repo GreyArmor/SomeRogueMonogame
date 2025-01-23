@@ -161,7 +161,6 @@ namespace NamelessRogue.Engine.Infrastructure
             {
                 system.RemoveEntity(entity);
             }
-
         }
 
 		internal static void ClearGame()
