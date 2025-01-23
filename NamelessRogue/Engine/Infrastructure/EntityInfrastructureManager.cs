@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using MonoGame.Extended.ECS;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
+using static Assimp.Metadata;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
@@ -89,7 +91,7 @@ namespace NamelessRogue.Engine.Infrastructure
             }
         }
 
-        public static void RemoveComponent(IComponent component,Guid entityID)
+        public static void RemoveComponent(IComponent component, Guid entityID)
         {
             Dictionary<Guid, IComponent> componentsOfType;
             components.TryGetValue(component.GetType(), out componentsOfType);
@@ -97,6 +99,16 @@ namespace NamelessRogue.Engine.Infrastructure
             {
                 componentsOfType.Remove(entityID);
             }
+
+            IEntity entity = entities[entityID];
+            foreach (var system in systems)
+            {
+                if (!system.IsEntityMatchesSignature(entity))
+                {
+                    system.RemoveEntity(entity);
+                }
+            }
+
         }
 
         public static ComponentType GetComponentByEntity<ComponentType>(Guid entityID) where ComponentType : IComponent

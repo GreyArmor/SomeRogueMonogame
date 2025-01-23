@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbilityTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>2554ec5c-0a72-46e0-970d-bdf8f6a257a9</Id>
+  <Name>Jump</Name>
+  <Description />
+  <IconPath>Icons\jump.png</IconPath>
+  <ActionPointsCost>100</ActionPointsCost>
+  <EnergyCost>0</EnergyCost>
+  <TargetMode>Targeted</TargetMode>
+  <ActivationMode>Activatable</ActivationMode>
+  <AreaOfEffect>0</AreaOfEffect>
+  <IsActive>false</IsActive>
+  <Range>10</Range>
+  <CooldownTurns>4</CooldownTurns>
+  <AssociatedBuffs />
+  <AbilityActions>
+    <AbilityAction>JumpToTarget</AbilityAction>
+  </AbilityActions>
+</AbilityTemplateData>

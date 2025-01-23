@@ -43,6 +43,10 @@ namespace NamelessRogue.Engine.UI
         string[] abilityTargetModesNames = ((TargetMode[])Enum.GetValues(typeof(TargetMode))).Select(x => x.ToString()).ToArray();
         int abilityTargetModesIndex = 0;
 
+        AbilityAction[] abilityActionsArr = (AbilityAction[])Enum.GetValues(typeof(AbilityAction));
+        string[] abilityActionsNames = ((AbilityAction[])Enum.GetValues(typeof(AbilityAction))).Select(x => x.ToString()).ToArray();
+        int abilityActionsIndex = 0;
+
         int areaOfEffect = 0;
 
         bool isActive;
@@ -90,6 +94,7 @@ namespace NamelessRogue.Engine.UI
         private string itemId;
 
         private List<AssociatedBuff> AssociatedBuffs = new List<AssociatedBuff>();
+        private List<AbilityAction> AbilityActions = new List<AbilityAction>();
         private bool buffsPickerDialogue;
         private string selectedBuffFile;
 
@@ -245,6 +250,33 @@ namespace NamelessRogue.Engine.UI
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.DragInt("##abilityActionCost", ref actionPointsCost);
 
+                        ImGui.SameLine();
+                        ImGui.Separator();
+                        ImGui.SetNextItemWidth(fieldsSizeX);
+
+                        if (ButtonWithSound("Add ability action", buttonSize, true))
+                        {
+                            AbilityActions.Add(abilityActionsArr[abilityActionsIndex]);
+                        }
+                        ImGui.SameLine();
+                        ImGui.Combo("##AAcombo", ref abilityActionsIndex, abilityActionsNames, abilityActionsNames.Length);
+
+                        int counter = 0;
+                        foreach (var action in AbilityActions.ToList())
+                        {
+                            ImGui.Separator();
+                            ImGui.SetNextItemWidth(fieldsSizeX / 2);
+                            ImGui.BeginChild("##abilityActiontext" + counter, new Vector2(fieldsSizeX / 2, buttonSize.Y / 2));
+                            ImGui.Text(action.ToString());
+                            ImGui.EndChild();
+                            ImGui.SameLine();
+                            if (ButtonWithSound("Remove ##action" + counter, buttonSize / 2, true))
+                            {
+                                AbilityActions.Remove(action);
+                            }
+                            counter++;
+                        }
+
                         ImGui.Separator();
                         ImGui.Text("Buffs");
                         ImGui.Separator();
@@ -292,9 +324,7 @@ namespace NamelessRogue.Engine.UI
                         ImGui.Separator();
                         ImGui.SetNextItemWidth(fieldsSizeX);
 
-                        ImGui.SetNextItemWidth(fieldsSizeX);
-
-                        int counter = 0;
+                        counter = 0;
                         foreach (var associatedBuff in AssociatedBuffs.ToList())
                         {
                             ImGui.Separator();
@@ -397,6 +427,7 @@ namespace NamelessRogue.Engine.UI
             }                    
 
             data.AssociatedBuffs = AssociatedBuffs.ToList();
+            data.AbilityActions = AbilityActions.ToList();
 
             using (TextWriter writer = new StreamWriter(newItemPath))
             {
@@ -435,6 +466,7 @@ namespace NamelessRogue.Engine.UI
             }
 
             AssociatedBuffs = data.AssociatedBuffs.ToList();
+            AbilityActions = data.AbilityActions.ToList();
 
             reader.Close();
         }

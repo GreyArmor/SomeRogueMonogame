@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbilityTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>4d3bf732-d53c-4878-bcbd-e0c6a5c8703f</Id>
+  <Name>Jump slash</Name>
+  <Description />
+  <IconPath>Icons\jump_slash.png</IconPath>
+  <ActionPointsCost>100</ActionPointsCost>
+  <EnergyCost>0</EnergyCost>
+  <TargetMode>Targeted</TargetMode>
+  <ActivationMode>Activatable</ActivationMode>
+  <AreaOfEffect>0</AreaOfEffect>
+  <IsActive>false</IsActive>
+  <Range>10</Range>
+  <CooldownTurns>4</CooldownTurns>
+  <AssociatedBuffs />
+  <AbilityActions>
+    <AbilityAction>JumpBesidesTarget</AbilityAction>
+    <AbilityAction>AttackTargetMelee</AbilityAction>
+  </AbilityActions>
+</AbilityTemplateData>

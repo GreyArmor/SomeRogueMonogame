@@ -32,6 +32,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 IEntity entityToKill = command.getToKill();
 
+                if (entityToKill == namelessGame.PlayerEntity)
+                {
+                    continue;
+                }
+
                 var dead = entityToKill.GetComponentOfType<Dead>();
                 if (dead == null)
                 {
@@ -58,7 +63,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 entityToKill.RemoveComponentOfType<OccupiesTile>();
 
-
                 var droppedItems = entityToKill.GetComponentOfType<DroppedItemsComponent>();
                 if (droppedItems != null)
                 {
@@ -80,6 +84,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             tile.AddEntity(itemEntity);
                         }
                     }
+                }
+
+                var modifiers = entityToKill.GetComponentOfType<ModifiersCollection>();
+                if (modifiers != null)
+                {
+                    modifiers.ModifierEntities.Clear();
+                    entityToKill.RemoveComponent(modifiers);
+                    namelessGame.RemoveEntity(modifiers.Accumulator);
                 }
 
                 Description d = entityToKill.GetComponentOfType<Description>();

@@ -115,7 +115,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 if (weapon.Equipment != null)
                 {
                     var weaponEntity = game.GetEntity(weapon.Equipment.ParentEntityId);
-                    var onHitBuffs =weaponEntity.GetComponentOfType<OnHitBuffs>();
+                    var onHitBuffs =weaponEntity.GetComponentOfType<AssociatedBuffs>();
                     if(onHitBuffs != null)
                     {
                         ids.AddRange(onHitBuffs.BuffIds);

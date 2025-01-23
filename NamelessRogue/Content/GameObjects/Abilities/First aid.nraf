@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbilityTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>9743cf05-df6a-42f4-9a50-1fb3e7570320</Id>
+  <Name>First aid</Name>
+  <Description />
+  <IconPath>Icons\firstAid.png</IconPath>
+  <ActionPointsCost>100</ActionPointsCost>
+  <EnergyCost>10</EnergyCost>
+  <TargetMode>Self</TargetMode>
+  <ActivationMode>Activatable</ActivationMode>
+  <AreaOfEffect>0</AreaOfEffect>
+  <IsActive>false</IsActive>
+  <Range>0</Range>
+  <CooldownTurns>10</CooldownTurns>
+  <AssociatedBuffs>
+    <AssociatedBuff>
+      <BuffId>1e808f98-981a-481d-a2ee-fd637398a99e</BuffId>
+      <Path>GameObjects\Buffs\Small heal.nrbf</Path>
+    </AssociatedBuff>
+  </AssociatedBuffs>
+  <AbilityActions />
+</AbilityTemplateData>

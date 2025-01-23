@@ -349,18 +349,19 @@ namespace NamelessRogue.shell
                     }                   
                 }
 
-				var abilityHolder = PlayerEntity.GetComponentOfType<AbilityHolder>();
+                AbilityFactory.LoadData(this);
+
+                var abilityHolder = PlayerEntity.GetComponentOfType<AbilityHolder>();
                 var abilityBinder = PlayerEntity.GetComponentOfType<AbilityBinder>();
 
-                var jump = AbilityFactory.CreateJumpAbility();
-
-				abilityHolder.Abilities.Add(jump);
-
-				abilityBinder.AbilityBindings.Add(1, jump);
-
-                var jumpSlash = AbilityFactory.CreateLeapSlashAbility();
-                abilityHolder.Abilities.Add(jumpSlash);
-                abilityBinder.AbilityBindings.Add(2, jumpSlash);
+				int binding = 1;
+				foreach (var abilityData in AbilityFactory.Data)
+				{
+                    var ability = AbilityFactory.CreateFromData(this, abilityData);
+                    abilityHolder.Abilities.Add(ability);
+                    abilityBinder.AbilityBindings.Add(binding, ability);
+                    binding++;
+                }               
 
                 //var itemsHolder = player.GetComponentOfType<ItemsHolder>();
 

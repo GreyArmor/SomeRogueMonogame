@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BuffTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>bd36fb92-e489-42d7-bcc9-0a5e26bfadf5</Id>
+  <Name>Small shock</Name>
+  <Description />
+  <Duration>1</Duration>
+  <IsAppliedImmediately>true</IsAppliedImmediately>
+  <PermanentModifier>true</PermanentModifier>
+  <IsDamageOverTime>false</IsDamageOverTime>
+  <HealthModificator>-10</HealthModificator>
+  <EnergyModificator>-10</EnergyModificator>
+  <ArmorModificator>10</ArmorModificator>
+  <ResistanceModificator>10</ResistanceModificator>
+  <DamageModificator>10</DamageModificator>
+</BuffTemplateData>

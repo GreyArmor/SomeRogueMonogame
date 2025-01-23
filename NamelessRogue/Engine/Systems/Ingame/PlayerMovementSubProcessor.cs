@@ -232,6 +232,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             case TargetMode.None:
                                                 break;
                                             case TargetMode.Self:
+                                                var activateSelfAbilityCommand = new ActivateSelfAbilityCommand(playerEntity, ability);
+                                                namelessGame.Commander.EnqueueCommand(activateSelfAbilityCommand);
                                                 break;
                                             case TargetMode.Targeted: 
                                             case TargetMode.TargetEnemies: 

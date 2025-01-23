@@ -34,7 +34,7 @@ namespace NamelessRogue.Engine.Components.Interaction
 
                 var entitStats = entity.GetComponentOfType<CharacterStats>();
 
-               
+
                 List<IEntity> modifiersToRemove = new List<IEntity>();
                 foreach (var modifier in modifiers.ModifierEntities)
                 {
@@ -80,19 +80,22 @@ namespace NamelessRogue.Engine.Components.Interaction
                     {
                         modifiersToRemove.Add(modifier);
                     }
-
-
-
                 }
 
                 if (entitStats != null)
-                {                   
+                {
                     accumulatedStats.Add(entitStats);
                 }
 
                 foreach (var modifier in modifiersToRemove)
                 {
                     modifiers.ModifierEntities.Remove(modifier);
+                }
+
+                if (accumulatedStats.Health.Value <= 0)
+                {
+                    var deathCommand = new DeathCommand(entity);
+                    namelessGame.Commander.EnqueueCommand(deathCommand);
                 }
 
             }
@@ -119,19 +122,23 @@ namespace NamelessRogue.Engine.Components.Interaction
                 if (modifierStats.Health.Value<0)
                 {
                     logCommand.LogMessage += modifierDescription.Name + " deals " + (modifierStats.Health.Value) + " damage to " + entityDescription.Name;
+                    logCommand.LogMessage += "\n";
                 }
                 else if (modifierStats.Health.Value>0)
                 {
                     logCommand.LogMessage += modifierDescription.Name + " restores " + (modifierStats.Health.Value) + " health to " + entityDescription.Name;
+                    logCommand.LogMessage += "\n";
                 }
 
                 if (modifierStats.Energy.Value < 0)
                 {
                     logCommand.LogMessage += modifierDescription.Name + " drains " + (modifierStats.Energy.Value) + " energy from " + entityDescription.Name;
+                    logCommand.LogMessage += "\n";
                 }
                 else if (modifierStats.Energy.Value > 0)
                 {
                     logCommand.LogMessage += modifierDescription.Name + " restores " + (modifierStats.Energy.Value) + " energy  to " + entityDescription.Name;
+                    logCommand.LogMessage += "\n";
                 }
 
                 entitStats.Add(modifierStats);

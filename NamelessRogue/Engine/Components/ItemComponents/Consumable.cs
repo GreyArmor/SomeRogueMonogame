@@ -52,20 +52,4 @@ namespace NamelessRogue.Engine.Components.ItemComponents
             return clone;
         }
     }
-
-    public class OnHitBuffs : Component
-    {
-        public OnHitBuffs(IEnumerable<string> buffIds)
-        {
-            BuffIds = buffIds.ToList();
-        }
-
-        public List<string> BuffIds { get; set; } = new List<string>();
-
-        public override IComponent Clone()
-        {
-            var clone = new Consumable(BuffIds);
-            return clone;
-        }
-    }
 }

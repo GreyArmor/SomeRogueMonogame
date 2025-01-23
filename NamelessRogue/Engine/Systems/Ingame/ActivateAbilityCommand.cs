@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-    internal class ActivateTargetedAbilityCommand : Abstraction.ICommand
+    internal class ActivateTargetedAbilityCommand : Abstraction.ICommand, IActivatedAbilityCommand
     {
         public ActivateTargetedAbilityCommand(IEntity source, IEntity ability)
         {
@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public IEntity Ability { get; }
     }
 
-    internal class ActivateSelfAbilityCommand : Abstraction.ICommand
+    internal class ActivateSelfAbilityCommand : Abstraction.ICommand, IActivatedAbilityCommand
     {
         public ActivateSelfAbilityCommand(IEntity source, IEntity ability)
         {

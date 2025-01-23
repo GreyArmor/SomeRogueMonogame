@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AbilityTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Id>4dbf7522-8bf6-4603-85b5-9c3cf5ec9211</Id>
-  <Name>First aid </Name>
+  <Id>296a724f-c752-4bf9-90b8-8b2ef12d1955</Id>
+  <Name>Shock</Name>
   <Description />
+  <IconPath>Icons\lightning-flame.png</IconPath>
   <ActionPointsCost>100</ActionPointsCost>
-  <EnergyCost>10</EnergyCost>
-  <TargetMode>Self</TargetMode>
+  <EnergyCost>20</EnergyCost>
+  <TargetMode>TargetEnemies</TargetMode>
   <ActivationMode>Activatable</ActivationMode>
   <AreaOfEffect>0</AreaOfEffect>
   <IsActive>false</IsActive>
-  <Range>0</Range>
+  <Range>10</Range>
   <CooldownTurns>10</CooldownTurns>
   <AssociatedBuffs>
     <AssociatedBuff>
-      <BuffId>1e808f98-981a-481d-a2ee-fd637398a99e</BuffId>
-      <Path>GameObjects\Buffs\Small heal.nrbf</Path>
+      <BuffId>bd36fb92-e489-42d7-bcc9-0a5e26bfadf5</BuffId>
+      <Path>GameObjects\Buffs\Small shock.nrbf</Path>
     </AssociatedBuff>
   </AssociatedBuffs>
+  <AbilityActions />
 </AbilityTemplateData>

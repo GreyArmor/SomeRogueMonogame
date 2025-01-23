@@ -99,7 +99,7 @@ namespace NamelessRogue.Engine.Factories
                 }
                 else
                 {
-                    var onHitBuffs = new OnHitBuffs(data.AssociatedBuffs.Select(x => x.BuffId));
+                    var onHitBuffs = new AssociatedBuffs(data.AssociatedBuffs.Select(x => x.BuffId));
                     entity.AddComponent(onHitBuffs);
                 }
             }

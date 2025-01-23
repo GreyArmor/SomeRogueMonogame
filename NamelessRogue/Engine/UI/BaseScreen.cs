@@ -161,7 +161,7 @@ namespace NamelessRogue.Engine.UI
 
                 //ImGui.SetNextWindowSize(new Vector2(100 + popupWidth, 100 + height * optionsPopupItems.Count()));
                 bool drop_open = true;
-                if (ImGui.BeginPopupModal("##OptionsPopup", ref drop_open, ImGuiWindowFlags.NoMove))
+                if (ImGui.BeginPopupModal("##OptionsPopup", ref drop_open, ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize))
                 {
                     var size = ImGui.GetItemRectSize();
                     bool clicked = ImGui.ListBox("##listboOptions", ref optionsPopupCurrentItem, optionsPopupItems, optionsPopupItems.Length);
