@@ -64,7 +64,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     var position = npc.GetComponentOfType<Position>();
                                     var tile = namelessGame.WorldProvider.GetTile(position.X, position.Y, position.Z);
                                     var dead = npc.GetComponentOfType<Dead>();
-                                    if (dead == null && aiControlled.Affinity == Affinity.Hostile && tile.IsVisible)
+
+                                    var distance = (position.Point - playerPosition.Point).Length();
+                                    if (dead == null && aiControlled.Affinity == Affinity.Hostile && tile.IsVisible && distance<=command.Range)
                                     {
                                         hostileEntities.Add(npc);
                                     }
@@ -83,8 +85,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     var position = npc.GetComponentOfType<Position>();
                                     var tile = namelessGame.WorldProvider.GetTile(position.X, position.Y, position.Z);
                                     var dead = npc.GetComponentOfType<Dead>();
-                                    if (dead == null && aiControlled.Affinity == Affinity.Friendly && tile.IsVisible)
-                                    {
+                                    var distance = (position.Point - playerPosition.Point).Length();
+                                    if (dead == null && aiControlled.Affinity == Affinity.Hostile && tile.IsVisible && distance <= command.Range)
+                                    {                                
                                         friendlyEntities.Add(npc);
                                     }
                                 }

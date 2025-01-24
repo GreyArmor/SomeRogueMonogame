@@ -83,8 +83,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }
                     break;                  
                 case IntentEnum.Fire:
-                    {
-           
+                    {          
 
                         Position cursorPosition = namelessGame.CursorEntity.GetComponentOfType<Position>();
                         Position playerPosition = namelessGame.PlayerEntity.GetComponentOfType<Position>();
