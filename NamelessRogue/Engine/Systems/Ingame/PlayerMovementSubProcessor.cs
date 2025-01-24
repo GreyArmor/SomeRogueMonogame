@@ -219,11 +219,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         if (hasAbilityBound)
                         {
                             var abilityParams = ability.GetComponentOfType<AbilityParameters>();
-
-                            if(abilityParams.CooldownTurnsRemaining>0)
-                            {
-                                var desc = ability.GetComponentOfType<Description>();
+                            var stats = namelessGame.PlayerEntity.GetComponentOfType<CharacterStats>();
+                           
+                            var desc = ability.GetComponentOfType<Description>();
+                            if (abilityParams.CooldownTurnsRemaining>0)
+                            {                              
                                 var logMessage = new HudLogMessageCommand($@"Ability {desc.Name} is not ready!");
+                                namelessGame.Commander.EnqueueCommand(logMessage);
+                                break;
+                            }
+
+                            if (stats.Energy.Value < abilityParams.EnergyCost)
+                            {
+                                var logMessage = new HudLogMessageCommand($@"Not enough energy!");
                                 namelessGame.Commander.EnqueueCommand(logMessage);
                                 break;
                             }

@@ -23,35 +23,6 @@ namespace NamelessRogue.Engine.Factories
 {
     public class AbilityFactory
     {
-
-        public static IEntity CreateJumpAbility()
-        {
-            Entity ability = new Entity();
-            ability.AddComponent(new Description() { Name = "Jump", Text = "Jump to target location" });
-            ability.AddComponent(new UiIconComponent("jump"));
-            ability.AddComponent(new AbilityComponent());
-            ability.AddComponent(new AbilityParameters() { ActivationMode = ActivationMode.Activatable, TargetMode = TargetMode.Targeted, AreaOfEffect = 1, Range = 6, 
-                AbilityActions = new List<AbilityAction>() { AbilityAction.JumpToTarget }}); 
-            return ability;
-        }
-
-        public static IEntity CreateLeapSlashAbility()
-        {
-            Entity ability = new Entity();
-            ability.AddComponent(new Description() { Name = "Leap slash", Text = "Jump to target location and slash the enemy with your weapon" });
-            ability.AddComponent(new UiIconComponent("jump_slash"));
-            ability.AddComponent(new AbilityComponent());
-            ability.AddComponent(new AbilityParameters()
-            {
-                ActivationMode = ActivationMode.Activatable,
-                TargetMode = TargetMode.TargetEnemies,
-                AreaOfEffect = 1,
-                Range = 6,
-                AbilityActions = new List<AbilityAction>() { AbilityAction.JumpBesidesTarget, AbilityAction.AttackTargetMelee }
-            });
-            return ability;
-        }
-
         public static List<AbilityTemplateData> Data = new List<AbilityTemplateData>();
         public static Dictionary<string, AbilityTemplateData> DataById = new Dictionary<string, AbilityTemplateData>();
         public static void LoadData(NamelessGame game)

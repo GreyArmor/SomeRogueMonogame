@@ -7,6 +7,7 @@ using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Infrastructure;
@@ -35,6 +36,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 var cursorEntity = namelessGame.CursorEntity;
                 var cursorPos = cursorEntity.GetComponentOfType<Position>();
+
+                var stats = namelessGame.PlayerEntity.GetComponentOfType<CharacterStats>();
+                stats.Energy.Value -= abilityParameters.EnergyCost;
 
                 if (abilityParameters.TargetMode == TargetMode.Targeted || abilityParameters.TargetMode == TargetMode.TargetFriends || abilityParameters.TargetMode == TargetMode.TargetEnemies)
                 {
@@ -69,10 +73,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 if (abilityParameters.TargetMode == TargetMode.Self)
                 {
-
-                    var player = namelessGame.PlayerEntity;
-                    var playerPos = player.GetComponentOfType<Position>();
-
+                    var source = command.Source;
+                    var playerPos = source.GetComponentOfType<Position>();
+                    var stats = source.GetComponentOfType<CharacterStats>();
+                    stats.Energy.Value -= abilityParameters.EnergyCost;
                     foreach (var abilityAction in abilityParameters.AbilityActions)
                     {
                         ProcessAbilityAction(namelessGame, command, playerPos, abilityAction);
