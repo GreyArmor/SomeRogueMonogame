@@ -19,7 +19,7 @@
     <DamageModificator>0</DamageModificator>
   </ConsumableItemTemplateData>
   <AssociatedBuffs>
-    <BuffId>55f934ae-4bf3-4f4b-a8eb-eb0f0de5938f</BuffId>
+    <BuffId>04f76d1c-f52b-431f-862a-603c9a8ecc26</BuffId>
     <Path>GameObjects\Buffs\Small energy replenishment.nrbf</Path>
   </AssociatedBuffs>
 </ItemTemplateData>
