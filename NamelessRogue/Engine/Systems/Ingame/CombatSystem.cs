@@ -13,6 +13,7 @@ using System.Linq;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Factories;
+using NamelessRogue.Engine.Components.Status;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -58,16 +59,18 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     damage = 0;
                 }
-                DamageHelper.ApplyDamage(ac.getTarget(), ac.getSource(), damage);
+
+                var damageCommand = new DealDamageCommand(new Damage(source, target, damage, DamageType.Ballistic));
+                namelessGame.Commander.EnqueueCommand(damageCommand);
 
                 Description targetDescription = ac.getTarget().GetComponentOfType<Description>();
                 Description sourceDescription = ac.getSource().GetComponentOfType<Description>();
                 if (targetDescription != null && sourceDescription != null)
                 {
-                    var logCommand = new HudLogMessageCommand();
-                    namelessGame.Commander.EnqueueCommand(logCommand);
+                  //  var logCommand = new HudLogMessageCommand();
+                 //   namelessGame.Commander.EnqueueCommand(logCommand);
 
-                    logCommand.LogMessage += (sourceDescription.Name + " deals " + (damage) + " damage to " + targetDescription.Name + $@" (Raw {rawDamage} - Armor {armor})");
+                 //   logCommand.LogMessage += (sourceDescription.Name + " deals " + (damage) + " damage to " + targetDescription.Name + $@" (Raw {rawDamage} - Armor {armor})");
                     //namelessGame.WriteLineToConsole;
                 }
 

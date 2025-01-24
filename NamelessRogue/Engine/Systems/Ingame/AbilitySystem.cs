@@ -2,9 +2,12 @@
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
+using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
@@ -118,6 +121,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }
                     break;
                 case AbilityAction.StartFire:
+                    var fireEntity = new Entity();
+                    var firePosition = new Position(targetPosition.X, targetPosition.Y, targetPosition.Z);
+                    fireEntity.AddComponent(firePosition);
+                    string fireId = $@"fire{Random.Shared.Next(1, 4)}";
+                    fireEntity.AddComponent(new Description("Fire", ""));
+                    fireEntity.AddComponent(new Drawable(fireId, new Utility.Color(1f)));
+                  
+                    fireEntity.AddComponent(new SpritedObject(false, fireId, "idle_1", true));
+                    fireEntity.AddComponent(new Fire() { StartTurn = namelessGame.CurrentGame.Turn, Duration = 20});
+                    namelessGame.AddEntity(fireEntity);
+                    namelessGame.WorldProvider.MoveEntity(fireEntity, firePosition.Point);
                     break;
             }
         }

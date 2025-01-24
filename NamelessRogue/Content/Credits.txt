@@ -1,1 +1,3 @@
 ﻿button click sound by annabloom https://freesound.org/people/annabloom/sounds/219069/
+fire1.ase fire2.ace fire3.ace by BenHickling https://opengameart.org/content/animated-fire
+flame.png by bart https://opengameart.org/content/pixel-art-flame-icon

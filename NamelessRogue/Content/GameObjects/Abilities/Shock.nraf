@@ -18,5 +18,7 @@
       <Path>GameObjects\Buffs\Small shock.nrbf</Path>
     </AssociatedBuff>
   </AssociatedBuffs>
-  <AbilityActions />
+  <AbilityActions>
+    <AbilityAction>StartFire</AbilityAction>
+  </AbilityActions>
 </AbilityTemplateData>

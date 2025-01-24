@@ -8,6 +8,10 @@ namespace NamelessRogue.Engine.Components.Environment
 {
     public class Fire : Component
     {
+        public int StartTurn { get; set; }
+
+        public int Duration { get; set; }
+
         public override IComponent Clone()
         {
             return new Fire();

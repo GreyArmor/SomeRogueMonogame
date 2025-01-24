@@ -6,20 +6,6 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {
-    public enum TargetMode : int
-    {
-        None, Self, Targeted, TargetEnemies, TargetFriends
-    }
-
-    public enum ActivationMode : int
-    {
-        Passive, Toggle, Activatable,
-    }
-
-    public enum AbilityAction : int
-    {
-        JumpToTarget, JumpBesidesTarget, AttackTargetMelee, AttackTargetRanged, StartFire, 
-    }
 
     public enum Category
     {

@@ -113,6 +113,15 @@
     <None Update="Content\Sprites\energybar.ase">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Sprites\Fire\fire1.ase">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sprites\Fire\fire2.ase">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sprites\Fire\fire3.ase">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Sprites\healthbar.ase">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -136,12 +145,15 @@
 	<ItemGroup>
 	  <Compile Remove="Content\Sprites\Furniture\**" />
 	  <Compile Remove="Content\Sprites\MainMenuScreen\**" />
+	  <Compile Remove="Engine\Components\Environment\Buildings\**" />
 	  <Compile Remove="Engine\_3DUtility\**" />
 	  <EmbeddedResource Remove="Content\Sprites\Furniture\**" />
 	  <EmbeddedResource Remove="Content\Sprites\MainMenuScreen\**" />
+	  <EmbeddedResource Remove="Engine\Components\Environment\Buildings\**" />
 	  <EmbeddedResource Remove="Engine\_3DUtility\**" />
 	  <None Remove="Content\Sprites\Furniture\**" />
 	  <None Remove="Content\Sprites\MainMenuScreen\**" />
+	  <None Remove="Engine\Components\Environment\Buildings\**" />
 	  <None Remove="Engine\_3DUtility\**" />
 	</ItemGroup>
 	
@@ -149,7 +161,6 @@
     <Folder Include="Content\GameObjects\Misc\" />
     <Folder Include="Content\Models\" />
     <Folder Include="Content\obj\Windows\AnimatedCharacters\" />
-    <Folder Include="Engine\Components\Environment\Buildings\" />
     <Folder Include="Engine\Generation\Items\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

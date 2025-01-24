@@ -416,19 +416,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             foreach (var entity in tileToDraw.GetEntities())
                             {
-                                var item = entity.GetComponentOfType<Item>();
-                                var furniture = entity.GetComponentOfType<Furniture>();
-
-                                bool isTileObject = item != null || furniture != null;
-
+                                var item = entity.GetComponentOfType<Item>();                              
                                 var drawable = entity.GetComponentOfType<Drawable>();
                                 var sprited = entity.GetComponentOfType<SpritedObject>();
 
-                                if (isTileObject && drawable != null && sprited == null)
+                                if (drawable != null && sprited == null)
                                 {
                                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.Tileset, drawable.CharColor,  drawable.CastsShadow);
                                 }
-                                else if(isTileObject && drawable != null && sprited != null)
+                                else if(drawable != null && sprited != null)
                                 {
                                     if (sprited.IsStatic)
                                     {
