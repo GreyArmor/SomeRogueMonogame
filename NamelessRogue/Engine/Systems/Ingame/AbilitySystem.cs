@@ -103,17 +103,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     AbilityLogicLibrary.Jump(command.Source, targetPosition.Point);
                     break;
                 case AbilityAction.JumpBesidesTarget:
+                    {
+                        var sourcePosition = command.Source.GetComponentOfType<Position>();
 
-                    var sourcePosition = command.Source.GetComponentOfType<Position>();
+                        var sourceV2 = sourcePosition.Point.ToPoint().ToVector2();
 
-                    var sourceV2 = sourcePosition.Point.ToPoint().ToVector2();
+                        var neighbors = AllNeighborProviderFlowfield.GetNeighbors(targetPosition.Point.ToPoint());
 
-                    var neighbors = AllNeighborProviderFlowfield.GetNeighbors(targetPosition.Point.ToPoint());
+                        var closestNeighbor = neighbors.OrderBy(neighbor => (neighbor.ToVector2() - sourceV2).LengthSquared()).First();
 
-                    var closestNeighbor = neighbors.OrderBy(neighbor => (neighbor.ToVector2() - sourceV2).LengthSquared()).First();
-
-                    AbilityLogicLibrary.Jump(command.Source, new Utility.Vector3Int(closestNeighbor.X, closestNeighbor.Y, targetPosition.Z));
-
+                        AbilityLogicLibrary.Jump(command.Source, new Utility.Vector3Int(closestNeighbor.X, closestNeighbor.Y, targetPosition.Z));
+                    }
                     break;
                 case AbilityAction.AttackTargetMelee:
                 case AbilityAction.AttackTargetRanged:
@@ -136,6 +136,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     fireEntity.AddComponent(new Fire() { StartTurn = namelessGame.CurrentGame.Turn, Duration = 20});
                     namelessGame.AddEntity(fireEntity);
                     namelessGame.WorldProvider.GetTile(targetPosition.X, targetPosition.Y, targetPosition.Z).AddEntity(fireEntity);
+                    break;
+                    case AbilityAction.SFXLightningToTarget:
+                    {
+                        var sourcePosition = command.Source.GetComponentOfType<Position>();
+                        namelessGame.Commander.EnqueueCommand(new SFXLightningCommand(sourcePosition.Point, targetPosition.Point));
+                    }
                     break;
             }
         }

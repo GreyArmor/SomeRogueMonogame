@@ -26,7 +26,9 @@ namespace NamelessRogue.Engine.Infrastructure
     {
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public Vector2 Size { get; private set; } 
+        public Vector2 Size { get; private set; }
+        public AnimatedSprite CurrentAnimation { get => currentAnimation; set => currentAnimation = value; }
+
         public AnimatedSpriteNR(int width, int height) {
             Width = width;
             Height = height;
@@ -72,32 +74,32 @@ namespace NamelessRogue.Engine.Infrastructure
 
         public void SetCurrentLoop(string animationName)
         {
-            currentAnimation = _animations[animationName];
-            currentAnimation.Play();
+            CurrentAnimation = _animations[animationName];
+            CurrentAnimation.Play();
         }
 
         public void Update(GameTime time)
         {
-            currentAnimation.Update(time);
+            CurrentAnimation.Update(time);
         }
 
         public void SetFrame(int frame)
         {
-            currentAnimation.SetFrame(frame);
+            CurrentAnimation.SetFrame(frame);
         }
 
         public void Draw(NamelessGame game, GameTime time, Vector2 position, Vector2 size, Vector2 scale, Microsoft.Xna.Framework.Color color = default)
         {
-            currentAnimation.Scale = scale;
+            CurrentAnimation.Scale = scale;
             if(color == default)
             {
-                currentAnimation.Color = Microsoft.Xna.Framework.Color.White;
+                CurrentAnimation.Color = Microsoft.Xna.Framework.Color.White;
             }
             else
             {
-                currentAnimation.Color = color;
+                CurrentAnimation.Color = color;
             }            
-            game.Batch.Draw(currentAnimation.TextureRegion, new Microsoft.Xna.Framework.Rectangle(position.ToPoint(), (size * scale).ToPoint()), color);
+            game.Batch.Draw(CurrentAnimation.TextureRegion, new Microsoft.Xna.Framework.Rectangle(position.ToPoint(), (size * scale).ToPoint()), color);
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public enum AbilityAction : int
     {
-        None, JumpToTarget, JumpBesidesTarget, AttackTargetMelee, AttackTargetRanged, StartFire, 
+        None, JumpToTarget, JumpBesidesTarget, AttackTargetMelee, AttackTargetRanged, StartFire, SFXLightningToTarget 
     }
 }

@@ -32,6 +32,10 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using NamelessRogue.Engine.Components.ItemComponents;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
 using NamelessRogue.Engine.Components.Status;
+using MonoGame.Aseprite;
+using MonoGame.Extended;
+using MonoGame.Extended.Particles;
+using MonoGame.Extended.Shapes;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -86,6 +90,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
     }
 
+    public class SFXLightningModel
+    {
+        public int timeToPlay;
+        public float rotation;
+        public Vector2 screenLocation;
+    }
 
     public class TileModel { 
         public Vertex[] Vertices { get; }
@@ -114,6 +124,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
     public class RenderingSystem : BaseSystem
     {
+        private List<SFXLightningModel> lightningModels = new List<SFXLightningModel>();
         public override HashSet<Type> Signature { get; }
 
         public readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
@@ -282,6 +293,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             if (camera != null && screen != null && worldProvider != null)
             {
+
+                ProcessSXFCommands(game);
+
                 MoveCamera(game, camera);
                 ClearScreen(screen, camera, game.GetSettings(), worldProvider);
                 FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
@@ -295,11 +309,34 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 game.Batch.Begin(samplerState: SamplerState.PointClamp);               
                 RenderSpriteScreen(game, screen, game.GetSettings(), gameTime);
                 RenderProjectiles(game, screen, camera, game.GetSettings(), gameTime);
+                RenderSFX(game, screen, camera, game.GetSettings(), gameTime);
                 game.Batch.End();
             }
             game.GraphicsDevice.Clear(ClearOptions.DepthBuffer, new Microsoft.Xna.Framework.Color(1), 1, 0);
         }
 
+        private void ProcessSXFCommands(NamelessGame game)
+        {
+            const int lightningSegmentLenght = 32;
+            while (game.Commander.DequeueCommand(out SFXLightningCommand command))
+            {        
+                var directionVector = command.Start.ToPoint().ToVector2() - command.End.ToPoint().ToVector2();
+                directionVector.Normalize();
+                var angle = MathUtil.AngleBetween(Vector2.UnitX, directionVector);
+
+                var dist = (command.Start - command.End).Length() * lightningSegmentLenght;
+                var maxDist = dist;
+                while (dist > 0)
+                {
+                    var lerpValue = (float)dist / maxDist;
+                    var fromVector = new Vector2(command.Start.X, command.Start.Y);
+                    var toVector = new Vector2(command.End.X, command.End.Y);
+                    var interpolatedValue = Vector2.Lerp(fromVector, toVector, lerpValue);
+                    lightningModels.Add(new SFXLightningModel() { screenLocation = interpolatedValue, rotation = (float)angle, timeToPlay = 4000 });
+                    dist -= lightningSegmentLenght;
+                }
+            }
+        }
 
         private static Screen UpdateZoom(NamelessGame game, Commander commander, IEntity entity, Screen screen, out bool zoomUpdate)
         {
@@ -693,7 +730,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
         }
-
         private void RenderProjectiles(NamelessGame game, Screen screen, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
         {
             foreach (IEntity entity in RegisteredEntities)
@@ -718,6 +754,52 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                         //        sprite.Draw(game.Batch, screenPoint, MathHelper.ToRadians(angle), );
                     }
+                }
+            }
+        }
+
+        private void RenderSFX(NamelessGame game, Screen screen, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
+        {
+            int tileHeight = game.GetSettings().GetFontSizeZoomed();
+
+            List<SFXLightningModel> list = lightningModels.ToList();
+            for (int lightningIndex = 0; lightningIndex < list.Count; lightningIndex++)
+            {
+                SFXLightningModel lightningModel = list[lightningIndex];
+                var polygonVertices = new List<Vector2>();
+                var rotatedPolygon = new List<Vector2>();
+                //skip this to let the last segment be in the center of the target
+                if (lightningIndex > 0)
+                {
+                    polygonVertices.Add(new Vector2(0, tileHeight / 2));
+                    polygonVertices.Add(new Vector2(tileHeight * 0.2f, (float)(Random.Shared.NextDouble() - 0.5) * (tileHeight / 2) + tileHeight / 2));
+                }
+                polygonVertices.Add(new Vector2(tileHeight * 0.5f, (float)(Random.Shared.NextDouble() - 0.5) * (tileHeight / 2) + tileHeight / 2));
+                polygonVertices.Add(new Vector2(tileHeight * 0.8f, (float)(Random.Shared.NextDouble() - 0.5) * (tileHeight / 2) + tileHeight / 2));
+                polygonVertices.Add(new Vector2(tileHeight, tileHeight / 2));
+
+                var origin = new Vector2(tileHeight / 2, tileHeight / 2);
+                for (int i = 0; i < polygonVertices.Count; i++)
+                {
+                    var point = polygonVertices[i];
+                    point.RotateAround(origin, MathHelper.ToRadians(lightningModel.rotation));
+                    rotatedPolygon.Add(point);
+                }
+
+                int tileWidth = game.GetSettings().GetFontSizeZoomed();
+                Vector2 screenPoint = new Vector2((lightningModel.screenLocation.X - camera.Position.X) * tileWidth, (lightningModel.screenLocation.Y - camera.Position.Y) * tileHeight);
+
+                for (int i = 0; i < rotatedPolygon.Count-1; i++) {
+                    var pointA = rotatedPolygon[i];
+                    var pointB = rotatedPolygon[i+1];                    
+                    game.Batch.DrawLine(screenPoint + pointA, screenPoint + pointB, Microsoft.Xna.Framework.Color.Blue, 4);
+                    game.Batch.DrawLine(screenPoint + pointA, screenPoint + pointB, Microsoft.Xna.Framework.Color.White, 2);
+                }             
+
+                lightningModel.timeToPlay -= gameTime.ElapsedGameTime.Milliseconds;
+                if(lightningModel.timeToPlay<=0)
+                {
+                    lightningModels.Remove(lightningModel);
                 }
             }
         }

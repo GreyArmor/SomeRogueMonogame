@@ -20,5 +20,6 @@
   </AssociatedBuffs>
   <AbilityActions>
     <AbilityAction>StartFire</AbilityAction>
+    <AbilityAction>SFXLightningToTarget</AbilityAction>
   </AbilityActions>
 </AbilityTemplateData>
