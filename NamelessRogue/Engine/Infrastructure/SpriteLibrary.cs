@@ -94,8 +94,6 @@ namespace NamelessRogue.Engine.Infrastructure
             AddAnimatedSprite("fire2", "Content\\Sprites\\Fire\\fire2.ase");
             AddAnimatedSprite("fire3", "Content\\Sprites\\Fire\\fire3.ase");
 
-            AddAnimatedSprite("lightning", "Content\\Sprites\\lightning.ase");
-
             AddStaticSprite("box", "Sprites\\box");
             AddStaticSprite("boxMetal", "Sprites\\boxMetal");
             AddStaticSprite("barrel", "Sprites\\barrel");
