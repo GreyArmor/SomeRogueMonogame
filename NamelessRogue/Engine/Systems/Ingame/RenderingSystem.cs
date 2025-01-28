@@ -462,6 +462,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 var drawable = entity.GetComponentOfType<Drawable>();
                                 var sprited = entity.GetComponentOfType<SpritedObject>();
 
+
+                                var character  = entity.GetComponentOfType<Character>();
+                                if(character!=null)
+                                {
+                                    continue;
+                                }
+
                                 if (drawable != null && sprited == null)
                                 {
                                     screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.Tileset, drawable.CharColor,  drawable.CastsShadow, drawable.IsFlying);
