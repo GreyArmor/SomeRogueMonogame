@@ -366,7 +366,6 @@ namespace NamelessRogue.Engine.UI
         {
             var directory = contentDirectoryPath + "\\GameObjects\\Abilities\\";
 
-
             var newItemPath = directory + name + ".nraf";
             if (File.Exists(newItemPath))
             {

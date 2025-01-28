@@ -121,7 +121,7 @@ namespace NamelessRogue.Engine.Factories
             character.AddComponent(new AIControlled() { Affinity = Affinity.Hostile });
            
             character.AddComponent(pos);
-            character.AddComponent(new Drawable(Path.GetFileName(data.SpritePath), new Engine.Utility.Color(1), castsShadow: data.CastsShadow));
+            character.AddComponent(new Drawable(Path.GetFileName(data.SpritePath), new Engine.Utility.Color(1), castsShadow: data.CastsShadow, isFlying: data.IsFlying));
             character.AddComponent(new SpritedObject(false, spriteFileName, sprite._animations.Keys.First()));
             character.AddComponent(new Description(data.Name, data.Description));
             var holder = new ItemsHolder();
@@ -132,7 +132,10 @@ namespace NamelessRogue.Engine.Factories
 
             var stats = new CharacterStats();
             stats.Health.Value = data.Health;
-            stats.Health.MaxValue = data.Energy;
+            stats.Health.MaxValue = data.Health;
+
+            stats.Energy.Value = data.Energy;
+            stats.Energy.MaxValue = data.Energy;
             stats.MovementSpeed.Value = data.MovementSpeed;
             stats.Immobile = data.Immobile;
 

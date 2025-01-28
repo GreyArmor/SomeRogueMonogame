@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>41d1d871-3816-4312-8baa-8542c0dc2578</Id>
+  <Name>Wastelander</Name>
+  <Description />
+  <SpritePath>Sprites\wastelander.ase</SpritePath>
+  <CastsShadow>true</CastsShadow>
+  <Immobile>false</Immobile>
+  <Health>10</Health>
+  <Energy>0</Energy>
+  <MovementSpeed>50</MovementSpeed>
+  <DroppedItems>
+    <DroppedItemTemplate>
+      <ItemId>e65bc87d-2378-425e-88af-ec48b3635d84</ItemId>
+      <Path>..\Armor\Gas mask.nrif</Path>
+      <Probability>100</Probability>
+    </DroppedItemTemplate>
+  </DroppedItems>
+  <WeaponTemplateData>
+    <MinimumDamage>2</MinimumDamage>
+    <MaximumDamage>5</MaximumDamage>
+    <Range>10</Range>
+    <AttackType>Ranged</AttackType>
+    <DamageType>Ballistic</DamageType>
+    <AmmoType>LowCaliber</AmmoType>
+    <AmmoInClip>12</AmmoInClip>
+  </WeaponTemplateData>
+  <ArmorTemplateData>
+    <DamageType>Physical</DamageType>
+    <ArmorValue>3</ArmorValue>
+    <ResistType>Physical</ResistType>
+    <ResistValue>10</ResistValue>
+  </ArmorTemplateData>
+  <IsFlying>false</IsFlying>
+</CharacterTemplateData>

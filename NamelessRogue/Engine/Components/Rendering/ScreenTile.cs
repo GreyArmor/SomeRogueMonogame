@@ -21,13 +21,15 @@ namespace NamelessRogue.Engine.Components.Rendering
         public string AnimationName { get; }
         public bool HasShadow { get; internal set; }
         public Engine.Utility.Color CharColor { get; set; }
+        public bool IsFlying { get; internal set; }
 
-        public StackedObject(string id, ScreenObjectSource type, Color color, string animationName = "", bool hasShadow = false)
+        public StackedObject(string id, ScreenObjectSource type, Color color, string animationName = "", bool hasShadow = false, bool isFlying = false)
         {
             Id = id;
             Type = type;
             AnimationName = animationName;
             HasShadow = hasShadow;
+            IsFlying = isFlying;
             CharColor = color;
         }
 
@@ -38,14 +40,14 @@ namespace NamelessRogue.Engine.Components.Rendering
         {
         }
         
-        public void AddObject(string id, ScreenObjectSource type, Color color, bool hasShadow, string animationName = "")
+        public void AddObject(string id, ScreenObjectSource type, Color color, bool hasShadow, bool isFlying, string animationName = "")
         {
-            StackedObjects.Add(new StackedObject(id, type, color, animationName, hasShadow));
+            StackedObjects.Add(new StackedObject(id, type, color, animationName, hasShadow, isFlying));
         }
 
-        public void AddObjectToBottom(string id, ScreenObjectSource type, Color color, bool hasShadow, string animationName = "")
+        public void AddObjectToBottom(string id, ScreenObjectSource type, Color color, bool hasShadow, bool isFlying, string animationName = "")
         {
-            StackedObjects.Insert(0, new StackedObject(id, type, color, animationName, hasShadow));
+            StackedObjects.Insert(0, new StackedObject(id, type, color, animationName, hasShadow, isFlying));
         }
         public List<StackedObject> StackedObjects { get; set; } = new List<StackedObject> ();
         public bool isVisible;

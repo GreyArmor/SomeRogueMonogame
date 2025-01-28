@@ -99,6 +99,7 @@ namespace NamelessRogue.Engine.UI
         int resistModValue = 10;
 
         bool castsShadow = false;
+        bool isFlying = false;
         bool immobile = false;
 
         string contentCharacterDirectoryPath = string.Empty;
@@ -259,6 +260,10 @@ namespace NamelessRogue.Engine.UI
                         ImGui.Text("Casts shadow?");
                         ImGui.SameLine();
                         ImGui.Checkbox("##CastsShadowValue", ref castsShadow);
+
+                        ImGui.Text("Flying?");
+                        ImGui.SameLine();
+                        ImGui.Checkbox("##FlyingValue", ref isFlying);
 
                         ImGui.SameLine();
 
@@ -434,6 +439,7 @@ namespace NamelessRogue.Engine.UI
             energy = data.Energy;
             movementSpeed = data.MovementSpeed;
             castsShadow = data.CastsShadow;
+            isFlying = data.IsFlying;
             immobile = data.Immobile;
             var wtd = data.WeaponTemplateData;
             var atd = data.ArmorTemplateData;
@@ -507,6 +513,7 @@ namespace NamelessRogue.Engine.UI
             data.Energy = energy;
             data.MovementSpeed = movementSpeed;
             data.CastsShadow = castsShadow;
+            data.IsFlying = isFlying;
             data.Immobile = immobile;
             if (spritePath != string.Empty)
             {

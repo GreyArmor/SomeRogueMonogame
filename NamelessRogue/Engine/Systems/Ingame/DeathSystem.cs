@@ -102,6 +102,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     namelessGame.Commander.EnqueueCommand(logCommand);
                     logCommand.LogMessage += d.Name + " is dead!";
                 }
+
+                Drawable drawable = entityToKill.GetComponentOfType<Drawable>();
+                if(drawable!=null)
+                {
+                    drawable.CastsShadow = false;
+                }
+            
             }
 
         }

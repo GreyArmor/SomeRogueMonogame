@@ -48,8 +48,8 @@ namespace NamelessRogue.Engine.Generation.Editor
         public WeaponTemplateData WeaponTemplateData { get; set; }
         [XmlElement]
         public ArmorTemplateData ArmorTemplateData { get; set; }
-
-
+        [XmlElement]
+        public bool IsFlying { get; set; }
     }
 
     [XmlRoot]

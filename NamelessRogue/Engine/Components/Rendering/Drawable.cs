@@ -15,7 +15,9 @@ namespace NamelessRogue.Engine.Components.Rendering
         public string TilesetPosition { get; set; }
 
         public bool CastsShadow { get; set; }
-		public Drawable(string representationId, Color charColor, Color backgroundColor = null, string tilesetPosition = "", bool castsShadow = false)
+        public bool IsFlying { get; }
+
+        public Drawable(string representationId, Color charColor, Color backgroundColor = null, string tilesetPosition = "", bool castsShadow = false , bool isFlying = false)
         {
             this.BackgroundColor = backgroundColor;
             if (backgroundColor == null)
@@ -26,6 +28,7 @@ namespace NamelessRogue.Engine.Components.Rendering
             this.charColor = charColor;
             TilesetPosition = tilesetPosition;
             CastsShadow = castsShadow;
+            IsFlying = isFlying;
         }
 
 		public Drawable()

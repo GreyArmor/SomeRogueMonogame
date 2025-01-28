@@ -36,4 +36,5 @@
     <ResistType>Physical</ResistType>
     <ResistValue>10</ResistValue>
   </ArmorTemplateData>
+  <IsFlying>true</IsFlying>
 </CharacterTemplateData>
