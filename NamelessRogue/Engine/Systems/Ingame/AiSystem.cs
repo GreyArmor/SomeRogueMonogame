@@ -62,6 +62,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         FollowPlayerAi basicAi = entity.GetComponentOfType<FollowPlayerAi>();
                         HostileTurretAI hostileTurretAI = entity.GetComponentOfType<HostileTurretAI>();
+                        FollowShootPlayerAi followShootPlayerAi = entity.GetComponentOfType<FollowShootPlayerAi>();
 
                         Position playerPosition = namelessGame.PlayerEntity
                             .GetComponentOfType<Position>();
@@ -74,7 +75,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 case BasicAiStates.Idle:
                                 case BasicAiStates.Moving:
                                     var pPos = playerPosition.Point;
-                                    MoveTo(entity, namelessGame, new Point(pPos.X, pPos.Y), true);
+                                    MoveTo(entity, namelessGame, new Point(pPos.X, pPos.Y), true, basicAi);
                                     var route = basicAi.Route;
                                     if (route.Count == 0)
                                     {
@@ -124,11 +125,66 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     break;
                             }
                         }
+
+                        else if (followShootPlayerAi != null)
+                        {
+                            switch (followShootPlayerAi.State)
+                            {
+                                case ShooterAiStates.Idle:
+                                    {
+                                        var pPos = playerPosition.Point;
+                                        var entityPos = entity.GetComponentOfType<Position>().Point;
+                                        var distance = (pPos - entityPos).Length();
+
+                                        var visionRange = 12;
+                                        if (distance <= visionRange)
+                                        {
+                                            followShootPlayerAi.Target = playerEntity;
+                                            followShootPlayerAi.State = ShooterAiStates.Aiming;
+                                            goto case ShooterAiStates.Aiming;
+                                        }
+                                    }
+                                    break;
+                                case ShooterAiStates.Aiming:
+                                    {
+                                        var targetPos = followShootPlayerAi.Target.GetComponentOfType<Position>().Point;
+                                        var entityPos = entity.GetComponentOfType<Position>().Point;
+                                        var distance = (targetPos - entityPos).Length();
+                                        var visionRange = 12;
+                                        if (distance <= visionRange)
+                                        {
+                                            followShootPlayerAi.State = ShooterAiStates.Shooting;
+                                            followShootPlayerAi.ShootingTarget = targetPos;
+                                            entity.GetComponentOfType<ActionPoints>().Points = -100;
+                                        }
+                                        else
+                                        {
+                                            MoveTo(entity, namelessGame, new Point(targetPos.X, targetPos.Y), true, followShootPlayerAi);
+                                            var route = followShootPlayerAi.Route;
+                                            if (route.Count == 0)
+                                            {
+                                                followShootPlayerAi.State = ShooterAiStates.Idle;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case ShooterAiStates.Shooting:
+                                    {
+                                        FireWeaponCommand command = new FireWeaponCommand(entity, followShootPlayerAi.ShootingTarget);
+                                        namelessGame.Commander.EnqueueCommand(command);
+
+                                        entity.GetComponentOfType<ActionPoints>().Points = -100;
+                                        followShootPlayerAi.State = ShooterAiStates.Aiming;
+                                    }
+                                    break;
+                            }
+                        }
+
                     }
                 }
             }
         }
-        public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides)
+        public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides, IRounteContainingAI aiComponent)
         {
             IEntity worldEntity = namelessGame.TimelineEntity;
             IWorldProvider worldProvider = null;
@@ -138,8 +194,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
 
             Position position = movableEntity.GetComponentOfType<Position>();
-            FollowPlayerAi basicAi = movableEntity.GetComponentOfType<FollowPlayerAi>();
-            var route = basicAi.Route;
+            var route = aiComponent.Route;
 
             if (!route.Any())
             {
@@ -149,22 +204,22 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     namelessGame);
                 if (moveBesides)
                 {
-                    basicAi.Route = new Queue<Point>(path.Take(path.Count - 1));
+                    aiComponent.Route = new Queue<Point>(path.Take(path.Count - 1));
                 }
                 else
                 {
-                    basicAi.Route = new Queue<Point>(path);
+                    aiComponent.Route = new Queue<Point>(path);
                 }
 
-                basicAi.DestinationPoint = destination;
+                aiComponent.DestinationPoint = destination;
             }
 
-            route = basicAi.Route;
+            route = aiComponent.Route;
             if (route.Any())
             {
                 Point nextPosition = route.Dequeue();
                 Tile tileToMoveTo = worldProvider.GetTile(nextPosition.X, nextPosition.Y, 0);
-                if (!tileToMoveTo.IsPassable() || destination != basicAi.DestinationPoint)
+                if (!tileToMoveTo.IsPassable() || destination != aiComponent.DestinationPoint)
                 {
                     AStarPathfinderSimple pathfinder = new AStarPathfinderSimple();
                     List<Point> path = pathfinder.FindPath(position.Point.ToPoint(),
@@ -174,24 +229,24 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     if (path.Any())
                     {
 
-                        basicAi.Route = new Queue<Point>(path);
+                        aiComponent.Route = new Queue<Point>(path);
 
                         if (moveBesides)
                         {
-                            basicAi.Route = new Queue<Point>(path.Take(path.Count - 1));
+                            aiComponent.Route = new Queue<Point>(path.Take(path.Count - 1));
                         }
                         else
                         {
-                            basicAi.Route = new Queue<Point>(path);
+                            aiComponent.Route = new Queue<Point>(path);
                         }
                     }
                     else
                     {
-                        basicAi.Route = new Queue<Point>();
+                        aiComponent.Route = new Queue<Point>();
                         nextPosition = position.Point.ToPoint();
                     }
 
-                    basicAi.DestinationPoint = destination;
+                    aiComponent.DestinationPoint = destination;
                 }
 
                 worldProvider.MoveEntity(movableEntity,

@@ -1,4 +1,4 @@
- 
+
 
 namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
 {

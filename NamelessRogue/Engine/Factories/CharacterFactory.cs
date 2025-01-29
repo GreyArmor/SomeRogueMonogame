@@ -145,7 +145,7 @@ namespace NamelessRogue.Engine.Factories
             }
             else
             {
-                character.AddComponent(new FollowPlayerAi());
+                character.AddComponent(new FollowShootPlayerAi());
             }
 
             var atd = data.ArmorTemplateData;
