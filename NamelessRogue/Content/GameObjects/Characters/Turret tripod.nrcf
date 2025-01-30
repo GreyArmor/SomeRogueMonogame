@@ -9,6 +9,7 @@
   <Health>10</Health>
   <Energy>0</Energy>
   <MovementSpeed>1</MovementSpeed>
+  <VisionRange>10</VisionRange>
   <DroppedItems>
     <DroppedItemTemplate>
       <ItemId>c7fa99db-347d-4677-ad9b-b7e72b587de9</ItemId>
@@ -31,4 +32,5 @@
     <ResistType>Physical</ResistType>
     <ResistValue>10</ResistValue>
   </ArmorTemplateData>
+  <IsFlying>false</IsFlying>
 </CharacterTemplateData>

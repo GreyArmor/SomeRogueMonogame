@@ -137,6 +137,10 @@ namespace NamelessRogue.Engine.Factories
             stats.Energy.Value = data.Energy;
             stats.Energy.MaxValue = data.Energy;
             stats.MovementSpeed.Value = data.MovementSpeed;
+
+            stats.VisionRange.Value = data.VisionRange;
+            stats.VisionRange.MaxValue = data.VisionRange;
+
             stats.Immobile = data.Immobile;
 
             if(stats.Immobile)

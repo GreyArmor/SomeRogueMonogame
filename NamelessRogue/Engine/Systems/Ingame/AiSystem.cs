@@ -60,6 +60,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     var actionPoints = entity.GetComponentOfType<ActionPoints>();
                     if (dead == null && actionPoints.Points >= 0)
                     {
+                        CharacterStats npcStats = entity.GetComponentOfType<CharacterStats>();
+
                         FollowPlayerAi basicAi = entity.GetComponentOfType<FollowPlayerAi>();
                         HostileTurretAI hostileTurretAI = entity.GetComponentOfType<HostileTurretAI>();
                         FollowShootPlayerAi followShootPlayerAi = entity.GetComponentOfType<FollowShootPlayerAi>();
@@ -136,7 +138,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
                                         var distance = (pPos - entityPos).Length();
 
-                                        var visionRange = 12;
+                                        var visionRange = npcStats.VisionRange.Value;
                                         if (distance <= visionRange)
                                         {
                                             followShootPlayerAi.Target = playerEntity;
@@ -150,7 +152,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         var targetPos = followShootPlayerAi.Target.GetComponentOfType<Position>().Point;
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
                                         var distance = (targetPos - entityPos).Length();
-                                        var visionRange = 12;
+                                        var visionRange = npcStats.VisionRange.Value;
                                         if (distance <= visionRange)
                                         {
                                             followShootPlayerAi.State = ShooterAiStates.Shooting;

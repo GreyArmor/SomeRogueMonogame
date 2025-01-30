@@ -39,6 +39,9 @@ namespace NamelessRogue.Engine.Generation.Editor
         public int MovementSpeed { get;  set; }
 
         [XmlElement]
+        public int VisionRange { get; set; }
+
+        [XmlElement]
         public string FactionId { get; set; }
 
         [XmlArray]
