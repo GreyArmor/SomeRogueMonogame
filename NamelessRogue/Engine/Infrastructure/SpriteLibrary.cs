@@ -39,7 +39,7 @@ namespace NamelessRogue.Engine.Infrastructure
             AnimatedSpriteNR sprite = new AnimatedSpriteNR(aseFile.CanvasWidth, aseFile.CanvasHeight);
 
             var spriteSheet = aseFile.CreateSpriteSheet(game.GraphicsDevice);
-
+            
             var firstAnimation = "";
 
             foreach (var animTag in spriteSheet.GetAnimationTagNames())
@@ -49,7 +49,9 @@ namespace NamelessRogue.Engine.Infrastructure
                     firstAnimation = animTag;
                 }
                 var animation = spriteSheet.CreateAnimatedSprite(animTag);
-                sprite.Add(animTag, animation);
+                var tag = spriteSheet.GetAnimationTag(animTag);
+                var duration = tag.Frames.ToArray().Sum(frame=>frame.Duration.Milliseconds);
+                sprite.Add(animTag, animation, duration);
             }
 
             sprite.SetCurrentLoop(firstAnimation);

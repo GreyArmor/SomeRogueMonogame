@@ -10,12 +10,39 @@ using AnimationType = NamelessRogue.Engine.Infrastructure.AnimationType;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-    internal class PlayCharacterAnimationCommand : ICommand
+    internal class PlayCharacterAnimationForATimeCommand : ICommand
     {
-        public PlayCharacterAnimationCommand(IEntity entity, AnimationType type, int durationMilisecods) {
+        public PlayCharacterAnimationForATimeCommand(IEntity entity, AnimationType type, int durationMilisecods) {
             Entity = entity;
             Type = type;
             DurationMilisecods = durationMilisecods;
+        }
+
+        public IEntity Entity { get; }
+        public AnimationType Type { get; }
+        public int DurationMilisecods { get; }
+    }
+
+    internal class PlayCharacterAnimationForNumberOfLoopsCommand : ICommand
+    {
+        public PlayCharacterAnimationForNumberOfLoopsCommand(IEntity entity, AnimationType type, int numberOfLoops)
+        {
+            Entity = entity;
+            Type = type;
+            LoopsCount = numberOfLoops;
+        }
+
+        public IEntity Entity { get; }
+        public AnimationType Type { get; }
+        public int LoopsCount { get; }
+    }
+
+    internal class LockIdleAnimationCommand : ICommand
+    {
+        public LockIdleAnimationCommand(IEntity entity, AnimationType type)
+        {
+            Entity = entity;
+            Type = type;
         }
 
         public IEntity Entity { get; }

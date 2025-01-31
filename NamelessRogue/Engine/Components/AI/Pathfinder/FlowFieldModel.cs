@@ -51,9 +51,11 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			//}
 
 			var chunk = _worlldProvider.GetChunks()[new Point((int)coord.X, (int)coord.Y)];
-			return chunk.NonGroundPassable;
+			if (chunk.NonGroundPassable)
+			{
+				return true;
+			}
 
-			return false;
 			var tile = _worlldProvider.GetTile((int)coord.X, (int)coord.Y, 0);
 			if (counter >= maxSearches)
 			{

@@ -49,13 +49,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					}
 				}
 			}
-			var deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
 
-			milisecondsCounter += deltaTime;
-
-			if (milisecondsCounter >= moveDelayMilisecends)
+			if (namelessGame.TurnUpdated)
 			{
-				milisecondsCounter = -milisecondsCounter;
 				foreach (Entity movableEntity in RegisteredEntities)
 				{
 					Position position = movableEntity.GetComponentOfType<Position>();
@@ -69,18 +65,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
 							flowMoveComponent.FinishedMoving = true;
 							//continue;
 						}
-
-						var flagbearerTag = movableEntity.GetComponentOfType<FlagBearerTag>();
-						if (flagbearerTag != null)
-						{
-							var groupToMove = movableEntity.GetComponentOfType<GroupTag>();
-							namelessGame.Commander.EnqueueCommand(new GroupMoveCommand(groupToMove.GroupId, position.Point.ToPoint(), nextPoint, flowMoveComponent.To));
-						}
-						else
-						{
-							namelessGame.WorldProvider.MoveEntity(movableEntity,
-							  nextPoint.X, nextPoint.Y, 0);
-						}
+						namelessGame.WorldProvider.MoveEntity(movableEntity,
+						  nextPoint.X, nextPoint.Y, 0);
 					}
 				}
 			}

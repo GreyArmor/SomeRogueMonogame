@@ -487,7 +487,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             animation = sprited.CurrentAnimation;
                                             sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
                                         }
-                                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, animation);
+                                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, sprited.CurrentAnimationTimeLeft, animation);
                                     }
                                 }
                             }
@@ -694,12 +694,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                 if (entity.GetComponentOfType<Dead>() != null)
                                 {
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObjectToBottom(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, animation);
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObjectToBottom(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, sprited.CurrentAnimationTimeLeft, animation);
 
                                 }
                                 else
                                 {
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, animation);
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, sprited.CurrentAnimationTimeLeft, animation);
                                 }
                             }
                         }
@@ -895,7 +895,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     foreach (var objectToDraw in screen.ScreenBuffer[x, y].StackedObjects)
                     {
-
                         if (objectToDraw.Type == ScreenObjectSource.AnimatedSprite || objectToDraw.Type == ScreenObjectSource.StaticSprite)
                         {
                             var spriteId = objectToDraw.Id;
@@ -905,8 +904,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
                                 {
-                                    sprite.SetCurrentLoop(objectToDraw.AnimationName);
-                                    sprite.Update(gameTime);
+
+                                    if (objectToDraw.AnimationName == "takeaim_1")
+                                    {
+                                        objectToDraw.ToString();
+                                    }
+                                    sprite.SetCurrentLoopwithTimeConstrains(objectToDraw.AnimationName, objectToDraw.AnimationTime);
+                                   // sprite.Update(gameTime);
                                     sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.White);
                                 }
                             }
@@ -946,7 +950,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
                                 {
-                                    sprite.SetCurrentLoop(objectToDraw.AnimationName);
+                                    sprite.SetCurrentLoopwithTimeConstrains(objectToDraw.AnimationName, objectToDraw.AnimationTime);
                                     sprite.Update(gameTime);
                                     int shadowOffset = 10 / game.GetSettings().Zoom;
                                     if (objectToDraw.HasShadow)

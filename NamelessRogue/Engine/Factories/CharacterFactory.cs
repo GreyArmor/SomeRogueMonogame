@@ -137,6 +137,10 @@ namespace NamelessRogue.Engine.Factories
             stats.Energy.Value = data.Energy;
             stats.Energy.MaxValue = data.Energy;
             stats.MovementSpeed.Value = data.MovementSpeed;
+
+            stats.VisionRange.Value = data.VisionRange;
+            stats.VisionRange.MaxValue = data.VisionRange;
+
             stats.Immobile = data.Immobile;
 
             if(stats.Immobile)
@@ -145,7 +149,7 @@ namespace NamelessRogue.Engine.Factories
             }
             else
             {
-                character.AddComponent(new FollowPlayerAi());
+                character.AddComponent(new FollowShootPlayerAi());
             }
 
             var atd = data.ArmorTemplateData;

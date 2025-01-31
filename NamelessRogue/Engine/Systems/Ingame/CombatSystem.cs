@@ -86,7 +86,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var ap = source.GetComponentOfType<ActionPoints>();
                 ap.Points -= Constants.ActionsAttackCost;
 
-                var playAttackAnimationCommand = new PlayCharacterAnimationCommand(source, AnimationType.Attack, 100);
+                var playAttackAnimationCommand = new PlayCharacterAnimationForATimeCommand(source, AnimationType.Attack, 100);
                 namelessGame.Commander.EnqueueCommand(playAttackAnimationCommand);
             }
         }

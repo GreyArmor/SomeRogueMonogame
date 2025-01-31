@@ -81,6 +81,7 @@ namespace NamelessRogue.Engine.UI
         int health = 10;
         int energy = 0;
         int movementSpeed = 50;
+        int visionRange = 10;
         int maxDamage = 10;
         int minDamage = 0;
         int ammoInClip = 0;
@@ -284,6 +285,10 @@ namespace NamelessRogue.Engine.UI
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.DragInt("##MovementSpeed", ref movementSpeed, 1, 1, 999);
 
+                        ImGui.Text("Vision range");
+                        ImGui.SetNextItemWidth(fieldsSizeX);
+                        ImGui.DragInt("##VisionRange", ref visionRange, 1, 1, 999);
+
 
                         ImGui.Text("Damage type");
                         ImGui.SetNextItemWidth(fieldsSizeX);
@@ -438,6 +443,7 @@ namespace NamelessRogue.Engine.UI
             health = data.Health;
             energy = data.Energy;
             movementSpeed = data.MovementSpeed;
+            visionRange = data.VisionRange;
             castsShadow = data.CastsShadow;
             isFlying = data.IsFlying;
             immobile = data.Immobile;
@@ -512,6 +518,7 @@ namespace NamelessRogue.Engine.UI
             data.Health = health;
             data.Energy = energy;
             data.MovementSpeed = movementSpeed;
+            data.VisionRange = visionRange;
             data.CastsShadow = castsShadow;
             data.IsFlying = isFlying;
             data.Immobile = immobile;
