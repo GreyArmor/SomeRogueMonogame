@@ -43,7 +43,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     entityToKill.AddComponent(new Dead());
                 }
 
-                var playAttackAnimationCommand = new PlayCharacterAnimationCommand(entityToKill, AnimationType.Death, 100);
+                var playAttackAnimationCommand = new PlayCharacterAnimationForATimeCommand(entityToKill, AnimationType.Death, 100);
                 namelessGame.Commander.EnqueueCommand(playAttackAnimationCommand);
 
                 IEntity worldEntity = namelessGame.TimelineEntity;

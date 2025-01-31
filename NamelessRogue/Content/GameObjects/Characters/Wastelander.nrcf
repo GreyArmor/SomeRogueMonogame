@@ -9,7 +9,7 @@
   <Health>10</Health>
   <Energy>0</Energy>
   <MovementSpeed>50</MovementSpeed>
-  <VisionRange>10</VisionRange>
+  <VisionRange>4</VisionRange>
   <DroppedItems>
     <DroppedItemTemplate>
       <ItemId>e65bc87d-2378-425e-88af-ec48b3635d84</ItemId>

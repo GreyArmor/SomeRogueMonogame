@@ -143,7 +143,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         {
                                             followShootPlayerAi.Target = playerEntity;
                                             followShootPlayerAi.State = ShooterAiStates.Aiming;
-                                            namelessGame.Commander.EnqueueCommand(new PlayCharacterAnimationCommand(entity, AnimationType.TakeAim, 500));
+                                            namelessGame.Commander.EnqueueCommand(new PlayCharacterAnimationForNumberOfLoopsCommand(entity, AnimationType.TakeAim, 1));
                                             namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Aiming));
                                             goto case ShooterAiStates.Aiming;
                                         }
@@ -155,19 +155,30 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
                                         var distance = (targetPos - entityPos).Length();
                                         var visionRange = npcStats.VisionRange.Value;
-                                        if (distance <= visionRange)
+
+                                        if (distance > visionRange)
                                         {
-                                            followShootPlayerAi.State = ShooterAiStates.Shooting;
+                                            followShootPlayerAi.State = ShooterAiStates.Idle;
                                             followShootPlayerAi.ShootingTarget = targetPos;
-                                            entity.GetComponentOfType<ActionPoints>().Points = -100;
+                                            namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Idle));
                                         }
                                         else
                                         {
-                                            MoveTo(entity, namelessGame, new Point(targetPos.X, targetPos.Y), true, followShootPlayerAi);
-                                            var route = followShootPlayerAi.Route;
-                                            if (route.Count == 0)
+                                            var weaponRange = npcStats.WeaponStats[0].Range;
+                                            if (distance <= weaponRange)
                                             {
-                                                followShootPlayerAi.State = ShooterAiStates.Idle;
+                                                followShootPlayerAi.State = ShooterAiStates.Shooting;
+                                                followShootPlayerAi.ShootingTarget = targetPos;
+                                                entity.GetComponentOfType<ActionPoints>().Points = -100;
+                                            }
+                                            else
+                                            {
+                                                MoveTo(entity, namelessGame, new Point(targetPos.X, targetPos.Y), true, followShootPlayerAi);
+                                                var route = followShootPlayerAi.Route;
+                                                if (route.Count == 0)
+                                                {
+                                                    followShootPlayerAi.State = ShooterAiStates.Idle;
+                                                }
                                             }
                                         }
                                     }

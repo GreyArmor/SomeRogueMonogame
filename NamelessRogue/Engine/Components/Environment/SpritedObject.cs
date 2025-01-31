@@ -25,7 +25,7 @@ namespace NamelessRogue.Engine.Components.Environment
         public bool InfinteAnimation { get; }
         public string CurrentAnimation { get; set; }
 
-        public float CurrentAnimationTimeLeft { get; set; }
+        public int CurrentAnimationTimeLeft { get; set; }
         public AnimationType IdleAnimationType { get; internal set; }
 
         public override IComponent Clone()

@@ -43,23 +43,24 @@ namespace NamelessRogue.Engine.Infrastructure
         }
 
         public Dictionary<string, AnimatedSprite> _animations = new Dictionary<string, AnimatedSprite>();
+        public Dictionary<string, int> _animationsDurations = new Dictionary<string, int>();
 
         public Dictionary<AnimationType, List<string>> _animationsByType = new Dictionary<AnimationType, List<string>>();
 
         AnimatedSprite currentAnimation;
-        public void Add(string name, AnimatedSprite sprite)
+        public void Add(string name, AnimatedSprite sprite, int durationMiliseconds)
         {
             _animations.Add(name, sprite);
-
-            AddToTypeCollactionIfAppropriate(name, "idle", AnimationType.Idle);
-            AddToTypeCollactionIfAppropriate(name, "attack", AnimationType.Attack);
-            AddToTypeCollactionIfAppropriate(name, "death", AnimationType.Death);
-            AddToTypeCollactionIfAppropriate(name, "dead", AnimationType.Dead);
-            AddToTypeCollactionIfAppropriate(name, "takeaim", AnimationType.TakeAim);
-            AddToTypeCollactionIfAppropriate(name, "aiming", AnimationType.Aiming);
+            _animationsDurations.Add(name, durationMiliseconds);
+            AddToTypeCollectionIfAppropriate(name, "idle", AnimationType.Idle);
+            AddToTypeCollectionIfAppropriate(name, "attack", AnimationType.Attack);
+            AddToTypeCollectionIfAppropriate(name, "death", AnimationType.Death);
+            AddToTypeCollectionIfAppropriate(name, "dead", AnimationType.Dead);
+            AddToTypeCollectionIfAppropriate(name, "takeaim", AnimationType.TakeAim);
+            AddToTypeCollectionIfAppropriate(name, "aiming", AnimationType.Aiming);
         }
 
-        private void AddToTypeCollactionIfAppropriate(string name, string type, AnimationType animationType)
+        private void AddToTypeCollectionIfAppropriate(string name, string type, AnimationType animationType)
         {
             if (name.Contains(type))
             {
@@ -80,6 +81,19 @@ namespace NamelessRogue.Engine.Infrastructure
         {
             CurrentAnimation = _animations[animationName];
             CurrentAnimation.Play();
+        }
+
+        public void SetCurrentLoopwithTimeConstrains(string animationName, int currentAnimationTimeLeft)
+        {
+            CurrentAnimation = _animations[animationName];
+            CurrentAnimation.Play();
+
+            if(currentAnimationTimeLeft<=0 || currentAnimationTimeLeft<= CurrentAnimation.CurrentFrame.Duration.Milliseconds)
+            {
+                CurrentAnimation.SetFrame(currentAnimation.FrameCount-1);
+                CurrentAnimation.Stop();
+            }
+
         }
 
         public void Update(GameTime time)

@@ -26,22 +26,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 var sprited = entity.GetComponentOfType<SpritedObject>();
                 if (!sprited.IsStatic)
-                {             
+                {
                     if (sprited.CurrentAnimationTimeLeft <= 0)
-                    {                       
-                        sprited.CurrentAnimationTimeLeft = 1000;                      
-
+                    {
                         var sprite = SpriteLibrary.SpritesAnimated[sprited.SpriteId];
-
                         var index = Random.Shared.Next(0, sprite._animationsByType[sprited.IdleAnimationType].Count);
                         var animationName = sprite._animationsByType[sprited.IdleAnimationType][index];
-                        sprite._animations[animationName].CurrentFrameTimeRemaining.ToString();
+                        var animationDurationMS = sprite._animationsDurations[animationName];
+                        sprited.CurrentAnimationTimeLeft = animationDurationMS;
                         sprited.CurrentAnimation = animationName;
                     }
                 }
             }
 
-            while (namelessGame.Commander.DequeueCommand(out PlayCharacterAnimationCommand command))
+            while (namelessGame.Commander.DequeueCommand(out PlayCharacterAnimationForATimeCommand command))
             {
                 var entity = command.Entity;
                 var sprited = entity.GetComponentOfType<SpritedObject>();
@@ -61,6 +59,29 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     sprited.CurrentAnimation = animationName;
                     sprited.IdleAnimation = animationName;
                     sprited.CurrentAnimationTimeLeft = 1000;
+                }
+            }
+
+            while (namelessGame.Commander.DequeueCommand(out PlayCharacterAnimationForNumberOfLoopsCommand command))
+            {
+                var entity = command.Entity;
+                var sprited = entity.GetComponentOfType<SpritedObject>();
+
+                if (sprited != null && !sprited.IsStatic)
+                {
+                    var sprite = SpriteLibrary.SpritesAnimated[sprited.SpriteId];
+
+                    if (!sprite._animationsByType[command.Type].Any())
+                    {
+                        continue;
+                    }
+
+                    var index = Random.Shared.Next(0, sprite._animationsByType[command.Type].Count);
+                    var animationName = sprite._animationsByType[command.Type][index];
+                    var animationDurationMS = sprite._animationsDurations[animationName];
+                    sprited.CurrentAnimation = animationName;
+                    sprited.IdleAnimation = animationName;
+                    sprited.CurrentAnimationTimeLeft = animationDurationMS * (command.LoopsCount);
                 }
             }
 
