@@ -19,10 +19,12 @@ namespace NamelessRogue.Engine.UI
         public EditorsPickerScreen EditorsPickerScreen { get; set; }
         public EditorItemScreen EditorItemScreen { get; set; }
         public EditorCharacterScreen EditorCharacterScreen { get; set; }
+		public EditorDialogScreen EditorDialogScreen { get; set; }
 
         public EditorBuffScreen EditorBuffScreen { get; set; }   
 		public EditorAbilityScreen EditorAbilityScreen { get;  set; }
         public WorldGenerationUI WorldGenScreen { get; set; }
+
      
 
         public UIContainer(NamelessGame game)
@@ -44,6 +46,7 @@ namespace NamelessRogue.Engine.UI
             EditorBuffScreen = new EditorBuffScreen(game);
             EditorAbilityScreen = new EditorAbilityScreen(game);
             AbilityScreen = new AbilityScreen(game);
+			EditorDialogScreen = new EditorDialogScreen(game);
 
             Instance = this;
 

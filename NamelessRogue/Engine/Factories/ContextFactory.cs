@@ -374,7 +374,28 @@ namespace NamelessRogue.Engine.Factories
             pickUpContext = null;
             WorldBoardContext = null;
         }
+        private static GameContext EditorDialogContext;
+        public static GameContext GetEditorDialogContext(NamelessGame game)
+        {
 
-      
+            if (EditorDialogContext != null)
+            {
+                return EditorDialogContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
+                systems.Add(new MainMenuScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
+
+                // create and init the UI manager
+                EditorDialogContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorDialogScreen, "Dialog");
+                return EditorDialogContext;
+            }
+        }
+
     }
 }
