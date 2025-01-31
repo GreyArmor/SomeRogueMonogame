@@ -113,7 +113,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         var targetPos = hostileTurretAI.Target.GetComponentOfType<Position>().Point;
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
                                         var distance = (targetPos - entityPos).Length();
-                                        var visionRange = 6;
+                                        var visionRange = npcStats.VisionRange.Value;
 
                                         if (distance <= visionRange)
                                         {
@@ -143,6 +143,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         {
                                             followShootPlayerAi.Target = playerEntity;
                                             followShootPlayerAi.State = ShooterAiStates.Aiming;
+                                            namelessGame.Commander.EnqueueCommand(new PlayCharacterAnimationCommand(entity, AnimationType.TakeAim, 500));
+                                            namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Aiming));
                                             goto case ShooterAiStates.Aiming;
                                         }
                                     }

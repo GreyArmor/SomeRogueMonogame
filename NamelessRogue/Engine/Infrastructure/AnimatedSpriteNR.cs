@@ -20,6 +20,8 @@ namespace NamelessRogue.Engine.Infrastructure
         Attack,
         Death,
         Dead,
+        TakeAim,
+        Aiming,
     }
 
     internal class AnimatedSpriteNR
@@ -53,6 +55,8 @@ namespace NamelessRogue.Engine.Infrastructure
             AddToTypeCollactionIfAppropriate(name, "attack", AnimationType.Attack);
             AddToTypeCollactionIfAppropriate(name, "death", AnimationType.Death);
             AddToTypeCollactionIfAppropriate(name, "dead", AnimationType.Dead);
+            AddToTypeCollactionIfAppropriate(name, "takeaim", AnimationType.TakeAim);
+            AddToTypeCollactionIfAppropriate(name, "aiming", AnimationType.Aiming);
         }
 
         private void AddToTypeCollactionIfAppropriate(string name, string type, AnimationType animationType)

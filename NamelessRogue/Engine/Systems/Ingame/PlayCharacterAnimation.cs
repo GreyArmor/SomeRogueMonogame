@@ -22,4 +22,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public AnimationType Type { get; }
         public int DurationMilisecods { get; }
     }
+
+    internal class LockIdleAnimationCommand : ICommand
+    {
+        public LockIdleAnimationCommand(IEntity entity, AnimationType type)
+        {
+            Entity = entity;
+            Type = type;
+        }
+
+        public IEntity Entity { get; }
+        public AnimationType Type { get; }
+        public int DurationMilisecods { get; }
+    }
 }

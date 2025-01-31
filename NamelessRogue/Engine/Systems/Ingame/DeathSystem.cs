@@ -108,6 +108,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     drawable.CastsShadow = false;
                 }
+
+                namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entityToKill, AnimationType.Dead));
             
             }
 
