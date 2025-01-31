@@ -18,11 +18,11 @@ namespace NamelessRogue.Engine.UI
         public override void DrawLayout()
         {
             ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
-            ImGui.BeginChild("menu", UiSize, false);
-            {
+           // ImGui.BeginChild("menu", UiSize, false);
+           //{
 
                 //"label" is also an ID on InputText, placing ## in front of it makes it invisible while retaining the ID
-                ImGui.Text("Seed");
+              /*  ImGui.Text("Seed");
                 ImGui.InputText("##seedinput", ref _seed, 30);
                 ImGui.Spacing();
                 ImGui.Text("Width");
@@ -40,7 +40,7 @@ namespace NamelessRogue.Engine.UI
                 if (ButtonWithSound("Generate", buttonSize, _seed.Any())) { Action = WorldGenAction.Generate; }
                 if (ButtonWithSound("Exit", buttonSize)) { Action = WorldGenAction.Exit; }
             }
-
+              */
             //ImGui.EndChild();
             //}
             ImGui.PopFont();
