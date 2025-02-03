@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DialogData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>0fce52d4-32ef-4dc6-ba2d-ae3a71699a13</Id>
+  <Response>What the fuck are you doing over there?!</Response>
+  <Options>
+    <DialogOption>
+      <Id>9077e86a-80b4-4147-88fa-f036bc0a1e1a</Id>
+      <OptionText>[Social skill/Persuation] Bullshit the guard to leave you alone.</OptionText>
+    </DialogOption>
+    <DialogOption>
+      <Id>9184573d-143f-46b7-85d0-201fb850253e</Id>
+      <OptionText>[Attack]</OptionText>
+      <DialogData>
+        <Id>192ce36e-a14b-4899-a7e3-13a3d8ced105</Id>
+        <Response />
+        <Options />
+      </DialogData>
+    </DialogOption>
+    <DialogOption>
+      <Id>4c23836e-a11d-4193-a8e3-f124ef5678de</Id>
+      <OptionText>[Bribe]</OptionText>
+    </DialogOption>
+    <DialogOption>
+      <Id>f2f8ef94-8d16-4ae6-969e-9200d470dae1</Id>
+      <OptionText>[Present credentials]</OptionText>
+    </DialogOption>
+  </Options>
+</DialogData>
