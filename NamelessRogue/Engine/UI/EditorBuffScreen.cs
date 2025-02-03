@@ -435,6 +435,11 @@ namespace NamelessRogue.Engine.UI
 
             currentFilePath = currentFilesOfSelectedItemType[currentSelectedFile];
 
+            if (currentFilePath == null || !currentFilePath.Any())
+            {
+                return;
+            }
+
             TextReader reader = new StreamReader(currentFilePath);
             var btd = (BuffTemplateData)serializer.Deserialize(reader);
 

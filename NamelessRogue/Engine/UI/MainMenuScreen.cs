@@ -16,7 +16,6 @@ namespace NamelessRogue.Engine.UI
 		LoadGame,
 		Exit,
         Editors,
-		Dialog
     }
 
 	public class MainMenuScreen : BaseScreen
@@ -29,7 +28,7 @@ namespace NamelessRogue.Engine.UI
 		System.Numerics.Vector2 buttonSize;
 		System.Numerics.Vector2 shiftVector;
 		System.Numerics.Vector2 menuSize;
-		int buttonCount = 7;
+		int buttonCount = 6;
 		public MainMenuScreen(NamelessGame game) : base(game) {
 			buttonSize = new System.Numerics.Vector2((uiSize.X / buttonCount) - buttonSpacing.X, 50);
 			shiftVector = new System.Numerics.Vector2(buttonSpacing.X + buttonSize.X, 0);
@@ -61,12 +60,9 @@ namespace NamelessRogue.Engine.UI
                     if (ButtonWithSound("Options", buttonSize)) { Action = MainMenuAction.Options; }
 
                     ImGui.SetCursorPos(shiftVector * 4);
-                    if (ButtonWithSound("Test", buttonSize)) { Action = MainMenuAction.Dialog; }
-
-                    ImGui.SetCursorPos(shiftVector * 5);
 					if (ButtonWithSound("Editors", buttonSize)) { Action = MainMenuAction.Editors; }
 
-                    ImGui.SetCursorPos(shiftVector * 6);
+                    ImGui.SetCursorPos(shiftVector * 5);
                     if (ButtonWithSound("Exit", buttonSize)) { Action = MainMenuAction.Exit; }
 
                     ImGui.PopFont();

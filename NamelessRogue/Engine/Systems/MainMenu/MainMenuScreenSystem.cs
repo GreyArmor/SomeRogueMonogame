@@ -16,9 +16,6 @@ namespace NamelessRogue.Engine.Systems.MainMenu
         {
             switch (UIContainer.Instance.MainMenu.Action)
             {
-                case MainMenuAction.Dialog:
-                    namelessGame.ContextToSwitch = ContextFactory.GetEditorDialogContext(namelessGame);
-                    break;
                 case MainMenuAction.GenerateNewTimeline:
                     namelessGame.ContextToSwitch = ContextFactory.GetWorldGenContext(namelessGame);
                     break;
@@ -43,5 +40,5 @@ namespace NamelessRogue.Engine.Systems.MainMenu
         }
     }
 
-	
+
 }

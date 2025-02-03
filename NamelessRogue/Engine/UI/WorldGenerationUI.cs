@@ -44,6 +44,8 @@ namespace NamelessRogue.Engine.UI
 			menuPosition = new System.Numerics.Vector2(10, 0);
 			ImGui.SetNextWindowPos(new System.Numerics.Vector2());
 			ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
+
+
 			ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
 			ImGui.SetWindowSize(uiSize);
 
