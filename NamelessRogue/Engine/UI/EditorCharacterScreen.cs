@@ -105,7 +105,7 @@ namespace NamelessRogue.Engine.UI
 
         string contentCharacterDirectoryPath = string.Empty;
         string contentDirectoryPath = string.Empty;
-        bool fileIsPicking = false;
+        bool spriteIsPicking = false;
 
         string characterId = "";
 
@@ -114,6 +114,10 @@ namespace NamelessRogue.Engine.UI
         int currentIconCombpBoxItem = 0;
         string selectedIconFile = "";
 
+        string dialogId = string.Empty;
+        string dialogPath = string.Empty;
+        string dialogPathFileName = string.Empty;
+
         string selectedDroppableItemFile = "";
 
         string[] currentSpriteAnimations = null;
@@ -121,6 +125,7 @@ namespace NamelessRogue.Engine.UI
 
         bool droppableItemPickerDialog = false;
         int selectedDroppableIndex = 0;
+        private bool dialogFilePicking;
 
         /// <summary>
         /// SOMEBODY TOUCHA MY SPAGHET
@@ -138,7 +143,7 @@ namespace NamelessRogue.Engine.UI
 
             ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollWithMouse);
             {
-                if (fileIsPicking)
+                if (spriteIsPicking)
                 {
                     var fileExtensions = new List<string>() { "*.ase" };
                     var previousPos = ImGui.GetCursorPos();
@@ -163,20 +168,60 @@ namespace NamelessRogue.Engine.UI
                             var sprite = SpriteLibrary.SpritesAnimated[spriteFileName];
                             currentSpriteAnimations = sprite._animations.Keys.ToArray();
 
-                            var changeSpriteCommand = new CharacterScreeChangeSpriteCommand(spriteFileName);
+                            var changeSpriteCommand = new CharacterScreenChangeSpriteCommand(spriteFileName);
                             game.Commander.EnqueueCommand(changeSpriteCommand);
 
-                            fileIsPicking = false;
+                            spriteIsPicking = false;
                         }
                         ImGui.SameLine();
                         if (ImGui.Button("Cancel"))
                         {
                             ImGui.CloseCurrentPopup();
-                            fileIsPicking = false;
+                            spriteIsPicking = false;
                         }
                         ImGui.EndPopup();
                     }
                 }
+
+                if (dialogFilePicking)
+                {
+                    var fileExtensions = new List<string>() { "*.nrdf" };
+                    var previousPos = ImGui.GetCursorPos();
+                    var center = ImGui.GetMainViewport().GetCenter();
+                    bool p_open = true;
+
+                    ImGui.OpenPopup("Dialog file picker popup");
+                    ImGui.SetNextWindowPos(new Vector2());
+
+                    if (ImGui.BeginPopupModal("Dialog file picker popup", ref p_open, ImGuiWindowFlags.AlwaysAutoResize))
+                    {
+                        ImGui.SetNextItemOpen(true);
+                        _fillTreeRecursive(contentDirectoryPath, fileExtensions, ref selectedIconFile);
+                        if (ImGui.Button("Open"))
+                        {
+                            ImGui.CloseCurrentPopup();
+                            dialogPath = selectedIconFile;
+                            dialogPathFileName = Path.GetFileName(dialogPath);
+
+
+                            XmlSerializer serializer = new XmlSerializer(typeof(DialogData));
+                            TextReader reader = new StreamReader(dialogPath);
+
+                            var dialogData = (DialogData)serializer?.Deserialize(reader);
+                            dialogId = dialogData.Id;
+                            dialogFilePicking = false;
+                        }
+                        ImGui.SameLine();
+                        if (ImGui.Button("Cancel"))
+                        {
+                            ImGui.CloseCurrentPopup();
+                            dialogFilePicking = false;
+                        }
+                        ImGui.EndPopup();
+                    }
+                }
+
+
                 var fieldsSizeX = (uiSize.X / 3) * 2;
                 //      if (!fileIsPicking)
                 {
@@ -206,7 +251,13 @@ namespace NamelessRogue.Engine.UI
                         ImGui.SameLine();
                         if (ButtonWithSound("Pick sprite", buttonSize))
                         {
-                            fileIsPicking = true;
+                            spriteIsPicking = true;
+                        }
+
+                        ImGui.SameLine();
+                        if (ButtonWithSound("Pick dialog", buttonSize))
+                        {
+                            dialogFilePicking = true;
                         }
 
                         ImGui.SameLine();
@@ -250,6 +301,13 @@ namespace NamelessRogue.Engine.UI
 
                             EditorCharacterScreenSpriteRenderSystem.SpritePosition = spritePos;
                             EditorCharacterScreenSpriteRenderSystem.SpriteSize = iconSize;
+                        }
+
+                        if(dialogId != null && dialogId!="")
+                        {
+                            ImGui.Separator();
+                            ImGui.Text($@"Dialog file name: " + dialogPathFileName);
+                            ImGui.Separator();
                         }
 
                         void _restrainValue(ref int value, int minValue = 0, int maxValue = 999)
@@ -433,7 +491,7 @@ namespace NamelessRogue.Engine.UI
                 var sprite = SpriteLibrary.SpritesAnimated[spriteFileName];
                 currentSpriteAnimations = sprite._animations.Keys.ToArray();
 
-                var changeSpriteCommand = new CharacterScreeChangeSpriteCommand(spriteFileName);
+                var changeSpriteCommand = new CharacterScreenChangeSpriteCommand(spriteFileName);
                 game.Commander.EnqueueCommand(changeSpriteCommand);
             }
 
@@ -449,6 +507,10 @@ namespace NamelessRogue.Engine.UI
             immobile = data.Immobile;
             var wtd = data.WeaponTemplateData;
             var atd = data.ArmorTemplateData;
+
+            dialogId = data.DialogDataId;
+            dialogPath = data.DialogFilePath;
+            dialogPathFileName = Path.GetFileNameWithoutExtension(dialogPath);
 
             if (wtd != null)
             {
@@ -511,9 +573,7 @@ namespace NamelessRogue.Engine.UI
 
             data.Id = characterId;
             data.Name = name;
-            data.Description = description;
-
-        
+            data.Description = description;       
 
             data.Health = health;
             data.Energy = energy;
@@ -551,8 +611,9 @@ namespace NamelessRogue.Engine.UI
             atd.ResistValue = resistValue;
             atd.ArmorValue = armorValue;
             data.ArmorTemplateData = atd;
-
             data.DroppedItems = DroppedItems;
+            data.DialogDataId = dialogId;
+            data.DialogFilePath = Path.GetRelativePath(directory, dialogPath);
 
             using (TextWriter writer = new StreamWriter(newCharacterPath))
             {

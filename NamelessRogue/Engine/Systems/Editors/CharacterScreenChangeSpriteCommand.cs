@@ -9,9 +9,9 @@ using ICommand = NamelessRogue.Engine.Abstraction.ICommand;
 
 namespace NamelessRogue.Engine.Systems.Editors
 {
-    public class CharacterScreeChangeSpriteCommand : ICommand
+    public class CharacterScreenChangeSpriteCommand : ICommand
     {
-        public CharacterScreeChangeSpriteCommand(string spriteId)
+        public CharacterScreenChangeSpriteCommand(string spriteId)
         {
             SpriteId = spriteId;
         }

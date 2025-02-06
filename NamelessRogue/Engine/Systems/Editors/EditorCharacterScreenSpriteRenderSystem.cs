@@ -19,7 +19,7 @@ namespace NamelessRogue.Engine.Systems.Editors
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            while (namelessGame.Commander.DequeueCommand(out CharacterScreeChangeSpriteCommand command))
+            while (namelessGame.Commander.DequeueCommand(out CharacterScreenChangeSpriteCommand command))
             {
                 currentSprite = SpriteLibrary.SpritesAnimated[command.SpriteId];
             }

@@ -55,7 +55,9 @@ namespace NamelessRogue.Engine.Generation.Editor
         public bool IsFlying { get; set; }
 
         [XmlElement]
-        public DialogData DialogData { get; set; }
+        public string DialogDataId { get; set; }
+        [XmlElement]
+        public string DialogFilePath { get; set; }
     }
 
     [XmlRoot]
