@@ -278,7 +278,7 @@ namespace NamelessRogue.shell
 
 				Point worldRiverPosition = new Point();
 				bool anyRivers = false;
-				/*
+                /*
 				foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
 				{
 					var pos = worldBoardWorldTile.WorldBoardPosiiton;
@@ -294,15 +294,22 @@ namespace NamelessRogue.shell
 				}*/
 
 
-				var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, 0, this);
+                BuffLibrary.ClearData();
+                BuffLibrary.LoadData(this);
+
+                ItemLibrary.ClearData();
+                ItemLibrary.LoadItemData(this);
+
+                DialogLibrary.ClearData();
+                DialogLibrary.LoadData(this);
+
+                var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, 0, this);
 				PlayerEntity = player;
 				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
 
 
                 var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.nrcf", SearchOption.AllDirectories);
-
-
-				Vector2 characterCreationOffset = new Vector2(0);
+								Vector2 characterCreationOffset = new Vector2(0);
 				
 				foreach (var charactersFile in characters)
 				{
@@ -322,13 +329,7 @@ namespace NamelessRogue.shell
                 //	}
                 //}	
 				//
-				//
-				BuffLibrary.ClearData();
-				BuffLibrary.LoadData(this);
-
-                ItemLibrary.ClearData();
-                ItemLibrary.LoadItemData(this);
-
+				//			
 	
 
                 var itemsHolder = player.GetComponentOfType<ItemsHolder>();

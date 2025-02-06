@@ -14,6 +14,8 @@ namespace NamelessRogue.Engine.UI
 		public MapScreen MapScreen { get; set; }
 		public InventoryScreen InventoryScreen { get; set; }
 
+        public DialogScreen DialogScreen { get; set; }
+
         public AbilityScreen AbilityScreen { get; set; }
 
         public EditorsPickerScreen EditorsPickerScreen { get; set; }
@@ -24,6 +26,7 @@ namespace NamelessRogue.Engine.UI
         public EditorBuffScreen EditorBuffScreen { get; set; }   
 		public EditorAbilityScreen EditorAbilityScreen { get;  set; }
         public WorldGenerationUI WorldGenScreen { get; set; }
+
 
      
 
@@ -47,7 +50,7 @@ namespace NamelessRogue.Engine.UI
             EditorAbilityScreen = new EditorAbilityScreen(game);
             AbilityScreen = new AbilityScreen(game);
 			EditorDialogScreen = new EditorDialogScreen(game);
-
+            DialogScreen = new DialogScreen(game);
             Instance = this;
 
 		}

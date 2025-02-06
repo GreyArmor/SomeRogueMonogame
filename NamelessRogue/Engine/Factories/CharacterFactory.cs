@@ -170,6 +170,11 @@ namespace NamelessRogue.Engine.Factories
             character.AddComponent(new ActionPoints() { Points = 100 });
             game.WorldProvider.MoveEntity(character, position);
 
+            if(data.DialogDataId!=null)
+            { 
+                character.AddComponent(new DialogComponent(data.DialogDataId));
+            }
+
             return character;
         }
 
