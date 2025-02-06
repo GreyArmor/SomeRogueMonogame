@@ -72,10 +72,10 @@ namespace NamelessRogue.Engine.UI
             currentFiles = Directory.GetFiles(contentDialogDirectoryPath);
             currentFilesNames = currentFiles.Select(path => System.IO.Path.GetFileName(path)).ToArray();
 
-            ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize);
+            ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoScrollWithMouse);
             {
 
-                ImGui.BeginChild("##fields", new Vector2(fieldsSizeX, uiSize.Y), false, ImGuiWindowFlags.None);
+                ImGui.BeginChild("##fields", new Vector2(fieldsSizeX, uiSize.Y-100), false, ImGuiWindowFlags.None);
                 {
 
                     if (ButtonWithSound("Save", buttonSize) && name.Any())
