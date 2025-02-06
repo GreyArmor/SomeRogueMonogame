@@ -18,6 +18,7 @@ using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems;
 using Microsoft.CodeAnalysis.Options;
+using NamelessRogue.Engine.Components.Stats;
 
 namespace NamelessRogue.Engine.UI
 {
@@ -29,6 +30,9 @@ namespace NamelessRogue.Engine.UI
     }
     public class EditorDialogScreen : BaseScreen
     {
+        DialogOutcomeId[] dialoOutcomeIdTypes = (DialogOutcomeId[])Enum.GetValues(typeof(DialogOutcomeId));
+        string[] dialoOutcomeIdTypesNames = Enum.GetNames(typeof(DialogOutcomeId));
+
         Vector2 buttonSize = new Vector2(200, 50);
         private string[] currentFiles;
         private string[] currentFilesNames;
@@ -40,6 +44,7 @@ namespace NamelessRogue.Engine.UI
 
         DialogDataViewModel data = new DialogDataViewModel();
         private string currentFilePath;
+
 
         public EditorDialogScreenAction Action { get; set; } = EditorDialogScreenAction.None;
         public EditorDialogScreen(NamelessGame game) : base(game)
@@ -106,7 +111,7 @@ namespace NamelessRogue.Engine.UI
                         Action = EditorDialogScreenAction.Exit;
                     }
 
-                    ImGui.Text("Name");
+                    ImGui.Text("File name");
                     ImGui.SetNextItemWidth(fieldsSizeX);
                     ImGui.InputText("##Name", ref name, 128);
 
@@ -164,15 +169,40 @@ namespace NamelessRogue.Engine.UI
                         ImGui.Text("Option text");
                         ImGui.InputTextMultiline("##Option text input" + dialogOption.Id, ref dialogOption.OptionText, 10000, inputTextSize, ImGuiInputTextFlags.None);
 
+                        ImGui.Text("Dialog outcome id");
+                        ImGui.Combo("##DOI", ref dialogOption.CurrentDiagolOutcomeId, this.dialoOutcomeIdTypesNames, dialoOutcomeIdTypesNames.Length);
+                        ImGui.Text("Has special outcome data?");
+                        ImGui.SameLine();
+                        ImGui.Checkbox("##HasDialogOutcomeData", ref dialogOption.HasDialogOutcomeData);
+
+                        if(dialogOption.HasDialogOutcomeData)
+                        {
+                            ImGui.Text("Dialog outcome data");
+                            ImGui.InputTextMultiline("##Dialog outcome data input" + dialogOption.Id, ref dialogOption.DialogOutcomeData, 10000, inputTextSize, ImGuiInputTextFlags.None);
+
+                        }
+
                         if (ButtonWithSound("Add child dialog" + "##" + dialogOption.Id, buttonSize))
                         {
                             dialogOption.DialogData = new DialogDataViewModel();
                         }
+
+                        if (dialogOption.DialogData != null)
+                        {
+                            ImGui.SameLine();
+                            if (ButtonWithSound("Remove child dialog" + "##" + dialogOption.Id, buttonSize))
+                            {
+                                dialogOption.DialogData = null;
+                            }
+                        }
                         ImGui.SameLine();
-                        if (ButtonWithSound("Remove this" + "##" + dialogOption.Id, buttonSize))
+                        if (ButtonWithSound("Remove this option" + "##" + dialogOption.Id, buttonSize))
                         {
                             data.Options.Remove(dialogOption);
                         }
+
+                      
+
 
                         DrawDialogTree(dialogOption.DialogData, treeStack + @$"->[{childIndex}] -> Response");
                         ImGui.TreePop();
@@ -237,6 +267,8 @@ namespace NamelessRogue.Engine.UI
                 return;
             }
 
+            name = System.IO.Path.GetFileNameWithoutExtension(currentFilePath); 
+
             TextReader reader = new StreamReader(currentFilePath);
             var dtd = (DialogData)serializer.Deserialize(reader);
 
@@ -294,13 +326,22 @@ namespace NamelessRogue.Engine.UI
         public string Id;
         public string OptionText;
         public DialogDataViewModel DialogData;
+        public string DialogOutcomeData;
+        public DialogOutcomeId DialogOutcomeId;
+        public int CurrentDiagolOutcomeId;
+        public bool HasDialogOutcomeData;
 
         public DialogOptionViewModel()
         {
             Id = Guid.NewGuid().ToString();
             OptionText = "";
+            DialogOutcomeId = DialogOutcomeId.None;
             DialogData = null;
+            HasDialogOutcomeData = false;
+            DialogOutcomeData = "";
         }
+
+       
         public void LoadFromData(DialogOption data)
         {
             Id = data.Id;
@@ -310,6 +351,10 @@ namespace NamelessRogue.Engine.UI
                 DialogData = new DialogDataViewModel();
                 DialogData.LoadFromData(data.DialogData);
             }
+            DialogOutcomeData = data.DialogOutcomeData;
+            DialogOutcomeId = data.DialogOutcomeId;
+            HasDialogOutcomeData = data.HasDialogOutcomeData;
+            CurrentDiagolOutcomeId = ((DialogOutcomeId[])Enum.GetValues(typeof(DialogOutcomeId))).ToList().IndexOf(DialogOutcomeId);
         }
 
         public void UnloadToData(DialogOption data)
@@ -325,6 +370,10 @@ namespace NamelessRogue.Engine.UI
 
                 DialogData.UnloadToData(data.DialogData);
             }
+
+            data.DialogOutcomeData = DialogOutcomeData;
+            data.DialogOutcomeId = DialogOutcomeId;
+            data.HasDialogOutcomeData = HasDialogOutcomeData;
         }
     }
 }

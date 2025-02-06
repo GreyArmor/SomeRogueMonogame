@@ -53,6 +53,9 @@ namespace NamelessRogue.Engine.Generation.Editor
         public ArmorTemplateData ArmorTemplateData { get; set; }
         [XmlElement]
         public bool IsFlying { get; set; }
+
+        [XmlElement]
+        public DialogData DialogData { get; set; }
     }
 
     [XmlRoot]

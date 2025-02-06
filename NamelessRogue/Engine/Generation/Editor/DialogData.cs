@@ -7,6 +7,22 @@ using System.Xml.Serialization;
 
 namespace NamelessRogue.Engine.Generation.Editor
 {
+
+    public enum DialogOutcomeId
+    {
+        None,
+        CancelDialog,
+        NPCBecomesHostile,
+        NPCBecomesNeutral,
+        NPCBecomesFriendly,
+        NPCStartTrade,
+        NPCBribeTrade,
+        NPCAuthorizeAccess,
+        MissionStart,
+        MissionProgress,
+        MissionEnd,
+    }
+
     [XmlRoot]
     public class DialogData
     {
@@ -25,6 +41,14 @@ namespace NamelessRogue.Engine.Generation.Editor
         public string Id { get; set; }
         [XmlElement]
         public string OptionText { get; set; }
+        [XmlElement]
+        public string DialogOutcomeData { get; set; }
+
+        [XmlElement]
+        public DialogOutcomeId DialogOutcomeId { get; set; }
+
+        [XmlElement]
+        public bool HasDialogOutcomeData { get; set; }
         [XmlElement]
         public  DialogData DialogData{ get; set; }
          
