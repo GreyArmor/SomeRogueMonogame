@@ -38,4 +38,6 @@
     <ResistValue>10</ResistValue>
   </ArmorTemplateData>
   <IsFlying>true</IsFlying>
+  <DialogDataId>137c7a72-36f3-4354-9823-f6499be6135a</DialogDataId>
+  <DialogFilePath>..\Dialogs\DroneHumm.nrdf</DialogFilePath>
 </CharacterTemplateData>

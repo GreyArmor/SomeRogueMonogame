@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DialogData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>137c7a72-36f3-4354-9823-f6499be6135a</Id>
+  <Response>Bzzzzzzz.</Response>
+  <Options>
+    <DialogOption>
+      <Id>276f1481-4c25-4c0f-b6e6-d912065d7c6a</Id>
+      <OptionText>Nevermond</OptionText>
+      <DialogOutcomeData />
+      <DialogOutcomeId>None</DialogOutcomeId>
+      <HasDialogOutcomeData>false</HasDialogOutcomeData>
+    </DialogOption>
+  </Options>
+</DialogData>

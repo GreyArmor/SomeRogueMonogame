@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Id>41d1d871-3816-4312-8baa-8542c0dc2578</Id>
-  <Name>Wastelander</Name>
+  <Name>Wastelander Trader</Name>
   <Description />
   <SpritePath>Sprites\wastelander.ase</SpritePath>
   <CastsShadow>true</CastsShadow>
@@ -12,9 +12,9 @@
   <VisionRange>4</VisionRange>
   <DroppedItems>
     <DroppedItemTemplate>
-      <ItemId>e65bc87d-2378-425e-88af-ec48b3635d84</ItemId>
-      <Path>..\Armor\Gas mask.nrif</Path>
-      <Probability>100</Probability>
+      <ItemId>59ace243-ebd9-45cd-9e1e-bac783ea0a60</ItemId>
+      <Path>..\Weapons\Simple gun.nrif</Path>
+      <Probability>20</Probability>
     </DroppedItemTemplate>
   </DroppedItems>
   <WeaponTemplateData>
@@ -34,5 +34,5 @@
   </ArmorTemplateData>
   <IsFlying>false</IsFlying>
   <DialogDataId>a5cf103d-2b4a-40e8-a8a1-6f6165906740</DialogDataId>
-  <DialogFilePath>..\Dialogs\Wastelander 1.nrdf</DialogFilePath>
+  <DialogFilePath>..\..\..\bin\Debug\Dialogs\Wastelander 1.nrdf</DialogFilePath>
 </CharacterTemplateData>

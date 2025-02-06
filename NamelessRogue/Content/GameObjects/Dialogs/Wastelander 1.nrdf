@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DialogData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>a5cf103d-2b4a-40e8-a8a1-6f6165906740</Id>
+  <Response>Sup chum?</Response>
+  <Options>
+    <DialogOption>
+      <Id>42648641-37b6-46bd-a998-fd22cd81e681</Id>
+      <OptionText>Nevermind.</OptionText>
+      <DialogOutcomeData />
+      <DialogOutcomeId>None</DialogOutcomeId>
+      <HasDialogOutcomeData>false</HasDialogOutcomeData>
+    </DialogOption>
+  </Options>
+</DialogData>
