@@ -34,5 +34,5 @@
   </ArmorTemplateData>
   <IsFlying>false</IsFlying>
   <DialogDataId>a5cf103d-2b4a-40e8-a8a1-6f6165906740</DialogDataId>
-  <DialogFilePath>..\..\..\bin\Debug\Dialogs\Wastelander 1.nrdf</DialogFilePath>
+  <DialogFilePath>..\Dialogs\Wastelander 1.nrdf</DialogFilePath>
 </CharacterTemplateData>

@@ -51,21 +51,6 @@ namespace NamelessRogue.Engine.Systems
                 {
                     _loadTexture(file);
                 }
-
-
-                //var cellSelected =  game.Content.Load<Texture2D>("Sprites/cellSelected");
-                //var cellDeselected = game.Content.Load<Texture2D>("Sprites/cellDeselected");
-                //var gunIcon = game.Content.Load<Texture2D>("Sprites/gunIcon");
-                //var gunRedIcon = game.Content.Load<Texture2D>("Sprites/gunRedIcon");
-                //var selectionColor = game.Content.Load<Texture2D>("Sprites/selectionColor");
-                //var helmet = game.Content.Load<Texture2D>("Sprites/helmet");
-                //ImGuiImageLibrary.Textures.Add("cellSelected", _imGuiRendererInstance.BindTexture(cellSelected));
-                //ImGuiImageLibrary.Textures.Add("cellDeselected", _imGuiRendererInstance.BindTexture(cellDeselected));
-                //ImGuiImageLibrary.Textures.Add("gunIcon", _imGuiRendererInstance.BindTexture(gunIcon));
-                //ImGuiImageLibrary.Textures.Add("gunRedIcon", _imGuiRendererInstance.BindTexture(gunRedIcon));
-                //ImGuiImageLibrary.Textures.Add("selectionColor", _imGuiRendererInstance.BindTexture(selectionColor));
-                //ImGuiImageLibrary.Textures.Add("helmet", _imGuiRendererInstance.BindTexture(helmet));
-
             }
 
             _xnaTexture = CreateTexture(game.GraphicsDevice, game.GetActualWidth(), game.GetActualHeight(), pixel =>
@@ -86,7 +71,10 @@ namespace NamelessRogue.Engine.Systems
         {
             _imGuiRendererInstance.BeforeLayout(gameTime);
 
-            game.CurrentContext.ContextScreen.DrawLayout();
+            foreach (var screen in game.CurrentContext.ContextScreens)
+            {
+                screen.DrawLayout();
+            }
             // Draw our UI
             //ImGuiLayout();
 

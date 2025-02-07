@@ -7,14 +7,14 @@
       <Id>00eb8d6e-1314-4807-882f-96acf8cec7c1</Id>
       <OptionText>Show me what you got.</OptionText>
       <DialogOutcomeData />
-      <DialogOutcomeId>None</DialogOutcomeId>
+      <DialogOutcomeId>NPCStartTrade</DialogOutcomeId>
       <HasDialogOutcomeData>false</HasDialogOutcomeData>
     </DialogOption>
     <DialogOption>
       <Id>5e13b228-606e-413c-a84a-add65d7a1a0d</Id>
-      <OptionText>Nevermind</OptionText>
+      <OptionText>Nevermind.</OptionText>
       <DialogOutcomeData />
-      <DialogOutcomeId>None</DialogOutcomeId>
+      <DialogOutcomeId>CancelDialog</DialogOutcomeId>
       <HasDialogOutcomeData>false</HasDialogOutcomeData>
     </DialogOption>
   </Options>

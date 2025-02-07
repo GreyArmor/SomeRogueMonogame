@@ -23,6 +23,8 @@ namespace NamelessRogue.Engine.Factories
 {
     public class ContextFactory
     {
+        private static List<ISystem> ingameLogicSystems = null;
+        private static List<ISystem> ingameRenderSystems = null;
         private static GameContext IngameContext;
         public static GameContext GetIngameContext(NamelessGame game)
         {
@@ -33,48 +35,48 @@ namespace NamelessRogue.Engine.Factories
             }
             else
             {
-                var systems = new List<ISystem>();
-				systems.Add(new ChunkManagementSystem());
-				systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
-                systems.Add(new IngameIntentSystem());
+                //i put these sustems in a list to use with other contexts that overlay over ingame context; example: dialog system
 
-                systems.Add(new PlayerMovementSystem());
-                systems.Add(new InteractSystem());
-                systems.Add(new AbilitySystem());
-                systems.Add(new VisibilitySystem());
-                systems.Add(new TargetingSystem());
-                
-                       
-                systems.Add(new InventorySystem());
-                systems.Add(new EquipSystem());
-                systems.Add(new FireWeaponSystem());
-                systems.Add(new ProjectileSystem());
-				systems.Add(new TurnManagementSystem());
-                systems.Add(new AiSystem());
-                systems.Add(new FlowFieldMovementSystem());
+                var ingameIntentSystem = new IngameIntentSystem();
 
+                ingameLogicSystems = new List<ISystem>();
+				ingameLogicSystems.Add(new ChunkManagementSystem());
+				ingameLogicSystems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
+                ingameLogicSystems.Add(ingameIntentSystem);
+                ingameLogicSystems.Add(new PlayerMovementSystem());
+                ingameLogicSystems.Add(new InteractSystem());
+                ingameLogicSystems.Add(new AbilitySystem());
+                ingameLogicSystems.Add(new VisibilitySystem());
+                ingameLogicSystems.Add(new TargetingSystem());   
+                ingameLogicSystems.Add(new InventorySystem());
+                ingameLogicSystems.Add(new EquipSystem());
+                ingameLogicSystems.Add(new FireWeaponSystem());
+                ingameLogicSystems.Add(new ProjectileSystem());
+				ingameLogicSystems.Add(new TurnManagementSystem());
+                ingameLogicSystems.Add(new AiSystem());
+                ingameLogicSystems.Add(new FlowFieldMovementSystem());
+                ingameLogicSystems.Add(new ConsumableSystem());
+                ingameLogicSystems.Add(new ModifierSystem());
+                ingameLogicSystems.Add(new CombatSystem());
+                ingameLogicSystems.Add(new FireSystem());
+                ingameLogicSystems.Add(new SwitchSystem());
+                ingameLogicSystems.Add(new DamageHandlingSystem());
+                ingameLogicSystems.Add(new DeathSystem());
+                ingameLogicSystems.Add(new HudSystem());
+                ingameLogicSystems.Add(new CharacterAnimationSystem());
+                ingameLogicSystems.Add(new SoundPlaySystem());
 
-                systems.Add(new ConsumableSystem());
-                systems.Add(new ModifierSystem());
-                systems.Add(new CombatSystem());
-                systems.Add(new FireSystem());
-
-                systems.Add(new SwitchSystem());
-                systems.Add(new DamageHandlingSystem());
-                systems.Add(new DeathSystem());
-                systems.Add(new HudSystem());
-                systems.Add(new CharacterAnimationSystem());
-                systems.Add(new SoundPlaySystem());
-              
-               // var renderingSystem = new RenderingSystem(game.GetSettings());
-
+                // var renderingSystem = new RenderingSystem(game.GetSettings());
+                ingameRenderSystems = new List<ISystem>();
                 var renderingSystem = new RenderingSystem(game.GetSettings());
                 var uiSystem = new UIRenderSystem(game);
 
+                ingameRenderSystems.Add(renderingSystem);
+                ingameRenderSystems.Add(uiSystem);
+                ingameRenderSystems.Add(new HudElementsRenderingSystem(game.Settings));
 
-				IngameContext = new GameContext(systems, new List<ISystem>() { renderingSystem,  uiSystem, new HudElementsRenderingSystem(game.Settings) },
-                    UIContainer.Instance.HudScreen, "InGame");
-
+				IngameContext = new GameContext(ingameLogicSystems.ToList(), ingameRenderSystems, UIContainer.Instance.HudScreen, "InGame");
+                ingameLogicSystems.Remove(ingameIntentSystem);
                 return IngameContext;
             }
         }
@@ -90,6 +92,7 @@ namespace NamelessRogue.Engine.Factories
             else
             {
                 var systems = new List<ISystem>();
+
                 systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
                 systems.Add(new IngameIntentSystem());
                 systems.Add(new InteractSystem());
@@ -100,11 +103,9 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
 
                 var renderingSystem = new RenderingSystem(game.GetSettings());
-                var uiSystem = new UIRenderSystem(game);
+                var uiSystem = new UIRenderSystem(game);     
 
-
-                IngameContext = new GameContext(systems, new List<ISystem>() { renderingSystem, uiSystem, new HudElementsRenderingSystem(game.Settings) },
-                    UIContainer.Instance.HudScreen, "InGame");
+                IngameContext = new GameContext(systems.ToList(), new List<ISystem>() { renderingSystem, uiSystem, new HudElementsRenderingSystem(game.Settings) }, UIContainer.Instance.HudScreen, "InGame");
 
                 return IngameContext;
             }
@@ -373,6 +374,14 @@ namespace NamelessRogue.Engine.Factories
             mainMenuContext = null;
             pickUpContext = null;
             WorldBoardContext = null;
+            editorAbilityContext = null;
+            editorBuffContext = null;
+            editorCharacterContext  = null;
+            editorItemContext = null;
+            editorsPickerContext = null;
+            worldGenContext = null;
+            DialogContext = null;
+
         }
         private static GameContext EditorDialogContext;
         public static GameContext GetEditorDialogContext(NamelessGame game)
@@ -394,6 +403,29 @@ namespace NamelessRogue.Engine.Factories
                 // create and init the UI manager
                 EditorDialogContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorDialogScreen, "Dialog");
                 return EditorDialogContext;
+            }
+        }
+
+        private static GameContext DialogContext;
+        public static GameContext GetDialogContext(NamelessGame game)
+        {
+
+            if (DialogContext != null)
+            {
+                return DialogContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
+                systems.Add(new DialogSystem());
+                systems.Add(new DialogScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var renderingSystem = new RenderingSystem(game.GetSettings());
+                // create and init the UI manager
+                DialogContext = new GameContext(systems, new List<ISystem>() { renderingSystem, uiSystem }, new List<IBaseGuiScreen>() { UIContainer.Instance.DialogScreen, UIContainer.Instance.HudScreen, } , "Dialog");
+                return DialogContext;
             }
         }
 

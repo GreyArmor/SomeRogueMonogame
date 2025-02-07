@@ -129,6 +129,9 @@ namespace NamelessRogue.Engine.Input
                         case Keys.D0:
                             intent.Intention = IntentEnum.QuickBarPress;
                             break;
+                        case Keys.C:
+                            intent.Intention = IntentEnum.Chat;
+                            break;
                         default:
                             break;
                     }

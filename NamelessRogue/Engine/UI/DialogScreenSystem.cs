@@ -21,8 +21,7 @@ namespace NamelessRogue.Engine.UI
             while (namelessGame.Commander.DequeueCommand(out UpdateDialogScreenCommand command)) {
                 var description = command.CurrentDialogEntity.GetComponentOfType<Description>();                
                 UIContainer.Instance.DialogScreen.NpcName = description.Name;
-                UIContainer.Instance.DialogScreen.CurrentDialogData = command.CurrentDialogData; 
-                
+                UIContainer.Instance.DialogScreen.CurrentDialogData = command.CurrentDialogData;                 
             }
         }
     }

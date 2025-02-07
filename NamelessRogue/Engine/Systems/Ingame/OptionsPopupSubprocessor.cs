@@ -21,12 +21,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 case IntentEnum.MoveUp:
                     {
-                        namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem--;
+                        //namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem--;
                     }
                     break;
                 case IntentEnum.MoveDown:
                     {
-                        namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem++;
+                        //namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem++;
                     }
                     break;
                 case IntentEnum.ZoomIn:
@@ -60,23 +60,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.PlayerMovement);
 
                         namelessGame.Commander.EnqueueCommand(switchModeCommand);
-                        namelessGame.CurrentContext.ContextScreen.CloseOptionsPopUp();
+                       // namelessGame.CurrentContext.ContextScreen.CloseOptionsPopUp();
                     }
                     break;
                 case IntentEnum.Interact:
                     {
-                        if (namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem == 0)
-                        {
-                            namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(OptionItems.ToList(), namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));
-                        }
-                        else
-                        {
-                            var chosenOptionEntity = OptionItems[namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem - 1];
-                            namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(new List<IEntity>() { chosenOptionEntity }, namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));     
-                        }
+                        //if (namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem == 0)
+                        //{
+                        //    namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(OptionItems.ToList(), namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));
+                        //}
+                        //else
+                        //{
+                        //    var chosenOptionEntity = OptionItems[namelessGame.CurrentContext.ContextScreen.CurrentOptionsItem - 1];
+                        //    namelessGame.Commander.EnqueueCommand(new PickUpItemCommand(new List<IEntity>() { chosenOptionEntity }, namelessGame.PlayerEntity.GetComponentOfType<ItemsHolder>()));     
+                        //}
                         var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.PlayerMovement);
                         namelessGame.Commander.EnqueueCommand(switchModeCommand);
-                        namelessGame.CurrentContext.ContextScreen.CloseOptionsPopUp();
+                       // namelessGame.CurrentContext.ContextScreen.CloseOptionsPopUp();
                     }
                     break;
                 case IntentEnum.Escape:
@@ -84,7 +84,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         var switchModeCommand = new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.PlayerMovement);
                         namelessGame.Commander.EnqueueCommand(switchModeCommand);
 
-                        namelessGame.CurrentContext.ContextScreen.CloseOptionsPopUp();
+                        //namelessGame.CurrentContext.ContextScreen.CloseOptionsPopUp();
 
                     }
                     break;

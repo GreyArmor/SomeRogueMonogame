@@ -33,6 +33,7 @@ namespace NamelessRogue.Engine.Input
         Fire,
         SwitchTarget,
         QuickBarPress,
+        Chat,
     }
 
     public class Intent

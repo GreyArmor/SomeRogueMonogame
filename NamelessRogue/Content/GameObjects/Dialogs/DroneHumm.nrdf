@@ -5,9 +5,9 @@
   <Options>
     <DialogOption>
       <Id>276f1481-4c25-4c0f-b6e6-d912065d7c6a</Id>
-      <OptionText>Nevermond</OptionText>
+      <OptionText>Nevermind.</OptionText>
       <DialogOutcomeData />
-      <DialogOutcomeId>None</DialogOutcomeId>
+      <DialogOutcomeId>CancelDialog</DialogOutcomeId>
       <HasDialogOutcomeData>false</HasDialogOutcomeData>
     </DialogOption>
   </Options>

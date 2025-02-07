@@ -7,8 +7,55 @@
       <Id>42648641-37b6-46bd-a998-fd22cd81e681</Id>
       <OptionText>Nevermind.</OptionText>
       <DialogOutcomeData />
+      <DialogOutcomeId>CancelDialog</DialogOutcomeId>
+      <HasDialogOutcomeData>false</HasDialogOutcomeData>
+    </DialogOption>
+    <DialogOption>
+      <Id>e38ea02c-6fa3-4feb-a300-83e743b1db10</Id>
+      <OptionText>Anything interesting has happened recently?</OptionText>
+      <DialogOutcomeData />
       <DialogOutcomeId>None</DialogOutcomeId>
       <HasDialogOutcomeData>false</HasDialogOutcomeData>
+      <DialogData>
+        <Id>0feafbaf-91ea-4d06-8f8a-79a878b4a039</Id>
+        <Response>Oh you know, blah blah blah.</Response>
+        <Options>
+          <DialogOption>
+            <Id>fe1168a1-5d29-4630-99f0-dbc66df9155a</Id>
+            <OptionText>Cool story bro.</OptionText>
+            <DialogOutcomeData />
+            <DialogOutcomeId>CancelDialog</DialogOutcomeId>
+            <HasDialogOutcomeData>false</HasDialogOutcomeData>
+          </DialogOption>
+          <DialogOption>
+            <Id>7110d6c6-9b4f-443f-833a-f00d5289b370</Id>
+            <OptionText>Noted.</OptionText>
+            <DialogOutcomeData />
+            <DialogOutcomeId>CancelDialog</DialogOutcomeId>
+            <HasDialogOutcomeData>false</HasDialogOutcomeData>
+          </DialogOption>
+          <DialogOption>
+            <Id>f303fcb3-a892-48b9-9185-8e50c2c596a0</Id>
+            <OptionText>Tell me more about blah blah balh.</OptionText>
+            <DialogOutcomeData />
+            <DialogOutcomeId>None</DialogOutcomeId>
+            <HasDialogOutcomeData>false</HasDialogOutcomeData>
+            <DialogData>
+              <Id>25514a39-456f-415e-8c8b-f9554bbc54f7</Id>
+              <Response>More blah blah blah.</Response>
+              <Options>
+                <DialogOption>
+                  <Id>ec6d53d7-980e-417d-b428-8717618b508a</Id>
+                  <OptionText>Thanks.</OptionText>
+                  <DialogOutcomeData />
+                  <DialogOutcomeId>CancelDialog</DialogOutcomeId>
+                  <HasDialogOutcomeData>false</HasDialogOutcomeData>
+                </DialogOption>
+              </Options>
+            </DialogData>
+          </DialogOption>
+        </Options>
+      </DialogData>
     </DialogOption>
   </Options>
 </DialogData>

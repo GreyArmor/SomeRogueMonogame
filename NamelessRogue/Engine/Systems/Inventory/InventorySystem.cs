@@ -53,7 +53,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                         {
                             var itemsToPickup = pickupCommand.Items.Select((x, index)=> ($@"[{index+1}] " + x.GetComponentOfType<Description>().Name)).ToList();
                             itemsToPickup.Insert(0, "Pick up everything");
-                            namelessGame.CurrentContext.ContextScreen.OpenOptionsPopUp(itemsToPickup, namelessGame.CurrentContext.ContextScreen.UiSize / 2);
+                           // namelessGame.CurrentContext.ContextScreen.OpenOptionsPopUp(itemsToPickup, namelessGame.CurrentContext.ContextScreen.UiSize / 2);
                             namelessGame.Commander.EnqueueCommand(new IngameIntentSystemModeSwitchCommand(IngameIntentSystemMode.OptionsPopup, pickupCommand.Items.ToList()));
                         }
                         else

@@ -31,6 +31,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     var dialogLibraryId = dialogComponent.DialogLibraryId;
                     var dialogData = DialogLibrary.DataById[dialogLibraryId];
                     currentDialogData = dialogData;
+                    namelessGame.Commander.EnqueueCommand(new UpdateDialogScreenCommand(currentDialogEntity, currentDialogData));
                 }
             }
 

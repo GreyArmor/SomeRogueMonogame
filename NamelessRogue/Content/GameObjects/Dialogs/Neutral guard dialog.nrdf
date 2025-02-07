@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DialogData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Id>0fce52d4-32ef-4dc6-ba2d-ae3a71699a13</Id>
+  <Id>0fce52d4-32ef-4dc6-ba2d-ae3a71699a58</Id>
   <Response>Citizen?</Response>
-  <Options />
+  <Options>
+    <DialogOption>
+      <Id>b5b3fe63-1e88-46f0-95b7-5ea2f3102247</Id>
+      <OptionText>Nevermind.</OptionText>
+      <DialogOutcomeData />
+      <DialogOutcomeId>CancelDialog</DialogOutcomeId>
+      <HasDialogOutcomeData>false</HasDialogOutcomeData>
+    </DialogOption>
+  </Options>
 </DialogData>

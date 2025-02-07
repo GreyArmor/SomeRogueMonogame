@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
+using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Input;
@@ -346,6 +347,40 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var interactCommand = new InteractCommand(interactableEntities.First());
                             namelessGame.Commander.EnqueueCommand(interactCommand);
                         }
+                    }
+                    break;
+                case IntentEnum.Chat:
+                    {
+                        List<Entity> interactableEntities = new List<Entity>();
+                        var playerPosition = playerEntity.GetComponentOfType<Position>();
+                        for (var x = playerPosition.X - 1; x <= playerPosition.X + 1; x++)
+                        {
+                            for (var y = playerPosition.Y - 1; y <= playerPosition.Y + 1; y++)
+                            {
+                                var tile = namelessGame.WorldProvider.GetTile(x, y, playerPosition.Z);
+                                var tileEntities = tile.GetEntities();
+                                foreach (var tileEntity in tileEntities)
+                                {
+                                    var interactable = tileEntity.GetComponentOfType<DialogComponent>();
+                                    if (interactable != null)
+                                    {
+                                        interactableEntities.Add(tileEntity);
+                                        break;
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (interactableEntities.Count > 0)
+                        {
+                            var chatCommand = new StartDialogCommand(interactableEntities.First());
+                            namelessGame.Commander.EnqueueCommand(chatCommand);
+                            namelessGame.ContextToSwitch = ContextFactory.GetDialogContext(namelessGame);
+                        }
+
+                 
+
                     }
                     break;
                 default:

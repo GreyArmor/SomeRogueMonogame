@@ -293,6 +293,9 @@ namespace NamelessRogue.shell
 					}
 				}*/
 
+                var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, 0, this);
+                PlayerEntity = player;
+                TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
 
                 BuffLibrary.ClearData();
                 BuffLibrary.LoadData(this);
@@ -303,9 +306,7 @@ namespace NamelessRogue.shell
                 DialogLibrary.ClearData();
                 DialogLibrary.LoadData(this);
 
-                var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, 0, this);
-				PlayerEntity = player;
-				TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
+    
 
 
                 var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.nrcf", SearchOption.AllDirectories);

@@ -2,5 +2,13 @@
 <DialogData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Id>a553897e-6df1-4daa-81b7-6e0a41737614</Id>
   <Response />
-  <Options />
+  <Options>
+    <DialogOption>
+      <Id>a3d1cb7d-1165-488a-9cd9-4d6029878bb2</Id>
+      <OptionText>Nevermind.</OptionText>
+      <DialogOutcomeData />
+      <DialogOutcomeId>CancelDialog</DialogOutcomeId>
+      <HasDialogOutcomeData>false</HasDialogOutcomeData>
+    </DialogOption>
+  </Options>
 </DialogData>

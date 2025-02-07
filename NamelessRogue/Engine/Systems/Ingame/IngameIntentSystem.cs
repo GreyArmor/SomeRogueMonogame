@@ -9,6 +9,7 @@ using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Input;

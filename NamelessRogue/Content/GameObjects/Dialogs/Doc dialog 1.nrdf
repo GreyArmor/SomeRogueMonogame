@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DialogData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Id>48792111-e7c3-4edd-9363-2ce9dcd69349</Id>
+  <Id>1e0ddc34-1382-4867-8362-9fbad679c542</Id>
   <Response>Looking for an upgrade? Optics, appendages, mental augs - we have everything!</Response>
   <Options>
     <DialogOption>
       <Id>00eb8d6e-1314-4807-882f-96acf8cec7c1</Id>
       <OptionText>Show me what you got.</OptionText>
       <DialogOutcomeData />
-      <DialogOutcomeId>None</DialogOutcomeId>
+      <DialogOutcomeId>NPCStartTrade</DialogOutcomeId>
       <HasDialogOutcomeData>false</HasDialogOutcomeData>
     </DialogOption>
     <DialogOption>
       <Id>5e13b228-606e-413c-a84a-add65d7a1a0d</Id>
-      <OptionText>Nevermind</OptionText>
+      <OptionText>Nevermind.</OptionText>
       <DialogOutcomeData />
-      <DialogOutcomeId>None</DialogOutcomeId>
+      <DialogOutcomeId>CancelDialog</DialogOutcomeId>
       <HasDialogOutcomeData>false</HasDialogOutcomeData>
     </DialogOption>
   </Options>

@@ -170,7 +170,11 @@ namespace NamelessRogue.Engine.UI
                         ImGui.InputTextMultiline("##Option text input" + dialogOption.Id, ref dialogOption.OptionText, 10000, inputTextSize, ImGuiInputTextFlags.None);
 
                         ImGui.Text("Dialog outcome id");
-                        ImGui.Combo("##DOI", ref dialogOption.CurrentDiagolOutcomeId, this.dialoOutcomeIdTypesNames, dialoOutcomeIdTypesNames.Length);
+                        var changed = ImGui.Combo("##DOI", ref dialogOption.CurrentDiagolOutcomeId, this.dialoOutcomeIdTypesNames, dialoOutcomeIdTypesNames.Length);
+                        if(changed)
+                        {
+                            dialogOption.DialogOutcomeId = dialoOutcomeIdTypes[dialogOption.CurrentDiagolOutcomeId];
+                        }
                         ImGui.Text("Has special outcome data?");
                         ImGui.SameLine();
                         ImGui.Checkbox("##HasDialogOutcomeData", ref dialogOption.HasDialogOutcomeData);
