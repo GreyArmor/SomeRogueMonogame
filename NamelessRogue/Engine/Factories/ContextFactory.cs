@@ -417,7 +417,8 @@ namespace NamelessRogue.Engine.Factories
             else
             {
                 var systems = new List<ISystem>();
-                systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
+                systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
+                systems.Add(new DialogIntentSystem());
                 systems.Add(new DialogSystem());
                 systems.Add(new DialogScreenSystem());
                 systems.Add(new SoundPlaySystem());

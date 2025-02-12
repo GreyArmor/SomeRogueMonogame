@@ -25,7 +25,8 @@ namespace NamelessRogue.Engine.UI
         public override void DrawLayout()
         {
             ImGui.SetNextWindowPos(new Vector2(uiSize.X * 1 / 3, uiSize.Y * 1 / 3));
-            ImGui.SetNextWindowSize(new Vector2(uiSize.X * 1 / 4, uiSize.Y * 1 / 4));
+            var windowSize = new Vector2(uiSize.X * 1 / 4, uiSize.Y * 1 / 4);
+            ImGui.SetNextWindowSize(windowSize);
             ImGui.Begin("", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.Modal);
             {
                 if (CurrentDialogData != null)
@@ -36,6 +37,7 @@ namespace NamelessRogue.Engine.UI
                     ImGui.Text(CurrentDialogData.Response);
 
                     string[] optionsList = CurrentDialogData.Options.Select((option, index) => { return $@"[{index}] " + option.OptionText; }).ToArray();
+                    ImGui.SetNextItemWidth(windowSize.X);
                     bool clicked = ImGui.ListBox("##options", ref CurrentSelectedOptionIndex, optionsList, optionsList.Length);
                     if (clicked)
                     {

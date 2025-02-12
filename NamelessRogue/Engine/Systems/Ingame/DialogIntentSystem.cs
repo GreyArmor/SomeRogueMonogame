@@ -16,63 +16,57 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public DialogIntentSystem()
         {
             Signature = new HashSet<Type>();
-            Signature.Add(typeof(InputComponent));
         }
         public override HashSet<Type> Signature { get; }
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            foreach (IEntity entity in RegisteredEntities)
+            InputComponent inputComponent = namelessGame.PlayerEntity.GetComponentOfType<InputComponent>();
+            if (inputComponent != null && !inputComponent.IsDelayed)
             {
-                InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
-                if (inputComponent != null)
+                foreach (Intent intent in inputComponent.Intents)
                 {
-                    foreach (Intent intent in inputComponent.Intents)
+                    switch (intent.Intention)
                     {
-
-                        switch (intent.Intention)
-                        {
-                            case IntentEnum.MoveUp:
+                        case IntentEnum.MoveUp:
+                            {
+                                UIContainer.Instance.DialogScreen.CurrentSelectedOptionIndex--;
+                                break;
+                            }
+                        case IntentEnum.MoveDown:
+                            {
+                                UIContainer.Instance.DialogScreen.CurrentSelectedOptionIndex++;
+                                break;
+                            }
+                        case IntentEnum.Interact:
+                            {
+                                var options = UIContainer.Instance.DialogScreen.CurrentDialogData.Options;
+                                PickDialogOptionCommand command = new PickDialogOptionCommand(options[UIContainer.Instance.DialogScreen.CurrentSelectedOptionIndex]);
+                                namelessGame.Commander.EnqueueCommand(command);
+                                break;
+                            }
+                        case IntentEnum.QuickBarPress:
+                            {
+                                var parsed = int.TryParse(intent.PressedChar.ToString(), out int optionIndex);
+                                if (!parsed)
                                 {
-                                    UIContainer.Instance.DialogScreen.CurrentSelectedOptionIndex--;
                                     break;
                                 }
-                            case IntentEnum.MoveDown:
+                                var options = UIContainer.Instance.DialogScreen.CurrentDialogData.Options;
+                                if (optionIndex >= 0 && optionIndex < options.Length)
                                 {
-                                    UIContainer.Instance.DialogScreen.CurrentSelectedOptionIndex++;
-                                    break;
-                                }
-                            case IntentEnum.Interact:
-                                {
-                                    var options = UIContainer.Instance.DialogScreen.CurrentDialogData.Options;
-                                    PickDialogOptionCommand command = new PickDialogOptionCommand(options[UIContainer.Instance.DialogScreen.CurrentSelectedOptionIndex]);
+                                    PickDialogOptionCommand command = new PickDialogOptionCommand(options[optionIndex]);
                                     namelessGame.Commander.EnqueueCommand(command);
-                                    break;
                                 }
-                            case IntentEnum.QuickBarPress:
-                                {
-                                    var parsed = int.TryParse(intent.PressedChar.ToString(), out int optionIndex);
-                                    if (!parsed)
-                                    {
-                                        break;
-                                    }
-                                    var options = UIContainer.Instance.DialogScreen.CurrentDialogData.Options;
-                                    if (optionIndex >= 0 && optionIndex < options.Length)
-                                    {
-                                        PickDialogOptionCommand command = new PickDialogOptionCommand(options[optionIndex]);
-                                        namelessGame.Commander.EnqueueCommand(command);
-                                    }
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-
-
+                            }
+                            break;
+                        default:
+                            break;
                     }
 
-                    inputComponent.Intents.Clear();
+                    
                 }
+                inputComponent.Intents.Clear();
             }
         }
     }
