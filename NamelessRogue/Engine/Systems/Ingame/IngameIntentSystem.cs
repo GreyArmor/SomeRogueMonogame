@@ -25,7 +25,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
         PlayerMovementSubProcessor playerMovementSubProcessor = new PlayerMovementSubProcessor();
         WeaponTargetingSubProcessor weaponTargetingSubProcessor = new WeaponTargetingSubProcessor();
         AbilityTargetingSubProcessor abilityTargetingSubProcessor = new AbilityTargetingSubProcessor();
-        OptionsPopupSubprocessor OptionsPopupSubprocessor = new OptionsPopupSubprocessor();
 
         public IngameIntentSystem()
         {
@@ -56,11 +55,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         currentSubProcessor = abilityTargetingSubProcessor; 
                         //TODO: refactor
                         abilityTargetingSubProcessor.AbilityIndex = (int)command.CommandData;
-                        break;
-                    case IngameIntentSystemMode.OptionsPopup:
-                        currentSubProcessor = OptionsPopupSubprocessor;
-                        OptionsPopupSubprocessor.OptionItems = (List<Abstraction.IEntity>)command.CommandData;
-
                         break;
                 }
             }

@@ -1,7 +1,7 @@
-﻿using NamelessRogue.Engine.Abstraction;
+﻿using MonoGame.Extended.ECS;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Generation.Editor;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;

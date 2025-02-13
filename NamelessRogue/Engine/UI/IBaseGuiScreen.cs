@@ -9,11 +9,6 @@ namespace NamelessRogue.Engine.UI
 	{
         Vector2 UiSize { get; set; }
 
-        int CurrentOptionsItem { get; set; }
-
-        void CloseOptionsPopUp();
         public void DrawLayout();
-        void DrawOptionsPopup();
-        void OpenOptionsPopUp(IEnumerable<string> options, Vector2 position);
     }
 }

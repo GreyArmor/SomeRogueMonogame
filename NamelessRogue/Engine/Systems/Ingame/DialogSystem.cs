@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Components.ItemComponents;
+using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.Editor;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +36,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     currentDialogData = dialogData;
                     namelessGame.Commander.EnqueueCommand(new UpdateDialogScreenCommand(currentDialogEntity, currentDialogData));
                 }
-            }
+            }           
 
             while (namelessGame.Commander.DequeueCommand(out PickDialogOptionCommand command))
             {

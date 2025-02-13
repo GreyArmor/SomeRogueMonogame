@@ -106,81 +106,10 @@ namespace NamelessRogue.Engine.UI
             }
         }
 
-        int optionsPopupCurrentItem = -1;
-        string[] optionsPopupItems = null;
-        bool openOptionPopup = false;
-        Vector2 optionsPopupPosition = Vector2.Zero;
-
-        public int CurrentOptionsItem
-        {
-            get { return optionsPopupCurrentItem; }
-            set
-            {
-                optionsPopupCurrentItem = value;
-                if (optionsPopupCurrentItem < 0)
-                {
-                    optionsPopupCurrentItem = 0;
-                }
-                else if(optionsPopupCurrentItem >= optionsPopupItems.Length)
-                {
-                    optionsPopupCurrentItem = optionsPopupItems.Length - 1;
-                }
-            }
-        }
 
         public Vector2 UiSize { get => uiSize; set => uiSize = value; }
 
-        public void OpenOptionsPopUp(IEnumerable<string> options, Vector2 position)
-        {
-            openOptionPopup = true;
-            optionsPopupItems = options.ToArray();
-            optionsPopupCurrentItem = 0;
-            optionsPopupPosition = position;
-        }
-
-        public void CloseOptionsPopUp()
-        {
-            openOptionPopup = false;
-            optionsPopupCurrentItem = -1;
-            optionsPopupItems = null;
-            optionsPopupPosition = Vector2.Zero;
-        }
-
-        public void DrawOptionsPopup()
-        {
-            if (openOptionPopup)
-            {
-                ImGui.OpenPopup("##OptionsPopup");
-
-                var popupWidth = 0;
-                foreach (var option in optionsPopupItems)
-                {
-                    var textsize = ImGui.CalcTextSize(option);
-                    if (popupWidth < textsize.X)
-                    {
-                        popupWidth = (int)textsize.X;
-                    }
-                }
-                ImGui.SetNextWindowPos(new Vector2(-popupWidth/2, 0) + uiSize / 2);           
-
-                //ImGui.SetNextWindowSize(new Vector2(100 + popupWidth, 100 + height * optionsPopupItems.Count()));
-                bool drop_open = true;
-                if (ImGui.BeginPopupModal("##OptionsPopup", ref drop_open, ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize))
-                {
-                    var size = ImGui.GetItemRectSize();
-                    bool clicked = ImGui.ListBox("##listboOptions", ref optionsPopupCurrentItem, optionsPopupItems, optionsPopupItems.Length);
-                    if (clicked)
-                    {
-                        game.Commander.EnqueueCommand(new OptionsPopupChooseOptionCommand(optionsPopupCurrentItem));
-                        openOptionPopup = false;
-                        ImGui.CloseCurrentPopup();
-                    }
-                }
-                ImGui.EndPopup();
-            }
-        }
-
-
+     
         protected void DrawCooldownCircle(Vector2 position, int radius, float percentageLeft)
         {
             const int pointsCount = 30;

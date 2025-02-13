@@ -67,9 +67,6 @@ namespace NamelessRogue.Engine.UI
             ImGui.SetNextWindowPos(new System.Numerics.Vector2());
             ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
 
-
-            DrawOptionsPopup();
-
             ImGui.SetWindowSize(uiSize);
 
             Player player = game.PlayerEntity.GetComponentOfType<Player>();

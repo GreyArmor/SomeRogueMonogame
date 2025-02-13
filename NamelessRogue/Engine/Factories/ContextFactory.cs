@@ -430,5 +430,29 @@ namespace NamelessRogue.Engine.Factories
             }
         }
 
+        private static GameContext PickupItemsDialogContext;
+        public static GameContext GetPickupItemsDialogContext(NamelessGame game)
+        {
+
+            if (PickupItemsDialogContext != null)
+            {
+                return PickupItemsDialogContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
+                systems.Add(new PickOptionDialogIntentSystem());
+                systems.Add(new PickOptionItemPickupDialogSystem());
+                systems.Add(new PickOptionDialogScreenSystem());
+                systems.Add(new InventorySystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var renderingSystem = new RenderingSystem(game.GetSettings());
+                // create and init the UI manager
+                PickupItemsDialogContext = new GameContext(systems, new List<ISystem>() { renderingSystem, uiSystem }, new List<IBaseGuiScreen>() { UIContainer.Instance.PickOptionDialogScreen, UIContainer.Instance.HudScreen, }, "Dialog");
+                return PickupItemsDialogContext;
+            }
+        }
     }
 }

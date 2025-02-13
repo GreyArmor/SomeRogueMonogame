@@ -378,7 +378,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             namelessGame.Commander.EnqueueCommand(chatCommand);
                             namelessGame.ContextToSwitch = ContextFactory.GetDialogContext(namelessGame);
                         }
-
                  
 
                     }

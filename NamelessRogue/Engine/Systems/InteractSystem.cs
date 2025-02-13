@@ -95,8 +95,7 @@ namespace NamelessRogue.Engine.Systems
 
 
                 if(item!=null)
-                {                
-
+                {
                     var tile = namelessGame.WorldProvider.GetTile(interactionEntityPosition.X, interactionEntityPosition.Y, interactionEntityPosition.Z);
                     var tileEntities = tile.GetEntities();
                     var tileItems = new List<IEntity>();
