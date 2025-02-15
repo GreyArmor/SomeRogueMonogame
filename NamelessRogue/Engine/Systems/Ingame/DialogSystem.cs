@@ -51,6 +51,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     case DialogOutcomeId.CancelDialog:
                         namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
                         break;
+                    case DialogOutcomeId.NPCStartTrade:
+                        namelessGame.ContextToSwitch = ContextFactory.GetTradeScreenContext(namelessGame);
+                        var startTradeCommand = new StartTradeCommand(currentDialogEntity);
+                        namelessGame.Commander.EnqueueCommand(startTradeCommand);
+                        break;
                     default:
                         namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
                         break;

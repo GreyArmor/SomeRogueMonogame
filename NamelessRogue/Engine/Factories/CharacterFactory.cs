@@ -129,7 +129,6 @@ namespace NamelessRogue.Engine.Factories
             character.AddComponent(new OccupiesTile());
             character.AddComponent(new FlowMoveComponent()); 
             
-
             var stats = new CharacterStats();
             stats.Health.Value = data.Health;
             stats.Health.MaxValue = data.Health;

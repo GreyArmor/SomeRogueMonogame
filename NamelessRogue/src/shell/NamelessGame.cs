@@ -312,6 +312,8 @@ namespace NamelessRogue.shell
                 var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.nrcf", SearchOption.AllDirectories);
 								Vector2 characterCreationOffset = new Vector2(0);
 				
+				List<Entity> charaterEntities = new List<Entity>();
+
 				foreach (var charactersFile in characters)
 				{
 					characterCreationOffset.Y--;
@@ -319,7 +321,25 @@ namespace NamelessRogue.shell
                     XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
                     TextReader reader = new StreamReader(charactersFile);
                     var data = (CharacterTemplateData)serializer.Deserialize(reader);
-					CharacterFactory.CreateCharacterFromData(this, new Vector3Int((int)(characterCreationOffset.X + (x* Constants.ChunkSize)), (int)(characterCreationOffset.Y + (y* Constants.ChunkSize)), 0), data);
+					var character = CharacterFactory.CreateCharacterFromData(this, new Vector3Int((int)(characterCreationOffset.X + (x* Constants.ChunkSize)), (int)(characterCreationOffset.Y + (y* Constants.ChunkSize)), 0), data);
+                    charaterEntities.Add(character);
+                }
+
+				foreach (var character in charaterEntities)
+				{
+					var characterItems = character.GetComponentOfType<ItemsHolder>();
+					for (int i = 0; i < 10; i++)
+					{
+						var numberOfItems = ItemLibrary.ItemData.Count;
+
+						var randomItem = Random.Shared.Next(0, numberOfItems);
+
+						var randomItemData = ItemLibrary.ItemData[randomItem];
+						var item = ItemLibrary.CreateItemFromData(this, randomItemData);
+                        characterItems.Items.Add(item);
+
+                    }		
+
                 }
 
                 //            for (int i = 5; i < 20; i++)

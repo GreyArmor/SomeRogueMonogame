@@ -57,5 +57,12 @@
         </Options>
       </DialogData>
     </DialogOption>
+    <DialogOption>
+      <Id>31bc7465-063b-440a-92d9-f22833138cc6</Id>
+      <OptionText>Lets trade.</OptionText>
+      <DialogOutcomeData />
+      <DialogOutcomeId>NPCStartTrade</DialogOutcomeId>
+      <HasDialogOutcomeData>false</HasDialogOutcomeData>
+    </DialogOption>
   </Options>
 </DialogData>

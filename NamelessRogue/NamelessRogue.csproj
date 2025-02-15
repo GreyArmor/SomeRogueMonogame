@@ -163,6 +163,7 @@
   <ItemGroup>
     <Folder Include="Content\GameObjects\Misc\" />
     <Folder Include="Content\Models\" />
+    <Folder Include="Content\T4CodeGenerators\" />
     <Folder Include="Content\obj\Windows\AnimatedCharacters\" />
     <Folder Include="Engine\Generation\Items\" />
   </ItemGroup>

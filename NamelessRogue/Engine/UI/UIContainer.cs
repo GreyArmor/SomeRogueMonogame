@@ -28,6 +28,8 @@ namespace NamelessRogue.Engine.UI
         public WorldGenerationUI WorldGenScreen { get; set; }
         public PickOptionDialogScreen PickOptionDialogScreen { get; internal set; }
 
+        public TradeScreen TradeScreen { get; set; }
+
         public UIContainer(NamelessGame game)
 		{
 			if (Instance != null)
@@ -50,6 +52,7 @@ namespace NamelessRogue.Engine.UI
 			EditorDialogScreen = new EditorDialogScreen(game);
             DialogScreen = new DialogScreen(game);
             PickOptionDialogScreen = new PickOptionDialogScreen(game);
+            TradeScreen = new TradeScreen(game);
             Instance = this;
 
 		}

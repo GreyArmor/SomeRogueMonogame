@@ -400,7 +400,6 @@ namespace NamelessRogue.Engine.Factories
                 var uiSystem = new UIRenderSystem(game);
                 var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
 
-                // create and init the UI manager
                 EditorDialogContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorDialogScreen, "Dialog");
                 return EditorDialogContext;
             }
@@ -424,7 +423,7 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
                 var renderingSystem = new RenderingSystem(game.GetSettings());
-                // create and init the UI manager
+
                 DialogContext = new GameContext(systems, new List<ISystem>() { renderingSystem, uiSystem }, new List<IBaseGuiScreen>() { UIContainer.Instance.DialogScreen, UIContainer.Instance.HudScreen, } , "Dialog");
                 return DialogContext;
             }
@@ -449,9 +448,32 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
                 var renderingSystem = new RenderingSystem(game.GetSettings());
-                // create and init the UI manager
+
                 PickupItemsDialogContext = new GameContext(systems, new List<ISystem>() { renderingSystem, uiSystem }, new List<IBaseGuiScreen>() { UIContainer.Instance.PickOptionDialogScreen, UIContainer.Instance.HudScreen, }, "Dialog");
                 return PickupItemsDialogContext;
+            }
+        }
+
+
+        private static GameContext TradeScreenContext;
+        public static GameContext GetTradeScreenContext(NamelessGame game)
+        {
+
+            if (TradeScreenContext != null)
+            {
+                return TradeScreenContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
+                systems.Add(new TradeScreenIntentSystem());
+                systems.Add(new TradeScreenSystem());
+                systems.Add(new InventorySystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                TradeScreenContext = new GameContext(systems, new List<ISystem>() { uiSystem }, new List<IBaseGuiScreen>() { UIContainer.Instance.TradeScreen }, "Trade");
+                return TradeScreenContext;
             }
         }
     }
