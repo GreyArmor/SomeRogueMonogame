@@ -16,6 +16,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Xml.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using Color = System.Drawing.Color;
 using Vector2 = System.Numerics.Vector2;
 
@@ -25,6 +26,7 @@ namespace NamelessRogue.Engine.UI
 	{
 		protected NamelessGame game;
         protected System.Numerics.Vector2 uiSize;
+        protected Vector2 buttonSize = new Vector2(200, 50);
         public BaseScreen(NamelessGame game)
 		{
 			this.game = game;
@@ -32,7 +34,7 @@ namespace NamelessRogue.Engine.UI
 		}
 		public abstract void DrawLayout();
 
-		public bool ButtonWithSound(String text, System.Numerics.Vector2 size, bool enabled = true)
+		public bool ButtonWithSound(string text, System.Numerics.Vector2 size, bool enabled = true)
 		{
 			bool clicked = false;
 			if (enabled)

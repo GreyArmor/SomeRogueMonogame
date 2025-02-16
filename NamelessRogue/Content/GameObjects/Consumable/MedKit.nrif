@@ -3,6 +3,7 @@
   <Id>cc5a9c20-4fe7-437b-8496-a017ea1a9636</Id>
   <Name>Medkit</Name>
   <Description />
+  <Price>20</Price>
   <IconPath>Icons\medkit.png</IconPath>
   <ItemType>Consumable</ItemType>
   <ItemQuality>Terrible</ItemQuality>

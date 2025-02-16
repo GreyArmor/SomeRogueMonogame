@@ -20,18 +20,22 @@ namespace NamelessRogue.Engine.Components.Interaction
 
     public class TradeTransationCommand : ICommand
     {
-        public IEntity entityToTradeWith;
-        public readonly List<IEntity> itemsToGiveToPlayer;
-        public readonly List<IEntity> itemsToGiveToNpc;
-        public readonly int cashToTransfer;
 
-        public TradeTransationCommand(IEntity entityToTradeWith, List<IEntity> itemsToGiveToPlayer, List<IEntity> itemsToGiveToNpc, int cashToTransfer)
+
+        public TradeTransationCommand(IEntity rightEntity, IEntity leftEntity,  List<IEntity> itemsToGiveToLeftentity, List<IEntity> itemsToGiveToRight, int cashToTransferFromrightToLeft)
         {
-            this.entityToTradeWith = entityToTradeWith;
-            this.itemsToGiveToPlayer = itemsToGiveToPlayer;
-            this.itemsToGiveToNpc = itemsToGiveToNpc;
-            this.cashToTransfer = cashToTransfer;
+            RightEntity = rightEntity;
+            LeftEntity = leftEntity;
+            ItemsToGiveToLeftEntity = itemsToGiveToLeftentity;
+            ItemsToGiveToRightEntity = itemsToGiveToRight;
+            CashToTransferFromRightToLeft = cashToTransferFromrightToLeft;
         }
+
+        public IEntity RightEntity { get; }
+        public IEntity LeftEntity { get; }
+        public List<IEntity> ItemsToGiveToLeftEntity { get; }
+        public List<IEntity> ItemsToGiveToRightEntity { get; }
+        public int CashToTransferFromRightToLeft { get; }
     }
 
 }

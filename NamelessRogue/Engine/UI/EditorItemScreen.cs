@@ -75,6 +75,7 @@ namespace NamelessRogue.Engine.UI
 
         string name = "";
         string description = "";
+        int price = 0;
         int maxDamage = 10;
         int minDamage = 0;
         int ammoInClip = 0;
@@ -300,9 +301,11 @@ namespace NamelessRogue.Engine.UI
                         ImGui.InputText("##Name", ref name, 128);
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.Text("Description");
+                     
                         var inputTextSize = new Vector2((uiSize.X / 3) * 2, 400);
                         ImGui.InputTextMultiline("##Description", ref description, 10000, inputTextSize, ImGuiInputTextFlags.None);
-                       
+                        ImGui.Text("Price");
+                        ImGui.InputInt("##price", ref price);
                         void _restrainValue(ref int value, int minValue = 0, int maxValue = 999)
                         {
                             value = value <= minValue ? minValue : value;
@@ -571,6 +574,7 @@ namespace NamelessRogue.Engine.UI
             data.Id = itemId;
             data.Name = name;
             data.Description = description;
+            data.Price = price;
             data.ItemType = currentItemType;
 
             if (iconPath != string.Empty)
@@ -656,6 +660,7 @@ namespace NamelessRogue.Engine.UI
             itemId = itemData.Id;
             name = itemData.Name;
             description = itemData.Description;
+            price = itemData.Price;
             var wtd = itemData.WeaponTemplateData;
             var atd = itemData.ArmorTemplateData;
             var citd = itemData.ConsumableItemTemplateData;

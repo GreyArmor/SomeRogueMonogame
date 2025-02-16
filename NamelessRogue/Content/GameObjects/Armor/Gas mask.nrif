@@ -3,6 +3,7 @@
   <Id>e65bc87d-2378-425e-88af-ec48b3635d84</Id>
   <Name>Gas mask</Name>
   <Description>Enviromentally unfriendly enviromental protection</Description>
+  <Price>50</Price>
   <IconPath>Icons\gas_mask.png</IconPath>
   <ItemType>Armor</ItemType>
   <ItemQuality>Terrible</ItemQuality>

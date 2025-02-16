@@ -3,6 +3,7 @@
   <Id>ad4f9a93-ca18-45ab-99f5-7edc43edae2d</Id>
   <Name>Rusting beaker</Name>
   <Description>Do not consume</Description>
+  <Price>50</Price>
   <IconPath>Icons\rusting_beaker.png</IconPath>
   <ItemType>Consumable</ItemType>
   <ItemQuality>Terrible</ItemQuality>

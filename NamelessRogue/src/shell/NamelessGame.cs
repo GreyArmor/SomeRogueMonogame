@@ -337,21 +337,8 @@ namespace NamelessRogue.shell
 						var randomItemData = ItemLibrary.ItemData[randomItem];
 						var item = ItemLibrary.CreateItemFromData(this, randomItemData);
                         characterItems.Items.Add(item);
-
                     }		
-
-                }
-
-                //            for (int i = 5; i < 20; i++)
-                //{
-                //	for (int j = 5; j < 6; j++)
-                //	{
-                //		CharacterFactory.CreateDummyCharacter((x * Constants.ChunkSize) - (j * 2), (y * Constants.ChunkSize) - (i * 2), 0, this);
-                //	}
-                //}	
-				//
-				//			
-	
+                }	
 
                 var itemsHolder = player.GetComponentOfType<ItemsHolder>();
                 foreach (var itemData in ItemLibrary.ItemData)

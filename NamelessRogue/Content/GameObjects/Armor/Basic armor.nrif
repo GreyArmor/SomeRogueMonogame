@@ -3,6 +3,7 @@
   <Id>0181a89d-4292-4c91-be21-5860bafeedcd</Id>
   <Name>Basic armor</Name>
   <Description>"Protection"</Description>
+  <Price>20</Price>
   <IconPath>Icons\basic_bodyarmors.png</IconPath>
   <ItemType>Armor</ItemType>
   <ItemQuality>Terrible</ItemQuality>

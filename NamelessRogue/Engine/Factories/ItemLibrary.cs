@@ -73,7 +73,7 @@ namespace NamelessRogue.Engine.Factories
 
             entity.AddComponent(new Description(data.Name, data.Description));
 
-            entity.AddComponent(new Item(data.ItemType, 0, data.ItemQuality, 1, 1, "CorpoCorp Inc."));
+            entity.AddComponent(new Item(data.ItemType, 0, data.Price, data.ItemQuality, 1, 1, "CorpoCorp Inc."));
 
             if (data.WeaponTemplateData != null)
             {

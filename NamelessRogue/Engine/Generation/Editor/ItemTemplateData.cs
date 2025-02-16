@@ -19,7 +19,8 @@ namespace NamelessRogue.Engine.Generation.Editor
         public string Name { get; set; }
         [XmlElement]
         public string Description { get; set; }
-
+        [XmlElement]
+        public int Price { get; set; }
         [XmlElement]
         public string IconPath { get; set; }
 

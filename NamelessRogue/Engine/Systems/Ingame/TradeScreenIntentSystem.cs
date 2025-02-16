@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-    public class PickOptionDialogIntentSystem : BaseSystem
+    public class TradeScreenIntentSystem : BaseSystem
     {
-        public PickOptionDialogIntentSystem()
+        public TradeScreenIntentSystem()
         {
             Signature = new HashSet<Type>();
         }
@@ -27,41 +28,43 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         case IntentEnum.MoveUp:
                             {
-                                UIContainer.Instance.PickOptionDialogScreen.CurrentSelectedOptionIndex--;
+                                UIContainer.Instance.TradeScreen.MoveCursorUp();
                                 break;
                             }
                         case IntentEnum.MoveDown:
                             {
-                                UIContainer.Instance.PickOptionDialogScreen.CurrentSelectedOptionIndex++;
+                                UIContainer.Instance.TradeScreen.MoveCursorDown();
                                 break;
                             }
+                        case IntentEnum.MoveRight:
+                        case IntentEnum.MoveLeft:
+                            {
+                                if (UIContainer.Instance.TradeScreen.CursorMode == TradeCursorMode.LeftTable)
+                                {
+                                    UIContainer.Instance.TradeScreen.SwitchMode(TradeCursorMode.RightTable);
+                                }
+                                else if (UIContainer.Instance.TradeScreen.CursorMode == TradeCursorMode.RightTable)
+                                {
+                                    UIContainer.Instance.TradeScreen.SwitchMode(TradeCursorMode.LeftTable);
+                                }
+
+                            }
+                            break;
                         case IntentEnum.Interact:
                             {
-                                var options = UIContainer.Instance.PickOptionDialogScreen.Options;
-                                if (options.Count > 0)
-                                {
-                                    PickOptionDialogOptionCommand command = new PickOptionDialogOptionCommand(options[UIContainer.Instance.PickOptionDialogScreen.CurrentSelectedOptionIndex]);
-                                    namelessGame.Commander.EnqueueCommand(command);
-                                }
+                                UIContainer.Instance.TradeScreen.SelectDeselectCurrentItem();
                                 break;
                             }
-                        case IntentEnum.QuickBarPress:
+                        case IntentEnum.Trade:
                             {
-                                var parsed = int.TryParse(intent.PressedChar.ToString(), out int optionIndex);
-                                if (!parsed)
-                                {
-                                    break;
-                                }
-                                var options = UIContainer.Instance.PickOptionDialogScreen.Options;
-                                if (optionIndex >= 0 && optionIndex < options.Count)
-                                {
-                                    PickOptionDialogOptionCommand command = new PickOptionDialogOptionCommand(options[optionIndex]);
-                                    namelessGame.Commander.EnqueueCommand(command);
-                                }
+
                             }
                             break;
                         case IntentEnum.Enter:
                             goto case IntentEnum.Interact;
+                        case IntentEnum.Escape:
+                            namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
+                            break;
                         default:
                             break;
                     }

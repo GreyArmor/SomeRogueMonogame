@@ -3,6 +3,7 @@
   <Id>3609652b-170a-4309-b4a7-a71c8e50917b</Id>
   <Name>Toxic beaker</Name>
   <Description>Do not consume</Description>
+  <Price>60</Price>
   <IconPath>Icons\toxic_beaker.png</IconPath>
   <ItemType>Consumable</ItemType>
   <ItemQuality>Terrible</ItemQuality>

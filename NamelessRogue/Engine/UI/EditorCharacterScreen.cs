@@ -34,7 +34,6 @@ namespace NamelessRogue.Engine.UI
 
     public class EditorCharacterScreen : BaseScreen
     {
-        Vector2 buttonSize = new Vector2(200, 50);
         DamageType[] damageTypes = (DamageType[])Enum.GetValues(typeof(DamageType));
         AttackType[] attackTypes = (AttackType[])Enum.GetValues(typeof(AttackType));
         AmmoType[] ammoTypes = (AmmoType[])Enum.GetValues(typeof(AmmoType));

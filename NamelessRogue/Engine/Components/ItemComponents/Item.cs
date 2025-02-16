@@ -33,7 +33,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
 
         public ItemQuality Quality { get; set; }
 
-        public Item(ItemType type, float weight, ItemQuality quality, int amount, int level, string author)
+        public Item(ItemType type, float weight, int price, ItemQuality quality, int amount, int level, string author)
         {
             Type = type;
             Weight = weight;
@@ -41,6 +41,7 @@ namespace NamelessRogue.Engine.Components.ItemComponents
             Quality = quality;
             Level = level;
             Author = author;
+            Price = price;
         }
 
 		public Item()
@@ -63,10 +64,11 @@ namespace NamelessRogue.Engine.Components.ItemComponents
         public int Level { get; set; }
 
         public string Author { get; set; }
+        public int Price { get; internal set; }
 
         public override IComponent Clone()
         {
-            return new Item(this.Type, this.Weight, this.Quality, this.Amount, this.Level, this.Author);
+            return new Item(this.Type, this.Weight, this.Price, this.Quality, this.Amount, this.Level, this.Author);
         }
     }
 }

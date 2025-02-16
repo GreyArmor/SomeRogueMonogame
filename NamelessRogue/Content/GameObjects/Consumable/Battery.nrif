@@ -3,6 +3,7 @@
   <Id>1586eec3-e2b6-45e0-aa4d-9e3e3305fe59</Id>
   <Name>Battery</Name>
   <Description>For when you need an extra jolt</Description>
+  <Price>50</Price>
   <IconPath>Icons\battery.png</IconPath>
   <ItemType>Consumable</ItemType>
   <ItemQuality>Terrible</ItemQuality>

@@ -34,6 +34,7 @@ namespace NamelessRogue.Engine.Input
         SwitchTarget,
         QuickBarPress,
         Chat,
+        Trade,
     }
 
     public class Intent
