@@ -22,20 +22,20 @@ namespace NamelessRogue.Engine.Components.Interaction
     {
 
 
-        public TradeTransationCommand(IEntity rightEntity, IEntity leftEntity,  List<IEntity> itemsToGiveToLeftentity, List<IEntity> itemsToGiveToRight, int cashToTransferFromrightToLeft)
+        public TradeTransationCommand(IEntity rightEntity, IEntity leftEntity,  List<IEntity> itemsToGiveToLeftentity, List<IEntity> itemsToGiveToRight, int cashToTransferFromLeftToRight)
         {
             RightEntity = rightEntity;
             LeftEntity = leftEntity;
             ItemsToGiveToLeftEntity = itemsToGiveToLeftentity;
             ItemsToGiveToRightEntity = itemsToGiveToRight;
-            CashToTransferFromRightToLeft = cashToTransferFromrightToLeft;
+            CashToTransferFromLeftToRight = cashToTransferFromLeftToRight;
         }
 
         public IEntity RightEntity { get; }
         public IEntity LeftEntity { get; }
         public List<IEntity> ItemsToGiveToLeftEntity { get; }
         public List<IEntity> ItemsToGiveToRightEntity { get; }
-        public int CashToTransferFromRightToLeft { get; }
+        public int CashToTransferFromLeftToRight { get; }
     }
 
 }

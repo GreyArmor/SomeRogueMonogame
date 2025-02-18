@@ -45,16 +45,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     leftItemsHolder.Items.Remove(item);
                 }
 
-                if (command.CashToTransferFromRightToLeft != 0)
+                if (command.CashToTransferFromLeftToRight != 0)
                 {
                     var leftEntityStats = leftEntity.GetComponentOfType<CharacterStats>();
                     var rightEntityStats = rightEntity.GetComponentOfType<CharacterStats>();
 
-                    leftEntityStats.Money += command.CashToTransferFromRightToLeft;
-                    rightEntityStats.Money -= command.CashToTransferFromRightToLeft;
+                    leftEntityStats.Money -= command.CashToTransferFromLeftToRight;
+                    rightEntityStats.Money += command.CashToTransferFromLeftToRight;
                 }
 
-                UIContainer.Instance.TradeScreen.FillTables(rightEntity, leftEntity);
+                UIContainer.Instance.TradeScreen.FillTables(leftEntity, rightEntity);
             }
 
             while (namelessGame.Commander.DequeueCommand(out EndTradeCommand command))
