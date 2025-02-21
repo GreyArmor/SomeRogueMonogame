@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.UI;
@@ -57,7 +58,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             }
                         case IntentEnum.Trade:
                             {
-
+                                var total = UIContainer.Instance.TradeScreen.GetTotal();
+                                var rightTableMoney = UIContainer.Instance.TradeScreen.GetRightTableMoney();
+                                var leftTableMoney = UIContainer.Instance.TradeScreen.GetLeftTableMoney();
+                                var unableToTrade = UIContainer.Instance.TradeScreen.IsUnableToTrade(total, leftTableMoney, rightTableMoney);
+                                UIContainer.Instance.TradeScreen.CreateTrade(total);
                             }
                             break;
                         case IntentEnum.Enter:

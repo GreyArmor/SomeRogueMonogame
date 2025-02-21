@@ -34,6 +34,8 @@ namespace NamelessRogue.Engine.UI
         private IEntity leftTableEntity;
 
         public TradeCursorMode CursorMode { get => cursorMode; set => cursorMode = value; }
+        public IEntity RightTableEntity { get => rightTableEntity; set => rightTableEntity = value; }
+        public IEntity LeftTableEntity { get => leftTableEntity; set => leftTableEntity = value; }
 
         public TradeScreen(NamelessGame game) : base(game)
         {
@@ -55,27 +57,21 @@ namespace NamelessRogue.Engine.UI
                     var rightTablePosition = new Vector2(uiSize.X / 2 + 20, 20);
 
                     var middlePosition = new Vector2(uiSize.X / 2 - 20, 20);
-
-                 
-                    var leftTotal = leftTable.SumOfSelectedObjects(); 
-                    var rightTotal = rightTable.SumOfSelectedObjects();
-
-                    var total = rightTotal - leftTotal;
-                    var totalText = total + "$";                  
+                    int total = GetTotal();
+                    var totalText = total + "$";
                     ImGui.SetCursorPos(middlePosition);
                     ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
                     ImGui.Text(totalText);
                     ImGui.PopFont();
                     DrawTable(leftTable, leftTablePosition + tableOffsetY, new Vector2(uiSize.X / 2 - 10, uiSize.Y - 200) - tableOffsetX, showLeftTabletSelector);
 
-                    DrawTable(rightTable, rightTablePosition + tableOffsetY, new Vector2(uiSize.X/2 -10, uiSize.Y - 200) - tableOffsetX, showRightTabletSelector);
-                         
-                    var leftTableMoney = leftTableEntity.GetComponentOfType<CharacterStats>().Money;
-                    var rightTableMoney = rightTableEntity.GetComponentOfType<CharacterStats>().Money;
+                    DrawTable(rightTable, rightTablePosition + tableOffsetY, new Vector2(uiSize.X / 2 - 10, uiSize.Y - 200) - tableOffsetX, showRightTabletSelector);
 
-                    var leftTableMoneyStr = leftTableEntity.GetComponentOfType<CharacterStats>().Money + "$";
-                    var rightTableMoneyStr = rightTableEntity.GetComponentOfType<CharacterStats>().Money.ToString() + "$";
+                    var leftTableMoney = GetLeftTableMoney();
+                    var rightTableMoney = GetRightTableMoney();
 
+                    var leftTableMoneyStr = leftTableMoney + "$";
+                    var rightTableMoneyStr = rightTableMoney + "$";
 
                     var positionYAfterTables = ImGui.GetCursorPosY();
 
@@ -84,25 +80,53 @@ namespace NamelessRogue.Engine.UI
                     ImGui.Text(leftTableMoneyStr);
                     ImGui.PopFont();
 
-                    ImGui.SetCursorPos(new Vector2(middlePosition.X - (buttonSize.X/2), positionYAfterTables));
-                    bool unableToTrade = rightTableMoney < -total || leftTableMoney < total;
-                    var tradePressed = ButtonWithSound("Trade", buttonSize, !unableToTrade);
+                    ImGui.SetCursorPos(new Vector2(middlePosition.X - (buttonSize.X / 2), positionYAfterTables));
+                    bool unableToTrade = IsUnableToTrade(total, leftTableMoney, rightTableMoney);
+                    var tradePressed = ButtonWithSound("[T]rade", buttonSize, !unableToTrade);
                     if (tradePressed)
                     {
-                        List<IEntity> leftSelectedentities = leftTable.Items.Where(x=>x.selectedForTrade).Select(item=>item.entityReference).ToList();
-                        List<IEntity> rightSelectedentities = rightTable.Items.Where(x => x.selectedForTrade).Select(item => item.entityReference).ToList();
-
-                        var tradeCommand = new TradeTransationCommand(rightTableEntity, leftTableEntity, rightSelectedentities, leftSelectedentities, total);
-                        game.Commander.EnqueueCommand(tradeCommand);
+                        CreateTrade(total);
                     }
 
-                    ImGui.SetCursorPos(new Vector2(UiSize.X-70, positionYAfterTables) + tableOffsetX);
+                    ImGui.SetCursorPos(new Vector2(UiSize.X - 70, positionYAfterTables) + tableOffsetX);
                     ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
                     ImGui.Text(rightTableMoneyStr);
                     ImGui.PopFont();
                 }
                 ImGui.End();
             }
+        }
+
+        public int GetRightTableMoney()
+        {
+            return RightTableEntity.GetComponentOfType<CharacterStats>().Money;
+        }
+
+        public int GetLeftTableMoney()
+        {
+            return LeftTableEntity.GetComponentOfType<CharacterStats>().Money;
+        }
+
+        public int GetTotal()
+        {
+            var leftTotal = leftTable.SumOfSelectedObjects();
+            var rightTotal = rightTable.SumOfSelectedObjects();
+            var total = rightTotal - leftTotal;
+            return total;
+        }
+
+        public void CreateTrade(int total)
+        {
+            List<IEntity> leftSelectedentities = leftTable.Items.Where(x => x.selectedForTrade).Select(item => item.entityReference).ToList();
+            List<IEntity> rightSelectedentities = rightTable.Items.Where(x => x.selectedForTrade).Select(item => item.entityReference).ToList();
+
+            var tradeCommand = new TradeTransationCommand(RightTableEntity, LeftTableEntity, rightSelectedentities, leftSelectedentities, total);
+            game.Commander.EnqueueCommand(tradeCommand);
+        }
+
+        public bool IsUnableToTrade(int total, int leftTableMoney, int rightTableMoney)
+        {
+            return rightTableMoney < -total || leftTableMoney < total;
         }
 
         private void DrawTable(TradeScreenTableModel table, Vector2 position, Vector2 size, bool showSelector)
@@ -177,8 +201,8 @@ namespace NamelessRogue.Engine.UI
             rightTable.Fill(rightTableEntity);
             leftTable.Fill(leftTableEntity);
 
-            this.rightTableEntity = rightTableEntity;
-            this.leftTableEntity = leftTableEntity;
+            this.RightTableEntity = rightTableEntity;
+            this.LeftTableEntity = leftTableEntity;
             currentTable = leftTable;
         }
 

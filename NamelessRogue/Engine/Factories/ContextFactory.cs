@@ -466,7 +466,7 @@ namespace NamelessRogue.Engine.Factories
             else
             {
                 var systems = new List<ISystem>();
-                systems.Add(new InputSystem(new IngameKeyIntentTraslator(), game));
+                systems.Add(new InputSystem(new TradeScreenIntentTranslator(), game));
                 systems.Add(new TradeScreenIntentSystem());
                 systems.Add(new TradeScreenSystem());
                 systems.Add(new InventorySystem());
