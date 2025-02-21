@@ -142,6 +142,8 @@ namespace NamelessRogue.Engine.Factories
 
             stats.Immobile = data.Immobile;
 
+            stats.Money = Random.Shared.Next(200, 1000);
+
             if(stats.Immobile)
             {
                 character.AddComponent(new HostileTurretAI());

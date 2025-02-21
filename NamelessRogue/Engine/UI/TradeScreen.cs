@@ -10,6 +10,7 @@ using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -69,19 +70,23 @@ namespace NamelessRogue.Engine.UI
 
                     DrawTable(rightTable, rightTablePosition + tableOffsetY, new Vector2(uiSize.X/2 -10, uiSize.Y - 200) - tableOffsetX, showRightTabletSelector);
                          
-                    var leftTableMoney = leftTableEntity.GetComponentOfType<CharacterStats>().Money+"$";
-                    var rightTableMoney = rightTableEntity.GetComponentOfType<CharacterStats>().Money.ToString()+"$";
-                    
+                    var leftTableMoney = leftTableEntity.GetComponentOfType<CharacterStats>().Money;
+                    var rightTableMoney = rightTableEntity.GetComponentOfType<CharacterStats>().Money;
+
+                    var leftTableMoneyStr = leftTableEntity.GetComponentOfType<CharacterStats>().Money + "$";
+                    var rightTableMoneyStr = rightTableEntity.GetComponentOfType<CharacterStats>().Money.ToString() + "$";
+
 
                     var positionYAfterTables = ImGui.GetCursorPosY();
 
                     ImGui.SetCursorPos(new Vector2(10, positionYAfterTables) + tableOffsetX);
                     ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-                    ImGui.Text(leftTableMoney);
+                    ImGui.Text(leftTableMoneyStr);
                     ImGui.PopFont();
 
                     ImGui.SetCursorPos(new Vector2(middlePosition.X - (buttonSize.X/2), positionYAfterTables));
-                    var tradePressed = ButtonWithSound("Trade", buttonSize, true);
+                    bool unableToTrade = rightTableMoney < -total || leftTableMoney < total;
+                    var tradePressed = ButtonWithSound("Trade", buttonSize, !unableToTrade);
                     if (tradePressed)
                     {
                         List<IEntity> leftSelectedentities = leftTable.Items.Where(x=>x.selectedForTrade).Select(item=>item.entityReference).ToList();
@@ -93,7 +98,7 @@ namespace NamelessRogue.Engine.UI
 
                     ImGui.SetCursorPos(new Vector2(UiSize.X-70, positionYAfterTables) + tableOffsetX);
                     ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-                    ImGui.Text(rightTableMoney);
+                    ImGui.Text(rightTableMoneyStr);
                     ImGui.PopFont();
                 }
                 ImGui.End();
@@ -149,6 +154,16 @@ namespace NamelessRogue.Engine.UI
                 if (showSelector && i == table.SelectedItem)
                 {
                     ImGui.Separator();
+                    var scrollY = ImGui.GetScrollY();
+                    var pos = ImGui.GetCursorPosY();
+                    if (pos >= scrollY + size.Y)
+                    {
+                        ImGui.SetScrollHereY(1.0f);
+                    }                     
+                    else if((pos-48) <= scrollY)
+                    {
+                        ImGui.SetScrollY(pos-48);
+                    }
                 }
             }
             ImGui.EndChild();
