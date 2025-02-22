@@ -100,10 +100,19 @@ namespace NamelessRogue.Engine.UI
                     ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
 
                     var rightTableTextSize = ImGui.CalcTextSize(rightTableMoneyStr);
-                    ImGui.SetCursorPos(new Vector2(UiSize.X - rightTableTextSize.X, positionYAfterTables) + tableOffsetX);
+                    ImGui.SetCursorPos(new Vector2(UiSize.X - (rightTableTextSize.X*2), positionYAfterTables) + tableOffsetX);
                   
                     ImGui.Text(rightTableMoneyStr);
                     ImGui.PopFont();
+
+                    ImGui.SetCursorPos(new Vector2(UiSize.X - (buttonSize.X) - tableOffsetX.X, 5));
+                    var escape = ButtonWithSound("[Esc]ape", buttonSize, true);
+                    if (escape)
+                    {
+                        var endTrade = new EndTradeCommand();
+                        game.Commander.EnqueueCommand(endTrade);
+                    }
+
                 }
                 ImGui.End();
             }
