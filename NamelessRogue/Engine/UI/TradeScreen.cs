@@ -35,7 +35,7 @@ namespace NamelessRogue.Engine.UI
 
         public TradeCursorMode CursorMode { get => cursorMode; set => cursorMode = value; }
         public IEntity RightTableEntity { get => rightTableEntity; set => rightTableEntity = value; }
-        public IEntity LeftTableEntity { get => leftTableEntity; set => leftTableEntity = value; }
+        public IEntity LeftTableEntity { get => leftTableEntity; set => leftTableEntity = value; }       
 
         public TradeScreen(NamelessGame game) : base(game)
         {
@@ -53,19 +53,29 @@ namespace NamelessRogue.Engine.UI
 
                     var tableOffsetY = new Vector2(0, 40);
                     var tableOffsetX = new Vector2(20, 0);
-                    var leftTablePosition = new Vector2(10, 20);
-                    var rightTablePosition = new Vector2(uiSize.X / 2 + 20, 20);
+                    var middleGapOffsetX = new Vector2(10, 0);
+                    var leftTablePosition = new Vector2(0, 20) + tableOffsetX;
+                    var rightTablePosition = new Vector2(uiSize.X / 2, 20) + tableOffsetX;
 
-                    var middlePosition = new Vector2(uiSize.X / 2 - 20, 20);
+                    var leftTableSize =  new Vector2(uiSize.X / 2 - 20, uiSize.Y / 2) - tableOffsetX;
+                    var rightTableSize = new Vector2(uiSize.X / 2 - 20, uiSize.Y / 2) - tableOffsetX;
+                    var middlePosition = new Vector2(uiSize.X / 2, 20);
+
+                    var tabledescriptionSize = new Vector2(uiSize.X / 2 - 20, uiSize.Y/3) - tableOffsetX;
                     int total = GetTotal();
-                    var totalText = total + "$";
-                    ImGui.SetCursorPos(middlePosition);
+                    var totalText = total + "$"; 
+                    
                     ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
+                    var totalTextSize = ImGui.CalcTextSize(totalText);
+                    ImGui.SetCursorPos(middlePosition - new Vector2(totalTextSize.X/2, 0)); 
+
                     ImGui.Text(totalText);
                     ImGui.PopFont();
-                    DrawTable(leftTable, leftTablePosition + tableOffsetY, new Vector2(uiSize.X / 2 - 10, uiSize.Y - 200) - tableOffsetX, showLeftTabletSelector);
-
-                    DrawTable(rightTable, rightTablePosition + tableOffsetY, new Vector2(uiSize.X / 2 - 10, uiSize.Y - 200) - tableOffsetX, showRightTabletSelector);
+                    DrawTable(leftTable, leftTablePosition + tableOffsetY, leftTableSize, showLeftTabletSelector);
+                    DrawTable(rightTable, rightTablePosition + tableOffsetY, rightTableSize, showRightTabletSelector);
+                    DrawSelectedItemDescriptionTable(leftTable, leftTablePosition + new Vector2(0, leftTableSize.Y) + tableOffsetY, tabledescriptionSize);
+                    DrawSelectedItemDescriptionTable(rightTable, rightTablePosition + new Vector2(0, rightTableSize.Y) + tableOffsetY, tabledescriptionSize);
+                    //   DrawSelectedItemDescriptionTable(rightTable, rightTablePosition + rightTableSize, rightTableSize);
 
                     var leftTableMoney = GetLeftTableMoney();
                     var rightTableMoney = GetRightTableMoney();
@@ -87,9 +97,11 @@ namespace NamelessRogue.Engine.UI
                     {
                         CreateTrade(total);
                     }
-
-                    ImGui.SetCursorPos(new Vector2(UiSize.X - 70, positionYAfterTables) + tableOffsetX);
                     ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
+
+                    var rightTableTextSize = ImGui.CalcTextSize(rightTableMoneyStr);
+                    ImGui.SetCursorPos(new Vector2(UiSize.X - rightTableTextSize.X, positionYAfterTables) + tableOffsetX);
+                  
                     ImGui.Text(rightTableMoneyStr);
                     ImGui.PopFont();
                 }
@@ -138,26 +150,18 @@ namespace NamelessRogue.Engine.UI
             for (int i = 0; i < table.Items.Count; i++)
             {
                 TradeScreenItem tableItem = table.Items[i];
-                ImGui.PushItemWidth(size.X);
+                ImGui.BeginChild("itemChild" + i + tableId, new Vector2(size.X, 49), false, ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
                 var textSize = ImGui.CalcTextSize(table.ItemsNames[i]);
                 int numberOfCharacters = 0;
                 bool itemClicked = false;
                 if (tableItem.selectedForTrade)
                 {
                     ImGui.Text(">");
-                    itemClicked = !itemClicked ? ImGui.IsItemClicked() : itemClicked;
                     ImGui.SameLine();
                     numberOfCharacters++;
                 }
-               // ImGui.SameLine();
                 var prevCursorPos = ImGui.GetCursorPos();
-           //     ImGui.Image(ImGuiImageLibrary.Textures["cellDeselected"], new Vector2(32, 32));
-                itemClicked = !itemClicked ? ImGui.IsItemClicked() : itemClicked;
-              //  ImGui.SameLine();
-              //   ImGui.SetCursorPos(prevCursorPos);
-                //  ImGui.SameLine();
                 ImGui.Image(ImGuiImageLibrary.Textures[table.ItemIconsIds[i]], new Vector2(32, 32));
-                itemClicked = !itemClicked ? ImGui.IsItemClicked() : itemClicked;
 
                 ImGui.SameLine();
 
@@ -167,30 +171,65 @@ namespace NamelessRogue.Engine.UI
                 string spaces = new string(' ', numberOfDots);
 
                 ImGui.Text(table.ItemsNames[i] + spaces + table.ItemsPrices[i] + "$");
-                itemClicked = !itemClicked ? ImGui.IsItemClicked() : itemClicked;
-                if (itemClicked)
-                {
-                    tableItem.selectedForTrade = !tableItem.selectedForTrade;
-                }
+              
                 var itemSize = ImGui.GetItemRectSize();
                 var itemPos = ImGui.GetItemRectMin();
                 var style = ImGui.GetStyle();
                 if (showSelector && i == table.SelectedItem)
                 {
                     ImGui.Separator();
+                  
+                }
+                ImGui.EndChild();
+
+                itemClicked = !itemClicked ? ImGui.IsItemClicked() : itemClicked;
+                if (itemClicked)
+                {
+                    tableItem.selectedForTrade = !tableItem.selectedForTrade;
+                    table.CurrentChanged = true;
+                    table.SelectedItem = i;
+                }
+
+                if (table.CurrentChanged && i == table.SelectedItem)
+                {
                     var scrollY = ImGui.GetScrollY();
                     var pos = ImGui.GetCursorPosY();
+
                     if (pos >= scrollY + size.Y)
                     {
                         ImGui.SetScrollHereY(1.0f);
-                    }                     
-                    else if((pos-48) <= scrollY)
-                    {
-                        ImGui.SetScrollY(pos-48);
                     }
+                    else if ((pos - 48) <= scrollY)
+                    {
+                        ImGui.SetScrollY(pos - 55);
+                    }
+                    table.CurrentChanged = true;
                 }
             }
+
+         
             ImGui.EndChild();
+        }
+
+        private void DrawSelectedItemDescriptionTable(TradeScreenTableModel table, Vector2 position, Vector2 size)
+        {
+            if (table.Items.Count > 0)
+            {
+                var tableId = table.GetHashCode().ToString();
+                int numberOfCharactersInLine = (int)((size.X - 32) / ImGui.CalcTextSize(".").X) - 5;
+                ImGui.SetCursorPos(position);
+                ImGui.BeginChild("itemDesc" + tableId, size, true, ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
+                TradeScreenItem tableItem = table.Items[table.SelectedItem];
+                ImGui.Image(ImGuiImageLibrary.Textures[table.ItemIconsIds[table.SelectedItem]], new Vector2(32, 32));
+                ImGui.SameLine();
+                ImGui.Text(table.ItemsNames[table.SelectedItem]);
+                ImGui.Text(table.ItemsDescriptions[table.SelectedItem]);
+
+
+                ImGui.EndChild();
+            }
+        
+         
         }
 
         public void FillTables(IEntity leftTableEntity, IEntity rightTableEntity)
@@ -218,6 +257,7 @@ namespace NamelessRogue.Engine.UI
             if (currentTable != null && currentTable.SelectedItem>0)
             {
                 currentTable.SelectedItem--;
+                currentTable.CurrentChanged = true;
             }
         }
 
@@ -226,6 +266,7 @@ namespace NamelessRogue.Engine.UI
             if (currentTable != null && currentTable.SelectedItem < currentTable.Items.Count - 1)
             {
                 currentTable.SelectedItem++;
+                currentTable.CurrentChanged = true;
             }
         }
 
@@ -264,6 +305,7 @@ namespace NamelessRogue.Engine.UI
     {
         public TradeScreenTableModel() { }
 
+        public bool CurrentChanged { get; set; }
         public List<TradeScreenItem> Items { get; set; } = new List<TradeScreenItem>();
         public List<string> ItemsNames = new List<string>();
         public List<string> ItemsDescriptions = new List<string>();
