@@ -21,6 +21,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             InputComponent inputComponent = namelessGame.PlayerEntity.GetComponentOfType<InputComponent>();
+            var mode = UIContainer.Instance.TradeScreen.CursorMode;
             if (inputComponent != null && !inputComponent.IsDelayed)
             {
                 foreach (Intent intent in inputComponent.Intents)
@@ -29,26 +30,61 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         case IntentEnum.MoveUp:
                             {
-                                UIContainer.Instance.TradeScreen.MoveCursorUp();
+                                switch (mode)
+                                {
+                                    case TradeCursorMode.RightTable:
+                                    case TradeCursorMode.LeftTable:
+                                        UIContainer.Instance.TradeScreen.MoveCursorUp();
+                                        break;
+                                    case TradeCursorMode.RightTableFilters:
+                                    case TradeCursorMode.LeftTableFilters:
+                                        UIContainer.Instance.TradeScreen.MoveCursorUp();
+                                        break;
+                                }
+
                                 break;
                             }
                         case IntentEnum.MoveDown:
                             {
-                                UIContainer.Instance.TradeScreen.MoveCursorDown();
+                                switch (mode)
+                                {
+                                    case TradeCursorMode.RightTable:
+                                    case TradeCursorMode.LeftTable:
+                                        UIContainer.Instance.TradeScreen.MoveCursorDown();
+                                        break;
+                                    case TradeCursorMode.RightTableFilters:
+                                    case TradeCursorMode.LeftTableFilters:
+                                        UIContainer.Instance.TradeScreen.MoveFilterCursorDown();
+                                        break;
+                                }
                                 break;
                             }
                         case IntentEnum.MoveRight:
                         case IntentEnum.MoveLeft:
-                            {
-                                if (UIContainer.Instance.TradeScreen.CursorMode == TradeCursorMode.LeftTable)
+                            {                               
+                                switch (mode)
                                 {
-                                    UIContainer.Instance.TradeScreen.SwitchMode(TradeCursorMode.RightTable);
+                                    case TradeCursorMode.RightTable:
+                                        UIContainer.Instance.TradeScreen.SwitchMode(TradeCursorMode.LeftTable);
+                                        break;
+                                    case TradeCursorMode.LeftTable:
+                                        UIContainer.Instance.TradeScreen.SwitchMode(TradeCursorMode.RightTable);
+                                        break;
+                                    case TradeCursorMode.RightTableFilters:
+                                    case TradeCursorMode.LeftTableFilters:
+                                        switch(intent.Intention)
+                                        {
+                                            case IntentEnum.MoveRight:
+                                                UIContainer.Instance.TradeScreen.MoveFilterCursorRight();
+                                                break;
+                                            case IntentEnum.MoveLeft:
+                                                UIContainer.Instance.TradeScreen.MoveFilterCursorLeft();
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        break;
                                 }
-                                else if (UIContainer.Instance.TradeScreen.CursorMode == TradeCursorMode.RightTable)
-                                {
-                                    UIContainer.Instance.TradeScreen.SwitchMode(TradeCursorMode.LeftTable);
-                                }
-
                             }
                             break;
                         case IntentEnum.Interact:
@@ -63,6 +99,28 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 var leftTableMoney = UIContainer.Instance.TradeScreen.GetLeftTableMoney();
                                 var unableToTrade = UIContainer.Instance.TradeScreen.IsUnableToTrade(total, leftTableMoney, rightTableMoney);
                                 UIContainer.Instance.TradeScreen.CreateTrade(total);
+                            }
+                            break;
+                        case IntentEnum.SwitchTarget:
+                            {
+                                switch (mode)
+                                {
+                                    case TradeCursorMode.LeftTable:
+                                        UIContainer.Instance.TradeScreen.SwitchMode(TradeCursorMode.LeftTableFilters);
+                                        break;
+                                    case TradeCursorMode.LeftTableFilters:
+                                        UIContainer.Instance.TradeScreen.SwitchMode(TradeCursorMode.RightTableFilters);
+                                        break;
+                                    case TradeCursorMode.RightTable:
+                                        UIContainer.Instance.TradeScreen.SwitchMode(TradeCursorMode.LeftTable);
+                                        break;
+                            
+                                    case TradeCursorMode.RightTableFilters:
+                                        UIContainer.Instance.TradeScreen.SwitchMode(TradeCursorMode.RightTable);
+                                        break;
+                                   
+                                }
+
                             }
                             break;
                         case IntentEnum.Enter:

@@ -160,28 +160,9 @@ namespace NamelessRogue.Engine.UI
 
     }
 
-    public class InventoryFiltersVisualModel
-    {
-        public Point SelectedCell { get; set; } = new Point();
-    }
-
-
     public class InventoryScreenPageSwitchModel {
         public Point SelectedCell { get; set; } = new Point();
     }
-    public class FilterFlags
-    {
-        public bool[] FilterArray = new bool[7];
-        public FilterFlags() { }
-        public bool All { get { return FilterArray[0]; } set { FilterArray[0] = value; } }
-        public bool Weapons { get { return FilterArray[1]; } set { FilterArray[1] = value; } }
-        public bool Armor { get { return FilterArray[2]; } set { FilterArray[2] = value; } }
-        public bool Consumables { get { return FilterArray[3]; } set { FilterArray[3] = value; } }
-        public bool Food { get { return FilterArray[4]; } set { FilterArray[4] = value; } }
-        public bool Ammo { get { return FilterArray[5]; } set { FilterArray[5] = value; } }
-        public bool Misc { get { return FilterArray[6]; } set { FilterArray[6] = value; } }
-    }
-
 
     public class InventoryScreen : BaseScreen
     {
