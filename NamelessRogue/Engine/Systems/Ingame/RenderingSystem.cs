@@ -217,25 +217,26 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.Pillar, new AtlasTileData(4, 1));
 
             var doorData = new AtlasTileData(5, 0);
+            var doorDataVertical = new AtlasTileData(5, 1);
 
             characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallHorizontal0, doorData);
             characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallHorizontal1, doorData);
             characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallHorizontal2, doorData);
 
-            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallVertical0, doorData);
-            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallVertical1, doorData);
-            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallVertical2, doorData);
+            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallVertical0, doorDataVertical);
+            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallVertical1, doorDataVertical);
+            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallVertical2, doorDataVertical);
 
             var openDoorData = new AtlasTileData(7, 0);
-
+            var openDoorDataVertical = new AtlasTileData(7, 1);
 
             characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallHorizontal0, openDoorData);
             characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallHorizontal1, openDoorData);
             characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallHorizontal2, openDoorData);
 
-            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallVertical0, openDoorData);
-            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallVertical1, openDoorData);
-            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallVertical2, openDoorData);
+            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallVertical0, openDoorDataVertical);
+            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallVertical1, openDoorDataVertical);
+            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallVertical2, openDoorDataVertical);
 
             characterToTileDictionary.Add("window" + TileBitmaskingEncoding.WallHorizontal0, new AtlasTileData(6, 0));
             characterToTileDictionary.Add("window" + TileBitmaskingEncoding.WallHorizontal1, new AtlasTileData(6, 0));
@@ -825,7 +826,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
 
-            effect.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+            effect.GraphicsDevice.SamplerStates[0] = sampler;
             effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             var device = game.GraphicsDevice;

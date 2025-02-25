@@ -18,7 +18,7 @@ struct PixelToFrame
 Texture2D tileAtlas;
 SamplerState textureSampler : register(s0) = sampler_state
 {
-	Filter = Linear;
+	Filter = Point;
 	MipFilter = Linear;
 	MagFilter = Linear;
 	MinFilter = Linear;

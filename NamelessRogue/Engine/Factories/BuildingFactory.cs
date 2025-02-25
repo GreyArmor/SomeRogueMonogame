@@ -32,7 +32,7 @@ namespace NamelessRogue.Engine.Factories
         {
             Entity door  = new Entity();
             door.AddComponent(new Position(x, y, z));
-            door.AddComponent(new Drawable("door", new Engine.Utility.Color(0.7,0.7,0.7)));
+            door.AddComponent(new Drawable("door", new Engine.Utility.Color(1f, 1f, 1f)));
             door.AddComponent(new Description("Door",""));
             door.AddComponent(new Door());
             door.AddComponent(new SimpleSwitch(true));
