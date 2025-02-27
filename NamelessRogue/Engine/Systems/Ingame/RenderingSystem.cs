@@ -488,6 +488,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             animation = sprited.CurrentAnimation;
                                             sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
                                         }
+
+                                        if(sprited.InfinteAnimation)
+                                        {
+                                            sprited.CurrentAnimationTimeLeft = 1000;
+                                        }
                                         screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, sprited.CurrentAnimationTimeLeft, animation);
                                     }
                                 }
@@ -905,12 +910,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
                                 {
-
-                                    if (objectToDraw.AnimationName == "takeaim_1")
-                                    {
-                                        objectToDraw.ToString();
-                                    }
-                                    sprite.SetCurrentLoopwithTimeConstrains(objectToDraw.AnimationName, objectToDraw.AnimationTime);
+                                    sprite.SetCurrentLoopWithTimeConstrains(objectToDraw.AnimationName, objectToDraw.AnimationTime);
                                    // sprite.Update(gameTime);
                                     sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.White);
                                 }
@@ -951,7 +951,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
                                 {
-                                    sprite.SetCurrentLoopwithTimeConstrains(objectToDraw.AnimationName, objectToDraw.AnimationTime);
+                                    sprite.SetCurrentLoopWithTimeConstrains(objectToDraw.AnimationName, objectToDraw.AnimationTime);
                                     sprite.Update(gameTime);
                                     int shadowOffset = 10 / game.GetSettings().Zoom;
                                     if (objectToDraw.HasShadow)

@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Components.Environment
 
         public override IComponent Clone()
         {
-            return new SpritedObject(IsStatic, SpriteId, IdleAnimation);
+            return new SpritedObject(IsStatic, SpriteId, IdleAnimation, InfinteAnimation, IdleAnimationType );
         }
     }
 }

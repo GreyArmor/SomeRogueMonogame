@@ -83,7 +83,7 @@ namespace NamelessRogue.Engine.Infrastructure
             CurrentAnimation.Play();
         }
 
-        public void SetCurrentLoopwithTimeConstrains(string animationName, int currentAnimationTimeLeft)
+        public void SetCurrentLoopWithTimeConstrains(string animationName, int currentAnimationTimeLeft)
         {
             CurrentAnimation = _animations[animationName];
             CurrentAnimation.Play();
