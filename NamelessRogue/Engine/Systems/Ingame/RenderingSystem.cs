@@ -1047,22 +1047,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
             int tileHeight = game.GetSettings().GetFontSizeZoomed();
             int tileWidth = game.GetSettings().GetFontSizeZoomed();
 
-            float hackCoef = 0.001f * game.GetSettings().Zoom;
-            if (game.GetSettings().Zoom != 1)
-            {
-                hackCoef = 0;
-            }
 
-          
 
-          
+            float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
+            float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
 
-            float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float)tileAtlas.Width) + hackCoef;
-            float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height) + hackCoef;
+            float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
 
-            float textureXend = (atlasTileData.X + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Width) - hackCoef;
-
-            float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Height) - hackCoef;
+            float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
 
             var settings = game.GetSettings();
 
