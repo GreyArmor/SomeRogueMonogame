@@ -26,5 +26,14 @@ namespace NamelessRogue.Engine.Systems.MainMenu
         }
     }
 
+    public class EditorQuestScreenSystem : BaseSystem
+    {
+        public override HashSet<Type> Signature { get; } = new HashSet<Type>();
+
+        public override void Update(GameTime gameTime, NamelessGame namelessGame)
+        {
+        }
+    }
+
 
 }

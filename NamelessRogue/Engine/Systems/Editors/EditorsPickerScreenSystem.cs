@@ -21,6 +21,9 @@ namespace NamelessRogue.Engine.Systems.Editors
                 case EditorsPickerScreenActions.ItemEditor:
                     namelessGame.ContextToSwitch = ContextFactory.GetEditorItemContext(namelessGame);
                     break;
+                case EditorsPickerScreenActions.QuestEditor:
+                    namelessGame.ContextToSwitch = ContextFactory.GetEEditorQuestContext(namelessGame);
+                    break;
                 case EditorsPickerScreenActions.AbilityEditor:
                     namelessGame.ContextToSwitch = ContextFactory.GetEditorAbilityContext(namelessGame);
                     break;

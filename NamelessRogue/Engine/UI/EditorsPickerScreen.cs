@@ -18,6 +18,7 @@ namespace NamelessRogue.Engine.UI
         AbilityEditor,
         BuffEditor,
         Dialog,
+        QuestEditor,
     }
     public class EditorsPickerScreen : BaseScreen
     {
@@ -34,7 +35,12 @@ namespace NamelessRogue.Engine.UI
             {
                 ImGui.SetCursorPos((uiSize / 2) - (buttonSize/2));
                 ImGui.BeginChild("EditorPicker");
-                
+
+                if (ButtonWithSound("Quest editor", buttonSize))
+                {
+                    EditorsPickerScreenActions = EditorsPickerScreenActions.QuestEditor;
+                }
+
                 if (ButtonWithSound("Character editor", buttonSize))
                 {
                     EditorsPickerScreenActions = EditorsPickerScreenActions.CharacterEditor;

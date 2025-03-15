@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using static NamelessRogue.Engine.Generation.Editor.QuestTemplateData;
 
 namespace NamelessRogue.Engine.Generation.Editor
 {
@@ -42,7 +43,7 @@ namespace NamelessRogue.Engine.Generation.Editor
         public ConsumableItemTemplateData? ConsumableItemTemplateData { get; set; }
 
         [XmlElement]
-        public List<AssociatedBuff> AssociatedBuffs { get; set; } = new List<AssociatedBuff>();
+        public List<FileReference> AssociatedBuffs { get; set; } = new List<FileReference>();
 
 
     }

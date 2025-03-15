@@ -42,7 +42,7 @@ namespace NamelessRogue.Engine.Context
             MusicThemeId = musicThemeId;
         }
 
-            public void Update(GameTime gameTime, NamelessGame namelessGame)
+        public void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             foreach (var system in Systems)
             {

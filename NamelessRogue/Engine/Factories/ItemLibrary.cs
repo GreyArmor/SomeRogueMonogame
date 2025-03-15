@@ -94,12 +94,12 @@ namespace NamelessRogue.Engine.Factories
             {
                 if (data.ItemType == ItemType.Consumable)
                 {
-                    var consumableComponent = new Consumable(data.AssociatedBuffs.Select(x => x.BuffId));
+                    var consumableComponent = new Consumable(data.AssociatedBuffs.Select(x => x.Id));
                     entity.AddComponent(consumableComponent);
                 }
                 else
                 {
-                    var onHitBuffs = new AssociatedBuffs(data.AssociatedBuffs.Select(x => x.BuffId));
+                    var onHitBuffs = new AssociatedBuffs(data.AssociatedBuffs.Select(x => x.Id));
                     entity.AddComponent(onHitBuffs);
                 }
             }

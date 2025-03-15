@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using static NamelessRogue.Engine.Generation.Editor.QuestTemplateData;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamelessRogue.Engine.UI
@@ -110,7 +111,7 @@ namespace NamelessRogue.Engine.UI
         string selectedIconFile = "";
         private string itemId;
 
-        private List<AssociatedBuff> AssociatedBuffs = new List<AssociatedBuff>();
+        private List<FileReference> AssociatedBuffs = new List<FileReference>();
         private bool buffsPickerDialogue;
         private string selectedBuffFile;
 
@@ -459,7 +460,7 @@ namespace NamelessRogue.Engine.UI
 
                                 var buffData = (BuffTemplateData)serializer?.Deserialize(reader);
 
-                                AssociatedBuffs.Add(new AssociatedBuff() { BuffId = buffData.Id, Path = Path.GetRelativePath(contentDirectoryPath, selectedBuffFile)});
+                                AssociatedBuffs.Add(new FileReference() { Id = buffData.Id, Path = Path.GetRelativePath(contentDirectoryPath, selectedBuffFile)});
                                 buffsPickerDialogue = false;
                                 reader.Close();
                                 ImGui.CloseCurrentPopup();

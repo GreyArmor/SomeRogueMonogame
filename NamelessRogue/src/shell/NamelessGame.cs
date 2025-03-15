@@ -508,29 +508,6 @@ namespace NamelessRogue.shell
 				ContextToSwitch = null;
 			}
 
-			//if (EntitiesToAdd.Any())
-			//{
-			//    foreach (var entity in EntitiesToAdd)
-			//    {
-			//        Entities.Add(entity);
-			//    }
-			//    EntitiesToAdd.Clear();
-			//}
-
-			//if (EntitiesToRemove.Any())
-			//{
-			//    foreach (var entity in EntitiesToRemove)
-			//    {
-			//        Entities.Remove(entity);
-			//    }
-			//    EntitiesToRemove.Clear();
-			//}
-
-			//foreach (var entity in Entities)
-			//{
-			//    entity.AppendDelayedComponents();
-			//}	
-
 			CurrentContext.Update(gameTime, this);
 
 			if (saveScheduled)
@@ -542,7 +519,6 @@ namespace NamelessRogue.shell
 			if (loadScheduled)
 			{
 				loadScheduled = false;
-
 
 				EntityInfrastructureManager.ClearGame();
 

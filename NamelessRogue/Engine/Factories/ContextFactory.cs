@@ -405,6 +405,30 @@ namespace NamelessRogue.Engine.Factories
             }
         }
 
+        private static GameContext EditorQuestContext;
+        public static GameContext GetEEditorQuestContext(NamelessGame game)
+        {
+
+            if (EditorQuestContext != null)
+            {
+                return EditorQuestContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
+                systems.Add(new EditorQuestScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
+
+                EditorQuestContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorQuestScreen, "Dialog");
+                return EditorQuestContext;
+            }
+        }
+
+
+
         private static GameContext DialogContext;
         public static GameContext GetDialogContext(NamelessGame game)
         {
