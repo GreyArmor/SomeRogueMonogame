@@ -20,6 +20,7 @@ namespace NamelessRogue.Engine.UI
 
         public EditorsPickerScreen EditorsPickerScreen { get; set; }
         public EditorItemScreen EditorItemScreen { get; set; }
+        public EdirtorLocationScreen EditorLocationScreen { get; set; }
         public EditorCharacterScreen EditorCharacterScreen { get; set; }
 		public EditorDialogScreen EditorDialogScreen { get; set; }
 
@@ -56,6 +57,7 @@ namespace NamelessRogue.Engine.UI
             PickOptionDialogScreen = new PickOptionDialogScreen(game);
             TradeScreen = new TradeScreen(game);
             EditorQuestScreen = new EditorQuestScreen(game);
+            EditorLocationScreen = new EdirtorLocationScreen(game);
             Instance = this;
 
 		}

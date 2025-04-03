@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LocationTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>757ea756-236f-4b58-ac66-826fd972126b</Id>
+  <Name>Mall</Name>
+  <Description>place with a lot of shops</Description>
+  <Size>
+    <X>0</X>
+    <Y>0</Y>
+  </Size>
+</LocationTemplateData>

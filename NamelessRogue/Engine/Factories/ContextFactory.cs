@@ -500,5 +500,27 @@ namespace NamelessRogue.Engine.Factories
                 return TradeScreenContext;
             }
         }
+
+        private static GameContext editorLocationContext;
+        public static GameContext GetEditorLocationContext(NamelessGame game)
+        {
+
+            if (editorLocationContext != null)
+            {
+                return editorLocationContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new EditorLocationScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
+                // create and init the UI manager
+                editorLocationContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorLocationScreen, "MainMenu");
+                return editorLocationContext;
+            }
+        }
+
     }
 }
