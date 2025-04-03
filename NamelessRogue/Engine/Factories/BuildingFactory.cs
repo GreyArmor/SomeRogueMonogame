@@ -47,7 +47,7 @@ namespace NamelessRogue.Engine.Factories
         {
             Entity window  = new Entity();
             window.AddComponent(new Position(x, y, z));
-            window.AddComponent(new Drawable("window", new Engine.Utility.Color(0.9,0.9,0.9), new Engine.Utility.Color()));
+            window.AddComponent(new Drawable("window", new Engine.Utility.Color(1f, 1f, 1f), new Engine.Utility.Color()));
             window.AddComponent(new Description("Window",""));
             window.AddComponent(new OccupiesTile());
             window.AddComponent(new Furniture());
