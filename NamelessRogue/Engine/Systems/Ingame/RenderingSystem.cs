@@ -37,6 +37,11 @@ using MonoGame.Extended;
 using MonoGame.Extended.Particles;
 using MonoGame.Extended.Shapes;
 using Microsoft.VisualBasic.Logging;
+using AsepriteDotNet;
+using MonoGame.Extended.Particles.Modifiers.Containers;
+using MonoGame.Extended.Particles.Modifiers.Interpolators;
+using MonoGame.Extended.Particles.Modifiers;
+using MonoGame.Extended.Particles.Profiles;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -163,6 +168,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             InitializeCharacterTileDictionary();
 
             Signature = [typeof(Drawable), typeof(Position)];
+           
 
         }
 
@@ -819,7 +825,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     lightningModels.Remove(lightningModel);
                 }
-            }
+            }         
+
+          //  _particleEffect.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+
         }
 
         private bool RenderScreen(NamelessGame game, Screen screen, GameSettings settings, int stackDepth)
@@ -1018,10 +1027,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
 
         Texture2D tileAtlas = null;
+        private Texture2D _particleTexture;
+        private ParticleEffect _particleEffect;
 
-
-
-        private Texture InitializeTexture(NamelessGame game)
+        private Microsoft.Xna.Framework.Graphics.Texture InitializeTexture(NamelessGame game)
         {
 
             tileAtlas = null;
@@ -1029,6 +1038,61 @@ namespace NamelessRogue.Engine.Systems.Ingame
             effect = game.Content.Load<Effect>("Shader");
 
             effect.Parameters["tileAtlas"].SetValue(tileAtlas);
+
+            _particleTexture = new Texture2D(game.GraphicsDevice, 1, 1);
+            _particleTexture.SetData(new[] { Microsoft.Xna.Framework.Color.White });
+            Texture2DRegion textureRegion = new Texture2DRegion(_particleTexture);
+
+
+            _particleEffect = new ParticleEffect()
+            {
+                Position = new Vector2(400, 240),
+                Emitters = new List<ParticleEmitter>
+                {
+                    new ParticleEmitter(textureRegion, 500, TimeSpan.FromSeconds(2.5),
+                        Profile.BoxFill(32,32))
+                    {
+                        Parameters = new ParticleReleaseParameters
+                        {
+                            Speed = new Range<float>(0f, 25),
+                            Quantity = 3,
+                            Rotation = new Range<float>(-1f, 1f),
+                            Scale = new Range<float>(1f, 2f)
+                        },
+                        Modifiers =
+                        {
+                            new AgeModifier
+                            {
+                                Interpolators =
+                                {
+                                    new ColorInterpolator
+                                    {
+                                        StartValue = Microsoft.Xna.Framework.Color.White.ToHsl(),
+                                        EndValue =  Microsoft.Xna.Framework.Color.Gray.ToHsl(),
+                                    }
+                                }
+                            },
+                            new RotationModifier {RotationRate = -2.1f},
+                            new DragModifier(){ Density = 1f, DragCoefficient = 1f},
+                            new LinearGravityModifier {Direction = -Vector2.UnitY, Strength = 30f},
+                            new OpacityFastFadeModifier(),
+                            new VortexModifier()
+                            {
+                                Mass = 10f,
+                                MaxSpeed = 1f,
+                                Position = new Vector2(0,-15)
+                            },
+                            new VortexModifier()
+                            {
+                                Mass = 10f,
+                                MaxSpeed = 1f,
+                                Position = new Vector2(-15,0)
+                            }
+                        }
+                    }
+                }
+            };
+
             return tileAtlas;
         }
 
