@@ -263,7 +263,7 @@
  </tile>
  <tile id="102">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="manhole"/>
   </properties>
  </tile>
  <tile id="103">
