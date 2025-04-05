@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.Diagnostics;
+using NamelessRogue.Engine.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace NamelessRogue.Engine.Generation.Editor
         public string id = "";
         public string name = "";
         public string description = "";
-        public Vector2 size;
+        public Vector2 size = new Vector2(Constants.ChunkSize);
 
         [XmlElement]
         public string Id { get => id; set => id = value; }

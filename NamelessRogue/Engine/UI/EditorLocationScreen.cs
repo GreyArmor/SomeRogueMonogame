@@ -16,6 +16,7 @@ using System.Numerics;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using static NamelessRogue.Engine.Generation.Editor.QuestTemplateData;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamelessRogue.Engine.UI
 {
@@ -251,10 +252,21 @@ namespace NamelessRogue.Engine.UI
                             value = value >= maxValue ? maxValue : value;
                         }
 
+
+                        ImGui.Text("SizeX / SizeY");
+
+                        int sizeX = (int)data.size.X;
+                        int sizeY = (int)data.size.Y;
+                        ImGui.DragInt("##sizeX", ref sizeX);
+                        ImGui.DragInt("##sizeY", ref sizeY);
+
+                        data.size = new Vector2(sizeX, sizeY);
+
                         if (ButtonWithSound("Add", buttonSize, true))
                         {
                             floorPickerDialog = true;
                         }
+
 
                         var fileExtensions = new List<string>() { "*.tmx" };
                         if (floorPickerDialog)
