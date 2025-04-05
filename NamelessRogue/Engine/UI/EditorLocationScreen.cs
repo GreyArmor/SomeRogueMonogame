@@ -13,7 +13,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Xml.Schema;
 using System.Xml.Serialization;
+using static NamelessRogue.Engine.Generation.Editor.QuestTemplateData;
 
 namespace NamelessRogue.Engine.UI
 {
@@ -61,8 +63,7 @@ namespace NamelessRogue.Engine.UI
         Vector2 iconSize = new Vector2(64, 64);
 
 
-        string name = "";
-        string description = "";
+        BuildingTemplateData data = new BuildingTemplateData();
         int currentSelectedFile = 0;
 
         string contentBuffDirectoryPath;
@@ -73,11 +74,11 @@ namespace NamelessRogue.Engine.UI
         string iconFileName = string.Empty;
         int currentIconCombpBoxItem = 0;
         string selectedIconFile = "";
-        private string itemId;
         private string[] currentFilesOfSelectedItemType;
         private string[] currentFilesOfSelectedItemTypeNames;
         private string currentFilePath;
-
+        private bool floorPickerDialog;
+        private string selectedTiledFile;
         /// <summary>
         /// SOMEBODY TOUCHA MY SPAGHET
         /// </summary>
@@ -187,7 +188,7 @@ namespace NamelessRogue.Engine.UI
                     ImGui.BeginChild("##fields", new Vector2(fieldsSizeX, uiSize.Y), false, ImGuiWindowFlags.None);
                     {
 
-                        if (ButtonWithSound("Save", buttonSize) && name.Any())
+                        if (ButtonWithSound("Save", buttonSize) && data.name.Any())
                         {
                             Save();
                             // EditorItemScreenActions = EditorItemScreenActions.Back;
@@ -231,24 +232,76 @@ namespace NamelessRogue.Engine.UI
                             ImGui.EndChild();
                         }
 
-                        if (itemId != "" || itemId == null)
+                        if (data.id != "" || data.id != null)
                         {
-                            ImGui.Text($@"Item Id = {itemId}");
+                            ImGui.Text($@"Item Id = {data.id}");
                         }
 
                         ImGui.Text("Name");
                         ImGui.SetNextItemWidth(fieldsSizeX);
-                        ImGui.InputText("##Name", ref name, 128);
+                        ImGui.InputText("##Name", ref data.name, 128);
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.Text("Description");
                         var inputTextSize = new Vector2((uiSize.X / 3) * 2, 400);
-                        ImGui.InputTextMultiline("##Description", ref description, 10000, inputTextSize, ImGuiInputTextFlags.None);
+                        ImGui.InputTextMultiline("##Description", ref data.description, 10000, inputTextSize, ImGuiInputTextFlags.None);
 
                         void _restrainValue(ref int value, int minValue = 0, int maxValue = 999)
                         {
                             value = value <= minValue ? minValue : value;
                             value = value >= maxValue ? maxValue : value;
-                        } 
+                        }
+
+                        if (ButtonWithSound("Add", buttonSize, true))
+                        {
+                            floorPickerDialog = true;
+                        }
+
+                        var fileExtensions = new List<string>() { "*.tmx" };
+                        if (floorPickerDialog)
+                        {
+                            ImGui.OpenPopup("Floor picker dialog");
+                            ImGui.SetNextWindowPos(new Vector2());
+                            bool drop_open = true;
+                            if (ImGui.BeginPopupModal("Floor picker dialog", ref drop_open, ImGuiWindowFlags.AlwaysAutoResize))
+                            {
+                                ImGui.SetNextItemOpen(true);
+                                _fillTreeRecursive(contentDirectoryPath, fileExtensions, ref selectedTiledFile);
+
+                                // ImGui.Combo("files", ref currentIconCombpBoxItem, files.ToArray(), files.Count);
+                                if (ImGui.Button("Open"))
+                                {
+                                    var floorFileRef = new FileReference() { Id = selectedTiledFile, Path = Path.GetRelativePath(contentDirectoryPath, selectedTiledFile) };
+                                    var buildingFloorTemplate = new BuildingFloor() { Floor = 0, TiledFilePath = floorFileRef };
+                                    data.TiledFilePaths.Add(buildingFloorTemplate);
+                                    floorPickerDialog = false;
+                                    ImGui.CloseCurrentPopup();
+                                }
+                                ImGui.SameLine();
+                                if (ImGui.Button("Cancel"))
+                                {
+                                    floorPickerDialog = false;
+                                    ImGui.CloseCurrentPopup();
+                                }
+                                ImGui.EndPopup();
+                            }
+                        }
+
+                        int counter = 0;
+                        foreach (var associatedBuilding in data.TiledFilePaths)
+                        {
+                           // ImGui.Separator();
+                            ImGui.SetNextItemWidth(fieldsSizeX / 2);
+                            ImGui.BeginChild("##associatedBuffText" + counter, new Vector2(fieldsSizeX / 2, buttonSize.Y / 2));
+                            ImGui.Text(Path.GetFileName(associatedBuilding.TiledFilePath.Path));                          
+                            ImGui.EndChild();
+                            ImGui.InputInt("Floor ##intdrg" + counter, ref associatedBuilding.floor);
+                            ImGui.SameLine();
+                            if (ButtonWithSound("Remove ##" + counter, buttonSize / 2, true))
+                            {
+                                data.TiledFilePaths.Remove(associatedBuilding);
+                            }
+                            counter++;
+                        }
 
                     }
                     ImGui.EndChild();
@@ -273,7 +326,7 @@ namespace NamelessRogue.Engine.UI
         {
             var directory = contentBuffDirectoryPath;
 
-            var newItemPath = directory + name + ".nrlf";
+            var newItemPath = directory + data.name + ".nrlf";
             if (File.Exists(newItemPath))
             {
                 TextReader reader = null;
@@ -282,7 +335,7 @@ namespace NamelessRogue.Engine.UI
                     XmlSerializer serializer = new XmlSerializer(typeof(BuffTemplateData));
                     reader = new StreamReader(newItemPath);
                     var oldData = (BuffTemplateData)serializer.Deserialize(reader);
-                    itemId = oldData.Id;
+                    data.id = oldData.Id;
                     reader.Close();
                 }
                 catch (Exception ex)
@@ -291,19 +344,14 @@ namespace NamelessRogue.Engine.UI
                     {
                         reader.Close();
                     }
-                    itemId = "";
+                    data.Id = "";
                 }
             }
 
-            LocationTemplateData data = new LocationTemplateData();
-            if (itemId == "" || itemId == null)
+            if (data.Id == "" || data.Id == null)
             {
-                itemId = Guid.NewGuid().ToString();
+                data.Id = Guid.NewGuid().ToString();
             }
-
-            data.Id = itemId;
-            data.Name = name;
-            data.Description = description;
 
             if (iconPath != string.Empty)
             {
@@ -323,7 +371,7 @@ namespace NamelessRogue.Engine.UI
 
             using (TextWriter writer = new StreamWriter(newItemPath))
             {
-                XmlSerializer ser = new XmlSerializer(typeof(LocationTemplateData));
+                XmlSerializer ser = new XmlSerializer(typeof(BuildingTemplateData));
                 ser.Serialize(writer, data);
                 currentFilesOfSelectedItemType = null;
             }
@@ -331,7 +379,7 @@ namespace NamelessRogue.Engine.UI
 
         private void Load()
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(LocationTemplateData    ));
+            XmlSerializer serializer = new XmlSerializer(typeof(BuildingTemplateData    ));
 
             currentFilePath = currentFilesOfSelectedItemType[currentSelectedFile];
 
@@ -341,22 +389,10 @@ namespace NamelessRogue.Engine.UI
             }
 
             TextReader reader = new StreamReader(currentFilePath);
-            var btd = (LocationTemplateData)serializer.Deserialize(reader);
+            var btd = (BuildingTemplateData)serializer.Deserialize(reader);
 
-            //if (btd.IconPath != null && btd.IconPath != string.Empty)
-            //{
-            //    iconPath = Path.GetDirectoryName(currentFilesOfSelectedItemType[currentSelectedFile]) + "\\" + btd.IconPath;
-            //    FileStream fileStream = new FileStream(iconPath, FileMode.Open);
-            //    Texture2D texture = Texture2D.FromStream(game.GraphicsDevice, fileStream);
-            //    iconFileName = Path.GetFileName(iconPath);
-            //    ImGuiImageLibrary.Textures.Remove(iconFileName);
-            //    ImGuiImageLibrary.Textures.Add(iconFileName, UIRenderSystem.ImGuiRendererInstance.BindTexture(texture));
-            //    fileStream.Close();
-            //    fileStream.Dispose();
-            //}
-            itemId = btd.Id;
-            name = btd.Name;
-            description = btd.Description;
+            data = btd;
+
             reader.Close();
         }
     }
