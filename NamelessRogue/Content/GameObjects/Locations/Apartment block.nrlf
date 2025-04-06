@@ -19,10 +19,10 @@
       <floor>0</floor>
       <Floor>0</Floor>
       <TiledFilePath>
-        <id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloor.tmx</id>
-        <path>Buildings\ApartmentBlockFloor.tmx</path>
-        <Id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloor.tmx</Id>
-        <Path>Buildings\ApartmentBlockFloor.tmx</Path>
+        <id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloorGroundLevel.tmx</id>
+        <path>Buildings\ApartmentBlockFloorGroundLevel.tmx</path>
+        <Id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloorGroundLevel.tmx</Id>
+        <Path>Buildings\ApartmentBlockFloorGroundLevel.tmx</Path>
       </TiledFilePath>
     </BuildingFloor>
     <BuildingFloor>
@@ -36,13 +36,23 @@
       </TiledFilePath>
     </BuildingFloor>
     <BuildingFloor>
-      <floor>3</floor>
-      <Floor>3</Floor>
+      <floor>2</floor>
+      <Floor>2</Floor>
       <TiledFilePath>
         <id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloor.tmx</id>
         <path>Buildings\ApartmentBlockFloor.tmx</path>
         <Id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloor.tmx</Id>
         <Path>Buildings\ApartmentBlockFloor.tmx</Path>
+      </TiledFilePath>
+    </BuildingFloor>
+    <BuildingFloor>
+      <floor>3</floor>
+      <Floor>3</Floor>
+      <TiledFilePath>
+        <id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockTopFloor.tmx</id>
+        <path>Buildings\ApartmentBlockTopFloor.tmx</path>
+        <Id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockTopFloor.tmx</Id>
+        <Path>Buildings\ApartmentBlockTopFloor.tmx</Path>
       </TiledFilePath>
     </BuildingFloor>
   </TiledFilePaths>

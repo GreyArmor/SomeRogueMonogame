@@ -62,7 +62,13 @@
     <None Update="Content\Buildings\ApartmentBlockFloor.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Buildings\ApartmentBlockFloorGroundLevel.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Buildings\ApartmentBlockFloor_backup.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Buildings\ApartmentBlockTopFloor.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Buildings\Buildings.tiled-project">
