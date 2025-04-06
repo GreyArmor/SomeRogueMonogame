@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BuildingTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <id>fecf11af-3b9e-4d97-9123-c7dc2f76885d</id>
+  <name>Apartment block</name>
+  <description />
+  <size>
+    <X>64</X>
+    <Y>64</Y>
+  </size>
+  <Id>fecf11af-3b9e-4d97-9123-c7dc2f76885d</Id>
+  <Name>Apartment block</Name>
+  <Description />
+  <Size>
+    <X>64</X>
+    <Y>64</Y>
+  </Size>
+  <TiledFilePaths>
+    <BuildingFloor>
+      <floor>0</floor>
+      <Floor>0</Floor>
+      <TiledFilePath>
+        <id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloor.tmx</id>
+        <path>Buildings\ApartmentBlockFloor.tmx</path>
+        <Id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloor.tmx</Id>
+        <Path>Buildings\ApartmentBlockFloor.tmx</Path>
+      </TiledFilePath>
+    </BuildingFloor>
+    <BuildingFloor>
+      <floor>1</floor>
+      <Floor>1</Floor>
+      <TiledFilePath>
+        <id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloor.tmx</id>
+        <path>Buildings\ApartmentBlockFloor.tmx</path>
+        <Id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloor.tmx</Id>
+        <Path>Buildings\ApartmentBlockFloor.tmx</Path>
+      </TiledFilePath>
+    </BuildingFloor>
+    <BuildingFloor>
+      <floor>3</floor>
+      <Floor>3</Floor>
+      <TiledFilePath>
+        <id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloor.tmx</id>
+        <path>Buildings\ApartmentBlockFloor.tmx</path>
+        <Id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\ApartmentBlockFloor.tmx</Id>
+        <Path>Buildings\ApartmentBlockFloor.tmx</Path>
+      </TiledFilePath>
+    </BuildingFloor>
+  </TiledFilePaths>
+</BuildingTemplateData>

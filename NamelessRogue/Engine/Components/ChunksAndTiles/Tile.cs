@@ -13,28 +13,19 @@ using NamelessRogue.shell;
 namespace NamelessRogue.Engine.Components.ChunksAndTiles
 {
     
-    public class Tile {
-        
+    public class Tile {        
         public Biomes Biome { get; set; }
-
         public bool IsVisible { get; set; } = false;
         public bool IsRemembered { get; set; } = false;
 
         public Tile(){}
 	
-        public Tile(TerrainTypes terrain, Biomes biome, Point coordinate, double elevation)
+        public Tile(TerrainTypes terrain, Biomes biome)
         {
-            this.coordinate = coordinate;
             Terrain = terrain;
             Biome = biome;
-            this.Elevation = elevation;
         }
-        public double Elevation { get; set; }
-        //TODO: should not be here
-        public float ElevationVisual { get; set; }
         public TerrainTypes Terrain { get; set; }
-        
-        private Point coordinate;
         
         private List<Entity> entitiesOnTile = new List<Entity>();
 

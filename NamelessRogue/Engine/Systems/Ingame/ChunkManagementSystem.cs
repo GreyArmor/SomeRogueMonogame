@@ -131,15 +131,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 realityBubbleChunk.Value.JustCreated = false;
             }
 
-            if (once)
-            {
-                BuildingFactory.CreateBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize, 0, namelessGame);
-                BuildingFactory.CreateBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize, 1, namelessGame);
-                BuildingFactory.CreateBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize, 2, namelessGame);
-                BuildingFactory.CreateBuilding(200 * Constants.ChunkSize, 200 * Constants.ChunkSize, 3, namelessGame);
-                once = false;
-            }
-
         }
     }
 }

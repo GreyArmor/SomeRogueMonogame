@@ -116,7 +116,7 @@ namespace NamelessRogue.Engine.Generation.World
             temperature = temperature / 20;
             Tuple<Terrain, Biome> terrinBiome =
                 TileNoiseInterpreter.GetTerrain(terrainElevation, forest, swamp, desert, temperature, resolutionZoomed, x, y);
-            return new Tile(terrinBiome.Item1.Type, terrinBiome.Item2.Type, new Point(x, y), terrainElevation);
+            return new Tile(terrinBiome.Item1.Type, terrinBiome.Item2.Type);
         }
     }
 }

@@ -17,10 +17,10 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 	[SkipClassGeneration]
 	public class ChunkData : IWorldProvider
 	{
-		private Dictionary<Point, Chunk> chunks;
+		private Dictionary<Point, Chunk?> chunks;
 
-		private Dictionary<Point, Chunk> realityBubbleChunks;
-		public List<Chunk> RealityChunks { get; set; } = new List<Chunk>();
+		private Dictionary<Point, Chunk?> realityBubbleChunks;
+		public List<Chunk?> RealityChunks { get; set; } = new List<Chunk?>();
 		private WorldSettings worldSettings;
 		private WorldBoard worldBoard;
 
@@ -83,7 +83,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
 			if (chunkOfPoint == null)
 			{
-				return new Tile(TerrainTypes.Nothingness, Biomes.None, new Point(-1, -1), 0.5);
+				return new Tile(TerrainTypes.Nothingness, Biomes.None);
 			}
 			var result = chunkOfPoint.GetTile(x, y, z);
 			return result;

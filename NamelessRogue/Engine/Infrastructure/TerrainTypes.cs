@@ -6,7 +6,7 @@ namespace NamelessRogue.Engine.Infrastructure
 {
     
 
-    public enum TerrainTypes : short {
+    public enum TerrainTypes : byte {
         Nothingness,
         Dirt,
         Road,

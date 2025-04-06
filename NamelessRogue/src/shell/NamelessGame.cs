@@ -253,28 +253,8 @@ namespace NamelessRogue.shell
 				{
 					x = 200;
 					y = 200;
-				}
+				}			
 			
-				ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
-				//initialize reality bubble
-				chunkManagementSystem.Update(zero, this);
-				//for (int i = 1; i < 10; i++)
-				//{
-				//    for (int j = 1; j < 10; j++)
-				//    {
-				//        Entities.Add(CharacterFactory.CreateBlankNpc(x - i,
-				//            y - j));
-				//    }
-				//}
-
-				//CharacterFactory.CreateBlankNpc(game, x - 6,
-				//	y, this);
-				//Entities.Add(CharacterFactory.CreateBlankNpc(x - 3,
-				//    y));
-				//Entities.Add(CharacterFactory.CreateBlankNpc(x - 5,
-				//    y));
-				//Entities.Add(CharacterFactory.CreateBlankNpc(x - 7,
-				//    y));
 
 				Point worldRiverPosition = new Point();
 				bool anyRivers = false;
@@ -297,6 +277,12 @@ namespace NamelessRogue.shell
                 PlayerEntity = player;
                 TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
 
+
+                ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
+                //initialize reality bubble
+                chunkManagementSystem.Update(zero, this);
+
+
                 BuffLibrary.ClearData();
                 BuffLibrary.LoadData(this);
 
@@ -306,8 +292,8 @@ namespace NamelessRogue.shell
                 DialogLibrary.ClearData();
                 DialogLibrary.LoadData(this);
 
-    
-
+				BuildingLibrary.ClearData();
+				BuildingLibrary.LoadData(this);
 
                 var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.nrcf", SearchOption.AllDirectories);
 								Vector2 characterCreationOffset = new Vector2(0);
@@ -370,7 +356,16 @@ namespace NamelessRogue.shell
                     abilityHolder.Abilities.Add(ability);
                     abilityBinder.AbilityBindings.Add(binding, ability);
                     binding++;
-                }               
+                }
+
+				int buildingOffsetX = 0;
+                int buildingOffsetY = 0;
+
+                foreach (var buildingData in BuildingLibrary.Data)
+				{
+					BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
+					buildingOffsetY += 2;
+                }
 
                 //var itemsHolder = player.GetComponentOfType<ItemsHolder>();
 

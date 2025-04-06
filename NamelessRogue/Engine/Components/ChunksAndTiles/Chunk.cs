@@ -48,7 +48,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                new Vector3(bottomLeftCornerWorld.X + Constants.ChunkSize,bottomLeftCornerWorld.Y + Constants.ChunkSize,0));
             worldPositionBottomLeftCorner = bottomLeftCornerWorld;
             this.chunkContainer = chunkContainer;
-
+            chunkTiles = null;
             isActive = false;
         }
 
@@ -288,8 +288,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    ChunkTiles[x][y][0] = new Tile(TerrainTypes.HardRocks, Biomes.None,
-                        new Point(x + worldPositionBottomLeftCorner.X, y + worldPositionBottomLeftCorner.Y), 0.5);
+                    ChunkTiles[x][y][0] = new Tile(TerrainTypes.HardRocks, Biomes.None);
                 }
             }
         }

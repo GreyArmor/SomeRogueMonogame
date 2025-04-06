@@ -299,7 +299,7 @@ namespace NamelessRogue.Engine.UI
                         }
 
                         int counter = 0;
-                        foreach (var associatedBuilding in data.TiledFilePaths)
+                        foreach (var associatedBuilding in data.TiledFilePaths.ToList())
                         {
                            // ImGui.Separator();
                             ImGui.SetNextItemWidth(fieldsSizeX / 2);
@@ -344,9 +344,9 @@ namespace NamelessRogue.Engine.UI
                 TextReader reader = null;
                 try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(BuffTemplateData));
+                    XmlSerializer serializer = new XmlSerializer(typeof(BuildingTemplateData));
                     reader = new StreamReader(newItemPath);
-                    var oldData = (BuffTemplateData)serializer.Deserialize(reader);
+                    var oldData = (BuildingTemplateData)serializer.Deserialize(reader);
                     data.id = oldData.Id;
                     reader.Close();
                 }
@@ -359,7 +359,10 @@ namespace NamelessRogue.Engine.UI
                     data.Id = "";
                 }
             }
-
+            else
+            {
+                data.Id = "";
+            }
             if (data.Id == "" || data.Id == null)
             {
                 data.Id = Guid.NewGuid().ToString();
@@ -391,7 +394,7 @@ namespace NamelessRogue.Engine.UI
 
         private void Load()
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(BuildingTemplateData    ));
+            XmlSerializer serializer = new XmlSerializer(typeof(BuildingTemplateData));
 
             currentFilePath = currentFilesOfSelectedItemType[currentSelectedFile];
 
