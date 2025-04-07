@@ -29,11 +29,11 @@ using TiledMap = TiledCSPlus.TiledMap;
 namespace NamelessRogue.Engine.Factories
 {
     public class BuildingFactory {
-        public static Entity CreateDoor(int x, int y, int z)
+        public static Entity CreateDoor(int x, int y, int z, string objectId)
         {
             Entity door  = new Entity();
             door.AddComponent(new Position(x, y, z));
-            door.AddComponent(new Drawable("door", new Engine.Utility.Color(1f, 1f, 1f)));
+            door.AddComponent(new Drawable(objectId, new Engine.Utility.Color(1f, 1f, 1f)));
             door.AddComponent(new Description("Door",""));
             door.AddComponent(new Door());
             door.AddComponent(new SimpleSwitch(true));
@@ -44,11 +44,11 @@ namespace NamelessRogue.Engine.Factories
             return door;
         }
 
-        public static Entity CreateWindow(int x, int y, int z)
+        public static Entity CreateWindow(int x, int y, int z, string tileObjectType)
         {
             Entity window  = new Entity();
             window.AddComponent(new Position(x, y, z));
-            window.AddComponent(new Drawable("window", new Engine.Utility.Color(1f, 1f, 1f), new Engine.Utility.Color()));
+            window.AddComponent(new Drawable(tileObjectType, new Engine.Utility.Color(1f, 1f, 1f), new Engine.Utility.Color()));
             window.AddComponent(new Description("Window",""));
             window.AddComponent(new OccupiesTile());
             window.AddComponent(new Furniture());
@@ -102,7 +102,7 @@ namespace NamelessRogue.Engine.Factories
                         {
                             var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
                             var tileObjectType = tile.Properties[0].Value;
-                            if (tileObjectType == "wall" || tileObjectType == "door" || tileObjectType == "window")
+                            if (tileObjectType == "wall" || tileObjectType == "wall_brick" || tileObjectType == "door" || tileObjectType == "window")
                             {
                                 postProcessingArray[loopY, loopX] = true;
                             }
@@ -187,8 +187,9 @@ namespace NamelessRogue.Engine.Factories
                                 switch (tileObjectType)
                                 {
                                     case "wall":
+                                    case "wall_brick":
                                         {
-                                            var wall = TerrainFurnitureFactory.GetFurniture("wall");
+                                            var wall = TerrainFurnitureFactory.GetFurniture(tileObjectType);
                                             var drawable = wall.GetComponentOfType<Drawable>();
                                             drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                             gameTile.AddEntity(wall);
@@ -196,8 +197,9 @@ namespace NamelessRogue.Engine.Factories
                                         }
                                         break;
                                     case "door":
+                                    case "door_brick":
                                         {
-                                            var entity = CreateDoor(realSpaceX + loopX, realSpaceY + loopY, floorZ);
+                                            var entity = CreateDoor(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
                                             var drawable = entity.GetComponentOfType<Drawable>();
                                             drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                             gameTile.AddEntity(entity);
@@ -205,8 +207,9 @@ namespace NamelessRogue.Engine.Factories
                                         }
                                         break;
                                     case "window":
+                                    case "window_brick":
                                         {
-                                            var entity = CreateWindow(realSpaceX + loopX, realSpaceY + loopY, floorZ);
+                                            var entity = CreateWindow(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
                                             var drawable = entity.GetComponentOfType<Drawable>();
                                             drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                             gameTile.AddEntity(entity);

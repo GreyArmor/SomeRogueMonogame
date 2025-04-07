@@ -175,14 +175,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
         //TODO move this hardcode to configuration file for tileset
         void InitializeCharacterTileDictionary()
         {
-            
+
 
             var atlasTileData = new AtlasTileData(8, 9);
             characterToTileDictionary = new Dictionary<string, AtlasTileData>();
             characterToTileDictionary.Add("Nothingness", atlasTileData);
             characterToTileDictionary.Add("Dirt", new AtlasTileData(2, 4));
-            characterToTileDictionary.Add("Character", new AtlasTileData(0,7));
-            characterToTileDictionary.Add("Asphault", new AtlasTileData(1,3));
+            characterToTileDictionary.Add("Character", new AtlasTileData(0, 7));
+            characterToTileDictionary.Add("Asphault", new AtlasTileData(1, 3));
             characterToTileDictionary.Add("Sidewalk", new AtlasTileData(0, 3));
             characterToTileDictionary.Add("PaintedAsphault", new AtlasTileData(2, 3));
             characterToTileDictionary.Add("FloorGrate", new AtlasTileData(0, 4));
@@ -202,59 +202,62 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("toilet", new AtlasTileData(3, 8));
             characterToTileDictionary.Add("shower", new AtlasTileData(0, 8));
 
-            var displacement = 10;
+            BindWallPositions(0, 0, "wall", "door", "openDoor", "window");
+            BindWallPositions(10, 0, "wall_brick", "door_brick", "openDoor_brick", "window_brick");
 
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.WallHorizontal0, new AtlasTileData(1 + displacement, 0));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.WallHorizontal1, new AtlasTileData(1 + displacement, 0));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.WallHorizontal2, new AtlasTileData(1 + displacement, 0));
-                                           
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.WallVertical0, new AtlasTileData(0 + displacement, 1));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.WallVertical1, new AtlasTileData(0 + displacement, 1));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.WallVertical2, new AtlasTileData(4 + displacement, 0));
-                                           
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.CornerTopLeft, new AtlasTileData(0 + displacement, 0));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.CornerBotLeft, new AtlasTileData(0 + displacement, 2));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.CornerTopRight, new AtlasTileData(2 + displacement, 0));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.CornerBotRight, new AtlasTileData(2 + displacement, 2));
-                                           
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.InterserctionLeft, new AtlasTileData(3 + displacement, 1));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.InterserctionRight, new AtlasTileData(3 + displacement, 1, true));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.InterserctionTop, new AtlasTileData(3 + displacement, 0));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.InterserctionBot, new AtlasTileData(3 + displacement, 2));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.InterserctionCenter, new AtlasTileData(4 + displacement, 2));
-            characterToTileDictionary.Add("wall" + TileBitmaskingEncoding.Pillar, new AtlasTileData(4 + displacement, 1));
+        }
 
-            var doorData = new AtlasTileData(5 + displacement, 0);
-            var doorDataVertical = new AtlasTileData(5 + displacement, 1);
+        private void BindWallPositions(int displacementX, int displacementY, string wallId, string doorId, string openDoorId, string windowId )
+        {
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.WallHorizontal0, new AtlasTileData(1 + displacementX, 0 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.WallHorizontal1, new AtlasTileData(1 + displacementX, 0 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.WallHorizontal2, new AtlasTileData(1 + displacementX, 0 + displacementY));
 
-            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallHorizontal0, doorData);
-            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallHorizontal1, doorData);
-            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallHorizontal2, doorData);
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.WallVertical0, new AtlasTileData(0 + displacementX, 1 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.WallVertical1, new AtlasTileData(0 + displacementX, 1 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.WallVertical2, new AtlasTileData(4 + displacementX, 0 + displacementY));
 
-            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallVertical0, doorDataVertical);
-            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallVertical1, doorDataVertical);
-            characterToTileDictionary.Add("door" + TileBitmaskingEncoding.WallVertical2, doorDataVertical);
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.CornerTopLeft, new AtlasTileData(0 + displacementX, 0 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.CornerBotLeft, new AtlasTileData(0 + displacementX, 2 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.CornerTopRight, new AtlasTileData(2 + displacementX, 0 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.CornerBotRight, new AtlasTileData(2 + displacementX, 2 + displacementY));
 
-            var openDoorData = new AtlasTileData(7 + displacement, 0);
-            var openDoorDataVertical = new AtlasTileData(7 + displacement, 1);
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.InterserctionLeft, new AtlasTileData(3 + displacementX, 1 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.InterserctionRight, new AtlasTileData(3 + displacementX, 1 + displacementY, true));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.InterserctionTop, new AtlasTileData(3 + displacementX, 0 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.InterserctionBot, new AtlasTileData(3 + displacementX, 2 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.InterserctionCenter, new AtlasTileData(4 + displacementX, 2 + displacementY));
+            characterToTileDictionary.Add(wallId + TileBitmaskingEncoding.Pillar, new AtlasTileData(4 + displacementX, 1));
 
-            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallHorizontal0, openDoorData);
-            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallHorizontal1, openDoorData);
-            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallHorizontal2, openDoorData);
+            var doorData = new AtlasTileData(5 + displacementX, 0 + displacementY);
+            var doorDataVertical = new AtlasTileData(5 + displacementX, 1 + displacementY);
 
-            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallVertical0, openDoorDataVertical);
-            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallVertical1, openDoorDataVertical);
-            characterToTileDictionary.Add("openDoor" + TileBitmaskingEncoding.WallVertical2, openDoorDataVertical);
+            characterToTileDictionary.Add(doorId + TileBitmaskingEncoding.WallHorizontal0, doorData);
+            characterToTileDictionary.Add(doorId + TileBitmaskingEncoding.WallHorizontal1, doorData);
+            characterToTileDictionary.Add(doorId + TileBitmaskingEncoding.WallHorizontal2, doorData);
 
-            characterToTileDictionary.Add("window" + TileBitmaskingEncoding.WallHorizontal0, new AtlasTileData(6 + displacement, 0));
-            characterToTileDictionary.Add("window" + TileBitmaskingEncoding.WallHorizontal1, new AtlasTileData(6 + displacement, 0));
-            characterToTileDictionary.Add("window" + TileBitmaskingEncoding.WallHorizontal2, new AtlasTileData(6 + displacement, 0));
+            characterToTileDictionary.Add(doorId + TileBitmaskingEncoding.WallVertical0, doorDataVertical);
+            characterToTileDictionary.Add(doorId + TileBitmaskingEncoding.WallVertical1, doorDataVertical);
+            characterToTileDictionary.Add(doorId + TileBitmaskingEncoding.WallVertical2, doorDataVertical);
 
-            characterToTileDictionary.Add("window" + TileBitmaskingEncoding.WallVertical0, new AtlasTileData(6 + displacement, 1));
-            characterToTileDictionary.Add("window" + TileBitmaskingEncoding.WallVertical1, new AtlasTileData(6 + displacement, 1));
-            characterToTileDictionary.Add("window" + TileBitmaskingEncoding.WallVertical2, new AtlasTileData(6 + displacement, 1));
+            var openDoorData = new AtlasTileData(7 + displacementX, 0 + displacementY);
+            var openDoorDataVertical = new AtlasTileData(7 + displacementX, 1 + displacementY);
 
+            characterToTileDictionary.Add(openDoorId + TileBitmaskingEncoding.WallHorizontal0, openDoorData);
+            characterToTileDictionary.Add(openDoorId + TileBitmaskingEncoding.WallHorizontal1, openDoorData);
+            characterToTileDictionary.Add(openDoorId + TileBitmaskingEncoding.WallHorizontal2, openDoorData);
 
+            characterToTileDictionary.Add(openDoorId + TileBitmaskingEncoding.WallVertical0, openDoorDataVertical);
+            characterToTileDictionary.Add(openDoorId + TileBitmaskingEncoding.WallVertical1, openDoorDataVertical);
+            characterToTileDictionary.Add(openDoorId + TileBitmaskingEncoding.WallVertical2, openDoorDataVertical);
+
+            characterToTileDictionary.Add(windowId + TileBitmaskingEncoding.WallHorizontal0, new AtlasTileData(6 + displacementX, 0 + displacementY));
+            characterToTileDictionary.Add(windowId + TileBitmaskingEncoding.WallHorizontal1, new AtlasTileData(6 + displacementX, 0 + displacementY));
+            characterToTileDictionary.Add(windowId + TileBitmaskingEncoding.WallHorizontal2, new AtlasTileData(6 + displacementX, 0 + displacementY));
+
+            characterToTileDictionary.Add(windowId + TileBitmaskingEncoding.WallVertical0, new AtlasTileData(6 + displacementX, 1 + displacementY));
+            characterToTileDictionary.Add(windowId + TileBitmaskingEncoding.WallVertical1, new AtlasTileData(6 + displacementX, 1 + displacementY));
+            characterToTileDictionary.Add(windowId + TileBitmaskingEncoding.WallVertical2, new AtlasTileData(6 + displacementX, 1 + displacementY));
         }
 
         TileModel foregroundModel;

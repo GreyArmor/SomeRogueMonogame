@@ -77,6 +77,7 @@ namespace NamelessRogue.Engine.Factories
             }
 
 
+            _addFurniture("wall_brick", "Wall", true, true);
             _addFurniture("wall", "Wall", true, true);
             _addFurniture("window", "Window", true, false);
             _addFurniture("bed", "Bed", false, false);
