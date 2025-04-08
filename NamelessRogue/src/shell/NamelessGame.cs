@@ -367,22 +367,6 @@ namespace NamelessRogue.shell
 					buildingOffsetY += 2;
                 }
 
-                //var itemsHolder = player.GetComponentOfType<ItemsHolder>();
-
-                //            for (int i = 0; i < 500; i++)
-                //{
-                //	var gun = ItemFactory.CreateGun(this);
-                //                itemsHolder.Items.Add(gun);
-
-                //                gun = ItemFactory.CreateRedGun(this);
-                //                itemsHolder.Items.Add(gun);
-
-                //	var helmet = ItemFactory.CreateHelmet(this);
-                //                itemsHolder.Items.Add(helmet);
-
-                //            }
-
-
                 FollowedByCameraEntity = player;
 
 				if (anyRivers)

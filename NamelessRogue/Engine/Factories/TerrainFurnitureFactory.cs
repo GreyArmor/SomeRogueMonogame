@@ -88,6 +88,23 @@ namespace NamelessRogue.Engine.Factories
             _addFurniture("table", "Table", true, false);
             _addFurniture("garbage", "Garbage", false, false);
 
+            _addFurniture("railing_metal_lt", "Railing", false, false);
+            _addFurniture("railing_metal_t", "Railing", false, false);
+            _addFurniture("railing_metal_rt", "Railing", false, false);
+            _addFurniture("railing_metal_l", "Railing", false, false);
+            _addFurniture("railing_metal_r", "Railing", false, false);
+            _addFurniture("railing_metal_rb", "Railing", false, false);
+            _addFurniture("railing_metal_b", "Railing", false, false);
+            _addFurniture("railing_metal_lb", "Railing", false, false);
+
+            var railingLadderDown = _addFurniture("railing_stairs_down", "Ladder down", false, false);
+            railingLadderDown.AddComponent(new StairsComponent());
+            var railingLadderUp =  _addFurniture("railing_stairs_up", "Ladder up", false, false);
+            railingLadderUp.AddComponent(new StairsComponent());
+
+            _addFurniture("floor_metal", "Metal floor", false, false);
+
+
             _addAnimatedFurniture("computer1", "Computer", true, false);
 
 

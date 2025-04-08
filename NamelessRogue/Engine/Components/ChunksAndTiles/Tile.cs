@@ -64,6 +64,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
                     return false;
                 }
             }
+
+            if(Terrain == TerrainTypes.Nothingness)
+            {
+                return false;
+            }
             return true;
         }
 

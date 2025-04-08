@@ -88,7 +88,7 @@ namespace NamelessRogue.Engine.Factories
                 // Retrieving objects or layers can be done using Linq or a for loop
                 var mainLayer = map.Layers.First(l => l.Name == "main");
                 var animatedLayer = map.Layers.First(l => l.Name == "animated");
-                int buildingSize = 60;
+                int buildingSize = 64;
 
                 var postProcessingArray = new bool[buildingSize, buildingSize];
                 var tilesetPositions = new string[buildingSize, buildingSize];
@@ -186,6 +186,10 @@ namespace NamelessRogue.Engine.Factories
                                 var tileObjectType = tile.Properties[0].Value;
                                 switch (tileObjectType)
                                 {
+                                    case "nothingness":
+                                        gameTile.Terrain = TerrainTypes.Nothingness;
+                                        gameTile.Biome = Biomes.None;                                        
+                                        break;
                                     case "wall":
                                     case "wall_brick":
                                         {

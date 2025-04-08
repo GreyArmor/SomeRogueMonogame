@@ -195,6 +195,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("stairs_down", new AtlasTileData(8, 0));
             characterToTileDictionary.Add("stairs_up", new AtlasTileData(8, 0));
 
+             characterToTileDictionary.Add("railing_metal_lt",  new AtlasTileData(5, 3));
+             characterToTileDictionary.Add("railing_metal_t",   new AtlasTileData(6, 3));
+             characterToTileDictionary.Add("railing_metal_rt",  new AtlasTileData(7, 3));
+             characterToTileDictionary.Add("railing_metal_l",   new AtlasTileData(5, 4));
+             characterToTileDictionary.Add("railing_metal_r",   new AtlasTileData(7, 4));
+             characterToTileDictionary.Add("railing_metal_rb",  new AtlasTileData(7, 5));
+             characterToTileDictionary.Add("railing_metal_b",   new AtlasTileData(6, 5));
+             characterToTileDictionary.Add("railing_metal_lb",  new AtlasTileData(5, 5));
+             characterToTileDictionary.Add("floor_metal", new AtlasTileData(6, 4));
+
+            characterToTileDictionary.Add("railing_stairs_down", new AtlasTileData(5, 6));
+            characterToTileDictionary.Add("railing_stairs_up", new AtlasTileData(6, 6));
+
+
             characterToTileDictionary.Add("table", new AtlasTileData(2, 8));
 
             characterToTileDictionary.Add("bed", new AtlasTileData(1, 9));

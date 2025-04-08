@@ -298,17 +298,17 @@
  </tile>
  <tile id="65">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="railing_metal_lt"/>
   </properties>
  </tile>
  <tile id="66">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="railing_metal_t"/>
   </properties>
  </tile>
  <tile id="67">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="railing_metal_rt"/>
   </properties>
  </tile>
  <tile id="68">
@@ -348,17 +348,17 @@
  </tile>
  <tile id="85">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="railing_metal_l"/>
   </properties>
  </tile>
  <tile id="86">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="floor_metal"/>
   </properties>
  </tile>
  <tile id="87">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="railing_metal_r"/>
   </properties>
  </tile>
  <tile id="88">
@@ -398,17 +398,17 @@
  </tile>
  <tile id="105">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="railing_metal_lb"/>
   </properties>
  </tile>
  <tile id="106">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="railing_metal_b"/>
   </properties>
  </tile>
  <tile id="107">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="railing_metal_rb"/>
   </properties>
  </tile>
  <tile id="108">
@@ -448,12 +448,12 @@
  </tile>
  <tile id="125">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="railing_stairs_down"/>
   </properties>
  </tile>
  <tile id="126">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="railing_stairs_up"/>
   </properties>
  </tile>
  <tile id="127">
