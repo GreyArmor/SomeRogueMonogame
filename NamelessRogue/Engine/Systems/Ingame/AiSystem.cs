@@ -12,6 +12,7 @@ using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.Status;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
@@ -112,10 +113,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     {
                                         var targetPos = hostileTurretAI.Target.GetComponentOfType<Position>().Point;
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
-                                        var distance = (targetPos - entityPos).Length();
-                                        var visionRange = npcStats.VisionRange.Value;
-
-                                        if (distance <= visionRange)
+                                        var visible = IsTargetVisible(worldProvider, targetPos, entityPos,  npcStats);
+                                        if (visible)
                                         {
                                             FireWeaponCommand command = new FireWeaponCommand(entity, targetPos);
                                             namelessGame.Commander.EnqueueCommand(command);
@@ -136,10 +135,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     {
                                         var pPos = playerPosition.Point;
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
-                                        var distance = (pPos - entityPos).Length();
-
-                                        var visionRange = npcStats.VisionRange.Value;
-                                        if (distance <= visionRange)
+                                        var visible = IsTargetVisible(worldProvider, pPos, entityPos, npcStats);
+                                        if (visible)
                                         {
                                             followShootPlayerAi.Target = playerEntity;
                                             followShootPlayerAi.State = ShooterAiStates.Aiming;
@@ -153,10 +150,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     {
                                         var targetPos = followShootPlayerAi.Target.GetComponentOfType<Position>().Point;
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
+                                        var visible = IsTargetVisible(worldProvider, targetPos, entityPos, npcStats);
                                         var distance = (targetPos - entityPos).Length();
-                                        var visionRange = npcStats.VisionRange.Value;
 
-                                        if (distance > visionRange)
+                                        if (!visible)
                                         {
                                             followShootPlayerAi.State = ShooterAiStates.Idle;
                                             followShootPlayerAi.ShootingTarget = targetPos;
@@ -199,6 +196,28 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
         }
+
+        private bool IsTargetVisible(IWorldProvider worldProvider, Vector3Int targetPos, Vector3Int entityPos, CharacterStats npcStats)
+        {
+            var distance = (targetPos - entityPos).Length();
+            var visionRange = npcStats.VisionRange.Value;
+
+            bool anyObstacles = false;
+            List<Point> line = PointUtil.getLine(entityPos.ToPoint(), targetPos.ToPoint());
+            foreach (var point in line)
+            {
+                var tile = worldProvider.GetTile(point.X, point.Y, entityPos.Z);
+                anyObstacles = !tile.IsPassableIgnoringCharacters();
+                if (anyObstacles)
+                {
+                    break;
+                }
+            }
+
+            return distance <= visionRange && !anyObstacles && targetPos.Z == entityPos.Z;
+        }
+
+
         public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides, IRounteContainingAI aiComponent)
         {
             IEntity worldEntity = namelessGame.TimelineEntity;
