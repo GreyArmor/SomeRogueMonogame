@@ -78,8 +78,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     foreach (string id in onHiBuffIds)
                     {
-                        var buff = BuffLibrary.CreateBuffFromData(namelessGame, BuffLibrary.DataById[id]);
-                        target.GetComponentOfType<ModifiersCollection>().ModifierEntities.Add(buff);
+                        if (id != "")
+                        {
+                            var buff = BuffLibrary.CreateBuffFromData(namelessGame, BuffLibrary.DataById[id]);
+                            target.GetComponentOfType<ModifiersCollection>().ModifierEntities.Add(buff);
+                        }
                     }
                 }
 

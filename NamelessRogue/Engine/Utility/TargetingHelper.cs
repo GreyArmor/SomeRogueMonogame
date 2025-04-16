@@ -1,5 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
+using NamelessRogue.Engine.Components.Environment;
+using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Stats;
 using System;
 using System.Collections.Generic;
@@ -29,6 +32,49 @@ namespace NamelessRogue.Engine.Utility
             }
 
             return distance <= visionRange && !anyObstacles && targetPos.Z == entityPos.Z;
+        }
+
+
+        /// <summary>
+        /// Works in 2d, takes Z level from pointA
+        /// </summary>
+        /// <param name="worldProvider"></param>
+        /// <param name="pointA"></param>
+        /// <param name="pointB"></param>
+        /// <returns>returns all characters and furniture on path</returns>
+        public static List<IEntity> GetObjectsAlongPath(IWorldProvider worldProvider, Vector3Int pointA, Vector3Int pointB, bool skipFirstTile = false)
+        {
+            List<IEntity> entities = new List<IEntity>();
+            List<Point> line = PointUtil.getLine(pointA.ToPoint(), pointB.ToPoint());
+            if(skipFirstTile)
+            {
+                line = line.Skip(1).ToList();
+            }    
+            foreach (var point in line)
+            {
+                var tile = worldProvider.GetTile(point.X, point.Y, pointA.Z);
+                var tileEntities = tile.GetEntities();
+               foreach(var tileEntity in tileEntities)
+                {
+                    var furniture = tileEntity.GetComponentOfType<Furniture>();
+                    if (furniture != null)
+                    {
+                        var blocksPath = tileEntity.GetComponentOfType<OccupiesTile>();
+                        if(blocksPath != null)
+                        {
+                            entities.Add(tileEntity);
+                            continue;
+                        }
+                    }
+
+                    var character = tileEntity.GetComponentOfType<Character>();
+                    if(character!=null)
+                    {
+                        entities.Add(tileEntity);
+                    }
+                }
+            }
+            return entities;
         }
     }
 }

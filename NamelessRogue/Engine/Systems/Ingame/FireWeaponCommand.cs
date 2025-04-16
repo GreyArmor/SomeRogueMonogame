@@ -24,12 +24,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
     internal class AttachToTargetCommand : Abstraction.ICommand
     {
-        public AttachToTargetCommand(Entity tileEntity)
+        public AttachToTargetCommand(IEntity tileEntity)
         {
             TileEntity = tileEntity;
         }
 
-        public Entity TileEntity { get; }
+        public IEntity TileEntity { get; }
     }
 
     internal class DetachFromToTargetCommand : Abstraction.ICommand
