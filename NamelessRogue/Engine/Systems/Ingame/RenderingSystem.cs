@@ -640,8 +640,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         List<Point> line = PointUtil.getLine(playerPosition.Point.ToPoint(), cursorPosition.Point.ToPoint());
                         for (int i = 0; i < line.Count - 1; i++)
                         {
-                            //X and Y are siwtched, but whatever
-                            Point p = new Point(line[i].Y, line[i].X);
+
+                            Point p = new Point(line[i].X, line[i].Y);
                             Point screenPoint = camera.PointToScreen(p.X, p.Y);
 
                             var distance = (p - playerPosition.Point.ToPoint()).ToVector2().Length();

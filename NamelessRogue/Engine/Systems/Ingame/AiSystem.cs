@@ -113,7 +113,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     {
                                         var targetPos = hostileTurretAI.Target.GetComponentOfType<Position>().Point;
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
-                                        var visible = IsTargetVisible(worldProvider, targetPos, entityPos,  npcStats);
+                                        var visible = TargetingHelper.IsTargetVisible(worldProvider, targetPos, entityPos,  npcStats);
                                         if (visible)
                                         {
                                             FireWeaponCommand command = new FireWeaponCommand(entity, targetPos);
@@ -135,7 +135,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     {
                                         var pPos = playerPosition.Point;
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
-                                        var visible = IsTargetVisible(worldProvider, pPos, entityPos, npcStats);
+                                        var visible = TargetingHelper.IsTargetVisible(worldProvider, pPos, entityPos, npcStats);
                                         if (visible)
                                         {
                                             followShootPlayerAi.Target = playerEntity;
@@ -150,14 +150,22 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     {
                                         var targetPos = followShootPlayerAi.Target.GetComponentOfType<Position>().Point;
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
-                                        var visible = IsTargetVisible(worldProvider, targetPos, entityPos, npcStats);
+                                        var visible = TargetingHelper.IsTargetVisible(worldProvider, targetPos, entityPos, npcStats);
                                         var distance = (targetPos - entityPos).Length();
 
                                         if (!visible)
                                         {
-                                            followShootPlayerAi.State = ShooterAiStates.Idle;
-                                            followShootPlayerAi.ShootingTarget = targetPos;
-                                            namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Idle));
+
+                                            MoveTo(entity, namelessGame, new Point(targetPos.X, targetPos.Y), true, followShootPlayerAi);
+                                            var route = followShootPlayerAi.Route;
+                                            if (route.Count == 0)
+                                            {
+                                                followShootPlayerAi.State = ShooterAiStates.Idle;
+                                            }
+
+                                            //followShootPlayerAi.State = ShooterAiStates.Idle;
+                                            //followShootPlayerAi.ShootingTarget = targetPos;
+                                            //namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Idle));
                                         }
                                         else
                                         {
@@ -166,7 +174,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                             {
                                                 followShootPlayerAi.State = ShooterAiStates.Shooting;
                                                 followShootPlayerAi.ShootingTarget = targetPos;
-                                                entity.GetComponentOfType<ActionPoints>().Points = -100;
                                             }
                                             else
                                             {
@@ -178,6 +185,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                                 }
                                             }
                                         }
+
+                                        entity.GetComponentOfType<ActionPoints>().Points = -200;
                                     }
                                     break;
                                 case ShooterAiStates.Shooting:
@@ -191,31 +200,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     break;
                             }
                         }
-
                     }
                 }
             }
         }
 
-        private bool IsTargetVisible(IWorldProvider worldProvider, Vector3Int targetPos, Vector3Int entityPos, CharacterStats npcStats)
-        {
-            var distance = (targetPos - entityPos).Length();
-            var visionRange = npcStats.VisionRange.Value;
-
-            bool anyObstacles = false;
-            List<Point> line = PointUtil.getLine(entityPos.ToPoint(), targetPos.ToPoint());
-            foreach (var point in line)
-            {
-                var tile = worldProvider.GetTile(point.X, point.Y, entityPos.Z);
-                anyObstacles = !tile.IsPassableIgnoringCharacters();
-                if (anyObstacles)
-                {
-                    break;
-                }
-            }
-
-            return distance <= visionRange && !anyObstacles && targetPos.Z == entityPos.Z;
-        }
+       
 
 
         public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides, IRounteContainingAI aiComponent)

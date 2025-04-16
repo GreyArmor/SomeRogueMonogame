@@ -26,8 +26,8 @@ namespace NamelessRogue.Engine.Utility
         }
 
         static Point lerp_point(Point p0, Point p1, float t) {
-            float x = lerp(p0.Y, p1.Y, t);
-            float y = lerp(p0.X, p1.X, t);
+            float x = lerp(p0.X, p1.X, t);
+            float y = lerp(p0.Y, p1.Y, t);
             return new Point((int) Math.Round(x), (int) Math.Round(y));
         }
 
