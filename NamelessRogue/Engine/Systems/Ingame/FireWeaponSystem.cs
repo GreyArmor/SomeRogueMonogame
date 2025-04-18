@@ -27,7 +27,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var sourcePosition = sourceEntity.GetComponentOfType<Position>();
                 var cursorPosition = command.Target;
                 var projectileTarget = cursorPosition;
-                var firstEntity = TargetingHelper.GetObjectsAlongPath(namelessGame.WorldProvider, sourcePosition.Point, cursorPosition, true).FirstOrDefault();
+                var firstEntity = TargetingHelper.GetCharactersAndFurnitureAlongPath(namelessGame.WorldProvider, sourcePosition.Point, cursorPosition, true).FirstOrDefault();
+
+                if(firstEntity==null)
+                {
+                    continue;
+                }
 
                 var firstEntityPosition = sourceEntity.GetComponentOfType<Position>();
 
@@ -39,7 +44,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         var character = tileEntity.GetComponentOfType<Character>();
                         if(character!=null)
                         {
-                            AttachToTargetCommand snapToTarget = new AttachToTargetCommand(firstEntity);
+                            AttachToTargetCommand snapToTarget = new AttachToTargetCommand(firstEntity.Item2);
                             namelessGame.Commander.EnqueueCommand(snapToTarget);
                             break;
                         }
@@ -48,11 +53,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 if (firstEntity != null)
                 {
-                    var character = firstEntity.GetComponentOfType<Character>();
-                    var furniture = firstEntity.GetComponentOfType<Furniture>();
+                    var character = firstEntity.Item2.GetComponentOfType<Character>();
+                    var furniture = firstEntity.Item2.GetComponentOfType<Furniture>();
                     if (character != null && character.Id != sourceEntity.Id)
                     {
-                        var combatCommand = new AttackCommand(sourceEntity, firstEntity);
+                        var combatCommand = new AttackCommand(sourceEntity, firstEntity.Item2);
                         namelessGame.Commander.EnqueueCommand(combatCommand);           
                     }
                     //put furniture damage here
@@ -60,7 +65,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                     }
                 }
-                var createProjectileCommand = new CreateProjectileCommand(sourcePosition.Point, cursorPosition, DamageType.Ballistic);
+                var createProjectileCommand = new CreateProjectileCommand(sourcePosition.Point, new Vector3Int(firstEntity.Item1.ToVector2(), sourcePosition.Z), DamageType.Ballistic);
                 namelessGame.Commander.EnqueueCommand(createProjectileCommand);
 
                 var ap = sourceEntity.GetComponentOfType<ActionPoints>();

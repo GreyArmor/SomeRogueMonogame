@@ -42,9 +42,9 @@ namespace NamelessRogue.Engine.Utility
         /// <param name="pointA"></param>
         /// <param name="pointB"></param>
         /// <returns>returns all characters and furniture on path</returns>
-        public static List<IEntity> GetObjectsAlongPath(IWorldProvider worldProvider, Vector3Int pointA, Vector3Int pointB, bool skipFirstTile = false)
+        public static List<Tuple<Point,IEntity>> GetCharactersAndFurnitureAlongPath(IWorldProvider worldProvider, Vector3Int pointA, Vector3Int pointB, bool skipFirstTile = true)
         {
-            List<IEntity> entities = new List<IEntity>();
+            List<Tuple<Point, IEntity>> entities = new List<Tuple<Point, IEntity>>();
             List<Point> line = PointUtil.getLine(pointA.ToPoint(), pointB.ToPoint());
             if(skipFirstTile)
             {
@@ -62,7 +62,7 @@ namespace NamelessRogue.Engine.Utility
                         var blocksPath = tileEntity.GetComponentOfType<OccupiesTile>();
                         if(blocksPath != null)
                         {
-                            entities.Add(tileEntity);
+                            entities.Add(new Tuple<Point, IEntity>(point, tileEntity));
                             continue;
                         }
                     }
@@ -70,7 +70,7 @@ namespace NamelessRogue.Engine.Utility
                     var character = tileEntity.GetComponentOfType<Character>();
                     if(character!=null)
                     {
-                        entities.Add(tileEntity);
+                        entities.Add(new Tuple<Point, IEntity>(point, tileEntity));
                     }
                 }
             }
