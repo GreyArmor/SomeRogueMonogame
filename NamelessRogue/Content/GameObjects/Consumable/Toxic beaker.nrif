@@ -20,7 +20,7 @@
     <DamageModificator>0</DamageModificator>
   </ConsumableItemTemplateData>
   <AssociatedBuffs>
-    <BuffId>dbc57d01-86bd-44f1-8d94-8e318c6829bb</BuffId>
+	  <Id>dbc57d01-86bd-44f1-8d94-8e318c6829bb</Id>
     <Path>GameObjects\Buffs\Toxic.nrbf</Path>
   </AssociatedBuffs>
 </ItemTemplateData>

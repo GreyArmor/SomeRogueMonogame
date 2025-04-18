@@ -7,7 +7,9 @@ namespace NamelessRogue.Engine.Generation.Editor
         [XmlRoot]
         public class FileReference
         {
+            [XmlIgnore]
             public string id = "";
+            [XmlIgnore]
             public string path = "";
 
             [XmlElement]

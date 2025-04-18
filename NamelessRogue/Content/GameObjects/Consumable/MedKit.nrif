@@ -20,7 +20,7 @@
     <DamageModificator>10</DamageModificator>
   </ConsumableItemTemplateData>
   <AssociatedBuffs>
-    <BuffId>1e808f98-981a-481d-a2ee-fd637398a99e</BuffId>
+    <Id>1e808f98-981a-481d-a2ee-fd637398a99e</Id>
     <Path>GameObjects\Buffs\Small heal.nrbf</Path>
   </AssociatedBuffs>
 </ItemTemplateData>

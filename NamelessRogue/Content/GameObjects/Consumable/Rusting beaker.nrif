@@ -20,7 +20,7 @@
     <DamageModificator>0</DamageModificator>
   </ConsumableItemTemplateData>
   <AssociatedBuffs>
-    <BuffId>55f934ae-4bf3-4f4b-a8eb-eb0f0de5938f</BuffId>
+	  <Id>55f934ae-4bf3-4f4b-a8eb-eb0f0de5938f</Id>
     <Path>GameObjects\Buffs\Rusting.nrbf</Path>
   </AssociatedBuffs>
 </ItemTemplateData>
