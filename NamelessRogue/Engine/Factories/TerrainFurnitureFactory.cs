@@ -97,6 +97,9 @@ namespace NamelessRogue.Engine.Factories
             _addFurniture("railing_metal_b", "Railing", false, false);
             _addFurniture("railing_metal_lb", "Railing", false, false);
 
+            _addFurniture("sattelite_dish", "Sattelite dish", true, true);
+
+
             var railingLadderDown = _addFurniture("railing_stairs_down", "Ladder down", false, false);
             railingLadderDown.AddComponent(new StairsComponent());
             var railingLadderUp =  _addFurniture("railing_stairs_up", "Ladder up", false, false);

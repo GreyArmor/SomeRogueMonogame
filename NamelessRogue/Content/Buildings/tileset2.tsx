@@ -588,7 +588,7 @@
  </tile>
  <tile id="183">
   <properties>
-   <property name="ObjectType" value="wall"/>
+   <property name="ObjectType" value="sattelite_dish"/>
   </properties>
  </tile>
  <tile id="184">

@@ -205,9 +205,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
              characterToTileDictionary.Add("railing_metal_lb",  new AtlasTileData(5, 5));
              characterToTileDictionary.Add("floor_metal", new AtlasTileData(6, 4));
 
+
             characterToTileDictionary.Add("railing_stairs_down", new AtlasTileData(5, 6));
             characterToTileDictionary.Add("railing_stairs_up", new AtlasTileData(6, 6));
 
+            characterToTileDictionary.Add("sattelite_dish", new AtlasTileData(3, 9));
 
             characterToTileDictionary.Add("table", new AtlasTileData(2, 8));
 
