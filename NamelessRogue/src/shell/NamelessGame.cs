@@ -361,13 +361,34 @@ namespace NamelessRogue.shell
 				int buildingOffsetX = 0;
                 int buildingOffsetY = 0;
 
-                foreach (var buildingData in BuildingLibrary.Data)
-				{
-					BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
-					buildingOffsetY += 2;
-                }
 
-                FollowedByCameraEntity = player;
+                //foreach (var buildingData in BuildingLibrary.Data)
+                //{
+                //    BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
+                //    buildingOffsetX += 1;
+                //}
+
+				for (int i = 0; i < 10; i++)
+				{
+					foreach (var buildingData in BuildingLibrary.Data)
+					{
+						BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
+						buildingOffsetX += 1;
+					}
+				}
+				//buildingOffsetY = 1;
+
+				//            for (int i = 0; i < 10; i++)
+				//            {
+				//                foreach (var buildingData in BuildingLibrary.Data)
+				//                {
+				//                    BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
+				//                    buildingOffsetX += 1;
+				//                }
+				//            }
+
+
+				FollowedByCameraEntity = player;
 
 				if (anyRivers)
 				{
