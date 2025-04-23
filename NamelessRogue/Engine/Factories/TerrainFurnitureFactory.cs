@@ -99,6 +99,16 @@ namespace NamelessRogue.Engine.Factories
 
             _addFurniture("sattelite_dish", "Sattelite dish", true, true);
 
+            _addFurniture("antenna_1", "Antenna", true, false);
+            _addFurniture("antenna_2", "Antenna", true, false);
+            _addFurniture("antenna_3", "Antenna", true, false);
+            _addFurniture("antenna_4", "Antenna", true, false);
+            _addFurniture("antenna_5", "Antenna", true, false);
+            _addFurniture("antenna_6", "Antenna", true, false);
+            _addFurniture("antenna_7", "Antenna", true, false);
+
+            _addFurniture("air_conditioner", "Air conditioner", true, true);
+
 
             var railingLadderDown = _addFurniture("railing_stairs_down", "Ladder down", false, false);
             railingLadderDown.AddComponent(new StairsComponent());

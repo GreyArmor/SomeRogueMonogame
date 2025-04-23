@@ -189,6 +189,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("smallCursor", new AtlasTileData(0, 6));
             characterToTileDictionary.Add("Cursor", new AtlasTileData(1, 6));
 
+            characterToTileDictionary.Add("arrowDown", new AtlasTileData(1,7));
+
             characterToTileDictionary.Add("wall", atlasTileData);
             characterToTileDictionary.Add("door", atlasTileData);
             characterToTileDictionary.Add("window", atlasTileData);
@@ -210,6 +212,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("railing_stairs_up", new AtlasTileData(6, 6));
 
             characterToTileDictionary.Add("sattelite_dish", new AtlasTileData(3, 9));
+            characterToTileDictionary.Add("air_conditioner", new AtlasTileData(4, 9));
+            characterToTileDictionary.Add("antenna_1", new AtlasTileData(3, 10));
+            characterToTileDictionary.Add("antenna_2", new AtlasTileData(4, 10));
+            characterToTileDictionary.Add("antenna_3", new AtlasTileData(5, 10));
+            characterToTileDictionary.Add("antenna_4", new AtlasTileData(6, 10));
+            characterToTileDictionary.Add("antenna_5", new AtlasTileData(3, 11));
+            characterToTileDictionary.Add("antenna_6", new AtlasTileData(4, 11));
+            characterToTileDictionary.Add("antenna_7", new AtlasTileData(5, 11));
 
             characterToTileDictionary.Add("table", new AtlasTileData(2, 8));
 
@@ -520,7 +530,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         {
                                             sprited.CurrentAnimationTimeLeft = 1000;
                                         }
-                                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, sprited.CurrentAnimationTimeLeft, animation);
+                                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, false, sprited.CurrentAnimationTimeLeft, animation);
                                     }
                                 }
                             }
@@ -551,13 +561,26 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         Tile tileToDraw = world.GetTile(x, y, playerPosZ);
 
-                        if (tileToDraw != null)
+                        if (tileToDraw != null && tileToDraw.Terrain!=TerrainTypes.Nothingness)
                         {
                             GetTerrainTile(screen, TerrainLibrary.Terrains[tileToDraw.Terrain], screenPoint);
                         }
                         else
                         {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset, new Color(), false, false);
+                            var currentElevation = playerPosZ;
+                            while (currentElevation > 0)
+                            {
+                                currentElevation--;
+                                tileToDraw = world.GetTile(x, y, currentElevation);
+                                if (tileToDraw != null || tileToDraw.Terrain != TerrainTypes.Nothingness)
+                                {
+                                    GetTerrainBlurredTile(screen, TerrainLibrary.Terrains[tileToDraw.Terrain], screenPoint);
+                                }
+                            }
+                            if (tileToDraw == null || tileToDraw.Terrain == TerrainTypes.Nothingness)
+                            {
+                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset, new Color(), false, false);
+                            }
                         }
 
                     }
@@ -595,10 +618,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         void GetTerrainTile(Screen screen, Terrain terrain, Point point)
         {
-
-            screen.ScreenBuffer[point.X, point.Y].AddObject(terrain.Representation.ObjectID, ScreenObjectSource.Tileset, new Color(255,255,255), false, false);
+            screen.ScreenBuffer[point.X, point.Y].AddObject(terrain.Representation.ObjectID, ScreenObjectSource.Tileset, new Color(255,255,255), false, false, false);
         }
 
+        void GetTerrainBlurredTile(Screen screen, Terrain terrain, Point point)
+        {
+            screen.ScreenBuffer[point.X, point.Y].AddObject(terrain.Representation.ObjectID, ScreenObjectSource.Tileset, new Color(255, 255, 255), false, false, false);
+        }
 
         private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
             NamelessGame game, GameTime gameTime)
@@ -732,7 +758,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 }
                                 else
                                 {
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, sprited.CurrentAnimationTimeLeft, animation);
+                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, false,  sprited.CurrentAnimationTimeLeft, animation);
                                 }
                             }
                         }
@@ -745,7 +771,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
 
-            foreach (IEntity entity in selectorCursors)
+            foreach (IEntity entity in selectorCursors) 
             {
                 Drawable drawable = entity.GetComponentOfType<Drawable>();
 
@@ -770,8 +796,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             //screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
                         }
-                    }
-
+                    } 
                 }
             }
         }
@@ -1055,7 +1080,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
 
             tileAtlas = null;
-            tileAtlas = game.Content.Load<Texture2D>("Sprites/tileset2");
+            tileAtlas = game.Content.Load<Texture2D>("Sprites/tileset2");            
             effect = game.Content.Load<Effect>("Shader");
 
             effect.Parameters["tileAtlas"].SetValue(tileAtlas);

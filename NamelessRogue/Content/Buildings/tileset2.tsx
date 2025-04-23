@@ -593,7 +593,7 @@
  </tile>
  <tile id="184">
   <properties>
-   <property name="ObjectType" value="wall_decoration"/>
+   <property name="ObjectType" value="air_conditioner"/>
   </properties>
  </tile>
  <tile id="185">
@@ -634,6 +634,46 @@
  <tile id="202">
   <properties>
    <property name="ObjectType" value="computer1"/>
+  </properties>
+ </tile>
+ <tile id="203">
+  <properties>
+   <property name="ObjectType" value="antenna_1"/>
+  </properties>
+ </tile>
+ <tile id="204">
+  <properties>
+   <property name="ObjectType" value="antenna_2"/>
+  </properties>
+ </tile>
+ <tile id="205">
+  <properties>
+   <property name="ObjectType" value="antenna_3"/>
+  </properties>
+ </tile>
+ <tile id="206">
+  <properties>
+   <property name="ObjectType" value="antenna_4"/>
+  </properties>
+ </tile>
+ <tile id="223">
+  <properties>
+   <property name="ObjectType" value="antenna_5"/>
+  </properties>
+ </tile>
+ <tile id="224">
+  <properties>
+   <property name="ObjectType" value="antenna_6"/>
+  </properties>
+ </tile>
+ <tile id="225">
+  <properties>
+   <property name="ObjectType" value="antenna_7"/>
+  </properties>
+ </tile>
+ <tile id="226">
+  <properties>
+   <property name="ObjectType" value=""/>
   </properties>
  </tile>
  <tile id="360">
