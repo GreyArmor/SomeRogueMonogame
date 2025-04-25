@@ -86,13 +86,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     // we use height data for vertex z value, all else is calculated by gpu, we use yaw and pitch to calculate triangle normal
     public struct TerrainVertex
-    {   
+    {
         // ReSharper disable NotAccessedField.Local
         public Vector3 vertexHeightYawPitch;
 
         public TerrainVertex(float height, float yaw, float pitch)
         {
-            this.vertexHeightYawPitch = new Vector3(height,yaw, pitch);
+            this.vertexHeightYawPitch = new Vector3(height, yaw, pitch);
         }
     }
 
@@ -103,18 +103,18 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public Vector2 screenLocation;
     }
 
-    public class TileModel { 
+    public class TileModel {
         public Vertex[] Vertices { get; }
         public int[] Indices { get; }
-		public TileModel(int height, int width)
-		{
+        public TileModel(int height, int width)
+        {
             Vertices = new Vertex[height * width * 4];
             Indices = new int[height * width * 6];
 
             //var indices = new int[6] { 0, 1, 2, 2, 1, 3 };
             var vertexCounter = 0;
-            for (int i = 0; i < height * width * 6; i+=6)
-			{
+            for (int i = 0; i < height * width * 6; i += 6)
+            {
                 Indices[i] = vertexCounter;
                 Indices[i + 1] = vertexCounter + 1;
                 Indices[i + 2] = vertexCounter + 2;
@@ -123,10 +123,74 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 Indices[i + 5] = vertexCounter + 3;
                 vertexCounter += 4;
             }
-		}
-	}
+        }
+    }
 
+    public class VisualChunk
+    {
+        TileModel TileModel { get; set; }
+        public Point WorldPosition { get; }
+        public ScreenTile[,] ScreenBuffer { get; private set; }
+        public VisualChunk(Point worldPosition)
+        {
+            var size = Constants.ChunkSize;
+            WorldPosition = worldPosition;
+            ScreenBuffer = new ScreenTile[size, size];
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    ScreenBuffer[i, j] = new ScreenTile();
+                }
+            }
+        }
 
+        public void UpdateChunk(Dictionary<string, RenderingSystem.AtlasTileData> characterToTileDictionary, Texture2D tileAtlas)
+        {
+            var stackDepth = 0;
+            for (int y = 0; y < Constants.ChunkSize; y++)
+            {
+                for (int x = 0; x < Constants.ChunkSize; x++)
+                {
+                    var objectToDraw = ScreenBuffer[x, y].StackedObjects[stackDepth];
+                    if (objectToDraw.Type == ScreenObjectSource.Tileset)
+                    {
+                        var objectId = objectToDraw.Id;
+                        RenderingSystem.AtlasTileData tileData;
+                        if (!characterToTileDictionary.TryGetValue(objectId, out tileData))
+                        {
+                            characterToTileDictionary.TryGetValue("Nothingness", out tileData);
+                        }
+                        var white = new Color(1f, 1f, 1f, 1f);
+                        var grey = new Color(0.5f, 0.5f, 0.5f, 1f);
+
+                        var tileMask = ScreenBuffer[x, y].isRemembered && ScreenBuffer[x, y].isVisible ? objectToDraw.CharColor : grey;
+
+                        int tileHeight = 64;
+                        int tileWidth = 64;
+
+                        RenderingSystem.DrawTile(tileHeight, tileWidth, x, y, Constants.ChunkSize,
+                                x * Constants.ChunkSize,
+                                y * Constants.ChunkSize,
+                                tileData,
+                                tileMask,
+                                tileMask, TileModel, tileAtlas);
+
+                    }
+                }
+            }
+        }
+    }
+
+    public class UpdateVisualChunkCommand : ICommand
+    {
+        public UpdateVisualChunkCommand(Point chunkCoordinate)
+        {
+            ChunkCoordinate = chunkCoordinate;
+        }
+
+        public Point ChunkCoordinate { get; }
+    }
 
     public class RenderingSystem : BaseSystem
     {
@@ -151,6 +215,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private IndexBuffer indexBuffer;
         private int playerPosZ;
         Microsoft.Xna.Framework.Color shadowColor = new Microsoft.Xna.Framework.Color(0, 0, 0, 96);
+
+      List<VisualChunk> visualChunks = new List<VisualChunk>();
 
        SamplerState sampler = new SamplerState()
         {
@@ -287,7 +353,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
 
         TileModel foregroundModel;
-        TileModel backgroundModel;
         public override void Update(GameTime gameTime, NamelessGame game)
         {
 
@@ -303,7 +368,22 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 InitializeTexture(game);
             }
 
-            IEntity worldEntity = game.TimelineEntity;
+            while (game.Commander.DequeueCommand(out UpdateVisualChunkCommand command))
+            {
+                var chunkPoint = command.ChunkCoordinate;
+
+                var chunk = visualChunks.FirstOrDefault(x => x.WorldPosition == chunkPoint);
+                if(chunk == null)
+                {
+                    chunk = new VisualChunk(chunkPoint);
+                }
+
+                chunk.UpdateChunk(characterToTileDictionary, tileAtlas);
+
+            }
+
+
+                IEntity worldEntity = game.TimelineEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -322,10 +402,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 foregroundModel = new TileModel(screen.Height, screen.Width);
             }
 
-            if (backgroundModel == null || zoomUpdate)
-            {
-                backgroundModel = new TileModel(screen.Height, screen.Width);
-            }
             Position playerPosition = game.FollowedByCameraEntity
                    .GetComponentOfType<Position>();
 
@@ -912,32 +988,29 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                             var tileMask = screen.ScreenBuffer[x, y].isRemembered && screen.ScreenBuffer[x, y].isVisible ? objectToDraw.CharColor : grey;
 
-                            DrawTile(game.GraphicsDevice, game, x, y,
+
+                            int tileHeight = 64;
+                            int tileWidth = 64;
+
+                      
+
+                            DrawTile(tileHeight, tileWidth, x, y,
+                                 game.Settings.GetWidthZoomed(),
                                 x * settings.GetFontSizeZoomed(),
-                                y * settings.GetFontSizeZoomed(),
-                                tileData,
-                            
+                                y * settings.GetFontSizeZoomed(),                                
+                                tileData,                            
                                 tileMask,
-                                tileMask, foregroundModel, backgroundModel
-                                );
+                                tileMask,
+                                foregroundModel, 
+                                tileAtlas);
                         }
-                    }
-                 
+                    }                 
                 }
             }
-           //s.Stop();
-            var tileModel = backgroundModel;
-			effect.CurrentTechnique = effect.Techniques["Background"];
-			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-			{
-				pass.Apply();
-				device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
-					 tileModel.Indices.ToArray(), 0, 2, this.VertexDeclaration);
-			}
 
 			effect.CurrentTechnique = effect.Techniques["Point"];
 
-            tileModel = foregroundModel;
+            var tileModel = foregroundModel;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
@@ -1055,7 +1128,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        class AtlasTileData
+        public class AtlasTileData
         {
             public int X;
             public int Y;
@@ -1143,21 +1216,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
 
 
-        void DrawTile(GraphicsDevice device, NamelessGame game, int screenPositionX, int screenPositionY, int positionX, int positionY,
+        public static void DrawTile(int tileHeight, int tileWidth, int screenPositionX, int screenPositionY, int screenWidth, int positionX, int positionY,
     AtlasTileData atlasTileData,
-    Color color, Color backGroundColor, TileModel foregroundModel, TileModel backgroundModel)
+    Color color, Color backGroundColor, TileModel foregroundModel, Texture2D tileAtlas)
         {
 
             if (atlasTileData == null)
             {
                 atlasTileData = new AtlasTileData(1, 1);
-            }
-
-
-            int tileHeight = game.GetSettings().GetFontSizeZoomed();
-            int tileWidth = game.GetSettings().GetFontSizeZoomed();
-
-
+            }        
 
             float textureX = atlasTileData.X * (Constants.tileAtlasTileSize / (float)tileAtlas.Width);
             float textureY = atlasTileData.Y * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
@@ -1166,9 +1233,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             float textureYend = (atlasTileData.Y + 1f) * (Constants.tileAtlasTileSize / (float)tileAtlas.Height);
 
-            var settings = game.GetSettings();
-
-            var arrayPosition = (screenPositionX * 4) + (screenPositionY * settings.GetWidthZoomed() * 4);
+            var arrayPosition = (screenPositionX * 4) + (screenPositionY * screenWidth * 4);
 
 
             if (atlasTileData.MirrorVerical)
@@ -1194,17 +1259,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
             foregroundvertices[arrayPosition + 2] = new Vertex(new Vector3(positionX, positionY + tileHeight, 0), color.ToVector4(),
                 backGroundColor.ToVector4(), new Vector2(textureX, textureYend));
             foregroundvertices[arrayPosition + 3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureXend, textureYend));
-
-            var backgroundVertices = backgroundModel.Vertices;
-
-            backgroundVertices[arrayPosition] = new Vertex(new Vector3(positionX, positionY, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureX, textureY));
-            backgroundVertices[arrayPosition + 1] = new Vertex(new Vector3(positionX + tileWidth, positionY, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureXend, textureY));
-            backgroundVertices[arrayPosition + 2] = new Vertex(new Vector3(positionX, positionY + tileHeight, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureX, textureYend));
-            backgroundVertices[arrayPosition + 3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), color.ToVector4(),
                 backGroundColor.ToVector4(), new Vector2(textureXend, textureYend));
 
         } 
