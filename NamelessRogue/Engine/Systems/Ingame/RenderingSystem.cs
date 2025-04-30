@@ -42,6 +42,7 @@ using MonoGame.Extended.Particles.Modifiers.Containers;
 using MonoGame.Extended.Particles.Modifiers.Interpolators;
 using MonoGame.Extended.Particles.Modifiers;
 using MonoGame.Extended.Particles.Profiles;
+using System.Reflection.Metadata;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -128,7 +129,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
     public class VisualChunk
     {
-        TileModel TileModel { get; set; }
+        public TileModel TileModel { get; set; }
         public Point WorldPosition { get; }
         public ScreenTile[,] ScreenBuffer { get; private set; }
         public VisualChunk(Point worldPosition)
@@ -136,6 +137,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var size = Constants.ChunkSize;
             WorldPosition = worldPosition;
             ScreenBuffer = new ScreenTile[size, size];
+            TileModel = new TileModel(size, size);
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
@@ -145,8 +147,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        public void UpdateChunk(Dictionary<string, RenderingSystem.AtlasTileData> characterToTileDictionary, Texture2D tileAtlas)
+        public void UpdateChunk(Dictionary<string, RenderingSystem.AtlasTileData> characterToTileDictionary, Texture2D tileAtlas, int playerZ, IWorldProvider worldProvider)
         {
+            FillWithWorld(worldProvider, playerZ);
+
             var stackDepth = 0;
             for (int y = 0; y < Constants.ChunkSize; y++)
             {
@@ -162,9 +166,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             characterToTileDictionary.TryGetValue("Nothingness", out tileData);
                         }
                         var white = new Color(1f, 1f, 1f, 1f);
-                        var grey = new Color(0.5f, 0.5f, 0.5f, 1f);
 
-                        var tileMask = ScreenBuffer[x, y].isRemembered && ScreenBuffer[x, y].isVisible ? objectToDraw.CharColor : grey;
+                        var tileMask = white;
 
                         int tileHeight = 64;
                         int tileWidth = 64;
@@ -180,7 +183,33 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
         }
+
+        private void FillWithWorld(IWorldProvider world, int playerZ)
+        {
+            var realSpaceChunkX = WorldPosition.X * Constants.ChunkSize;
+            var realSpaceChunkY = WorldPosition.Y * Constants.ChunkSize;
+
+            for (int x = 0; x < Constants.ChunkSize; x++)
+            {
+                for (int y = 0; y < Constants.ChunkSize; y++)
+                {
+                    var realSpaceX = realSpaceChunkX + x;
+                    var realSpaceY = realSpaceChunkY + y;
+                    Tile tileToDraw = world.GetTile(realSpaceX, realSpaceY, playerZ);
+
+                    if (tileToDraw != null && tileToDraw.Terrain != TerrainTypes.Nothingness)
+                    {
+                        ScreenBuffer[x, y].AddObject(TerrainLibrary.Terrains[tileToDraw.Terrain].Representation.ObjectID, ScreenObjectSource.Tileset, new Color(255, 255, 255), false, false, false);
+                    }
+                    else
+                    {
+                        ScreenBuffer[x, y].AddObject("Nothingness", ScreenObjectSource.Tileset, new Color(), false, false);
+                    }
+                }
+            }
+        }
     }
+
 
     public class UpdateVisualChunkCommand : ICommand
     {
@@ -362,10 +391,25 @@ namespace NamelessRogue.Engine.Systems.Ingame
             game.GraphicsDevice.SamplerStates[0] = sampler;
             game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
+            Position playerPosition = game.FollowedByCameraEntity
+               .GetComponentOfType<Position>();
+
+            playerPosZ = playerPosition.Z;
+
             //todo move to constructor or some other place better suited for initialization
             if (tileAtlas == null)
             {
                 InitializeTexture(game);
+            }
+
+          
+
+
+            IEntity worldEntity = game.TimelineEntity;
+            IWorldProvider worldProvider = null;
+            if (worldEntity != null)
+            {
+                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
             }
 
             while (game.Commander.DequeueCommand(out UpdateVisualChunkCommand command))
@@ -373,22 +417,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var chunkPoint = command.ChunkCoordinate;
 
                 var chunk = visualChunks.FirstOrDefault(x => x.WorldPosition == chunkPoint);
-                if(chunk == null)
+                if (chunk == null)
                 {
                     chunk = new VisualChunk(chunkPoint);
                 }
 
-                chunk.UpdateChunk(characterToTileDictionary, tileAtlas);
-
+                chunk.UpdateChunk(characterToTileDictionary, tileAtlas, playerPosZ, worldProvider);
+                visualChunks.Add(chunk);
             }
 
-
-                IEntity worldEntity = game.TimelineEntity;
-            IWorldProvider worldProvider = null;
-            if (worldEntity != null)
-            {
-                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
-            }
 
             var entity = game.CameraEntity;
 
@@ -402,34 +439,74 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 foregroundModel = new TileModel(screen.Height, screen.Width);
             }
 
-            Position playerPosition = game.FollowedByCameraEntity
-                   .GetComponentOfType<Position>();
-
-            playerPosZ = playerPosition.Z;
+        
 
             if (camera != null && screen != null && worldProvider != null)
             {
 
-                ProcessSXFCommands(game);
+                //ProcessSXFCommands(game);
 
                 MoveCamera(game, camera);
                 ClearScreen(screen, camera, game.GetSettings(), worldProvider);
-                FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
-                FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
-                FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, gameTime, worldProvider);
-                FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game, gameTime);
-                int stackDepth = 0;
-                while (RenderScreen(game, screen, game.GetSettings(), stackDepth)) {
-                    stackDepth++;
+                //FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
+                //FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
+                //FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, gameTime, worldProvider);
+                //FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game, gameTime);
+             
+                bool renderNewScreen = true;
+                if (renderNewScreen)
+                {
+                    effect.Parameters["tileAtlas"].SetValue(tileAtlas);
+                    var projectionMatrix = Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
+
+                    effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
+
+                    effect.GraphicsDevice.SamplerStates[0] = sampler;
+                    effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
+                    var playerChunkPosition = new Point((playerPosition.Point.X / Constants.ChunkSize), (playerPosition.Point.Y / Constants.ChunkSize));
+                    foreach (var visualChunk in visualChunks)
+                    {
+                        var tileModel = visualChunk.TileModel;
+
+                        if ((playerChunkPosition - visualChunk.WorldPosition).ToVector2().Length()>(4)) //- visualChunk.WorldPosition).ToVector2().Length() > 1)
+                        {
+                            continue;
+                        }
+
+                        var chunkPosition = new Vector3((visualChunk.WorldPosition.X) * Constants.ChunkSize, (visualChunk.WorldPosition.Y) * Constants.ChunkSize, 0);
+
+                        var chunkScreenPoint = camera.PointToScreen(new Point((int)chunkPosition.X, (int)chunkPosition.Y));
+
+                        var chunkPositionMatrix = Matrix.CreateTranslation(new Vector3(chunkScreenPoint.X*Constants.ChunkSize, chunkScreenPoint.Y* Constants.ChunkSize, 0));
+                        effect.Parameters["xWorld"].SetValue(chunkPositionMatrix * Matrix.CreateScale(1f/game.Settings.Zoom));
+                        foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                        {
+                            pass.Apply();
+                            game.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
+                                 tileModel.Indices.ToArray(), 0, tileModel.Indices.Count() / 3, this.VertexDeclaration);
+                        }
+                    }
                 }
-              
-                RenderSpriteShadows(game, screen, game.GetSettings(), gameTime);
-         
-                game.Batch.Begin(samplerState: SamplerState.PointClamp);               
-                RenderSpriteScreen(game, screen, game.GetSettings(), gameTime);
-                RenderProjectiles(game, screen, camera, game.GetSettings(), gameTime);
-                RenderSFX(game, screen, camera, game.GetSettings(), gameTime);
-                game.Batch.End();
+
+               
+
+                if (!renderNewScreen)
+                {
+                    int stackDepth = 0;
+                    while (RenderScreen(game, screen, game.GetSettings(), stackDepth))
+                    {
+                        stackDepth++;
+                    }
+                }
+
+                //RenderSpriteShadows(game, screen, game.GetSettings(), gameTime);
+
+                //game.Batch.Begin(samplerState: SamplerState.PointClamp);
+                //RenderSpriteScreen(game, screen, game.GetSettings(), gameTime);
+                //RenderProjectiles(game, screen, camera, game.GetSettings(), gameTime);
+                //RenderSFX(game, screen, camera, game.GetSettings(), gameTime);
+                //game.Batch.End();
             }
             game.GraphicsDevice.Clear(ClearOptions.DepthBuffer, new Microsoft.Xna.Framework.Color(1), 1, 0);
         }
@@ -504,9 +581,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     .GetComponentOfType<Position>();
 
                 Point p = camera.getPosition();
-                p.X = (playerPosition.Point.X - game.GetSettings().GetWidthZoomed() / 2);
-                p.Y = (playerPosition.Point.Y - game.GetSettings().GetHeightZoomed() / 2);
-                camera.setPosition(p);
+            p.X = (playerPosition.Point.X - game.GetSettings().GetWidthZoomed() / 2);
+            p.Y = (playerPosition.Point.Y - game.GetSettings().GetHeightZoomed() / 2);
+            camera.setPosition(p);
         }
         PermissiveVisibility fov;
         Screen screenCopy;

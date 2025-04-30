@@ -127,8 +127,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             }
                         }
                     }
+                   
                 }
                 realityBubbleChunk.Value.JustCreated = false;
+                namelessGame.Commander.EnqueueCommand(new UpdateVisualChunkCommand(realityBubbleChunk.Key));
             }
 
         }

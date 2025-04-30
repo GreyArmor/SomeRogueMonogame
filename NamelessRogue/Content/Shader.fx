@@ -28,11 +28,12 @@ SamplerState textureSampler : register(s0) = sampler_state
 
 
 float4x4 xViewProjection;
+float4x4 xWorld;
 
 VertexToPixel SimplestVertexShader(float4 inPos : POSITION, float4 inColor : COLOR0, float4 inBackgroundColor : COLOR1, float2 inTextureCoord : TEXCOORD)
 {
 	VertexToPixel Output = (VertexToPixel)0;
-	Output.Position = mul(inPos, xViewProjection);
+    Output.Position = mul(mul(inPos, xWorld), xViewProjection);
 	Output.Color = inColor;
 	Output.BackgroundColor = inBackgroundColor;
 	Output.TextureCoordinate = inTextureCoord;
