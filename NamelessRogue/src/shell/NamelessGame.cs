@@ -199,6 +199,7 @@ namespace NamelessRogue.shell
 				GraphicsDevice.PresentationParameters.BackBufferFormat,
 				DepthFormat.Depth24, 4, RenderTargetUsage.PlatformContents);
 
+			
 			graphics.ApplyChanges();
 
 			ModelsLibrary.Initialize(this);
