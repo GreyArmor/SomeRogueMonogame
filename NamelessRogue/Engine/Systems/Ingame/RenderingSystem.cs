@@ -539,7 +539,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }
                 }
 
-                //game.Batch.End();
+                game.Batch.End();
 
 
                 if (!renderNewScreen)
