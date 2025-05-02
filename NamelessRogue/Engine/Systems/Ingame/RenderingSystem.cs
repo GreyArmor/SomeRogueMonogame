@@ -105,6 +105,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public Vector2 screenLocation;
     }
 
+
+
     public class TileModel : IDisposable {
         public Vertex[] Vertices { get; }
         public int[] Indices { get; }
@@ -236,6 +238,47 @@ namespace NamelessRogue.Engine.Systems.Ingame
     }
 
 
+    public class VisibilityModel
+    {
+        public TileModel TileModel { get; set; }
+        public VisibilityModel(int width, int height)
+        {
+            TileModel = new TileModel(width, height);
+        }
+
+        public void UpdateVisibility(Screen screen, NamelessGame game)
+        {
+
+            var worldProvider = game.WorldProvider;
+
+            var black = new Color(0, 0, 0, 1f);
+            var grey = new Color(1f, 1f, 1f, 0.5f);
+            int tileHeight = game.Settings.GetFontSizeZoomed();
+            int tileWidth = game.Settings.GetFontSizeZoomed();
+            for (int y = 0; y < screen.Height; y++)
+            {
+                for (int x = 0; x < screen.Width; x++)
+                {
+                    var isVisible = screen.ScreenBuffer[x, y].isVisible;
+                   
+                    if (!isVisible)
+                    {
+                        var isRemembered = screen.ScreenBuffer[x, y].isRemembered;
+                        var tileMask = isRemembered ? grey : black;
+                        RenderingSystem.DrawVisibilityTile(tileHeight, tileWidth, x, y, screen.Width,
+                                x * Constants.ChunkSize,
+                                y * Constants.ChunkSize,                                
+                                tileMask, TileModel);
+                    }
+                }
+            }
+
+            TileModel.UpdateBuffers(game.GraphicsDevice);
+        }
+    }
+
+
+
     public class UpdateVisualChunkCommand : ICommand
     {
         public UpdateVisualChunkCommand(Point chunkCoordinate)
@@ -265,7 +308,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private float step = 0.04f;
         private InternalRandom graphicalRandom = new InternalRandom();
         Effect effect;
-        private VertexBuffer vertexBuffer;
+        private VertexBuffer visibilityVertexBuffer;
         private IndexBuffer indexBuffer;
         private int playerPosZ;
         Microsoft.Xna.Framework.Color shadowColor = new Microsoft.Xna.Framework.Color(0, 0, 0, 96);
@@ -406,8 +449,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add(windowId + TileBitmaskingEncoding.WallVertical2, new AtlasTileData(6 + displacementX, 1 + displacementY));
         }
 
-        TileModel unseenTiles;
-        TileModel unknownTiles;
+        VisibilityModel visibility;
+        Vector3Int previousPlayerPosition = default;
         public override void Update(GameTime gameTime, NamelessGame game)
         {
 
@@ -457,9 +500,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
             screen = UpdateZoom(game, commander, entity, screen , out bool zoomUpdate);
             int fsz = game.Settings.GetFontSizeZoomed();
 
-            if(zoomUpdate)
+            if (zoomUpdate ||  visibility == null)
             {
-
+                visibility = new VisibilityModel(screen.Width, screen.Height);
             }
 
             if (camera != null && screen != null && worldProvider != null)
@@ -469,54 +512,70 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 MoveCamera(game, camera);
                 ClearScreen(screen, camera, game.GetSettings(), worldProvider);
-                FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
+
+                if (previousPlayerPosition != playerPosition.Point || zoomUpdate)
+                {
+                    FillcharacterBufferVisibility(game, screen, camera, game.GetSettings(), worldProvider);
+                    visibility.UpdateVisibility(screen, game);
+                }
 
 
                 //FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
                 //FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, gameTime, worldProvider);
                 //FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game, gameTime);
 
-                bool renderNewScreen = true;
-                if (renderNewScreen)
+
+                var projectionMatrix = Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
+
+                effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
+
+                effect.GraphicsDevice.SamplerStates[0] = sampler;
+                effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
+                effect.Parameters["tileAtlas"].SetValue(pixel);
+                effect.Parameters["xWorld"].SetValue(Matrix.Identity);
+
+                game.GraphicsDevice.SetVertexBuffer(visibility.TileModel.Buffer);
+                game.GraphicsDevice.Indices = visibility.TileModel.IndexBuffer;
+
+                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
-                    effect.Parameters["tileAtlas"].SetValue(tileAtlas);
-                    var projectionMatrix = Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
-
-                    effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
-
-                    effect.GraphicsDevice.SamplerStates[0] = sampler;
-                    effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-
-                    var playerChunkPosition = new Point((playerPosition.Point.X / Constants.ChunkSize), (playerPosition.Point.Y / Constants.ChunkSize));
-                    foreach (var visualChunk in visualChunks)
-                    {
-                        var tileModel = visualChunk.TileModel;
-
-                        if ((playerChunkPosition - visualChunk.WorldPosition).ToVector2().Length()>(4)) //- visualChunk.WorldPosition).ToVector2().Length() > 1)
-                        {
-                            continue;
-                        }
-
-                        var chunkPosition = new Vector3((visualChunk.WorldPosition.X) * Constants.ChunkSize, (visualChunk.WorldPosition.Y) * Constants.ChunkSize, 0);
-
-                        var chunkScreenPoint = camera.PointToScreen(new Point((int)chunkPosition.X, (int)chunkPosition.Y));
-
-                        var chunkPositionMatrix = Matrix.CreateTranslation(new Vector3(chunkScreenPoint.X*Constants.ChunkSize, chunkScreenPoint.Y* Constants.ChunkSize, 0));
-                        effect.Parameters["xWorld"].SetValue(chunkPositionMatrix * Matrix.CreateScale(1f/game.Settings.Zoom));
-
-                        game.GraphicsDevice.SetVertexBuffer(visualChunk.TileModel.Buffer);
-                        game.GraphicsDevice.Indices = visualChunk.TileModel.IndexBuffer;
-
-                        foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-                        {
-                            pass.Apply();
-                            game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, visualChunk.TileModel.Indices.Length / 3);
-                          //  game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
-                          //      tileModel.Indices, 0, tileModel.Indices.Length / 3, this.VertexDeclaration);
-                        }
-                    }
+                    pass.Apply();
+                    game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, visibility.TileModel.Indices.Length / 3);
+                    //  game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
+                    //      tileModel.Indices, 0, tileModel.Indices.Length / 3, this.VertexDeclaration);
                 }
 
+                effect.Parameters["tileAtlas"].SetValue(tileAtlas);
+
+                var playerChunkPosition = new Point((playerPosition.Point.X / Constants.ChunkSize), (playerPosition.Point.Y / Constants.ChunkSize));
+                foreach (var visualChunk in visualChunks)
+                {
+                    var tileModel = visualChunk.TileModel;
+
+                    if ((playerChunkPosition - visualChunk.WorldPosition).ToVector2().Length() > (4)) //- visualChunk.WorldPosition).ToVector2().Length() > 1)
+                    {
+                        continue;
+                    }
+
+                    var chunkPosition = new Vector3((visualChunk.WorldPosition.X) * Constants.ChunkSize, (visualChunk.WorldPosition.Y) * Constants.ChunkSize, 0);
+
+                    var chunkScreenPoint = camera.PointToScreen(new Point((int)chunkPosition.X, (int)chunkPosition.Y));
+
+                    var chunkPositionMatrix = Matrix.CreateTranslation(new Vector3(chunkScreenPoint.X * Constants.ChunkSize, chunkScreenPoint.Y * Constants.ChunkSize, 0));
+                    effect.Parameters["xWorld"].SetValue(chunkPositionMatrix * Matrix.CreateScale(1f / game.Settings.Zoom));
+
+                    game.GraphicsDevice.SetVertexBuffer(visualChunk.TileModel.Buffer);
+                    game.GraphicsDevice.Indices = visualChunk.TileModel.IndexBuffer;
+
+                    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                    {
+                        pass.Apply();
+                        game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, visualChunk.TileModel.Indices.Length / 3);
+                        //  game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
+                        //      tileModel.Indices, 0, tileModel.Indices.Length / 3, this.VertexDeclaration);
+                    }
+                }
                 game.Batch.Begin(samplerState: SamplerState.PointClamp, depthStencilState: DepthStencilState.Default);
                 for (int x = 0; x < game.GetSettings().GetWidthZoomed(); x++)
                 {
@@ -542,14 +601,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 game.Batch.End();
 
 
-                if (!renderNewScreen)
-                {
-                    int stackDepth = 0;
-                    while (RenderScreen(game, screen, game.GetSettings(), stackDepth))
-                    {
-                        stackDepth++;
-                    }
-                }
+                //if (!renderNewScreen)
+                //{
+                //    int stackDepth = 0;
+                //    while (RenderScreen(game, screen, game.GetSettings(), stackDepth))
+                //    {
+                //        stackDepth++;
+                //    }
+                //}
 
                 //RenderSpriteShadows(game, screen, game.GetSettings(), gameTime);
 
@@ -560,10 +619,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 //game.Batch.End();
             }
 
-           
+            previousPlayerPosition = playerPosition.Point;
 
             game.GraphicsDevice.Clear(ClearOptions.DepthBuffer, new Microsoft.Xna.Framework.Color(1), 1, 0);
         }
+
 
         private void ProcessSXFCommands(NamelessGame game)
         {
@@ -1350,6 +1410,33 @@ namespace NamelessRogue.Engine.Systems.Ingame
             return tileAtlas;
         }
 
+        public static void DrawVisibilityTile(int tileHeight, int tileWidth, int screenPositionX, int screenPositionY, int screenWidth, int positionX, int positionY,  Color color, TileModel foregroundModel)
+        {
+
+
+            float textureX = 0;
+            float textureY = 0;
+
+            float textureXend = 1;
+
+            float textureYend = 1;
+
+            var arrayPosition = (screenPositionX * 4) + (screenPositionY * screenWidth * 4);
+
+            var foregroundvertices = foregroundModel.Vertices;
+
+            foregroundvertices[arrayPosition] = new Vertex(new Vector3(positionX, positionY, 0), color.ToVector4(),
+                color.ToVector4(), new Vector2(textureX, textureY));
+            foregroundvertices[arrayPosition + 1] = new Vertex(new Vector3(positionX + tileWidth, positionY, 0), color.ToVector4(),
+                color.ToVector4(), new Vector2(textureXend, textureY));
+            foregroundvertices[arrayPosition + 2] = new Vertex(new Vector3(positionX, positionY + tileHeight, 0), color.ToVector4(),
+                color.ToVector4(), new Vector2(textureX, textureYend));
+            foregroundvertices[arrayPosition + 3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), color.ToVector4(),
+                color.ToVector4(), new Vector2(textureXend, textureYend));
+
+
+
+        }
 
         public static void DrawTile(int tileHeight, int tileWidth, int screenPositionX, int screenPositionY, int screenWidth, int positionX, int positionY,
     AtlasTileData atlasTileData,
