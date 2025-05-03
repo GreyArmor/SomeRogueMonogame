@@ -6,6 +6,7 @@ using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
@@ -91,6 +92,9 @@ namespace NamelessRogue.Engine.Systems
                         ap.Points -= Constants.ActionsMovementCost;
                     }
                     namelessGame.Commander.EnqueueCommand(new PlaySoundCommand("DoorOpen", false, 0.1f));
+                    namelessGame.Commander.EnqueueCommand(new UpdateVisualChunkCommand(new Point(interactionEntityPosition.X/Constants.ChunkSize, interactionEntityPosition.Y/Constants.ChunkSize)));
+
+
                 }
 
 
