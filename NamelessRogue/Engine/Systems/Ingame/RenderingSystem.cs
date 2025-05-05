@@ -539,6 +539,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         VisibilityModel visibility;
         Vector3Int previousPlayerPosition = default;
         List<VisualChunk> chunksToUpdate = new List<VisualChunk>();
+
         public override void Update(GameTime gameTime, NamelessGame game)
         {
 
@@ -681,6 +682,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
                 game.Batch.Begin(samplerState: SamplerState.PointClamp);
+
+                var screenActualWidth = game.Settings.GetWidthZoomed() * game.Settings.GetFontSizeZoomed();
+                game.Batch.Draw(pixel, new Rectangle(screenActualWidth, 0, game.GetActualWidth() - screenActualWidth, game.GetActualHeight()), XNAColor.Black);
+
                 RenderSpriteScreen(game, camera, game.GetSettings(), gameTime);
                 RenderProjectiles(game, screen, camera, game.GetSettings(), gameTime);
                 RenderSFX(game, screen, camera, game.GetSettings(), gameTime);
