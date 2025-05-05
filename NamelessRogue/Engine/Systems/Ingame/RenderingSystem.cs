@@ -179,9 +179,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
 
             var worldProvider = game.WorldProvider;
+
+
+            for (int x = 0; x < Constants.ChunkSize; x++)
+            {
+                for (int y = 0; y < Constants.ChunkSize; y++)
+                {
+                    ScreenBuffer[x, y].StackedObjects.Clear();
+                }
+            }
+
+
             FillWithWorld(worldProvider, playerZ);
 
-            var size = Constants.ChunkSize;            
+            var size = Constants.ChunkSize;
             var currentDepth = 0;
             for (int y = 0; y < Constants.ChunkSize; y++)
             {
@@ -189,7 +200,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     var depth = ScreenBuffer[x, y].StackedObjects.Count();
 
-                    if(currentDepth<depth)
+                    if (currentDepth < depth)
                     {
                         for (; currentDepth < depth; currentDepth++)
                         {
