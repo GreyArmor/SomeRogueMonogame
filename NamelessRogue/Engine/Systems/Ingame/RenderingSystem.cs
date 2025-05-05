@@ -127,7 +127,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 Indices[i] = vertexCounter;
                 Indices[i + 1] = vertexCounter + 1;
-                Indices[i + 2] = vertexCounter + 2;222
+                Indices[i + 2] = vertexCounter + 2;
                 Indices[i + 3] = vertexCounter + 2;
                 Indices[i + 4] = vertexCounter + 1;
                 Indices[i + 5] = vertexCounter + 3;
