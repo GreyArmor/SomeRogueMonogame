@@ -580,7 +580,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
 
                 chunksToUpdate.Add(chunk);
-             //   chunk.UpdateChunk(characterToTileDictionary, tileAtlas, playerPosZ, game);
                 chunkUpdate = true;
             }
 
@@ -1282,6 +1281,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var spriteId = sprited.SpriteId;
                 int tileHeight = game.GetSettings().GetFontSizeZoomed();
                 int tileWidth = game.GetSettings().GetFontSizeZoomed();
+
+                var animation = sprited.IdleAnimation;
+
+                if (sprited.CurrentAnimationTimeLeft > 0)
+                {
+                    animation = sprited.CurrentAnimation;
+                    sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
+                }
+
                 if (!sprited.IsStatic)
                 {
                     if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
