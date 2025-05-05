@@ -406,7 +406,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public RenderingSystem(GameSettings settings){
             InitializeCharacterTileDictionary();
 
-            Signature = [typeof(Drawable), typeof(Position)];
+            Signature = [typeof(Drawable), typeof(Position), typeof(SpritedObject)];
            
 
         }
@@ -527,6 +527,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         VisibilityModel visibility;
         Vector3Int previousPlayerPosition = default;
+        List<VisualChunk> chunksToUpdate = new List<VisualChunk>();
         public override void Update(GameTime gameTime, NamelessGame game)
         {
 
@@ -543,7 +544,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             if (tileAtlas == null)
             {
                 InitializeTexture(game);
-            }         
+            }
 
 
             IEntity worldEntity = game.TimelineEntity;
@@ -553,6 +554,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
             }
             bool chunkUpdate = false;
+
+        
+
             while (game.Commander.DequeueCommand(out UpdateVisualChunkCommand command))
             {
                 var chunkPoint = command.ChunkCoordinate;
@@ -564,10 +568,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     visualChunks.Add(chunk);
                 }
 
+                chunksToUpdate.Add(chunk);
                 chunk.UpdateChunk(characterToTileDictionary, tileAtlas, playerPosZ, game);
                 chunkUpdate = true;
             }
 
+            if (chunkUpdate)
+            {
+                chunksToUpdate = chunksToUpdate.Distinct().ToList();
+
+                foreach (var chunk in chunksToUpdate)
+                {
+                    chunk.UpdateChunk(characterToTileDictionary, tileAtlas, playerPosZ, game);
+                }
+            }        
 
             var entity = game.CameraEntity;
 
@@ -597,7 +611,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
 
 
-                //FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
+              //  FillcharacterBuffersWithWorld(screen, camera, game.GetSettings(), worldProvider);
                 //FillcharacterBuffersWithTileObjects(screen, camera, game.GetSettings(), game, gameTime, worldProvider);
                 //FillcharacterBuffersWithWorldObjects(screen, camera, game.GetSettings(), game, gameTime);
 
@@ -635,8 +649,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             pass.Apply();
                             game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tileModel.Indices.Length / 3);
-                            //  game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
-                            //      tileModel.Indices, 0, tileModel.Indices.Length / 3, this.VertexDeclaration);
                         }
                     }
                 }
@@ -652,21 +664,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     pass.Apply();
                     game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, visibility.TileModel.Indices.Length / 3);
                 }
-
-
-                //if (!renderNewScreen)
-                //{
-                //    int stackDepth = 0;
-                //    while (RenderScreen(game, screen, game.GetSettings(), stackDepth))
-                //    {
-                //        stackDepth++;
-                //    }
-                //}
-
                 RenderSpriteShadows(game, screen, game.GetSettings(), gameTime);
 
                 game.Batch.Begin(samplerState: SamplerState.PointClamp);
-                RenderSpriteScreen(game, screen, game.GetSettings(), gameTime);
+                RenderSpriteScreen(game, camera, game.GetSettings(), gameTime);
                 RenderProjectiles(game, screen, camera, game.GetSettings(), gameTime);
                 RenderSFX(game, screen, camera, game.GetSettings(), gameTime);
                 game.Batch.End();
@@ -752,8 +753,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
             p.Y = (playerPosition.Point.Y - game.GetSettings().GetHeightZoomed() / 2);
             camera.setPosition(p);
         }
-        PermissiveVisibility fov;
-        Screen screenCopy;
         private void FillcharacterBufferVisibility(NamelessGame game, Screen screen, ConsoleCamera camera,
             GameSettings settings, IWorldProvider world)
         {
@@ -771,9 +770,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     screen.ScreenBuffer[x, y].isRemembered = false;
                 }
             }
-            screenCopy = screen;
-            // return;
-
             for (int x = camX; x < settings.GetWidthZoomed() + camX; x++)
             {
                 for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
@@ -1264,40 +1260,34 @@ namespace NamelessRogue.Engine.Systems.Ingame
             return moreItemsToRender;
         }
         
-        private void RenderSpriteScreen(NamelessGame game, Screen screen, GameSettings settings, GameTime gameTime)
+        private void RenderSpriteScreen(NamelessGame game, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
         {
-            for (int y = 0; y < settings.GetHeightZoomed(); y++)
+            foreach (var entity in RegisteredEntities)
             {
-                for (int x = 0; x < settings.GetWidthZoomed(); x++)
+                var sprited = entity.GetComponentOfType<SpritedObject>();
+                var position = entity.GetComponentOfType<Position>();
+                Point screenPoint = camera.PointToScreen(position.X, position.Y);
+                var spriteId = sprited.SpriteId;
+                int tileHeight = game.GetSettings().GetFontSizeZoomed();
+                int tileWidth = game.GetSettings().GetFontSizeZoomed();
+                if (!sprited.IsStatic)
                 {
-                    foreach (var objectToDraw in screen.ScreenBuffer[x, y].StackedObjects)
+                    if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
                     {
-                        if (objectToDraw.Type == ScreenObjectSource.AnimatedSprite || objectToDraw.Type == ScreenObjectSource.StaticSprite)
+                        sprite.SetCurrentLoopWithTimeConstrains(sprited.CurrentAnimation, sprited.CurrentAnimationTimeLeft);
+                        // sprite.Update(gameTime);
+                        sprite.Draw(game, gameTime, new Vector2(screenPoint.X * tileWidth, screenPoint.Y * tileHeight), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.White);
+                    }
+                }
+                else
+                {
+                    if (SpriteLibrary.SpritesStatic.TryGetValue(spriteId, out var sprite))
+                    {
                         {
-                            var spriteId = objectToDraw.Id;
-                            int tileHeight = game.GetSettings().GetFontSizeZoomed();
-                            int tileWidth = game.GetSettings().GetFontSizeZoomed();
-                            if (objectToDraw.Type == ScreenObjectSource.AnimatedSprite)
-                            {
-                                if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
-                                {
-                                    sprite.SetCurrentLoopWithTimeConstrains(objectToDraw.AnimationName, objectToDraw.AnimationTime);
-                                   // sprite.Update(gameTime);
-                                    sprite.Draw(game, gameTime, new Vector2(x * tileWidth, y * tileHeight), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.White);
-                                }
-                            }
-                            else
-                            {
-                                if (SpriteLibrary.SpritesStatic.TryGetValue(spriteId, out var sprite))
-                                {
-                                    {
-                                        var position = new Vector2((x * tileWidth), (y * tileHeight));
-                                        var size = new Vector2(tileWidth, tileHeight);
-                                        var scale = Vector2.One;
-                                        game.Batch.Draw(sprite.TextureRegion, new Microsoft.Xna.Framework.Rectangle(position.ToPoint(), (size * scale).ToPoint()), Microsoft.Xna.Framework.Color.White);
-                                    }
-                                }
-                            }                                           
+                            var positionV = new Vector2((screenPoint.X * tileWidth), (screenPoint.Y * tileHeight));
+                            var size = new Vector2(tileWidth, tileHeight);
+                            var scale = Vector2.One;
+                            game.Batch.Draw(sprite.TextureRegion, new Microsoft.Xna.Framework.Rectangle(positionV.ToPoint(), (size * scale).ToPoint()), Microsoft.Xna.Framework.Color.White);
                         }
                     }
                 }
