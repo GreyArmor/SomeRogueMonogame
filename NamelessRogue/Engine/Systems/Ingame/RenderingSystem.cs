@@ -677,6 +677,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
                 RenderSpriteShadows(game, screen, game.GetSettings(), gameTime);
 
+               // game.Batch.Begin(samplerState: SamplerState.PointClamp);
+
+
                 game.Batch.Begin(samplerState: SamplerState.PointClamp);
                 RenderSpriteScreen(game, camera, game.GetSettings(), gameTime);
                 RenderProjectiles(game, screen, camera, game.GetSettings(), gameTime);
@@ -1275,6 +1278,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             foreach (var entity in RegisteredEntities)
             {
+
+                var projectile = entity.GetComponentOfType<ProjectileComponent>();
+                if(projectile!=null)
+                {
+                    continue;
+                }
+
                 var sprited = entity.GetComponentOfType<SpritedObject>();
                 var position = entity.GetComponentOfType<Position>();
                 Point screenPoint = camera.PointToScreen(position.X, position.Y);
