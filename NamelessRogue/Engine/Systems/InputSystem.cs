@@ -18,9 +18,7 @@ namespace NamelessRogue.Engine.Systems
     {
         FirstDelay,
         SecondDelay,
-        ThirdDelay,
-        NotDelayed,
-            
+        ThirdDelay,     
     }
     public class InputSystem : BaseSystem
     {
@@ -50,9 +48,9 @@ namespace NamelessRogue.Engine.Systems
         private long previousGametimeForMove = 0;
 
         private int firstDelayTime = 0;
-        private int secondDelayTime = 400;
-        private int thirdDelayTime = 200;
-        private int noDelayTime = 30;
+        private int secondDelayTime = 300;
+        private int thirdDelayTime = 100;
+        private int noDelayTime = 48;
         DelayState delayState = DelayState.FirstDelay;
 
         int inputsTimeLimit = 30;
@@ -60,81 +58,86 @@ namespace NamelessRogue.Engine.Systems
         private char lastCommand = Char.MinValue;
         private KeyboardState lastState;
         private Keys[] lastKeys = Array.Empty<Keys>();
-
+        int delayTime = 0;
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-
-            int delayTime = 0;
-            switch (delayState)
-            {
-                case DelayState.FirstDelay:
-                    delayTime = firstDelayTime;
-                    break;
-                case DelayState.SecondDelay:
-                    delayTime = secondDelayTime;
-                    break;
-                case DelayState.ThirdDelay:
-                    delayTime = thirdDelayTime;
-                    break;
-                default:
-                    delayTime = noDelayTime;
-                    break;
-            }
-
+            //firstDelayTime = 0;
+            //secondDelayTime = 300;
+            //thirdDelayTime = 100;     
+            //noDelayTime = 48;
             lastState = Keyboard.GetState();
             var newKeys = lastState.GetPressedKeys();
             var sameKeys = true;
+
+            if (lastState.GetPressedKeyCount() == 0)
+            {
+                lastKeys = lastState.GetPressedKeys();
+                delayState = DelayState.FirstDelay;
+                delayTime = firstDelayTime;
+                return;
+            }
 
             if (lastKeys.Length == newKeys.Length)
             {
                 foreach (Keys key in newKeys)
                 {
+                    if (!lastKeys.Contains(key))
                     {
-                        if (!lastKeys.Contains(key))
-                        {
-                            sameKeys = false;
-                            break;
-                        }
+                        sameKeys = false;
+                        break;
                     }
                 }
             }
 
-            if(!sameKeys)
+            if (sameKeys && delayState>DelayState.ThirdDelay)
             {
-                delayState = DelayState.FirstDelay;
-                delayTime = 0;
+                delayTime = noDelayTime;
             }
 
             lastKeys = lastState.GetPressedKeys();
 
             InputComponent inputComponent = namelessGame.PlayerEntity.GetComponentOfType<InputComponent>();
-            if (gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove > delayTime)
+            var diffrence = gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove;
+            if (diffrence > delayTime)
             {
+               // Debug.WriteLine("diff:" + diffrence);
                 inputComponent.IsDelayed = false;
                 previousGametimeForMove = (long)gameTime.TotalGameTime.TotalMilliseconds;
-           
+
                 if (inputComponent != null)
                 {
                     inputComponent.Intents.AddRange(translator.Translate(lastKeys, lastCommand, Mouse.GetState()));
                     lastCommand = Char.MinValue;
                 }
 
-                if (delayState != DelayState.NotDelayed)
+                delayState++;
+
+                switch (delayState)
                 {
-                    delayState++;
+                    case DelayState.FirstDelay:
+                        delayTime = firstDelayTime;
+                        break;
+                    case DelayState.SecondDelay:
+                        delayTime = secondDelayTime;
+                        break;
+                    case DelayState.ThirdDelay:
+                        delayTime = thirdDelayTime;
+                        break;
+                    default:
+                        delayTime = noDelayTime;
+                        break;
                 }
+
             }
             else
             {
                 inputComponent.IsDelayed = true;
             }
-            if (lastState.GetPressedKeyCount() == 0)
-            {
-                delayState = DelayState.FirstDelay;
-            }
-          //  Debug.WriteLine(delayState);
+    
+
+           // Debug.WriteLine(delayState);
             lastState = (default);
 
         }
