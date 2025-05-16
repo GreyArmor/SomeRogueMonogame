@@ -26,7 +26,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var projectileEntity = new Entity();
                 projectileEntity.AddComponent(new ProjectileComponent(command.From, command.To, 1f));
                 projectileEntity.AddComponent(new Drawable("bullet", new Utility.Color(1)));
-                projectileEntity.AddComponent(new SpritedObject(true));
+                //projectileEntity.AddComponent(new SpritedObject(true));
                 projectileEntity.AddComponent(new Position(command.From.X, command.From.Y, command.From.Z));
             }
             var projectileToRemove = new List<IEntity>();

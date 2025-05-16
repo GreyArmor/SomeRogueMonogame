@@ -132,7 +132,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     fireEntity.AddComponent(new Description("Fire", ""));
                     fireEntity.AddComponent(new Drawable(fireId, new Utility.Color(1f)));
                   
-                    fireEntity.AddComponent(new SpritedObject(false, fireId, "idle_1", true));
+                    fireEntity.AddComponent(new AnimatedSpriteObject(SpriteLibrary.SpriteIdToPath[fireId]));
                     fireEntity.AddComponent(new Fire() { StartTurn = namelessGame.CurrentGame.Turn, Duration = 20});
                     namelessGame.AddEntity(fireEntity);
                     namelessGame.WorldProvider.GetTile(targetPosition.X, targetPosition.Y, targetPosition.Z).AddEntity(fireEntity);

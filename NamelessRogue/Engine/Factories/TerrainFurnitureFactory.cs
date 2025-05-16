@@ -71,7 +71,7 @@ namespace NamelessRogue.Engine.Factories
                     entity.AddComponent(new BlocksVision());
                 }
                 entity.AddComponent(new Furniture());
-                entity.AddComponent(new SpritedObject(false, id, "idle", true));
+                entity.AddComponent(new AnimatedSpriteObject(SpriteLibrary.SpriteIdToPath[id], true));
                 AnimatedFurnitureDisctionary.Add(id, entity);
                 return entity;
             }
@@ -200,7 +200,7 @@ namespace NamelessRogue.Engine.Factories
                             //to get a random sprite
                             garbage.AddComponent(new Description("Garbage", ""));
                             garbage.AddComponent(new Drawable(@$"garbage{randomGarbageNumber}", new Engine.Utility.Color(255, 255, 255)));
-                            garbage.AddComponent(new SpritedObject(true));
+                           // garbage.AddComponent(new SpritedObject(true));
                             result = garbage;
                         }
                     }

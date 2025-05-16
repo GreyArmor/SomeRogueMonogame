@@ -7,32 +7,31 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Components.Environment
 {
-    public class SpritedObject : Component
+    public class AnimatedSpriteObject : Component
     {
-        public SpritedObject(bool isStatic, string spriteId = "", string idleAnimation = "", bool infinteAnimation = false, AnimationType idleAnimationType = AnimationType.Idle)
+        public AnimatedSpriteObject(string spritePath = "", bool infinteAnimation = false, AnimationType idleAnimationType = AnimationType.Idle)
         {
-            IsStatic = isStatic;
-            SpriteId = spriteId;
-            IdleAnimation = idleAnimation;
+            SpritePath = spritePath;
             InfinteAnimation = infinteAnimation;
-            CurrentAnimation = idleAnimation;
             IdleAnimationType = idleAnimationType;
+            Sprite = SpriteLibrary.CreateSprite(spritePath);
         }
 
-        public bool IsStatic { get; }
-        public string SpriteId { get; }
-        public string IdleAnimation { get; set; }
+        public string SpritePath { get; }
         public bool InfinteAnimation { get; }
         public string CurrentAnimation { get; set; }
 
         public int CurrentAnimationTimeLeft { get; set; }
+
+     //   public int CurrentAnimationLoops{ get; set; }
         public AnimationType IdleAnimationType { get; internal set; }
 
+        public AnimatedSpriteNR Sprite { get; set; }
 
 
         public override IComponent Clone()
         {
-            return new SpritedObject(IsStatic, SpriteId, IdleAnimation, InfinteAnimation, IdleAnimationType );
+            return new AnimatedSpriteObject(SpritePath, InfinteAnimation, IdleAnimationType );
         }
     }
 }

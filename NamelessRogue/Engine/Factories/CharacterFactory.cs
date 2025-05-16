@@ -54,7 +54,7 @@ namespace NamelessRogue.Engine.Factories
             var position = new Position(x, y, z);
             Entity playerCharacter = new Entity();
             playerCharacter.AddComponent(new Drawable("Xelanoi", new Engine.Utility.Color(1),null, "", true));
-            playerCharacter.AddComponent(new SpritedObject(false, "Xelanoi", SpriteLibrary.SpritesAnimated["Xelanoi"]._animations.First().Key));
+            playerCharacter.AddComponent(new AnimatedSpriteObject(SpriteLibrary.SpriteIdToPath["Xelanoi"]));
             playerCharacter.AddComponent(new Character("Xelanoi"));
             playerCharacter.AddComponent(new Player());
             playerCharacter.AddComponent(new InputReceiver());
@@ -110,10 +110,6 @@ namespace NamelessRogue.Engine.Factories
         {
             var spritePath = "Content\\GameObjects\\Characters\\" + data.SpritePath;
             var spriteFileName = Path.GetFileName(spritePath);
-            SpriteLibrary.RemoveAnimatedSprite(spriteFileName);
-            SpriteLibrary.AddAnimatedSprite(spriteFileName, spritePath);
-
-            var sprite = SpriteLibrary.SpritesAnimated[spriteFileName];;
 
             var pos = new Position(position.X,position.Y, position.Z);
             Entity character = new Entity();
@@ -122,7 +118,7 @@ namespace NamelessRogue.Engine.Factories
            
             character.AddComponent(pos);
             character.AddComponent(new Drawable(Path.GetFileName(data.SpritePath), new Engine.Utility.Color(1), castsShadow: data.CastsShadow, isFlying: data.IsFlying));
-            character.AddComponent(new SpritedObject(false, spriteFileName, sprite._animations.Keys.First()));
+            character.AddComponent(new AnimatedSpriteObject(spritePath));
             character.AddComponent(new Description(data.Name, data.Description));
             var holder = new ItemsHolder();
             character.AddComponent(holder);

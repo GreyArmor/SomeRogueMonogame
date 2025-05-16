@@ -18,43 +18,22 @@ using MonoGame.Aseprite;
 using System.IO;
 using AsepriteDotNet.Processors;
 using AnimatedSprite = MonoGame.Aseprite.AnimatedSprite;
+using RogueSharp;
+using Path = System.IO.Path;
 
 namespace NamelessRogue.Engine.Infrastructure
 {
 
 	internal class SpriteLibrary
 	{
-		public static readonly Dictionary<string, AnimatedSpriteNR> SpritesAnimated = new Dictionary<string, AnimatedSpriteNR>();
+        public static readonly Dictionary<string, string> SpriteIdToPath = new Dictionary<string, string>();
+        public static readonly Dictionary<string, AnimatedSpriteNR> SpritesAnimated = new Dictionary<string, AnimatedSpriteNR>();
         public static readonly Dictionary<string, Sprite> SpritesStatic = new Dictionary<string, Sprite>();
         static NamelessGame game;
 
         public static void AddAnimatedSprite(string id, string path)
         {
-            AsepriteFile aseFile;
-            using (Stream stream = File.OpenRead(path))
-            {
-                aseFile = AsepriteFileLoader.FromStream(Path.GetFileName(path), stream, preMultiplyAlpha: true);
-            }
-
-            AnimatedSpriteNR sprite = new AnimatedSpriteNR(aseFile.CanvasWidth, aseFile.CanvasHeight);
-
-            var spriteSheet = aseFile.CreateSpriteSheet(game.GraphicsDevice);
-            
-            var firstAnimation = "";
-
-            foreach (var animTag in spriteSheet.GetAnimationTagNames())
-            {
-                if (firstAnimation == "")
-                {
-                    firstAnimation = animTag;
-                }
-                var animation = spriteSheet.CreateAnimatedSprite(animTag);
-                var tag = spriteSheet.GetAnimationTag(animTag);
-                var duration = tag.Frames.ToArray().Sum(frame=>frame.Duration.Milliseconds);
-                sprite.Add(animTag, animation, duration);
-            }
-
-            sprite.SetCurrentLoop(firstAnimation);
+            var sprite = CreateSprite(path);
             SpritesAnimated.Add(id, sprite);
         }
 
@@ -79,11 +58,57 @@ namespace NamelessRogue.Engine.Infrastructure
             SpritesStatic.Add(id, sprite);
         }
 
+        public static AnimatedSpriteNR CreateSprite(string path)
+        {
+            AsepriteFile aseFile;
+            using (Stream stream = File.OpenRead(path))
+            {
+                aseFile = AsepriteFileLoader.FromStream(Path.GetFileName(path), stream, preMultiplyAlpha: true);
+            }
+
+            AnimatedSpriteNR sprite = new AnimatedSpriteNR(aseFile.CanvasWidth, aseFile.CanvasHeight);
+
+            var spriteSheet = aseFile.CreateSpriteSheet(game.GraphicsDevice);
+
+            var firstAnimation = "";
+
+            foreach (var animTag in spriteSheet.GetAnimationTagNames())
+            {
+                if (firstAnimation == "")
+                {
+                    firstAnimation = animTag;
+                }
+                var animation = spriteSheet.CreateAnimatedSprite(animTag);
+                var tag = spriteSheet.GetAnimationTag(animTag);
+                var duration = tag.Frames.ToArray().Sum(frame => frame.Duration.Milliseconds);
+                sprite.Add(animTag, animation, duration);
+            }
+
+            sprite.SetCurrentLoop(firstAnimation);
+            return sprite;
+        }
+
         public static void Initialize(NamelessGame namelessGame)
         {
 
             //TODO: AUTOMATE THE LOADING
             game = namelessGame;
+
+            SpriteIdToPath.Add("ZeroAndOne", "Content\\Sprites\\ZeroAndOne.ase");
+            SpriteIdToPath.Add("ZeroAndOne2", "Content\\Sprites\\ZeroAndOne2.ase");
+            SpriteIdToPath.Add("computer1", "Content\\Sprites\\AnimatedFurniture\\computer1.ase");
+            SpriteIdToPath.Add("healthbar", "Content\\Sprites\\healthbar.ase");
+            SpriteIdToPath.Add("energybar", "Content\\Sprites\\energybar.ase");
+            SpriteIdToPath.Add("drone_recon", "Content\\Sprites\\drone_recon.ase");
+            SpriteIdToPath.Add("Xelanoi", "Content\\Sprites\\Xelanoi.ase");
+            SpriteIdToPath.Add("fire1", "Content\\Sprites\\Fire\\fire1.ase");
+            SpriteIdToPath.Add("fire2", "Content\\Sprites\\Fire\\fire2.ase");
+            SpriteIdToPath.Add("fire3", "Content\\Sprites\\Fire\\fire3.ase");
+            SpriteIdToPath.Add("box", "Sprites\\box");
+            SpriteIdToPath.Add("boxMetal", "Sprites\\boxMetal");
+            SpriteIdToPath.Add("barrel", "Sprites\\barrel");
+            SpriteIdToPath.Add("bullet", "Sprites\\bullet");
+
             AddAnimatedSprite("ZeroAndOne", "Content\\Sprites\\ZeroAndOne.ase");
             AddAnimatedSprite("ZeroAndOne2", "Content\\Sprites\\ZeroAndOne2.ase");
             AddAnimatedSprite("computer1", "Content\\Sprites\\AnimatedFurniture\\computer1.ase");
@@ -105,6 +130,6 @@ namespace NamelessRogue.Engine.Infrastructure
             {
                 AddStaticSprite($@"garbage{i}", $@"Sprites\\Garbage\\garbage{i}");
             }
-        }
-	}
+        }       
+    }
 }

@@ -24,7 +24,7 @@ namespace NamelessRogue.Engine.Infrastructure
         Aiming,
     }
 
-    internal class AnimatedSpriteNR
+    public class AnimatedSpriteNR
     {
         public int Width { get; private set; }
         public int Height { get; private set; }
@@ -77,33 +77,14 @@ namespace NamelessRogue.Engine.Infrastructure
             }
         }
 
-        public void SetCurrentLoop(string animationName)
+        public void SetCurrentLoop(string animationName, int? loopCount = null)
         {
             CurrentAnimation = _animations[animationName];
-            CurrentAnimation.Play();
+            CurrentAnimation.Play(loopCount);
         }
-
-        public void SetCurrentLoopWithTimeConstrains(string animationName, int currentAnimationTimeLeft)
-        {
-            CurrentAnimation = _animations[animationName];
-            CurrentAnimation.Play();
-
-            if(currentAnimationTimeLeft<=0 || currentAnimationTimeLeft<= CurrentAnimation.CurrentFrame.Duration.Milliseconds)
-            {
-                CurrentAnimation.SetFrame(currentAnimation.FrameCount-1);
-                CurrentAnimation.Stop();
-            }
-
-        }
-
         public void Update(GameTime time)
         {
             CurrentAnimation.Update(time);
-        }
-
-        public void SetFrame(int frame)
-        {
-            CurrentAnimation.SetFrame(frame);
         }
 
         public void Draw(NamelessGame game, GameTime time, Vector2 position, Vector2 size, Vector2 scale, Microsoft.Xna.Framework.Color color = default)

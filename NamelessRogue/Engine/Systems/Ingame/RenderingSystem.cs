@@ -275,7 +275,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             var item = entity.GetComponentOfType<Item>();
                             var drawable = entity.GetComponentOfType<Drawable>();
-                            var sprited = entity.GetComponentOfType<SpritedObject>();
+                            var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
 
 
                             var character = entity.GetComponentOfType<Character>();
@@ -417,7 +417,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public RenderingSystem(GameSettings settings) {
             InitializeCharacterTileDictionary();
 
-            Signature = [typeof(Drawable), typeof(Position), typeof(SpritedObject)];
+            Signature = [typeof(Drawable), typeof(Position), typeof(AnimatedSpriteObject)];
 
 
         }
@@ -595,12 +595,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 chunksToUpdate.Clear();
             }
 
-            var entity = game.CameraEntity;
+            var cameraEntity = game.CameraEntity;
 
-            ConsoleCamera camera = entity.GetComponentOfType<ConsoleCamera>();
-            Screen screen = entity.GetComponentOfType<Screen>();
+            ConsoleCamera camera = cameraEntity.GetComponentOfType<ConsoleCamera>();
+            Screen screen = cameraEntity.GetComponentOfType<Screen>();
             Commander commander = game.Commander;
-            screen = UpdateZoom(game, commander, entity, screen, out bool zoomUpdate);
+            screen = UpdateZoom(game, commander, cameraEntity, screen, out bool zoomUpdate);
             int fsz = game.Settings.GetFontSizeZoomed();
 
             if (visibility == null || zoomUpdate)
@@ -676,6 +676,28 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     pass.Apply();
                     game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, visibility.TileModel.Indices.Length / 3);
                 }
+
+                foreach (var entity in RegisteredEntities)
+                {
+
+                    var projectile = entity.GetComponentOfType<ProjectileComponent>();
+                    if (projectile != null)
+                    {
+                        continue;
+                    }
+
+                    var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
+                    sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Microseconds;
+
+                    if (sprited.InfinteAnimation)
+                    {
+                        sprited.CurrentAnimationTimeLeft = 1000;
+                    }
+                    sprited.Sprite.Update(gameTime);
+
+
+                }
+
                 RenderSpriteShadows(game, camera, game.GetSettings(), gameTime);
 
                 game.Batch.Begin(samplerState: SamplerState.PointClamp);
@@ -718,7 +740,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        private static Screen UpdateZoom(NamelessGame game, Commander commander, IEntity entity, Screen screen, out bool zoomUpdate)
+        private static Screen UpdateZoom(NamelessGame game, Commander commander, IEntity cameraEntity, Screen screen, out bool zoomUpdate)
         {
             zoomUpdate = false;
             if (commander.DequeueCommand(out ZoomCommand zoom))
@@ -726,7 +748,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var settings = game.GetSettings();
 
 
-                entity.RemoveComponent(screen);
+                cameraEntity.RemoveComponent(screen);
 
                 if (zoom.ZoomOut)
                 {
@@ -751,7 +773,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }
                 }
                 screen = new Screen(settings.GetWidthZoomed(), settings.GetHeightZoomed());
-                entity.AddComponent(screen);
+                cameraEntity.AddComponent(screen);
                 zoomUpdate = true;
             }
 
@@ -802,127 +824,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
 
 
-        private void FillcharacterBuffersWithTileObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
-            NamelessGame game, GameTime gameTime, IWorldProvider world)
-        {
-            // return;
-            int camX = camera.getPosition().X;
-            int camY = camera.getPosition().Y;
-            if (angle > 360)
-            {
-                angle = 0;
-            }
-
-            angle += step;
-
-            for (int x = camX; x < settings.GetWidthZoomed() + camX; x++)
-            {
-                for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
-                {
-                    Point screenPoint = camera.PointToScreen(x, y);
-                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isRemembered && x > 0 && y > 0)
-                    {
-                        Tile tileToDraw = world.GetTile(x, y, playerPosZ);
-
-                        if (tileToDraw != null)
-                        {
-                            foreach (var entity in tileToDraw.GetEntities())
-                            {
-                                var item = entity.GetComponentOfType<Item>();
-                                var drawable = entity.GetComponentOfType<Drawable>();
-                                var sprited = entity.GetComponentOfType<SpritedObject>();
-
-
-                                var character = entity.GetComponentOfType<Character>();
-                                if (character != null)
-                                {
-                                    continue;
-                                }
-
-                                if (drawable != null && sprited == null)
-                                {
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.Tileset, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying);
-                                }
-                                else if (drawable != null && sprited != null)
-                                {
-                                    if (sprited.IsStatic)
-                                    {
-                                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.StaticSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying);
-                                    }
-                                    else
-                                    {
-                                        var animation = sprited.IdleAnimation;
-                                        if (sprited.CurrentAnimationTimeLeft > 0)
-                                        {
-                                            animation = sprited.CurrentAnimation;
-                                            sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
-                                        }
-
-                                        if (sprited.InfinteAnimation)
-                                        {
-                                            sprited.CurrentAnimationTimeLeft = 1000;
-                                        }
-                                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, false, sprited.CurrentAnimationTimeLeft, animation);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings, IWorldProvider world)
-        {
-            int camX = camera.getPosition().X;
-            int camY = camera.getPosition().Y;
-            if (angle > 360)
-            {
-                angle = 0;
-            }
-
-            angle += step;
-
-            for (int x = camX; x < settings.GetWidthZoomed() + camX; x++)
-            {
-                for (int y = camY; y < settings.GetHeightZoomed() + camY; y++)
-                {
-                    Point screenPoint = camera.PointToScreen(x, y);
-                    if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isRemembered && x > 0 && y > 0)
-                    {
-                        Tile tileToDraw = world.GetTile(x, y, playerPosZ);
-
-                        if (tileToDraw != null && tileToDraw.Terrain != TerrainTypes.Nothingness)
-                        {
-                            GetTerrainTile(screen, TerrainLibrary.Terrains[tileToDraw.Terrain], screenPoint);
-                        }
-                        else
-                        {
-                            var currentElevation = playerPosZ;
-                            while (currentElevation > 0)
-                            {
-                                currentElevation--;
-                                tileToDraw = world.GetTile(x, y, currentElevation);
-                                if (tileToDraw != null || tileToDraw.Terrain != TerrainTypes.Nothingness)
-                                {
-                                    GetTerrainBlurredTile(screen, TerrainLibrary.Terrains[tileToDraw.Terrain], screenPoint);
-                                }
-                            }
-                            if (tileToDraw == null || tileToDraw.Terrain == TerrainTypes.Nothingness)
-                            {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset, new Color(), false, false);
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset, new Color(), false, false);
-                    }
-                }
-            }
-        }
-
+   
+    
         public void ClearScreen(Screen screen, ConsoleCamera camera, GameSettings settings,
             IWorldProvider world)
         {
@@ -947,190 +850,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        void GetTerrainTile(Screen screen, Terrain terrain, Point point)
-        {
-            screen.ScreenBuffer[point.X, point.Y].AddObject(terrain.Representation.ObjectID, ScreenObjectSource.Tileset, new Color(255, 255, 255), false, false, false);
-        }
-
-        void GetTerrainBlurredTile(Screen screen, Terrain terrain, Point point)
-        {
-            screen.ScreenBuffer[point.X, point.Y].AddObject(terrain.Representation.ObjectID, ScreenObjectSource.Tileset, new Color(255, 255, 255), false, false, false);
-        }
-
-        private void FillcharacterBuffersWithWorldObjects(Screen screen, ConsoleCamera camera, GameSettings settings,
-            NamelessGame game, GameTime gameTime)
-        {
-            {
-                var cursorEntity = game.CursorEntity;
-                Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
-                Position playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
-
-                LineToPlayer lineToPlayer = cursorEntity.GetComponentOfType<LineToPlayer>();
-                Drawable cursorDrawable = cursorEntity.GetComponentOfType<Drawable>();
-                var targeter = game.TargeterEntity.GetComponentOfType<TergeterComponent>();
-                if (cursorDrawable.Visible)
-                {
-                    {
-                        var distance = (cursorPosition.Point - playerPosition.Point).Length();
-                        var screenPoint = camera.PointToScreen(cursorPosition.X, cursorPosition.Y);
-                        int x = screenPoint.X;
-                        int y = screenPoint.Y;
-                        if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
-                        {
-                            if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
-                            {
-
-                                var color = new Color(255, 255, 255);
-
-                                if (distance > targeter.CurrentTargetingRange)
-                                {
-                                    color = new Color(255, 0, 0);
-                                }
-
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(cursorDrawable.ObjectID, ScreenObjectSource.Tileset, color, false, false);
-
-                            }
-                        }
-                    }
-
-                    if (lineToPlayer != null)
-                    {
-
-                        List<Point> line = PointUtil.getLine(playerPosition.Point.ToPoint(), cursorPosition.Point.ToPoint());
-                        for (int i = 0; i < line.Count - 1; i++)
-                        {
-
-                            Point p = new Point(line[i].X, line[i].Y);
-                            Point screenPoint = camera.PointToScreen(p.X, p.Y);
-
-                            var distance = (p - playerPosition.Point.ToPoint()).ToVector2().Length();
-
-                            int x = screenPoint.X;
-                            int y = screenPoint.Y;
-                            if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
-                            {
-
-                                var color = new Color(255, 255, 255);
-                                if (distance > targeter.CurrentTargetingRange)
-                                {
-                                    color = new Color(255, 0, 0);
-                                }
-
-                                string objectId = i == (line.Count() - 1) ? "Cursor" : "smallCursor";
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(objectId, ScreenObjectSource.Tileset, color, false, false);
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            List<IEntity> characters = new List<IEntity>();
-            List<IEntity> selectorCursors = new List<IEntity>();
-            foreach (IEntity entity in RegisteredEntities)
-            {
-                Drawable drawable = entity.GetComponentOfType<Drawable>();
-
-                var character = entity.GetComponentOfType<Character>();
-                var characterPosition = entity.GetComponentOfType<Position>();
-
-                if (character != null && characterPosition.Z == playerPosZ)
-                {
-                    characters.Add(entity);
-                    continue;
-                }
-
-                var interactionSelectorLink = entity.GetComponentOfType<InteractionSelectorLink>();
-                if (interactionSelectorLink != null)
-                {
-                    selectorCursors.Add(entity);
-                    continue;
-                }
-            }
-
-            foreach (IEntity entity in characters)
-            {
-                Drawable drawable = entity.GetComponentOfType<Drawable>();
-
-                if (drawable == null)
-                {
-                    continue;
-                }
-
-                Position position = entity.GetComponentOfType<Position>();
-                if (drawable.Visible)
-                {
-                    Point screenPoint = camera.PointToScreen(position.X, position.Y);
-                    int x = screenPoint.X;
-                    int y = screenPoint.Y;
-                    if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
-                    {
-                        if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
-                        {
-                            var sprited = entity.GetComponentOfType<SpritedObject>();
-                            if (sprited == null)
-                            {
-                                screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Character", ScreenObjectSource.Tileset, drawable.CharColor, false, false);
-                            }
-                            else
-                            {
-                                var animation = sprited.IdleAnimation;
-
-                                if (sprited.CurrentAnimationTimeLeft > 0)
-                                {
-                                    animation = sprited.CurrentAnimation;
-                                    sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
-                                }
-
-                                if (entity.GetComponentOfType<Dead>() != null)
-                                {
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObjectToBottom(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, sprited.CurrentAnimationTimeLeft, animation);
-
-                                }
-                                else
-                                {
-                                    screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.AnimatedSprite, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying, false, sprited.CurrentAnimationTimeLeft, animation);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            //screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
-                        }
-                    }
-
-                }
-            }
-
-            foreach (IEntity entity in selectorCursors)
-            {
-                Drawable drawable = entity.GetComponentOfType<Drawable>();
-
-                if (drawable == null)
-                {
-                    continue;
-                }
-
-                Position position = entity.GetComponentOfType<Position>();
-                if (drawable.Visible)
-                {
-                    Point screenPoint = camera.PointToScreen(position.X, position.Y);
-                    int x = screenPoint.X;
-                    int y = screenPoint.Y;
-                    if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
-                    {
-                        if (screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible)
-                        {
-                            screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Cursor", ScreenObjectSource.Tileset, drawable.CharColor, false, false);
-                        }
-                        else
-                        {
-                            //screen.ScreenBuffer[screenPoint.X, screenPoint.Y].AddObject("Nothingness", ScreenObjectSource.Tileset);
-                        }
-                    }
-                }
-            }
-        }
+   
         private void RenderProjectiles(NamelessGame game, Screen screen, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
         {
             foreach (IEntity entity in RegisteredEntities)
@@ -1208,75 +928,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         }
 
-        private bool RenderScreen(NamelessGame game, Screen screen, GameSettings settings, int stackDepth)
-        {
-            bool moreItemsToRender = false;
-            effect.Parameters["tileAtlas"].SetValue(tileAtlas);
-            var projectionMatrix = //Matrix.CreateOrthographic(game.getActualWidth(),game.getActualHeight(),0,1);
-    Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
-
-            effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
-
-            effect.GraphicsDevice.SamplerStates[0] = sampler;
-            effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-
-            var device = game.GraphicsDevice;
-            //Stopwatch s = Stopwatch.StartNew();
-            for (int y = 0; y < settings.GetHeightZoomed(); y++)
-            {
-                for (int x = 0; x < settings.GetWidthZoomed(); x++)
-                {
-                    if (screen.ScreenBuffer[x, y].StackedObjects.Count > stackDepth)
-                    {
-                        moreItemsToRender = true;
-                        var objectToDraw = screen.ScreenBuffer[x, y].StackedObjects[stackDepth];
-                        if (objectToDraw.Type == ScreenObjectSource.Tileset)
-                        {
-                            var objectId = objectToDraw.Id;
-                            AtlasTileData tileData;
-                            if (!characterToTileDictionary.TryGetValue(objectId, out tileData))
-                            {
-                                characterToTileDictionary.TryGetValue("Nothingness", out tileData);
-                            }
-                            var white = new Color(1f, 1f, 1f, 1f);
-                            var grey = new Color(0.5f, 0.5f, 0.5f, 1f);
-
-                            var tileMask = screen.ScreenBuffer[x, y].isRemembered && screen.ScreenBuffer[x, y].isVisible ? objectToDraw.CharColor : grey;
-
-
-                            int tileHeight = 64;
-                            int tileWidth = 64;
-
-
-
-                            //DrawTile(tileHeight, tileWidth, x, y,
-                            //     game.Settings.GetWidthZoomed(),
-                            //    x * settings.GetFontSizeZoomed(),
-                            //    y * settings.GetFontSizeZoomed(),                                
-                            //    tileData,                            
-                            //    tileMask,
-                            //    tileMask,
-                            //    foregroundModel, 
-                            //    tileAtlas);
-                        }
-                    }
-                }
-            }
-
-            effect.CurrentTechnique = effect.Techniques["Point"];
-
-            //var tileModel = foregroundModel;
-
-            //foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            //{
-            //    pass.Apply();
-            //    device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, tileModel.Vertices, 0, tileModel.Vertices.Length,
-            //         tileModel.Indices.ToArray(), 0, tileModel.Indices.Count()/3, VertexDeclaration);
-            //}
-            return moreItemsToRender;
-        }
-
-        private void RenderSpriteScreen(NamelessGame game, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
+          private void RenderSpriteScreen(NamelessGame game, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
         {
             foreach (var entity in RegisteredEntities)
             {
@@ -1287,42 +939,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     continue;
                 }
 
-                var sprited = entity.GetComponentOfType<SpritedObject>();
+                var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
                 var position = entity.GetComponentOfType<Position>();
                 Point screenPoint = camera.PointToScreen(position.X, position.Y);
-                var spriteId = sprited.SpriteId;
                 int tileHeight = game.GetSettings().GetFontSizeZoomed();
                 int tileWidth = game.GetSettings().GetFontSizeZoomed();
 
-                var animation = sprited.IdleAnimation;
-
+                var animation = sprited.CurrentAnimation;
                 if (sprited.CurrentAnimationTimeLeft > 0)
                 {
-                    animation = sprited.CurrentAnimation;
-                    sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
-                }
 
-                if (!sprited.IsStatic)
-                {
-                    if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
-                    {
-                        sprite.SetCurrentLoopWithTimeConstrains(sprited.CurrentAnimation, sprited.CurrentAnimationTimeLeft);
-                        // sprite.Update(gameTime);
-                        sprite.Draw(game, gameTime, new Vector2(screenPoint.X * tileWidth, screenPoint.Y * tileHeight), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.White);
-                    }
                 }
-                else
-                {
-                    if (SpriteLibrary.SpritesStatic.TryGetValue(spriteId, out var sprite))
-                    {
-                        {
-                            var positionV = new Vector2((screenPoint.X * tileWidth), (screenPoint.Y * tileHeight));
-                            var size = new Vector2(tileWidth, tileHeight);
-                            var scale = Vector2.One;
-                            game.Batch.Draw(sprite.TextureRegion, new Microsoft.Xna.Framework.Rectangle(positionV.ToPoint(), (size * scale).ToPoint()), Microsoft.Xna.Framework.Color.White);
-                        }
-                    }
-                }
+                var sprite = sprited.Sprite;
+                sprite.Draw(game, gameTime, new Vector2(screenPoint.X * tileWidth, screenPoint.Y * tileHeight), new Vector2(tileWidth, tileHeight), new Vector2(1f), Microsoft.Xna.Framework.Color.White);
             }
         }
 
@@ -1337,23 +966,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     continue;
                 }
 
-                var sprited = entity.GetComponentOfType<SpritedObject>();
+                var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
                 var position = entity.GetComponentOfType<Position>();
                 Point screenPoint = camera.PointToScreen(position.X, position.Y);
-                var spriteId = sprited.SpriteId;
+                var spriteId = sprited;
                 int tileHeight = game.GetSettings().GetFontSizeZoomed();
                 int tileWidth = game.GetSettings().GetFontSizeZoomed();
 
-                var animation = sprited.IdleAnimation;
+                var animation = sprited.CurrentAnimation;
 
-                if (sprited.CurrentAnimationTimeLeft > 0)
-                {
-                    animation = sprited.CurrentAnimation;
-                    sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Milliseconds;
-                }
-
-                if (!sprited.IsStatic)
-                {
                     Vector2 positionOnScreen = new Vector2((screenPoint.X * tileWidth) + tileWidth * 0.4f, (screenPoint.Y * tileHeight) + tileHeight / 4);
                     var angleX = -45;
                     Matrix slant = Matrix.CreateTranslation(-positionOnScreen.X, -positionOnScreen.Y, 0f) *
@@ -1362,14 +983,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     Matrix.CreateScale(1.4f, 1f, 0) *
                     Matrix.CreateTranslation(positionOnScreen.X, positionOnScreen.Y, 0f);
                     game.Batch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: slant);
-
-                    if (SpriteLibrary.SpritesAnimated.TryGetValue(spriteId, out var sprite))
-                    {
-                        sprite.Draw(game, gameTime, positionOnScreen, new Vector2(tileWidth, tileHeight), new Vector2(1f), shadowColor);
-                    }
+                    var sprite = sprited.Sprite;                
+                    sprite.Draw(game, gameTime, positionOnScreen, new Vector2(tileWidth, tileHeight), new Vector2(1f), shadowColor);
                     game.Batch.End();
-                }
-            }
+              }
         }
 
         public class AtlasTileData

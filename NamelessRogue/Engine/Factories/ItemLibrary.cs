@@ -69,7 +69,7 @@ namespace NamelessRogue.Engine.Factories
             var iconFileName = Path.GetFileName(data.IconPath);
             entity.AddComponent(new UiIconComponent(iconFileName));
             entity.AddComponent(new Drawable(iconFileName, new Color(1f)));
-            entity.AddComponent(new SpritedObject(true, iconFileName));
+          //  entity.AddComponent(new SpritedObject(true, iconFileName));
 
             entity.AddComponent(new Description(data.Name, data.Description));
 
