@@ -68,7 +68,8 @@ namespace NamelessRogue.Engine.Infrastructure
 
             AnimatedSpriteNR sprite = new AnimatedSpriteNR(aseFile.CanvasWidth, aseFile.CanvasHeight);
 
-            var spriteSheet = aseFile.CreateSpriteSheet(game.GraphicsDevice);
+            //todo: update this line and remove legacy method as mention in the method description
+            var spriteSheet = aseFile.CreateSpriteSheet(game.GraphicsDevice, null);
 
             var firstAnimation = "";
 
