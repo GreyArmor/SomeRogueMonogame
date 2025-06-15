@@ -707,6 +707,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 RenderSpriteScreen(game, camera, game.GetSettings(), gameTime);
                 RenderProjectiles(game, screen, camera, game.GetSettings(), gameTime);
+                RenderCursor(game, screen, camera, game.GetSettings(), gameTime);
                 RenderSFX(game, screen, camera, game.GetSettings(), gameTime);
                 game.Batch.End();
             }
@@ -879,6 +880,69 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
+        private void RenderCursor(NamelessGame game, Screen screen, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
+        {
+            var cursorEntity = game.CursorEntity;
+            Drawable cursorDrawable = cursorEntity.GetComponentOfType<Drawable>();
+            if (cursorDrawable.Visible)
+            {
+                Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
+                Position playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
+
+                LineToPlayer lineToPlayer = cursorEntity.GetComponentOfType<LineToPlayer>();
+                var targeter = game.TargeterEntity.GetComponentOfType<TergeterComponent>();
+
+                if (lineToPlayer != null)
+                {
+
+                    List<Point> line = PointUtil.getLine(playerPosition.Point.ToPoint(), cursorPosition.Point.ToPoint());
+                    for (int i = 0; i < line.Count - 1; i++)
+                    {
+
+                        Point p = new Point(line[i].X, line[i].Y);
+                        Point screenPoint = camera.PointToScreen(p.X, p.Y);
+
+                        var distance = (p - playerPosition.Point.ToPoint()).ToVector2().Length();
+
+                        int x = screenPoint.X;
+                        int y = screenPoint.Y;
+                        if (x >= 0 && x < settings.GetWidthZoomed() && y >= 0 && y < settings.GetHeightZoomed())
+                        {
+
+                            var color = new Color(255, 255, 255);
+                            if (distance > targeter.CurrentTargetingRange)
+                            {
+                                color = new Color(255, 0, 0);
+                            }
+
+                            string objectId = i == (line.Count() - 1) ? "Cursor" : "smallCursor";
+                            var tileData = this.characterToTileDictionary[objectId];
+
+                            var destination = new Rectangle(new Point(x * settings.GetFontSizeZoomed(), y * settings.GetFontSizeZoomed()), new Point(settings.GetFontSizeZoomed()));
+                            var source = new Rectangle(new Point(tileData.X * settings.GetFontSizeZoomed(), tileData.Y * settings.GetFontSizeZoomed()), new Point(settings.GetFontSizeZoomed()));
+
+                            game.Batch.Draw(cursorSmall, destination, color.ToXnaColor());
+
+
+                        }
+                    }
+                }
+                {
+                    Point screenPointBigCursor = camera.PointToScreen(cursorPosition.X, cursorPosition.Y);
+                    var distance = (cursorPosition.Point.ToPoint() - playerPosition.Point.ToPoint()).ToVector2().Length();
+                    var cursorBigDestination = new Rectangle(new Point(screenPointBigCursor.X * settings.GetFontSizeZoomed(), screenPointBigCursor.Y * settings.GetFontSizeZoomed()), new Point(settings.GetFontSizeZoomed()));
+
+                    var color = new Color(255, 255, 255);
+                    if (distance > targeter.CurrentTargetingRange)
+                    {
+                        color = new Color(255, 0, 0);
+                    }
+                    game.Batch.Draw(cursorNig, cursorBigDestination, color.ToXnaColor());
+                }
+            }
+        }
+        
+
         private void RenderSFX(NamelessGame game, Screen screen, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
         {
             int tileHeight = game.GetSettings().GetFontSizeZoomed();
@@ -1007,6 +1071,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
 
         Texture2D tileAtlas = null;
+        Texture2D cursorSmall = null;
+        Texture2D cursorNig = null;
         private Texture2D _particleTexture;
         private ParticleEffect _particleEffect;
         private Texture2D pixel;
@@ -1018,7 +1084,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
             pixel.SetData<XNAColor>(new XNAColor[] { XNAColor.White });
 
             tileAtlas = null;
-            tileAtlas = game.Content.Load<Texture2D>("Sprites/tileset2");            
+            tileAtlas = game.Content.Load<Texture2D>("Sprites/tileset2");
+
+            cursorSmall = null;
+            cursorSmall = game.Content.Load<Texture2D>("Sprites/cursorSmall");
+
+            cursorNig = null;
+            cursorNig = game.Content.Load<Texture2D>("Sprites/cursorBig");
+
             effect = game.Content.Load<Effect>("Shader");
 
             effect.Parameters["tileAtlas"].SetValue(tileAtlas);
