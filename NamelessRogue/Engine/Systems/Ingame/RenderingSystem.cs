@@ -158,9 +158,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
     public class VisualChunk
     {
         public List<TileModel> TileLayers { get; set; }
-        public Point WorldPosition { get; }
+        public Vector3Int WorldPosition { get; }
         public ScreenTile[,] ScreenBuffer { get; private set; }
-        public VisualChunk(Point worldPosition)
+        public VisualChunk(Vector3Int worldPosition)
         {
             var size = Constants.ChunkSize;
             WorldPosition = worldPosition;
@@ -175,7 +175,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        public void UpdateChunk(Dictionary<string, RenderingSystem.AtlasTileData> characterToTileDictionary, Texture2D tileAtlas, int playerZ, NamelessGame game)
+        public void UpdateChunk(Dictionary<string, RenderingSystem.AtlasTileData> characterToTileDictionary, Texture2D tileAtlas, NamelessGame game)
         {
 
             var worldProvider = game.WorldProvider;
@@ -190,7 +190,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
 
 
-            FillWithWorld(worldProvider, playerZ);
+            FillWithWorld(worldProvider, WorldPosition.Z);
 
             var size = Constants.ChunkSize;
             var currentDepth = 0;
@@ -266,8 +266,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         ScreenBuffer[x, y].AddObject("Nothingness", ScreenObjectSource.Tileset, new Color(), false, false);
                     }
-
-
 
                     if (tileToDraw != null)
                     {
@@ -368,12 +366,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
     public class UpdateVisualChunkCommand : ICommand
     {
-        public UpdateVisualChunkCommand(Point chunkCoordinate)
+        public UpdateVisualChunkCommand(Vector3Int chunkCoordinate)
         {
             ChunkCoordinate = chunkCoordinate;
         }
 
-        public Point ChunkCoordinate { get; }
+        public Vector3Int ChunkCoordinate { get; }
     }
 
     public class RenderingSystem : BaseSystem
@@ -589,7 +587,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 foreach (var chunk in chunksToUpdate)
                 {
-                    chunk.UpdateChunk(characterToTileDictionary, tileAtlas, playerPosZ, game);
+                    chunk.UpdateChunk(characterToTileDictionary, tileAtlas, game);
                 }
                 chunksToUpdate.Clear();
             }
@@ -640,7 +638,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var playerChunkPosition = new Point((playerPosition.Point.X / Constants.ChunkSize), (playerPosition.Point.Y / Constants.ChunkSize));
                 foreach (var visualChunk in visualChunks)
                 {
-                    if ((playerChunkPosition - visualChunk.WorldPosition).ToVector2().Length() > (4)) //- visualChunk.WorldPosition).ToVector2().Length() > 1)
+                    if (visualChunk.WorldPosition.Z != playerPosZ)
+                    {
+                        continue;
+                    }
+
+                    if ((playerChunkPosition - visualChunk.WorldPosition.ToPoint()).ToVector2().Length() > (4)) //- visualChunk.WorldPosition).ToVector2().Length() > 1)
                     {
                         continue;
                     }
@@ -913,6 +916,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
                 var position = entity.GetComponentOfType<Position>();
+
+                if(position.Z != playerPosZ)
+                { continue; }
+
                 Point screenPoint = camera.PointToScreen(position.X, position.Y);
                 int tileHeight = game.GetSettings().GetFontSizeZoomed();
                 int tileWidth = game.GetSettings().GetFontSizeZoomed();

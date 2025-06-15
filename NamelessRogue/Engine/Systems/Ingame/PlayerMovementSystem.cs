@@ -133,7 +133,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             ap.Points -= Constants.ActionsMovementCost;
                             //   playerEntity.RemoveComponentOfType<HasTurn>();
                             namelessGame.Commander.EnqueueCommand(new PlaySoundCommand("DoorOpen", false, 0.1f));
-                            namelessGame.Commander.EnqueueCommand(new UpdateVisualChunkCommand(new Point(point.X / Constants.ChunkSize, point.Y / Constants.ChunkSize)));
+                            namelessGame.Commander.EnqueueCommand(new UpdateVisualChunkCommand(new Vector3Int(point.X / Constants.ChunkSize, point.Y / Constants.ChunkSize, point.Z)));
 
 
                         }

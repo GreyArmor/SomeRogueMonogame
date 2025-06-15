@@ -31,13 +31,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
             IEntity playerentity = namelessGame.PlayerEntity;
+            Position playerPosition = namelessGame.TestMapPosition;
+            //look for current chunk
+            var playerChunkPositon = new Point(playerPosition.Point.X / Constants.ChunkSize, playerPosition.Point.Y / Constants.ChunkSize);
             if (playerentity != null)
             {
                     Chunk currentChunk = null;
                 Point? currentChunkKey = null;
-                Position playerPosition = namelessGame.TestMapPosition;
-				//look for current chunk
-				var playerChunkPositon = new Point(playerPosition.Point.X / Constants.ChunkSize, playerPosition.Point.Y / Constants.ChunkSize);
+              
                 if (worldProvider.GetRealityBubbleChunks().TryGetValue(playerChunkPositon, out var ch))
 				{                   
                     currentChunk = ch;
@@ -129,10 +130,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }
                    
                 }
-                realityBubbleChunk.Value.JustCreated = false;
-                namelessGame.Commander.EnqueueCommand(new UpdateVisualChunkCommand(realityBubbleChunk.Key));
+                realityBubbleChunk.Value.JustCreated = false;              
             }
-
         }
     }
 }

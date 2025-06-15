@@ -377,19 +377,32 @@ namespace NamelessRogue.shell
 						buildingOffsetX += 1;
 					}
 				}
-				//buildingOffsetY = 1;
+				var realChunks = WorldProvider.GetRealityBubbleChunks();
+				foreach (var realityBubbleChunk in realChunks)
+				{
+					for (int z = 0; z < Constants.ChunkHeight; z++)
+					{
+						var tile = realityBubbleChunk.Value.ChunkTiles[0][0][z];
+						if (tile != null)
+						{
+							Commander.EnqueueCommand(new UpdateVisualChunkCommand(new Engine.Utility.Vector3Int(realityBubbleChunk.Key.X, realityBubbleChunk.Key.Y, z)));
+						}
+					}
+				}
 
-				//            for (int i = 0; i < 10; i++)
-				//            {
-				//                foreach (var buildingData in BuildingLibrary.Data)
-				//                {
-				//                    BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
-				//                    buildingOffsetX += 1;
-				//                }
-				//            }
+                //buildingOffsetY = 1;
+
+                //            for (int i = 0; i < 10; i++)
+                //            {
+                //                foreach (var buildingData in BuildingLibrary.Data)
+                //                {
+                //                    BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
+                //                    buildingOffsetX += 1;
+                //                }
+                //            }
 
 
-				FollowedByCameraEntity = player;
+                FollowedByCameraEntity = player;
 
 				if (anyRivers)
 				{

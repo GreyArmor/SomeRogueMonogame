@@ -92,7 +92,7 @@ namespace NamelessRogue.Engine.Systems
                         ap.Points -= Constants.ActionsMovementCost;
                     }
                     namelessGame.Commander.EnqueueCommand(new PlaySoundCommand("DoorOpen", false, 0.1f));
-                    namelessGame.Commander.EnqueueCommand(new UpdateVisualChunkCommand(new Point(interactionEntityPosition.X/Constants.ChunkSize, interactionEntityPosition.Y/Constants.ChunkSize)));
+                    namelessGame.Commander.EnqueueCommand(new UpdateVisualChunkCommand(new Utility.Vector3Int(interactionEntityPosition.X/Constants.ChunkSize, interactionEntityPosition.Y/Constants.ChunkSize, interactionEntityPosition.Z)));
 
 
                 }
