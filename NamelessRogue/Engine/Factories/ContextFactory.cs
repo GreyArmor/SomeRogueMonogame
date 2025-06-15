@@ -74,6 +74,8 @@ namespace NamelessRogue.Engine.Factories
                 ingameRenderSystems.Add(renderingSystem);
                 ingameRenderSystems.Add(uiSystem);
                 ingameRenderSystems.Add(new HudElementsRenderingSystem(game.Settings));
+                ingameRenderSystems.Add(new ProjectileRendringSystem());
+                ingameRenderSystems.Add(new SFXSystem());
 
 				IngameContext = new GameContext(ingameLogicSystems.ToList(), ingameRenderSystems, UIContainer.Instance.HudScreen, "InGame");
                 ingameLogicSystems.Remove(ingameIntentSystem);
