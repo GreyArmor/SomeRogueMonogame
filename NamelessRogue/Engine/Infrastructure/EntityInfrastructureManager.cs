@@ -11,7 +11,7 @@ using static Assimp.Metadata;
 namespace NamelessRogue.Engine.Infrastructure
 {
     public class EntityInfrastructureManager {
-        const int defaultCapacity = 64000;
+        const int defaultCapacity = 128000;
         static List<IEntity> entities;
         static Queue<int> freeIndexes;
         static Dictionary<Type, List<IComponent>> components;

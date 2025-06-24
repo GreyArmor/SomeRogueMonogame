@@ -13,4 +13,12 @@ namespace NamelessRogue.Engine.Components.Environment
             return new Furniture();
         }
     }
+
+    public class PhantomEntity : Component
+    {
+        public override IComponent Clone()
+        {
+            return new PhantomEntity();
+        }
+    }
 }

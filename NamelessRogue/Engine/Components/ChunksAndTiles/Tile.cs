@@ -17,7 +17,8 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
         public Biomes Biome { get; set; }
         public bool IsVisible { get; set; } = false;
         public bool IsRemembered { get; set; } = false;
-
+        //for correct wall placement
+        public string TilesetPosition { get; set; } = "";
         public Tile(){}
 	
         public Tile(TerrainTypes terrain, Biomes biome)

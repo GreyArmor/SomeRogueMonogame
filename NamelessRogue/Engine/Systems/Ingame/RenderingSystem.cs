@@ -284,7 +284,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                             if (drawable != null && sprited == null)
                             {
-                                ScreenBuffer[x, y].AddObject(drawable.ObjectID + drawable.TilesetPosition, ScreenObjectSource.Tileset, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying);
+                                ScreenBuffer[x, y].AddObject(drawable.ObjectID + tileToDraw.TilesetPosition, ScreenObjectSource.Tileset, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying);
                             }
                             else if (drawable != null && sprited != null)
                             {

@@ -184,42 +184,34 @@ namespace NamelessRogue.Engine.Factories
                             {
                                 var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
                                 var tileObjectType = tile.Properties[0].Value;
+                                gameTile.TilesetPosition = tilesetPositions[loopY, loopX];
                                 switch (tileObjectType)
                                 {
                                     case "nothingness":
                                         gameTile.Terrain = TerrainTypes.Nothingness;
-                                        gameTile.Biome = Biomes.None;                                        
-                                        break;
-                                    case "wall":
-                                    case "wall_brick":
-                                        {
-                                            var wall = TerrainFurnitureFactory.GetFurniture(tileObjectType);
-                                            var drawable = wall.GetComponentOfType<Drawable>();
-                                            drawable.TilesetPosition = tilesetPositions[loopY, loopX];
-                                            gameTile.AddEntity(wall);                                          
-                                        }
+                                        gameTile.Biome = Biomes.None;
                                         break;
                                     case "door":
                                     case "door_brick":
                                         {
                                             var entity = CreateDoor(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
-                                            var drawable = entity.GetComponentOfType<Drawable>();
-                                            drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                             gameTile.AddEntity(entity);
-                                                           }
+                                        }
                                         break;
                                     case "window":
                                     case "window_brick":
                                         {
                                             var entity = CreateWindow(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
-                                            var drawable = entity.GetComponentOfType<Drawable>();
-                                            drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                             gameTile.AddEntity(entity);
                                         }
                                         break;
                                     default:
                                         {
                                             var entity = TerrainFurnitureFactory.GetFurniture(tileObjectType);
+                                            if (entity != null)
+                                            {
+                                                gameTile.AddEntity(entity);
+                                            }
                                         }
                                         break;
                                 }

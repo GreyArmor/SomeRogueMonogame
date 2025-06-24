@@ -23,16 +23,31 @@ namespace NamelessRogue.Engine.Factories
 {
     public static class TerrainFurnitureFactory
     {
-        private static Dictionary<string, Entity> FurnitureDisctionary = new Dictionary<string,Entity>();
-        private static Dictionary<string, Entity> AnimatedFurnitureDisctionary = new Dictionary<string, Entity>();
-
-        public static Entity GetFurniture(string id)
+        private static Dictionary<string, Entity> FurnitureDictionary = new Dictionary<string,Entity>();
+        private static Dictionary<string, Entity> AnimatedFurnitureDictionary = new Dictionary<string, Entity>();
+        //we return and assign every furniture as a singleton object for terrain generation, then when interacted with we should create a clone
+        //because it becomes a unique entity in our world
+        public static Entity GetFurniture(string id, bool createClone = false)
         {
-            return (Entity)(FurnitureDisctionary.TryGetValue(id, out var entity) ? entity.CloneEntity() : null);
+            if (createClone)
+            {
+                return (Entity)(FurnitureDictionary.TryGetValue(id, out var entity) ? entity.CloneEntity() : null);
+            }
+            else
+            {
+                return (Entity)(FurnitureDictionary.TryGetValue(id, out var entity) ? entity : null);
+            }
         }
-        public static Entity GetAnimatedFurniture(string id)
+        public static Entity GetAnimatedFurniture(string id, bool createClone = false)
         {
-            return (Entity)(AnimatedFurnitureDisctionary.TryGetValue(id, out var entity) ? entity.CloneEntity() : null);
+            if (createClone)
+            {
+                return (Entity)(AnimatedFurnitureDictionary.TryGetValue(id, out var entity) ? entity.CloneEntity() : null);
+            }
+            else
+            {
+                return (Entity)(AnimatedFurnitureDictionary.TryGetValue(id, out var entity) ? entity : null);
+            }
         }
         public static void CreateFurnitureEntities(NamelessGame game)
         {
@@ -53,7 +68,8 @@ namespace NamelessRogue.Engine.Factories
                     entity.AddComponent(new BlocksVision());
                 }
                 entity.AddComponent(new Furniture());
-                FurnitureDisctionary.Add(id, entity);
+                entity.AddComponent(new PhantomEntity());
+                FurnitureDictionary.Add(id, entity);
                 return entity;
             }
 
@@ -72,7 +88,7 @@ namespace NamelessRogue.Engine.Factories
                 }
                 entity.AddComponent(new Furniture());
                 entity.AddComponent(new AnimatedSpriteObject(SpriteLibrary.SpriteIdToPath[id], true));
-                AnimatedFurnitureDisctionary.Add(id, entity);
+                AnimatedFurnitureDictionary.Add(id, entity);
                 return entity;
             }
 
