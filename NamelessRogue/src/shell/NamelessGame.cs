@@ -34,6 +34,7 @@ using NamelessRogue.Engine.Components.Interaction;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using SharpDX.MediaFoundation;
 using NamelessRogue.Engine.Generation.Editor;
+using System.Diagnostics;
 
 namespace NamelessRogue.shell
 {
@@ -81,7 +82,7 @@ namespace NamelessRogue.shell
 		// this lookup is very expensive, avoid using in loops
 		public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
 		{
-			List<IEntity> results = EntityInfrastructureManager.Entities.Values.Where(v => v.GetComponentOfType<T>() != null).ToList();
+			List<IEntity> results = EntityInfrastructureManager.Entities.Where(v => v.GetComponentOfType<T>() != null).ToList();
 			return results;
 		}
 
@@ -363,20 +364,31 @@ namespace NamelessRogue.shell
                 int buildingOffsetY = 0;
 
 
-                //foreach (var buildingData in BuildingLibrary.Data)
-                //{
-                //    BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
-                //    buildingOffsetX += 1;
-                //}
-
-				for (int i = 0; i < 1; i++)
+				foreach (var buildingData in BuildingLibrary.Data)
 				{
-					foreach (var buildingData in BuildingLibrary.Data)
+					for (int i = 0; i < 2; i++)
 					{
-						BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
-						buildingOffsetX += 1;
+						for (int j = 0; j < 2; j++)
+						{
+                            BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + i, y + j), buildingData);
+                        }                        
 					}
 				}
+
+				//var stopwatch = Stopwatch.StartNew();
+				//for (int i = 0; i < 1; i++)
+				//{
+				//	foreach (var buildingData in BuildingLibrary.Data)
+				//	{
+				//		BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
+				//		buildingOffsetX += 1;
+				//	}
+				//}
+
+				//stopwatch.Stop();
+
+				//stopwatch.ToString();
+
 				var realChunks = WorldProvider.GetRealityBubbleChunks();
 				foreach (var realityBubbleChunk in realChunks)
 				{

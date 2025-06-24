@@ -73,17 +73,17 @@ namespace NamelessRogue.Engine.Serialization
 
                     dynamic storageObject = constructor.Invoke(null);
 
-                    storageObject.FillFrom(ObjectExtensions.CastToReflected(componentDictionary.Value, componentDictionary.Value.GetType()));
+                    //storageObject.FillFrom(ObjectExtensions.CastToReflected(componentDictionary.Value, componentDictionary.Value.GetType()));
 
                     saveFile.StoragesDictionary[storageObject.GetType()].Add(storageObject);
                 }
             }
-            foreach (var entity in EntityInfrastructureManager.Entities.Values)
-            {
-                var storage = new EntityStorage();
-                storage.FillFrom(entity);
-                saveFile.EntityStorageTable.Add(storage);
-            }
+            //foreach (var entity in EntityInfrastructureManager.Entities.Values)
+            //{
+            //    var storage = new EntityStorage();
+            //    storage.FillFrom(entity);
+            //    saveFile.EntityStorageTable.Add(storage);
+            //}
 
             {
                 int maxBytesNeeded = FlatBufferSerializer.Default.GetMaxSize(saveFile);
@@ -151,7 +151,7 @@ namespace NamelessRogue.Engine.Serialization
 
                         storage.FillTo(component.CastToReflected(typePair.Key));
 
-                        EntityInfrastructureManager.AddComponent(component.ParentEntityId, component);
+                       // EntityInfrastructureManager.AddComponent(component.ParentEntityId, component);
                     }
    
                 }

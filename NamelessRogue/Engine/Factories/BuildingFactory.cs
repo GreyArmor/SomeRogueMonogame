@@ -196,8 +196,7 @@ namespace NamelessRogue.Engine.Factories
                                             var wall = TerrainFurnitureFactory.GetFurniture(tileObjectType);
                                             var drawable = wall.GetComponentOfType<Drawable>();
                                             drawable.TilesetPosition = tilesetPositions[loopY, loopX];
-                                            gameTile.AddEntity(wall);
-                                            namelessGame.AddEntity(wall);
+                                            gameTile.AddEntity(wall);                                          
                                         }
                                         break;
                                     case "door":
@@ -207,8 +206,7 @@ namespace NamelessRogue.Engine.Factories
                                             var drawable = entity.GetComponentOfType<Drawable>();
                                             drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                             gameTile.AddEntity(entity);
-                                            namelessGame.AddEntity(entity);
-                                        }
+                                                           }
                                         break;
                                     case "window":
                                     case "window_brick":
@@ -217,18 +215,11 @@ namespace NamelessRogue.Engine.Factories
                                             var drawable = entity.GetComponentOfType<Drawable>();
                                             drawable.TilesetPosition = tilesetPositions[loopY, loopX];
                                             gameTile.AddEntity(entity);
-                                            namelessGame.AddEntity(entity);
                                         }
                                         break;
                                     default:
                                         {
-
                                             var entity = TerrainFurnitureFactory.GetFurniture(tileObjectType);
-                                            if (entity != null)
-                                            {
-                                                gameTile.AddEntity(entity);
-                                                namelessGame.AddEntity(entity);
-                                            }
                                         }
                                         break;
                                 }

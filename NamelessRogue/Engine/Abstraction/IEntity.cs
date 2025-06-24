@@ -11,6 +11,7 @@ namespace NamelessRogue.Engine.Abstraction
     public interface IEntity
     {
         Guid Id { get; set; }
+        int Index { get; set; }
         T GetComponentOfType<T>() where T : IComponent;
         void AddComponent<T>(T component) where T : IComponent;
 

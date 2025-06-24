@@ -11,27 +11,45 @@ using static Assimp.Metadata;
 namespace NamelessRogue.Engine.Infrastructure
 {
     public class EntityInfrastructureManager {
-        static Dictionary<Guid, IEntity> entities;
-        static Dictionary<Type, Dictionary<Guid, IComponent>> components;
+        const int defaultCapacity = 64000;
+        static List<IEntity> entities;
+        static Queue<int> freeIndexes;
+        static Dictionary<Type, List<IComponent>> components;
         static LinkedList<ISystem> systems;
 
-		public static Dictionary<Type, Dictionary<Guid, IComponent>> Components { get { return components; } }
 
-		public static Dictionary<Guid,IEntity> Entities { get { return entities; } }
+        public static int NextavailableIndex()
+        {
+            return freeIndexes.Peek();
+        }
+
+		public static Dictionary<Type, List<IComponent>> Components { get { return components; } }
+
+		public static List<IEntity> Entities { get { return entities; } }
 
 		static EntityInfrastructureManager() {
-            entities = new Dictionary<Guid, IEntity>();
-            components = new Dictionary<Type, Dictionary<Guid, IComponent>>();
+            entities = new List<IEntity>(new IEntity[defaultCapacity]);
+            freeIndexes = new Queue<int>();
+            for(int i = 0; i < defaultCapacity; i++)
+            {
+                freeIndexes.Enqueue(i);
+            }
+            components = new Dictionary<Type, List<IComponent>>();
             systems = new LinkedList<ISystem>();
         }
 
         public static IEntity GetEntity(Guid id)
         {
-            return entities.TryGetValue(id, out IEntity entity) ? entity : null;
+            return entities.FirstOrDefault(x=>x.Id == id);
         }
         public static void AddEntity(IEntity entity)
         {
-            entities.TryAdd(entity.Id,entity);
+            if (entity.Index == -1)
+            {
+                var index = freeIndexes.Dequeue();
+                entities[index] = entity;
+                entity.Index = index;
+            }
         }
         public static void AddSystem(ISystem system)
         {
@@ -44,23 +62,18 @@ namespace NamelessRogue.Engine.Infrastructure
         }
 
 
-        public static void AddComponent<ComponentType>(Guid entityId, ComponentType component) where ComponentType : IComponent
+        public static void AddComponent<ComponentType>(IEntity entity, ComponentType component) where ComponentType : IComponent
         {
-            Dictionary<Guid, IComponent> componentsOfType;
-            components.TryGetValue(component.GetType(), out componentsOfType);
+            components.TryGetValue(component.GetType(), out var componentsOfType);
             if (componentsOfType == null)
             {
-                componentsOfType = new Dictionary<Guid, IComponent>();
+                componentsOfType = new List<IComponent>(new IComponent[defaultCapacity]);
                 components.Add(component.GetType(), componentsOfType);
             }
 
-            component.ParentEntityId = entityId;
-            componentsOfType.Add(entityId, component);
+            component.ParentEntityId = entity.Id;
+            componentsOfType[entity.Index] = component;
 
-            if (!entities.TryGetValue(entityId, out IEntity entity))
-            {
-                entity = new Entity();
-            }
             foreach (var system in systems)
             {
                 if (system.IsEntityMatchesSignature(entity))
@@ -70,17 +83,14 @@ namespace NamelessRogue.Engine.Infrastructure
             }
         }
 
-        public static  void AddComponent<ComponentType>(IEntity entity, ComponentType component) where ComponentType : IComponent {
-            AddComponent(entity.Id, component);
-        }
-
         public static void RemoveComponent<ComponentType>(IEntity entity) where ComponentType : IComponent
         {
-            Dictionary<Guid, IComponent> componentsOfType;
-            components.TryGetValue(typeof(ComponentType), out componentsOfType);
+            components.TryGetValue(typeof(ComponentType), out var componentsOfType);
             if (componentsOfType != null) {
-                componentsOfType.Remove(entity.Id);
+                componentsOfType[entity.Index] = null;
             }
+
+            freeIndexes.Enqueue(entity.Index);
 
             foreach (var system in systems)
             {
@@ -91,16 +101,14 @@ namespace NamelessRogue.Engine.Infrastructure
             }
         }
 
-        public static void RemoveComponent(IComponent component, Guid entityID)
+        public static void RemoveComponent(IComponent component, IEntity entity)
         {
-            Dictionary<Guid, IComponent> componentsOfType;
-            components.TryGetValue(component.GetType(), out componentsOfType);
+            components.TryGetValue(component.GetType(), out var componentsOfType);
             if (componentsOfType != null)
             {
-                componentsOfType.Remove(entityID);
+                componentsOfType[entity.Index] = null;
             }
 
-            IEntity entity = entities[entityID];
             foreach (var system in systems)
             {
                 if (!system.IsEntityMatchesSignature(entity))
@@ -111,22 +119,21 @@ namespace NamelessRogue.Engine.Infrastructure
 
         }
 
-        public static ComponentType GetComponentByEntity<ComponentType>(Guid entityID) where ComponentType : IComponent
+        public static ComponentType GetComponentByEntity<ComponentType>(IEntity entity) where ComponentType : IComponent
         {
-            Dictionary<Guid, IComponent> componentsOfType;
-            components.TryGetValue(typeof(ComponentType), out componentsOfType);
+            components.TryGetValue(typeof(ComponentType), out var componentsOfType);
             if (componentsOfType != null) {
-                return (ComponentType) componentsOfType[entityID];
+                return (ComponentType) componentsOfType[entity.Index];
             }
         return default(ComponentType);
     }
 
-        internal static List<IComponent> GetAllComponents(Guid entityID)
+        internal static List<IComponent> GetAllComponents(IEntity entity)
         {
             List<IComponent> componentsOfEntity = new List<IComponent>();
-            foreach (KeyValuePair<Type, Dictionary<Guid, IComponent>> keyValuePair in components)
+            foreach (var keyValuePair in components)
             {
-                keyValuePair.Value.TryGetValue(entityID, out IComponent component);
+                IComponent component = keyValuePair.Value[entity.Index];
                 if (component != null)
                 {
                     componentsOfEntity.Add(component);
@@ -136,11 +143,11 @@ namespace NamelessRogue.Engine.Infrastructure
             return componentsOfEntity;
         }
 
-        public static ComponentType GetComponent<ComponentType>(Guid componentId) where ComponentType : IComponent
+        public static ComponentType GetComponent<ComponentType>(int index) where ComponentType : IComponent
         {
-            if (components.TryGetValue(typeof(ComponentType), out var dict))
+            if (components.TryGetValue(typeof(ComponentType), out var componentList))
             {
-                dict.TryGetValue(componentId, out var component);
+                var component = componentList[index];
                 if (component != null)
                 {
                     return (ComponentType) component;
@@ -150,12 +157,12 @@ namespace NamelessRogue.Engine.Infrastructure
             return default(ComponentType);
         }
 
-
-
         public static void RemoveEntity(IEntity entity) {
-            foreach (Dictionary<Guid, IComponent> dict in components.Values) {
-                dict.Remove(entity.Id);
+            foreach (var componentList in components.Values) {
+                componentList[entity.Index] = null;
             }
+
+            freeIndexes.Enqueue(entity.Index);
 
             foreach (var system in systems)
             {
@@ -166,6 +173,7 @@ namespace NamelessRogue.Engine.Infrastructure
 		internal static void ClearGame()
 		{
             entities.Clear();
+            
             systems.Clear();
             components.Clear();
 

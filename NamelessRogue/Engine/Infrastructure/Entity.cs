@@ -46,7 +46,7 @@ namespace NamelessRogue.Engine.Infrastructure
        
         public ComponentType GetComponentOfType<ComponentType>() where ComponentType : IComponent
         {
-            return EntityInfrastructureManager.GetComponent<ComponentType>(Id);
+            return EntityInfrastructureManager.GetComponent<ComponentType>(Index);
         }
 
 
@@ -58,7 +58,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
         public List<IComponent> GetAllComponents()
         { 
-            return EntityInfrastructureManager.GetAllComponents(Id);
+            return EntityInfrastructureManager.GetAllComponents(this);
         }
 
         public IEntity CloneEntity()
@@ -78,6 +78,9 @@ namespace NamelessRogue.Engine.Infrastructure
 		public Guid Id { get; set; }
 
         public List<IComponent> AllComponents { get { return GetAllComponents(); } }
+
+        //by default this is unassigned, indicating that the entity has not been adden to the list of entities;
+        public int Index { get; set; } = -1;
 
         public void AddComponentDelayed<T>(T component) where T : IComponent
         {
@@ -104,7 +107,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
         public void RemoveComponent<T>(T component) where T : IComponent
         {
-            EntityInfrastructureManager.RemoveComponent(component, Id);
+            EntityInfrastructureManager.RemoveComponent(component, this);
         }
 		public override bool Equals(object obj)
 		{

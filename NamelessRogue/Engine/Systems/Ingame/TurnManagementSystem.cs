@@ -39,7 +39,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 //reduce cooldowns of all abilities by one when the turn passes
                 foreach(var ability in EntityInfrastructureManager.Components[typeof(AbilityParameters)])
                 {
-                    var abilitiParams = (AbilityParameters)ability.Value;
+                    var abilitiParams = (AbilityParameters)ability;
+
+                    if(abilitiParams == null)
+                    {
+                        continue;
+                    }
+
                     if (abilitiParams.CooldownTurnsRemaining > 0)
                     {
                         abilitiParams.CooldownTurnsRemaining--;
