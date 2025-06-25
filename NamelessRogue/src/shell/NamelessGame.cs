@@ -352,8 +352,6 @@ namespace NamelessRogue.shell
                     binding++;
                 }
 
-				int buildingOffsetX = 0;
-                int buildingOffsetY = 0;
 
 
 				foreach (var buildingData in BuildingLibrary.Data)
