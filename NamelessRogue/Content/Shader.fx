@@ -4,8 +4,6 @@
 struct VertexToPixel
 {
 	float4 Position     : POSITION;
-	float4 Color        : COLOR0;
-	float4 BackgroundColor        : COLOR1;
 	float2 TextureCoordinate        : TEXCOORD;
 };
 
@@ -30,12 +28,10 @@ SamplerState textureSampler : register(s0) = sampler_state
 float4x4 xViewProjection;
 float4x4 xWorld;
 
-VertexToPixel SimplestVertexShader(float4 inPos : POSITION, float4 inColor : COLOR0, float4 inBackgroundColor : COLOR1, float2 inTextureCoord : TEXCOORD)
+VertexToPixel SimplestVertexShader(float4 inPos : POSITION, float2 inTextureCoord : TEXCOORD)
 {
 	VertexToPixel Output = (VertexToPixel)0;
     Output.Position = mul(mul(inPos, xWorld), xViewProjection);
-	Output.Color = inColor;
-	Output.BackgroundColor = inBackgroundColor;
 	Output.TextureCoordinate = inTextureCoord;
 
 	return Output;
@@ -47,9 +43,7 @@ PixelToFrame SimplePixelShader(VertexToPixel PSIn)
 	PixelToFrame Output = (PixelToFrame)0;
 
 	float4 textureColor = tileAtlas.Sample(textureSampler, PSIn.TextureCoordinate);
-
-	Output.Color = textureColor * PSIn.Color;
-	Output.Color.a = textureColor.a;
+	Output.Color = textureColor;
 	return Output;
 }
 
@@ -57,7 +51,7 @@ PixelToFrame SimplePixelShader(VertexToPixel PSIn)
 PixelToFrame BackgroundPixelShader(VertexToPixel PSIn)
 {
 	PixelToFrame Output = (PixelToFrame)0;
-	Output.Color = PSIn.BackgroundColor;
+    Output.Color = (float4) 0;
 	return Output;
 }
 

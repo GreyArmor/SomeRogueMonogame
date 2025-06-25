@@ -51,6 +51,22 @@ using static log4net.Appender.ColoredConsoleAppender;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct VertexTileModel
+    {
+        // ReSharper disable NotAccessedField.Local
+        private Vector3 position;
+        private Vector2 textureCoordinate;
+
+        public VertexTileModel(Vector3 position, Vector2 textureCoordinate)
+        {
+            this.position = position;
+            this.textureCoordinate = textureCoordinate;
+        }
+    }
+
+
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vertex
     {
@@ -89,19 +105,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    // we use height data for vertex z value, all else is calculated by gpu, we use yaw and pitch to calculate triangle normal
-    public struct TerrainVertex
-    {
-        // ReSharper disable NotAccessedField.Local
-        public Vector3 vertexHeightYawPitch;
-
-        public TerrainVertex(float height, float yaw, float pitch)
-        {
-            this.vertexHeightYawPitch = new Vector3(height, yaw, pitch);
-        }
-    }
-
     public class SFXLightningModel
     {
         public int timeToPlay;
@@ -112,13 +115,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
     public class TileModel : IDisposable {
-        public Vertex[] Vertices { get; }
+        public VertexTileModel[] Vertices { get; }
         public int[] Indices { get; }
         public VertexBuffer Buffer { get; set; }
         public IndexBuffer IndexBuffer { get; set; }
         public TileModel(int height, int width)
         {
-            Vertices = new Vertex[height * width * 4];
+            Vertices = new VertexTileModel[height * width * 4];
             Indices = new int[height * width * 6];
 
             //var indices = new int[6] { 0, 1, 2, 2, 1, 3 };
@@ -147,7 +150,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             Buffer?.Dispose();
             IndexBuffer?.Dispose();
 
-            Buffer = new VertexBuffer(device, RenderingSystem.VertexDeclaration, Vertices.Length, BufferUsage.None);
+            Buffer = new VertexBuffer(device, RenderingSystem.TileModelVertexDeclaration, Vertices.Length, BufferUsage.None);
             IndexBuffer = new IndexBuffer(device, IndexElementSize.ThirtyTwoBits, Indices.Length, BufferUsage.None);
 
             Buffer.SetData(Vertices);
@@ -386,6 +389,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
             new VertexElement(sizeof(float) * 11, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0)
         );
 
+       public static readonly VertexDeclaration TileModelVertexDeclaration = new VertexDeclaration
+       (
+           new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+           new VertexElement(sizeof(float) * 3, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0)
+       );
+
         Dictionary<string, AtlasTileData> characterToTileDictionary;
         private float gameTime;
         private float angle = 0;
@@ -552,7 +561,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             //todo move to constructor or some other place better suited for initialization
             if (tileAtlas == null)
             {
-                InitializeTexture(game);
+                Initialize(game);
             }
 
 
@@ -583,7 +592,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             if (chunkUpdate)
             {
-                chunksToUpdate = chunksToUpdate.Distinct().ToList();
+                chunksToUpdate = chunksToUpdate.GroupBy(ch=>ch.WorldPosition).Select(g=>g.First()).ToList();
 
                 foreach (var chunk in chunksToUpdate)
                 {
@@ -709,7 +718,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 RenderSpriteScreen(game, camera, game.GetSettings(), gameTime);
                 RenderCursor(game, screen, camera, game.GetSettings(), gameTime);
-                RenderSFX(game, screen, camera, game.GetSettings(), gameTime);
                 game.Batch.End();
             }
 
@@ -992,7 +1000,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         private ParticleEffect _particleEffect;
         private Texture2D pixel;
 
-        private Microsoft.Xna.Framework.Graphics.Texture InitializeTexture(NamelessGame game)
+        private Microsoft.Xna.Framework.Graphics.Texture Initialize(NamelessGame game)
         {
 
             pixel = new Texture2D(game.GraphicsDevice, 1, 1);
@@ -1083,14 +1091,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             var foregroundvertices = foregroundModel.Vertices;
 
-            foregroundvertices[arrayPosition] = new Vertex(new Vector3(positionX, positionY, 0), color.ToVector4(),
-                color.ToVector4(), new Vector2(textureX, textureY));
-            foregroundvertices[arrayPosition + 1] = new Vertex(new Vector3(positionX + tileWidth, positionY, 0), color.ToVector4(),
-                color.ToVector4(), new Vector2(textureXend, textureY));
-            foregroundvertices[arrayPosition + 2] = new Vertex(new Vector3(positionX, positionY + tileHeight, 0), color.ToVector4(),
-                color.ToVector4(), new Vector2(textureX, textureYend));
-            foregroundvertices[arrayPosition + 3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), color.ToVector4(),
-                color.ToVector4(), new Vector2(textureXend, textureYend));
+            foregroundvertices[arrayPosition] =     new VertexTileModel(new Vector3(positionX, positionY, 0), new Vector2(textureX, textureY));
+            foregroundvertices[arrayPosition + 1] = new VertexTileModel(new Vector3(positionX + tileWidth, positionY, 0), new Vector2(textureXend, textureY));
+            foregroundvertices[arrayPosition + 2] = new VertexTileModel(new Vector3(positionX, positionY + tileHeight, 0),new Vector2(textureX, textureYend));
+            foregroundvertices[arrayPosition + 3] = new VertexTileModel(new Vector3(positionX + tileWidth, positionY + tileHeight, 0),new Vector2(textureXend, textureYend));
 
         }
 
@@ -1130,14 +1134,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             var foregroundvertices = foregroundModel.Vertices;
 
-            foregroundvertices[arrayPosition] = new Vertex(new Vector3(positionX, positionY, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureX, textureY));
-            foregroundvertices[arrayPosition + 1] = new Vertex(new Vector3(positionX + tileWidth, positionY, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureXend, textureY));
-            foregroundvertices[arrayPosition + 2] = new Vertex(new Vector3(positionX, positionY + tileHeight, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureX, textureYend));
-            foregroundvertices[arrayPosition + 3] = new Vertex(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), color.ToVector4(),
-                backGroundColor.ToVector4(), new Vector2(textureXend, textureYend));
+            foregroundvertices[arrayPosition] =     new VertexTileModel (new Vector3(positionX, positionY, 0), new Vector2(textureX, textureY));
+            foregroundvertices[arrayPosition + 1] = new VertexTileModel(new Vector3(positionX + tileWidth, positionY, 0), new Vector2(textureXend, textureY));
+            foregroundvertices[arrayPosition + 2] = new VertexTileModel(new Vector3(positionX, positionY + tileHeight, 0), new Vector2(textureX, textureYend));
+            foregroundvertices[arrayPosition + 3] = new VertexTileModel(new Vector3(positionX + tileWidth, positionY + tileHeight, 0), new Vector2(textureXend, textureYend));
 
            
 

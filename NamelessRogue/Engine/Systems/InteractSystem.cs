@@ -63,7 +63,6 @@ namespace NamelessRogue.Engine.Systems
                 var interactionEntityPosition = command.InteractableEntity.GetComponentOfType<Position>();
                 var door = interactionEntity.GetComponentOfType<Door>();
                 var item = interactionEntity.GetComponentOfType<Item>();
-
                 if (door != null)
                 {
                     SimpleSwitch simpleSwitch = interactionEntity.GetComponentOfType<SimpleSwitch>();
