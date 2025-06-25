@@ -245,17 +245,9 @@ namespace NamelessRogue.shell
 				//	}
 				//}
 				int x, y;
-				if (firsTile != null)
-				{
-					//place everything at the center of newly generated settlement;
-					x = firsTile.Settlement.Concrete.Center.X;
-					y = firsTile.Settlement.Concrete.Center.Y;
-				}
-				else
-				{
-					x = 200;
-					y = 200;
-				}			
+
+				x = 200;
+				y = 200;		
 			
 
 				Point worldRiverPosition = new Point();

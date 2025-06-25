@@ -266,17 +266,17 @@ namespace NamelessRogue.Engine.Generation.Noise
             {
                 for (int j = 0; j < resolution; j++)
                 {
-                    if (data[i, j].Continent!=null)
-                    {
-                        var color = data[i, j].Continent.Color;
+                    //if (data[i, j].Continent!=null)
+                    //{
+                    //    var color = data[i, j].Continent.Color;
                         
-                        var vector = new Vector4(color.Red, color.Green, color.Blue, 1);
-                        arr[i, j] = vector;
-                    }
-                    else
-                    {
+                    //    var vector = new Vector4(color.Red, color.Green, color.Blue, 1);
+                    //    arr[i, j] = vector;
+                    //}
+                    //else
+                    //{
                         arr[i, j] = new Vector4(0, 0, 0, 1);
-                    }
+                   // }
                 }
             }
            

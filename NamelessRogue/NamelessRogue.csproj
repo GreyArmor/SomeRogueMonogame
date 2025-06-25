@@ -154,24 +154,28 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Content\Models\**" />
 	  <Compile Remove="Content\Sprites\Furniture\**" />
 	  <Compile Remove="Content\Sprites\MainMenuScreen\**" />
+	  <Compile Remove="Content\T4CodeGenerators\**" />
 	  <Compile Remove="Engine\Components\Environment\Buildings\**" />
 	  <Compile Remove="Engine\_3DUtility\**" />
+	  <EmbeddedResource Remove="Content\Models\**" />
 	  <EmbeddedResource Remove="Content\Sprites\Furniture\**" />
 	  <EmbeddedResource Remove="Content\Sprites\MainMenuScreen\**" />
+	  <EmbeddedResource Remove="Content\T4CodeGenerators\**" />
 	  <EmbeddedResource Remove="Engine\Components\Environment\Buildings\**" />
 	  <EmbeddedResource Remove="Engine\_3DUtility\**" />
+	  <None Remove="Content\Models\**" />
 	  <None Remove="Content\Sprites\Furniture\**" />
 	  <None Remove="Content\Sprites\MainMenuScreen\**" />
+	  <None Remove="Content\T4CodeGenerators\**" />
 	  <None Remove="Engine\Components\Environment\Buildings\**" />
 	  <None Remove="Engine\_3DUtility\**" />
 	</ItemGroup>
 	
   <ItemGroup>
     <Folder Include="Content\GameObjects\Misc\" />
-    <Folder Include="Content\Models\" />
-    <Folder Include="Content\T4CodeGenerators\" />
     <Folder Include="Content\obj\Windows\AnimatedCharacters\" />
     <Folder Include="Engine\Generation\Items\" />
   </ItemGroup>

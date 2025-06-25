@@ -107,10 +107,10 @@ namespace NamelessRogue.Engine.Generation.World
                 terrainElevation = 0.5f;
             }
 
-            double forest = 1 - (0.5 * (1 + ForestsNoise.getNoise(dX, dY)));
-            double swamp = 1 - (0.5 * (1 + SwampNoise.getNoise(dX, dY)));
+            double forest = 0.5;
+            double swamp = 0.5;
             // double lake = 1 - (0.5 * (1 + LakesNoise.getNoise(dX, dY)));
-            double desert = 1 - (0.5 * (1 + DesertNoise.getNoise(dX, dY)));
+            double desert = 0.5;
 
             double temperature = 0.5 - (0.5 * (1 + TemperatureNoise.getNoise(dX, dY)));
             temperature = temperature / 20;

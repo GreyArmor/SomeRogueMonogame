@@ -13,13 +13,6 @@ namespace NamelessRogue.Engine.Generation.World
         public TerrainTypes Terrain { get; set; }
         public Biomes Biome { get; set; }
         public MapBuilding Building { get; set; }
-        public MapArtifact Artifact { get; set; }
-        public MetaphysicalForce Affinity { get; set; } = new MetaphysicalForce("",new Color());
-        public Civilization Owner { get; set; }
-        public Region Continent { get; set; }
-        public Region LandmarkRegion { get; set; }
-        public Settlement Settlement { get; set; }
-
         public int Elevation { get; set; }
 
         private Point point;

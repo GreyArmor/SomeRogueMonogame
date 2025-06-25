@@ -35,43 +35,43 @@ namespace NamelessRogue.Engine.Systems.Map
                 switch (mapScreen.Mode)
 				{
 
-					case MapMode.ArtifactMode:
-						{
-							if (tile.Artifact != null)
-							{
-                                mapScreen.Description = (tile.Artifact.Name);
-							}
-						}
-						break;
-					case MapMode.PoliticalMode:
-						{
+					//case MapMode.ArtifactMode:
+					//	{
+					//		if (tile.Artifact != null)
+					//		{
+     //                           mapScreen.Description = (tile.Artifact.Name);
+					//		}
+					//	}
+					//	break;
+					//case MapMode.PoliticalMode:
+					//	{
 
-							if (tile.Owner != null)
-							{
-								if (tile.Settlement != null)
-								{
-                                    mapScreen.Description = $"{tile.Owner.Name}, {tile.Settlement.Name} city";
-								}
-								else
-								{
-                                    mapScreen.Description = $"{tile.Owner.Name}";
-								}
+					//		if (tile.Owner != null)
+					//		{
+					//			if (tile.Settlement != null)
+					//			{
+     //                               mapScreen.Description = $"{tile.Owner.Name}, {tile.Settlement.Name} city";
+					//			}
+					//			else
+					//			{
+     //                               mapScreen.Description = $"{tile.Owner.Name}";
+					//			}
 
-							}
-						}
-						break;
-					case MapMode.RegionsMode:
-						{
-							if (tile.Continent != null)
-							{
-                                mapScreen.Description = $"{tile.Continent.Name} continent";
-							}
-							if (tile.LandmarkRegion != null)
-							{
-                                mapScreen.Description = $"{tile.LandmarkRegion.Name} region";
-							}
-						}
-						break;
+					//		}
+					//	}
+					//	break;
+					//case MapMode.RegionsMode:
+					//	{
+					//		if (tile.Continent != null)
+					//		{
+     //                           mapScreen.Description = $"{tile.Continent.Name} continent";
+					//		}
+					//		if (tile.LandmarkRegion != null)
+					//		{
+     //                           mapScreen.Description = $"{tile.LandmarkRegion.Name} region";
+					//		}
+					//	}
+					//	break;
 					default:
                         mapScreen.Description = "";
 						break;
