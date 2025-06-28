@@ -33,8 +33,6 @@ namespace NamelessRogue.Engine.Generation.World
 
 	public class CityPart {
 
-        public Matrix Transform { get; set; } = new Matrix();
-
 		public Point Center { get; set; }
 
 		public List<Waypoints> Roads { get; set; } = new List<Waypoints>();

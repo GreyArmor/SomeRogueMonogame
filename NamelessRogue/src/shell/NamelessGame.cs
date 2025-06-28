@@ -76,6 +76,8 @@ namespace NamelessRogue.shell
 
         public IEntity TargeterEntity { get; set; }
 
+        public IEntity WorldMapCameraEntity { get; set; }
+
         public Commander Commander { get; set; }
 
 
@@ -415,6 +417,7 @@ namespace NamelessRogue.shell
 
 				CursorEntity = GameInitializer.CreateCursor();
                 TargeterEntity = GameInitializer.CreateTargeter();
+				WorldMapCameraEntity = GameInitializer.CreateWorldMapCamera();
             }
 
 			CurrentContext = ContextFactory.GetMainMenuContext(this);

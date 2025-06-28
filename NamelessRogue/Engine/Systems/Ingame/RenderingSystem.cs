@@ -224,9 +224,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 characterToTileDictionary.TryGetValue("Nothingness", out tileData);
                             }
-                            var white = new Color(1f, 1f, 1f, 1f);
-
-                            var tileMask = white;
 
                             int tileHeight = 64;
                             int tileWidth = 64;
@@ -234,9 +231,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             RenderingSystem.DrawTile(tileHeight, tileWidth, x, y, Constants.ChunkSize,
                                     x * Constants.ChunkSize,
                                     y * Constants.ChunkSize,
-                                    tileData,
-                                    tileMask,
-                                    tileMask, tileModel, tileAtlas);
+                                    tileData, tileModel, tileAtlas);
                         }
                     }
                 }
@@ -1099,8 +1094,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         }
 
         public static void DrawTile(int tileHeight, int tileWidth, int screenPositionX, int screenPositionY, int screenWidth, int positionX, int positionY,
-    AtlasTileData atlasTileData,
-    Color color, Color backGroundColor, TileModel foregroundModel, Texture2D tileAtlas)
+    AtlasTileData atlasTileData, TileModel foregroundModel, Texture2D tileAtlas)
         {
 
             if (atlasTileData == null)

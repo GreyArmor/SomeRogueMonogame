@@ -5,6 +5,8 @@ using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems;
+using NamelessRogue.Engine.Systems.Map;
+using System;
 
 namespace NamelessRogue.Engine.Factories
 {
@@ -28,6 +30,13 @@ namespace NamelessRogue.Engine.Factories
             Entity cursor = new Entity();
             cursor.AddComponent(new TergeterComponent());
             return cursor;
+        }
+
+        internal static IEntity CreateWorldMapCamera()
+        {
+            Entity cameraEntity = new Entity();
+            cameraEntity.AddComponent(new WorldMapCameraComponent(new System.Numerics.Vector2(), 64));
+            return cameraEntity;
         }
     }
 }

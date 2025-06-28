@@ -134,7 +134,7 @@ namespace NamelessRogue.Engine.Factories
                 var uiSystem = new UIRenderSystem(game);
 
                 // create and init the UI manager
-                WorldBoardContext = new GameContext(systems, new List<ISystem>() { uiSystem, renderingSystem }, UIContainer.Instance.MapScreen, "WorldMap");
+                WorldBoardContext = new GameContext(systems, new List<ISystem>() { renderingSystem, uiSystem }, UIContainer.Instance.MapScreen, "WorldMap");
                 return WorldBoardContext;
             }
         }

@@ -83,26 +83,6 @@ namespace NamelessRogue.Engine.Systems.Map
 				case MapAction.Exit:
 					namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
 					break;
-				case MapAction.RegionsMode:
-					{
-						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Regions;
-					}
-					break;
-				case MapAction.PoliticalMode:
-					{
-						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Political;
-					}
-					break;
-				case MapAction.TerrainMode:
-					{
-						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
-					}
-					break;
-				case MapAction.ArtifactMode:
-					{
-						_mapRenderSystem.Mode = WorldBoardRenderingSystemMode.Terrain;
-					}
-					break;
 				default:
 					break;
 			}
