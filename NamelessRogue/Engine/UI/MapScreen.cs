@@ -33,7 +33,6 @@ namespace NamelessRogue.Engine.UI
 		public MapMode Mode { get; set; } = MapMode.TerrainMode;
 
 		public string Description { get; internal set; } = "";
-        public int Zoom { get => zoom; set => zoom = value; }
 
         System.Numerics.Vector2 menuPosition;
 		System.Numerics.Vector2 buttonSpacing = new System.Numerics.Vector2(0, 5);
@@ -41,7 +40,8 @@ namespace NamelessRogue.Engine.UI
 		System.Numerics.Vector2 shiftVector;
 		System.Numerics.Vector2 sidebarSize;
 		int buttonCount = 6;
-		int zoom = 64;
+		int zoomIndex = 6;
+		int[] zoomValues = new int[] { 1, 2, 4, 8, 16, 32, 64 };
 		public MapScreen(NamelessGame game) : base(game)
 		{
 			buttonSize = new System.Numerics.Vector2(game.Settings.HudWidth - 10, 50);
@@ -52,8 +52,7 @@ namespace NamelessRogue.Engine.UI
 		public override void DrawLayout()
 		{
             menuPosition = new System.Numerics.Vector2(uiSize.X - game.Settings.HudWidth, 0);
-            ImGui.SetNextWindowPos(new System.Numerics.Vector2());
-            ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
+            ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove);
 
             ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
 			ImGui.SetWindowSize(uiSize);
@@ -62,17 +61,12 @@ namespace NamelessRogue.Engine.UI
 			{
 				ImGui.BeginChild("menu", sidebarSize);
 				{
-
-					ImGui.DragInt("Zoom", ref zoom, 1, 1, 64);
-                    game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>().Zoom = zoom;
-                    ImGui.SetCursorPos(shiftVector * 5);
-					if (ButtonWithSound("Exit", buttonSize)) { Action = MapAction.Exit; }
+					ImGui.Text("Zoom");
+					ImGui.SliderInt("##zoomslider", ref zoomIndex, 0, 6);
+                    game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>().Zoom = zoomValues[zoomIndex];
+ 					if (ButtonWithSound("Exit", buttonSize)) { Action = MapAction.Exit; }
 
 				}
-				var labelPosition = menuPosition;
-				labelPosition.Y = 0;
-				ImGui.SetCursorPos(labelPosition);
-				ImGui.Text(Description);
 				ImGui.PopFont();
 				ImGui.EndChild();
 			}

@@ -143,10 +143,14 @@ namespace NamelessRogue.Engine.Systems.Map
                 worldMapTileModel.UpdateBuffers(game.GraphicsDevice);
             }
 
-            var zoom = game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>().Zoom;
-
-            var chunkPositionMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 0));
-            effect.Parameters["xWorld"].SetValue(chunkPositionMatrix * Matrix.CreateScale(1f/ zoom));
+            var worldMapCameraComponent = game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>();
+            var zoom = worldMapCameraComponent.Zoom;
+       
+            var projectionMatrix = Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth() * zoom, game.GetActualHeight() * zoom, 0, 0, 2);
+            var position = new Vector2();
+            var viewMatrix = Matrix.CreateLookAt(new Vector3(position.X, position.Y, 1), new Vector3(position.X, position.Y, 0), Vector3.UnitY);
+            effect.Parameters["xViewProjection"].SetValue(viewMatrix*projectionMatrix);
+            effect.Parameters["xWorld"].SetValue(Matrix.Identity);
             game.GraphicsDevice.SetVertexBuffer(worldMapTileModel.Buffer);
             game.GraphicsDevice.Indices = worldMapTileModel.IndexBuffer;
 
