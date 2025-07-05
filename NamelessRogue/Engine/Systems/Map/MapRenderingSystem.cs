@@ -24,6 +24,7 @@ using NamelessRogue.Engine.Factories;
 using static NamelessRogue.Engine.Systems.Ingame.RenderingSystem;
 using AtlasTileData = NamelessRogue.Engine.Systems.Ingame.RenderingSystem.AtlasTileData;
 using XNAColor = Microsoft.Xna.Framework.Color;
+using Microsoft.Xna.Framework.Input;
 namespace NamelessRogue.Engine.Systems.Map
 {
 
@@ -63,8 +64,8 @@ namespace NamelessRogue.Engine.Systems.Map
 
         SamplerState sampler = new SamplerState()
         {
-            AddressU = TextureAddressMode.Wrap,
-            AddressV = TextureAddressMode.Wrap,
+            AddressU = TextureAddressMode.Clamp,
+            AddressV = TextureAddressMode.Clamp,
             AddressW = TextureAddressMode.Clamp,
             Filter = TextureFilter.Point,
             FilterMode = TextureFilterMode.Default,
@@ -89,7 +90,9 @@ namespace NamelessRogue.Engine.Systems.Map
             characterToTileDictionary.Add("Water", new AtlasTileData(3, 0));
         }
 
-
+        Vector2 mousePosPrevious = new Vector2();
+        bool mouseCaptured = false;
+        Vector2 currentMapPosition = Vector2.Zero;
         public override void Update(GameTime gameTime, NamelessGame game)
         {
 
@@ -133,9 +136,9 @@ namespace NamelessRogue.Engine.Systems.Map
                             characterToTileDictionary.TryGetValue("Nothingness", out tileData);
                         }
 
-                        RenderingSystem.DrawTile(tileHeight, tileWidth, x, y, WorldGenConstants.Resolution,
-                                x * Constants.ChunkSize,
-                                y * Constants.ChunkSize,
+                        RenderingSystem.DrawTile(tileHeight+1, tileWidth+1, x, y, WorldGenConstants.Resolution,
+                                (x * tileWidth),
+                                (y * tileHeight),
                                 tileData,
                                  worldMapTileModel, tileAtlas);
                     }
@@ -145,10 +148,42 @@ namespace NamelessRogue.Engine.Systems.Map
 
             var worldMapCameraComponent = game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>();
             var zoom = worldMapCameraComponent.Zoom;
-       
-            var projectionMatrix = Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth() * zoom, game.GetActualHeight() * zoom, 0, 0, 2);
-            var position = new Vector2();
-            var viewMatrix = Matrix.CreateLookAt(new Vector3(position.X, position.Y, 1), new Vector3(position.X, position.Y, 0), Vector3.UnitY);
+
+
+
+            var state = Mouse.GetState();
+
+            if(state.LeftButton == ButtonState.Pressed)
+            {
+                if(mouseCaptured)
+                {
+                    var currentPosition = state.Position.ToVector2();
+                    var delta = currentPosition - mousePosPrevious;
+                    currentMapPosition -= delta * zoom;
+                    currentMapPosition.X = (int)currentMapPosition.X;
+                    currentMapPosition.Y = (int)currentMapPosition.Y;
+
+                    mousePosPrevious = currentPosition;
+                }
+                else
+                {
+                    mousePosPrevious = state.Position.ToVector2();
+                    mouseCaptured = true;
+                }
+            }
+            else
+            {
+                mouseCaptured = false;
+            }
+
+            var width = game.GetActualWidth();
+            var height = game.GetActualHeight() ;
+            var projectionMatrix = Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
+            var position = currentMapPosition;
+            var viewMatrix = Matrix.CreateTranslation(-position.X, -position.Y, 0) *
+            Matrix.CreateScale(1f/zoom, 1f/zoom, 1.0f) *
+            Matrix.CreateTranslation(width / 2, height / 2, 0.0f);
+
             effect.Parameters["xViewProjection"].SetValue(viewMatrix*projectionMatrix);
             effect.Parameters["xWorld"].SetValue(Matrix.Identity);
             game.GraphicsDevice.SetVertexBuffer(worldMapTileModel.Buffer);

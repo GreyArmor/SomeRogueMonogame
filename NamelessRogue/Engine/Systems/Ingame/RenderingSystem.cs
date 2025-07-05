@@ -630,7 +630,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
                 var projectionMatrix = Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
-
                 effect.Parameters["xViewProjection"].SetValue(projectionMatrix);
 
                 effect.GraphicsDevice.SamplerStates[0] = sampler;
@@ -673,6 +672,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 effect.Parameters["tileAtlas"].SetValue(visibility.VisibilityMask);
                 effect.Parameters["xWorld"].SetValue(Matrix.Identity);
+            
 
                 game.GraphicsDevice.SetVertexBuffer(visibility.TileModel.Buffer);
                 game.GraphicsDevice.Indices = visibility.TileModel.IndexBuffer;
