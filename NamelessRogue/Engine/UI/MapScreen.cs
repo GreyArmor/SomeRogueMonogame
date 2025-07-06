@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems.Map;
 using NamelessRogue.shell;
@@ -40,8 +41,7 @@ namespace NamelessRogue.Engine.UI
 		System.Numerics.Vector2 shiftVector;
 		System.Numerics.Vector2 sidebarSize;
 		int buttonCount = 6;
-		int zoomIndex = 6;
-		int[] zoomValues = new int[] { 1, 2, 4, 8, 16, 32, 64 };
+		
 		public MapScreen(NamelessGame game) : base(game)
 		{
 			buttonSize = new System.Numerics.Vector2(game.Settings.HudWidth - 10, 50);
@@ -50,7 +50,8 @@ namespace NamelessRogue.Engine.UI
 		}
 
 		public override void DrawLayout()
-		{
+        {
+			var zoomComponent = game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>();
             menuPosition = new System.Numerics.Vector2(uiSize.X - game.Settings.HudWidth, 0);
             ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoMove);
 
@@ -62,8 +63,8 @@ namespace NamelessRogue.Engine.UI
 				ImGui.BeginChild("menu", sidebarSize);
 				{
 					ImGui.Text("Zoom");
-					ImGui.SliderInt("##zoomslider", ref zoomIndex, 0, 6);
-                    game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>().Zoom = zoomValues[zoomIndex];
+					ImGui.SliderInt("##zoomslider", ref zoomComponent.zoomIndex, 0, 6);
+                    zoomComponent.Zoom = Constants.WorldMapZoomValues[zoomComponent.zoomIndex];
  					if (ButtonWithSound("Exit", buttonSize)) { Action = MapAction.Exit; }
 
 				}

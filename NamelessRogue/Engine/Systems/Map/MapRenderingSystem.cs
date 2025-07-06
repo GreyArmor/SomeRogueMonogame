@@ -25,6 +25,7 @@ using static NamelessRogue.Engine.Systems.Ingame.RenderingSystem;
 using AtlasTileData = NamelessRogue.Engine.Systems.Ingame.RenderingSystem.AtlasTileData;
 using XNAColor = Microsoft.Xna.Framework.Color;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 namespace NamelessRogue.Engine.Systems.Map
 {
 
@@ -91,8 +92,10 @@ namespace NamelessRogue.Engine.Systems.Map
         }
 
         Vector2 mousePosPrevious = new Vector2();
+
         bool mouseCaptured = false;
         Vector2 currentMapPosition = Vector2.Zero;
+        int previousScrollValue = 0;
         public override void Update(GameTime gameTime, NamelessGame game)
         {
 
@@ -116,9 +119,6 @@ namespace NamelessRogue.Engine.Systems.Map
                 InitializeTexture(game);
                 _spriteBatch = new SpriteBatch(game.GraphicsDevice, 6400);
                 worldMapTileModel = new TileModel(WorldGenConstants.Resolution, WorldGenConstants.Resolution);
-
-
-   
                 for (int y = 0; y < WorldGenConstants.Resolution; y++)
                 {
                     for (int x = 0; x < WorldGenConstants.Resolution; x++)
@@ -136,7 +136,7 @@ namespace NamelessRogue.Engine.Systems.Map
                             characterToTileDictionary.TryGetValue("Nothingness", out tileData);
                         }
 
-                        RenderingSystem.DrawTile(tileHeight+1, tileWidth+1, x, y, WorldGenConstants.Resolution,
+                        RenderingSystem.DrawTile(tileHeight + 10, tileWidth + 10, x, y, WorldGenConstants.Resolution,
                                 (x * tileWidth),
                                 (y * tileHeight),
                                 tileData,
@@ -146,45 +146,22 @@ namespace NamelessRogue.Engine.Systems.Map
                 worldMapTileModel.UpdateBuffers(game.GraphicsDevice);
             }
 
+            var screenActualWidth = game.Settings.GetWidthZoomed() * game.Settings.GetFontSizeZoomed();
             var worldMapCameraComponent = game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>();
             var zoom = worldMapCameraComponent.Zoom;
+            var blackScreenPartRect = new Rectangle(screenActualWidth, 0, game.GetActualWidth() - screenActualWidth, game.GetActualHeight());
+            var mapScreenPartRect = new Rectangle(0, 0, screenActualWidth, game.GetActualHeight());
+            ProcessMouse(game, screenActualWidth, blackScreenPartRect);
 
-
-
-            var state = Mouse.GetState();
-
-            if(state.LeftButton == ButtonState.Pressed)
-            {
-                if(mouseCaptured)
-                {
-                    var currentPosition = state.Position.ToVector2();
-                    var delta = currentPosition - mousePosPrevious;
-                    currentMapPosition -= delta * zoom;
-                    currentMapPosition.X = (int)currentMapPosition.X;
-                    currentMapPosition.Y = (int)currentMapPosition.Y;
-
-                    mousePosPrevious = currentPosition;
-                }
-                else
-                {
-                    mousePosPrevious = state.Position.ToVector2();
-                    mouseCaptured = true;
-                }
-            }
-            else
-            {
-                mouseCaptured = false;
-            }
-
-            var width = game.GetActualWidth();
-            var height = game.GetActualHeight() ;
+            var width = screenActualWidth;
+            var height = game.GetActualHeight();
             var projectionMatrix = Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
             var position = currentMapPosition;
             var viewMatrix = Matrix.CreateTranslation(-position.X, -position.Y, 0) *
-            Matrix.CreateScale(1f/zoom, 1f/zoom, 1.0f) *
-            Matrix.CreateTranslation(width / 2, height / 2, 0.0f);
+            Matrix.CreateScale(1f / zoom, 1f / zoom, 1.0f) *
+            Matrix.CreateTranslation(width/2, height/2, 0.0f);
 
-            effect.Parameters["xViewProjection"].SetValue(viewMatrix*projectionMatrix);
+            effect.Parameters["xViewProjection"].SetValue(viewMatrix * projectionMatrix);
             effect.Parameters["xWorld"].SetValue(Matrix.Identity);
             game.GraphicsDevice.SetVertexBuffer(worldMapTileModel.Buffer);
             game.GraphicsDevice.Indices = worldMapTileModel.IndexBuffer;
@@ -197,14 +174,84 @@ namespace NamelessRogue.Engine.Systems.Map
 
             game.Batch.Begin(samplerState: SamplerState.PointClamp);
 
-            var screenActualWidth = game.Settings.GetWidthZoomed() * game.Settings.GetFontSizeZoomed();
-            game.Batch.Draw(pixel, new Rectangle(screenActualWidth, 0, game.GetActualWidth() - screenActualWidth, game.GetActualHeight()), XNAColor.Black);
+            game.Batch.Draw(pixel, blackScreenPartRect, XNAColor.Black);
 
             game.Batch.End();
 
             game.GraphicsDevice.Clear(ClearOptions.DepthBuffer, new Microsoft.Xna.Framework.Color(1), 1, 0);
         }
-        
+
+        private Rectangle ProcessMouse(NamelessGame game, int screenActualWidth, Rectangle blackScreenPartRect)
+        {
+            var state = Mouse.GetState();
+            var windowBounds = game.GraphicsDevice.Viewport.Bounds;
+
+            var worldMapCameraComponent = game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>();
+            var zoom = worldMapCameraComponent.Zoom;
+
+            if (windowBounds.Contains(state.Position) && !blackScreenPartRect.Contains(state.Position))
+            {
+               // Debug.WriteLine(state.ScrollWheelValue);
+                if(state.ScrollWheelValue < previousScrollValue)
+                {
+                  //  worldMapCameraComponent.ZoomIndex++;
+                   // zoom = Constants.WorldMapZoomValues[worldMapCameraComponent.ZoomIndex];
+                    MovePositionToMouseWorld(state, zoom, screenActualWidth, game.GetActualHeight());
+
+                }
+                else if(state.ScrollWheelValue > previousScrollValue)
+                {
+                  //  worldMapCameraComponent.ZoomIndex--;
+                    MovePositionToMouseWorld(state, zoom, screenActualWidth, game.GetActualHeight());
+                }
+                zoom = Constants.WorldMapZoomValues[worldMapCameraComponent.ZoomIndex];
+                previousScrollValue = state.ScrollWheelValue;
+                worldMapCameraComponent.Zoom = Constants.WorldMapZoomValues[worldMapCameraComponent.zoomIndex];
+                if (state.LeftButton == ButtonState.Pressed)
+                {
+                    if (mouseCaptured)
+                    {
+                        MovePositionToMouse(state, zoom);
+                    }
+                    else
+                    {
+                        mousePosPrevious = state.Position.ToVector2();
+                        mouseCaptured = true;
+                    }
+                }
+                else
+                {
+                    mouseCaptured = false;
+                }
+            }
+            else
+            {
+                mouseCaptured = false;
+            }
+
+            return blackScreenPartRect;
+        }
+
+        private void MovePositionToMouse(MouseState state, int zoom)
+        {
+
+            var currentPosition = state.Position.ToVector2();
+            var delta = currentPosition - mousePosPrevious;
+            currentMapPosition -= delta * zoom;
+
+            mousePosPrevious = currentPosition;
+        }
+
+        private void MovePositionToMouseWorld(MouseState state, int zoom, int screenActualWidth, int screenActualHeight)
+        {
+            var currentPosition = state.Position.ToVector2();
+            var delta = currentPosition - mousePosPrevious;
+            currentMapPosition -= delta * zoom;
+
+            mousePosPrevious = currentPosition;
+            Debug.WriteLine(currentMapPosition);
+            //mousePosPrevious = currentPosition;
+        }
 
         private void MoveCamera(NamelessGame game, ConsoleCamera camera)
         {
@@ -255,6 +302,7 @@ namespace NamelessRogue.Engine.Systems.Map
         Texture2D whiteRectangle = null;
         private SpriteBatch _spriteBatch;
         private Screen worldMapScreen;
+        private Vector2 currentMouseOffset = new Vector2();
 
         private Texture InitializeTexture(NamelessGame game)
         {
