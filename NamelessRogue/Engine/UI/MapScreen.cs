@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems.Map;
 using NamelessRogue.shell;
@@ -67,7 +68,12 @@ namespace NamelessRogue.Engine.UI
                     zoomComponent.Zoom = Constants.WorldMapZoomValues[zoomComponent.zoomIndex];
  					if (ButtonWithSound("Exit", buttonSize)) { Action = MapAction.Exit; }
 
-				}
+                    ImGui.Text(@$"currentMousePos={Mouse.GetState().Position}");
+                    ImGui.Text(@$"currentMapPosition={ MapRenderingSystem.currentMapPosition }");
+                    ImGui.Text(@$"mousePosPrevious={MapRenderingSystem.mousePosPrevious}");
+                    ImGui.Text(@$"currentMouseShift={MapRenderingSystem.currentMouseShift}");
+
+                }
 				ImGui.PopFont();
 				ImGui.EndChild();
 			}

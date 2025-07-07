@@ -91,15 +91,22 @@ namespace NamelessRogue.Engine.Systems.Map
             characterToTileDictionary.Add("Water", new AtlasTileData(3, 0));
         }
 
-        Vector2 mousePosPrevious = new Vector2();
+        public static Vector2 mousePosPrevious = new Vector2();
 
         bool mouseCaptured = false;
-        Vector2 currentMapPosition = Vector2.Zero;
+        public static Vector2 currentMapPosition = Vector2.Zero;
+        public static Vector2 currentMouseShift = Vector2.Zero;
         int previousScrollValue = 0;
         public override void Update(GameTime gameTime, NamelessGame game)
         {
 
             this.gameTime = (long)gameTime.TotalGameTime.TotalMilliseconds;
+
+            var screenActualWidth = game.Settings.GetWidthZoomed() * game.Settings.GetFontSizeZoomed();
+            var worldMapCameraComponent = game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>();
+            var zoom = worldMapCameraComponent.Zoom;
+            var width = screenActualWidth;
+            var height = game.GetActualHeight();
 
             game.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             game.GraphicsDevice.SamplerStates[0] = sampler;
@@ -144,17 +151,17 @@ namespace NamelessRogue.Engine.Systems.Map
                     }
                 }
                 worldMapTileModel.UpdateBuffers(game.GraphicsDevice);
+                currentMapPosition = new Vector2(width / 2 * zoom, height / 2 * zoom);
+
             }
 
-            var screenActualWidth = game.Settings.GetWidthZoomed() * game.Settings.GetFontSizeZoomed();
-            var worldMapCameraComponent = game.WorldMapCameraEntity.GetComponentOfType<WorldMapCameraComponent>();
-            var zoom = worldMapCameraComponent.Zoom;
+          
+            
             var blackScreenPartRect = new Rectangle(screenActualWidth, 0, game.GetActualWidth() - screenActualWidth, game.GetActualHeight());
             var mapScreenPartRect = new Rectangle(0, 0, screenActualWidth, game.GetActualHeight());
             ProcessMouse(game, screenActualWidth, blackScreenPartRect);
 
-            var width = screenActualWidth;
-            var height = game.GetActualHeight();
+           
             var projectionMatrix = Matrix.CreateOrthographicOffCenter(0, game.GetActualWidth(), game.GetActualHeight(), 0, 0, 2);
             var position = currentMapPosition;
             var viewMatrix = Matrix.CreateTranslation(-position.X, -position.Y, 0) *
@@ -194,15 +201,15 @@ namespace NamelessRogue.Engine.Systems.Map
                // Debug.WriteLine(state.ScrollWheelValue);
                 if(state.ScrollWheelValue < previousScrollValue)
                 {
-                  //  worldMapCameraComponent.ZoomIndex++;
-                   // zoom = Constants.WorldMapZoomValues[worldMapCameraComponent.ZoomIndex];
-                    MovePositionToMouseWorld(state, zoom, screenActualWidth, game.GetActualHeight());
+                    worldMapCameraComponent.ZoomIndex++;
+                    zoom = Constants.WorldMapZoomValues[worldMapCameraComponent.ZoomIndex];
+                    //MovePositionToMouseWorld(state, zoom, screenActualWidth, game.GetActualHeight());
 
                 }
                 else if(state.ScrollWheelValue > previousScrollValue)
                 {
-                  //  worldMapCameraComponent.ZoomIndex--;
-                    MovePositionToMouseWorld(state, zoom, screenActualWidth, game.GetActualHeight());
+                    worldMapCameraComponent.ZoomIndex--;
+                  //  MovePositionToMouseWorld(state, zoom, screenActualWidth, game.GetActualHeight());
                 }
                 zoom = Constants.WorldMapZoomValues[worldMapCameraComponent.ZoomIndex];
                 previousScrollValue = state.ScrollWheelValue;
@@ -238,18 +245,30 @@ namespace NamelessRogue.Engine.Systems.Map
             var currentPosition = state.Position.ToVector2();
             var delta = currentPosition - mousePosPrevious;
             currentMapPosition -= delta * zoom;
-
+            currentMouseShift +=  delta;
             mousePosPrevious = currentPosition;
+        }
+
+        public void Reset()
+        {
+            currentMapPosition = default;
+            mousePosPrevious = default;
+            currentMouseShift = default;
         }
 
         private void MovePositionToMouseWorld(MouseState state, int zoom, int screenActualWidth, int screenActualHeight)
         {
             var currentPosition = state.Position.ToVector2();
-            var delta = currentPosition - mousePosPrevious;
-            currentMapPosition -= delta * zoom;
-
-            mousePosPrevious = currentPosition;
-            Debug.WriteLine(currentMapPosition);
+            var center = new Vector2(screenActualWidth / 2, screenActualHeight / 2);
+            var shiftDelta = currentPosition - currentMouseShift;
+            // currentMapPosition = ;
+            var finalshift = shiftDelta;
+            var intendedcurrentMapPosition = new Vector2(finalshift.X * zoom, finalshift.Y * zoom);
+            // currentPosition = new Vector2(screenActualWidth / 2 * zoom, screenActualHeight / 2 * zoom);
+            currentMapPosition = intendedcurrentMapPosition;
+            mousePosPrevious = finalshift;
+            currentMouseShift = center - currentPosition;
+            //Debug.WriteLine(currentMapPosition);
             //mousePosPrevious = currentPosition;
         }
 
