@@ -179,13 +179,13 @@ namespace NamelessRogue.Engine.Systems.Map
                 game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, worldMapTileModel.Indices.Length / 3);
             }
 
-            //game.Batch.Begin(samplerState: SamplerState.PointClamp);
+            game.Batch.Begin(samplerState: SamplerState.PointClamp);
 
-            //game.Batch.Draw(pixel, blackScreenPartRect, XNAColor.Black);
+            game.Batch.Draw(pixel, blackScreenPartRect, XNAColor.Black);
 
-            //game.Batch.End();
+            game.Batch.End();
 
-            //game.GraphicsDevice.Clear(ClearOptions.DepthBuffer, new Microsoft.Xna.Framework.Color(1), 1, 0);
+            game.GraphicsDevice.Clear(ClearOptions.DepthBuffer, new Microsoft.Xna.Framework.Color(1), 1, 0);
         }
 
         private Rectangle ProcessMouse(NamelessGame game, int screenActualWidth, Rectangle blackScreenPartRect)
