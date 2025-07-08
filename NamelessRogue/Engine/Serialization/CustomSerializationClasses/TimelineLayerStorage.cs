@@ -22,7 +22,6 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		[FlatBufferItem(3)] public IList<WorldTileStorage> WorldTiles { get; set; }
 
-		[FlatBufferItem(4)] public IList<CivilizationStorage> Civilizations { get; set; }
 
 		[FlatBufferItem(5)] public IList<RegionStorage> Continents { get; set; }
 

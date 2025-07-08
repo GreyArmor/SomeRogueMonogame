@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components.WorldBoardComponents.Combat;
-using NamelessRogue.Engine.Generation.World.Meta;
 
 namespace NamelessRogue.Engine.Generation.World.BoardPieces
 {

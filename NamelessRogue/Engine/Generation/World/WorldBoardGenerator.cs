@@ -12,14 +12,12 @@ using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.Noise;
-using NamelessRogue.Engine.Generation.World.Meta;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using VoronoiLib;
 using VoronoiLib.Structures;
 using Color = NamelessRogue.Engine.Utility.Color;
-using NamelessRogue.Engine.Generation.World.Denizens;
 using MonoGame.Extended;
 using SharpDX.Direct3D9;
 using AStarNavigator.Algorithms;
@@ -533,7 +531,6 @@ namespace NamelessRogue.Engine.Generation.World
 
             //if empty then generate the name procedurally
             string Name { get; set; } = "";
-            List<RaceId> RacesOfDenizens { get; set; }
             public WorldGenerationParameters() { }
         }
     }

@@ -7,7 +7,6 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World.BoardPieces;
-using NamelessRogue.Engine.Generation.World.Meta;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Serialization;
 using NamelessRogue.shell;
