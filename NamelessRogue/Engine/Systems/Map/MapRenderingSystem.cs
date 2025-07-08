@@ -167,7 +167,7 @@ namespace NamelessRogue.Engine.Systems.Map
             var viewMatrix = Matrix.CreateTranslation(-position.X, -position.Y, 0) *
             Matrix.CreateScale(1f / zoom, 1f / zoom, 1.0f) *
             Matrix.CreateTranslation(width/2, height/2, 0.0f);
-
+            effect.Parameters["tileAtlas"].SetValue(tileAtlas);
             effect.Parameters["xViewProjection"].SetValue(viewMatrix * projectionMatrix);
             effect.Parameters["xWorld"].SetValue(Matrix.Identity);
             game.GraphicsDevice.SetVertexBuffer(worldMapTileModel.Buffer);
@@ -179,13 +179,13 @@ namespace NamelessRogue.Engine.Systems.Map
                 game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, worldMapTileModel.Indices.Length / 3);
             }
 
-            game.Batch.Begin(samplerState: SamplerState.PointClamp);
+            //game.Batch.Begin(samplerState: SamplerState.PointClamp);
 
-            game.Batch.Draw(pixel, blackScreenPartRect, XNAColor.Black);
+            //game.Batch.Draw(pixel, blackScreenPartRect, XNAColor.Black);
 
-            game.Batch.End();
+            //game.Batch.End();
 
-            game.GraphicsDevice.Clear(ClearOptions.DepthBuffer, new Microsoft.Xna.Framework.Color(1), 1, 0);
+            //game.GraphicsDevice.Clear(ClearOptions.DepthBuffer, new Microsoft.Xna.Framework.Color(1), 1, 0);
         }
 
         private Rectangle ProcessMouse(NamelessGame game, int screenActualWidth, Rectangle blackScreenPartRect)

@@ -892,7 +892,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         color = new Color(255, 0, 0);
                     }
-                    game.Batch.Draw(cursorNig, cursorBigDestination, color.ToXnaColor());
+                    game.Batch.Draw(cursorBig, cursorBigDestination, color.ToXnaColor());
                 }
             }
         }
@@ -990,7 +990,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         Texture2D tileAtlas = null;
         Texture2D cursorSmall = null;
-        Texture2D cursorNig = null;
+        Texture2D cursorBig = null;
         private Texture2D _particleTexture;
         private ParticleEffect _particleEffect;
         private Texture2D pixel;
@@ -1007,8 +1007,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
             cursorSmall = null;
             cursorSmall = game.Content.Load<Texture2D>("Sprites/cursorSmall");
 
-            cursorNig = null;
-            cursorNig = game.Content.Load<Texture2D>("Sprites/cursorBig");
+            cursorBig = null;
+            cursorBig = game.Content.Load<Texture2D>("Sprites/cursorBig");
 
             effect = game.Content.Load<Effect>("Shader");
 
