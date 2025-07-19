@@ -27,10 +27,12 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
         {
 
             while (game.Commander.DequeueCommand(out GenerateWorldFileCommand command))
-            {
-                //pass to the next context
-                game.Commander.EnqueueCommand(command);
+            {              
                 game.ContextToSwitch = ContextFactory.GetWorldGenerationProgressContext(game);
+                //pass this command to the nexy context
+                game.Commander.EnqueueCommand(command);
+                //breaking is mandatory here
+                break;
             }
 
             switch (UIContainer.Instance.WorldGenScreen.Action)

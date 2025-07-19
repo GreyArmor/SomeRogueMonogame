@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Factories;
+using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
@@ -13,6 +15,17 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Systems.PickUpItems
 {
+
+    public class GenerateWorldFinishedCommand : ICommand
+    {
+        public GenerateWorldFinishedCommand(WorldTemplate worldTemplate)
+        {
+            WorldTemplate = worldTemplate;
+        }
+
+        public WorldTemplate WorldTemplate { get; }
+    }
+
     public class WorldGenerationProgressSystem : BaseSystem
     {
         public WorldGenerationProgressSystem()
@@ -28,8 +41,24 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
 
             while (game.Commander.DequeueCommand(out GenerateWorldFileCommand command))
             {
-                //pass to the next context
-                game.Commander.EnqueueCommand(command);
+                var task = new Task(() =>
+                {
+                    var parameters = command.Parameters;
+                    var worldTemplate = new WorldTemplate(parameters);
+                    var worldMap = new WorldMap(parameters.worldSizeValue);
+                    ChunkData chunkData = new ChunkData(game.WorldSettings, worldMap);
+                    worldMap.Chunks = chunkData;
+                    WorldBoardGenerator.PopulateWithInitialData(worldMap, game);
+                    worldTemplate.WorldMap = worldMap; 
+                    game.Commander.EnqueueCommand(new GenerateWorldFinishedCommand(worldTemplate));
+                });
+
+                task.Start();
+            }
+
+            while (game.Commander.DequeueCommand(out GenerateWorldFinishedCommand command))
+            {
+                command.ToString();               
             }
 
             switch (UIContainer.Instance.WorldGenScreen.Action)
@@ -44,7 +73,5 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
             }
             UIContainer.Instance.WorldGenScreen.Action = WorldGenAction.None;
         }
-
-
     }
 }

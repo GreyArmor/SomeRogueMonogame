@@ -44,7 +44,7 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		public void FillTo(ChunkData component)
 		{
-			component.ChunkResolution = ChunkResolution;
+			//component.ChunkResolution = ChunkResolution;
 			component.Chunks = new Dictionary<Microsoft.Xna.Framework.Point, Chunk>();
 			foreach (var chunkStorage in Chunks)
 			{

@@ -26,6 +26,10 @@ using AStarNavigator;
 using static NamelessRogue.Engine.Components.AI.NonPlayerCharacter.AStarPathfinderSimple;
 using System.Reflection.Metadata;
 using NamelessRogue.Engine.Generation.World.TerrainFeatures;
+using Point = Microsoft.Xna.Framework.Point;
+using NamelessRogue.Engine.Components.AI.Pathfinder;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using NamelessRogue.Engine.Components.Physical;
 
 namespace NamelessRogue.Engine.Generation.World
 {
@@ -139,7 +143,7 @@ namespace NamelessRogue.Engine.Generation.World
 
         public static void PopulateWithInitialData(WorldMap board, NamelessGame game)
         {
-            var resolution = WorldGenConstants.Resolution;
+            var resolution = board.Resolution;
 
             var random = new InternalRandom(game.WorldSettings.GlobalRandom.Next());
 
@@ -171,38 +175,57 @@ namespace NamelessRogue.Engine.Generation.World
 
 
 
-            //board.CityParts = new List<CityPart>();
+            ////board.CityParts = new List<CityPart>();
 
-            var testCityPartCenter = new Microsoft.Xna.Framework.Point(200, 200); ;
-                        
 
-            //generate random roads here
+            Point cityPartCenter = FindRandomLand(board, game, random, resolution);
 
-          
+            CreateCitySpill(board, game, random, resolution, cityPartCenter, (int)(resolution*resolution*0.2f));
 
-            for (int i = 0; i < 10; i++)
-            {
-                if (i % 2 == 0)
-                {
-                    Vector2 startV = new Vector2((float)i, 0);
-                    Vector2 endV = new Vector2((float)i, 10);
-                    CreateRoad(board, testCityPartCenter.ToVector2(), startV, endV);
-                }
-            }
+            ////generate random roads here
 
-            for (int i = 0; i < 10; i++)
-            {
-                if (i % 2 == 0)
-                {
-                    Vector2 startV = new Vector2(0, i);
-                    Vector2 endV = new Vector2(10, i);
-                    CreateRoad(board, testCityPartCenter.ToVector2(), startV, endV);
-                }
-            }
+
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    if (i % 2 == 0)
+            //    {
+            //        Vector2 startV = new Vector2((float)i, 0);
+            //        Vector2 endV = new Vector2((float)i, 10);
+            //        CreateRoad(board, testCityPartCenter.ToVector2(), startV, endV);
+            //    }
+            //}
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    if (i % 2 == 0)
+            //    {
+            //        Vector2 startV = new Vector2(0, i);
+            //        Vector2 endV = new Vector2(10, i);
+            //        CreateRoad(board, testCityPartCenter.ToVector2(), startV, endV);
+            //    }
+            //}
 
             //  board.CityParts.Add(testCityPart);
 
             OldRiverGeneration(board, game, resolution, random, fillArray);
+        }
+
+        private static Point FindRandomLand(WorldMap map, NamelessGame game, InternalRandom random, int resolution)
+        {
+            bool found = false;
+            Point result = new Point();
+            while (!found)
+            {
+                int res20percent = (int)(resolution * 0.2f);
+                result = new Point(random.Next(res20percent, resolution - res20percent), random.Next(res20percent, resolution - res20percent));
+                var tile = map.WorldTiles[result.X, result.Y];
+                if (tile.Terrain != TerrainTypes.Water)
+                {
+                    found = true;
+                }
+            }
+            return result;          
         }
 
         private static void CreateRoad(WorldMap board, Vector2 center, Vector2 startV, Vector2 endV)
@@ -258,9 +281,9 @@ namespace NamelessRogue.Engine.Generation.World
        
         private static void InitBoardWithoutFeatures(WorldMap board, NamelessGame game, int resolution)
         {
-            for (int x = 0; x < game.WorldSettings.WorldBoardWidth; x++)
+            for (int x = 0; x < resolution; x++)
             {
-                for (int y = 0; y < game.WorldSettings.WorldBoardHeight; y++)
+                for (int y = 0; y < resolution; y++)
                 {
                     var worldTile = new WorldTile(new Microsoft.Xna.Framework.Point(x, y));
                     var tile = game.CurrentGame.TerrainGen.GetTileWithoutTerrainFeatures(x, y, (float)game.WorldSettings.WorldBoardWidth / resolution);
@@ -281,6 +304,42 @@ namespace NamelessRogue.Engine.Generation.World
                     };
                 }
             }
+        }
+
+        private static void CreateCitySpill(WorldMap map, NamelessGame game, InternalRandom random, int resolution, Point cityCenter, int numberOfCityTiles)
+        {
+            Rectangle worldBounds = new Rectangle(new Point(), new Point(resolution));
+            Point position = cityCenter;
+            var tilesLeft = numberOfCityTiles;
+            Queue<Point> openList = new Queue<Point>();
+            openList.Enqueue(position);
+            while (openList.Any() && tilesLeft>0)
+            {
+                var currentTile = map.WorldTiles[position.X, position.Y];
+                currentTile.Building = new BoardPieces.MapBuilding();
+                var neighbors = new Queue<Point>(SharpCornerNeighborProvider.GetNeighbors(position));
+
+                bool foundNeighbor = false;
+                while (neighbors.Any())
+                {
+                    var neighbor = neighbors.Dequeue();
+                    var neighborTile = map.WorldTiles[neighbor.X, neighbor.Y];
+                    if (neighborTile.Terrain!= TerrainTypes.Water && neighborTile.Building == null && worldBounds.Contains(neighbor))
+                    {
+                        position = neighbor;
+                        tilesLeft--;
+                        foundNeighbor = true;
+                    }
+                    break;
+                }
+
+                if (!foundNeighbor)
+                {
+                    var randomNeighbor = SharpCornerNeighborProvider.GetNeighbors(position).OrderBy(x => random.Next()).First(worldBounds.Contains);
+                    position = randomNeighbor;
+                }
+            }
+
         }
 
         private static void OldRiverGeneration(WorldMap board, NamelessGame game, int resolution, InternalRandom random, TileForGeneration[][] fillArray)
@@ -503,9 +562,9 @@ namespace NamelessRogue.Engine.Generation.World
 			ImageWriter.RiverBordersWriteImage(borderLines, board.ElevationMap, resolution, "C:\\11\\riverBordersLines.png");
 #endif
 
-            for (int x = 0; x < game.WorldSettings.WorldBoardWidth; x++)
+            for (int x = 0; x < resolution; x++)
             {
-                for (int y = 0; y < game.WorldSettings.WorldBoardHeight; y++)
+                for (int y = 0; y < resolution; y++)
                 {
                     var worldTile = board.WorldTiles[x, y];
 

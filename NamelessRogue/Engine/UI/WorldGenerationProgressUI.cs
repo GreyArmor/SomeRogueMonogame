@@ -34,9 +34,9 @@ namespace NamelessRogue.Engine.UI
             ImGui.SetWindowSize(uiSize);
 
             ImGui.ProgressBar(ProgressFraction, ProgressBarSize, "Generating world...");
-            if (ButtonWithSound("Cancel", buttonSize, worldGenerationParameters.seed.Any()))
+            if (ButtonWithSound("Cancel", buttonSize, true))
             {
-                game.ContextToSwitch = ContextFactory.GetWorldGenerationProgressContext(game);
+                game.ContextToSwitch = ContextFactory.GetWorldGenContext(game);
             }
 
             ImGui.PopFont();

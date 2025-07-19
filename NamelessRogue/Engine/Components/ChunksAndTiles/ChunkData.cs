@@ -64,7 +64,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
 
 		//TODO: we need to implement quick iteration by using bounding box trees;
-		public int ChunkResolution { get; set; } = WorldGenConstants.Resolution;
+		public int ChunkResolution { get { return WorldMap.Resolution; } }
 		public WorldMap WorldMap { get => worldMap; set => worldMap = value; }
 		public Dictionary<Point, Chunk> Chunks { get => chunks; set => chunks = value; }
 		public Dictionary<Point, Chunk> RealityBubbleChunks { get => realityBubbleChunks; set => realityBubbleChunks = value; }

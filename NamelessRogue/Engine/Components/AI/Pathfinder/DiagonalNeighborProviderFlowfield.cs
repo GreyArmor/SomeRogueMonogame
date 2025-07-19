@@ -27,7 +27,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 	}
 
-	public static class SharpCornerNeighborProviderFlowfield
+	public static class SharpCornerNeighborProvider
 	{
 		private static readonly int[,] neighbors = new int[,]
 		{

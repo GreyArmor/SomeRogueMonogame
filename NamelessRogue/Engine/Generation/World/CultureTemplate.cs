@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Generation.World
         private Markov.MarkovChain<char> townChain;
 
         public CultureTemplate()
-        {}
+        { }
 
         public CultureTemplate(string templateName, string townNames)//, string landNames)
         {
@@ -29,10 +29,22 @@ namespace NamelessRogue.Engine.Generation.World
             {
                 townChain.Add(str);
             }
-            //foreach (var str in landlists)
-            //{
-            //    landChain.Add(str);
-            //}
+        }
+
+        public CultureTemplate(string templateName, string[] townNames)//, string landNames)
+        {
+            TemplateName = templateName;
+
+            foreach (var str in townNames)
+            {
+                TownNames += str + ' ';
+            }
+            townChain = new MarkovChain<char>(2);
+            List<string> townList = TownNames.ToLower().Split(' ').ToList();
+            foreach (var str in townNames)
+            {
+                townChain.Add(str);
+            }
         }
 
         public string TownNames { get; set; }
@@ -49,7 +61,13 @@ namespace NamelessRogue.Engine.Generation.World
                 }
             }
 
-            return new string(townChain.Chain(random.Next()).ToArray()).FirstCharToUpper();
+
+            char[] charName = null;
+            while (charName == null || charName.Length<3 || charName.Length>10)
+            {
+                charName = townChain.Chain(random.Next()).ToArray();
+            }
+            return new string(charName).FirstCharToUpper();
         }
 
     }

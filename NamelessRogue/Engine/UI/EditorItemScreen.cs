@@ -307,11 +307,7 @@ namespace NamelessRogue.Engine.UI
                         ImGui.InputTextMultiline("##Description", ref description, 10000, inputTextSize, ImGuiInputTextFlags.None);
                         ImGui.Text("Price");
                         ImGui.InputInt("##price", ref price);
-                        void _restrainValue(ref int value, int minValue = 0, int maxValue = 999)
-                        {
-                            value = value <= minValue ? minValue : value;
-                            value = value >= maxValue ? maxValue : value;
-                        }
+                       
 
                         if (currentItemType == ItemType.Weapon)
                         {

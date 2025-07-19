@@ -175,7 +175,7 @@ namespace NamelessRogue.shell
 
 			CurrentGame = new GameInstance();
 			DebugDevice = this.GraphicsDevice;
-            gameInstance = new GameInstance(75924, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
+            gameInstance = new GameInstance(75924, 1000);
             //TODO: move to config later
             int width = 20;
 			int height = 15;

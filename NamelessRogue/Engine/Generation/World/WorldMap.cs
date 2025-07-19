@@ -50,12 +50,11 @@ namespace NamelessRogue.Engine.Generation.World
 		private bool[][] riverBorderMap;
         private bool[][] roadsMap;
         public TileForPainting[][] TerrainFeatures { get; set; }
+        public int Resolution { get; }
 
-        public WorldMap(int width, int height)
+        public WorldMap(int resolution)
         {
-            WorldTiles = new WorldTile[width, height];
-
-			var resolution = WorldGenConstants.Resolution;
+            WorldTiles = new WorldTile[resolution, resolution];
 
 			ElevationMap = new float[resolution][];
 			for (int i = 0; i < resolution; i++)
@@ -82,8 +81,9 @@ namespace NamelessRogue.Engine.Generation.World
 			}
 
 			RiverBorderLines = new List<Waypoints>();
-			//CityParts = new List<CityPart>();
-		}
+            Resolution = resolution;
+            //CityParts = new List<CityPart>();
+        }
 
 		public WorldMap()
 		{

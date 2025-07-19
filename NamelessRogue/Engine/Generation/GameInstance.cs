@@ -11,12 +11,12 @@ namespace NamelessRogue.Engine.Generation
 {
     public class GameInstance
     {
+
         public GameInstance() { }
-        public GameInstance(int seed, int worldBoardWidth, int worldBoardHeight)
+        public GameInstance(int seed, int worldBoardResolution)
         {
             Seed = seed;
-            WorldBoardWidth = worldBoardWidth;
-            WorldBoardHeight = worldBoardHeight;
+            WorldBoardWidth = worldBoardResolution;
             GlobalRandom = new InternalRandom(seed);
             WorldMapScale = 1;
             ContinentTilesPerCivilization = 2000;
@@ -25,7 +25,7 @@ namespace NamelessRogue.Engine.Generation
             ContinentTilesPerResource = 100;
             NamesGenerator = new NamesGenerator();
             GlobalRandom = new InternalRandom(seed);
-            TerrainGen = new TerrainGenerator(GlobalRandom);
+            TerrainGen = new TerrainGenerator(GlobalRandom, worldBoardResolution);
 
             //TODO move to files
             CultureTemplates.Add(new CultureTemplate("Slavic",
@@ -48,9 +48,14 @@ namespace NamelessRogue.Engine.Generation
                 "THEBES MEMPHIS HELIOPOLIS ELEPHANTINE ALEXANDRIA PIRAMESSES GIZA BYBLOS AKHETATEN HIERACONPOLIS ABYDOS ASYUT AVARIS LISHT BUTO EDFU PITHOM BUSIRIS KAHUN ATHRIBIS MENDES ELASHMUNEIN TANIS BUBASTIS THIS ORYX SEBENNYTUS AKHMIN KARNAK LUXOR ELKAB ARMANT BALAT ELLAHUN GHURAB HAWARA DASHUR RAQOTE DAMANHUR MERIMDE ABUSIR HERAKLEOPOLIS AKORIS BENIHASAN TASA BADARI HERMOPOLIS AMRAH NEGADE KOPTOS HERMONTHIS OMBOS ANIBA SOLEB SEMNA AMARA"
             ));
 
+            string[] cyberpunkTownNames = new string[] { "Neotoka", "Veltrix", "Draxylon", "Cindara", "Ombervek", "Zentara", "Crynova", "Halcyrex", "Virelon", "Noxmere", "Tekhama", "Dravokh", "Miranex", "Sornveil", "Quantrex", "Luxara", "Strathide", "Valkarion", "Nethspire", "Xyvanta", "Korvath", "Zephuron", "Graveth", "Orsimar", "Thrallax", "Cryndale", "Veltrion", "Zarnova", "Threxium", "Omnivar", "Xarneth", "Lytraxis", "Korvexa", "Synmaris", "Tarkion", "Blyxara", "Quanthel", "Dramore", "Zethralis", "Nivora", "Hexvane", "Tornexis", "Valkhera", "Xeraphon", "Noktara", "Cindros", "Vorentha", "Skarnyx", "Jentharis", "Obvex", "Luxmire", "Thraven", "Krythana", "Sornex", "Ylvaron", "Zarnith", "Delvora", "Myrenthos", "Praxion", "Xevelar", "Orvaxa", "Zynthral", "Corthanix", "Vireth", "Halzonis", "Tarnyx", "Grivara", "Quarnyx", "Lorvex", "Kandros", "Nythera", "Draxmere", "Zalvaron", "Nuxareth", "Orzava" };
+            CyberpunkTemplate = new CultureTemplate("Cyberpunk", cyberpunkTownNames);
+
+
+
         }
 
-
+        public CultureTemplate CyberpunkTemplate { get; private set; }
 
         public List<CultureTemplate> CultureTemplates { get; } = new List<CultureTemplate>();
         public int Turn { get; set; }
@@ -64,7 +69,6 @@ namespace NamelessRogue.Engine.Generation
 
         public int Seed { get; set; }
         public int WorldBoardWidth { get; set; }
-        public int WorldBoardHeight { get; set; }
         public InternalRandom GlobalRandom { get; set; }
         public TerrainGenerator TerrainGen { get; set; }
     }

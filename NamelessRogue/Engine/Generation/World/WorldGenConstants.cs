@@ -14,7 +14,5 @@ namespace NamelessRogue.Engine.Generation.World
         //per 10 food;
         public static int HealthNeededToStoreFood = 2;
 
-        public static int Resolution = 1000;
-
     }
 }

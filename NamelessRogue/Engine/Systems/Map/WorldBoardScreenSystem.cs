@@ -29,7 +29,7 @@ namespace NamelessRogue.Engine.Systems.Map
             var tilePosition = camera.GetMouseTilePosition(namelessGame);
             var settings = namelessGame.WorldSettings;
 			var mapScreen = UIContainer.Instance.MapScreen;
-			if (tilePosition.X >= 0 && tilePosition.X < settings.WorldBoardWidth && tilePosition.Y >= 0 && tilePosition.Y < settings.WorldBoardHeight)
+			if (tilePosition.X >= 0 && tilePosition.X < settings.WorldBoardWidth && tilePosition.Y >= 0 && tilePosition.Y < settings.WorldBoardWidth)
             {
                 var tile = timeline.WorldMap.WorldTiles[tilePosition.X, tilePosition.Y];
                 switch (mapScreen.Mode)

@@ -32,10 +32,12 @@ namespace NamelessRogue.Engine.Generation.World
         int layer1 = 3000,layer2 = 1000,layer3 = 1000;
         public InternalRandom Random { get; set; }
         public List<Waypoints> BorderLines { get; set; } = new List<Waypoints>();
+        public int Resolution { get; }
 
-        public TerrainGenerator(InternalRandom random)
+        public TerrainGenerator(InternalRandom random, int resolution)
         {
             Init(random);
+            Resolution = resolution;
         }
 
         public void Init(InternalRandom random)
@@ -67,7 +69,7 @@ namespace NamelessRogue.Engine.Generation.World
         {
             double dX = (double)x / scale;
             double dY = (double)y / scale;
-            int resolutionZoomed = (int)(WorldGenConstants.Resolution * scale);
+            int resolutionZoomed = (int)(Resolution * scale);
             int borderthickness = 0;
 
             double noise = 0;
@@ -98,7 +100,7 @@ namespace NamelessRogue.Engine.Generation.World
             double dX = (double)x / scale;
             double dY = (double)y / scale;
             // System.out.print("X ="+dX+"Y =" +dY +"\n");
-            int resolutionZoomed = (int)(WorldGenConstants.Resolution * scale);
+            int resolutionZoomed = (int)(Resolution * scale);
 
             var terrainElevation = GetHeightNoise(x, y, scale);
 

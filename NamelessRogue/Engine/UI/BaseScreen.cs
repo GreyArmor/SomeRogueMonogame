@@ -111,7 +111,12 @@ namespace NamelessRogue.Engine.UI
 
         public Vector2 UiSize { get => uiSize; set => uiSize = value; }
 
-     
+        protected void _restrainValue(ref int value, int minValue = 0, int maxValue = 999)
+        {
+            value = value <= minValue ? minValue : value;
+            value = value >= maxValue ? maxValue : value;
+        }
+
         protected void DrawCooldownCircle(Vector2 position, int radius, float percentageLeft)
         {
             const int pointsCount = 30;
