@@ -21,16 +21,16 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
 		private Dictionary<Point, Chunk?> realityBubbleChunks;
 		public List<Chunk?> RealityChunks { get; set; } = new List<Chunk?>();
-		private WorldSettings worldSettings;
-		private WorldBoard worldBoard;
+		private GameInstance gameInstance;
+		private WorldMap worldMap;
 
-		public ChunkData(WorldSettings settings, WorldBoard worldBoard)
+		public ChunkData(GameInstance instance, WorldMap worldBoard)
 		{
 			Id = Guid.NewGuid();
 			chunks = new Dictionary<Point, Chunk>();
 			realityBubbleChunks = new Dictionary<Point, Chunk>();
-			worldSettings = settings;
-			this.worldBoard = worldBoard;
+			gameInstance = instance;
+			this.worldMap = worldBoard;
 			initWorld();
 		}
 
@@ -65,10 +65,10 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
 		//TODO: we need to implement quick iteration by using bounding box trees;
 		public int ChunkResolution { get; set; } = WorldGenConstants.Resolution;
-		public WorldBoard WorldBoard { get => worldBoard; set => worldBoard = value; }
+		public WorldMap WorldMap { get => worldMap; set => worldMap = value; }
 		public Dictionary<Point, Chunk> Chunks { get => chunks; set => chunks = value; }
 		public Dictionary<Point, Chunk> RealityBubbleChunks { get => realityBubbleChunks; set => realityBubbleChunks = value; }
-		public WorldSettings WorldSettings { get => worldSettings; set => worldSettings = value; }
+		public GameInstance WorldSettings { get => gameInstance; set => gameInstance = value; }
 
 		public Tile GetTile(int x, int y, int z)
 		{
@@ -113,12 +113,12 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
 		public TerrainGenerator GetWorldGenerator()
 		{
-			return worldSettings.TerrainGen;
+			return gameInstance.TerrainGen;
 		}
 
 		public InternalRandom GetGlobalRandom()
 		{
-			return worldSettings.GlobalRandom;
+			return gameInstance.GlobalRandom;
 		}
 
 		public Dictionary<Point, Chunk> GetRealityBubbleChunks()

@@ -75,7 +75,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
         };
 
-        public MapRenderingSystem(GameSettings settings, WorldSettings gameWorldSettings)
+        public MapRenderingSystem(GameSettings settings, GameInstance gameWorldSettings)
         {
             InitializeCharacterTileDictionary();
             worldMapScreen = new Screen(gameWorldSettings.WorldBoardWidth, gameWorldSettings.WorldBoardHeight);
@@ -114,10 +114,10 @@ namespace NamelessRogue.Engine.Systems.Map
 
 
             IEntity timeline = game.TimelineEntity;
-            WorldBoard worldProvider = null;
+            WorldMap worldProvider = null;
             if (timeline != null)
             {
-                worldProvider = timeline.GetComponentOfType<TimeLine>().CurrentTimelineLayer;
+                worldProvider = timeline.GetComponentOfType<WorldTemplate>().WorldMap;
             }
 
             //todo move to constructor or some other place better suited for initialization
@@ -284,8 +284,8 @@ namespace NamelessRogue.Engine.Systems.Map
         }
 
         private void FillcharacterBuffersWithWorld(Screen screen, ConsoleCamera camera, GameSettings settings,
-            WorldSettings worldSEttings,
-            WorldBoard world)
+            GameInstance worldSEttings,
+            WorldMap world)
         {
 
             int camX = camera.getPosition().X;

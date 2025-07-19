@@ -140,7 +140,7 @@ namespace NamelessRogue.Engine.Factories
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+                worldProvider = worldEntity.GetComponentOfType<WorldTemplate>().WorldMap.Chunks;
             }
    
             IEntity building = new Entity();

@@ -31,7 +31,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+                worldProvider = worldEntity.GetComponentOfType<WorldTemplate>().WorldMap.Chunks;
                 while (namelessGame.Commander.DequeueCommand(out DropItemCommand dropCommand))
                 {
                     var tile = worldProvider.GetTile(dropCommand.WhereToDrop.X, dropCommand.WhereToDrop.Y, 0);

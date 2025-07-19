@@ -9,22 +9,23 @@ using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Generation
 {
-    public class WorldSettings
+    public class GameInstance
     {
-        public WorldSettings() { }
-        public WorldSettings(int seed, int worldBoardWidth, int worldBoardHeight)
+        public GameInstance() { }
+        public GameInstance(int seed, int worldBoardWidth, int worldBoardHeight)
         {
             Seed = seed;
             WorldBoardWidth = worldBoardWidth;
             WorldBoardHeight = worldBoardHeight;
             GlobalRandom = new InternalRandom(seed);
-            TerrainGen = new TerrainGenerator(GlobalRandom);
             WorldMapScale = 1;
             ContinentTilesPerCivilization = 2000;
 
             ContinentTilesPerArtifact = 1500;
             ContinentTilesPerResource = 100;
             NamesGenerator = new NamesGenerator();
+            GlobalRandom = new InternalRandom(seed);
+            TerrainGen = new TerrainGenerator(GlobalRandom);
 
             //TODO move to files
             CultureTemplates.Add(new CultureTemplate("Slavic",
@@ -52,7 +53,7 @@ namespace NamelessRogue.Engine.Generation
 
 
         public List<CultureTemplate> CultureTemplates { get; } = new List<CultureTemplate>();
-
+        public int Turn { get; set; }
         public int ContinentTilesPerCivilization { get; set; }
         public int ContinentTilesPerArtifact { get; set; }
         public int ContinentTilesPerResource { get; set; }
@@ -61,10 +62,10 @@ namespace NamelessRogue.Engine.Generation
         //TODO: not implemented currently
         public float WorldMapScale { get; set; }
 
-        public TerrainGenerator TerrainGen { get; set; }
         public int Seed { get; set; }
         public int WorldBoardWidth { get; set; }
         public int WorldBoardHeight { get; set; }
         public InternalRandom GlobalRandom { get; set; }
+        public TerrainGenerator TerrainGen { get; set; }
     }
 }

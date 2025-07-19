@@ -350,12 +350,33 @@ namespace NamelessRogue.Engine.Factories
             {
                 var systems = new List<ISystem>();
                 systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
-                systems.Add(new WorldGenSystem());
+                systems.Add(new WorldGenerationSystem());
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
 
                 worldGenContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIContainer.Instance.WorldGenScreen, "NewWorld");
                 return worldGenContext;
+            }
+        }
+
+        private static GameContext worldGenerationProgressContext;
+        public static GameContext GetWorldGenerationProgressContext(NamelessGame game)
+        {
+
+            if (worldGenerationProgressContext != null)
+            {
+                return worldGenerationProgressContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
+                systems.Add(new WorldGenerationProgressSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+
+                worldGenerationProgressContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIContainer.Instance.WorldGenerationProgressUI, "NewWorld");
+                return worldGenerationProgressContext;
             }
         }
 

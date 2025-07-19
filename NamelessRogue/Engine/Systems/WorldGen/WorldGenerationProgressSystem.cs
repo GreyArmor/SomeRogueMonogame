@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Systems.PickUpItems
 {
-    public class WorldGenSystem : BaseSystem
+    public class WorldGenerationProgressSystem : BaseSystem
     {
-        public WorldGenSystem()
+        public WorldGenerationProgressSystem()
         {
             Signature = new HashSet<Type>();
             Signature.Add(typeof(InputComponent));
@@ -25,6 +25,12 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
 
         public override void Update(GameTime gameTime, NamelessGame game)
         {
+
+            while (game.Commander.DequeueCommand(out GenerateWorldFileCommand command))
+            {
+                //pass to the next context
+                game.Commander.EnqueueCommand(command);
+            }
 
             switch (UIContainer.Instance.WorldGenScreen.Action)
             {

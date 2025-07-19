@@ -564,7 +564,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+                worldProvider = worldEntity.GetComponentOfType<WorldTemplate>().WorldMap.Chunks;
             }
             bool chunkUpdate = false;
 

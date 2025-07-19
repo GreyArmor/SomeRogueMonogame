@@ -1,10 +1,15 @@
 ﻿using ImGuiNET;
+using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.ItemComponents;
+using NamelessRogue.Engine.Components.Stats;
+using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static NamelessRogue.Engine.Generation.World.WorldBoardGenerator;
 
 namespace NamelessRogue.Engine.UI
 {
@@ -14,30 +19,69 @@ namespace NamelessRogue.Engine.UI
 		Generate,
 		Exit
 	}
+
+
+	public class WorldGenerationParameters
+	{
+        public string seed = "";
+        public string name = "";
+        public string description = "";
+		public DateTime time;
+		public WorldSizeName worldSize;
+		public int worldSizeValue = 0;
+		public WaterLevel waterLevel;
+    }
+
+	public class GenerateWorldFileCommand : ICommand
+	{
+		public GenerateWorldFileCommand(WorldGenerationParameters parameters)
+        {
+            Parameters = parameters;
+        }
+
+        public WorldGenerationParameters Parameters { get; }
+    }
 	public class WorldGenerationUI : BaseScreen
 	{
 		public bool LocalMapDisplay { get; set; } = false;
 		public WorldGenAction Action { get; set; } = WorldGenAction.None;
+        WorldSizeName[] worldSizes = (WorldSizeName[])Enum.GetValues(typeof(WorldSizeName));
+        string[] worldSizesNames = Enum.GetNames(typeof(WorldSizeName));
+        WaterLevel[] waterLevel = (WaterLevel[])Enum.GetValues(typeof(WaterLevel));
+        string[] waterLevelNames = Enum.GetNames(typeof(WaterLevel));
 
-		public string Description { get; internal set; } = "";
+        int selectedWorldSize = 0;
+        int selectedWaterLevel = 0;
+        Dictionary<WorldSizeName, int> worldSizeValues = new Dictionary<WorldSizeName, int>();
 
 		System.Numerics.Vector2 menuPosition;
 		System.Numerics.Vector2 buttonSpacing = new System.Numerics.Vector2(0, 5);
 		System.Numerics.Vector2 buttonSize;
 		System.Numerics.Vector2 shiftVector;
 		System.Numerics.Vector2 sidebarSize;
+        System.Numerics.Vector2 smallButtonSize;
 
-		string _seed = "";
-		int worldWidth = 1000;
-		int worldHeight = 1000;
-		public WorldGenerationUI(NamelessGame game) : base(game)
+        WorldGenerationParameters worldGenerationParameters;
+		Random random;
+        public WorldGenerationUI(NamelessGame game) : base(game)
 		{
 			buttonSize = new System.Numerics.Vector2(game.Settings.HudWidth, 50);
-			shiftVector = new System.Numerics.Vector2(0, buttonSpacing.Y + buttonSize.Y);
+			smallButtonSize = new System.Numerics.Vector2(40);
+            shiftVector = new System.Numerics.Vector2(0, buttonSpacing.Y + buttonSize.Y);
 			sidebarSize = new System.Numerics.Vector2(0, uiSize.Y);
-			Random r = new Random();
-			_seed = r.Next().ToString();
-		}
+            random = new Random();
+			
+            worldSizeValues = new Dictionary<WorldSizeName, int>();
+			worldSizeValues.Add(WorldSizeName.Tiny, 100);
+            worldSizeValues.Add(WorldSizeName.Small, 250);
+            worldSizeValues.Add(WorldSizeName.Medium, 500);
+            worldSizeValues.Add(WorldSizeName.Big, 750);
+            worldSizeValues.Add(WorldSizeName.Large, 1000);
+
+			worldGenerationParameters = new WorldGenerationParameters();
+            worldGenerationParameters.seed = random.Next().ToString();
+            worldGenerationParameters.name = "Defaul World Name";
+        }
 
 		public override void DrawLayout()
 		{
@@ -54,23 +98,30 @@ namespace NamelessRogue.Engine.UI
 			ImGui.BeginChild("menu", sidebarSize, false);
 			{
 
-				//"label" is also an ID on InputText, placing ## in front of it makes it invisible while retaining the ID
-				ImGui.Text("Seed");
-				ImGui.InputText("##seedinput", ref _seed, 30);
-				ImGui.Spacing();
-				ImGui.Text("Width");
-				ImGui.InputInt("##widthinput", ref worldWidth, 1, 10);
-				ImGui.Spacing();
-				ImGui.Text("Height");
-				ImGui.InputInt("##Heightinput", ref worldHeight, 1, 10);
+                ImGui.Text("Name");
+                ImGui.InputText("##nameInput", ref worldGenerationParameters.name, 30);
+                ImGui.Text("Seed");
+				ImGui.InputText("##seedinput", ref worldGenerationParameters.seed, 30);
+				ImGui.SameLine();
+                if (ButtonWithSound(" ", smallButtonSize)) { worldGenerationParameters.seed = random.Next().ToString(); }
+                ImGui.Spacing();
+				ImGui.Text("Size");
+                ImGui.Combo("##worldSizes", ref selectedWorldSize, worldSizesNames, worldSizesNames.Length, worldSizesNames.Length);
+                ImGui.Text("Water lever");
+                ImGui.Combo("##WaterType", ref selectedWaterLevel, waterLevelNames, waterLevelNames.Length, waterLevelNames.Length);
 
-				if (worldWidth < 100) worldWidth = 100;
-				if (worldWidth > 1000) worldWidth = 1000;
+                var worldSizeValue = worldSizeValues[worldSizes[selectedWorldSize]];
+				ImGui.Text($@"{worldSizeValue.ToString()} by {worldSizeValue.ToString()}");
 
-				if (worldHeight < 100) worldHeight = 100;
-				if (worldHeight > 1000) worldHeight = 1000;
+				worldGenerationParameters.worldSizeValue = worldSizeValue;
+				worldGenerationParameters.worldSize = worldSizes[selectedWorldSize];
+				worldGenerationParameters.waterLevel = waterLevel[selectedWaterLevel];
 
-				if (ButtonWithSound("Generate", buttonSize, _seed.Any())) { Action = WorldGenAction.Generate; }
+                worldGenerationParameters.time = new DateTime();
+
+                if (ButtonWithSound("Generate", buttonSize, worldGenerationParameters.seed.Any())) {
+					game.Commander.EnqueueCommand(new GenerateWorldFileCommand(worldGenerationParameters));
+				}
 				if (ButtonWithSound("Exit", buttonSize)) { Action = WorldGenAction.Exit; }
 			}
 

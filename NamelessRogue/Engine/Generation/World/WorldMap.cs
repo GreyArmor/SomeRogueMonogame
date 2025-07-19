@@ -31,19 +31,10 @@ namespace NamelessRogue.Engine.Generation.World
 		public List<Vector2> Points { get; set; } = new List<Vector2>();
 	}
 
-	public class CityPart {
 
-		public Point Center { get; set; }
-
-		public List<Waypoints> Roads { get; set; } = new List<Waypoints>();
-
-		Utility.BoundingBox Bounds { get; set; } = new Utility.BoundingBox();
-	}
-
-
-    public class WorldBoard
+    public class WorldMap
     {
-        public DateTime CurrentTime { get; set; }
+      
         public WorldTile[,] WorldTiles { get; set; }
         public ChunkData Chunks { get; set; }
 		public float[][] ElevationMap { get => elevationMap; set => elevationMap = value; }
@@ -53,9 +44,6 @@ namespace NamelessRogue.Engine.Generation.World
 
 		public List<Waypoints> Roads { get; set; } = new List<Waypoints>();
 
-        //public List<CityPart> CityParts { get; set; }
-
-
 		//used for river/lake generation
 		private float[][] elevationMap;
 		private bool[][] riverMap;
@@ -63,12 +51,9 @@ namespace NamelessRogue.Engine.Generation.World
         private bool[][] roadsMap;
         public TileForPainting[][] TerrainFeatures { get; set; }
 
-
-        public WorldBoard(int width, int height, int age)
+        public WorldMap(int width, int height)
         {
             WorldTiles = new WorldTile[width, height];
-            CurrentTime = new DateTime(2050, 5, 14);
-
 
 			var resolution = WorldGenConstants.Resolution;
 
@@ -100,7 +85,7 @@ namespace NamelessRogue.Engine.Generation.World
 			//CityParts = new List<CityPart>();
 		}
 
-		public WorldBoard()
+		public WorldMap()
 		{
 		}
 	}

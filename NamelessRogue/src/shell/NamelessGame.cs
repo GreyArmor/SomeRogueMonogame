@@ -14,7 +14,6 @@ using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Context;
 using NamelessRogue.Engine.Factories;
-using NamelessRogue.Engine.GameInstance;
 using NamelessRogue.Engine.Generation;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
@@ -43,7 +42,7 @@ namespace NamelessRogue.shell
 		private static long serialVersionUID = 1L;
 
 		//RenderTarget2D renderTarget = new RenderTarget2D(
-		public GameInstance CurrentGame { get; set; }
+		public GameInstance CurrentGame { get { return gameInstance; } set { gameInstance = value; } }
 
 		public static GraphicsDevice DebugDevice;
 
@@ -103,7 +102,7 @@ namespace NamelessRogue.shell
 		{
 			get
 			{
-				return TimelineEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+				return TimelineEntity.GetComponentOfType<WorldTemplate>().WorldMap.Chunks;
 			}
 		}
 
@@ -147,7 +146,7 @@ namespace NamelessRogue.shell
 
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
-		WorldSettings worldSettings;
+		GameInstance gameInstance;
 		public ILog Log { get; private set; }
 		/// <summary>
 		/// Allows the game to perform any initialization it needs to before starting to run.
@@ -176,8 +175,9 @@ namespace NamelessRogue.shell
 
 			CurrentGame = new GameInstance();
 			DebugDevice = this.GraphicsDevice;
-			//TODO: move to config later
-			int width = 20;
+            gameInstance = new GameInstance(75924, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
+            //TODO: move to config later
+            int width = 20;
 			int height = 15;
 
 
@@ -210,7 +210,7 @@ namespace NamelessRogue.shell
             SpriteLibrary.Initialize(this);
 
             //12345 123
-            worldSettings = new WorldSettings(75924, WorldGenConstants.Resolution, WorldGenConstants.Resolution);
+          
 
 
 			new UIContainer(this);
@@ -234,7 +234,7 @@ namespace NamelessRogue.shell
 				//libraries.AddComponent(ammoLibrary);
 
 				var timelinEntity = TimelineEntity;
-				var timeline = timelinEntity.GetComponentOfType<TimeLine>();
+				var timeline = timelinEntity.GetComponentOfType<WorldTemplate>();
 
 				WorldTile firsTile = null;
 				//foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
@@ -480,10 +480,10 @@ namespace NamelessRogue.shell
 			get { return spriteBatch; }
 		}
 
-		public WorldSettings WorldSettings
+		public GameInstance WorldSettings
 		{
-			get { return worldSettings; }
-			set { worldSettings = value; }
+			get { return gameInstance; }
+			set { gameInstance = value; }
 		}
 		public bool IsInitialized { get; internal set; }
 		public GameSettings Settings { get => settings; set => settings = value; }

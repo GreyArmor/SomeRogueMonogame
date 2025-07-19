@@ -25,13 +25,13 @@ namespace NamelessRogue.Engine.Systems.Map
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             ConsoleCamera camera = namelessGame.CameraEntity?.GetComponentOfType<ConsoleCamera>();
-            TimeLine timeline = namelessGame.TimelineEntity?.GetComponentOfType<TimeLine>();
+            WorldTemplate timeline = namelessGame.TimelineEntity?.GetComponentOfType<WorldTemplate>();
             var tilePosition = camera.GetMouseTilePosition(namelessGame);
             var settings = namelessGame.WorldSettings;
 			var mapScreen = UIContainer.Instance.MapScreen;
 			if (tilePosition.X >= 0 && tilePosition.X < settings.WorldBoardWidth && tilePosition.Y >= 0 && tilePosition.Y < settings.WorldBoardHeight)
             {
-                var tile = timeline.CurrentTimelineLayer.WorldTiles[tilePosition.X, tilePosition.Y];
+                var tile = timeline.WorldMap.WorldTiles[tilePosition.X, tilePosition.Y];
                 switch (mapScreen.Mode)
 				{
 

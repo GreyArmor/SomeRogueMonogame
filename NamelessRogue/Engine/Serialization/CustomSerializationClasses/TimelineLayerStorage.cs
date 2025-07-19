@@ -14,7 +14,7 @@ using NamelessRogue.Engine.Generation.Noise;
 namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 {
 	[FlatBufferTable]
-	public class TimelineLayerStorage : IStorage<Generation.World.WorldBoard>
+	public class TimelineLayerStorage : IStorage<Generation.World.WorldMap>
 	{
 		[FlatBufferItem(0)] public string Id { get; set; }
 		[FlatBufferItem(1)] public string ParentEntityId { get; set; }
@@ -50,7 +50,7 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		[FlatBufferItem(17)] public IList<TileForInlandWaterConnectivityStorage> InlandWaterConnectivity { get; set; }
 
-		public void FillFrom(Generation.World.WorldBoard component)
+		public void FillFrom(Generation.World.WorldMap component)
 		{
 
 			Age = 0;
@@ -117,7 +117,7 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		}
 
-		public void FillTo(Generation.World.WorldBoard component)
+		public void FillTo(Generation.World.WorldMap component)
 		{
 		//	component.Age = Age;
 
@@ -183,15 +183,15 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 			}
 		}
 
-		public static implicit operator Generation.World.WorldBoard(TimelineLayerStorage thisType)
+		public static implicit operator Generation.World.WorldMap(TimelineLayerStorage thisType)
 		{
 			if (thisType == null) { return null; }
-			Generation.World.WorldBoard result = new Generation.World.WorldBoard();
+			Generation.World.WorldMap result = new Generation.World.WorldMap();
 			thisType.FillTo(result);
 			return result;
 		}
 
-		public static implicit operator TimelineLayerStorage(Generation.World.WorldBoard component)
+		public static implicit operator TimelineLayerStorage(Generation.World.WorldMap component)
 		{
 			if (component == null) { return null; }
 			TimelineLayerStorage result = new TimelineLayerStorage();

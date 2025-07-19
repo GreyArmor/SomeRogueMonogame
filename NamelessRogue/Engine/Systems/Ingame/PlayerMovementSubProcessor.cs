@@ -112,7 +112,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             IWorldProvider worldProvider = null;
                             if (worldEntity != null)
                             {
-                                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer
+                                worldProvider = worldEntity.GetComponentOfType<WorldTemplate>().WorldMap
                                     .Chunks;
                             }
 

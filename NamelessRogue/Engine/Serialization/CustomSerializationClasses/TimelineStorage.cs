@@ -8,23 +8,23 @@ using System.Text;
 namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 {
 	[FlatBufferTable]
-	public class TimelineStorage : IStorage<TimeLine>
+	public class TimelineStorage : IStorage<WorldTemplate>
 	{
 		[FlatBufferItem(0)] public string Id { get; set; }
 		[FlatBufferItem(1)] public string ParentEntityId { get; set; }
 		[FlatBufferItem(2)] public TimelineLayerStorage CurrentTimelineLayer { get; set; }
-		public void FillFrom(TimeLine component)
+		public void FillFrom(WorldTemplate component)
 		{
 			Id = component.Id.ToString();
 			ParentEntityId = component.ParentEntityId.ToString();
-			CurrentTimelineLayer = component.CurrentTimelineLayer;
+			CurrentTimelineLayer = component.WorldMap;
 		}
 
-		public void FillTo(TimeLine component)
+		public void FillTo(WorldTemplate component)
 		{
 			component.Id = new Guid(Id);
 			component.ParentEntityId = new Guid(ParentEntityId);
-			component.CurrentTimelineLayer = CurrentTimelineLayer;
+			component.WorldMap = CurrentTimelineLayer;
 		}
 	}
 }

@@ -16,23 +16,13 @@ using SharpDX.DirectWrite;
 namespace NamelessRogue.Engine.Generation.World
 {
     public class HistoryGenerator {
-
-        public class HistoryGenerationSettings
-        {
-            /// <summary>
-            /// Number of turns simulated
-            /// </summary>
-            public int HowOldIsTheWorld { get; }
-
-        }
-
         public static List<MapArtifact> Artifacts { get; private set; }
-        public static TimeLine BuildTimeline(NamelessGame game, HistoryGenerationSettings settings)
+        public static WorldTemplate BuildWorldTemplate(NamelessGame game)
         {
-            var timeline = new TimeLine(game.WorldSettings.Seed);
-            var worldBoard = InitialiseFirstBoard(game,settings);
+            var timeline = new WorldTemplate(game.WorldSettings.Seed);
+            var worldBoard = InitialiseFirstBoard(game);
             //timeline.WorldBoardAtEveryAge.Add(worldBoard);
-            timeline.CurrentTimelineLayer = worldBoard;
+            timeline.WorldMap = worldBoard;
 
 
             //String appPath = System.IO.Directory.GetCurrentDirectory();
@@ -54,9 +44,9 @@ namespace NamelessRogue.Engine.Generation.World
             return timeline;
         }
 
-        private static WorldBoard InitialiseFirstBoard(NamelessGame game, HistoryGenerationSettings settings)
+        private static WorldMap InitialiseFirstBoard(NamelessGame game)
         {
-            var worldBoard = new WorldBoard(game.WorldSettings.WorldBoardWidth, game.WorldSettings.WorldBoardWidth, 0);
+            var worldBoard = new WorldMap(game.WorldSettings.WorldBoardWidth, game.WorldSettings.WorldBoardWidth);
             ChunkData chunkData = new ChunkData(game.WorldSettings, worldBoard);
 
             worldBoard.Chunks = chunkData;

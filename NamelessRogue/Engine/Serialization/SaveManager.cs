@@ -97,7 +97,7 @@ namespace NamelessRogue.Engine.Serialization
 
             {
                 TimelineStorage timelinesStorage = new TimelineStorage();
-                var timeline = game.TimelineEntity.GetComponentOfType<TimeLine>();
+                var timeline = game.TimelineEntity.GetComponentOfType<WorldTemplate>();
                 timelinesStorage.FillFrom(timeline);
                 {
 
@@ -160,16 +160,16 @@ namespace NamelessRogue.Engine.Serialization
             {
                 var buffer = File.ReadAllBytes("chunksmemory.nrs");
                 var saveFile = FlatBufferSerializer.Default.Parse<TimelineStorage>(buffer);
-                TimeLine timeLine = new TimeLine();
+                WorldTemplate timeLine = new WorldTemplate(0);
                 saveFile.FillTo(timeLine);
 
-                timeLine.CurrentTimelineLayer.Chunks.WorldBoard = timeLine.CurrentTimelineLayer;
+                timeLine.WorldMap.Chunks.WorldMap = timeLine.WorldMap;
                 //TO DO: serialize properly
-                timeLine.CurrentTimelineLayer.Chunks.WorldSettings = game.WorldSettings;
+                timeLine.WorldMap.Chunks.WorldSettings = game.WorldSettings;
 
-                foreach (var chunk in timeLine.CurrentTimelineLayer.Chunks.Chunks)
+                foreach (var chunk in timeLine.WorldMap.Chunks.Chunks)
                 {
-                    chunk.Value.ChunkContainer = timeLine.CurrentTimelineLayer.Chunks;
+                    chunk.Value.ChunkContainer = timeLine.WorldMap.Chunks;
                 }
 
                 var entity = new Entity(timeLine.ParentEntityId);
@@ -207,7 +207,7 @@ namespace NamelessRogue.Engine.Serialization
         }
 
 
-        public static void SaveTimelineLayer(String pathToFolder, WorldBoard layer, String id)
+        public static void SaveTimelineLayer(String pathToFolder, WorldMap layer, String id)
         {
             if (!Directory.Exists(pathToFolder))
             {
@@ -224,14 +224,14 @@ namespace NamelessRogue.Engine.Serialization
             }
         }
 
-        public static WorldBoard LoadTimelineLayer(String pathToFolder, String id)
+        public static WorldMap LoadTimelineLayer(String pathToFolder, String id)
         {
 
             using (StreamReader reader = new StreamReader(pathToFolder + "\\" + id + ".json"))
             using (JsonTextReader jsonReader = new JsonTextReader(reader))
             {
                 JsonSerializer ser = new JsonSerializer();
-                return ser.Deserialize<WorldBoard>(jsonReader);
+                return ser.Deserialize<WorldMap>(jsonReader);
             }
         }
     }

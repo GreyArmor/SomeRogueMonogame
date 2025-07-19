@@ -46,7 +46,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+                worldProvider = worldEntity.GetComponentOfType<WorldTemplate>().WorldMap.Chunks;
             }
 
             if (worldProvider != null)
@@ -214,7 +214,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<TimeLine>().CurrentTimelineLayer.Chunks;
+                worldProvider = worldEntity.GetComponentOfType<WorldTemplate>().WorldMap.Chunks;
             }
 
             Position position = movableEntity.GetComponentOfType<Position>();

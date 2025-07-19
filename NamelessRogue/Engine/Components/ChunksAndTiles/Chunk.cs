@@ -52,7 +52,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             isActive = false;
         }
 
-        public void FillWithTiles(TerrainGenerator generator, WorldBoard board)
+        public void FillWithTiles(TerrainGenerator generator, WorldMap board)
         {
             for (int x = 0; x < Constants.ChunkSize; x++)
             {
@@ -353,7 +353,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
                 if (!LoadFromDisk())
                 {
-                    FillWithTiles(chunkContainer.GetWorldGenerator(),chunkContainer.WorldBoard);
+                    FillWithTiles(chunkContainer.GetWorldGenerator(),chunkContainer.WorldMap);
                     this.JustCreated = true;
                 }
                 loaded = true;

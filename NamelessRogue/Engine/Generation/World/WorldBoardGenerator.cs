@@ -137,7 +137,7 @@ namespace NamelessRogue.Engine.Generation.World
         }
 
 
-        public static void PopulateWithInitialData(WorldBoard board, NamelessGame game)
+        public static void PopulateWithInitialData(WorldMap board, NamelessGame game)
         {
             var resolution = WorldGenConstants.Resolution;
 
@@ -173,11 +173,8 @@ namespace NamelessRogue.Engine.Generation.World
 
             //board.CityParts = new List<CityPart>();
 
-            var testCityPart = new CityPart();
-
-            testCityPart.Center = new Microsoft.Xna.Framework.Point(200, 200);
-
-            
+            var testCityPartCenter = new Microsoft.Xna.Framework.Point(200, 200); ;
+                        
 
             //generate random roads here
 
@@ -189,7 +186,7 @@ namespace NamelessRogue.Engine.Generation.World
                 {
                     Vector2 startV = new Vector2((float)i, 0);
                     Vector2 endV = new Vector2((float)i, 10);
-                    CreateRoad(board, testCityPart.Center.ToVector2(), startV, endV);
+                    CreateRoad(board, testCityPartCenter.ToVector2(), startV, endV);
                 }
             }
 
@@ -199,7 +196,7 @@ namespace NamelessRogue.Engine.Generation.World
                 {
                     Vector2 startV = new Vector2(0, i);
                     Vector2 endV = new Vector2(10, i);
-                    CreateRoad(board, testCityPart.Center.ToVector2(), startV, endV);
+                    CreateRoad(board, testCityPartCenter.ToVector2(), startV, endV);
                 }
             }
 
@@ -208,7 +205,7 @@ namespace NamelessRogue.Engine.Generation.World
             OldRiverGeneration(board, game, resolution, random, fillArray);
         }
 
-        private static void CreateRoad(WorldBoard board, Vector2 center, Vector2 startV, Vector2 endV)
+        private static void CreateRoad(WorldMap board, Vector2 center, Vector2 startV, Vector2 endV)
         {
 
             var navigator = new TileNavigator(
@@ -259,14 +256,14 @@ namespace NamelessRogue.Engine.Generation.World
         }
 
        
-        private static void InitBoardWithoutFeatures(WorldBoard board, NamelessGame game, int resolution)
+        private static void InitBoardWithoutFeatures(WorldMap board, NamelessGame game, int resolution)
         {
             for (int x = 0; x < game.WorldSettings.WorldBoardWidth; x++)
             {
                 for (int y = 0; y < game.WorldSettings.WorldBoardHeight; y++)
                 {
                     var worldTile = new WorldTile(new Microsoft.Xna.Framework.Point(x, y));
-                    var tile = game.WorldSettings.TerrainGen.GetTileWithoutTerrainFeatures(x, y, (float)game.WorldSettings.WorldBoardWidth / resolution);
+                    var tile = game.CurrentGame.TerrainGen.GetTileWithoutTerrainFeatures(x, y, (float)game.WorldSettings.WorldBoardWidth / resolution);
                     worldTile.Terrain = tile.Terrain;
                     worldTile.Biome = tile.Biome;
                     board.WorldTiles[x, y] = worldTile;
@@ -286,7 +283,7 @@ namespace NamelessRogue.Engine.Generation.World
             }
         }
 
-        private static void OldRiverGeneration(WorldBoard board, NamelessGame game, int resolution, InternalRandom random, TileForGeneration[][] fillArray)
+        private static void OldRiverGeneration(WorldMap board, NamelessGame game, int resolution, InternalRandom random, TileForGeneration[][] fillArray)
         {
             List<FortuneSite> points = new List<FortuneSite>();
             LinkedList<VEdge> edges = new LinkedList<VEdge>();
