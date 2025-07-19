@@ -180,7 +180,7 @@ namespace NamelessRogue.Engine.Generation.World
 
             Point cityPartCenter = FindRandomLand(board, game, random, resolution);
 
-            CreateCitySpill(board, game, random, resolution, cityPartCenter, (int)(resolution*resolution*0.2f));
+            CreateCitySpill(board, game, random, resolution, cityPartCenter, (int)(resolution*resolution*0.1f));
 
             ////generate random roads here
 
@@ -286,7 +286,7 @@ namespace NamelessRogue.Engine.Generation.World
                 for (int y = 0; y < resolution; y++)
                 {
                     var worldTile = new WorldTile(new Microsoft.Xna.Framework.Point(x, y));
-                    var tile = game.CurrentGame.TerrainGen.GetTileWithoutTerrainFeatures(x, y, (float)game.WorldSettings.WorldBoardWidth / resolution);
+                    var tile = game.CurrentGame.TerrainGen.GetTileWithoutTerrainFeatures(x, y, (float)game.WorldSettings.WorldMapResolution / resolution);
                     worldTile.Terrain = tile.Terrain;
                     worldTile.Biome = tile.Biome;
                     board.WorldTiles[x, y] = worldTile;
@@ -308,38 +308,32 @@ namespace NamelessRogue.Engine.Generation.World
 
         private static void CreateCitySpill(WorldMap map, NamelessGame game, InternalRandom random, int resolution, Point cityCenter, int numberOfCityTiles)
         {
-            Rectangle worldBounds = new Rectangle(new Point(), new Point(resolution));
+            int res20 = (int)(resolution * 0.2f);
+            Rectangle worldBounds = new Rectangle(new Point(res20), new Point(resolution- res20));
             Point position = cityCenter;
             var tilesLeft = numberOfCityTiles;
             Queue<Point> openList = new Queue<Point>();
             openList.Enqueue(position);
+            var currentTile = map.WorldTiles[position.X, position.Y];
+            currentTile.Building = new BoardPieces.MapBuilding();
             while (openList.Any() && tilesLeft>0)
             {
-                var currentTile = map.WorldTiles[position.X, position.Y];
-                currentTile.Building = new BoardPieces.MapBuilding();
-                var neighbors = new Queue<Point>(SharpCornerNeighborProvider.GetNeighbors(position));
-
-                bool foundNeighbor = false;
-                while (neighbors.Any())
+                position = openList.Dequeue();
+                var neighbors = new List<Point>(SharpCornerNeighborProvider.GetNeighbors(position).OrderBy(x=>random.Next())).Take(2);
+                foreach(var neighbor in neighbors)
                 {
-                    var neighbor = neighbors.Dequeue();
-                    var neighborTile = map.WorldTiles[neighbor.X, neighbor.Y];
-                    if (neighborTile.Terrain!= TerrainTypes.Water && neighborTile.Building == null && worldBounds.Contains(neighbor))
+                    if (worldBounds.Contains(neighbor))
                     {
-                        position = neighbor;
-                        tilesLeft--;
-                        foundNeighbor = true;
+                        var neighborTile = map.WorldTiles[neighbor.X, neighbor.Y];
+                        if (neighborTile.Terrain != TerrainTypes.Water && neighborTile.Building == null)
+                        {
+                            openList.Enqueue(neighbor);
+                            neighborTile.Building = new BoardPieces.MapBuilding();
+                            tilesLeft--;
+                        }
                     }
-                    break;
-                }
-
-                if (!foundNeighbor)
-                {
-                    var randomNeighbor = SharpCornerNeighborProvider.GetNeighbors(position).OrderBy(x => random.Next()).First(worldBounds.Contains);
-                    position = randomNeighbor;
                 }
             }
-
         }
 
         private static void OldRiverGeneration(WorldMap board, NamelessGame game, int resolution, InternalRandom random, TileForGeneration[][] fillArray)

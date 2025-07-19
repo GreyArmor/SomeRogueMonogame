@@ -58,6 +58,7 @@ namespace NamelessRogue.Engine.Systems.Map
         private InternalRandom graphicalRandom = new InternalRandom();
         Effect effect;
         TileModel worldMapTileModel;
+        TileModel worldMapBuildings;
 
         public bool LocalMapRendering { get; set; } = false;
 
@@ -78,7 +79,7 @@ namespace NamelessRogue.Engine.Systems.Map
         public MapRenderingSystem(GameSettings settings, GameInstance gameWorldSettings)
         {
             InitializeCharacterTileDictionary();
-            worldMapScreen = new Screen(gameWorldSettings.WorldBoardWidth, gameWorldSettings.WorldBoardWidth);
+            worldMapScreen = new Screen(gameWorldSettings.WorldMapResolution, gameWorldSettings.WorldMapResolution);
         }
 
         //TODO move this hardcode to configuration file for tileset
@@ -86,6 +87,7 @@ namespace NamelessRogue.Engine.Systems.Map
         {
             characterToTileDictionary = new Dictionary<string, AtlasTileData>();
             characterToTileDictionary.Add("Nothingness", new AtlasTileData(0,0));
+            characterToTileDictionary.Add("Transparent", new AtlasTileData(0, 1));
             characterToTileDictionary.Add("Road", new AtlasTileData(1, 0));
             characterToTileDictionary.Add("Dirt", new AtlasTileData(2, 0));
             characterToTileDictionary.Add("Water", new AtlasTileData(3, 0));
@@ -126,10 +128,11 @@ namespace NamelessRogue.Engine.Systems.Map
             {
                 InitializeTexture(game);
                 _spriteBatch = new SpriteBatch(game.GraphicsDevice, 6400);
-                worldMapTileModel = new TileModel(game.CurrentGame.WorldBoardWidth, game.CurrentGame.WorldBoardWidth);
-                for (int y = 0; y < game.CurrentGame.WorldBoardWidth; y++)
+                worldMapTileModel = new TileModel(game.CurrentGame.WorldMapResolution, game.CurrentGame.WorldMapResolution);
+                worldMapBuildings = new TileModel(game.CurrentGame.WorldMapResolution, game.CurrentGame.WorldMapResolution);
+                for (int y = 0; y < game.CurrentGame.WorldMapResolution; y++)
                 {
-                    for (int x = 0; x < game.CurrentGame.WorldBoardWidth; x++)
+                    for (int x = 0; x < game.CurrentGame.WorldMapResolution; x++)
                     {
                         var worldTile = worldProvider.WorldTiles[x, y];
 
@@ -140,23 +143,38 @@ namespace NamelessRogue.Engine.Systems.Map
 
                         RenderingSystem.AtlasTileData tileData;
 
-                        if(worldTile.Building!=null)
+                        RenderingSystem.AtlasTileData buildingTileData;
+
+                        if (worldTile.Building!=null)
                         {
-                            characterToTileDictionary.TryGetValue("City", out tileData);
+                            characterToTileDictionary.TryGetValue("City", out buildingTileData);
                         }
-                        else if (!characterToTileDictionary.TryGetValue(terrainRep.ObjectID, out tileData))
+                        else
+                        {
+                            characterToTileDictionary.TryGetValue("Transparent", out buildingTileData);
+                        }
+
+                        if (!characterToTileDictionary.TryGetValue(terrainRep.ObjectID, out tileData))
                         {
                             characterToTileDictionary.TryGetValue("Nothingness", out tileData);
                         }
 
-                        RenderingSystem.DrawTile(tileHeight + 10, tileWidth + 10, x, y, game.CurrentGame.WorldBoardWidth,
+                        RenderingSystem.DrawTile(tileHeight, tileWidth, x, y, game.CurrentGame.WorldMapResolution,
                                 (x * tileWidth),
                                 (y * tileHeight),
                                 tileData,
                                  worldMapTileModel, tileAtlas);
+
+
+                        RenderingSystem.DrawTile(tileHeight, tileWidth, x, y, game.CurrentGame.WorldMapResolution,
+                                (x * tileWidth),
+                                (y * tileHeight),
+                                buildingTileData,
+                                 worldMapBuildings, tileAtlas);
                     }
                 }
                 worldMapTileModel.UpdateBuffers(game.GraphicsDevice);
+                worldMapBuildings.UpdateBuffers(game.GraphicsDevice);
                 currentMapPosition = new Vector2(width / 2 * zoom, height / 2 * zoom);
 
             }
@@ -183,6 +201,15 @@ namespace NamelessRogue.Engine.Systems.Map
             {
                 pass.Apply();
                 game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, worldMapTileModel.Indices.Length / 3);
+            }
+
+            game.GraphicsDevice.SetVertexBuffer(worldMapBuildings.Buffer);
+            game.GraphicsDevice.Indices = worldMapBuildings.IndexBuffer;
+
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, worldMapBuildings.Indices.Length / 3);
             }
 
             game.Batch.Begin(samplerState: SamplerState.PointClamp);
@@ -303,8 +330,8 @@ namespace NamelessRogue.Engine.Systems.Map
                 {
                     Point screenPoint = camera.PointToScreen(x, y);
 
-                    if (screenPoint.X < 0 || screenPoint.Y < 0 || x < 0 || x >= worldSEttings.WorldBoardWidth ||
-                        y < 0 || y >= worldSEttings.WorldBoardWidth)
+                    if (screenPoint.X < 0 || screenPoint.Y < 0 || x < 0 || x >= worldSEttings.WorldMapResolution ||
+                        y < 0 || y >= worldSEttings.WorldMapResolution)
                     {
                         continue;
                     }

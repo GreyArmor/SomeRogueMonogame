@@ -46,7 +46,7 @@ namespace NamelessRogue.Engine.Generation.World
 
         private static WorldMap InitialiseFirstBoard(NamelessGame game)
         {
-            var worldBoard = new WorldMap(game.WorldSettings.WorldBoardWidth);
+            var worldBoard = new WorldMap(game.WorldSettings.WorldMapResolution);
             ChunkData chunkData = new ChunkData(game.WorldSettings, worldBoard);
 
             worldBoard.Chunks = chunkData;

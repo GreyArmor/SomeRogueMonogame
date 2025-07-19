@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Generation
         public GameInstance(int seed, int worldBoardResolution)
         {
             Seed = seed;
-            WorldBoardWidth = worldBoardResolution;
+            WorldMapResolution = worldBoardResolution;
             GlobalRandom = new InternalRandom(seed);
             WorldMapScale = 1;
             ContinentTilesPerCivilization = 2000;
@@ -68,7 +68,7 @@ namespace NamelessRogue.Engine.Generation
         public float WorldMapScale { get; set; }
 
         public int Seed { get; set; }
-        public int WorldBoardWidth { get; set; }
+        public int WorldMapResolution { get; set; }
         public InternalRandom GlobalRandom { get; set; }
         public TerrainGenerator TerrainGen { get; set; }
     }
