@@ -8,6 +8,7 @@ using NamelessRogue.Engine.Utility;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 {
@@ -29,15 +30,18 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 			if (tiles != null)
 			{
 				ChunkResolution = Constants.ChunkSize;
-				Tiles = new TileStorage[ChunkResolution * ChunkResolution];
-
-				for (int i = 0; i < ChunkResolution; i++)
-				{
-					for (int j = 0; j < ChunkResolution; j++)
-					{
-					//	Tiles[i * ChunkResolution + j] = tiles[i][j];
-					}
-				}
+                var queue = new Queue<TileStorage>();
+                for (int i = 0; i < tiles.GetLength(0); i++)
+                {
+                    for (int j = 0; j < tiles.GetLength(1); j++)
+                    {
+                        for (int k = 0; k < tiles.GetLength(2); k++)
+                        {
+                            queue.Enqueue(tiles[i][j][k]);
+                        }
+                    }
+                }
+               
 			}			
 		}
 
@@ -48,22 +52,32 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 			component.Bounds = Bounds;
 			if (Tiles != null)
 			{
-				Tile[][] tiles;
-				tiles = new Tile[Tiles.Length][];
-				for (var index = 0; index < Tiles.Length; index++)
+				Tile[][][] tiles;
+				tiles = new Tile[Constants.ChunkSize][][];
+				for (var x = 0; x < Constants.ChunkSize; x++)
 				{
-					tiles[index] = new Tile[ChunkResolution];
+					tiles[x] = new Tile[Constants.ChunkSize][];
+					for(int y = 0; y < Constants.ChunkSize; y++ )
+					{
+						tiles[x][y] = new Tile[Constants.ChunkHeight];
+                    }
 				}
 
-				for (int i = 0; i < ChunkResolution; i++)
-				{
-					for (int j = 0; j < ChunkResolution; j++)
-					{
-						tiles[i][j] = Tiles[i* ChunkResolution + j];
-					}
-				}
-			//	component.SetChunkTiles(tiles);
-			}
+
+				var index = 0;
+                for (int x = 0; x < Constants.ChunkSize; x++)
+                {
+                    for (int y = 0; y < Constants.ChunkSize; y++)
+                    {
+                        for (int z = 0; z < [Constants.ChunkHeight; z++)
+                        {
+                            tiles[x][y][z] = Tiles[index++];
+                        }
+                    }
+                }
+
+                component.SetChunkTiles(tiles);
+            }
 
 			//obviously, it was not generated right now
 			component.JustCreated = false;
