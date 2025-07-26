@@ -13,8 +13,10 @@ namespace NamelessRogue.Engine.Generation.World
         public TerrainTypes Terrain { get; set; }
         public Biomes Biome { get; set; }
         public MapBuilding Building { get; set; }
-        public int Elevation { get; set; }
-
+        public float Elevation { get; set; }
+        public bool RiverMapValue { get; set; }
+        public bool RiverMapBorderValue { get; set; }
+        public bool RoadMapValue { get; set; }
         private Point point;
 
         public WorldTile(Point point)

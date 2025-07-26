@@ -5,6 +5,7 @@ using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Input;
+using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
 using System;
@@ -58,6 +59,8 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
 
             while (game.Commander.DequeueCommand(out GenerateWorldFinishedCommand command))
             {
+
+                SaveManager.SaveMap("", command.WorldTemplate.WorldMap, game);
                 command.ToString();               
             }
 

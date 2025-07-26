@@ -10,20 +10,27 @@ namespace NamelessRogue.Engine.Generation.World
 
 	public class TileForGeneration
 	{
-		public double fillValue;
-		public int x;
+        public double fillValue;
+        public int x;
 		public int y;
 		public bool isWater;
 		public TileForGeneration parent;
-	}
+        public int X { get => x; set => x = value; }
+        public int Y { get => y; set => y = value; }
+        public bool IsWater { get => isWater; set => isWater = value; }
+        public double FillValue { get => fillValue; set => fillValue = value; }
+    }
 
 	public class TileForPainting
 	{
-		public int x;
-		public int y;
-		public bool isWater;
-		public List<Waypoints> WaterBorderLines { get; set; } = new List<Waypoints>();
+        public int x;
+        public int y;
+        public bool isWater;
+        public List<Waypoints> WaterBorderLines { get; set; } = new List<Waypoints>();
         public List<Waypoints> Roads { get; set; } = new List<Waypoints>();
+        public int X { get => x; set => x = value; }
+        public int Y { get => y; set => y = value; }
+        public bool IsWater { get => isWater; set => isWater = value; }
     }
 
 	public class Waypoints
@@ -34,46 +41,18 @@ namespace NamelessRogue.Engine.Generation.World
 
     public class WorldMap
     {
-      
+        public int Resolution { get; set; }
         public WorldTile[,] WorldTiles { get; set; }
         public ChunkData Chunks { get; set; }
-		public float[][] ElevationMap { get => elevationMap; set => elevationMap = value; }
-		public bool[][] RiverMap { get => riverMap; set => riverMap = value; }
-		public bool[][] RiverBorderMap { get => riverBorderMap; set => riverBorderMap = value; }
 		public List<Waypoints> RiverBorderLines { get; set; } = new List<Waypoints>();
-
 		public List<Waypoints> Roads { get; set; } = new List<Waypoints>();
-
-		//used for river/lake generation
-		private float[][] elevationMap;
-		private bool[][] riverMap;
-		private bool[][] riverBorderMap;
-        private bool[][] roadsMap;
         public TileForPainting[][] TerrainFeatures { get; set; }
-        public int Resolution { get; }
+ 
 
         public WorldMap(int resolution)
         {
             WorldTiles = new WorldTile[resolution, resolution];
-
-			ElevationMap = new float[resolution][];
-			for (int i = 0; i < resolution; i++)
-			{
-				ElevationMap[i] = new float[resolution];
-			}
-
-			RiverMap = new bool[resolution][];
-			for (int i = 0; i < resolution; i++)
-			{
-				RiverMap[i] = new bool[resolution];
-			}
-
-			RiverBorderMap = new bool[resolution][];
-			for (int i = 0; i < resolution; i++)
-			{
-				RiverBorderMap[i] = new bool[resolution];
-			}
-
+            			
 			TerrainFeatures = new TileForPainting[resolution][];
 			for (int i = 0; i < resolution; i++)
 			{
@@ -81,8 +60,7 @@ namespace NamelessRogue.Engine.Generation.World
 			}
 
 			RiverBorderLines = new List<Waypoints>();
-            Resolution = resolution;
-            //CityParts = new List<CityPart>();
+            Resolution = resolution;            
         }
 
 		public WorldMap()

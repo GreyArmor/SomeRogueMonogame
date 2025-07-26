@@ -12,19 +12,17 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 	{
 		[FlatBufferItem(0)] public string Id { get; set; }
 		[FlatBufferItem(1)] public string ParentEntityId { get; set; }
-		[FlatBufferItem(2)] public TimelineLayerStorage CurrentTimelineLayer { get; set; }
 		public void FillFrom(WorldTemplate component)
 		{
 			Id = component.Id.ToString();
 			ParentEntityId = component.ParentEntityId.ToString();
-			CurrentTimelineLayer = component.WorldMap;
+
 		}
 
 		public void FillTo(WorldTemplate component)
 		{
 			component.Id = new Guid(Id);
 			component.ParentEntityId = new Guid(ParentEntityId);
-			component.WorldMap = CurrentTimelineLayer;
 		}
 	}
 }

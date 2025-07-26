@@ -41,8 +41,9 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
                         }
                     }
                 }
-               
-			}			
+				Tiles = queue.ToArray();
+
+            }			
 		}
 
 		public void FillTo(Chunk component)
@@ -69,7 +70,7 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
                 {
                     for (int y = 0; y < Constants.ChunkSize; y++)
                     {
-                        for (int z = 0; z < [Constants.ChunkHeight; z++)
+                        for (int z = 0; z < Constants.ChunkHeight; z++)
                         {
                             tiles[x][y][z] = Tiles[index++];
                         }

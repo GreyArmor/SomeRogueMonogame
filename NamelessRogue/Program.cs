@@ -30,8 +30,9 @@ namespace NamelessRogue
         [STAThread]
         static void Main()
         {
-            //SerializationCodeGenerator.GenerateStorages(typeof(ConsoleCamera));
+            //SerializationCodeGenerator.GenerateStorages(typeof(NamelessRogue.Engine.Generation.World.WorldMap));
             //return;
+
             using (var game = new NamelessGame())
             {
                 game.Run();

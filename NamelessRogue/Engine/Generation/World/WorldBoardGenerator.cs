@@ -155,7 +155,7 @@ namespace NamelessRogue.Engine.Generation.World
                 for (int j = 0; j < resolution; j++)
                 {
                     //fill it with terrain heght with current noises using resolution
-                    board.ElevationMap[i][j] = game.WorldSettings.TerrainGen.GetHeightNoise(i, j, 1);
+                    board.WorldTiles[i,j].Elevation = game.WorldSettings.TerrainGen.GetHeightNoise(i, j, 1);
                 }
             }
 
@@ -166,7 +166,7 @@ namespace NamelessRogue.Engine.Generation.World
                 fillArray[i] = new TileForGeneration[resolution];
                 for (int j = 0; j < resolution; j++)
                 {
-                    fillArray[i][j] = new TileForGeneration() { fillValue = board.ElevationMap[i][j], x = i, y = j, isWater = false };
+                    fillArray[i][j] = new TileForGeneration() { fillValue = board.WorldTiles[i, j].Elevation, x = i, y = j, isWater = false };
 
                 }
             }
@@ -394,17 +394,17 @@ namespace NamelessRogue.Engine.Generation.World
 
             var edgesByTheSea = edges.Where(
                 x =>
-                    board.ElevationMap[(int)x.Start.X][(int)x.Start.Y] < TileNoiseInterpreter.SeaLevelThreshold &&
-                    board.ElevationMap[(int)x.End.X][(int)x.End.Y] >= TileNoiseInterpreter.SeaLevelThreshold ||
+                    board.WorldTiles[(int)x.Start.X,(int)x.Start.Y].Elevation < TileNoiseInterpreter.SeaLevelThreshold &&
+                    board.WorldTiles[(int)x.End.X,(int)x.End.Y].Elevation >= TileNoiseInterpreter.SeaLevelThreshold ||
 
-                    board.ElevationMap[(int)x.End.X][(int)x.End.Y] < TileNoiseInterpreter.SeaLevelThreshold &&
-                    board.ElevationMap[(int)x.Start.X][(int)x.Start.Y] >= TileNoiseInterpreter.SeaLevelThreshold
+                    board.WorldTiles[(int)x.End.X, (int)x.End.Y].Elevation < TileNoiseInterpreter.SeaLevelThreshold &&
+                    board.WorldTiles[(int)x.Start.X, (int)x.Start.Y].Elevation >= TileNoiseInterpreter.SeaLevelThreshold
                 );
 
             var allInlandEdges = edges.Where(
                 x =>
-                    board.ElevationMap[(int)x.End.X][(int)x.End.Y] >= TileNoiseInterpreter.SeaLevelThreshold &&
-                    board.ElevationMap[(int)x.Start.X][(int)x.Start.Y] >= TileNoiseInterpreter.SeaLevelThreshold
+                    board.WorldTiles[(int)x.End.X, (int)x.End.Y].Elevation >= TileNoiseInterpreter.SeaLevelThreshold &&
+                    board.WorldTiles[(int)x.Start.X, (int)x.Start.Y].Elevation >= TileNoiseInterpreter.SeaLevelThreshold
                 ).ToList();
 
             //randommly remove some rivers;
@@ -454,7 +454,7 @@ namespace NamelessRogue.Engine.Generation.World
                     {
                         //fillArray[x][y].isWater = true;
 
-                        if (board.ElevationMap[x][y] >= TileNoiseInterpreter.SeaLevelThreshold)
+                        if (board.WorldTiles[x,y].Elevation >= TileNoiseInterpreter.SeaLevelThreshold)
                         {
                             fillArray[x][y].isWater = true;
                         }
@@ -462,7 +462,7 @@ namespace NamelessRogue.Engine.Generation.World
                         {
                             Queue<TileForGeneration> neighbours = new Queue<TileForGeneration>();
                             GenerationUtility.GetNeighbours(fillArray, neighbours, x, y, 2);
-                            if (neighbours.Any(n => board.ElevationMap[n.x][n.y] >= TileNoiseInterpreter.SeaLevelThreshold))
+                            if (neighbours.Any(n => board.WorldTiles[n.x,n.y].Elevation >= TileNoiseInterpreter.SeaLevelThreshold))
                             {
                                 fillArray[x][y].isWater = true;
                             }
@@ -477,7 +477,7 @@ namespace NamelessRogue.Engine.Generation.World
             {
                 for (int j = 0; j < resolution; j++)
                 {
-                    board.RiverMap[i][j] = fillArray[i][j].isWater;
+                    board.WorldTiles[i,j].RiverMapValue = fillArray[i][j].isWater;
                 }
             }
 
@@ -487,7 +487,7 @@ namespace NamelessRogue.Engine.Generation.World
                 riverBorderMapCopyForCalcultaion[i] = new bool[resolution];
                 for (int j = 0; j < resolution; j++)
                 {
-                    if (board.RiverMap[i][j])
+                    if (board.WorldTiles[i, j].RiverMapValue)
                     {
                         bool borderedByAnythingBesidesWater = false;
                         //not really a radius, more like an side lenght of a square
@@ -498,7 +498,7 @@ namespace NamelessRogue.Engine.Generation.World
                             {
                                 for (int l = j - searchRadius; l < j + searchRadius + 1; l++)
                                 {
-                                    if (!board.RiverMap[k][l])
+                                    if (!board.WorldTiles[k,l].RoadMapValue)
                                     {
                                         borderedByAnythingBesidesWater = true;
                                     }
@@ -508,7 +508,7 @@ namespace NamelessRogue.Engine.Generation.World
 
                         if (borderedByAnythingBesidesWater)
                         {
-                            board.RiverBorderMap[i][j] = true;
+                            board.WorldTiles[i, j].RiverMapBorderValue = true;
                             riverBorderMapCopyForCalcultaion[i][j] = true;
                         }
                     }
@@ -522,7 +522,7 @@ namespace NamelessRogue.Engine.Generation.World
             {
                 for (int j = 0; j < resolution; j++)
                 {
-                    if (board.RiverBorderMap[i][j])
+                    if (board.WorldTiles[i,j].RiverMapBorderValue)
                     {
                         pointsNotConnectedToStartingPoints.Add(fillArray[i][j]);
                     }
@@ -535,7 +535,7 @@ namespace NamelessRogue.Engine.Generation.World
             {
                 for (int j = 0; j < resolution; j++)
                 {
-                    board.TerrainFeatures[i][j].isWater = board.RiverMap[i][j];
+                    board.TerrainFeatures[i][j].IsWater = board.WorldTiles[i, j].RiverMapValue;
                 }
             }
 
@@ -562,7 +562,7 @@ namespace NamelessRogue.Engine.Generation.World
                 {
                     var worldTile = board.WorldTiles[x, y];
 
-                    if (board.RiverMap[x][y] && worldTile.Terrain != TerrainTypes.Water)
+                    if (worldTile.RiverMapValue && worldTile.Terrain != TerrainTypes.Water)
                     {
                         worldTile.Terrain = TerrainTypes.Water;
                         worldTile.Biome = Biomes.River;
