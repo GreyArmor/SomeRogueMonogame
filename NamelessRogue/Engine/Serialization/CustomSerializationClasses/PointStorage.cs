@@ -7,7 +7,9 @@ using System.Text;
 
 namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 {
-	[FlatBufferTable]
+
+
+    [FlatBufferTable]
 	public class PointStorage : IStorage<Point>
 	{
 		[FlatBufferItem(0)] public int X { get; set; }

@@ -11,6 +11,6 @@ namespace NamelessRogue.Engine.Serialization
     public class ByteSizesStorage
     {
         [XmlArray]
-        Dictionary<string, int> MaxSizesEvaluated { get; set; } = new Dictionary<string, int>();
+        public List<KeyValuePair<string, int>> MaxSizesEvaluated { get; set; } = new List<KeyValuePair<string, int>>();
     }
 }

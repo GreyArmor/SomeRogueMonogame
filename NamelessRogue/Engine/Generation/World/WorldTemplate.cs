@@ -30,7 +30,6 @@ namespace NamelessRogue.Engine.Generation.World
         Large,       
     }
 
-    [SkipClassGeneration]
     public class WorldTemplate : Component
     {
         public int Seed { get; set; }
@@ -57,6 +56,10 @@ namespace NamelessRogue.Engine.Generation.World
             WaterType = parameters.waterLevel;
             NeighbouringCityCount = parameters.neighboringCityCount;
             CurrentTime = parameters.time;
+        }
+
+        public WorldTemplate()
+        {
         }
 
         public WorldMap WorldMap { get; set; }

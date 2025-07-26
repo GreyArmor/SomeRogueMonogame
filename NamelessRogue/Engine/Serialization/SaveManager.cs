@@ -9,6 +9,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using System.Xml.Serialization;
 using FlatSharp;
+using FlatSharp.CodeGen;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
@@ -63,7 +64,7 @@ namespace NamelessRogue.Engine.Serialization
                 ByteSizes = (ByteSizesStorage)serializer.Deserialize(reader);
                 reader.Close();
             }
-            //    FlatBufferSerializer.Default.Compile<NamelessRogueSaveFile>();
+                FlatBufferSerializer.Default.Compile<NamelessRogueSaveFile>();
             //    FlatBufferSerializer.Default.Compile<TimelineStorage>();
         }
         public static void SaveGame(String pathToFolder, NamelessGame game)
@@ -142,7 +143,7 @@ namespace NamelessRogue.Engine.Serialization
             mapStorage.FillFrom(map);
             {
                 FlatBufferSerializer serializer = new FlatBufferSerializer(FlatBufferDeserializationOption.Greedy);
-                int maxBytesNeeded = serializer.GetMaxSize(mapStorage);
+                int maxBytesNeeded = GetMaxSizeForTypeAndSave(mapStorage);
 
                 byte[] buffer = new byte[maxBytesNeeded];
 
@@ -159,6 +160,29 @@ namespace NamelessRogue.Engine.Serialization
                 LoadWorldMap("SavedMaps", "chunksmemory.nrs");
             }
         }
+
+        public static void SaveWorldTemplate(String pathToFolder, string filename, WorldTemplate worldTemplate, NamelessGame game)
+        {
+            var storage = new WorldTemplateStorage();
+            storage.FillFrom(worldTemplate);
+            {
+                FlatBufferSerializer serializer = new FlatBufferSerializer(FlatBufferDeserializationOption.Greedy);
+                int maxBytesNeeded = GetMaxSizeForTypeAndSave(storage);
+
+                byte[] buffer = new byte[maxBytesNeeded];
+
+                int bytesWritten = serializer.Serialize(storage, buffer);
+
+                if (!Directory.Exists(pathToFolder))
+                {
+                    Directory.CreateDirectory(pathToFolder);
+                }
+                var stream = File.Create(pathToFolder+"\\"+ filename);
+                stream.Write(buffer, 0, bytesWritten);
+                stream.Close();
+            }
+        }
+
 
 
         public static void LoadGame(String pathToFolder, NamelessGame game)
@@ -233,6 +257,39 @@ namespace NamelessRogue.Engine.Serialization
             var buffer = File.ReadAllBytes(pathToFolder + "\\" + filename);
             var saveFile = FlatBufferSerializer.Default.Parse<WorldMapStorage>(buffer);
             return saveFile;
+        }
+
+        public static WorldTemplate LoadWorldTemplate(String pathToFolder, string filename)
+        {
+            var buffer = File.ReadAllBytes(pathToFolder + "\\" + filename);
+            WorldTemplate saveFile = FlatBufferSerializer.Default.Parse<WorldTemplateStorage>(buffer);
+            return saveFile;
+        }
+
+
+        static int GetMaxSizeForTypeAndSave(object obj)
+        {
+            var typeString = obj.GetType().Name;
+            var hasValue = ByteSizes.MaxSizesEvaluated.Any(x => x.Key == typeString);
+            var size = ByteSizes.MaxSizesEvaluated.FirstOrDefault(x => x.Key == typeString);
+            if (!hasValue)
+            {
+                FlatBufferSerializer serializer = new FlatBufferSerializer(FlatBufferDeserializationOption.Greedy);
+                int maxBytesNeeded = serializer.GetMaxSize(obj.CastToReflected(obj.GetType()));
+
+                ByteSizes.MaxSizesEvaluated.Add(new KeyValuePair<string, int>(typeString, maxBytesNeeded));
+
+                XmlSerializer xmlSer = new XmlSerializer(typeof(ByteSizesStorage));
+                using (var stream = File.OpenWrite("ByteSizesStorage.xml"))
+                {
+                    xmlSer.Serialize(stream, ByteSizes);
+                }
+                return maxBytesNeeded;
+            }
+            else
+            {
+                return size.Value;
+            }
         }
     }
 }

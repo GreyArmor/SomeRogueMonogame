@@ -59,8 +59,8 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
 
             while (game.Commander.DequeueCommand(out GenerateWorldFinishedCommand command))
             {
-
-                SaveManager.SaveMap("", command.WorldTemplate.WorldMap, game);
+                SaveManager.SaveWorldTemplate("Worlds", "test.nrwf", command.WorldTemplate, game);
+                var savedWorldTemplate = SaveManager.LoadWorldTemplate("Worlds", "test.nrwf");
                 command.ToString();               
             }
 
