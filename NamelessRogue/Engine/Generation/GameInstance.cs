@@ -11,7 +11,6 @@ namespace NamelessRogue.Engine.Generation
 {
     public class GameInstance
     {
-
         public GameInstance() { }
         public GameInstance(int seed, int worldBoardResolution)
         {

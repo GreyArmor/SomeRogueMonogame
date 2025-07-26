@@ -8,7 +8,9 @@ using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using static NamelessRogue.Engine.Generation.World.WorldBoardGenerator;
 
@@ -59,13 +61,16 @@ namespace NamelessRogue.Engine.UI
 		System.Numerics.Vector2 sidebarSize;
         System.Numerics.Vector2 smallButtonSize;
 
+        private string[] currentFiles;
+        int currentFile = 0;
+
         WorldGenerationParameters worldGenerationParameters;
 		Random random;
         public WorldGenerationUI(NamelessGame game) : base(game)
 		{
 			buttonSize = new System.Numerics.Vector2(game.Settings.HudWidth, 50);
 			smallButtonSize = new System.Numerics.Vector2(100, 30);
-			sidebarSize = new System.Numerics.Vector2(0, uiSize.Y);
+			sidebarSize = new System.Numerics.Vector2(uiSize.X/3*2, uiSize.Y);
             random = new Random();
 				
             worldSizeValues = new Dictionary<WorldSizeName, int>();
@@ -85,30 +90,30 @@ namespace NamelessRogue.Engine.UI
             worldGenerationParameters.time = RandomDateTimeGenerator.RandomDate(new DateTime(2125, 1, 1), new DateTime(2175, 1, 1));
         }
 
-		public override void DrawLayout()
-		{
-			ImGui.SetNextWindowPos(new System.Numerics.Vector2());
-			ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
+        public override void DrawLayout()
+        {
+            ImGui.SetNextWindowPos(new System.Numerics.Vector2());
+            ImGui.Begin("", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar);
 
 
-			ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-			ImGui.SetWindowSize(uiSize);
+            ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
+            ImGui.SetWindowSize(uiSize);
 
-			//ImGui.SetCursorPos(menuPosition);
-			//{
-			ImGui.BeginChild("menu", sidebarSize, false);
-			{
+            //ImGui.SetCursorPos(menuPosition);
+            //{
+            ImGui.BeginChild("menu", sidebarSize, false);
+            {
                 ImGui.Text("Name");
                 ImGui.InputText("##nameInput", ref worldGenerationParameters.name, 30);
                 ImGui.SameLine();
                 if (ButtonWithSound("New ##newname", smallButtonSize)) { worldGenerationParameters.name = game.CurrentGame.CyberpunkTemplate.GetTownName(game.CurrentGame.GlobalRandom); }
                 ImGui.Spacing();
                 ImGui.Text("Seed");
-				ImGui.InputText("##seedinput", ref worldGenerationParameters.seed, 30);
-				ImGui.SameLine();
+                ImGui.InputText("##seedinput", ref worldGenerationParameters.seed, 30);
+                ImGui.SameLine();
                 if (ButtonWithSound("New ##newseed", smallButtonSize)) { worldGenerationParameters.seed = random.Next().ToString(); }
                 ImGui.Spacing();
-				ImGui.Text("Size");
+                ImGui.Text("Size");
                 ImGui.Combo("##worldSizes", ref selectedWorldSize, worldSizesNames, worldSizesNames.Length, worldSizesNames.Length);
                 var worldSizeValue = worldSizeValues[worldSizes[selectedWorldSize]];
                 ImGui.Text($@"{worldSizeValue.ToString()} by {worldSizeValue.ToString()}");
@@ -117,30 +122,49 @@ namespace NamelessRogue.Engine.UI
 
                 ImGui.Text("Number of neighboring cities (0-6)");
                 ImGui.InputInt("##NeighborsCount", ref worldGenerationParameters.neighboringCityCount);
-				_restrainValue(ref worldGenerationParameters.neighboringCityCount, 0, 6);
-				ImGui.Text("Current date");
+                _restrainValue(ref worldGenerationParameters.neighboringCityCount, 0, 6);
+                ImGui.Text("Current date");
                 ImGui.Text(worldGenerationParameters.time.ToShortDateString());
                 ImGui.SameLine();
                 if (ButtonWithSound("New ##newtime", smallButtonSize)) { worldGenerationParameters.time = RandomDateTimeGenerator.RandomDate(new DateTime(2125, 1, 1), new DateTime(2175, 1, 1)); }
 
                 worldGenerationParameters.worldSizeValue = worldSizeValue;
-				worldGenerationParameters.worldSize = worldSizes[selectedWorldSize];
-				worldGenerationParameters.waterLevel = waterLevel[selectedWaterLevel];
+                worldGenerationParameters.worldSize = worldSizes[selectedWorldSize];
+                worldGenerationParameters.waterLevel = waterLevel[selectedWaterLevel];
 
-                
+                if (ButtonWithSound("Generate", buttonSize, worldGenerationParameters.seed.Any()))
+                {
+                    game.Commander.EnqueueCommand(new GenerateWorldFileCommand(worldGenerationParameters));
+                }
+                if (ButtonWithSound("Exit", buttonSize)) { Action = WorldGenAction.Exit; }
 
-                //worldGenerationParameters.time = RandomDateTimeGenerator.RandomDate(new DateTime(2125, 1, 1), new DateTime(2175, 1, 1));
+                currentFiles = Directory.EnumerateFiles("Worlds").ToArray();
+            }
 
-                if (ButtonWithSound("Generate", buttonSize, worldGenerationParameters.seed.Any())) {
-					game.Commander.EnqueueCommand(new GenerateWorldFileCommand(worldGenerationParameters));
-				}
-				if (ButtonWithSound("Exit", buttonSize)) { Action = WorldGenAction.Exit; }
-			}
+            ImGui.EndChild();
 
-			//ImGui.EndChild();
-			//}
-			ImGui.PopFont();
-			ImGui.End();
-		}
+            ImGui.SameLine();
+            ImGui.BeginChild("##currentItems", new Vector2((uiSize.X / 3 - 100), uiSize.Y - 50), true);
+            {
+                ImGui.BeginChild("##listChild");
+                {
+                    ImGui.Text("World files");
+
+                    if (currentFiles != null && currentFiles.Any())
+                    {                       
+                        ImGui.ListBox("##currentItemsByType", ref currentFile, currentFiles, currentFiles.Length, currentFiles.Length);
+                    }
+                }
+                ImGui.EndChild();
+                if (ButtonWithSound("Save", buttonSize)) { Action = WorldGenAction.Exit; }
+                if (ButtonWithSound("Load", buttonSize)) { Action = WorldGenAction.Exit; }
+            }
+            ImGui.EndChild();
+           
+
+            //}
+            ImGui.PopFont();
+            ImGui.End();
+        }
 	}
 }
