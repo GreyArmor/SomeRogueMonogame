@@ -169,14 +169,19 @@ namespace NamelessRogue.shell
 
             Log.Info("Application started");
 
-			//SaveManager.Init();
+            if (!Directory.Exists("Worlds"))
+            {
+                Directory.CreateDirectory("Worlds");
+            }
 
-			InputEntity = new Entity();
+            //SaveManager.Init();
+
+            InputEntity = new Entity();
 			InputEntity.AddComponent(new InputComponent());
 
             CurrentGame = new GameInstance();
             DebugDevice = this.GraphicsDevice;
-            gameInstance = new GameInstance(123456);
+            gameInstance = new GameInstance(6666666);
             //TODO: move to config later
             int width = 20;
             int height = 15;

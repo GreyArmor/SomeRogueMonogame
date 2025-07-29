@@ -3,6 +3,8 @@ using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace NamelessRogue.Engine.UI
@@ -22,8 +24,8 @@ namespace NamelessRogue.Engine.UI
 	{
 
 		public MainMenuAction Action { get; set; } = MainMenuAction.None;
-
-		System.Numerics.Vector2 menuPosition;
+        string[] currentWorldFiles = Directory.EnumerateFiles("Worlds").ToArray();
+        System.Numerics.Vector2 menuPosition;
 		System.Numerics.Vector2 buttonSpacing = new System.Numerics.Vector2(10, 0);
 		System.Numerics.Vector2 buttonSize;
 		System.Numerics.Vector2 shiftVector;
@@ -37,7 +39,8 @@ namespace NamelessRogue.Engine.UI
 
 		public override void DrawLayout()
 		{
-			menuPosition = new System.Numerics.Vector2((uiSize.X - ((buttonSize.X + buttonSpacing.X) * buttonCount))/2, uiSize.Y * 0.9f);
+            currentWorldFiles = Directory.EnumerateFiles("Worlds").ToArray();
+            menuPosition = new System.Numerics.Vector2((uiSize.X - ((buttonSize.X + buttonSpacing.X) * buttonCount))/2, uiSize.Y * 0.9f);
 			ImGui.SetNextWindowPos(new System.Numerics.Vector2());
 			ImGui.Begin("", ImGuiWindowFlags.NoBackground|ImGuiWindowFlags.NoTitleBar|ImGuiWindowFlags.NoResize|ImGuiWindowFlags.NoScrollbar);
 
@@ -48,7 +51,7 @@ namespace NamelessRogue.Engine.UI
 				ImGui.BeginChild("menu", menuSize);
 				{
 					ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
-					if (ButtonWithSound("New game", buttonSize)) { Action = MainMenuAction.NewGame; };
+					if (ButtonWithSound("New game", buttonSize, currentWorldFiles.Any())) { Action = MainMenuAction.NewGame; };
 
 					ImGui.SetCursorPos(shiftVector);
 					if (ButtonWithSound("Load game", buttonSize)) { Action = MainMenuAction.LoadGame; }

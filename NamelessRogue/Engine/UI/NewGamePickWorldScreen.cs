@@ -17,10 +17,6 @@ namespace NamelessRogue.Engine.UI
         public NewGamePickWorldScreen(NamelessGame game) : base(game)
         {
             buttonSize = new System.Numerics.Vector2(uiSize.X / 4, 50);
-            if(!Directory.Exists("Worlds"))
-            {
-                Directory.CreateDirectory("Worlds");
-            }
         }
 
         public override void DrawLayout()
