@@ -98,7 +98,7 @@ namespace NamelessRogue.Engine.Systems
 
             lastKeys = lastState.GetPressedKeys();
 
-            InputComponent inputComponent = namelessGame.PlayerEntity.GetComponentOfType<InputComponent>();
+            InputComponent inputComponent = namelessGame.InputEntity.GetComponentOfType<InputComponent>();
             var diffrence = gameTime.TotalGameTime.TotalMilliseconds - previousGametimeForMove;
             if (diffrence > delayTime)
             {

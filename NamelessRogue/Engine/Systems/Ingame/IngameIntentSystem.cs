@@ -60,7 +60,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
 
             var playerEntity = namelessGame.PlayerEntity;
-            InputComponent inputComponent = playerEntity.GetComponentOfType<InputComponent>();
+            InputComponent inputComponent = namelessGame.InputEntity.GetComponentOfType<InputComponent>();
             if (inputComponent != null && !inputComponent.IsDelayed)
             {
                 foreach (Intent intent in inputComponent.Intents)

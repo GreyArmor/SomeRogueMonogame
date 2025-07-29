@@ -1,26 +1,15 @@
 ﻿using ImGuiNET;
-using NamelessRogue.Engine.Components.ItemComponents;
-using NamelessRogue.Engine.Components.Stats;
-using NamelessRogue.Engine.Factories;
-using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading;
-using static NamelessRogue.Engine.Generation.World.WorldBoardGenerator;
 
 namespace NamelessRogue.Engine.UI
 {
-    public class WorldGenerationProgressUI : BaseScreen
+    public class NewGameGenerationProgressScreen : BaseScreen
     {
         public float ProgressFraction { get; set; } = 0f;
         Vector2 ProgressBarSize { get; set; }
-
-        public WorldGenerationProgressUI(NamelessGame game) : base(game)
+        public NewGameGenerationProgressScreen(NamelessGame game) : base(game)
         {
             ProgressBarSize = new Vector2(-1, 50);
         }
@@ -33,12 +22,12 @@ namespace NamelessRogue.Engine.UI
             ImGui.PushFont(ImGUI_FontLibrary.AnonymousPro_Regular24);
             ImGui.SetWindowSize(uiSize);
 
-            ImGui.SetNextWindowPos(new Vector2(0, uiSize.Y - 50 - (buttonSize.Y*2)));
+            ImGui.SetNextWindowPos(new Vector2(0, uiSize.Y - 50 - (buttonSize.Y * 2)));
             // ImGui.SetNextWindowPos(new Vector2(0, uiSize.Y - 50 - buttonSize.Y));
-            ImGui.BeginChild("##buttons", new Vector2(0, buttonSize.Y+2));
+            ImGui.BeginChild("##buttons", new Vector2(0, buttonSize.Y + 2));
             {
                 ImGui.ProgressBar(ProgressFraction, ProgressBarSize, "Generating world...");
-                
+
                 //if (ButtonWithSound("Cancel", buttonSize, true))
                 //{
                 //    game.ContextToSwitch = ContextFactory.GetWorldGenContext(game);
@@ -46,7 +35,7 @@ namespace NamelessRogue.Engine.UI
             }
             ImGui.EndChild();
 
-          
+
 
             ImGui.PopFont();
             ImGui.End();

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Systems.PickUpItems
@@ -36,7 +37,7 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
         }
         public override HashSet<Type> Signature { get; }
         public bool InventoryNeedsUpdate { get; private set; }
-
+        Timer progressBarTestTimer = null;
         public override void Update(GameTime gameTime, NamelessGame game)
         {
 
@@ -50,31 +51,28 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
                     ChunkData chunkData = new ChunkData(game.WorldSettings, worldMap);
                     worldMap.Chunks = chunkData;
                     WorldBoardGenerator.PopulateWithInitialData(worldMap, game);
-                    worldTemplate.WorldMap = worldMap; 
-                    game.Commander.EnqueueCommand(new GenerateWorldFinishedCommand(worldTemplate));
-                });
+                    worldTemplate.WorldMap = worldMap;
 
+                 
+
+                    game.Commander.EnqueueCommand(new GenerateWorldFinishedCommand(worldTemplate));
+                    progressBarTestTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                    progressBarTestTimer.Dispose();
+                });
+                UIContainer.Instance.WorldGenerationProgressUI.ProgressFraction = 0;
+                progressBarTestTimer = new Timer((object? target) => {
+                    UIContainer.Instance.WorldGenerationProgressUI.ProgressFraction = UIContainer.Instance.WorldGenerationProgressUI.ProgressFraction < 1f ? UIContainer.Instance.WorldGenerationProgressUI.ProgressFraction += 0.1f : 1f;
+                }
+                , null, 0, 100);
+                
                 task.Start();
             }
 
             while (game.Commander.DequeueCommand(out GenerateWorldFinishedCommand command))
             {
-                SaveManager.SaveWorldTemplate("Worlds", "test.nrwf", command.WorldTemplate, game);
-                var savedWorldTemplate = SaveManager.LoadWorldTemplate("Worlds", "test.nrwf");
-                command.ToString();               
+                SaveManager.SaveWorldTemplate("Worlds", @$"{command.WorldTemplate.Name}.nrwf", command.WorldTemplate, game);
+                game.ContextToSwitch = ContextFactory.GetWorldGenContext(game);
             }
-
-            switch (UIContainer.Instance.WorldGenScreen.Action)
-            {
-                case WorldGenAction.Exit:
-                    game.ContextToSwitch = ContextFactory.GetMainMenuContext(game);
-                    break;
-                case WorldGenAction.Generate:
-                    break;
-                default:
-                    break;
-            }
-            UIContainer.Instance.WorldGenScreen.Action = WorldGenAction.None;
         }
     }
 }

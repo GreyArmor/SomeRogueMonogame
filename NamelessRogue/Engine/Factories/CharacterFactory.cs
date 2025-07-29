@@ -59,7 +59,6 @@ namespace NamelessRogue.Engine.Factories
             playerCharacter.AddComponent(new Player());
             playerCharacter.AddComponent(new InputReceiver());
             playerCharacter.AddComponent(new FollowedByCamera());
-            playerCharacter.AddComponent(new InputComponent());
             playerCharacter.AddComponent(position);
             playerCharacter.AddComponent(new Description("Player",""));
             var holder = new ItemsHolder();

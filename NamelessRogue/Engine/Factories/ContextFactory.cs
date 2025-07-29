@@ -16,6 +16,7 @@ using NamelessRogue.Engine.Systems.Inventory;
 using NamelessRogue.Engine.Systems.MainMenu;
 using NamelessRogue.Engine.Systems.Map;
 using NamelessRogue.Engine.Systems.PickUpItems;
+using NamelessRogue.Engine.Systems.WorldGen;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
 
@@ -542,6 +543,64 @@ namespace NamelessRogue.Engine.Factories
                 // create and init the UI manager
                 editorLocationContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.EditorLocationScreen, "MainMenu");
                 return editorLocationContext;
+            }
+        }
+
+        private static GameContext newGamePickWorldContext;
+        public static GameContext GetNewGamePickWorldContext(NamelessGame game)
+        {
+            if (newGamePickWorldContext != null)
+            {
+                return newGamePickWorldContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new NewGamePickWorldScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
+                // create and init the UI manager
+                newGamePickWorldContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.NewGamePickWorldScreen, "MainMenu");
+                return newGamePickWorldContext;
+            }
+        }
+
+        private static GameContext characterCreationScreenContext;
+        public static GameContext GetCharacterCreationScreenContext(NamelessGame game)
+        {
+            if (characterCreationScreenContext != null)
+            {
+                return characterCreationScreenContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new CharacterCreationScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
+                characterCreationScreenContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.CharacterCreationScreen, "MainMenu");
+                return characterCreationScreenContext;
+            }
+        }
+
+        private static GameContext newGameGenerationProgressContext;
+        public static GameContext GetNewGameGenerationProgressContext(NamelessGame game)
+        {
+            if (newGameGenerationProgressContext != null)
+            {
+                return newGameGenerationProgressContext;
+            }
+            else
+            {
+                var systems = new List<ISystem>();
+                systems.Add(new NewGameGenerationScreenSystem());
+                systems.Add(new SoundPlaySystem());
+                var uiSystem = new UIRenderSystem(game);
+                var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
+                newGameGenerationProgressContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.NewGameGenerationProgressScreen, "MainMenu");
+                return newGameGenerationProgressContext;
             }
         }
 

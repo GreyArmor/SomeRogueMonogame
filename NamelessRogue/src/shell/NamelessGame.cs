@@ -34,6 +34,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using SharpDX.MediaFoundation;
 using NamelessRogue.Engine.Generation.Editor;
 using System.Diagnostics;
+using NamelessRogue.Engine.Components.ChunksAndTiles;
 
 namespace NamelessRogue.shell
 {
@@ -63,9 +64,9 @@ namespace NamelessRogue.shell
 
 		public Position TestMapPosition { get; private set; }
 		public IEntity PlayerEntity { get; set; }
-		public IEntity TimelineEntity { get; set; }
 
-		public IEntity ChunkGeometryEntiry { get; set; }
+        public IEntity InputEntity { get; set; }
+        public IEntity TimelineEntity { get; set; }
 
 		public IEntity FollowedByCameraEntity { get; set; }
 
@@ -155,284 +156,208 @@ namespace NamelessRogue.shell
 		/// and initialize them as well.
 		/// </summary>
 		protected override void Initialize()
-		{
-			var assembly = Assembly.GetExecutingAssembly();
-			var resourceName = "NamelessRogue.log4net.config";
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "NamelessRogue.log4net.config";
 
-			using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-			{
-				XmlConfigurator.Configure(LogManager.CreateRepository("NamelessRogue"), stream);
-			}
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                XmlConfigurator.Configure(LogManager.CreateRepository("NamelessRogue"), stream);
+            }
 
-			Log = LogManager.GetLogger(typeof(NamelessGame));
+            Log = LogManager.GetLogger(typeof(NamelessGame));
 
-			Log.Info("Application started");
-
-			GameTime zero = new GameTime();
+            Log.Info("Application started");
 
 			//SaveManager.Init();
 
+			InputEntity = new Entity();
+			InputEntity.AddComponent(new InputComponent());
 
-			CurrentGame = new GameInstance();
-			DebugDevice = this.GraphicsDevice;
-            gameInstance = new GameInstance(123456, 500);
+            CurrentGame = new GameInstance();
+            DebugDevice = this.GraphicsDevice;
+            gameInstance = new GameInstance(123456);
             //TODO: move to config later
             int width = 20;
-			int height = 15;
+            int height = 15;
+
+            Commander = new Commander();
+         
+            settings = new GameSettings(width, height);
+
+            graphics.PreferredBackBufferWidth = (int)(GetActualCharacterWidth() + settings.HudWidth);
+            graphics.PreferredBackBufferHeight = GetActualCharacterHeight();
+
+            graphics.IsFullScreen = false;
+            graphics.PreferMultiSampling = true;
+            graphics.SynchronizeWithVerticalRetrace = true;
+
+            RenderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                GraphicsDevice.PresentationParameters.BackBufferWidth,
+                GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24, 4, RenderTargetUsage.PlatformContents);
 
 
-			var commanderEntity = new Entity();
-			Commander = new Commander();
-			commanderEntity.AddComponent(Commander);
+            graphics.ApplyChanges();
 
-			settings = new GameSettings(width, height);
-
-			graphics.PreferredBackBufferWidth = (int)(GetActualCharacterWidth() + settings.HudWidth);
-			graphics.PreferredBackBufferHeight = GetActualCharacterHeight();
-
-			graphics.IsFullScreen = false;
-			graphics.PreferMultiSampling = true;
-			graphics.SynchronizeWithVerticalRetrace = true;
-
-			RenderTarget = new RenderTarget2D(
-				GraphicsDevice,
-				GraphicsDevice.PresentationParameters.BackBufferWidth,
-				GraphicsDevice.PresentationParameters.BackBufferHeight,
-				false,
-				GraphicsDevice.PresentationParameters.BackBufferFormat,
-				DepthFormat.Depth24, 4, RenderTargetUsage.PlatformContents);
-
-			
-			graphics.ApplyChanges();
-
-			ModelsLibrary.Initialize(this);
+            ModelsLibrary.Initialize(this);
             spriteBatch = new SpriteBatch(GraphicsDevice);
             SpriteLibrary.Initialize(this);
+            new UIContainer(this);
+            ContextFactory.InitAllContexts(this);
+            var viewportEntity = RenderFactory.CreateViewport(settings);
+            CameraEntity = viewportEntity;
+            TerrainFurnitureFactory.CreateFurnitureEntities(this);
 
-            //12345 123
-          
+            CurrentContext = ContextFactory.GetMainMenuContext(this);
+            this.IsMouseVisible = true;
 
+            InitSound();
+            PlayMainMenuTheme();
 
-			new UIContainer(this);
-			ContextFactory.InitAllContexts(this);
-			var viewportEntity = RenderFactory.CreateViewport(settings);
-			CameraEntity = viewportEntity;
-			
-			if (true)
-			{			
-				TerrainFurnitureFactory.CreateFurnitureEntities(this);
-				Entity chunksHolder = new Entity();
-				Chunk3dGeometryHolder holder = new Chunk3dGeometryHolder();
-				chunksHolder.AddComponent(holder);
-				ChunkGeometryEntiry = chunksHolder;
-
-				TimelineEntity = TimelineFactory.CreateTimeline(this);
-
-				var libraries = new Entity();
-				//var ammoLibrary = new AmmoLibrary();
-				//ammoLibrary.AmmoTypes.Add(new AmmoType() { Name = "Revolver ammo" });
-				//libraries.AddComponent(ammoLibrary);
-
-				var timelinEntity = TimelineEntity;
-				var timeline = timelinEntity.GetComponentOfType<WorldTemplate>();
-
-				WorldTile firsTile = null;
-				//foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
-				//{
-				//	if (worldBoardWorldTile.Settlement != null)
-				//	{
-				//		firsTile = worldBoardWorldTile;
-				//		break;
-
-				//	}
-				//}
-				int x, y;
-
-				x = 200;
-				y = 200;		
-			
-
-				Point worldRiverPosition = new Point();
-				bool anyRivers = false;
-                /*
-				foreach (var worldBoardWorldTile in timeline.CurrentTimelineLayer.WorldTiles)
-				{
-					var pos = worldBoardWorldTile.WorldBoardPosiiton;
-					var isWater = timeline.CurrentTimelineLayer.TerrainFeatures[pos.X][pos.Y].isWater;
-					if (isWater)
-					{
-						anyRivers = true;
-						worldRiverPosition = pos;
-						x = pos.X;
-						y = pos.Y;
-						break;
-					}
-				}*/
-
-                var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, 0, this);
-                PlayerEntity = player;
-                TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
-
-
-                ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
-                //initialize reality bubble
-                chunkManagementSystem.Update(zero, this);
-
-
-                BuffLibrary.ClearData();
-                BuffLibrary.LoadData(this);
-
-                ItemLibrary.ClearData();
-                ItemLibrary.LoadItemData(this);
-
-                DialogLibrary.ClearData();
-                DialogLibrary.LoadData(this);
-
-				BuildingLibrary.ClearData();
-				BuildingLibrary.LoadData(this);
-
-                var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.nrcf", SearchOption.AllDirectories);
-								Vector2 characterCreationOffset = new Vector2(0);
-				
-				List<Entity> charaterEntities = new List<Entity>();
-
-				foreach (var charactersFile in characters)
-				{
-					characterCreationOffset.Y--;
-                    characterCreationOffset.Y--;
-                    XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
-                    TextReader reader = new StreamReader(charactersFile);
-                    var data = (CharacterTemplateData)serializer.Deserialize(reader);
-					var character = CharacterFactory.CreateCharacterFromData(this, new Vector3Int((int)(characterCreationOffset.X + (x* Constants.ChunkSize)), (int)(characterCreationOffset.Y + (y* Constants.ChunkSize)), 0), data);
-                    charaterEntities.Add(character);
-                }
-
-				foreach (var character in charaterEntities)
-				{
-					var characterItems = character.GetComponentOfType<ItemsHolder>();
-					for (int i = 0; i < 10; i++)
-					{
-						var numberOfItems = ItemLibrary.ItemData.Count;
-
-						var randomItem = Random.Shared.Next(0, numberOfItems);
-
-						var randomItemData = ItemLibrary.ItemData[randomItem];
-						var item = ItemLibrary.CreateItemFromData(this, randomItemData);
-                        characterItems.Items.Add(item);
-                    }		
-                }	
-
-                var itemsHolder = player.GetComponentOfType<ItemsHolder>();
-                foreach (var itemData in ItemLibrary.ItemData)
-				{
-					if(itemData.ItemType==ItemType.Consumable)
-					{
-						for (int i = 0;	i<10; i++)
-						{
-                            var item = ItemLibrary.CreateItemFromData(this, itemData);
-                            itemsHolder.Items.Add(item);
-                        }					
-					}
-					else 
-					{
-                        var item = ItemLibrary.CreateItemFromData(this, itemData);
-                        itemsHolder.Items.Add(item);
-                    }                   
-                }
-
-                AbilityFactory.LoadData(this);
-
-                var abilityHolder = PlayerEntity.GetComponentOfType<AbilityHolder>();
-                var abilityBinder = PlayerEntity.GetComponentOfType<AbilityBinder>();
-
-				int binding = 1;
-				foreach (var abilityData in AbilityFactory.Data)
-				{
-                    var ability = AbilityFactory.CreateFromData(this, abilityData);
-                    abilityHolder.Abilities.Add(ability);
-                    abilityBinder.AbilityBindings.Add(binding, ability);
-                    binding++;
-                }
-
-
-
-				foreach (var buildingData in BuildingLibrary.Data)
-				{
-					for (int i = -4; i < 4; i++)
-					{
-						for (int j = -4; j < 4; j++)
-						{
-                            BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + i, y + j), buildingData);
-                        }                        
-					}
-				}
-
-				//var stopwatch = Stopwatch.StartNew();
-				//for (int i = 0; i < 1; i++)
-				//{
-				//	foreach (var buildingData in BuildingLibrary.Data)
-				//	{
-				//		BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
-				//		buildingOffsetX += 1;
-				//	}
-				//}
-
-				//stopwatch.Stop();
-
-				//stopwatch.ToString();
-
-				var realChunks = WorldProvider.GetRealityBubbleChunks();
-				foreach (var realityBubbleChunk in realChunks)
-				{
-					for (int z = 0; z < Constants.ChunkHeight; z++)
-					{
-						var tile = realityBubbleChunk.Value.ChunkTiles[0][0][z];
-						if (tile != null)
-						{
-							Commander.EnqueueCommand(new UpdateVisualChunkCommand(new Engine.Utility.Vector3Int(realityBubbleChunk.Key.X, realityBubbleChunk.Key.Y, z)));
-						}
-					}
-				}
-
-                //buildingOffsetY = 1;
-
-                //            for (int i = 0; i < 10; i++)
-                //            {
-                //                foreach (var buildingData in BuildingLibrary.Data)
-                //                {
-                //                    BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + buildingOffsetX, y + buildingOffsetY), buildingData);
-                //                    buildingOffsetX += 1;
-                //                }
-                //            }
-
-
-                FollowedByCameraEntity = player;
-
-				if (anyRivers)
-				{
-					//move player to some river
-					PlayerEntity.GetComponentOfType<Position>().Point = new Vector3Int(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
-					chunkManagementSystem.Update(zero, this);
-				}
-
-				CursorEntity = GameInitializer.CreateCursor();
-                TargeterEntity = GameInitializer.CreateTargeter();
-				WorldMapCameraEntity = GameInitializer.CreateWorldMapCamera();
-            }
-
-			CurrentContext = ContextFactory.GetMainMenuContext(this);
-			this.IsMouseVisible = true;
-	
-			InitSound();
-			PlayMainMenuTheme();
-
-			AbilityLogicLibrary.Init(this);
+            AbilityLogicLibrary.Init(this);
 
 
             IsInitialized = true;
 
-		}
-		MusicPack musicPack;
+        }
+
+        public void InitializeNewGameinstance(GameInstance gameInstance, WorldTemplate worldTemplate)
+        {
+			GameTime zero = new GameTime();
+			this.CurrentGame = gameInstance;
+
+            Entity worldTemplateEntity = new Entity();
+            worldTemplateEntity.AddComponent(worldTemplate);
+            TimelineEntity = worldTemplateEntity; //TimelineFactory.CreateTimeline(this);       
+
+            ChunkData chunkData = new ChunkData(CurrentGame, worldTemplate.WorldMap);
+            worldTemplate.WorldMap.Chunks = chunkData;
+
+            int x, y;
+
+            x = 200;
+            y = 200;
+
+            var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, 0, this);
+            PlayerEntity = player;
+            TestMapPosition = new Position(x * Constants.ChunkSize, y * Constants.ChunkSize, 0);
+
+           
+
+            ChunkManagementSystem chunkManagementSystem = new ChunkManagementSystem();
+            //initialize reality bubble
+            chunkManagementSystem.Update(zero, this);
+
+
+            BuffLibrary.ClearData();
+            BuffLibrary.LoadData(this);
+
+            ItemLibrary.ClearData();
+            ItemLibrary.LoadItemData(this);
+
+            DialogLibrary.ClearData();
+            DialogLibrary.LoadData(this);
+
+            BuildingLibrary.ClearData();
+            BuildingLibrary.LoadData(this);
+
+            var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.nrcf", SearchOption.AllDirectories);
+            Vector2 characterCreationOffset = new Vector2(0);
+
+            List<Entity> charaterEntities = new List<Entity>();
+
+            foreach (var charactersFile in characters)
+            {
+                characterCreationOffset.Y--;
+                characterCreationOffset.Y--;
+                XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
+                TextReader reader = new StreamReader(charactersFile);
+                var data = (CharacterTemplateData)serializer.Deserialize(reader);
+                var character = CharacterFactory.CreateCharacterFromData(this, new Vector3Int((int)(characterCreationOffset.X + (x * Constants.ChunkSize)), (int)(characterCreationOffset.Y + (y * Constants.ChunkSize)), 0), data);
+                charaterEntities.Add(character);
+            }
+
+            foreach (var character in charaterEntities)
+            {
+                var characterItems = character.GetComponentOfType<ItemsHolder>();
+                for (int i = 0; i < 10; i++)
+                {
+                    var numberOfItems = ItemLibrary.ItemData.Count;
+
+                    var randomItem = Random.Shared.Next(0, numberOfItems);
+
+                    var randomItemData = ItemLibrary.ItemData[randomItem];
+                    var item = ItemLibrary.CreateItemFromData(this, randomItemData);
+                    characterItems.Items.Add(item);
+                }
+            }
+
+            var itemsHolder = player.GetComponentOfType<ItemsHolder>();
+            foreach (var itemData in ItemLibrary.ItemData)
+            {
+                if (itemData.ItemType == ItemType.Consumable)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        var item = ItemLibrary.CreateItemFromData(this, itemData);
+                        itemsHolder.Items.Add(item);
+                    }
+                }
+                else
+                {
+                    var item = ItemLibrary.CreateItemFromData(this, itemData);
+                    itemsHolder.Items.Add(item);
+                }
+            }
+
+            AbilityFactory.LoadData(this);
+
+            var abilityHolder = PlayerEntity.GetComponentOfType<AbilityHolder>();
+            var abilityBinder = PlayerEntity.GetComponentOfType<AbilityBinder>();
+
+            int binding = 1;
+            foreach (var abilityData in AbilityFactory.Data)
+            {
+                var ability = AbilityFactory.CreateFromData(this, abilityData);
+                abilityHolder.Abilities.Add(ability);
+                abilityBinder.AbilityBindings.Add(binding, ability);
+                binding++;
+            }
+
+            foreach (var buildingData in BuildingLibrary.Data)
+            {
+                for (int i = -4; i < 4; i++)
+                {
+                    for (int j = -4; j < 4; j++)
+                    {
+                        BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + i, y + j), buildingData);
+                    }
+                }
+            }
+            var realChunks = WorldProvider.GetRealityBubbleChunks();
+            foreach (var realityBubbleChunk in realChunks)
+            {
+                for (int z = 0; z < Constants.ChunkHeight; z++)
+                {
+                    var tile = realityBubbleChunk.Value.ChunkTiles[0][0][z];
+                    if (tile != null)
+                    {
+                        Commander.EnqueueCommand(new UpdateVisualChunkCommand(new Engine.Utility.Vector3Int(realityBubbleChunk.Key.X, realityBubbleChunk.Key.Y, z)));
+                    }
+                }
+            }
+
+            FollowedByCameraEntity = player;
+            CursorEntity = GameInitializer.CreateCursor();
+            TargeterEntity = GameInitializer.CreateTargeter();
+            WorldMapCameraEntity = GameInitializer.CreateWorldMapCamera();
+        }
+
+        MusicPack musicPack;
 		public void InitSound()
 		{
 			var packPath = @$"Content\MusicPack\PackConfig.xml";

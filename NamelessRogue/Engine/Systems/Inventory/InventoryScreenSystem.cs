@@ -68,9 +68,8 @@ namespace NamelessRogue.Engine.Systems.Inventory
 
             UIContainer.Instance.InventoryScreen.Action = InventoryScreeAction.None;
 
-            foreach (IEntity entity in RegisteredEntities)
-            {
-                InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
+
+                InputComponent inputComponent = namelessGame.InputEntity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)
                 {
                     var playerEntity = namelessGame.PlayerEntity;
@@ -284,7 +283,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
                     }
 
                     inputComponent.Intents.Clear();
-                }
+               
 
                 bool updated = false;
                 while (namelessGame.Commander.DequeueCommand<UpdateInventoryScreenCommand>(out var equipOrTakeOffCommand))

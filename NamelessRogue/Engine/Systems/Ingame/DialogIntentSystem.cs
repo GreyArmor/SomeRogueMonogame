@@ -21,7 +21,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            InputComponent inputComponent = namelessGame.PlayerEntity.GetComponentOfType<InputComponent>();
+            InputComponent inputComponent = namelessGame.InputEntity.GetComponentOfType<InputComponent>();
             if (inputComponent != null && !inputComponent.IsDelayed)
             {
                 foreach (Intent intent in inputComponent.Intents)

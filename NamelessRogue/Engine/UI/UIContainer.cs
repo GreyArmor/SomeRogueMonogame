@@ -32,6 +32,11 @@ namespace NamelessRogue.Engine.UI
 
         public WorldGenerationProgressUI WorldGenerationProgressUI { get; set; }
         public PickOptionDialogScreen PickOptionDialogScreen { get; internal set; }
+        public NewGamePickWorldScreen NewGamePickWorldScreen { get; set; }
+
+        public CharacterCreationScreen CharacterCreationScreen { get; set; }
+
+        public NewGameGenerationProgressScreen NewGameGenerationProgressScreen { get; set; }
 
         public TradeScreen TradeScreen { get; set; }
 
@@ -61,6 +66,9 @@ namespace NamelessRogue.Engine.UI
             EditorQuestScreen = new EditorQuestScreen(game);
             EditorLocationScreen = new EdirtorLocationScreen(game);
             WorldGenerationProgressUI = new WorldGenerationProgressUI(game);
+            NewGamePickWorldScreen = new NewGamePickWorldScreen(game);
+            CharacterCreationScreen = new CharacterCreationScreen(game);
+            NewGameGenerationProgressScreen = new NewGameGenerationProgressScreen(game);
             Instance = this;
 
 		}

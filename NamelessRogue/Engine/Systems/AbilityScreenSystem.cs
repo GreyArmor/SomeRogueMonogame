@@ -23,7 +23,7 @@ namespace NamelessRogue.Engine.Systems
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             var playerEntity = namelessGame.PlayerEntity;
-            var inputComponent = playerEntity.GetComponentOfType<InputComponent>();
+            var inputComponent = namelessGame.InputEntity.GetComponentOfType<InputComponent>();
             foreach (Intent intent in inputComponent.Intents)
             {
                 switch (intent.Intention)

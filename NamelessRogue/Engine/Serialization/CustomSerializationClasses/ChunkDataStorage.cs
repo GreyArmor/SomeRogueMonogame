@@ -17,7 +17,6 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 
 		[FlatBufferItem(1)] public IList<ChunkStorage> Chunks { get; set; }
 		[FlatBufferItem(2)] public IList<ChunkStorage> RealityBubbleChunks { get; set; }
-		[FlatBufferItem(3)] public WorldSettingsStorage WorldSettings { get; set; }
 
 		//[FlatBufferItem(4)] public TimelineLayerStorage Worldboard { get; set;}
 

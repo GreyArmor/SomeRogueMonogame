@@ -16,31 +16,12 @@ using SharpDX.DirectWrite;
 namespace NamelessRogue.Engine.Generation.World
 {
     public class HistoryGenerator {
-        public static List<MapArtifact> Artifacts { get; private set; }
         public static WorldTemplate BuildWorldTemplate(NamelessGame game)
         {
             var timeline = new WorldTemplate(game.WorldSettings.Seed);
             var worldBoard = InitialiseFirstBoard(game);
-            //timeline.WorldBoardAtEveryAge.Add(worldBoard);
             timeline.WorldMap = worldBoard;
 
-
-            //String appPath = System.IO.Directory.GetCurrentDirectory();
-            //Stopwatch s = new Stopwatch(); 
-            //s.Start();
-            //SaveManager.SaveTimelineLayer(appPath + "\\Layers", worldBoard,
-            //    worldBoard.Age.ToString());
-            //s.Stop();
-            //s = new Stopwatch();
-            //s.Start();
-            //var timelineLayer = SaveManager.LoadTimelineLayer(appPath + "\\Layers",
-            //    worldBoard.Age.ToString());
-            //s.Stop();
-            //timelineLayer.ToString();
-            //for (int i = 1; i < settings.HowOldIsTheWorld; i++)
-            //{
-
-            //}
             return timeline;
         }
 
@@ -52,33 +33,6 @@ namespace NamelessRogue.Engine.Generation.World
             worldBoard.Chunks = chunkData;
 
             WorldBoardGenerator.PopulateWithInitialData(worldBoard, game);
-           // WorldBoardGenerator.AnalizeLandmasses(worldBoard, game);
-           // WorldBoardGenerator.PlaceInitialCivilizations(worldBoard, game);
-            //WorldBoardGenerator.PlaceInitialArtifacts(worldBoard, game);
-            //WorldBoardGenerator.PlaceResources(worldBoard, game);
-            //WorldBoardGenerator.DistributeMetaphysics(worldBoard, game);
-
-            //WorldTile firsTile = null;
-            //foreach (var worldBoardWorldTile in worldBoard.WorldTiles)
-            //{
-
-            //    if (worldBoardWorldTile.Settlement != null)
-            //    {
-            //        IWorldProvider worldProvider = chunkData;
-            //        firsTile = worldBoardWorldTile;
-            //        var concreteSettlment = SettlementFactory.GenerateSettlement(game, firsTile, worldBoard, worldProvider);
-
-            //        firsTile.Settlement.Concrete = concreteSettlment;
-            //        break;
-
-            //    }
-            //}
-
- 
-
-            //var concreteSettlment = SettlementFactory.GenerateSettlement(game, firsTile, worldBoard, worldProvider);
-
-            //firsTile.Settlement.Concrete = concreteSettlment;
           
             return worldBoard;
         }

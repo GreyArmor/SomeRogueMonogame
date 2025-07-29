@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Systems.MainMenu
                     namelessGame.ContextToSwitch = ContextFactory.GetWorldGenContext(namelessGame);
                     break;
                 case MainMenuAction.NewGame:
-                    namelessGame.ContextToSwitch = ContextFactory.GetIngameContext(namelessGame);
+                    namelessGame.ContextToSwitch = ContextFactory.GetNewGamePickWorldContext(namelessGame);
                     break;
                 case MainMenuAction.Options:
                     break;

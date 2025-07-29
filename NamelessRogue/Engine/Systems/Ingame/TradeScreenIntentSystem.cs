@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            InputComponent inputComponent = namelessGame.PlayerEntity.GetComponentOfType<InputComponent>();
+            InputComponent inputComponent = namelessGame.InputEntity.GetComponentOfType<InputComponent>();
             var mode = UIContainer.Instance.TradeScreen.CursorMode;
             if (inputComponent != null && !inputComponent.IsDelayed)
             {

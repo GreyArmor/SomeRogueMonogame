@@ -2,30 +2,25 @@
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace NamelessRogue.Engine.UI
 {
-    enum TempCharacterArchtype
+    public class NewGamePickWorldScreen : BaseScreen
     {
-        Merc, Hacker, Punk
-    }
-	public class CharacterCreationScreen : BaseScreen
-	{
-        private TempCharacterArchtype[] characterCharacterArchtypeList;
-        private string[] characterList;
-        int currentCharacter = 0;
-        
+        private string[] currentFiles;
+        int currentFile = 0;
+
         Random random;
-        public CharacterCreationScreen(NamelessGame game) : base(game)
+        public NewGamePickWorldScreen(NamelessGame game) : base(game)
         {
             buttonSize = new System.Numerics.Vector2(uiSize.X / 4, 50);
-            characterList = new string[] { "Mercenary", "Hacker", "Punk",   };
-            characterCharacterArchtypeList = new TempCharacterArchtype[] { TempCharacterArchtype.Merc, TempCharacterArchtype.Hacker, TempCharacterArchtype.Punk };
+            if(!Directory.Exists("Worlds"))
+            {
+                Directory.CreateDirectory("Worlds");
+            }
         }
 
         public override void DrawLayout()
@@ -39,27 +34,29 @@ namespace NamelessRogue.Engine.UI
             ImGui.SetWindowSize(uiSize);
             ImGui.SetNextWindowPos(new Vector2(centeredPositonX, 0));
 
+            currentFiles = Directory.EnumerateFiles("Worlds").ToArray();
             ImGui.BeginChild("##currentItems", new Vector2(menuSizeX, uiSize.Y - 50), false);
             {
                 ImGui.BeginChild("##listChild");
                 {
-                    ImGui.Text("Pick character:");
+                    ImGui.Text("Pick world:");
 
-                    if (characterList != null && characterList.Any())
+                    if (currentFiles != null && currentFiles.Any())
                     {
                         ImGui.SetNextItemWidth(menuSizeX);
-                        var clicked = ImGui.ListBox("##currentItemsByType", ref currentCharacter, characterList, characterList.Length, characterList.Length);
-                        if (clicked)
+                        var clicked = ImGui.ListBox("##currentItemsByType", ref currentFile, currentFiles, currentFiles.Length, currentFiles.Length);
+                        if(clicked)
                         {
+                            currentFiles.ToString();
                         }
                     }
                 }
                 ImGui.EndChild();
                 ImGui.SetNextWindowPos(new Vector2(centeredPositonX, uiSize.Y - 50 - buttonSize.Y));
-                // ImGui.SetNextWindowPos(new Vector2(0, uiSize.Y - 50 - buttonSize.Y));
-                ImGui.BeginChild("##buttons", new Vector2(menuSizeX, buttonSize.Y));
+               // ImGui.SetNextWindowPos(new Vector2(0, uiSize.Y - 50 - buttonSize.Y));
+                ImGui.BeginChild("##buttons" , new Vector2(menuSizeX, buttonSize.Y));
                 {
-                    if (ButtonWithSound("Start", buttonSize)) { game.Commander.EnqueueCommand(new StartNewGameWithThisCharacterCommand(characterCharacterArchtypeList[currentCharacter])); }
+                    if (ButtonWithSound("Start", buttonSize)) { game.Commander.EnqueueCommand(new StartNewGameInAWorldCommand(currentFiles[currentFile])); }
                     ImGui.SameLine();
                     if (ButtonWithSound("Back", buttonSize)) { game.Commander.EnqueueCommand(new ExitContextCommand()); }
                 }
