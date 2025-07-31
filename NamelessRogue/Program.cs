@@ -34,7 +34,8 @@ namespace NamelessRogue
             //return;
 
             SaveManager.Init();
-
+            SaveManager.BuildAndSaveAlphaWorld();
+           // return;
             using (var game = new NamelessGame())
             {
                 game.Run();

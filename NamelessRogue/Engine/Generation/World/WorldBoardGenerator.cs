@@ -178,9 +178,9 @@ namespace NamelessRogue.Engine.Generation.World
             ////board.CityParts = new List<CityPart>();
 
 
-            Point cityPartCenter = FindRandomLand(board, game, random, resolution);
+            //Point cityPartCenter = FindRandomLand(board, game, random, resolution);
 
-            CreateCitySpill(board, game, random, resolution, cityPartCenter, (int)(resolution*resolution*0.1f));
+            //CreateCitySpill(board, game, random, resolution, cityPartCenter, (int)(resolution*resolution*0.1f));
 
             ////generate random roads here
 
@@ -208,7 +208,7 @@ namespace NamelessRogue.Engine.Generation.World
 
             //  board.CityParts.Add(testCityPart);
 
-            OldRiverGeneration(board, game, resolution, random, fillArray);
+           // OldRiverGeneration(board, game, resolution, random, fillArray);
         }
 
         private static Point FindRandomLand(WorldMap map, NamelessGame game, InternalRandom random, int resolution)
@@ -308,32 +308,32 @@ namespace NamelessRogue.Engine.Generation.World
 
         private static void CreateCitySpill(WorldMap map, NamelessGame game, InternalRandom random, int resolution, Point cityCenter, int numberOfCityTiles)
         {
-            int res20 = (int)(resolution * 0.2f);
-            Rectangle worldBounds = new Rectangle(new Point(res20), new Point(resolution- res20));
-            Point position = cityCenter;
-            var tilesLeft = numberOfCityTiles;
-            Queue<Point> openList = new Queue<Point>();
-            openList.Enqueue(position);
-            var currentTile = map.WorldTiles[position.X, position.Y];
-            currentTile.Building = new BoardPieces.MapBuilding();
-            while (openList.Any() && tilesLeft>0)
-            {
-                position = openList.Dequeue();
-                var neighbors = new List<Point>(SharpCornerNeighborProvider.GetNeighbors(position).OrderBy(x=>random.Next())).Take(2);
-                foreach(var neighbor in neighbors)
-                {
-                    if (worldBounds.Contains(neighbor))
-                    {
-                        var neighborTile = map.WorldTiles[neighbor.X, neighbor.Y];
-                        if (neighborTile.Terrain != TerrainTypes.Water && neighborTile.Building == null)
-                        {
-                            openList.Enqueue(neighbor);
-                            neighborTile.Building = new BoardPieces.MapBuilding();
-                            tilesLeft--;
-                        }
-                    }
-                }
-            }
+            //int res20 = (int)(resolution * 0.2f);
+            //Rectangle worldBounds = new Rectangle(new Point(res20), new Point(resolution- res20));
+            //Point position = cityCenter;
+            //var tilesLeft = numberOfCityTiles;
+            //Queue<Point> openList = new Queue<Point>();
+            //openList.Enqueue(position);
+            //var currentTile = map.WorldTiles[position.X, position.Y];
+            //currentTile.Building = new BoardPieces.MapBuilding();
+            //while (openList.Any() && tilesLeft>0)
+            //{
+            //    position = openList.Dequeue();
+            //    var neighbors = new List<Point>(SharpCornerNeighborProvider.GetNeighbors(position).OrderBy(x=>random.Next())).Take(2);
+            //    foreach(var neighbor in neighbors)
+            //    {
+            //        if (worldBounds.Contains(neighbor))
+            //        {
+            //            var neighborTile = map.WorldTiles[neighbor.X, neighbor.Y];
+            //            if (neighborTile.Terrain != TerrainTypes.Water && neighborTile.Building == null)
+            //            {
+            //                openList.Enqueue(neighbor);
+            //                neighborTile.Building = new BoardPieces.MapBuilding();
+            //                tilesLeft--;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         private static void OldRiverGeneration(WorldMap board, NamelessGame game, int resolution, InternalRandom random, TileForGeneration[][] fillArray)

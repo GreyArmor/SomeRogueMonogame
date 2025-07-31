@@ -82,6 +82,15 @@
     <None Update="Content\Buildings\DFfont.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Buildings\road_crossroads.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Buildings\road_horizontal.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Buildings\road_vertical.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Buildings\symbols.tsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -145,6 +154,9 @@
     <None Update="Content\Sprites\ZeroAndOne2.ase">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Worlds\Alpha World.nrwf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 	<ItemGroup>
@@ -159,25 +171,30 @@
 	  <Compile Remove="Content\Sprites\MainMenuScreen\**" />
 	  <Compile Remove="Content\T4CodeGenerators\**" />
 	  <Compile Remove="Engine\Components\Environment\Buildings\**" />
+	  <Compile Remove="Engine\Generation\Items\**" />
 	  <Compile Remove="Engine\_3DUtility\**" />
+	  <Compile Remove="NewFolder\**" />
 	  <EmbeddedResource Remove="Content\Models\**" />
 	  <EmbeddedResource Remove="Content\Sprites\Furniture\**" />
 	  <EmbeddedResource Remove="Content\Sprites\MainMenuScreen\**" />
 	  <EmbeddedResource Remove="Content\T4CodeGenerators\**" />
 	  <EmbeddedResource Remove="Engine\Components\Environment\Buildings\**" />
+	  <EmbeddedResource Remove="Engine\Generation\Items\**" />
 	  <EmbeddedResource Remove="Engine\_3DUtility\**" />
+	  <EmbeddedResource Remove="NewFolder\**" />
 	  <None Remove="Content\Models\**" />
 	  <None Remove="Content\Sprites\Furniture\**" />
 	  <None Remove="Content\Sprites\MainMenuScreen\**" />
 	  <None Remove="Content\T4CodeGenerators\**" />
 	  <None Remove="Engine\Components\Environment\Buildings\**" />
+	  <None Remove="Engine\Generation\Items\**" />
 	  <None Remove="Engine\_3DUtility\**" />
+	  <None Remove="NewFolder\**" />
 	</ItemGroup>
 	
   <ItemGroup>
     <Folder Include="Content\GameObjects\Misc\" />
     <Folder Include="Content\obj\Windows\AnimatedCharacters\" />
-    <Folder Include="Engine\Generation\Items\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

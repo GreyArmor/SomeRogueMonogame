@@ -46,14 +46,14 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
                 var task = new Task(() =>
                 {
                     var parameters = command.Parameters;
+                    parameters.worldSize = WorldSizeName.Tiny;
+                    parameters.worldSizeValue = 10;
                     var worldTemplate = new WorldTemplate(parameters);
                     var worldMap = new WorldMap(parameters.worldSizeValue);
                     ChunkData chunkData = new ChunkData(game.WorldSettings, worldMap);
                     worldMap.Chunks = chunkData;
                     WorldBoardGenerator.PopulateWithInitialData(worldMap, game);
-                    worldTemplate.WorldMap = worldMap;
-
-                 
+                    worldTemplate.WorldMap = worldMap;                 
 
                     game.Commander.EnqueueCommand(new GenerateWorldFinishedCommand(worldTemplate));
                     progressBarTestTimer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -70,7 +70,7 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
 
             while (game.Commander.DequeueCommand(out GenerateWorldFinishedCommand command))
             {
-                SaveManager.SaveWorldTemplate("Worlds", @$"{command.WorldTemplate.Name}.nrwf", command.WorldTemplate, game);
+                SaveManager.SaveWorldTemplate("Worlds", @$"{command.WorldTemplate.Name}.nrwf", command.WorldTemplate);
                 game.ContextToSwitch = ContextFactory.GetWorldGenContext(game);
             }
         }

@@ -230,7 +230,7 @@ namespace NamelessRogue.shell
 
         }
 
-        public void InitializeNewGameinstance(GameInstance gameInstance, WorldTemplate worldTemplate)
+        public void InitializeNewGameInstance(GameInstance gameInstance, WorldTemplate worldTemplate)
         {
 			GameTime zero = new GameTime();
 			this.CurrentGame = gameInstance;
@@ -243,9 +243,11 @@ namespace NamelessRogue.shell
             worldTemplate.WorldMap.Chunks = chunkData;
 
             int x, y;
+			//alpha world start zone
+            x = 5;
+            y = 9;
 
-            x = 200;
-            y = 200;
+
 
             var player = CharacterFactory.CreateSimplePlayerCharacter(x * Constants.ChunkSize, y * Constants.ChunkSize, 0, this);
             PlayerEntity = player;
@@ -333,16 +335,33 @@ namespace NamelessRogue.shell
                 binding++;
             }
 
-            foreach (var buildingData in BuildingLibrary.Data)
-            {
-                for (int i = -4; i < 4; i++)
-                {
-                    for (int j = -4; j < 4; j++)
-                    {
-                        BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + i, y + j), buildingData);
+			for (int worldX = 0; worldX < worldTemplate.WorldSize.X; worldX++)
+			{
+				for (int worldY = 0; worldY < worldTemplate.WorldSize.Y; worldY++)
+				{
+					var worldTile = worldTemplate.WorldMap.WorldTiles[worldX, worldY];
+                    foreach(var building in worldTile.Buildings)
+					{
+						var buildingName = building.Name;
+						var buildingData = BuildingLibrary.Data.FirstOrDefault(x=>x.Name == buildingName);
+						if (buildingData!=null)
+						{
+							BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(worldX, worldY), buildingData);
+						}
                     }
                 }
-            }
+			}
+
+            //foreach (var buildingData in BuildingLibrary.Data)
+            //{
+            //    for (int i = -4; i < 4; i++)
+            //    {
+            //        for (int j = -4; j < 4; j++)
+            //        {
+            //            BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(x + i, y + j), buildingData);
+            //        }
+            //    }
+            //}
             var realChunks = WorldProvider.GetRealityBubbleChunks();
             foreach (var realityBubbleChunk in realChunks)
             {

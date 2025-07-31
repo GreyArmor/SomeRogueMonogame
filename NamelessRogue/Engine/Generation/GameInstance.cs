@@ -20,7 +20,7 @@ namespace NamelessRogue.Engine.Generation
             GlobalRandom = new InternalRandom(seed);
             NamesGenerator = new NamesGenerator();
             GlobalRandom = new InternalRandom(seed);
-            TerrainGen = new TerrainGenerator(GlobalRandom, 500);//(int)template.WorldSize.X);
+            TerrainGen = new TerrainGenerator(GlobalRandom, 10);//(int)template.WorldSize.X);
             string[] cyberpunkCityNames = new string[]
              {
                 "Neotoka", "Veltrix", "Draxylon", "Cindara", "Ombervek", "Zentara", "Crynova", "Halcyrex", "Virelon", "Noxmere",

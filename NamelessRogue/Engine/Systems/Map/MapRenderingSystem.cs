@@ -145,7 +145,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
                         RenderingSystem.AtlasTileData buildingTileData;
 
-                        if (worldTile.Building!=null)
+                        if (worldTile.Buildings!=null)
                         {
                             characterToTileDictionary.TryGetValue("City", out buildingTileData);
                         }

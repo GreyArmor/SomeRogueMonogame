@@ -12,7 +12,7 @@ namespace NamelessRogue.Engine.Generation.World
     public class WorldTile {
         public TerrainTypes Terrain { get; set; }
         public Biomes Biome { get; set; }
-        public MapBuilding Building { get; set; }
+        public MapBuilding[] Buildings { get; set; } = Array.Empty<MapBuilding>();
         public float Elevation { get; set; }
         public bool RiverMapValue { get; set; }
         public bool RiverMapBorderValue { get; set; }

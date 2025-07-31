@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BuildingTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <id>eadffb30-9f9e-4f99-be95-6dfd7e1a6cc9</id>
+  <name>road_horizontal</name>
+  <description />
+  <size>
+    <X>64</X>
+    <Y>64</Y>
+  </size>
+  <Id>eadffb30-9f9e-4f99-be95-6dfd7e1a6cc9</Id>
+  <Name>road_horizontal</Name>
+  <Description />
+  <Size>
+    <X>64</X>
+    <Y>64</Y>
+  </Size>
+  <TiledFilePaths>
+    <BuildingFloor>
+      <floor>0</floor>
+      <Floor>0</Floor>
+      <TiledFilePath>
+        <Id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\road_horizontal.tmx</Id>
+        <Path>Buildings\road_horizontal.tmx</Path>
+      </TiledFilePath>
+    </BuildingFloor>
+  </TiledFilePaths>
+</BuildingTemplateData>

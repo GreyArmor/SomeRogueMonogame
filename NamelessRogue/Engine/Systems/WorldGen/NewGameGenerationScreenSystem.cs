@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Systems.WorldGen
                     namelessGame.CurrentGame = new Generation.GameInstance(worldTemplate.Seed);
                     namelessGame.CurrentGame.WorldMapResolution = worldTemplate.WorldMap.Resolution;
                    
-                    namelessGame.InitializeNewGameinstance(namelessGame.CurrentGame, worldTemplate);
+                    namelessGame.InitializeNewGameInstance(namelessGame.CurrentGame, worldTemplate);
                     progressBarTestTimer.Change(Timeout.Infinite, Timeout.Infinite);
                     progressBarTestTimer.Dispose();
                     

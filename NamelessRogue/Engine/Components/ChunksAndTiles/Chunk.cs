@@ -58,8 +58,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    ChunkTiles[x][y][0] = generator.GetTileWithoutTerrainFeatures(x + worldPositionBottomLeftCorner.X,
-                        y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
+                    //put land everywhere for the test world
+                    ChunkTiles[x][y][0] = new Tile(TerrainTypes.Dirt, Biomes.None);
+                        
+                        //generator.GetTileWithoutTerrainFeatures(x + worldPositionBottomLeftCorner.X,
+                        //y + worldPositionBottomLeftCorner.Y, Constants.ChunkSize);
 
                     if (ChunkTiles[x][y][0].Terrain != TerrainTypes.Water)
                     {
@@ -75,7 +78,9 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
             var surroundingChunksWithRivers = new List<TileForPainting>();
 
-            if (ChunkWorldMapLocationPoint.X > 0 && ChunkWorldMapLocationPoint.Y > 0)
+            if (ChunkWorldMapLocationPoint.X > 0 && ChunkWorldMapLocationPoint.Y > 0 &&
+                ChunkWorldMapLocationPoint.X < this.ChunkContainer.WorldSettings.WorldMapResolution-1 &&
+                ChunkWorldMapLocationPoint.Y < this.ChunkContainer.WorldSettings.WorldMapResolution - 1)
             {
                 for (int i = -1; i < 2; i++)
                 {
@@ -331,6 +336,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
             int localX = x - bottomLeftX;
             int localY = y - bottomLeftY;
+
+            if(localX<0 || localY < 0)
+            {
+                return new Tile(TerrainTypes.Nothingness, Biomes.None);
+            }
 
             return ChunkTiles[localX][localY][z];
         }

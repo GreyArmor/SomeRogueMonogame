@@ -180,15 +180,15 @@ namespace NamelessRogue.Engine.Factories
                     {
                         var gameTile = worldProvider.GetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ);
 
-                        if (gameTile == null)
-                        {
-                            gameTile = new Tile(TerrainTypes.AsphaultPoor, Biomes.None);
-                            worldProvider.SetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ, gameTile);
-                        }
-                        else
-                        {
-                            gameTile.Terrain = TerrainTypes.FloorGrate;
-                        }
+                        //if (gameTile == null)
+                        //{
+                        //    gameTile = new Tile(TerrainTypes.AsphaultPoor, Biomes.None);
+                        //    worldProvider.SetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ, gameTile);
+                        //}
+                        //else
+                        //{
+                        //    gameTile.Terrain = TerrainTypes.FloorGrate;
+                        //}
 
                         //add static objects
                         {
@@ -229,6 +229,16 @@ namespace NamelessRogue.Engine.Factories
                                         break;
                                 }
                             }
+
+                            if (tileId == 62)
+                            {
+                                gameTile.Terrain = TerrainTypes.AsphaultPoor;
+                            }
+                            if (tileId == 63)
+                            {
+                                gameTile.Terrain = TerrainTypes.PaintedAsphault;
+                            }
+                            gameTile.Biome = Biomes.None;
                         }
                         //add animated objects
                         {
