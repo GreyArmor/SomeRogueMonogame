@@ -321,6 +321,41 @@
    <property name="ObjectType" value=""/>
   </properties>
  </tile>
+ <tile id="70">
+  <properties>
+   <property name="ObjectType" value="chainlink"/>
+  </properties>
+ </tile>
+ <tile id="71">
+  <properties>
+   <property name="ObjectType" value="chainlink"/>
+  </properties>
+ </tile>
+ <tile id="72">
+  <properties>
+   <property name="ObjectType" value="chainlink"/>
+  </properties>
+ </tile>
+ <tile id="73">
+  <properties>
+   <property name="ObjectType" value=""/>
+  </properties>
+ </tile>
+ <tile id="74">
+  <properties>
+   <property name="ObjectType" value=""/>
+  </properties>
+ </tile>
+ <tile id="75">
+  <properties>
+   <property name="ObjectType" value="door_chainlink"/>
+  </properties>
+ </tile>
+ <tile id="77">
+  <properties>
+   <property name="ObjectType" value="door_open_chainlink"/>
+  </properties>
+ </tile>
  <tile id="80">
   <properties>
    <property name="ObjectType" value=""/>
@@ -371,6 +406,36 @@
    <property name="ObjectType" value=""/>
   </properties>
  </tile>
+ <tile id="90">
+  <properties>
+   <property name="ObjectType" value="chainlink"/>
+  </properties>
+ </tile>
+ <tile id="91">
+  <properties>
+   <property name="ObjectType" value="chainlink"/>
+  </properties>
+ </tile>
+ <tile id="92">
+  <properties>
+   <property name="ObjectType" value="chainlink"/>
+  </properties>
+ </tile>
+ <tile id="93">
+  <properties>
+   <property name="ObjectType" value=""/>
+  </properties>
+ </tile>
+ <tile id="94">
+  <properties>
+   <property name="ObjectType" value=""/>
+  </properties>
+ </tile>
+ <tile id="95">
+  <properties>
+   <property name="ObjectType" value=""/>
+  </properties>
+ </tile>
  <tile id="100">
   <properties>
    <property name="ObjectType" value=""/>
@@ -417,6 +482,36 @@
   </properties>
  </tile>
  <tile id="109">
+  <properties>
+   <property name="ObjectType" value=""/>
+  </properties>
+ </tile>
+ <tile id="110">
+  <properties>
+   <property name="ObjectType" value="chainlink"/>
+  </properties>
+ </tile>
+ <tile id="111">
+  <properties>
+   <property name="ObjectType" value="chainlink"/>
+  </properties>
+ </tile>
+ <tile id="112">
+  <properties>
+   <property name="ObjectType" value="chainlink"/>
+  </properties>
+ </tile>
+ <tile id="113">
+  <properties>
+   <property name="ObjectType" value="chainlink"/>
+  </properties>
+ </tile>
+ <tile id="114">
+  <properties>
+   <property name="ObjectType" value=""/>
+  </properties>
+ </tile>
+ <tile id="115">
   <properties>
    <property name="ObjectType" value=""/>
   </properties>
@@ -483,12 +578,12 @@
  </tile>
  <tile id="142">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="table_left"/>
   </properties>
  </tile>
  <tile id="143">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="table_right"/>
   </properties>
  </tile>
  <tile id="144">
@@ -498,17 +593,17 @@
  </tile>
  <tile id="145">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="table_nw"/>
   </properties>
  </tile>
  <tile id="146">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="table_top"/>
   </properties>
  </tile>
  <tile id="147">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="table_ne"/>
   </properties>
  </tile>
  <tile id="148">
@@ -548,17 +643,17 @@
  </tile>
  <tile id="165">
   <properties>
-   <property name="ObjectType" value="room_furniture"/>
+   <property name="ObjectType" value="table_w"/>
   </properties>
  </tile>
  <tile id="166">
   <properties>
-   <property name="ObjectType" value="street_furniture"/>
+   <property name="ObjectType" value="table"/>
   </properties>
  </tile>
  <tile id="167">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="table_e"/>
   </properties>
  </tile>
  <tile id="168">
@@ -598,17 +693,17 @@
  </tile>
  <tile id="185">
   <properties>
-   <property name="ObjectType" value="room_decoration"/>
+   <property name="ObjectType" value="table_sw"/>
   </properties>
  </tile>
  <tile id="186">
   <properties>
-   <property name="ObjectType" value="street_decoration"/>
+   <property name="ObjectType" value="table_bot"/>
   </properties>
  </tile>
  <tile id="187">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="table_se"/>
   </properties>
  </tile>
  <tile id="188">

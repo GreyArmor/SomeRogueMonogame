@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BuildingTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <id>bfc64803-5bac-495c-851b-f0d0b148455d</id>
+  <name>the_hub_se</name>
+  <description />
+  <size>
+    <X>64</X>
+    <Y>64</Y>
+  </size>
+  <Id>bfc64803-5bac-495c-851b-f0d0b148455d</Id>
+  <Name>the_hub_se</Name>
+  <Description />
+  <Size>
+    <X>64</X>
+    <Y>64</Y>
+  </Size>
+  <TiledFilePaths>
+    <BuildingFloor>
+      <floor>0</floor>
+      <Floor>0</Floor>
+      <TiledFilePath>
+        <Id>C:\Users\user\Source\Repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\the_hub_se.tmx</Id>
+        <Path>Buildings\the_hub_se.tmx</Path>
+      </TiledFilePath>
+    </BuildingFloor>
+  </TiledFilePaths>
+</BuildingTemplateData>

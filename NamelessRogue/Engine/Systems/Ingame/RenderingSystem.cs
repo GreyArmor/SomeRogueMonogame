@@ -220,6 +220,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             var objectId = objectToDraw.Id;
                             RenderingSystem.AtlasTileData tileData;
+                            if(objectId.Contains("door"))
+                            {
+                                objectId.ToString();
+                            }
                             if (!characterToTileDictionary.TryGetValue(objectId, out tileData))
                             {
                                 characterToTileDictionary.TryGetValue("Nothingness", out tileData);
@@ -479,8 +483,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("toilet", new AtlasTileData(3, 8));
             characterToTileDictionary.Add("shower", new AtlasTileData(0, 8));
 
-            BindWallPositions(0, 0, "wall", "door", "openDoor", "window");
-            BindWallPositions(10, 0, "wall_brick", "door_brick", "openDoor_brick", "window_brick");
+            BindWallPositions(0, 0, "wall", "closed_door", "open_door", "window");
+            BindWallPositions(10, 0, "wall_brick", "closed_door_brick", "open_door_brick", "window_brick");
+            BindWallPositions(10, 3, "chainlink", "closed_door_chainlink", "open_door_chainlink", "window_chainlink");
 
         }
 

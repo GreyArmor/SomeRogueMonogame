@@ -123,7 +123,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         if (simpleSwitch != null == simpleSwitch.isSwitchActive())
                         {
                             entityThatOccupiedTile.GetComponentOfType<Drawable>()
-                                .ObjectID = "openDoor";
+                                .ObjectID = "open_"+ door.DoorId;
                             entityThatOccupiedTile.RemoveComponentOfType<BlocksVision>();
                             entityThatOccupiedTile.RemoveComponentOfType<OccupiesTile>();
 

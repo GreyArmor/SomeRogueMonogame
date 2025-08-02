@@ -29,6 +29,7 @@ using NamelessRogue.Engine.Serialization.SerializationIfrastructure;
 using NamelessRogue.shell;
 using Newtonsoft.Json;
 using RogueSharp;
+using Point = Microsoft.Xna.Framework.Point;
 
 namespace NamelessRogue.Engine.Serialization
 {
@@ -289,7 +290,7 @@ namespace NamelessRogue.Engine.Serialization
                 buildingList.Add(new MapBuilding() { Name = "road_vertical" });
                 worldTile.Buildings = buildingList.ToArray();
             }
-
+            Point center = default;
             for (int x = 0; x < worldTemplate.WorldSize.X; x++)
             {
                 for (int y = 0; y < worldTemplate.WorldSize.X; y++)
@@ -299,12 +300,16 @@ namespace NamelessRogue.Engine.Serialization
                     if(worldTile.Buildings.Length>1)
                     {
                         worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "road_crossroads" } };
+                        center = new Point(x-1, y-1);
                     }
                 }
             }
 
+            {
+                var worldTile = worldTemplate.WorldMap.WorldTiles[center.X, center.Y];
+                worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "the_hub_se" } };
+            }
 
-          
             SaveWorldTemplate("Worlds", "Alpha World.nrwf", worldTemplate);
         }
 

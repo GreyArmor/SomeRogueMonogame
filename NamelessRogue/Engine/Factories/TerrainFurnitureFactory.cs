@@ -92,7 +92,7 @@ namespace NamelessRogue.Engine.Factories
                 return entity;
             }
 
-
+            _addFurniture("chainlink", "Wall", true, true);
             _addFurniture("wall_brick", "Wall", true, true);
             _addFurniture("wall", "Wall", true, true);
             _addFurniture("window", "Window", true, false);

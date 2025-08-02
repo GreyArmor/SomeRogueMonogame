@@ -69,7 +69,7 @@ namespace NamelessRogue.Engine.Systems
                     if (simpleSwitch != null == simpleSwitch.isSwitchActive())
                     {
                         interactionEntity.GetComponentOfType<Drawable>()
-                            .ObjectID = "openDoor";
+                            .ObjectID = "open_"+door.DoorId;
                         interactionEntity.RemoveComponentOfType<BlocksVision>();
                         interactionEntity.RemoveComponentOfType<OccupiesTile>();
 
@@ -81,7 +81,7 @@ namespace NamelessRogue.Engine.Systems
                     else if (simpleSwitch != null == !simpleSwitch.isSwitchActive())
                     {
                         interactionEntity.GetComponentOfType<Drawable>()
-                            .ObjectID = "door";
+                            .ObjectID = "closed_" + door.DoorId;
                         interactionEntity.AddComponent(new BlocksVision());
                         interactionEntity.AddComponent(new OccupiesTile());
 

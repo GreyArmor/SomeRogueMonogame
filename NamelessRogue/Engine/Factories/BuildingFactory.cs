@@ -49,7 +49,7 @@ namespace NamelessRogue.Engine.Factories
                     {
                         var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
                         var tileObjectType = tile.Properties[0].Value;
-                        if (tileObjectType == "wall" || tileObjectType == "wall_brick" || tileObjectType == "door" || tileObjectType == "window")
+                        if (tileObjectType.Contains("wall") || tileObjectType.Contains("door") || tileObjectType.Contains("tileObjectType") || tileObjectType =="chainlink")
                         {
                             postProcessingArray[loopY, loopX] = true;
                         }
@@ -107,7 +107,7 @@ namespace NamelessRogue.Engine.Factories
             door.AddComponent(new Position(x, y, z));
             door.AddComponent(new Drawable(objectId, new Engine.Utility.Color(1f, 1f, 1f)));
             door.AddComponent(new Description("Door",""));
-            door.AddComponent(new Door());
+            door.AddComponent(new Door(objectId));
             door.AddComponent(new SimpleSwitch(true));
             door.AddComponent(new Interactable());
             door.AddComponent(new OccupiesTile());
@@ -205,6 +205,7 @@ namespace NamelessRogue.Engine.Factories
                                         gameTile.Biome = Biomes.None;
                                         break;
                                     case "door":
+                                    case "door_chainlink":
                                     case "door_brick":
                                         {
                                             var entity = CreateDoor(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
