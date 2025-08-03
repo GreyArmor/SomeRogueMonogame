@@ -486,6 +486,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             BindWallPositions(0, 0, "wall", "closed_door", "open_door", "window");
             BindWallPositions(10, 0, "wall_brick", "closed_door_brick", "open_door_brick", "window_brick");
             BindWallPositions(10, 3, "chainlink", "closed_door_chainlink", "open_door_chainlink", "window_chainlink");
+            BindWallPositions(10, 6, "tent_wall", "closed_door_tent", "open_door_tent", "window_tent");
 
         }
 

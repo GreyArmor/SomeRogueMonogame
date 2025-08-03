@@ -91,8 +91,8 @@ namespace NamelessRogue.Engine.Factories
                 AnimatedFurnitureDictionary.Add(id, entity);
                 return entity;
             }
-
-            _addFurniture("chainlink", "Wall", true, true);
+            _addFurniture("tent_wall", "Wall", true, true);
+            _addFurniture("chainlink", "Wall", true, false);
             _addFurniture("wall_brick", "Wall", true, true);
             _addFurniture("wall", "Wall", true, true);
             _addFurniture("window", "Window", true, false);

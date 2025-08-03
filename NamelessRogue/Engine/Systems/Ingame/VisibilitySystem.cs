@@ -32,7 +32,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
                
                 fov = new PermissiveVisibility((x, y) =>
                 {
-                    return false;
                     var worldTile = world.GetTile(x, y, playerPosZ);
                     if (worldTile == null)
                     {

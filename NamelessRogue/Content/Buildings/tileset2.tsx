@@ -38,7 +38,7 @@
  </tile>
  <tile id="7">
   <properties>
-   <property name="ObjectType" value="door_open"/>
+   <property name="ObjectType" value="door"/>
   </properties>
  </tile>
  <tile id="8">
@@ -88,7 +88,7 @@
  </tile>
  <tile id="17">
   <properties>
-   <property name="ObjectType" value="door_open_brick"/>
+   <property name="ObjectType" value="door_brick"/>
   </properties>
  </tile>
  <tile id="20">
@@ -128,7 +128,7 @@
  </tile>
  <tile id="27">
   <properties>
-   <property name="ObjectType" value="door_open"/>
+   <property name="ObjectType" value="door"/>
   </properties>
  </tile>
  <tile id="28">
@@ -178,7 +178,7 @@
  </tile>
  <tile id="37">
   <properties>
-   <property name="ObjectType" value="door_open_brick"/>
+   <property name="ObjectType" value="door_brick"/>
   </properties>
  </tile>
  <tile id="40">
@@ -353,7 +353,7 @@
  </tile>
  <tile id="77">
   <properties>
-   <property name="ObjectType" value="door_open_chainlink"/>
+   <property name="ObjectType" value="door_chainlink"/>
   </properties>
  </tile>
  <tile id="80">
@@ -433,7 +433,12 @@
  </tile>
  <tile id="95">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="door_chainlink"/>
+  </properties>
+ </tile>
+ <tile id="97">
+  <properties>
+   <property name="ObjectType" value="door_chainlink"/>
   </properties>
  </tile>
  <tile id="100">
@@ -566,6 +571,36 @@
    <property name="ObjectType" value=""/>
   </properties>
  </tile>
+ <tile id="130">
+  <properties>
+   <property name="ObjectType" value="tent_wall"/>
+  </properties>
+ </tile>
+ <tile id="131">
+  <properties>
+   <property name="ObjectType" value="tent_wall"/>
+  </properties>
+ </tile>
+ <tile id="132">
+  <properties>
+   <property name="ObjectType" value="tent_wall"/>
+  </properties>
+ </tile>
+ <tile id="135">
+  <properties>
+   <property name="ObjectType" value="door_tent"/>
+  </properties>
+ </tile>
+ <tile id="136">
+  <properties>
+   <property name="ObjectType" value="door_tent"/>
+  </properties>
+ </tile>
+ <tile id="137">
+  <properties>
+   <property name="ObjectType" value="door_tent"/>
+  </properties>
+ </tile>
  <tile id="140">
   <properties>
    <property name="ObjectType" value=""/>
@@ -616,6 +651,36 @@
    <property name="ObjectType" value=""/>
   </properties>
  </tile>
+ <tile id="150">
+  <properties>
+   <property name="ObjectType" value="tent_wall"/>
+  </properties>
+ </tile>
+ <tile id="151">
+  <properties>
+   <property name="ObjectType" value=""/>
+  </properties>
+ </tile>
+ <tile id="152">
+  <properties>
+   <property name="ObjectType" value="tent_wall"/>
+  </properties>
+ </tile>
+ <tile id="155">
+  <properties>
+   <property name="ObjectType" value="door_tent"/>
+  </properties>
+ </tile>
+ <tile id="156">
+  <properties>
+   <property name="ObjectType" value="door_tent"/>
+  </properties>
+ </tile>
+ <tile id="157">
+  <properties>
+   <property name="ObjectType" value="door_tent"/>
+  </properties>
+ </tile>
  <tile id="160">
   <properties>
    <property name="ObjectType" value="shower"/>
@@ -664,6 +729,21 @@
  <tile id="169">
   <properties>
    <property name="ObjectType" value="wall"/>
+  </properties>
+ </tile>
+ <tile id="170">
+  <properties>
+   <property name="ObjectType" value="tent_wall"/>
+  </properties>
+ </tile>
+ <tile id="171">
+  <properties>
+   <property name="ObjectType" value="tent_wall"/>
+  </properties>
+ </tile>
+ <tile id="172">
+  <properties>
+   <property name="ObjectType" value="tent_wall"/>
   </properties>
  </tile>
  <tile id="180">

@@ -105,7 +105,7 @@ namespace NamelessRogue.Engine.Factories
         {
             Entity door  = new Entity();
             door.AddComponent(new Position(x, y, z));
-            door.AddComponent(new Drawable(objectId, new Engine.Utility.Color(1f, 1f, 1f)));
+            door.AddComponent(new Drawable("closed_"+objectId, new Engine.Utility.Color(1f, 1f, 1f)));
             door.AddComponent(new Description("Door",""));
             door.AddComponent(new Door(objectId));
             door.AddComponent(new SimpleSwitch(true));
@@ -204,27 +204,25 @@ namespace NamelessRogue.Engine.Factories
                                         gameTile.Terrain = TerrainTypes.Nothingness;
                                         gameTile.Biome = Biomes.None;
                                         break;
-                                    case "door":
-                                    case "door_chainlink":
-                                    case "door_brick":
+                                      default:
                                         {
-                                            var entity = CreateDoor(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
-                                            gameTile.AddEntity(entity);
-                                        }
-                                        break;
-                                    case "window":
-                                    case "window_brick":
-                                        {
-                                            var entity = CreateWindow(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
-                                            gameTile.AddEntity(entity);
-                                        }
-                                        break;
-                                    default:
-                                        {
-                                            var entity = TerrainFurnitureFactory.GetFurniture(tileObjectType);
-                                            if (entity != null)
+                                            if (tileObjectType.Contains("window"))
                                             {
+                                                var entity = CreateWindow(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
                                                 gameTile.AddEntity(entity);
+                                            }
+                                            else if (tileObjectType.Contains("door"))
+                                            {
+                                                var entity = CreateDoor(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
+                                                gameTile.AddEntity(entity);
+                                            }
+                                            else
+                                            {
+                                                var entity = TerrainFurnitureFactory.GetFurniture(tileObjectType);
+                                                if (entity != null)
+                                                {
+                                                    gameTile.AddEntity(entity);
+                                                }
                                             }
                                         }
                                         break;
