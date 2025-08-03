@@ -220,7 +220,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {
                             var objectId = objectToDraw.Id;
                             RenderingSystem.AtlasTileData tileData;
-                            if(objectId.Contains("door"))
+                            if(objectId.Contains("window"))
                             {
                                 objectId.ToString();
                             }

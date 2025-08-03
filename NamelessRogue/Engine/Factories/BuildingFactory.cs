@@ -49,7 +49,7 @@ namespace NamelessRogue.Engine.Factories
                     {
                         var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
                         var tileObjectType = tile.Properties[0].Value;
-                        if (tileObjectType.Contains("wall") || tileObjectType.Contains("door") || tileObjectType.Contains("tileObjectType") || tileObjectType =="chainlink")
+                        if (tileObjectType.Contains("wall") || tileObjectType.Contains("door") || tileObjectType.Contains("window") || tileObjectType =="chainlink")
                         {
                             postProcessingArray[loopY, loopX] = true;
                         }
@@ -180,15 +180,15 @@ namespace NamelessRogue.Engine.Factories
                     {
                         var gameTile = worldProvider.GetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ);
 
-                        //if (gameTile == null)
-                        //{
-                        //    gameTile = new Tile(TerrainTypes.AsphaultPoor, Biomes.None);
-                        //    worldProvider.SetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ, gameTile);
-                        //}
-                        //else
-                        //{
-                        //    gameTile.Terrain = TerrainTypes.FloorGrate;
-                        //}
+                        if (gameTile == null)
+                        {
+                            gameTile = new Tile(TerrainTypes.AsphaultPoor, Biomes.None);
+                            worldProvider.SetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ, gameTile);
+                        }
+                        else
+                        {
+                           // gameTile.Terrain = TerrainTypes.FloorGrate;
+                        }
 
                         //add static objects
                         {
