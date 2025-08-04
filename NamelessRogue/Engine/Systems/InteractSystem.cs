@@ -82,7 +82,10 @@ namespace NamelessRogue.Engine.Systems
                     {
                         interactionEntity.GetComponentOfType<Drawable>()
                             .ObjectID = "closed_" + door.DoorId;
-                        interactionEntity.AddComponent(new BlocksVision());
+                        if (!door.IsTranslucent)
+                        {
+                            interactionEntity.AddComponent(new BlocksVision());
+                        }
                         interactionEntity.AddComponent(new OccupiesTile());
 
                         namelessGame.Commander.EnqueueCommand(

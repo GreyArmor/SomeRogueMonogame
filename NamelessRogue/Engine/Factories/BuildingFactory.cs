@@ -107,7 +107,7 @@ namespace NamelessRogue.Engine.Factories
             door.AddComponent(new Position(x, y, z));
             door.AddComponent(new Drawable("closed_"+objectId, new Engine.Utility.Color(1f, 1f, 1f)));
             door.AddComponent(new Description("Door",""));
-            door.AddComponent(new Door(objectId));
+            door.AddComponent(new Door(objectId, false));
             door.AddComponent(new SimpleSwitch(true));
             door.AddComponent(new Interactable());
             door.AddComponent(new OccupiesTile());
@@ -215,6 +215,13 @@ namespace NamelessRogue.Engine.Factories
                                             {
                                                 var entity = CreateDoor(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
                                                 gameTile.AddEntity(entity);
+
+                                                if(tileObjectType.Contains("chainlink"))
+                                                {
+                                                    entity.RemoveComponentOfType<BlocksVision>();
+                                                    entity.GetComponentOfType<Door>().IsTranslucent = true;
+                                                }
+
                                             }
                                             else
                                             {
