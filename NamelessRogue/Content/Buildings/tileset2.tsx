@@ -343,7 +343,7 @@
  </tile>
  <tile id="74">
   <properties>
-   <property name="ObjectType" value="chainlink"/>
+   <property name="ObjectType" value=""/>
   </properties>
  </tile>
  <tile id="75">
@@ -428,7 +428,7 @@
  </tile>
  <tile id="94">
   <properties>
-   <property name="ObjectType" value="chainlink"/>
+   <property name="ObjectType" value=""/>
   </properties>
  </tile>
  <tile id="95">
@@ -518,7 +518,7 @@
  </tile>
  <tile id="115">
   <properties>
-   <property name="ObjectType" value="chainlink"/>
+   <property name="ObjectType" value=""/>
   </properties>
  </tile>
  <tile id="120">
