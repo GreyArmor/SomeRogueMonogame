@@ -165,8 +165,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             while (namelessGame.Commander.DequeueCommand(out AttachToTargetCommand command))
             {
-                AttachedTarget = command.TileEntity;
-                IsAttached = true;
+               var characterComponent = command.TileEntity.GetComponentOfType<Character>();
+                if (characterComponent != null)
+                {
+                    AttachedTarget = command.TileEntity;
+                    IsAttached = true;
+                }
             }
 
 
@@ -174,6 +178,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             {
                 IEntity cursorEntity = namelessGame.CursorEntity;
                 Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
+                
                 var targetPosition = AttachedTarget.GetComponentOfType<Position>();
                 if (cursorPosition.Point != targetPosition.Point)
                 {
