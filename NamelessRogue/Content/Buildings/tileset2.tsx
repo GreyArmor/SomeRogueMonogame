@@ -871,6 +871,11 @@
    <property name="ObjecType" value="hospital_bed_horizontal"/>
   </properties>
  </tile>
+ <tile id="260">
+  <properties>
+   <property name="ObjectType" value="refueling_station"/>
+  </properties>
+ </tile>
  <tile id="360">
   <properties>
    <property name="ObjectType" value="wall_furniture"/>

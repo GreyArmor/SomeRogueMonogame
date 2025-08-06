@@ -18,7 +18,24 @@ namespace NamelessRogue.Engine.Infrastructure
         }
         public static void Jump(IEntity jumpingEntity, Vector3Int destination)
         {
-            Game.WorldProvider.MoveEntity(jumpingEntity, destination);            
+            var tile = Game.WorldProvider.GetTile(destination.X, destination.Y, destination.Z);
+            if (tile != null)
+            {
+                Game.WorldProvider.MoveEntity(jumpingEntity, destination);
+            }
+            else
+            {
+                var newDestinationZ = destination.Z;
+                while(newDestinationZ>0)
+                {
+                    newDestinationZ--;
+                    var lowerLeverTile = Game.WorldProvider.GetTile(destination.X, destination.Y, newDestinationZ);
+                    if (lowerLeverTile != null)
+                    {
+                        Game.WorldProvider.MoveEntity(jumpingEntity, new Vector3Int(destination.X, destination.Y, newDestinationZ));
+                    }
+                }
+            }
         }
     }
 }
