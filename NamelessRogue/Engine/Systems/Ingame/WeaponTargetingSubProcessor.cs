@@ -90,7 +90,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         var distance = (cursorPosition.Point - playerPosition.Point).Length();
                         if (targeter.CurrentTargetingRange >= distance)
                         {
-                            FireWeaponCommand command = new FireWeaponCommand(namelessGame.PlayerEntity, cursorPosition.Point);
+                            FireWeaponCommand command = new FireWeaponCommand(namelessGame.PlayerEntity, cursorPosition.Point, true);
                             namelessGame.Commander.EnqueueCommand(command);
                             system.SingleKeyPressIntents.Add(IntentEnum.Fire);
                         }

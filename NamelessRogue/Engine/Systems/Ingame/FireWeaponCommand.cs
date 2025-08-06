@@ -12,14 +12,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
 {
     internal class FireWeaponCommand : Abstraction.ICommand
     {
-        public FireWeaponCommand(IEntity source, Vector3Int target)
+        public FireWeaponCommand(IEntity source, Vector3Int target, bool attachTargeting = false)
         {
             Source = source;
             Target = target;
+            AttachTargeting = attachTargeting;
         }
 
         public IEntity Source { get; }
         public Vector3Int Target { get; }
+        public bool AttachTargeting { get; }
     }
 
     internal class AttachToTargetCommand : Abstraction.ICommand

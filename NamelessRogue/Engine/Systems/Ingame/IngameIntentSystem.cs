@@ -73,14 +73,15 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     currentSubProcessor.Process(namelessGame, this, intent);
                 }
 
-                foreach (var intent in SingleKeyPressIntents.ToList())
-                {
-                    if (!inputComponent.Intents.Any(x => x.Intention == intent))
-                    {
-                        SingleKeyPressIntents.Remove(intent);
-                    }
-                }
+              
                 inputComponent.Intents.Clear();
+            }
+            foreach (var intent in SingleKeyPressIntents.ToList())
+            {
+                if (!inputComponent.Intents.Any(x => x.Intention == intent))
+                {
+                    SingleKeyPressIntents.Remove(intent);
+                }
             }
         }
     }

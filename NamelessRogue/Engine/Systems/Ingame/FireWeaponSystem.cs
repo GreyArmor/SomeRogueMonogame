@@ -36,17 +36,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 var firstEntityPosition = sourceEntity.GetComponentOfType<Position>();
 
-                var tile = namelessGame.WorldProvider.GetTile(cursorPosition.X, cursorPosition.Y, cursorPosition.Z);
-                if (tile.AnyEntities())
+                if (command.AttachTargeting)
                 {
-                    foreach (var tileEntity in tile.GetEntities())
+                    var tile = namelessGame.WorldProvider.GetTile(cursorPosition.X, cursorPosition.Y, cursorPosition.Z);
+                    if (tile.AnyEntities())
                     {
-                        var character = tileEntity.GetComponentOfType<Character>();
-                        if(character!=null)
+                        foreach (var tileEntity in tile.GetEntities())
                         {
-                            AttachToTargetCommand snapToTarget = new AttachToTargetCommand(firstEntity.Item2);
-                            namelessGame.Commander.EnqueueCommand(snapToTarget);
-                            break;
+                            var character = tileEntity.GetComponentOfType<Character>();
+                            if (character != null)
+                            {
+                                AttachToTargetCommand snapToTarget = new AttachToTargetCommand(firstEntity.Item2);
+                                namelessGame.Commander.EnqueueCommand(snapToTarget);
+                                break;
+                            }
                         }
                     }
                 }
