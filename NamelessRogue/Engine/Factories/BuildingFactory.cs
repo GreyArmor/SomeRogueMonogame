@@ -27,78 +27,8 @@ using TiledMap = TiledCSPlus.TiledMap;
 
 namespace NamelessRogue.Engine.Factories
 {
-
-    public class BuildingDataCache
-    {
-        static DiagonalNeighborProviderSelfIncluded diagonalNeighbors = new DiagonalNeighborProviderSelfIncluded();
-        static StraightNeighborProviderSelfIncluded straightNeighbors = new StraightNeighborProviderSelfIncluded();
-        public bool[,] postProcessingArray;
-        public string[,] tilesetPositions;
-        public void CalculateCache(int buildingSize, int realSpaceX, int realSpaceY, int floorZ, IWorldProvider worldProvider, TiledLayer mainLayer, TiledTileset tileset)
-        {
-            postProcessingArray = new bool[buildingSize, buildingSize];
-            tilesetPositions = new string[buildingSize, buildingSize];
-
-            for (int loopY = 0; loopY < buildingSize; loopY++)
-            {
-                for (int loopX = 0; loopX < buildingSize; loopX++)
-                {
-                    var gameTile = worldProvider.GetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ);
-                    var tileId = mainLayer.Data[loopX + (loopY * buildingSize)];
-                    if (tileId != 0)
-                    {
-                        var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
-                        var tileObjectType = tile.Properties[0].Value;
-                        if (tileObjectType.Contains("wall") || tileObjectType.Contains("door") || tileObjectType.Contains("window") || tileObjectType =="chainlink")
-                        {
-                            postProcessingArray[loopY, loopX] = true;
-                        }
-                    }
-                }
-            }
-
-            for (int loopY = 0; loopY < buildingSize; loopY++)
-            {
-                for (int loopX = 0; loopX < buildingSize; loopX++)
-                {
-                    var cellValue = postProcessingArray[loopY, loopX];
-
-                    if (!cellValue)
-                    {
-                        continue;
-                    }
-
-                    var diagonalCells = diagonalNeighbors.GetNeighbors(new AStarNavigator.Tile(loopX, loopY)).ToList();
-                    var straightCells = straightNeighbors.GetNeighbors(new AStarNavigator.Tile(loopX, loopY)).ToList();
-                    string tilesetPosition = "";
-                    foreach (var neighbor in diagonalCells)
-                    {
-                        //throw away outside of bounds tiles
-                        if (neighbor.X < 0 || neighbor.Y < 0 || neighbor.X == buildingSize || neighbor.Y == buildingSize)
-                        {
-                            tilesetPosition += "0";
-                        }
-                        else
-                        {
-                            // also throw away all diagonal tiles
-                            if (straightCells.Contains(neighbor) && postProcessingArray[(int)neighbor.Y, (int)neighbor.X])
-                            {
-                                tilesetPosition += "1";
-                            }
-                            else
-                            {
-                                tilesetPosition += "0";
-                            }
-                        }
-                    }
-                    tilesetPositions[loopY, loopX] = tilesetPosition;
-                }
-            }
-
-        }
-    }
     public class BuildingFactory {
-
+        const int tilemapTileSize = 32;
         static Dictionary<string, BuildingDataCache> buildingCreationCache = new Dictionary<string, BuildingDataCache>();
 
         public static Entity CreateDoor(int x, int y, int z, string objectId)
@@ -161,6 +91,8 @@ namespace NamelessRogue.Engine.Factories
                 // Retrieving objects or layers can be done using Linq or a for loop
                 var mainLayer = map.Layers.First(l => l.Name == "main");
                 var animatedLayer = map.Layers.First(l => l.Name == "animated");
+                var objects = map.Layers.FirstOrDefault(l => l.Name == "objects")?.Objects;
+
                 int buildingSize = 64;
 
                 bool hasCache = buildingCreationCache.TryGetValue(mapPath, out var buildingCache);
@@ -197,10 +129,12 @@ namespace NamelessRogue.Engine.Factories
                             {
                                 var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
                                 var tileObjectType = tile.Properties[0].Value;
+                             
+                               
                                 gameTile.TilesetPosition = buildingCache.tilesetPositions[loopY, loopX];
                                 switch (tileObjectType)
                                 {
-                                    case "nothingness":
+                                      case "nothingness":
                                         gameTile.Terrain = TerrainTypes.Nothingness;
                                         gameTile.Biome = Biomes.None;
                                         break;
@@ -234,6 +168,10 @@ namespace NamelessRogue.Engine.Factories
                                         }
                                         break;
                                 }
+
+
+
+
                             }
 
                             if (tileId == 62)
@@ -263,7 +201,24 @@ namespace NamelessRogue.Engine.Factories
                             }
                         }
                     }
-                }                
+                }
+
+                if (objects != null)
+                {
+                    foreach (var tileObject in objects)
+                    {
+                        var tilePosition = tileObject.Position / tilemapTileSize;
+                        var npc_id = tileObject.Properties[0].Value;
+                        var hasCharacter = CharacterFactory.CharacterDataById.TryGetValue(npc_id, out var characterData);
+                        if(hasCharacter)
+                        {
+                            var gameTile = worldProvider.GetTile(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, floorZ);
+                            var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
+                            namelessGame.AddEntity(character);
+                            gameTile.AddEntity(character);
+                        }
+                    }
+                }
             }
             building.AddComponent(buildingComponent);
             return building;

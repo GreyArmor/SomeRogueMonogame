@@ -26,7 +26,6 @@ namespace NamelessRogue.Engine.Factories
         public static void LoadItemData(NamelessGame game)
         {
             var items = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath, "*.nrif", SearchOption.AllDirectories);
-            var itemsHolder = game.PlayerEntity.GetComponentOfType<ItemsHolder>();
             foreach (var itemPath in items)
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));

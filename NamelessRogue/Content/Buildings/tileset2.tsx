@@ -831,6 +831,16 @@
    <property name="ObjectType" value="antenna_4"/>
   </properties>
  </tile>
+ <tile id="220">
+  <properties>
+   <property name="ObjecType" value="code_panel"/>
+  </properties>
+ </tile>
+ <tile id="221">
+  <properties>
+   <property name="ObjecType" value="surgery_table"/>
+  </properties>
+ </tile>
  <tile id="223">
   <properties>
    <property name="ObjectType" value="antenna_5"/>
@@ -849,6 +859,16 @@
  <tile id="226">
   <properties>
    <property name="ObjectType" value=""/>
+  </properties>
+ </tile>
+ <tile id="240">
+  <properties>
+   <property name="ObjecType" value="hospital_bed_vertical"/>
+  </properties>
+ </tile>
+ <tile id="241">
+  <properties>
+   <property name="ObjecType" value="hospital_bed_horizontal"/>
   </properties>
  </tile>
  <tile id="360">
@@ -878,7 +898,12 @@
  </tile>
  <tile id="382">
   <properties>
-   <property name="ObjectType" value="street decoration"/>
+   <property name="ObjectType" value="street_decoration"/>
+  </properties>
+ </tile>
+ <tile id="383">
+  <properties>
+   <property name="ObjectType" value="NPC"/>
   </properties>
  </tile>
 </tileset>

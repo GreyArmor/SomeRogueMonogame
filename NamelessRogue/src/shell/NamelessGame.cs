@@ -208,6 +208,9 @@ namespace NamelessRogue.shell
 
             graphics.ApplyChanges();
 
+           
+
+
             ModelsLibrary.Initialize(this);
             spriteBatch = new SpriteBatch(GraphicsDevice);
             SpriteLibrary.Initialize(this);
@@ -216,6 +219,23 @@ namespace NamelessRogue.shell
             var viewportEntity = RenderFactory.CreateViewport(settings);
             CameraEntity = viewportEntity;
             TerrainFurnitureFactory.CreateFurnitureEntities(this);
+
+            BuffLibrary.ClearData();
+            BuffLibrary.LoadData(this);
+
+            ItemLibrary.ClearData();
+            ItemLibrary.LoadItemData(this);
+
+            DialogLibrary.ClearData();
+            DialogLibrary.LoadData(this);
+
+            BuildingLibrary.ClearData();
+            BuildingLibrary.LoadData(this);
+
+			CharacterFactory.ClearData();
+			CharacterFactory.LoadCharacters();
+
+
 
             CurrentContext = ContextFactory.GetMainMenuContext(this);
             this.IsMouseVisible = true;
@@ -259,49 +279,36 @@ namespace NamelessRogue.shell
             //initialize reality bubble
             chunkManagementSystem.Update(zero, this);
 
+            //var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.nrcf", SearchOption.AllDirectories);
+            //Vector2 characterCreationOffset = new Vector2(0);
 
-            BuffLibrary.ClearData();
-            BuffLibrary.LoadData(this);
+            //List<Entity> charaterEntities = new List<Entity>();
 
-            ItemLibrary.ClearData();
-            ItemLibrary.LoadItemData(this);
+            //foreach (var charactersFile in characters)
+            //{
+            //    characterCreationOffset.Y--;
+            //    characterCreationOffset.Y--;
+            //    XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
+            //    TextReader reader = new StreamReader(charactersFile);
+            //    var data = (CharacterTemplateData)serializer.Deserialize(reader);
+            //    var character = CharacterFactory.CreateCharacterFromData(this, new Vector3Int((int)(characterCreationOffset.X + (x * Constants.ChunkSize)), (int)(characterCreationOffset.Y + (y * Constants.ChunkSize)), 0), data);
+            //    charaterEntities.Add(character);
+            //}
 
-            DialogLibrary.ClearData();
-            DialogLibrary.LoadData(this);
+            //foreach (var character in charaterEntities)
+            //{
+            //    var characterItems = character.GetComponentOfType<ItemsHolder>();
+            //    for (int i = 0; i < 10; i++)
+            //    {
+            //        var numberOfItems = ItemLibrary.ItemData.Count;
 
-            BuildingLibrary.ClearData();
-            BuildingLibrary.LoadData(this);
+            //        var randomItem = Random.Shared.Next(0, numberOfItems);
 
-            var characters = Directory.GetFiles(Environment.CurrentDirectory + Constants.GameObjectRelativePath + "\\Characters\\", "*.nrcf", SearchOption.AllDirectories);
-            Vector2 characterCreationOffset = new Vector2(0);
-
-            List<Entity> charaterEntities = new List<Entity>();
-
-            foreach (var charactersFile in characters)
-            {
-                characterCreationOffset.Y--;
-                characterCreationOffset.Y--;
-                XmlSerializer serializer = new XmlSerializer(typeof(CharacterTemplateData));
-                TextReader reader = new StreamReader(charactersFile);
-                var data = (CharacterTemplateData)serializer.Deserialize(reader);
-                var character = CharacterFactory.CreateCharacterFromData(this, new Vector3Int((int)(characterCreationOffset.X + (x * Constants.ChunkSize)), (int)(characterCreationOffset.Y + (y * Constants.ChunkSize)), 0), data);
-                charaterEntities.Add(character);
-            }
-
-            foreach (var character in charaterEntities)
-            {
-                var characterItems = character.GetComponentOfType<ItemsHolder>();
-                for (int i = 0; i < 10; i++)
-                {
-                    var numberOfItems = ItemLibrary.ItemData.Count;
-
-                    var randomItem = Random.Shared.Next(0, numberOfItems);
-
-                    var randomItemData = ItemLibrary.ItemData[randomItem];
-                    var item = ItemLibrary.CreateItemFromData(this, randomItemData);
-                    characterItems.Items.Add(item);
-                }
-            }
+            //        var randomItemData = ItemLibrary.ItemData[randomItem];
+            //        var item = ItemLibrary.CreateItemFromData(this, randomItemData);
+            //        characterItems.Items.Add(item);
+            //    }
+            //}
 
             var itemsHolder = player.GetComponentOfType<ItemsHolder>();
             foreach (var itemData in ItemLibrary.ItemData)

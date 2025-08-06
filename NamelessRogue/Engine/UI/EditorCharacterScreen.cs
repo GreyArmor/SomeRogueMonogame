@@ -267,7 +267,14 @@ namespace NamelessRogue.Engine.UI
 
                         if(characterId!="" || characterId == null)
                         {
+                            var buttonSizeClipboard = new Vector2(buttonSize.X, 20);
                             ImGui.Text($@"Character Id = {characterId}");
+                            ImGui.SameLine();
+                            if (ButtonWithSound("Copy to clipboard", buttonSizeClipboard, true))
+                            {
+                                Clipboard.SetText(characterId);
+                            }
+
                         }
 
                         ImGui.Text("Name");
