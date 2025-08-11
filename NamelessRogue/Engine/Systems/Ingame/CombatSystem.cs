@@ -33,6 +33,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 var source = ac.getSource();
                 var target = ac.getTarget();
+
+                if(target.GetComponentOfType<Dead>()!=null || source.GetComponentOfType<Dead>()!=null)
+                {
+                    continue;
+                }
+
                 var sourceStats = GetAccumulatedStats(source);
                 var targetStats = GetAccumulatedStats(ac.getTarget());
                 var onHiBuffIds = GetOnHitBuffIds(source, namelessGame);
@@ -89,7 +95,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var ap = source.GetComponentOfType<ActionPoints>();
                 ap.Points -= Constants.ActionsAttackCost;
 
-                var playAttackAnimationCommand = new PlayCharacterAnimationForATimeCommand(source, AnimationType.Attack, 100);
+                var playAttackAnimationCommand = new PlayCharacterAnimationForATimeCommand(source, AnimationType.Attack, 1000);
                 namelessGame.Commander.EnqueueCommand(playAttackAnimationCommand);
             }
         }

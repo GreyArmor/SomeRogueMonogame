@@ -53,6 +53,8 @@ namespace NamelessRogue.Engine.UI
 
         public List<DroppedItemTemplate> DroppedItems { get; set; } = new List<DroppedItemTemplate>();
 
+        public List<DroppedItemTemplate> VendorItems { get; set; } = new List<DroppedItemTemplate>();
+
         public EditorCharacterScreen(NamelessGame game) : base(game)
         {
             string workingDirectory = Environment.CurrentDirectory;
@@ -123,6 +125,7 @@ namespace NamelessRogue.Engine.UI
         int currentAnimationIndex = 0;
 
         bool droppableItemPickerDialog = false;
+        bool sellableItemPickerDialog = false;
         int selectedDroppableIndex = 0;
         private bool dialogFilePicking;
 
@@ -460,6 +463,64 @@ namespace NamelessRogue.Engine.UI
                             }
                             droppableItemCounter++;
                         }
+
+                        ImGui.Separator();
+                        ImGui.Text("Sellable items:");
+
+                        if (ButtonWithSound("Add ##sellableItems", buttonSize, true))
+                        {
+                            sellableItemPickerDialog = true;
+                        }
+
+                        if (sellableItemPickerDialog)
+                        {
+                            ImGui.OpenPopup("Sellable item picker dialog");
+                            ImGui.SetNextWindowPos(new Vector2());
+                            bool drop_open = true;
+                            if (ImGui.BeginPopupModal("Sellable item picker dialog", ref drop_open, ImGuiWindowFlags.AlwaysAutoResize))
+                            {
+                                ImGui.SetNextItemOpen(true);
+                                _fillTreeRecursive(contentDirectoryPath, fileExtensions, ref selectedDroppableItemFile);
+
+                                // ImGui.Combo("files", ref currentIconCombpBoxItem, files.ToArray(), files.Count);
+                                if (ImGui.Button("Open"))
+                                {
+                                    XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));
+                                    TextReader reader = new StreamReader(selectedDroppableItemFile);
+
+                                    var itemData = (ItemTemplateData)serializer?.Deserialize(reader);
+
+                                    VendorItems.Add(new DroppedItemTemplate() { ItemId = itemData.Id, Path = Path.GetRelativePath(directory, selectedDroppableItemFile), Probability = 0 });
+                                    sellableItemPickerDialog = false;
+                                    ImGui.CloseCurrentPopup();
+                                }
+                                ImGui.SameLine();
+                                if (ImGui.Button("Cancel"))
+                                {
+                                    sellableItemPickerDialog = false;
+                                    ImGui.CloseCurrentPopup();
+                                }
+                                ImGui.EndPopup();
+                            }
+                        }
+
+                        ImGui.SetNextItemWidth(fieldsSizeX);
+
+                        int vendorItemsCounter = 0;
+                        foreach (var vendorItem in VendorItems.ToList())
+                        {
+                            ImGui.Separator();
+                            ImGui.SetNextItemWidth(fieldsSizeX / 2);
+                            ImGui.BeginChild("##itemSoldText" + vendorItemsCounter, new Vector2(fieldsSizeX / 2, buttonSize.Y / 2));
+                            ImGui.Text(Path.GetFileName(vendorItem.Path));
+                            ImGui.EndChild();
+                            ImGui.SameLine();
+                            if (ButtonWithSound("Remove ##" + vendorItemsCounter, buttonSize / 2, true))
+                            {
+                                VendorItems.Remove(vendorItem);
+                            }
+                            vendorItemsCounter++;
+                        }
                     }                   
                     ImGui.EndChild();
                     ImGui.SameLine();
@@ -539,7 +600,7 @@ namespace NamelessRogue.Engine.UI
             }
 
             DroppedItems = data.DroppedItems;
-
+            VendorItems = data.VendorItems;
             reader.Close();
         }
         //"C:\\Users\\user\\source\\repos\\SomeRogueMonogame\\NamelessRogue\\Content\\GameObjects\\Characters"
@@ -618,6 +679,7 @@ namespace NamelessRogue.Engine.UI
             atd.ArmorValue = armorValue;
             data.ArmorTemplateData = atd;
             data.DroppedItems = DroppedItems;
+            data.VendorItems = VendorItems;
             data.DialogDataId = dialogId;
             data.DialogFilePath = Path.GetRelativePath(directory, dialogPath);
 

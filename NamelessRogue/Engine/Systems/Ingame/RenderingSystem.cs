@@ -693,7 +693,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
 
                     var projectile = entity.GetComponentOfType<ProjectileComponent>();
-                    if (projectile == null)
+                    if (projectile != null)
                     {
                         continue;
                     }

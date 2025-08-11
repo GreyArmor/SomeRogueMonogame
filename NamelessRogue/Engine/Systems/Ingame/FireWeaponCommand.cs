@@ -34,6 +34,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public IEntity TileEntity { get; }
     }
 
+    internal class RemoveFromTargetingAndSwitchTargetCommand : Abstraction.ICommand
+    {
+        public RemoveFromTargetingAndSwitchTargetCommand(IEntity tileEntity)
+        {
+            TileEntity = tileEntity;
+        }
+
+        public IEntity TileEntity { get; }
+    }
+
     internal class DetachFromToTargetCommand : Abstraction.ICommand
     {
     }

@@ -3,6 +3,7 @@
   <Id>59ace243-ebd9-45cd-9e1e-bac783ea0a60</Id>
   <Name>Simple gun</Name>
   <Description>Pew pew</Description>
+  <Price>0</Price>
   <IconPath>Icons\gunIcon.png</IconPath>
   <ItemType>Weapon</ItemType>
   <ItemQuality>Terrible</ItemQuality>
@@ -11,8 +12,8 @@
     <Slot>RightHand</Slot>
   </PossibleSlots>
   <WeaponTemplateData>
-    <MinimumDamage>0</MinimumDamage>
-    <MaximumDamage>10</MaximumDamage>
+    <MinimumDamage>15</MinimumDamage>
+    <MaximumDamage>44</MaximumDamage>
     <Range>21</Range>
     <AttackType>Ranged</AttackType>
     <DamageType>Physical</DamageType>

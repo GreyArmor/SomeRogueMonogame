@@ -24,17 +24,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             foreach (var entity in RegisteredEntities)
             {
-                //var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
-                //if (sprited.CurrentAnimationTimeLeft <= 0 || !sprited.Sprite.CurrentAnimation.IsAnimating)
-                //{
-                //    var sprite = sprited.Sprite;
-                //    var index = Random.Shared.Next(0, sprite._animationsByType[sprited.IdleAnimationType].Count);
-                //    var animationName = sprite._animationsByType[sprited.IdleAnimationType][index];
-                //    var animationDurationMS = sprite._animationsDurations[animationName];
-                //    sprited.CurrentAnimationTimeLeft = animationDurationMS;
-                //    sprited.CurrentAnimation = animationName;
-                //    sprite.SetCurrentLoop(animationName, 1);
-                //}
+                var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
+                if (sprited.CurrentAnimationTimeLeft <= 0)
+                {
+                    var sprite = sprited.Sprite;
+                    var index = Random.Shared.Next(0, sprite._animationsByType[sprited.IdleAnimationType].Count);
+                    var animationName = sprite._animationsByType[sprited.IdleAnimationType][index];
+                    var animationDurationMS = sprite._animationsDurations[animationName];
+                    sprited.CurrentAnimationTimeLeft = animationDurationMS;
+                    sprited.CurrentAnimation = animationName;
+                    sprite.SetCurrentLoop(animationName, 1);
+                }
             }
 
             while (namelessGame.Commander.DequeueCommand(out PlayCharacterAnimationForATimeCommand command))
@@ -93,7 +93,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var animationName = sprite._animationsByType[command.Type][index];
                 sprited.IdleAnimationType = command.Type;
 
-            }             
+            }
         }
     }
 }

@@ -47,6 +47,9 @@ namespace NamelessRogue.Engine.Generation.Editor
         [XmlArray]
         public List<DroppedItemTemplate> DroppedItems { get; set; }
 
+        [XmlArray]
+        public List<DroppedItemTemplate> VendorItems { get; set; }
+
         [XmlElement]
         public WeaponTemplateData WeaponTemplateData { get; set; }
         [XmlElement]

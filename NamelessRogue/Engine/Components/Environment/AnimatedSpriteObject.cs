@@ -18,7 +18,7 @@ namespace NamelessRogue.Engine.Components.Environment
         }
 
         public string SpritePath { get; }
-        public bool InfinteAnimation { get; }
+        public bool InfinteAnimation { get; set; }
         public string CurrentAnimation { get; set; }
 
         public int CurrentAnimationTimeLeft { get; set; }

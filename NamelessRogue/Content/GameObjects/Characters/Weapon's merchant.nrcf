@@ -27,6 +27,38 @@
       <Probability>1</Probability>
     </DroppedItemTemplate>
   </DroppedItems>
+  <VendorItems>
+    <DroppedItemTemplate>
+      <ItemId>7f907c43-047a-4ee8-bb95-65efa66ee146</ItemId>
+      <Path>..\Weapons\Red gun.nrif</Path>
+      <Probability>0</Probability>
+    </DroppedItemTemplate>
+    <DroppedItemTemplate>
+      <ItemId>59ace243-ebd9-45cd-9e1e-bac783ea0a60</ItemId>
+      <Path>..\Weapons\Simple gun.nrif</Path>
+      <Probability>0</Probability>
+    </DroppedItemTemplate>
+    <DroppedItemTemplate>
+      <ItemId>01bf611a-3489-4fc1-ace4-7e2dfd8ec095</ItemId>
+      <Path>..\Weapons\Toxic knife.nrif</Path>
+      <Probability>0</Probability>
+    </DroppedItemTemplate>
+    <DroppedItemTemplate>
+      <ItemId>7f907c43-047a-4ee8-bb95-65efa66ee146</ItemId>
+      <Path>..\Weapons\Red gun.nrif</Path>
+      <Probability>0</Probability>
+    </DroppedItemTemplate>
+    <DroppedItemTemplate>
+      <ItemId>7f907c43-047a-4ee8-bb95-65efa66ee146</ItemId>
+      <Path>..\Weapons\Red gun.nrif</Path>
+      <Probability>0</Probability>
+    </DroppedItemTemplate>
+    <DroppedItemTemplate>
+      <ItemId>7f907c43-047a-4ee8-bb95-65efa66ee146</ItemId>
+      <Path>..\Weapons\Red gun.nrif</Path>
+      <Probability>0</Probability>
+    </DroppedItemTemplate>
+  </VendorItems>
   <WeaponTemplateData>
     <MinimumDamage>0</MinimumDamage>
     <MaximumDamage>10</MaximumDamage>
@@ -44,5 +76,5 @@
   </ArmorTemplateData>
   <IsFlying>false</IsFlying>
   <DialogDataId>48792111-e7c3-4edd-9363-2ce9dcd69349</DialogDataId>
-  <DialogFilePath>..\Dialogs\Trader dialog 1.nrdf</DialogFilePath>
+  <DialogFilePath>..\..\..\bin\Debug\Dialogs\Trader dialog 1.nrdf</DialogFilePath>
 </CharacterTemplateData>

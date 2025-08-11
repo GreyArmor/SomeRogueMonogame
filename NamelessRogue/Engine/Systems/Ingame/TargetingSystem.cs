@@ -118,18 +118,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             while (namelessGame.Commander.DequeueCommand(out TabTargetingCommand command))
             {
-                if (targeter.Targets.Count > 0)
-                {
-                    IEntity cursorEntity = namelessGame.CursorEntity;
-                    Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
-                    targeter.TabulationIndex++;
-                    if (targeter.TabulationIndex >= targeter.Targets.Count)
-                    {
-                        targeter.TabulationIndex = 0;
-                    }
-                    var targetPosition = targeter.Targets[targeter.TabulationIndex].GetComponentOfType<Position>();
-                    cursorPosition.Point = targetPosition.Point;
-                }
+                TabTargeting(namelessGame, targeter);
             }
 
             while (namelessGame.Commander.DequeueCommand(out EndTargetingCommand command))
@@ -165,7 +154,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             while (namelessGame.Commander.DequeueCommand(out AttachToTargetCommand command))
             {
-               var characterComponent = command.TileEntity.GetComponentOfType<Character>();
+                var characterComponent = command.TileEntity.GetComponentOfType<Character>();
                 if (characterComponent != null)
                 {
                     AttachedTarget = command.TileEntity;
@@ -173,9 +162,34 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
 
+            while (namelessGame.Commander.DequeueCommand(out RemoveFromTargetingAndSwitchTargetCommand command))
+            {
+                targeter.RemoveEntity(command.TileEntity);
+                if(IsAttached)
+                {
+                    if (targeter.Targets.Count == 0)
+                    {
+                        AttachedTarget = null;
+                        IsAttached = false;
+                    }
+                    else
+                    {
+                        AttachedTarget = targeter.Targets[targeter.TabulationIndex];
+                    }
+                }
+            }
+
 
             if (IsAttached)
             {
+
+                var isAttachedTargetDead = AttachedTarget.GetComponentOfType<Dead>()!=null;
+
+                if(isAttachedTargetDead)
+                {
+                    TabTargeting(namelessGame, targeter);
+                }
+
                 IEntity cursorEntity = namelessGame.CursorEntity;
                 Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
                 
@@ -184,6 +198,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     cursorPosition.Point = targetPosition.Point;
                 }
+            }
+        }
+
+        private void TabTargeting(NamelessGame namelessGame, TergeterComponent targeter)
+        {
+            if (targeter.Targets.Count > 0)
+            {
+                IEntity cursorEntity = namelessGame.CursorEntity;
+                Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
+                targeter.TabulationIndex++;
+                if (targeter.TabulationIndex >= targeter.Targets.Count)
+                {
+                    targeter.TabulationIndex = 0;
+                }
+                var targetPosition = targeter.Targets[targeter.TabulationIndex].GetComponentOfType<Position>();
+                cursorPosition.Point = targetPosition.Point;
+                this.AttachedTarget = targeter.Targets[targeter.TabulationIndex];
             }
         }
     }

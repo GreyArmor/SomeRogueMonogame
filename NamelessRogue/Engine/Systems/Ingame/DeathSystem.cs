@@ -41,10 +41,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 if (dead == null)
                 {
                     entityToKill.AddComponent(new Dead());
+                    var removeFromTargetingCommand = new RemoveFromTargetingAndSwitchTargetCommand(entityToKill);
+                    namelessGame.Commander.EnqueueCommand(removeFromTargetingCommand);
+
+                }
+                else
+                {
+                    continue;
                 }
 
-                var playAttackAnimationCommand = new PlayCharacterAnimationForATimeCommand(entityToKill, AnimationType.Death, 100);
-                namelessGame.Commander.EnqueueCommand(playAttackAnimationCommand);
+                var deathanimationCommand = new PlayCharacterAnimationForNumberOfLoopsCommand(entityToKill, AnimationType.Death, 6);
+                namelessGame.Commander.EnqueueCommand(deathanimationCommand);
 
                 IEntity worldEntity = namelessGame.TimelineEntity;
                 IWorldProvider worldProvider = null;

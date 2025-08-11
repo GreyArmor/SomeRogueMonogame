@@ -3,6 +3,7 @@
   <Id>7f907c43-047a-4ee8-bb95-65efa66ee146</Id>
   <Name>Red gun</Name>
   <Description>Pew pew but red</Description>
+  <Price>0</Price>
   <IconPath>Icons\gunRedIcon.png</IconPath>
   <ItemType>Weapon</ItemType>
   <ItemQuality>Terrible</ItemQuality>
@@ -11,8 +12,8 @@
     <Slot>RightHand</Slot>
   </PossibleSlots>
   <WeaponTemplateData>
-    <MinimumDamage>0</MinimumDamage>
-    <MaximumDamage>10</MaximumDamage>
+    <MinimumDamage>13</MinimumDamage>
+    <MaximumDamage>28</MaximumDamage>
     <Range>26</Range>
     <AttackType>Ranged</AttackType>
     <DamageType>Physical</DamageType>
@@ -20,7 +21,7 @@
     <AmmoInClip>0</AmmoInClip>
   </WeaponTemplateData>
   <AssociatedBuffs>
-	<Id>dbc57d01-86bd-44f1-8d94-8e318c6829bb</Id>
+    <Id>dbc57d01-86bd-44f1-8d94-8e318c6829bb</Id>
     <Path>GameObjects\Buffs\Toxic.nrbf</Path>
   </AssociatedBuffs>
 </ItemTemplateData>

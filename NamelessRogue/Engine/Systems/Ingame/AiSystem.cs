@@ -165,7 +165,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                                             //followShootPlayerAi.State = ShooterAiStates.Idle;
                                             //followShootPlayerAi.ShootingTarget = targetPos;
-                                            //namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Idle));
+                                            namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Aiming));
                                         }
                                         else
                                         {
