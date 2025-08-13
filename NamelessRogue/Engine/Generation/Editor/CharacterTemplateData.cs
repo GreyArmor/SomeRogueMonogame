@@ -27,7 +27,7 @@ namespace NamelessRogue.Engine.Generation.Editor
         public bool CastsShadow { get; set; }
 
         [XmlElement]
-        public bool Immobile { get;  set; }
+        public bool Immobile { get; set; }
 
         [XmlElement]
         public int Health { get; set; }
@@ -36,7 +36,7 @@ namespace NamelessRogue.Engine.Generation.Editor
         public int Energy { get; set; }
 
         [XmlElement]
-        public int MovementSpeed { get;  set; }
+        public int MovementSpeed { get; set; }
 
         [XmlElement]
         public int VisionRange { get; set; }
@@ -61,6 +61,17 @@ namespace NamelessRogue.Engine.Generation.Editor
         public string DialogDataId { get; set; }
         [XmlElement]
         public string DialogFilePath { get; set; }
+
+        [XmlElement]
+        public bool RandomName { get; set; }
+
+        [XmlElement]
+        public bool RandomVendorAvailableItems { get; set; }
+
+        [XmlElement]
+        public bool RandomDroppedItems { get; set; }
+
+
     }
 
     [XmlRoot]

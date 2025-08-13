@@ -103,6 +103,9 @@ namespace NamelessRogue.Engine.UI
         bool castsShadow = false;
         bool isFlying = false;
         bool immobile = false;
+        bool randomName = false;
+        bool randomVendorItems = false;
+        bool randomDroppedItems = false;
 
         string contentCharacterDirectoryPath = string.Empty;
         string contentDirectoryPath = string.Empty;
@@ -339,6 +342,32 @@ namespace NamelessRogue.Engine.UI
                         ImGui.SameLine();
                         ImGui.Checkbox("##ImmobileValue", ref immobile);
 
+                        ImGui.Text("Casts shadow?");
+                        ImGui.SameLine();
+                        ImGui.Checkbox("##CastsShadowValue", ref castsShadow);
+
+                        ImGui.Text("Flying?");
+                        ImGui.SameLine();
+                        ImGui.Checkbox("##FlyingValue", ref isFlying);
+
+                        ImGui.Separator();
+
+
+                        ImGui.Text("Randomization:");
+                        ImGui.Text("Random name?");
+                        ImGui.SameLine();
+                        ImGui.Checkbox("##RandomName", ref randomName);
+
+                        ImGui.Text("Random vendor items?");
+                        ImGui.SameLine();
+                        ImGui.Checkbox("##RandomVI", ref randomVendorItems);
+
+                        ImGui.Text("Random dropped items?");
+                        ImGui.SameLine();
+                        ImGui.Checkbox("##RandomDroppedItems", ref randomDroppedItems);
+
+
+                        ImGui.Separator();
                         ImGui.Text("Health");
                         ImGui.SetNextItemWidth(fieldsSizeX);
                         ImGui.DragInt("##HealthValue", ref health, 1, 1, 999);
@@ -572,6 +601,9 @@ namespace NamelessRogue.Engine.UI
             castsShadow = data.CastsShadow;
             isFlying = data.IsFlying;
             immobile = data.Immobile;
+            randomName = data.RandomName;
+            randomVendorItems = data.RandomVendorAvailableItems;
+            randomDroppedItems = data.RandomDroppedItems;
             var wtd = data.WeaponTemplateData;
             var atd = data.ArmorTemplateData;
 
@@ -649,6 +681,9 @@ namespace NamelessRogue.Engine.UI
             data.CastsShadow = castsShadow;
             data.IsFlying = isFlying;
             data.Immobile = immobile;
+            data.RandomName = randomName;
+            data.RandomVendorAvailableItems = randomVendorItems;
+            data.RandomDroppedItems = randomDroppedItems;
             if (spritePath != string.Empty)
             {
                 if (!Directory.Exists(directory + "\\Sprites\\"))

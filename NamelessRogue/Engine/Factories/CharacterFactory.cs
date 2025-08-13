@@ -11,6 +11,7 @@ using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Components.WorldBoardComponents;
+using NamelessRogue.Engine.Generation;
 using NamelessRogue.Engine.Generation.Editor;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
@@ -107,6 +108,11 @@ namespace NamelessRogue.Engine.Factories
 
         public static Entity CreateCharacterFromData(NamelessGame game, Vector3Int position, CharacterTemplateData data)
         {
+
+            var isRandomName = data.RandomName;
+
+            
+
             var spritePath = "Content\\GameObjects\\Characters\\" + data.SpritePath;
             var spriteFileName = Path.GetFileName(spritePath);
 
@@ -118,7 +124,14 @@ namespace NamelessRogue.Engine.Factories
             character.AddComponent(pos);
             character.AddComponent(new Drawable(Path.GetFileName(data.SpritePath), new Engine.Utility.Color(1), castsShadow: data.CastsShadow, isFlying: data.IsFlying));
             character.AddComponent(new AnimatedSpriteObject(spritePath));
-            character.AddComponent(new Description(data.Name, data.Description));
+
+            var description = new Description(data.Name, data.Description);
+            if(isRandomName)
+            {
+                description.Name = CharacterNameGenerators.GetName(GeneratorName.English, true);
+            }
+
+            character.AddComponent(description);
             var holder = new ItemsHolder();
             character.AddComponent(holder);
             character.AddComponent(new OccupiesTile());

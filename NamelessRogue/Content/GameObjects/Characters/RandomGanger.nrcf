@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>6bbb6742-9602-4987-b1d4-d00fb9215942</Id>
+  <Name>RandomGanger</Name>
+  <Description />
+  <SpritePath>Sprites\wastelander.ase</SpritePath>
+  <CastsShadow>false</CastsShadow>
+  <Immobile>false</Immobile>
+  <Health>10</Health>
+  <Energy>0</Energy>
+  <MovementSpeed>50</MovementSpeed>
+  <VisionRange>10</VisionRange>
+  <DroppedItems>
+    <DroppedItemTemplate>
+      <ItemId>cc5a9c20-4fe7-437b-8496-a017ea1a9636</ItemId>
+      <Path>..\Consumable\MedKit.nrif</Path>
+      <Probability>20</Probability>
+    </DroppedItemTemplate>
+  </DroppedItems>
+  <VendorItems />
+  <WeaponTemplateData>
+    <MinimumDamage>0</MinimumDamage>
+    <MaximumDamage>10</MaximumDamage>
+    <Range>1</Range>
+    <AttackType>Close</AttackType>
+    <DamageType>Physical</DamageType>
+    <AmmoType>LowCaliber</AmmoType>
+    <AmmoInClip>0</AmmoInClip>
+  </WeaponTemplateData>
+  <ArmorTemplateData>
+    <DamageType>Physical</DamageType>
+    <ArmorValue>10</ArmorValue>
+    <ResistType>Physical</ResistType>
+    <ResistValue>10</ResistValue>
+  </ArmorTemplateData>
+  <IsFlying>false</IsFlying>
+  <DialogDataId>d1176bc0-2660-4f2a-8fbc-76865799c08e</DialogDataId>
+  <DialogFilePath>..\Dialogs\RandomGanger.nrdf</DialogFilePath>
+  <RandomName>true</RandomName>
+  <RandomVendorAvailableItems>true</RandomVendorAvailableItems>
+  <RandomDroppedItems>false</RandomDroppedItems>
+</CharacterTemplateData>
