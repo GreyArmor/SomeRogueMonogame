@@ -233,8 +233,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             int tileWidth = 64;
 
                             RenderingSystem.DrawTile(tileHeight, tileWidth, x, y, Constants.ChunkSize,
-                                    x * Constants.ChunkSize,
-                                    y * Constants.ChunkSize,
+                                    x * tileWidth,
+                                    y * tileHeight,
                                     tileData, tileModel, tileAtlas);
                         }
                     }
@@ -652,7 +652,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         continue;
                     }
 
-                    if ((playerChunkPosition - visualChunk.WorldPosition.ToPoint()).ToVector2().Length() > (4)) //- visualChunk.WorldPosition).ToVector2().Length() > 1)
+                    if ((playerChunkPosition - visualChunk.WorldPosition.ToPoint()).ToVector2().Length() > (12)) //- visualChunk.WorldPosition).ToVector2().Length() > 1)
                     {
                         continue;
                     }
@@ -661,7 +661,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                     var chunkScreenPoint = camera.PointToScreen(new Point((int)chunkPosition.X, (int)chunkPosition.Y));
 
-                    var chunkPositionMatrix = Matrix.CreateTranslation(new Vector3(chunkScreenPoint.X * Constants.ChunkSize, chunkScreenPoint.Y * Constants.ChunkSize, 0));
+                    var chunkPositionMatrix = Matrix.CreateTranslation(new Vector3(chunkScreenPoint.X * Constants.TileSize, chunkScreenPoint.Y * Constants.TileSize, 0));
                     effect.Parameters["xWorld"].SetValue(chunkPositionMatrix * Matrix.CreateScale(1f / game.Settings.Zoom));
                     foreach (var tileModel in visualChunk.TileLayers)
                     {
@@ -912,7 +912,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         }
 
-          private void RenderSpriteScreen(NamelessGame game, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
+         private void RenderSpriteScreen(NamelessGame game, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
         {
             foreach (var entity in RegisteredEntities)
             {

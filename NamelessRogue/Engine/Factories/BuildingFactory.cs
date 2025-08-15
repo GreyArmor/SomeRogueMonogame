@@ -93,7 +93,7 @@ namespace NamelessRogue.Engine.Factories
                 var animatedLayer = map.Layers.First(l => l.Name == "animated");
                 var objects = map.Layers.FirstOrDefault(l => l.Name == "objects")?.Objects;
 
-                int buildingSize = 64;
+                int buildingSize = map.Width;
 
                 bool hasCache = buildingCreationCache.TryGetValue(mapPath, out var buildingCache);
                 

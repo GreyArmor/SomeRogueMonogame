@@ -306,27 +306,27 @@ namespace NamelessRogue.Engine.Serialization
             }
 
             {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[center.X, center.Y];
+                var worldTile = worldTemplate.WorldMap.WorldTiles[center.X-4, center.Y-4];
                 worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "the_hub_se" } };
             }
 
 
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[center.X-1, center.Y-1];
-                worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
-            }
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 1, center.Y - 2];
-                worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
-            }
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 2, center.Y - 1];
-                worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
-            }
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 2, center.Y - 2];
-                worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
-            }
+            //{
+            //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X-1, center.Y-1];
+            //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
+            //}
+            //{
+            //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 1, center.Y - 2];
+            //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
+            //}
+            //{
+            //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 2, center.Y - 1];
+            //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
+            //}
+            //{
+            //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 2, center.Y - 2];
+            //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
+            //}
 
             SaveWorldTemplate("Worlds", "Alpha World.nrwf", worldTemplate);
         }
