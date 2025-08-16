@@ -273,8 +273,26 @@ namespace NamelessRogue.Engine.Serialization
         public static void BuildAndSaveAlphaWorld()
         {
             var worldTemplate = LoadWorldTemplate("Worlds", "Alpha World.nrwf");
+
             var verticalRoadY = 8;
             var horizontalRoadX = 5;
+
+            for (int x = 0; x < worldTemplate.WorldSize.X; x++)
+            {
+                var worldTile = worldTemplate.WorldMap.WorldTiles[x, 0];
+                var buildingList = new List<MapBuilding>();
+                buildingList.Add(new MapBuilding() { Name = "CityWallSouth" });
+                worldTile.Buildings = buildingList.ToArray();
+            }
+
+            {
+                var worldTile = worldTemplate.WorldMap.WorldTiles[horizontalRoadX, 0];
+                var buildingList = new List<MapBuilding>();
+                buildingList.Add(new MapBuilding() { Name = "CityWallSouthBlockpost" });
+                worldTile.Buildings = buildingList.ToArray();
+            }
+
+         
             for (int x = 0; x<worldTemplate.WorldSize.X; x++)
             {
                 var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
@@ -283,7 +301,38 @@ namespace NamelessRogue.Engine.Serialization
                 worldTile.Buildings = buildingList.ToArray();
             }
 
-            for (int y = 3; y < verticalRoadY+1; y++)
+            verticalRoadY = 12;
+
+            for (int x = 0; x < worldTemplate.WorldSize.X; x++)
+            {
+                var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
+                var buildingList = new List<MapBuilding>();
+                buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
+                worldTile.Buildings = buildingList.ToArray();
+            }
+
+            verticalRoadY = 16;
+
+            for (int x = 0; x < worldTemplate.WorldSize.X; x++)
+            {
+                var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
+                var buildingList = new List<MapBuilding>();
+                buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
+                worldTile.Buildings = buildingList.ToArray();
+            }
+
+            verticalRoadY = 20;
+
+            for (int x = 0; x < worldTemplate.WorldSize.X; x++)
+            {
+                var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
+                var buildingList = new List<MapBuilding>();
+                buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
+                worldTile.Buildings = buildingList.ToArray();
+            }
+
+
+            for (int y = 1; y < verticalRoadY+1; y++)
             {
                 var worldTile = worldTemplate.WorldMap.WorldTiles[horizontalRoadX, y];
                 var buildingList = new List<MapBuilding>(worldTile.Buildings);
@@ -335,14 +384,15 @@ namespace NamelessRogue.Engine.Serialization
         static int GetMaxSizeForTypeAndSave(object obj)
         {
             var typeString = obj.GetType().Name;
-            var hasValue = ByteSizes.MaxSizesEvaluated.Any(x => x.Key == typeString);
-            var size = ByteSizes.MaxSizesEvaluated.FirstOrDefault(x => x.Key == typeString);
-            if (!hasValue)
+            var hasValue = ByteSizes.Keys.Any(x => x == typeString);
+           
+            //if (!hasValue)
+            if(true)
             {
                 FlatBufferSerializer serializer = new FlatBufferSerializer(FlatBufferDeserializationOption.Greedy);
                 int maxBytesNeeded = serializer.GetMaxSize(obj.CastToReflected(obj.GetType()));
 
-                ByteSizes.MaxSizesEvaluated.Add(new KeyValuePair<string, int>(typeString, maxBytesNeeded));
+                ByteSizes.Add(typeString, maxBytesNeeded);
 
                 XmlSerializer xmlSer = new XmlSerializer(typeof(ByteSizesStorage));
                 using (var stream = File.OpenWrite("ByteSizesStorage.xml"))
@@ -353,7 +403,9 @@ namespace NamelessRogue.Engine.Serialization
             }
             else
             {
-                return size.Value;
+                var index = ByteSizes.Keys.IndexOf(typeString);
+                var size = ByteSizes.Values[index];
+                return size;
             }
         }
     }

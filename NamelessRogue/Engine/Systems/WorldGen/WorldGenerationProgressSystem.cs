@@ -47,7 +47,7 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
                 {
                     var parameters = command.Parameters;
                     parameters.worldSize = WorldSizeName.Tiny;
-                    parameters.worldSizeValue = 10;
+                    parameters.worldSizeValue = 30;
                     var worldTemplate = new WorldTemplate(parameters);
                     var worldMap = new WorldMap(parameters.worldSizeValue);
                     ChunkData chunkData = new ChunkData(game.WorldSettings, worldMap);

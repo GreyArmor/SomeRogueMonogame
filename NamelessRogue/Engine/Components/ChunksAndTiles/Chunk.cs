@@ -293,7 +293,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             {
                 for (int y = 0; y < Constants.ChunkSize; y++)
                 {
-                    ChunkTiles[x][y][0] = new Tile(TerrainTypes.HardRocks, Biomes.None);
+                    ChunkTiles[x][y][0] = new Tile(TerrainTypes.Dirt, Biomes.None);
                 }
             }
         }

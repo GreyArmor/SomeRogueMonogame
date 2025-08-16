@@ -10,7 +10,15 @@ namespace NamelessRogue.Engine.Serialization
     [XmlRoot]
     public class ByteSizesStorage
     {
+        public void Add(string typeString, int byteSize)
+        {
+            Keys.Add(typeString);
+            Values.Add(byteSize);
+        }
         [XmlArray]
-        public List<KeyValuePair<string, int>> MaxSizesEvaluated { get; set; } = new List<KeyValuePair<string, int>>();
+        public List<string> Keys { get; set; } = new List<string>();
+
+        [XmlArray]
+        public List<int> Values { get; set; } = new List<int>();
     }
 }

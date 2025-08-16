@@ -30,11 +30,11 @@ namespace NamelessRogue.Engine.Generation.World
             Terrains.Add(TerrainTypes.Dirt,
                 new Terrain(TerrainTypes.Dirt, new Drawable("Dirt", new Color(0, 0.4f, 0), new Color())));
 
-            Terrains.Add(TerrainTypes.FloorGrate,
-               new Terrain(TerrainTypes.FloorGrate, new Drawable("FloorGrate", new Color(0, 0.4f, 0), new Color())));
+            Terrains.Add(TerrainTypes.IndoorHex,
+               new Terrain(TerrainTypes.IndoorHex, new Drawable("IndoorHex", new Color(0, 0.4f, 0), new Color())));
 
-            Terrains.Add(TerrainTypes.HardRocks,
-                new Terrain(TerrainTypes.HardRocks, new Drawable("HardRocks", new Color(0.2, 0.2, 0.2), new Color())));
+            Terrains.Add(TerrainTypes.ConcreteTiles,
+              new Terrain(TerrainTypes.ConcreteTiles, new Drawable("ConcreteTiles", new Color(0, 0.4f, 0), new Color())));
 
             Terrains.Add(TerrainTypes.AsphaultPoor,
                 new Terrain(TerrainTypes.AsphaultPoor, new Drawable("Asphault", new Color(0.8, 0.8, 0.8), new Color())));

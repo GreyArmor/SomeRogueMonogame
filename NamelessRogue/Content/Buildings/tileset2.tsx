@@ -273,17 +273,17 @@
  </tile>
  <tile id="60">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="ConcreteTiles"/>
   </properties>
  </tile>
  <tile id="61">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="AsphaultPoor"/>
   </properties>
  </tile>
  <tile id="62">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="PaintedAsphault"/>
   </properties>
  </tile>
  <tile id="63">
@@ -358,7 +358,7 @@
  </tile>
  <tile id="80">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="IndoorHex"/>
   </properties>
  </tile>
  <tile id="81">
@@ -368,7 +368,7 @@
  </tile>
  <tile id="82">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="Dirt"/>
   </properties>
  </tile>
  <tile id="83">

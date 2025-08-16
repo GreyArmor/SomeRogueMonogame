@@ -91,6 +91,7 @@ namespace NamelessRogue.Engine.Factories
                 // Retrieving objects or layers can be done using Linq or a for loop
                 var mainLayer = map.Layers.First(l => l.Name == "main");
                 var animatedLayer = map.Layers.First(l => l.Name == "animated");
+                var terrainLayer = map.Layers.FirstOrDefault(l => l.Name == "terrain");
                 var objects = map.Layers.FirstOrDefault(l => l.Name == "objects")?.Objects;
 
                 int buildingSize = map.Width;
@@ -110,17 +111,27 @@ namespace NamelessRogue.Engine.Factories
                 {
                     for (int loopX = 0; loopX < buildingSize; loopX++)
                     {
-                        var gameTile = worldProvider.GetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ);
+                        var gameTile = worldProvider.GetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ);                      
+
+                        if(terrainLayer!=null)
+                        {
+                            var tileId = terrainLayer.Data[loopX + (loopY * buildingSize)];
+                            if (tileId != 0)
+                            {
+                                var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
+                                var tileObjectType = tile.Properties[0].Value;
+                                var terrainType = Enum.Parse<TerrainTypes>(tileObjectType);
+                                gameTile = new Tile(terrainType, Biomes.None);
+                                worldProvider.SetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ, gameTile);
+                            }
+                        }
 
                         if (gameTile == null)
                         {
                             gameTile = new Tile(TerrainTypes.AsphaultPoor, Biomes.None);
                             worldProvider.SetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ, gameTile);
                         }
-                        else
-                        {
-                           // gameTile.Terrain = TerrainTypes.FloorGrate;
-                        }
+
 
                         //add static objects
                         {
