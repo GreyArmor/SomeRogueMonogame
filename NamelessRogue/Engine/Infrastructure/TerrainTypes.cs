@@ -20,6 +20,8 @@ namespace NamelessRogue.Engine.Infrastructure
         AsphaultMiddle,
         AsphaultRich,
         IndoorHex,
-        ConcreteTiles, 
+        ConcreteTiles,
+        CrossroadsVertical,
+        CrossroadsHorizontal,
     }
 }

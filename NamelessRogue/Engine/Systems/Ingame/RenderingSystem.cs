@@ -440,9 +440,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("Asphault", new AtlasTileData(1, 3));
             characterToTileDictionary.Add("ConcreteTiles", new AtlasTileData(0, 3));
             characterToTileDictionary.Add("PaintedAsphault", new AtlasTileData(2, 3));
+            characterToTileDictionary.Add("CrossroadsVertical", new AtlasTileData(4, 3));
+            characterToTileDictionary.Add("CrossroadsHorizontal", new AtlasTileData(3, 3));
             characterToTileDictionary.Add("IndoorHex", new AtlasTileData(0, 4));
             characterToTileDictionary.Add("smallCursor", new AtlasTileData(0, 6));
-            characterToTileDictionary.Add("Cursor", new AtlasTileData(1, 6));
+            characterToTileDictionary.Add("Cursor", new AtlasTileData(1, 6)); 
 
             characterToTileDictionary.Add("arrowDown", new AtlasTileData(1, 7));
 

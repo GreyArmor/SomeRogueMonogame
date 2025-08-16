@@ -59,7 +59,6 @@ namespace NamelessRogue.Engine.Factories
 
         public static IEntity CreateBuilding(int worldSpaceX, int worldSpaceY, BuildingTemplateData data, NamelessGame namelessGame)
         {
-
             var realSpaceX = Constants.ChunkSize * worldSpaceX;
             var realSpaceY = Constants.ChunkSize * worldSpaceY;
 

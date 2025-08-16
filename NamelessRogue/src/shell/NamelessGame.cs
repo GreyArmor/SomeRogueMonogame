@@ -349,7 +349,8 @@ namespace NamelessRogue.shell
 					var worldTile = worldTemplate.WorldMap.WorldTiles[worldX, worldY];
                     foreach(var building in worldTile.Buildings)
 					{
-						var buildingName = building.Name;
+                        var buildingName = building.Name;
+						
 						var buildingData = BuildingLibrary.Data.FirstOrDefault(x=>x.Name == buildingName);
 						if (buildingData!=null)
 						{

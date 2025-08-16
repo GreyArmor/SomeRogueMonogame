@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BuildingTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <id>9458bb0b-7322-4d57-a61a-4d3cb35a2cac</id>
+  <name>road_horizontal_crossroads_west</name>
+  <description />
+  <size>
+    <X>16</X>
+    <Y>16</Y>
+  </size>
+  <Id>9458bb0b-7322-4d57-a61a-4d3cb35a2cac</Id>
+  <Name>road_horizontal_crossroads_west</Name>
+  <Description />
+  <Size>
+    <X>16</X>
+    <Y>16</Y>
+  </Size>
+  <TiledFilePaths>
+    <BuildingFloor>
+      <floor>0</floor>
+      <Floor>0</Floor>
+      <TiledFilePath>
+        <Id>C:\Users\user\source\repos\SomeRogueMonogame\NamelessRogue\Content\Buildings\road_horizontal_crossroads_west.tmx</Id>
+        <Path>Buildings\road_horizontal_crossroads_west.tmx</Path>
+      </TiledFilePath>
+    </BuildingFloor>
+  </TiledFilePaths>
+</BuildingTemplateData>

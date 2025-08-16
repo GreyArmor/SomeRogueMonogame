@@ -288,12 +288,12 @@
  </tile>
  <tile id="63">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="CrossroadsHorizontal"/>
   </properties>
  </tile>
  <tile id="64">
   <properties>
-   <property name="ObjectType" value=""/>
+   <property name="ObjectType" value="CrossroadsVertical"/>
   </properties>
  </tile>
  <tile id="65">

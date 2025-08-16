@@ -78,7 +78,7 @@
  </tile>
  <tile id="41">
   <properties>
-   <property name="BuildingName" value="road_crossroads"/>
+   <property name="BuildingName" value="road_vertical_crossroads_north"/>
   </properties>
  </tile>
  <tile id="42">
@@ -102,6 +102,36 @@
   </properties>
  </tile>
  <tile id="46">
+  <properties>
+   <property name="BuildingName" value=""/>
+  </properties>
+ </tile>
+ <tile id="60">
+  <properties>
+   <property name="BuildingName" value="road_horizontal_crossroads_west"/>
+  </properties>
+ </tile>
+ <tile id="61">
+  <properties>
+   <property name="BuildingName" value="road_crossroads"/>
+  </properties>
+ </tile>
+ <tile id="62">
+  <properties>
+   <property name="BuildingName" value="road_horizontal_crossroads_east"/>
+  </properties>
+ </tile>
+ <tile id="80">
+  <properties>
+   <property name="BuildingName" value="road_vertical_crossroads_north"/>
+  </properties>
+ </tile>
+ <tile id="81">
+  <properties>
+   <property name="BuildingName" value="road_vertical_crossroads_south"/>
+  </properties>
+ </tile>
+ <tile id="82">
   <properties>
    <property name="BuildingName" value=""/>
   </properties>

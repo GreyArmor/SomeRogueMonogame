@@ -292,6 +292,11 @@ namespace NamelessRogue.Engine.Serialization
                         var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
                         var tileObjectType = tile.Properties[0].Value;
 
+                        if(tileObjectType.ToLower().Contains("east"))
+                        {
+                            tileObjectType.ToString();
+                        }
+
                         var worldTile = worldTemplate.WorldMap.WorldTiles[loopX, loopY];
                         var buildingList = new List<MapBuilding>();
                         buildingList.Add(new MapBuilding() { Name = tileObjectType });

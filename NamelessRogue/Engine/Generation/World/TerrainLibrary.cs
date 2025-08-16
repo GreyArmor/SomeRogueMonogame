@@ -33,6 +33,12 @@ namespace NamelessRogue.Engine.Generation.World
             Terrains.Add(TerrainTypes.IndoorHex,
                new Terrain(TerrainTypes.IndoorHex, new Drawable("IndoorHex", new Color(0, 0.4f, 0), new Color())));
 
+            Terrains.Add(TerrainTypes.CrossroadsHorizontal,
+              new Terrain(TerrainTypes.CrossroadsHorizontal, new Drawable("CrossroadsHorizontal", new Color(0, 0.4f, 0), new Color())));
+
+            Terrains.Add(TerrainTypes.CrossroadsVertical,
+        new Terrain(TerrainTypes.CrossroadsVertical, new Drawable("CrossroadsVertical", new Color(0, 0.4f, 0), new Color())));
+
             Terrains.Add(TerrainTypes.ConcreteTiles,
               new Terrain(TerrainTypes.ConcreteTiles, new Drawable("ConcreteTiles", new Color(0, 0.4f, 0), new Color())));
 
