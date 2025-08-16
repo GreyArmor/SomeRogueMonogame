@@ -29,6 +29,7 @@ using NamelessRogue.Engine.Serialization.SerializationIfrastructure;
 using NamelessRogue.shell;
 using Newtonsoft.Json;
 using RogueSharp;
+using TiledCSPlus;
 using Point = Microsoft.Xna.Framework.Point;
 
 namespace NamelessRogue.Engine.Serialization
@@ -274,110 +275,136 @@ namespace NamelessRogue.Engine.Serialization
         {
             var worldTemplate = LoadWorldTemplate("Worlds", "Alpha World.nrwf");
 
-            var verticalRoadY = 8;
-            var horizontalRoadX = 5;
 
-            for (int x = 0; x < worldTemplate.WorldSize.X; x++)
+            var tileset = new TiledTileset("Content\\Buildings\\worldMapTileset.tsx");
+            var map = new TiledMap("Content\\WorldMaps\\AlphaWorldMap.tmx");
+
+            var mainLayer = map.Layers.First(l => l.Name == "main");
+            var mapSize = 30;
+
+            for (int loopY = 0; loopY < mapSize; loopY++)
             {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[x, 0];
-                var buildingList = new List<MapBuilding>();
-                buildingList.Add(new MapBuilding() { Name = "CityWallSouth" });
-                worldTile.Buildings = buildingList.ToArray();
-            }
-
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[horizontalRoadX, 0];
-                var buildingList = new List<MapBuilding>();
-                buildingList.Add(new MapBuilding() { Name = "CityWallSouthBlockpost" });
-                worldTile.Buildings = buildingList.ToArray();
-            }
-
-         
-            for (int x = 0; x<worldTemplate.WorldSize.X; x++)
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
-                var buildingList = new List<MapBuilding>();
-                buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
-                worldTile.Buildings = buildingList.ToArray();
-            }
-
-            verticalRoadY = 12;
-
-            for (int x = 0; x < worldTemplate.WorldSize.X; x++)
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
-                var buildingList = new List<MapBuilding>();
-                buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
-                worldTile.Buildings = buildingList.ToArray();
-            }
-
-            verticalRoadY = 16;
-
-            for (int x = 0; x < worldTemplate.WorldSize.X; x++)
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
-                var buildingList = new List<MapBuilding>();
-                buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
-                worldTile.Buildings = buildingList.ToArray();
-            }
-
-            verticalRoadY = 20;
-
-            for (int x = 0; x < worldTemplate.WorldSize.X; x++)
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
-                var buildingList = new List<MapBuilding>();
-                buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
-                worldTile.Buildings = buildingList.ToArray();
-            }
-
-
-            for (int y = 1; y < verticalRoadY+1; y++)
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[horizontalRoadX, y];
-                var buildingList = new List<MapBuilding>(worldTile.Buildings);
-                buildingList.Add(new MapBuilding() { Name = "road_vertical" });
-                worldTile.Buildings = buildingList.ToArray();
-            }
-            Point center = default;
-            for (int x = 0; x < worldTemplate.WorldSize.X; x++)
-            {
-                for (int y = 0; y < worldTemplate.WorldSize.X; y++)
+                for (int loopX = 0; loopX < mapSize; loopX++)
                 {
-                    var worldTile = worldTemplate.WorldMap.WorldTiles[x, y];
-
-                    if(worldTile.Buildings.Length>1)
+                    var tileId = mainLayer.Data[loopX + (loopY * mapSize)];
+                    if (tileId != 0)
                     {
-                        worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "road_crossroads" } };
-                        center = new Point(x-1, y-1);
+                        var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
+                        var tileObjectType = tile.Properties[0].Value;
+
+                        var worldTile = worldTemplate.WorldMap.WorldTiles[loopX, loopY];
+                        var buildingList = new List<MapBuilding>();
+                        buildingList.Add(new MapBuilding() { Name = tileObjectType });
+                        worldTile.Buildings = buildingList.ToArray();
                     }
                 }
             }
 
-            {
-                var worldTile = worldTemplate.WorldMap.WorldTiles[center.X-4, center.Y-4];
-                worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "the_hub_se" } };
-            }
+
+                    //var verticalRoadY = 8;
+                    //var horizontalRoadX = 5;
+
+                    //for (int x = 0; x < worldTemplate.WorldSize.X; x++)
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[x, 0];
+                    //    var buildingList = new List<MapBuilding>();
+                    //    buildingList.Add(new MapBuilding() { Name = "CityWallSouth" });
+                    //    worldTile.Buildings = buildingList.ToArray();
+                    //}
+
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[horizontalRoadX, 0];
+                    //    var buildingList = new List<MapBuilding>();
+                    //    buildingList.Add(new MapBuilding() { Name = "CityWallSouthBlockpost" });
+                    //    worldTile.Buildings = buildingList.ToArray();
+                    //}
 
 
-            //{
-            //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X-1, center.Y-1];
-            //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
-            //}
-            //{
-            //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 1, center.Y - 2];
-            //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
-            //}
-            //{
-            //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 2, center.Y - 1];
-            //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
-            //}
-            //{
-            //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 2, center.Y - 2];
-            //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
-            //}
+                    //for (int x = 0; x<worldTemplate.WorldSize.X; x++)
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
+                    //    var buildingList = new List<MapBuilding>();
+                    //    buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
+                    //    worldTile.Buildings = buildingList.ToArray();
+                    //}
 
-            SaveWorldTemplate("Worlds", "Alpha World.nrwf", worldTemplate);
+                    //verticalRoadY = 12;
+
+                    //for (int x = 0; x < worldTemplate.WorldSize.X; x++)
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
+                    //    var buildingList = new List<MapBuilding>();
+                    //    buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
+                    //    worldTile.Buildings = buildingList.ToArray();
+                    //}
+
+                    //verticalRoadY = 16;
+
+                    //for (int x = 0; x < worldTemplate.WorldSize.X; x++)
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
+                    //    var buildingList = new List<MapBuilding>();
+                    //    buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
+                    //    worldTile.Buildings = buildingList.ToArray();
+                    //}
+
+                    //verticalRoadY = 20;
+
+                    //for (int x = 0; x < worldTemplate.WorldSize.X; x++)
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[x, verticalRoadY];
+                    //    var buildingList = new List<MapBuilding>();
+                    //    buildingList.Add(new MapBuilding() { Name = "road_horizontal" });
+                    //    worldTile.Buildings = buildingList.ToArray();
+                    //}
+
+
+                    //for (int y = 1; y < verticalRoadY+1; y++)
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[horizontalRoadX, y];
+                    //    var buildingList = new List<MapBuilding>(worldTile.Buildings);
+                    //    buildingList.Add(new MapBuilding() { Name = "road_vertical" });
+                    //    worldTile.Buildings = buildingList.ToArray();
+                    //}
+                    //Point center = default;
+                    //for (int x = 0; x < worldTemplate.WorldSize.X; x++)
+                    //{
+                    //    for (int y = 0; y < worldTemplate.WorldSize.X; y++)
+                    //    {
+                    //        var worldTile = worldTemplate.WorldMap.WorldTiles[x, y];
+
+                    //        if(worldTile.Buildings.Length>1)
+                    //        {
+                    //            worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "road_crossroads" } };
+                    //            center = new Point(x-1, y-1);
+                    //        }
+                    //    }
+                    //}
+
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X-4, center.Y-4];
+                    //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "the_hub_se" } };
+                    //}
+
+
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X-1, center.Y-1];
+                    //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
+                    //}
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 1, center.Y - 2];
+                    //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
+                    //}
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 2, center.Y - 1];
+                    //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
+                    //}
+                    //{
+                    //    var worldTile = worldTemplate.WorldMap.WorldTiles[center.X - 2, center.Y - 2];
+                    //    worldTile.Buildings = new MapBuilding[] { new MapBuilding() { Name = "Apartment block" } };
+                    //}
+
+                    SaveWorldTemplate("Worlds", "Alpha World.nrwf", worldTemplate);
         }
 
 

@@ -74,13 +74,13 @@
    </properties>
    <point/>
   </object>
-  <object id="3" name="turret_npc" x="17" y="128">
+  <object id="3" name="turret_npc" x="16" y="115">
    <properties>
     <property name="NPC_id" value="029b3f19-fdb0-4763-b7cb-780309fdc4d3"/>
    </properties>
    <point/>
   </object>
-  <object id="4" name="turret_npc" x="497" y="123">
+  <object id="4" name="turret_npc" x="499" y="119">
    <properties>
     <property name="NPC_id" value="029b3f19-fdb0-4763-b7cb-780309fdc4d3"/>
    </properties>
