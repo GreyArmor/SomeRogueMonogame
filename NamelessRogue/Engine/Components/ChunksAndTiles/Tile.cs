@@ -41,6 +41,11 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             return entitiesOnTile.ToList();
         }
 
+        public void ClearEntities()
+        {
+            entitiesOnTile.Clear();
+        }
+
         public void SetEntities(List<Entity> entities)
         {
             entitiesOnTile = entities.ToList();

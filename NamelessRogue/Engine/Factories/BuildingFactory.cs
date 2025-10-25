@@ -138,8 +138,7 @@ namespace NamelessRogue.Engine.Factories
                             if (tileId != 0)
                             {
                                 var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
-                                var tileObjectType = tile.Properties[0].Value;
-                             
+                                var tileObjectType = tile.Properties[0].Value;                           
                                
                                 gameTile.TilesetPosition = buildingCache.tilesetPositions[loopY, loopX];
                                 switch (tileObjectType)
@@ -165,7 +164,6 @@ namespace NamelessRogue.Engine.Factories
                                                     entity.RemoveComponentOfType<BlocksVision>();
                                                     entity.GetComponentOfType<Door>().IsTranslucent = true;
                                                 }
-
                                             }
                                             else
                                             {
@@ -178,10 +176,6 @@ namespace NamelessRogue.Engine.Factories
                                         }
                                         break;
                                 }
-
-
-
-
                             }
 
                             if (tileId == 62)
@@ -212,20 +206,34 @@ namespace NamelessRogue.Engine.Factories
                         }
                     }
                 }
-
+                var apartmentBlockShopsRandomizer = new ApartmentShopsTerrainRandomizer();
                 if (objects != null)
                 {
                     foreach (var tileObject in objects)
                     {
                         var tilePosition = tileObject.Position / tilemapTileSize;
-                        var npc_id = tileObject.Properties[0].Value;
-                        var hasCharacter = CharacterFactory.CharacterDataById.TryGetValue(npc_id, out var characterData);
-                        if(hasCharacter)
+                        if (tileObject.Type == TiledObjectType.Point)
+                        {                           
+                            var npc_id = tileObject.Properties[0].Value;
+                            var hasCharacter = CharacterFactory.CharacterDataById.TryGetValue(npc_id, out var characterData);
+
+                            if (hasCharacter)
+                            {
+                                var gameTile = worldProvider.GetTile(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, floorZ);
+                                var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
+                                namelessGame.AddEntity(character);
+                                gameTile.AddEntity(character);
+                            }
+                        }
+                        else if (tileObject.Type == TiledObjectType.Rectangular)
                         {
-                            var gameTile = worldProvider.GetTile(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, floorZ);
-                            var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
-                            namelessGame.AddEntity(character);
-                            gameTile.AddEntity(character);
+                            var rectZise = tileObject.Size / tilemapTileSize;
+                            var isRandomizer = tileObject.Name == "TerrainRandomizer";
+                            if(isRandomizer)
+                            {
+                                var randomizerRect = new Rectangle((int)tilePosition.X + realSpaceX, (int)tilePosition.Y + realSpaceY, (int)rectZise.X, (int)rectZise.Y);
+                                apartmentBlockShopsRandomizer.Randomize(worldProvider, randomizerRect, floorZ, namelessGame.CurrentGame.GlobalRandom);
+                            }
                         }
                     }
                 }

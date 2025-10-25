@@ -71,6 +71,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }
 
                     currentSubProcessor.Process(namelessGame, this, intent);
+                    break;
                 }
 
               
