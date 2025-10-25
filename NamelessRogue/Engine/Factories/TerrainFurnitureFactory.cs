@@ -94,6 +94,7 @@ namespace NamelessRogue.Engine.Factories
             _addFurniture("tent_wall", "Wall", true, true);
             _addFurniture("chainlink", "Wall", true, false);
             _addFurniture("wall_brick", "Wall", true, true);
+            _addFurniture("wall_glass", "Wall", true, false);
             _addFurniture("wall", "Wall", true, true);
             _addFurniture("window", "Window", true, false);
             _addFurniture("bed", "Bed", false, false);

@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TiledCSPlus;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace NamelessRogue.Engine.Factories
 {
@@ -21,13 +23,13 @@ namespace NamelessRogue.Engine.Factories
 
     public class ApartmentShopsTerrainRandomizer : TerrainRandomizer
     {        
+        private enum RoomWallType { Concrete, Brick, Glass, }
+        Array roomWallTypes = Enum.GetValues(typeof(RoomWallType));
         public override void Randomize(IWorldProvider world, Rectangle rectangle, int zLevel, InternalRandom random)
         {
-            var wallFurniture = TerrainFurnitureFactory.GetFurniture("wall");
+            var wallFurniture = TerrainFurnitureFactory.GetFurniture("wall_glass");
  
-            var roomsNumber = random.Next(1, 5);
-
-            const int roomOffset = 5;
+             const int roomOffset = 5;
 
             var centerX = random.Next(rectangle.Left + roomOffset, rectangle.Right - roomOffset);
             var centerY = random.Next(rectangle.Top + roomOffset, rectangle.Bottom - roomOffset);                      
@@ -36,6 +38,7 @@ namespace NamelessRogue.Engine.Factories
 
             for (int i = 0; i < 4; i++)
             {
+                var roomWallType = (RoomWallType)roomWallTypes.GetValue(random.Next(roomWallTypes.Length));
                 var room = rooms[i];
                 var roomWallCenters = RectangleUtility.RectangleCenters(room);
 
@@ -53,7 +56,7 @@ namespace NamelessRogue.Engine.Factories
                     var tile = world.GetTile(wallCenter.X, wallCenter.Y, zLevel);
                     tile.ClearEntities();
 
-                    var doorFurniture = BuildingFactory.CreateDoor(wallCenter.X, wallCenter.Y, zLevel, "door");
+                    var doorFurniture = BuildingFactory.CreateDoor(wallCenter.X, wallCenter.Y, zLevel, "door_glass");
                     tile.AddEntity(doorFurniture);
                 }
             }
