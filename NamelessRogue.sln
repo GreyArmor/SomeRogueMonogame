@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NamelessRogue", "NamelessRo
 		{96E175FA-74CA-4C0E-A318-8525A5658A41} = {96E175FA-74CA-4C0E-A318-8525A5658A41}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamelessRogueDataEditor", "NamelessRogueDataEditor\NamelessRogueDataEditor.csproj", "{CD2754CB-D5B8-4407-A738-BE62F118256D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamelessRogueEditorDataTypes", "NamelessRogueEditorDataTypes\NamelessRogueEditorDataTypes.csproj", "{9516E89B-8879-4C37-8737-6B34C8494287}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +35,14 @@ Global
 		{293CBD48-3487-440C-BF46-B85D572DE28C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{293CBD48-3487-440C-BF46-B85D572DE28C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{293CBD48-3487-440C-BF46-B85D572DE28C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD2754CB-D5B8-4407-A738-BE62F118256D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD2754CB-D5B8-4407-A738-BE62F118256D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD2754CB-D5B8-4407-A738-BE62F118256D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD2754CB-D5B8-4407-A738-BE62F118256D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9516E89B-8879-4C37-8737-6B34C8494287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9516E89B-8879-4C37-8737-6B34C8494287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9516E89B-8879-4C37-8737-6B34C8494287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9516E89B-8879-4C37-8737-6B34C8494287}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
