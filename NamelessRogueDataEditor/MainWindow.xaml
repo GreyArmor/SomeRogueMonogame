@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NamelessRogueDataEditor"
         xmlns:vm="clr-namespace:NamelessRogueDataEditor.ViewModels"
+        xmlns:v="clr-namespace:NamelessRogueDataEditor.Views"
         mc:Ignorable="d"
         Title="Nameless rogue data editor" Height="450" Width="800" WindowState="Maximized" Background="DarkGray">
     <Window.Resources>
@@ -13,27 +14,23 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/MainStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+            <DataTemplate DataType="{x:Type vm:StartupWindowViewModel}">
+                <v:StartupView></v:StartupView>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:CharacterViewModel}">
+                <v:CharacterView></v:CharacterView>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ItemEditorViewModel}">
+                <v:ItemsView></v:ItemsView>
+            </DataTemplate>
+        </ResourceDictionary>      
     </Window.Resources>
     <Window.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:StartupWindowViewModel/>
     </Window.DataContext>
     <Grid Width="Auto" Height="Auto">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0">
-            <Menu DockPanel.Dock="Top">
-                <MenuItem Header="_File">
-                    <MenuItem Header="_New" Command="{Binding NewFileCommand}"/>
-                    <MenuItem Header="_Load" Command="{Binding LoadFileCommand}"/>
-                    <MenuItem Header="_Save" Command="{Binding SaveFileCommand}"/>
-                </MenuItem>
-            </Menu>
-            <Grid Grid.Row="0">
-                <ContentControl></ContentControl>
-            </Grid>
-        </DockPanel>
+        <ContentPresenter Content="{Binding}"/>
     </Grid>
 </Window>

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NamelessRogueDataEditor
+namespace NamelessRogueDataEditor.Views
 {
     /// <summary>
-    /// Interaction logic for CharacterView.xaml
+    /// Interaction logic for StartupView.xaml
     /// </summary>
-    public partial class CharacterView : UserControl
+    public partial class StartupView : UserControl
     {
-        public CharacterView()
+        public StartupView()
         {
             InitializeComponent();
         }
