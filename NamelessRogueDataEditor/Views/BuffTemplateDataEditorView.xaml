@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="NamelessRogueDataEditor.Views.BuffTemplateDataEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NamelessRogueDataEditor.Views"
+             xmlns:vm="clr-namespace:NamelessRogueDataEditor.ViewModels"
+             xmlns:controls="clr-namespace:NamelessRogueDataEditor.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <vm:BuffEditorViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/MainStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="16" VerticalAlignment="Top">
+                <TextBlock Text="Name:"/>
+                <TextBox Text="{Binding Buff.Name, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Text="Description:" Margin="0,8,0,0"/>
+                <TextBox Text="{Binding Buff.Description, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Text="Icon Path:" Margin="0,8,0,0"/>
+                <Label Content="{Binding Buff.IconPath, UpdateSourceTrigger=PropertyChanged}" />
+                <Button Content="Select Icon" Command="{Binding SelectIconCommand}" Margin="0,4,0,0" />
+                <StackPanel Orientation="Horizontal" Margin="20,8,0,0">
+                    <StackPanel Orientation="Vertical" Margin="0,8,0,0">
+                        <TextBlock Text="Is applied immediately?" Margin="0,8,0,0"/>
+                        <CheckBox IsChecked="{Binding Buff.IsAppliedImmediately, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="20,8,0,0">
+                        <TextBlock Text="Is damage over time?" Margin="0,8,0,0"/>
+                        <CheckBox IsChecked="{Binding Buff.IsDamageOverTime, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="20,8,0,0">
+                        <TextBlock Text="Is permanent Modifier?" Margin="0,8,0,0"/>
+                        <CheckBox IsChecked="{Binding Buff.PermanentModifier, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                </StackPanel>
+                
+                <controls:LabeledSliderControl LabelText="Armor modificator" Value="{Binding Buff.ArmorModificator, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:LabeledSliderControl LabelText="Resistance modificator" Value="{Binding Buff.ResistanceModificator, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:LabeledSliderControl LabelText="Damage modificator" Value="{Binding Buff.DamageModificator, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:LabeledSliderControl LabelText="Energy Modificator" Value="{Binding Buff.EnergyModificator, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:LabeledSliderControl LabelText="Duration" Value="{Binding Buff.Duration, UpdateSourceTrigger=PropertyChanged}" />
+
+                <Button Style="{StaticResource DefaultButtonStyle}" Content="Save" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

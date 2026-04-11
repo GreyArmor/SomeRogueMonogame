@@ -21,8 +21,7 @@ namespace NamelessRogueDataEditor.ViewModels
             dlg.FileName = "Document";
             dlg.DefaultExt = ".txt";
             dlg.Filter = "Text documents (.txt)|*.txt";
-
-     
+            
             Nullable<bool> result = dlg.ShowDialog();
 
             if (result.Value)
@@ -34,6 +33,12 @@ namespace NamelessRogueDataEditor.ViewModels
 
         [RelayCommand]
         void NewItem() { App.Current.MainWindow.DataContext = new ItemEditorViewModel(new NamelessRogue.Engine.Generation.Editor.ItemTemplateData()); }
+
+        [RelayCommand]
+        void NewAbility() { App.Current.MainWindow.DataContext = new AbilityTemplateEditorViewModel(); }
+
+        [RelayCommand]
+        void NewBuff() { App.Current.MainWindow.DataContext = new BuffEditorViewModel(); }
 
         [RelayCommand]
         void NewFile() {}

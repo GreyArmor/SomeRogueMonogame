@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:NamelessRogueDataEditor.Views"
              mc:Ignorable="d"         
              d:DesignHeight="450" d:DesignWidth="800">
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -38,8 +39,8 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Row="0" Grid.Column="0">New character</Button>
             <Button Grid.Row="1" Grid.Column="0" Command="{Binding NewItemCommand}">New Item</Button>
-            <Button Grid.Row="0" Grid.Column="1">New character</Button>
-            <Button Grid.Row="1" Grid.Column="1">New character</Button>
+            <Button Grid.Row="0" Grid.Column="1" Command="{Binding NewAbilityCommand}">New Ability</Button>
+            <Button Grid.Row="1" Grid.Column="1"  Command="{Binding NewBuffCommand}">New buff</Button>
         </Grid>
     </Grid>
 </UserControl>

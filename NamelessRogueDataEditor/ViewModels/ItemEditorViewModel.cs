@@ -14,8 +14,11 @@ namespace NamelessRogueDataEditor.ViewModels
     using System;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
+    using System.IO;
+    using System.Windows;
     using System.Windows.Input;
     using System.Xml.Linq;
+    using System.Xml.Serialization;
     using static NamelessRogue.Engine.Generation.Editor.QuestTemplateData;
 
     public partial class ItemEditorViewModel : ObservableObject
@@ -69,8 +72,21 @@ namespace NamelessRogueDataEditor.ViewModels
 
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
+
+        string contentDirectoryPath;
+        private string iconFileName;
+
         public ItemEditorViewModel(ItemTemplateData item)
         {
+
+            string workingDirectory = Environment.CurrentDirectory;
+#if DEBUG
+            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
+            contentDirectoryPath = projectDirectory + "\\Content";
+#else
+            contentDirectoryPath = workingDirectory+"\\Content";
+#endif
+
             if (item == null) throw new ArgumentNullException(nameof(item));
 
             Id = item.Id;
@@ -86,9 +102,9 @@ namespace NamelessRogueDataEditor.ViewModels
                 foreach (var slot in item.PossibleSlots)
                     PossibleSlots.Add(slot);
 
-            WeaponTemplateData = item.WeaponTemplateData != null ? CloneWeaponTemplateData(item.WeaponTemplateData) : null;
-            ArmorTemplateData = item.ArmorTemplateData != null ? CloneArmorTemplateData(item.ArmorTemplateData) : null;
-            ConsumableItemTemplateData = item.ConsumableItemTemplateData != null ? CloneConsumableItemTemplateData(item.ConsumableItemTemplateData) : null;
+            WeaponTemplateData = item.WeaponTemplateData != null ? CloneWeaponTemplateData(item.WeaponTemplateData) : new WeaponTemplateData();
+            ArmorTemplateData = item.ArmorTemplateData != null ? CloneArmorTemplateData(item.ArmorTemplateData) : new ArmorTemplateData();
+            ConsumableItemTemplateData = item.ConsumableItemTemplateData != null ? CloneConsumableItemTemplateData(item.ConsumableItemTemplateData) : new ConsumableItemTemplateData();
 
             AssociatedBuffs.Clear();
             if (item.AssociatedBuffs != null)
@@ -139,8 +155,104 @@ namespace NamelessRogueDataEditor.ViewModels
         // Example Save logic, replace with your integration
         private void OnSave()
         {
-            // TODO: Map back to model or raise event to notify saving
-            // Example: Update ItemTemplateData instance or notify observer
+            var directory = "";
+            var currentItemType = itemType;
+            switch (itemType)
+            {
+                case ItemType.Weapon:
+                    directory = contentDirectoryPath + "\\GameObjects\\Weapons\\";
+                    break;
+                case ItemType.Armor:
+                    directory = contentDirectoryPath + "\\GameObjects\\Armor\\";
+                    break;
+                case ItemType.Consumable:
+                    directory = contentDirectoryPath + "\\GameObjects\\Consumable\\";
+                    break;
+                case ItemType.Supplies:
+                    directory = contentDirectoryPath + "\\GameObjects\\Supplies\\";
+                    break;
+                case ItemType.Ammo:
+                    directory = contentDirectoryPath + "\\GameObjects\\Ammo\\";
+                    break;
+                case ItemType.Misc:
+                    directory = contentDirectoryPath + "\\GameObjects\\Misc\\";
+                    break;
+            }
+
+
+            var newItemPath = directory + name + ".nrif";
+            if (File.Exists(newItemPath))
+            {
+                TextReader reader = null;
+                try
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(ItemTemplateData));
+                    reader = new StreamReader(newItemPath);
+                    var oldData = (ItemTemplateData)serializer.Deserialize(reader);
+                    id = oldData.Id;
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    if (reader != null)
+                    {
+                        reader.Close();
+                    }
+                    id = "";
+                }
+            }
+
+            ItemTemplateData data = new ItemTemplateData();
+            if (id == "" || id == null)
+            {
+                id = Guid.NewGuid().ToString();
+            }
+
+            data.Id = Id;
+            data.Name = Name;
+            data.Description = Description;
+            data.Price = Price;
+            data.ItemType = currentItemType;
+
+            if (IconPath != string.Empty)
+            {
+                if (!Directory.Exists(directory + "\\Icons\\"))
+                {
+                    Directory.CreateDirectory(directory + "\\Icons\\");
+                }
+                // File.Delete(iconPath);
+
+                var newIconLocation = directory + "Icons\\" + iconFileName;
+                //if (IconPath != newIconLocation)
+                //{
+                //    File.Copy(IconPath, newIconLocation, true);
+                //}
+                data.IconPath = Path.GetRelativePath(directory, directory + "\\Icons\\" + iconFileName);
+            }
+
+            if (currentItemType == ItemType.Weapon)
+            {
+                data.WeaponTemplateData = WeaponTemplateData;
+                data.PossibleSlots = new List<Slot>() { Slot.LefHand, Slot.RightHand };
+            }
+            else if (currentItemType == ItemType.Armor)
+            {
+                data.ArmorTemplateData = ArmorTemplateData;
+                data.PossibleSlots = new List<Slot>() { this.PossibleSlots.FirstOrDefault() };
+            }
+            else if (currentItemType == ItemType.Consumable)
+            {
+                var citd = consumableItemTemplateData;
+                data.ConsumableItemTemplateData = citd;
+            }
+
+            data.AssociatedBuffs = AssociatedBuffs.ToList();
+
+            using (TextWriter writer = new StreamWriter(newItemPath))
+            {
+                XmlSerializer ser = new XmlSerializer(typeof(ItemTemplateData));
+                ser.Serialize(writer, data);
+            }
         }
 
         private void OnCancel()

@@ -25,6 +25,14 @@
             <DataTemplate DataType="{x:Type vm:ItemEditorViewModel}">
                 <v:ItemsView></v:ItemsView>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:AbilityTemplateEditorViewModel}">
+                <v:ItemsView></v:ItemsView>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:BuffEditorViewModel}">
+                <v:BuffTemplateDataEditorView></v:BuffTemplateDataEditorView>
+            </DataTemplate>
         </ResourceDictionary>      
     </Window.Resources>
     <Window.DataContext>
