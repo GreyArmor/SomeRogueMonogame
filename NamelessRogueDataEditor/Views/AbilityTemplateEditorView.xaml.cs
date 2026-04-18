@@ -17,7 +17,7 @@ namespace NamelessRogueDataEditor.Views
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class AbilityTemplateEditorView : Window
+    public partial class AbilityTemplateEditorView : UserControl
     {
         public AbilityTemplateEditorView()
         {

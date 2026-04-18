@@ -11,12 +11,55 @@ namespace NamelessRogueDataEditor.ViewModels
 {
     public partial class AbilityTemplateEditorViewModel : BaseEditorViewModel
     {
-        [ObservableProperty]
         private AbilityTemplateData? ability;
+        
+        [ObservableProperty]
+        private string id = string.Empty;
+        
+        [ObservableProperty]
+        private string name = string.Empty;
+        
+        [ObservableProperty]
+        private string description = string.Empty;
+        
+        [ObservableProperty]
+        private string iconPath = string.Empty;
+        
+        [ObservableProperty]
+        private int actionPointsCost;
+        
+        [ObservableProperty]
+        private int energyCost;
+        
+        [ObservableProperty]
+        private TargetMode targetMode = TargetMode.None;
+        
+        [ObservableProperty]
+        private ActivationMode activationMode = ActivationMode.Passive;
+        
+        [ObservableProperty]
+        private int areaOfEffect = 0;
+        
+        [ObservableProperty]
+        private bool isActive;
+        
+        [ObservableProperty]
+        private int range = 0;
+        
+        [ObservableProperty]
+        private int cooldownTurns = 0;
+               
+        [ObservableProperty]
+        private List<AssociatedBuff> associatedBuffs = new();
+               
+        [ObservableProperty]
+        private List<AbilityAction> abilityActions = new();
 
-        public AbilityTemplateEditorViewModel() : base("*.nraf", "Ability")
+
+
+        public AbilityTemplateEditorViewModel() : base("*.nraf", "Abilities")
         {
-            Ability = new AbilityTemplateData
+            ability = new AbilityTemplateData
             {
                 AssociatedBuffs = [],
                 AbilityActions = []
@@ -29,17 +72,17 @@ namespace NamelessRogueDataEditor.ViewModels
             var serializer = new XmlSerializer(typeof(AbilityTemplateData));
             var dir = Path.Combine("..", "NamelessRogue", "Content", "GameObjects", "Abilities");
             Directory.CreateDirectory(dir);
-            var path = Path.Combine(dir, $"{Ability?.Name ?? "Ability"}.xml");
+            var path = Path.Combine(dir, $"{ability?.Name ?? "Ability"}.xml");
             using var stream = File.Create(path);
-            serializer.Serialize(stream, Ability);
+            serializer.Serialize(stream, ability);
             MessageBox.Show($"Saved to {path}");
         }
 
         [RelayCommand]
         private void AddAction()
         {
-            Ability?.AssociatedBuffs.Add(new AssociatedBuff());
-            OnPropertyChanged(nameof(Ability));
+            ability?.AssociatedBuffs.Add(new AssociatedBuff());
+            OnPropertyChanged(nameof(ability));
         }
     }
 }

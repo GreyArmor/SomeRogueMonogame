@@ -26,8 +26,10 @@ namespace NamelessRogueDataEditor.ViewModels
         {
             TabItems = new ObservableCollection<object> {
             new BuffEditorViewModel { HeaderName = "Buff" },
+            new AbilityTemplateEditorViewModel { HeaderName = "Ability" },
             new ItemEditorViewModel(new NamelessRogue.Engine.Generation.Editor.ItemTemplateData()) { HeaderName = "Item" },
-            new CharacterViewModel { HeaderName = "Item" },
+            new CharacterViewModel { HeaderName = "Character" },
+    
         };
             SelectedTab = TabItems[0]; // Set default tab
         }
