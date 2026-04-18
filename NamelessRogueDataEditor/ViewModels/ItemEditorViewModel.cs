@@ -21,7 +21,7 @@ namespace NamelessRogueDataEditor.ViewModels
     using System.Xml.Serialization;
     using static NamelessRogue.Engine.Generation.Editor.QuestTemplateData;
 
-    public partial class ItemEditorViewModel : ObservableObject
+    public partial class ItemEditorViewModel : BaseEditorViewModel
     {
         [ObservableProperty]
         ObservableCollection<ItemQuality> itemQualityValues = new ObservableCollection<ItemQuality>(Enum.GetValues<ItemQuality>());
@@ -76,7 +76,7 @@ namespace NamelessRogueDataEditor.ViewModels
         string contentDirectoryPath;
         private string iconFileName;
 
-        public ItemEditorViewModel(ItemTemplateData item)
+        public ItemEditorViewModel(ItemTemplateData item) : base("*.nrif", "")
         {
 
             string workingDirectory = Environment.CurrentDirectory;

@@ -9,12 +9,12 @@ using System.Xml.Serialization;
 
 namespace NamelessRogueDataEditor.ViewModels
 {
-    public partial class AbilityTemplateEditorViewModel : ObservableObject
+    public partial class AbilityTemplateEditorViewModel : BaseEditorViewModel
     {
         [ObservableProperty]
         private AbilityTemplateData? ability;
 
-        public AbilityTemplateEditorViewModel()
+        public AbilityTemplateEditorViewModel() : base("*.nraf", "Ability")
         {
             Ability = new AbilityTemplateData
             {

@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace NamelessRogueDataEditor.ViewModels
 {
-    public partial class CharacterViewModel : ObservableObject
+    public partial class CharacterViewModel : BaseEditorViewModel
     {
-
+        public CharacterViewModel() : base("*.nrcf", "Characters")
+        {
+        }
     }
 }

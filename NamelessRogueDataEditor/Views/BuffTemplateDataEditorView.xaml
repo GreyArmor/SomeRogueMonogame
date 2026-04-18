@@ -19,61 +19,59 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"></ColumnDefinition>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <ScrollViewer Grid.Column="0">
-                <StackPanel Margin="16" VerticalAlignment="Top">
-                    <TextBlock Text="Id:"/>
-                    <TextBox Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="16,0,0,0">
+                <Button Style="{StaticResource DefaultButtonStyle}" Content="Save" IsEnabled="{Binding CanSave}" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
+            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <ScrollViewer Grid.Column="0">
+                    <StackPanel Margin="16" VerticalAlignment="Top">
+                        <TextBlock Text="Id:"/>
+                        <TextBox Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBlock Text="Name:"/>
-                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Name:"/>
+                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBlock Text="Description:" Margin="0,8,0,0"/>
-                    <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Description:" Margin="0,8,0,0"/>
+                        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBlock Text="Icon Path:" Margin="0,8,0,0"/>
-                    <Label Content="{Binding IconPath, UpdateSourceTrigger=PropertyChanged}" />
-                    <Button Content="Select Icon" Command="{Binding SelectIconCommand}" Margin="0,4,0,0" />
-                    <StackPanel Orientation="Horizontal" Margin="20,8,0,0">
-                        <StackPanel Orientation="Vertical" Margin="0,8,0,0">
-                            <TextBlock Text="Is applied immediately?" Margin="0,8,0,0"/>
-                            <CheckBox IsChecked="{Binding IsAppliedImmediately, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Text="Icon Path:" Margin="0,8,0,0"/>
+                        <Label Content="{Binding IconPath, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Content="Select Icon" Command="{Binding SelectIconCommand}" Margin="0,4,0,0" />
+                        <StackPanel Orientation="Horizontal" Margin="20,8,0,0">
+                            <StackPanel Orientation="Vertical" Margin="0,8,0,0">
+                                <TextBlock Text="Is applied immediately?" Margin="0,8,0,0"/>
+                                <CheckBox IsChecked="{Binding IsAppliedImmediately, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="20,8,0,0">
+                                <TextBlock Text="Is damage over time?" Margin="0,8,0,0"/>
+                                <CheckBox IsChecked="{Binding IsDamageOverTime, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="20,8,0,0">
+                                <TextBlock Text="Is permanent Modifier?" Margin="0,8,0,0"/>
+                                <CheckBox IsChecked="{Binding PermanentModifier, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
                         </StackPanel>
-                        <StackPanel Orientation="Vertical" Margin="20,8,0,0">
-                            <TextBlock Text="Is damage over time?" Margin="0,8,0,0"/>
-                            <CheckBox IsChecked="{Binding IsDamageOverTime, UpdateSourceTrigger=PropertyChanged}"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Margin="20,8,0,0">
-                            <TextBlock Text="Is permanent Modifier?" Margin="0,8,0,0"/>
-                            <CheckBox IsChecked="{Binding PermanentModifier, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
+
+                        <controls:LabeledSliderControl LabelText="Armor modificator" Value="{Binding ArmorModificator, UpdateSourceTrigger=PropertyChanged}" />
+                        <controls:LabeledSliderControl LabelText="Resistance modificator" Value="{Binding ResistanceModificator, UpdateSourceTrigger=PropertyChanged}" />
+                        <controls:LabeledSliderControl LabelText="Damage modificator" Value="{Binding DamageModificator, UpdateSourceTrigger=PropertyChanged}" />
+                        <controls:LabeledSliderControl LabelText="Energy Modificator" Value="{Binding EnergyModificator, UpdateSourceTrigger=PropertyChanged}" />
+                        <controls:LabeledSliderControl LabelText="Duration" Value="{Binding Duration, UpdateSourceTrigger=PropertyChanged}" />
+
+                       
                     </StackPanel>
-
-                    <controls:LabeledSliderControl LabelText="Armor modificator" Value="{Binding ArmorModificator, UpdateSourceTrigger=PropertyChanged}" />
-                    <controls:LabeledSliderControl LabelText="Resistance modificator" Value="{Binding ResistanceModificator, UpdateSourceTrigger=PropertyChanged}" />
-                    <controls:LabeledSliderControl LabelText="Damage modificator" Value="{Binding DamageModificator, UpdateSourceTrigger=PropertyChanged}" />
-                    <controls:LabeledSliderControl LabelText="Energy Modificator" Value="{Binding EnergyModificator, UpdateSourceTrigger=PropertyChanged}" />
-                    <controls:LabeledSliderControl LabelText="Duration" Value="{Binding Duration, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Style="{StaticResource DefaultButtonStyle}" Content="Save" IsEnabled="{Binding CanSave}" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
-                        <Button Grid.Column="1" Style="{StaticResource DefaultButtonStyle}" Content="Back" Command="{Binding BackCommand}" Margin="0,16,0,0" Height="32"/>
-                    </Grid>
-                                   </StackPanel>
-            </ScrollViewer>
-            <ScrollViewer Grid.Column="1">
-                <StackPanel>
-                    <ListBox ItemsSource="{Binding BuffFileNames}"></ListBox>
-                </StackPanel>
-            </ScrollViewer>
-        </Grid>
+                </ScrollViewer>
+                <ScrollViewer Grid.Column="1">
+                    <StackPanel>
+                        <ListBox ItemsSource="{Binding EditorFileNames}"></ListBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

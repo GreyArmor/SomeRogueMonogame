@@ -14,10 +14,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/MainStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate DataType="{x:Type vm:StartupWindowViewModel}">
-                <v:StartupView></v:StartupView>
-            </DataTemplate>
-
+            
             <DataTemplate DataType="{x:Type vm:CharacterViewModel}">
                 <v:CharacterView></v:CharacterView>
             </DataTemplate>
@@ -36,9 +33,18 @@
         </ResourceDictionary>      
     </Window.Resources>
     <Window.DataContext>
-        <vm:StartupWindowViewModel/>
+        <vm:MainViewModel/>
     </Window.DataContext>
     <Grid Width="Auto" Height="Auto">
-        <ContentPresenter Content="{Binding}"/>
+        <TabControl ItemsSource="{Binding TabItems}" 
+                SelectedItem="{Binding SelectedTab}">
+            <!-- Defines how the tab header looks -->
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding HeaderName}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+        </TabControl>
+
     </Grid>
 </Window>

@@ -14,14 +14,11 @@ using Wpf.Ui.Extensions;
 
 namespace NamelessRogueDataEditor.ViewModels
 {
-    public partial class BuffEditorViewModel : ObservableObject
+    public partial class BuffEditorViewModel : BaseEditorViewModel
     {
         string buffDirectory;
         private BuffTemplateData buff;
 
-        List<string> buffFiles;
-        [ObservableProperty]
-        List<string> buffFileNames;
 
         [ObservableProperty]
         public string id;
@@ -62,21 +59,12 @@ namespace NamelessRogueDataEditor.ViewModels
 
         [ObservableProperty]
         bool canSave = false;
-        public BuffEditorViewModel()
+        public BuffEditorViewModel() : base("*.nrbf", "Buffs")
         {
-            buff = new BuffTemplateData();
-            buffDirectory = System.IO.Path.Combine(ContentDirectoryHelper.contentDirectoryPath, "GameObjects", "Buffs");
-            buffFiles = Directory.EnumerateFiles(buffDirectory, "*.nrbf").ToList();
-            buffFileNames = buffFiles.Select(x=>Path.GetFileName(x)).ToList();
-
+            buff = new BuffTemplateData();       
             PropertyChanged += (s, e) => { CanSave = !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(IconPath) && !string.IsNullOrEmpty(Id); };
         }
-
-        [RelayCommand]
-        public void Back()
-        {
-            App.Current.MainWindow.DataContext = new StartupWindowViewModel();
-        }
+       
 
         [RelayCommand]
         public void Save()
@@ -96,7 +84,7 @@ namespace NamelessRogueDataEditor.ViewModels
             buff.DamageModificator = damageModificator;
 
 
-            var directory = System.IO.Path.Combine(ContentDirectoryHelper.contentDirectoryPath, "GameObjects", "Buffs");
+            var directory = editorPath;
             var iconFileName = Path.GetFileName(iconPath);
             if (!Directory.Exists(directory + "\\Icons\\"))
             {
