@@ -5,12 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NamelessRogueDataEditor.ViewModels"
         mc:Ignorable="d"
-        Height="700" Width="500">
+        Height="Auto" Width="Auto">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/MainStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <UserControl.DataContext>
         <local:AbilityTemplateEditorViewModel/>
     </UserControl.DataContext>
-    <ScrollViewer>
-        <StackPanel Margin="16" VerticalAlignment="Top">
+
+    <Grid Width="Auto" Height="Auto" >
+        <StackPanel>
             <TextBlock Text="Name:"/>
             <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
 
@@ -26,13 +36,13 @@
             <TextBlock Text="Energy Cost:" Margin="0,8,0,0"/>
             <TextBox Text="{Binding EnergyCost, UpdateSourceTrigger=PropertyChanged}" />
 
-            <!--<TextBlock Text="Target Mode:" Margin="0,8,0,0"/>
-            <ComboBox SelectedValue="{Binding Ability.TargetMode, Mode=TwoWay}" 
-                      ItemsSource="{x:Static local:TargetModeValues.All}" />-->
+            <TextBlock Text="Target Mode:" Margin="0,8,0,0"/>
+            <ComboBox SelectedValue="{Binding TargetMode, Mode=TwoWay}" 
+                  ItemsSource="{x:Static local:TargetModeValues.All}" />
 
             <TextBlock Text="Activation Mode:" Margin="0,8,0,0"/>
-            <!--<ComboBox SelectedValue="{Binding Ability.ActivationMode, Mode=TwoWay}" 
-                      ItemsSource="{x:Static local:ActivationModeValues.All}" />-->
+            <ComboBox SelectedValue="{Binding ActivationMode, Mode=TwoWay}" 
+                  ItemsSource="{x:Static local:ActivationModeValues.All}" />
 
             <TextBlock Text="Area Of Effect:" Margin="0,8,0,0"/>
             <TextBox Text="{Binding AreaOfEffect, UpdateSourceTrigger=PropertyChanged}" />
@@ -58,18 +68,20 @@
             </ListBox>
 
             <Button Content="Add Buff" Margin="0,2,0,0" 
-                    Command="{Binding AddBuffCommand}" />
+                Command="{Binding AddBuffCommand}" />
 
             <TextBlock Text="Ability Actions:" Margin="0,8,0,0"/>
             <ListBox ItemsSource="{Binding AbilityActions}" Height="80" />
 
             <!--<ComboBox x:Name="AbilityActionPicker" Margin="0,2,0,0"
-                      ItemsSource="{x:Static local:AbilityActionValues.All}" />-->
+                  ItemsSource="{x:Static local:AbilityActionValues.All}" />-->
 
             <!--<Button Content="Add Action" Margin="0,2,0,0"
-                    Click="" />-->
+                Click="" />-->
 
-            <Button Content="Save" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
+            <Button Style="{StaticResource DefaultButtonStyle}" Content="Save" IsEnabled="{Binding CanSave}" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
+
         </StackPanel>
-    </ScrollViewer>
+    </Grid>
+
 </UserControl>

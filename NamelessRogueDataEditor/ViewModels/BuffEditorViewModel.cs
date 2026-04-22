@@ -14,21 +14,15 @@ using Wpf.Ui.Extensions;
 
 namespace NamelessRogueDataEditor.ViewModels
 {
-    public partial class BuffEditorViewModel : BaseEditorViewModel
+    public partial class BuffEditorViewModel : BaseEditorViewModel<BuffTemplateData>
     {
-        string buffDirectory;
+ 
         private BuffTemplateData buff;
 
-
-        [ObservableProperty]
-        public string id;
         [ObservableProperty]
         public string name;
         [ObservableProperty]
-        public string description;
-
-        [ObservableProperty]
-        public string iconPath;
+        public string description;       
 
         [ObservableProperty]
         public int duration;
@@ -63,11 +57,14 @@ namespace NamelessRogueDataEditor.ViewModels
         {
             buff = new BuffTemplateData();       
             PropertyChanged += (s, e) => { CanSave = !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(IconPath) && !string.IsNullOrEmpty(Id); };
-        }
-       
-
+        }    
         [RelayCommand]
-        public void Save()
+        public void SelectIcon()
+        {
+            IconPath = _selectFile("*.png;*.jpg", "Select an icon");
+        }
+
+        protected override BuffTemplateData FillDataForSave()
         {
             buff.Id = id;
             buff.Name = name;
@@ -103,36 +100,7 @@ namespace NamelessRogueDataEditor.ViewModels
             }
             buff.IconPath = Path.GetRelativePath(directory, directory + "\\Icons\\" + iconFileName);
             IconPath = buff.IconPath;
-            var serializer = new System.Xml.Serialization.XmlSerializer(typeof(BuffTemplateData));
-            var dir = System.IO.Path.Combine(ContentDirectoryHelper.contentDirectoryPath, "GameObjects", "Buffs");
-            System.IO.Directory.CreateDirectory(dir);
-            var path = System.IO.Path.Combine(dir, $"{buff?.Name ?? "Buff"}.nrbf");
-            using var stream = System.IO.File.Create(path);
-            serializer.Serialize(stream, buff);
-            System.Windows.MessageBox.Show($"Saved to {path}");
+            return buff;
         }
-
-        [RelayCommand]
-        public void SelectIcon()
-        {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            var dir = ContentDirectoryHelper.contentDirectoryPath;
-            System.IO.Directory.CreateDirectory(dir);
-            fileDialog.InitialDirectory = dir;
-            fileDialog.Filter = "Files|*.png;*.jpg";
-            fileDialog.Title = "Select an icon";
-
-            if (fileDialog.ShowDialog() == DialogResult.OK)
-            {
-                if (File.Exists(fileDialog.FileName))
-                {
-                    IconPath = fileDialog.FileName;
-                }
-            }
-          
-            fileDialog = null;
-        }
-
-      
     }
 }

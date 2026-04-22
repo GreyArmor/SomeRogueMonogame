@@ -21,7 +21,7 @@ namespace NamelessRogueDataEditor.ViewModels
     using System.Xml.Serialization;
     using static NamelessRogue.Engine.Generation.Editor.QuestTemplateData;
 
-    public partial class ItemEditorViewModel : BaseEditorViewModel
+    public partial class ItemEditorViewModel : BaseEditorViewModel<ItemTemplateData>
     {
         [ObservableProperty]
         ObservableCollection<ItemQuality> itemQualityValues = new ObservableCollection<ItemQuality>(Enum.GetValues<ItemQuality>());
@@ -111,7 +111,7 @@ namespace NamelessRogueDataEditor.ViewModels
                 foreach (var buff in item.AssociatedBuffs)
                     AssociatedBuffs.Add(buff);
 
-            SaveCommand = new RelayCommand(OnSave);
+            SaveCommand = new RelayCommand(Save);
             CancelCommand = new RelayCommand(OnCancel);
         }
 
@@ -152,8 +152,7 @@ namespace NamelessRogueDataEditor.ViewModels
                 DamageModificator = source.DamageModificator
             };
 
-        // Example Save logic, replace with your integration
-        private void OnSave()
+        public override void Save()
         {
             var directory = "";
             var currentItemType = itemType;
@@ -258,6 +257,11 @@ namespace NamelessRogueDataEditor.ViewModels
         private void OnCancel()
         {
             // TODO: Handle cancel, e.g. close window or discard changes
+        }
+
+        protected override ItemTemplateData FillDataForSave()
+        {
+            throw new NotImplementedException();
         }
     }
 }
