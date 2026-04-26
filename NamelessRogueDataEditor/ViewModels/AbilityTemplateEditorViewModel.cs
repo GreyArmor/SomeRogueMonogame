@@ -15,9 +15,6 @@ namespace NamelessRogueDataEditor.ViewModels
         private AbilityTemplateData? ability;
         
         [ObservableProperty]
-        private string id = string.Empty;
-        
-        [ObservableProperty]
         private string name = string.Empty;
         
         [ObservableProperty]
@@ -51,11 +48,15 @@ namespace NamelessRogueDataEditor.ViewModels
         private int cooldownTurns = 0;
                
         [ObservableProperty]
-        private List<AssociatedBuff> associatedBuffs = new();
+        private ObservableCollection<AssociatedBuff> associatedBuffs = new();
                
         [ObservableProperty]
-        private List<AbilityAction> abilityActions = new();
+        private ObservableCollection<AbilityAction> abilityActions = new();
 
+        [ObservableProperty]
+        private int selectedAssociatedBuffIndex = 0;
+        [ObservableProperty]
+        private int selectedAbilityActionIndex = 0;
 
 
         public AbilityTemplateEditorViewModel() : base("*.nraf", "Abilities")
@@ -65,13 +66,43 @@ namespace NamelessRogueDataEditor.ViewModels
                 AssociatedBuffs = [],
                 AbilityActions = []
             };
+
+            PropertyChanged += (s, e) => { CanSave = !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(IconPath) && !string.IsNullOrEmpty(Id); };
         }
 
         [RelayCommand]
-        private void AddAction()
+        private void AddAssociatedBuff()
         {
-            ability?.AssociatedBuffs.Add(new AssociatedBuff());
-            OnPropertyChanged(nameof(ability));
+            var file = this._selectFile("*.nrbf", "Select a buff to associate");
+            if (!string.IsNullOrEmpty(file) && File.Exists(file))
+            {
+                string buffId;
+                var serializer = new System.Xml.Serialization.XmlSerializer(typeof(BuffTemplateData));
+                using (FileStream fs = new(file, FileMode.Open))
+                {
+                    buffId = ((BuffTemplateData)serializer.Deserialize(fs)).Id ?? string.Empty;
+                }
+
+                    var relativePath = Path.GetRelativePath(editorPath, file);
+                AssociatedBuffs.Add(new AssociatedBuff { BuffId = buffId, Path = relativePath });
+                
+            }
+        }
+
+        [RelayCommand]
+        public virtual void RemoveAssociatedBuff()
+        {
+            if (!AssociatedBuffs.Any())
+            {
+                return;
+            }
+            var selectedFile = AssociatedBuffs[SelectedAssociatedBuffIndex];
+            AssociatedBuffs.Remove(selectedFile);
+            if (!AssociatedBuffs.Any() && SelectedFileIndex > 0)
+            {
+                SelectedAssociatedBuffIndex--;
+            }
+            
         }
 
 
@@ -113,5 +144,49 @@ namespace NamelessRogueDataEditor.ViewModels
             return ability;
         }
 
+        protected override void FillDataFromSave(AbilityTemplateData data)
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            ability = data;
+
+            Id = data.Id ?? string.Empty;
+            Name = data.Name ?? string.Empty;
+            Description = data.Description ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(data.IconPath))
+            {
+                IconPath = string.Empty;
+            }
+            else if (Path.IsPathFullyQualified(data.IconPath))
+            {
+                IconPath = data.IconPath;
+            }
+            else
+            {
+                var baseDir = string.IsNullOrEmpty(editorPath) ? Directory.GetCurrentDirectory() : editorPath;
+                IconPath = Path.GetFullPath(Path.Combine(baseDir, data.IconPath));
+            }
+
+            ActionPointsCost = data.ActionPointsCost;
+            EnergyCost = data.EnergyCost;
+            TargetMode = data.TargetMode;
+            ActivationMode = data.ActivationMode;
+            AreaOfEffect = data.AreaOfEffect;
+            IsActive = data.IsActive;
+            Range = data.Range;
+            CooldownTurns = data.CooldownTurns;
+
+            AssociatedBuffs = data.AssociatedBuffs != null
+                ? new ObservableCollection<AssociatedBuff>(data.AssociatedBuffs)
+                : new ObservableCollection<AssociatedBuff>();
+
+            AbilityActions = data.AbilityActions != null
+                ? new ObservableCollection<AbilityAction>(data.AbilityActions)
+                : new ObservableCollection<AbilityAction>();
+        }
     }
 }

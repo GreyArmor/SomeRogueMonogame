@@ -18,5 +18,10 @@ namespace NamelessRogueDataEditor.ViewModels
         {
             return new CharacterTemplateData();            
         }
+
+        protected override void FillDataFromSave(CharacterTemplateData data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

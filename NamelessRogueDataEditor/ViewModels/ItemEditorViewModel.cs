@@ -263,5 +263,10 @@ namespace NamelessRogueDataEditor.ViewModels
         {
             throw new NotImplementedException();
         }
+
+        protected override void FillDataFromSave(ItemTemplateData data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BuffTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>small_heal</Id>
+  <Name>Small heal</Name>
+  <Description>Heal 20 health</Description>
+  <IconPath>Icons\medkit.png</IconPath>
+  <Duration>5</Duration>
+  <IsAppliedImmediately>true</IsAppliedImmediately>
+  <PermanentModifier>true</PermanentModifier>
+  <IsDamageOverTime>false</IsDamageOverTime>
+  <HealthModificator>20</HealthModificator>
+  <EnergyModificator>0</EnergyModificator>
+  <ArmorModificator>0</ArmorModificator>
+  <ResistanceModificator>0</ResistanceModificator>
+  <DamageModificator>0</DamageModificator>
+</BuffTemplateData>

@@ -22,6 +22,8 @@
         <StackPanel>
             <StackPanel Orientation="Horizontal" Margin="16,0,0,0">
                 <Button Style="{StaticResource DefaultButtonStyle}" Content="Save" IsEnabled="{Binding CanSave}" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
+                <Button Style="{StaticResource DefaultButtonStyle}" Content="Load" Command="{Binding LoadCommand}" Margin="0,16,0,0" Height="32"/>
+                <Button Style="{StaticResource DefaultButtonStyle}" Content="Delete" Command="{Binding DeleteCommand}" Margin="0,16,0,0" Height="32"/>
             </StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -61,6 +63,7 @@
                             <controls:LabeledSliderControl LabelText="Armor modificator" Value="{Binding ArmorModificator, UpdateSourceTrigger=PropertyChanged}" />
                             <controls:LabeledSliderControl LabelText="Resistance modificator" Value="{Binding ResistanceModificator, UpdateSourceTrigger=PropertyChanged}" />
                             <controls:LabeledSliderControl LabelText="Damage modificator" Value="{Binding DamageModificator, UpdateSourceTrigger=PropertyChanged}" />
+                            <controls:LabeledSliderControl LabelText="Health modificator" Value="{Binding HealthModificator, UpdateSourceTrigger=PropertyChanged}" />
                             <controls:LabeledSliderControl LabelText="Energy Modificator" Value="{Binding EnergyModificator, UpdateSourceTrigger=PropertyChanged}" />
                             <controls:LabeledSliderControl LabelText="Duration" Value="{Binding Duration, UpdateSourceTrigger=PropertyChanged}" />
 
@@ -71,7 +74,7 @@
                 <ScrollViewer Grid.Column="1">
                     <GroupBox Header="Files" Margin="0,0,0,10">
                         <StackPanel>
-                            <ListBox ItemsSource="{Binding EditorFileNames}"></ListBox>
+                            <ListBox ItemsSource="{Binding EditorFileNames}"  SelectedIndex="{Binding SelectedFileIndex, Mode=TwoWay}"></ListBox>
                         </StackPanel>
                     </GroupBox>
                 </ScrollViewer>

@@ -50,9 +50,7 @@ namespace NamelessRogueDataEditor.ViewModels
 
         [ObservableProperty]
         public int damageModificator = 0;
-
-        [ObservableProperty]
-        bool canSave = false;
+       
         public BuffEditorViewModel() : base("*.nrbf", "Buffs")
         {
             buff = new BuffTemplateData();       
@@ -101,6 +99,47 @@ namespace NamelessRogueDataEditor.ViewModels
             buff.IconPath = Path.GetRelativePath(directory, directory + "\\Icons\\" + iconFileName);
             IconPath = buff.IconPath;
             return buff;
+        }
+
+        protected override void FillDataFromSave(BuffTemplateData data)
+        {
+            buff = data;
+
+            Id = data.Id;
+            Name = data.Name;
+            Description = data.Description;
+            Duration = data.Duration;
+            IsAppliedImmediately = data.IsAppliedImmediately;
+            PermanentModifier = data.PermanentModifier;
+            IsDamageOverTime = data.IsDamageOverTime;
+            HealthModificator = data.HealthModificator;
+            EnergyModificator = data.EnergyModificator;
+            ArmorModificator = data.ArmorModificator;
+            ResistanceModificator = data.ResistanceModificator;
+            DamageModificator = data.DamageModificator;
+
+            if (!string.IsNullOrEmpty(data.IconPath))
+            {
+                var resolved = data.IconPath;
+                try
+                {
+                    if (!Path.IsPathFullyQualified(resolved))
+                    {
+                        var baseDir = string.IsNullOrEmpty(editorPath) ? Directory.GetCurrentDirectory() : editorPath;
+                        resolved = Path.GetFullPath(Path.Combine(baseDir, data.IconPath));
+                    }
+                }
+                catch
+                {
+                    resolved = data.IconPath;
+                }
+
+                IconPath = resolved;
+            }
+            else
+            {
+                IconPath = string.Empty;
+            }
         }
     }
 }
