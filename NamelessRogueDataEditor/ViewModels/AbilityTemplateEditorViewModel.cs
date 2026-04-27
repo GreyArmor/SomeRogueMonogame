@@ -58,6 +58,9 @@ namespace NamelessRogueDataEditor.ViewModels
         [ObservableProperty]
         private int selectedAbilityActionIndex = 0;
 
+        [ObservableProperty]
+        private ObservableCollection<AbilityAction> abilityActionsEnumValue = new ObservableCollection<AbilityAction>(Enum.GetValues(typeof(AbilityAction)).Cast<AbilityAction>());
+
 
         public AbilityTemplateEditorViewModel() : base("*.nraf", "Abilities")
         {
@@ -187,6 +190,17 @@ namespace NamelessRogueDataEditor.ViewModels
             AbilityActions = data.AbilityActions != null
                 ? new ObservableCollection<AbilityAction>(data.AbilityActions)
                 : new ObservableCollection<AbilityAction>();
+        }
+
+        [RelayCommand]
+        public void AddAbilityAction(AbilityAction action)
+        {
+            AbilityActions.Add(action);
+        }
+        [RelayCommand]
+        public void RemoveAbilityAction(AbilityAction action)
+        {
+            AbilityActions.Remove(action);
         }
     }
 }

@@ -32,7 +32,7 @@
                 </Grid.ColumnDefinitions>
                 <GroupBox Header="Properties" Grid.Column="0">
                     <ScrollViewer>
-                        <StackPanel Margin="16" VerticalAlignment="Top">
+                        <StackPanel VerticalAlignment="Top">
                             <TextBlock Text="Id:"/>
                             <TextBox Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
 
