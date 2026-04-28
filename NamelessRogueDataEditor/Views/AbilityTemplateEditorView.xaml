@@ -95,13 +95,19 @@
                                         <DataTemplate>
                                             <Grid Margin="5">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <Button Grid.Column="0" Content="-" Margin="0,0,20,0" Width="30" Command="{Binding DataContext.RemoveAbilityActionCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
 
                                                 <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" />
+
+                                                <Button Grid.Column="2" Content="^" Width="30" Margin="0,0,10,0" Command="{Binding DataContext.AbilityActionUpCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
+                                                <Button Grid.Column="3" Content="⌄" Width="30" Margin="0,0,10,0" Command="{Binding DataContext.AbilityActionDownCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
+
 
                                             </Grid>
                                         </DataTemplate>
@@ -113,12 +119,14 @@
                                         <DataTemplate>
                                             <Grid Margin="5">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                 
                                                 </Grid.ColumnDefinitions>
                                                 <Button Grid.Column="0" Content="+" Width="30" Margin="0,0,20,0" Command="{Binding DataContext.AddAbilityActionCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
 
                                                 <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" />
+                                             
 
                                             </Grid>
                                         </DataTemplate>

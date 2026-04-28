@@ -202,5 +202,25 @@ namespace NamelessRogueDataEditor.ViewModels
         {
             AbilityActions.Remove(action);
         }
+
+        [RelayCommand]
+        public void AbilityActionUp(AbilityAction action)
+        {
+            var index = AbilityActions.IndexOf(action);
+            if (index > 0)
+            {
+                AbilityActions.Move(index, index - 1);
+            }
+        }
+
+        [RelayCommand]
+        public void AbilityActionDown(AbilityAction action)
+        {
+            var index = AbilityActions.IndexOf(action);
+            if (index >= 0 && index < AbilityActions.Count-1)
+            {
+                AbilityActions.Move(index, index + 1);
+            }
+        }
     }
 }
