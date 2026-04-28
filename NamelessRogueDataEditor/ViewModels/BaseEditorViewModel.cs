@@ -49,7 +49,7 @@ namespace NamelessRogueDataEditor.ViewModels
             ReloadFiles(fileType, filesDirectory);  
         }
 
-        private void ReloadFiles(string fileType, string filesDirectory)
+        protected void ReloadFiles(string fileType, string filesDirectory)
         {
             editorPath = Path.Combine(ContentDirectoryHelper.contentDirectoryPath, "GameObjects", filesDirectory);
             editorFiles = Directory.EnumerateFiles(editorPath, fileType, SearchOption.AllDirectories).ToList();

@@ -49,9 +49,6 @@ namespace NamelessRogueDataEditor.ViewModels
         private int price;
 
         [ObservableProperty]
-        private string iconPath;
-
-        [ObservableProperty]
         private ItemType itemType;
 
         [ObservableProperty]
@@ -68,25 +65,14 @@ namespace NamelessRogueDataEditor.ViewModels
         [ObservableProperty]
         private ConsumableItemTemplateData consumableItemTemplateData;
 
-        public ObservableCollection<FileReference> AssociatedBuffs { get; } = new ObservableCollection<FileReference>();
+        [ObservableProperty]
+        private ObservableCollection<FileReference> associatedBuffs = new ObservableCollection<FileReference>();
 
-        public ICommand SaveCommand { get; }
-        public ICommand CancelCommand { get; }
 
         string contentDirectoryPath;
-        private string iconFileName;
 
         public ItemEditorViewModel(ItemTemplateData item) : base("*.nrif", "")
         {
-
-            string workingDirectory = Environment.CurrentDirectory;
-#if DEBUG
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-            contentDirectoryPath = projectDirectory + "\\Content";
-#else
-            contentDirectoryPath = workingDirectory+"\\Content";
-#endif
-
             if (item == null) throw new ArgumentNullException(nameof(item));
 
             Id = item.Id;
@@ -110,9 +96,6 @@ namespace NamelessRogueDataEditor.ViewModels
             if (item.AssociatedBuffs != null)
                 foreach (var buff in item.AssociatedBuffs)
                     AssociatedBuffs.Add(buff);
-
-            SaveCommand = new RelayCommand(Save);
-            CancelCommand = new RelayCommand(OnCancel);
         }
 
         // Implement cloning methods for deep copies to allow editing without mutating original instance
@@ -154,6 +137,20 @@ namespace NamelessRogueDataEditor.ViewModels
 
         public override void Save()
         {
+            string directory = GetItemDirectory();
+            ItemTemplateData objecToSave = FillDataForSave();
+            var serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemTemplateData));
+            var dir = System.IO.Path.Combine(ContentDirectoryHelper.contentDirectoryPath, "GameObjects", directory);
+            System.IO.Directory.CreateDirectory(dir);
+            var path = System.IO.Path.Combine(dir, $"{Id + Path.GetExtension(this.FileType)}");
+            using var stream = System.IO.File.Create(path);
+            serializer.Serialize(stream, objecToSave);
+            System.Windows.MessageBox.Show($"Saved to {path}");
+            ReloadFiles(FileType, FilesDirectory);
+        }
+
+        private string GetItemDirectory()
+        {
             var directory = "";
             var currentItemType = itemType;
             switch (itemType)
@@ -177,8 +174,13 @@ namespace NamelessRogueDataEditor.ViewModels
                     directory = contentDirectoryPath + "\\GameObjects\\Misc\\";
                     break;
             }
+            return directory;
+        }
 
-
+        protected override ItemTemplateData FillDataForSave()
+        {
+            var directory = GetItemDirectory();
+            var currentItemType = itemType;
             var newItemPath = directory + name + ".nrif";
             if (File.Exists(newItemPath))
             {
@@ -211,23 +213,7 @@ namespace NamelessRogueDataEditor.ViewModels
             data.Name = Name;
             data.Description = Description;
             data.Price = Price;
-            data.ItemType = currentItemType;
-
-            if (IconPath != string.Empty)
-            {
-                if (!Directory.Exists(directory + "\\Icons\\"))
-                {
-                    Directory.CreateDirectory(directory + "\\Icons\\");
-                }
-                // File.Delete(iconPath);
-
-                var newIconLocation = directory + "Icons\\" + iconFileName;
-                //if (IconPath != newIconLocation)
-                //{
-                //    File.Copy(IconPath, newIconLocation, true);
-                //}
-                data.IconPath = Path.GetRelativePath(directory, directory + "\\Icons\\" + iconFileName);
-            }
+            data.ItemType = currentItemType;      
 
             if (currentItemType == ItemType.Weapon)
             {
@@ -245,23 +231,24 @@ namespace NamelessRogueDataEditor.ViewModels
                 data.ConsumableItemTemplateData = citd;
             }
 
-            data.AssociatedBuffs = AssociatedBuffs.ToList();
-
-            using (TextWriter writer = new StreamWriter(newItemPath))
+            var iconFileName = Path.GetFileName(iconPath);
+            if (!Directory.Exists(directory + "\\Icons\\"))
             {
-                XmlSerializer ser = new XmlSerializer(typeof(ItemTemplateData));
-                ser.Serialize(writer, data);
+                Directory.CreateDirectory(directory + "\\Icons\\");
             }
-        }
+            //move icon to local directory
+            var newIconLocation = directory + "\\Icons\\" + iconFileName;
 
-        private void OnCancel()
-        {
-            // TODO: Handle cancel, e.g. close window or discard changes
-        }
+            if (Path.IsPathFullyQualified(iconPath))
+            {
+                if (iconPath != newIconLocation)
+                {
+                    File.Copy(iconPath, newIconLocation, true);
+                }
+            }
 
-        protected override ItemTemplateData FillDataForSave()
-        {
-            throw new NotImplementedException();
+            data.AssociatedBuffs = AssociatedBuffs.ToList();
+            return data;
         }
 
         protected override void FillDataFromSave(ItemTemplateData data)
