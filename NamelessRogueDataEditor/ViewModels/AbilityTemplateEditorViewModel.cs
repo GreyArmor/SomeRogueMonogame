@@ -101,7 +101,7 @@ namespace NamelessRogueDataEditor.ViewModels
             }
             var selectedFile = AssociatedBuffs[SelectedAssociatedBuffIndex];
             AssociatedBuffs.Remove(selectedFile);
-            if (!AssociatedBuffs.Any() && SelectedFileIndex > 0)
+            if (!AssociatedBuffs.Any() && SelectedAssociatedBuffIndex > 0)
             {
                 SelectedAssociatedBuffIndex--;
             }
@@ -143,7 +143,7 @@ namespace NamelessRogueDataEditor.ViewModels
                 }
             }
             ability.IconPath = Path.GetRelativePath(directory, directory + "\\Icons\\" + iconFileName);
-            IconPath = ability.IconPath;
+            IconPath = newIconLocation;
             return ability;
         }
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ItemTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>basic_armor</Id>
+  <Name>Basic armor</Name>
+  <Description>"Protection"</Description>
+  <Price>20</Price>
+  <ItemType>Armor</ItemType>
+  <ItemQuality>Terrible</ItemQuality>
+  <PossibleSlots>
+    <Slot>Torso</Slot>
+  </PossibleSlots>
+  <ArmorTemplateData>
+    <DamageType>Physical</DamageType>
+    <ArmorValue>3</ArmorValue>
+    <ResistType>Physical</ResistType>
+    <ResistValue>11</ResistValue>
+  </ArmorTemplateData>
+</ItemTemplateData>

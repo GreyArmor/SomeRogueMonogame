@@ -19,181 +19,229 @@
     </UserControl.Resources>
 
       
-        <Grid>
-        <StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="16,0,0,0">
-                <Button Style="{StaticResource DefaultButtonStyle}" Content="Save" IsEnabled="{Binding CanSave}" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
-                <Button Style="{StaticResource DefaultButtonStyle}" Content="Load" Command="{Binding LoadCommand}" Margin="0,16,0,0" Height="32"/>
-                <Button Style="{StaticResource DefaultButtonStyle}" Content="Delete" Command="{Binding DeleteCommand}" Margin="0,16,0,0" Height="32"/>
-            </StackPanel>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"></ColumnDefinition>
-                    <ColumnDefinition Width="1*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <GroupBox Header="Properties" Grid.Column="0">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
-                            <GroupBox Header="Item Details" Margin="0,0,0,0">
-                                <StackPanel Margin="10">
-                                    <Label Content="Id"/>
-                                    <TextBox Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
-                                    <Label Content="Name" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+    <Grid>
+        <ScrollViewer VerticalAlignment="Top" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="16,0,0,0">
+                    <Button Style="{StaticResource DefaultButtonStyle}" Content="Save" IsEnabled="{Binding CanSave}" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
+                    <Button Style="{StaticResource DefaultButtonStyle}" Content="Load" Command="{Binding LoadCommand}" Margin="0,16,0,0" Height="32"/>
+                    <Button Style="{StaticResource DefaultButtonStyle}" Content="Delete" Command="{Binding DeleteCommand}" Margin="0,16,0,0" Height="32"/>
+                </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="Item Details" Grid.Column="0">
+                        <Grid>
+                            <StackPanel>
+                                <GroupBox Margin="0,0,0,0">
+                                    <StackPanel Margin="10">
+                                        <Label Content="Id"/>
+                                        <TextBox Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Label Content="Name" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
 
-                                    <Label Content="Description" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="60"/>
+                                        <Label Content="Description" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="60"/>
 
-                                    <Label Content="Price" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Label Content="Price" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" />
 
-                                    <Label Content="Icon Path" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding IconPath, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Label Content="Icon Path" Margin="0,5,0,0"/>
+                                        <Label Content="{Binding IconPath, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Button Content="Select Icon" Command="{Binding SelectIconCommand}" Margin="0,4,0,0" />
+                                        <Image Source="{Binding IconPath}" Stretch="None"></Image>
 
-                                    <Label Content="Item Type" Margin="0,5,0,0"/>
-                                    <ComboBox ItemsSource="{Binding ItemTypeValues}" SelectedItem="{Binding ItemType}" />
+                                        <Label Content="Item Type" Margin="0,5,0,0"/>
+                                        <ComboBox ItemsSource="{Binding ItemTypeValues}" SelectedItem="{Binding ItemType}" />
 
-                                    <Label Content="Item Quality" Margin="0,5,0,0"/>
-                                    <ComboBox ItemsSource="{Binding ItemQualityValues}" SelectedItem="{Binding ItemQuality}" />
+                                        <Label Content="Item Quality" Margin="0,5,0,0"/>
+                                        <ComboBox ItemsSource="{Binding ItemQualityValues}" SelectedItem="{Binding ItemQuality}" />
 
-                                    <Label Content="Possible Slots" Margin="0,5,0,0"/>
-                                    <ListBox ItemsSource="{Binding PossibleSlots}" Height="60" />
+                                        <TextBlock Text="Possible slots:" Margin="0,8,0,0"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <ListBox Grid.Column="0" ItemsSource="{Binding PossibleSlots}" SelectedIndex="{Binding SelectedPossibleSLot, Mode=OneWay}" Height="200">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="5">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="200" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Button Grid.Column="0" Content="-" Margin="0,0,20,0" Width="30" Command="{Binding DataContext.RemoveSlotCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
+
+                                                            <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+
+                                            <ListBox Grid.Column="1" ItemsSource="{x:Static vm:SlotValues.All}" Height="200">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="5">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="Auto" />
+
+                                                            </Grid.ColumnDefinitions>
+                                                            <Button Grid.Column="0" Content="+" Width="30" Margin="0,0,20,0" Command="{Binding DataContext.AddSlotCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
+
+                                                            <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" />
+
+
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+
+                                        </Grid>
+
+                                    </StackPanel>
+                                </GroupBox>
+
+                                <GroupBox Header="Weapon Template Data" Margin="0,0,0,10">
+                                    <GroupBox.Style>
+                                        <Style TargetType="GroupBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <!-- Default state -->
+                                            <Style.Triggers>
+                                                <!-- When ItemType equals 'Weapon', set Visibility to Visible -->
+                                                <DataTrigger Binding="{Binding ItemType}" Value="Weapon">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </GroupBox.Style>
+                                    <StackPanel Margin="10">
+                                        <Label Content="Minimum Damage"/>
+                                        <TextBox Text="{Binding WeaponTemplateData.MinimumDamage, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <Label Content="Maximum Damage" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding WeaponTemplateData.MaximumDamage, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <Label Content="Range" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding WeaponTemplateData.Range, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <Label Content="Attack Type" Margin="0,5,0,0"/>
+                                        <ComboBox ItemsSource="{Binding AttackTypeValues}" SelectedItem="{Binding WeaponTemplateData.AttackType}" />
+
+                                        <Label Content="Damage Type" Margin="0,5,0,0"/>
+                                        <ComboBox ItemsSource="{Binding DamageTypeValues}" SelectedItem="{Binding WeaponTemplateData.DamageType}" />
+
+                                        <Label Content="Ammo Type" Margin="0,5,0,0"/>
+                                        <ComboBox ItemsSource="{Binding AmmoTypeValues}" SelectedItem="{Binding WeaponTemplateData.AmmoType}" />
+
+                                        <Label Content="Ammo In Clip" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding WeaponTemplateData.AmmoInClip, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                </GroupBox>
+
+                                <GroupBox Header="Armor Template Data" Margin="0,0,0,10">
+                                    <GroupBox.Style>
+                                        <Style TargetType="GroupBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <!-- Default state -->
+                                            <Style.Triggers>
+                                                <!-- When ItemType equals 'Weapon', set Visibility to Visible -->
+                                                <DataTrigger Binding="{Binding ItemType}" Value="Armor">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </GroupBox.Style>
+                                    <StackPanel Margin="10">
+                                        <Label Content="Damage Type"/>
+                                        <ComboBox ItemsSource="{Binding DamageTypeValues}" SelectedItem="{Binding ArmorTemplateData.DamageType}" />
+
+                                        <Label Content="Armor Value" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding ArmorTemplateData.ArmorValue, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <Label Content="Resist Type" Margin="0,5,0,0"/>
+                                        <ComboBox ItemsSource="{Binding DamageTypeValues}" SelectedItem="{Binding ArmorTemplateData.ResistType}" />
+
+                                        <Label Content="Resist Value" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding ArmorTemplateData.ResistValue, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                </GroupBox>
+
+                                <GroupBox Header="Consumable Item Template Data" Margin="0,0,0,10">
+                                    <GroupBox.Style>
+                                        <Style TargetType="GroupBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <!-- Default state -->
+                                            <Style.Triggers>
+                                                <!-- When ItemType equals 'Weapon', set Visibility to Visible -->
+                                                <DataTrigger Binding="{Binding ItemType}" Value="Consumable">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </GroupBox.Style>
+                                    <StackPanel Margin="10">
+                                        <Label Content="Charges"/>
+                                        <TextBox Text="{Binding ConsumableItemTemplateData.Charges, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <Label Content="Duration" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding ConsumableItemTemplateData.Duration, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <CheckBox Content="Is Throwable" IsChecked="{Binding ConsumableItemTemplateData.IsThrowable}" Margin="0,5,0,0"/>
+                                        <CheckBox Content="Is Applied Immediately" IsChecked="{Binding ConsumableItemTemplateData.IsAppliedImmediately}" />
+                                        <CheckBox Content="Is Damage Over Time" IsChecked="{Binding ConsumableItemTemplateData.IsDamageOverTime}" />
+
+                                        <Label Content="Health Modificator" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding ConsumableItemTemplateData.HealthModificator, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <Label Content="Energy Modificator" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding ConsumableItemTemplateData.EnergyModificator, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <Label Content="Armor Modificator" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding ConsumableItemTemplateData.ArmorModificator, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <Label Content="Resistance Modificator" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding ConsumableItemTemplateData.ResistanceModificator, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <Label Content="Damage Modificator" Margin="0,5,0,0"/>
+                                        <TextBox Text="{Binding ConsumableItemTemplateData.DamageModificator, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                </GroupBox>
+                                <TextBlock Text="Associated Buffs:" Margin="0,8,0,0"/>
+                                <ListBox ItemsSource="{Binding AssociatedBuffs}" SelectedIndex="{Binding SelectedSlotIndex}" Height="80">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Width="100" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
+                                                <TextBox Width="200" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Add" Margin="0,2,0,0" Command="{Binding AddAssociatedBuffCommand}" />
+                                    <Button Content="Remove" Margin="0,2,0,0" Command="{Binding RemoveAssociatedBuffCommand}" />
                                 </StackPanel>
-                            </GroupBox>
-
-                            <GroupBox Header="Weapon Template Data" Margin="0,0,0,10">
-                                <GroupBox.Style>
-                                    <Style TargetType="GroupBox">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <!-- Default state -->
-                                        <Style.Triggers>
-                                            <!-- When ItemType equals 'Weapon', set Visibility to Visible -->
-                                            <DataTrigger Binding="{Binding ItemType}" Value="Weapon">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </GroupBox.Style>
-                                <StackPanel Margin="10">
-                                    <Label Content="Minimum Damage"/>
-                                    <TextBox Text="{Binding WeaponTemplateData.MinimumDamage, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <Label Content="Maximum Damage" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding WeaponTemplateData.MaximumDamage, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <Label Content="Range" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding WeaponTemplateData.Range, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <Label Content="Attack Type" Margin="0,5,0,0"/>
-                                    <ComboBox ItemsSource="{Binding AttackTypeValues}" SelectedItem="{Binding WeaponTemplateData.AttackType}" />
-
-                                    <Label Content="Damage Type" Margin="0,5,0,0"/>
-                                    <ComboBox ItemsSource="{Binding DamageTypeValues}" SelectedItem="{Binding WeaponTemplateData.DamageType}" />
-
-                                    <Label Content="Ammo Type" Margin="0,5,0,0"/>
-                                    <ComboBox ItemsSource="{Binding AmmoTypeValues}" SelectedItem="{Binding WeaponTemplateData.AmmoType}" />
-
-                                    <Label Content="Ammo In Clip" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding WeaponTemplateData.AmmoInClip, UpdateSourceTrigger=PropertyChanged}" />
-                                </StackPanel>
-                            </GroupBox>
-
-                            <GroupBox Header="Armor Template Data" Margin="0,0,0,10">
-                                <GroupBox.Style>
-                                    <Style TargetType="GroupBox">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <!-- Default state -->
-                                        <Style.Triggers>
-                                            <!-- When ItemType equals 'Weapon', set Visibility to Visible -->
-                                            <DataTrigger Binding="{Binding ItemType}" Value="Armor">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </GroupBox.Style>
-                                <StackPanel Margin="10">
-                                    <Label Content="Damage Type"/>
-                                    <ComboBox ItemsSource="{Binding DamageTypeValues}" SelectedItem="{Binding ArmorTemplateData.DamageType}" />
-
-                                    <Label Content="Armor Value" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding ArmorTemplateData.ArmorValue, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <Label Content="Resist Type" Margin="0,5,0,0"/>
-                                    <ComboBox ItemsSource="{Binding DamageTypeValues}" SelectedItem="{Binding ArmorTemplateData.ResistType}" />
-
-                                    <Label Content="Resist Value" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding ArmorTemplateData.ResistValue, UpdateSourceTrigger=PropertyChanged}" />
-                                </StackPanel>
-                            </GroupBox>
-
-                            <GroupBox Header="Consumable Item Template Data" Margin="0,0,0,10">
-                                <GroupBox.Style>
-                                    <Style TargetType="GroupBox">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <!-- Default state -->
-                                        <Style.Triggers>
-                                            <!-- When ItemType equals 'Weapon', set Visibility to Visible -->
-                                            <DataTrigger Binding="{Binding ItemType}" Value="Consumable">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </GroupBox.Style>
-                                <StackPanel Margin="10">
-                                    <Label Content="Charges"/>
-                                    <TextBox Text="{Binding ConsumableItemTemplateData.Charges, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <Label Content="Duration" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding ConsumableItemTemplateData.Duration, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <CheckBox Content="Is Throwable" IsChecked="{Binding ConsumableItemTemplateData.IsThrowable}" Margin="0,5,0,0"/>
-                                    <CheckBox Content="Is Applied Immediately" IsChecked="{Binding ConsumableItemTemplateData.IsAppliedImmediately}" />
-                                    <CheckBox Content="Is Damage Over Time" IsChecked="{Binding ConsumableItemTemplateData.IsDamageOverTime}" />
-
-                                    <Label Content="Health Modificator" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding ConsumableItemTemplateData.HealthModificator, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <Label Content="Energy Modificator" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding ConsumableItemTemplateData.EnergyModificator, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <Label Content="Armor Modificator" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding ConsumableItemTemplateData.ArmorModificator, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <Label Content="Resistance Modificator" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding ConsumableItemTemplateData.ResistanceModificator, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <Label Content="Damage Modificator" Margin="0,5,0,0"/>
-                                    <TextBox Text="{Binding ConsumableItemTemplateData.DamageModificator, UpdateSourceTrigger=PropertyChanged}" />
-                                </StackPanel>
-                            </GroupBox>
-
-                            <TextBlock Text="Associated Buffs:" Margin="0,8,0,0"/>
-                            <ListBox ItemsSource="{Binding AssociatedBuffs}" SelectedIndex="{Binding SelectedAssociatedBuffIndex}" Height="80">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBox Width="100" Text="{Binding BuffId, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
-                                            <TextBox Width="200" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            <StackPanel Orientation="Horizontal">
-                                <Button Content="Add" Margin="0,2,0,0" Command="{Binding AddAssociatedBuffCommand}" />
-                                <Button Content="Remove" Margin="0,2,0,0" Command="{Binding RemoveAssociatedBuffCommand}" />
                             </StackPanel>
-                        </StackPanel>
-                    </ScrollViewer>
-                </GroupBox>
-                <ScrollViewer Grid.Column="1">
-                    <GroupBox Header="Files" Margin="0,0,0,10">
-                        <StackPanel>
-                            <ListBox ItemsSource="{Binding EditorFileNames}"  SelectedIndex="{Binding SelectedFileIndex, Mode=TwoWay}"></ListBox>
-                        </StackPanel>
+
+                        </Grid>
                     </GroupBox>
-                </ScrollViewer>
-            </Grid>
-        </StackPanel>
+                    <ScrollViewer Grid.Column="1">
+                        <GroupBox Header="Files" Margin="0,0,0,10">
+                            <StackPanel>
+                                <ListBox ItemsSource="{Binding EditorFileNames}"  SelectedIndex="{Binding SelectedFileIndex, Mode=TwoWay}"></ListBox>
+                            </StackPanel>
+                        </GroupBox>
+                    </ScrollViewer>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 
 </UserControl>

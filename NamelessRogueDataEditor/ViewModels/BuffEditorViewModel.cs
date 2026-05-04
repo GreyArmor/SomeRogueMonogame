@@ -56,11 +56,6 @@ namespace NamelessRogueDataEditor.ViewModels
             buff = new BuffTemplateData();       
             PropertyChanged += (s, e) => { CanSave = !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(IconPath) && !string.IsNullOrEmpty(Id); };
         }    
-        [RelayCommand]
-        public void SelectIcon()
-        {
-            IconPath = _selectFile("*.png;*.jpg", "Select an icon");
-        }
 
         protected override BuffTemplateData FillDataForSave()
         {
@@ -97,7 +92,7 @@ namespace NamelessRogueDataEditor.ViewModels
                 }
             }
             buff.IconPath = Path.GetRelativePath(directory, directory + "\\Icons\\" + iconFileName);
-            IconPath = buff.IconPath;
+            IconPath = newIconLocation;
             return buff;
         }
 

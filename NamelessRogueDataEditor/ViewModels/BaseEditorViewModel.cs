@@ -80,6 +80,11 @@ namespace NamelessRogueDataEditor.ViewModels
             return result;
         }
 
+        [RelayCommand]
+        public void SelectIcon()
+        {
+            IconPath = _selectFile("*.png;*.jpg", "Select an icon");
+        }
 
         protected abstract ObjectDataType FillDataForSave();
         protected abstract void FillDataFromSave(ObjectDataType data);

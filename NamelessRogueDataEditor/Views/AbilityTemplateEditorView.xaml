@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NamelessRogueDataEditor.ViewModels"
         mc:Ignorable="d"
         Height="Auto" Width="Auto">
-
+    
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,133 +20,137 @@
     </UserControl.DataContext>
 
     <Grid>
-        <StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="16,0,0,0">
-                <Button Style="{StaticResource DefaultButtonStyle}" Content="Save" IsEnabled="{Binding CanSave}" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
-                <Button Style="{StaticResource DefaultButtonStyle}" Content="Load" Command="{Binding LoadCommand}" Margin="0,16,0,0" Height="32"/>
-                <Button Style="{StaticResource DefaultButtonStyle}" Content="Delete" Command="{Binding DeleteCommand}" Margin="0,16,0,0" Height="32"/>
-            </StackPanel>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"></ColumnDefinition>
-                    <ColumnDefinition Width="1*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <GroupBox Header="Properties" Grid.Column="0">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                        <StackPanel>
-                        <TextBlock Text="Id:"/>
-                        <TextBox Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock Text="Name:"/>
-                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+        <ScrollViewer VerticalAlignment="Top" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="16,0,0,0">
+                    <Button Style="{StaticResource DefaultButtonStyle}" Content="Save" IsEnabled="{Binding CanSave}" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
+                    <Button Style="{StaticResource DefaultButtonStyle}" Content="Load" Command="{Binding LoadCommand}" Margin="0,16,0,0" Height="32"/>
+                    <Button Style="{StaticResource DefaultButtonStyle}" Content="Delete" Command="{Binding DeleteCommand}" Margin="0,16,0,0" Height="32"/>
+                </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="Properties" Grid.Column="0">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="Id:"/>
+                                <TextBox Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="Name:"/>
+                                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
 
-                        <TextBlock Text="Description:" Margin="0,8,0,0"/>
-                        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="Description:" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
 
-                        <TextBlock Text="Icon Path:" Margin="0,8,0,0"/>
-                        <TextBox Text="{Binding IconPath, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="Icon Path:" Margin="0,8,0,0"/>
+                                <Label Content="{Binding IconPath, UpdateSourceTrigger=PropertyChanged}" />
+                                <Button Content="Select Icon" Command="{Binding SelectIconCommand}" Margin="0,4,0,0" />
+                                <Image Source="{Binding IconPath}"></Image>
 
-                        <TextBlock Text="Action Points Cost:" Margin="0,8,0,0"/>
-                        <TextBox Text="{Binding ActionPointsCost, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="Action Points Cost:" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding ActionPointsCost, UpdateSourceTrigger=PropertyChanged}" />
 
-                        <TextBlock Text="Energy Cost:" Margin="0,8,0,0"/>
-                        <TextBox Text="{Binding EnergyCost, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="Energy Cost:" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding EnergyCost, UpdateSourceTrigger=PropertyChanged}" />
 
-                        <TextBlock Text="Target Mode:" Margin="0,8,0,0"/>
-                        <ComboBox SelectedValue="{Binding TargetMode, Mode=TwoWay}" ItemsSource="{x:Static local:TargetModeValues.All}" />
+                                <TextBlock Text="Target Mode:" Margin="0,8,0,0"/>
+                                <ComboBox SelectedValue="{Binding TargetMode, Mode=TwoWay}" ItemsSource="{x:Static local:TargetModeValues.All}" />
 
-                        <TextBlock Text="Activation Mode:" Margin="0,8,0,0"/>
-                        <ComboBox SelectedValue="{Binding ActivationMode, Mode=TwoWay}" ItemsSource="{x:Static local:ActivationModeValues.All}" />
-                        <TextBlock Text="Area Of Effect:" Margin="0,8,0,0"/>
-                        <TextBox Text="{Binding AreaOfEffect, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="Activation Mode:" Margin="0,8,0,0"/>
+                                <ComboBox SelectedValue="{Binding ActivationMode, Mode=TwoWay}" ItemsSource="{x:Static local:ActivationModeValues.All}" />
+                                <TextBlock Text="Area Of Effect:" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding AreaOfEffect, UpdateSourceTrigger=PropertyChanged}" />
 
-                        <CheckBox Content="Is Active" IsChecked="{Binding Ability.IsActive}" Margin="0,8,0,0"/>
+                                <CheckBox Content="Is Active" IsChecked="{Binding Ability.IsActive}" Margin="0,8,0,0"/>
 
-                        <TextBlock Text="Range:" Margin="0,8,0,0"/>
-                        <TextBox Text="{Binding Range, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="Range:" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding Range, UpdateSourceTrigger=PropertyChanged}" />
 
-                        <TextBlock Text="Cooldown Turns:" Margin="0,8,0,0"/>
-                        <TextBox Text="{Binding CooldownTurns, UpdateSourceTrigger=PropertyChanged}" />
-                       
-                       
-                        <TextBlock Text="Associated Buffs:" Margin="0,8,0,0"/>
-                        <ListBox ItemsSource="{Binding AssociatedBuffs}" SelectedIndex="{Binding SelectedAssociatedBuffIndex}" Height="80">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBox Width="100" Text="{Binding BuffId, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
-                                        <TextBox Width="200" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="Add" Margin="0,2,0,0" Command="{Binding AddAssociatedBuffCommand}" />
-                            <Button Content="Remove" Margin="0,2,0,0" Command="{Binding RemoveAssociatedBuffCommand}" />
-                        </StackPanel>
+                                <TextBlock Text="Cooldown Turns:" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding CooldownTurns, UpdateSourceTrigger=PropertyChanged}" />
 
-                        <TextBlock Text="Ability action:" Margin="0,8,0,0"/>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <ListBox Grid.Column="0" ItemsSource="{Binding AbilityActions}" SelectedIndex="{Binding SelectedAbilityActionIndex, Mode=OneWay}" Height="200">
+
+                                <TextBlock Text="Associated Buffs:" Margin="0,8,0,0"/>
+                                <ListBox ItemsSource="{Binding AssociatedBuffs}" SelectedIndex="{Binding SelectedAssociatedBuffIndex}" Height="80">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid Margin="5">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-
-                                                <Button Grid.Column="0" Content="-" Margin="0,0,20,0" Width="30" Command="{Binding DataContext.RemoveAbilityActionCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
-
-                                                <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" />
-
-                                                <Button Grid.Column="2" Content="^" Width="30" Margin="0,0,10,0" Command="{Binding DataContext.AbilityActionUpCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
-                                                <Button Grid.Column="3" Content="⌄" Width="30" Margin="0,0,10,0" Command="{Binding DataContext.AbilityActionDownCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
-
-
-                                            </Grid>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Width="100" Text="{Binding BuffId, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
+                                                <TextBox Width="200" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" />
+                                            </StackPanel>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Add" Margin="0,2,0,0" Command="{Binding AddAssociatedBuffCommand}" />
+                                    <Button Content="Remove" Margin="0,2,0,0" Command="{Binding RemoveAssociatedBuffCommand}" />
+                                </StackPanel>
 
-                                <ListBox Grid.Column="1" ItemsSource="{Binding AbilityActionsEnumValue}" Height="200">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid Margin="5">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                 
-                                                </Grid.ColumnDefinitions>
-                                                <Button Grid.Column="0" Content="+" Width="30" Margin="0,0,20,0" Command="{Binding DataContext.AddAbilityActionCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
+                                <TextBlock Text="Ability action:" Margin="0,8,0,0"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ListBox Grid.Column="0" ItemsSource="{Binding AbilityActions}" SelectedIndex="{Binding SelectedAbilityActionIndex, Mode=OneWay}" Height="200">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="5">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="200" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
 
-                                                <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" />
-                                             
+                                                    <Button Grid.Column="0" Content="-" Margin="0,0,20,0" Width="30" Command="{Binding DataContext.RemoveAbilityActionCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
 
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
+                                                    <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" />
 
-                            </Grid>
-                        </StackPanel>
-                    </ScrollViewer>
-                </GroupBox>
-            
-                <ScrollViewer Grid.Column="1">
-                    <GroupBox Header="Files" Margin="0,0,0,10">
-                        <StackPanel>
-                            <ListBox ItemsSource="{Binding EditorFileNames}"  SelectedIndex="{Binding SelectedFileIndex, Mode=TwoWay}"></ListBox>
-                        </StackPanel>
+                                                    <Button Grid.Column="2" Content="^" Width="30" Margin="0,0,10,0" Command="{Binding DataContext.AbilityActionUpCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
+                                                    <Button Grid.Column="3" Content="⌄" Width="30" Margin="0,0,10,0" Command="{Binding DataContext.AbilityActionDownCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
+
+
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                    <ListBox Grid.Column="1" ItemsSource="{x:Static local:AbilityActionValues.All}" Height="200">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="5">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+
+                                                    </Grid.ColumnDefinitions>
+                                                    <Button Grid.Column="0" Content="+" Width="30" Margin="0,0,20,0" Command="{Binding DataContext.AddAbilityActionCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
+
+                                                    <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" />
+
+
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                </Grid>
+                            </StackPanel>
+                        </ScrollViewer>
                     </GroupBox>
-                </ScrollViewer>
-            </Grid>
-        </StackPanel>
+
+                    <ScrollViewer Grid.Column="1">
+                        <GroupBox Header="Files" Margin="0,0,0,10">
+                            <StackPanel>
+                                <ListBox ItemsSource="{Binding EditorFileNames}"  SelectedIndex="{Binding SelectedFileIndex, Mode=TwoWay}"></ListBox>
+                            </StackPanel>
+                        </GroupBox>
+                    </ScrollViewer>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>   
     
 </UserControl>

@@ -8,9 +8,11 @@ namespace NamelessRogueDataEditor.ViewModels
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using NamelessRogue.Engine.Components.Interaction;
     using NamelessRogue.Engine.Components.ItemComponents;
     using NamelessRogue.Engine.Components.Stats;
     using NamelessRogue.Engine.Generation.Editor;
+    using NamelessRogue.Engine.Serialization;
     using System;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
@@ -35,9 +37,6 @@ namespace NamelessRogueDataEditor.ViewModels
         ObservableCollection<AmmoType> ammoTypeValues = new ObservableCollection<AmmoType>(Enum.GetValues<AmmoType>());
         //[ObservableProperty]
         //ObservableCollection<ItemType> itemTypeValues = new ObservableCollection<ItemType>(Enum.GetValues<ItemType>());
-
-        [ObservableProperty]
-        private string id;
 
         [ObservableProperty]
         private string name;
@@ -68,37 +67,16 @@ namespace NamelessRogueDataEditor.ViewModels
         [ObservableProperty]
         private ObservableCollection<FileReference> associatedBuffs = new ObservableCollection<FileReference>();
 
+        [ObservableProperty]
+        private int selectedAssociatedBuffIndex = 0;
+        [ObservableProperty]
+        private int selectedSlotIndex = 0;
 
-        string contentDirectoryPath;
-
-        public ItemEditorViewModel(ItemTemplateData item) : base("*.nrif", "")
+        public ItemEditorViewModel() : base("*.nrif","")
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-
-            Id = item.Id;
-            Name = item.Name;
-            Description = item.Description;
-            Price = item.Price;
-            IconPath = item.IconPath;
-            ItemType = item.ItemType;
-            ItemQuality = item.ItemQuality;
-
-            PossibleSlots.Clear();
-            if (item.PossibleSlots != null)
-                foreach (var slot in item.PossibleSlots)
-                    PossibleSlots.Add(slot);
-
-            WeaponTemplateData = item.WeaponTemplateData != null ? CloneWeaponTemplateData(item.WeaponTemplateData) : new WeaponTemplateData();
-            ArmorTemplateData = item.ArmorTemplateData != null ? CloneArmorTemplateData(item.ArmorTemplateData) : new ArmorTemplateData();
-            ConsumableItemTemplateData = item.ConsumableItemTemplateData != null ? CloneConsumableItemTemplateData(item.ConsumableItemTemplateData) : new ConsumableItemTemplateData();
-
-            AssociatedBuffs.Clear();
-            if (item.AssociatedBuffs != null)
-                foreach (var buff in item.AssociatedBuffs)
-                    AssociatedBuffs.Add(buff);
+            PropertyChanged += (s, e) => { CanSave = !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(IconPath) && !string.IsNullOrEmpty(Id); };
         }
 
-        // Implement cloning methods for deep copies to allow editing without mutating original instance
         private WeaponTemplateData CloneWeaponTemplateData(WeaponTemplateData source) =>
             new WeaponTemplateData
             {
@@ -156,22 +134,22 @@ namespace NamelessRogueDataEditor.ViewModels
             switch (itemType)
             {
                 case ItemType.Weapon:
-                    directory = contentDirectoryPath + "\\GameObjects\\Weapons\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Weapons\\";
                     break;
                 case ItemType.Armor:
-                    directory = contentDirectoryPath + "\\GameObjects\\Armor\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Armor\\";
                     break;
                 case ItemType.Consumable:
-                    directory = contentDirectoryPath + "\\GameObjects\\Consumable\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Consumable\\";
                     break;
                 case ItemType.Supplies:
-                    directory = contentDirectoryPath + "\\GameObjects\\Supplies\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Supplies\\";
                     break;
                 case ItemType.Ammo:
-                    directory = contentDirectoryPath + "\\GameObjects\\Ammo\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Ammo\\";
                     break;
                 case ItemType.Misc:
-                    directory = contentDirectoryPath + "\\GameObjects\\Misc\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Misc\\";
                     break;
             }
             return directory;
@@ -181,7 +159,7 @@ namespace NamelessRogueDataEditor.ViewModels
         {
             var directory = GetItemDirectory();
             var currentItemType = itemType;
-            var newItemPath = directory + name + ".nrif";
+            var newItemPath = directory + id + ".nrif";
             if (File.Exists(newItemPath))
             {
                 TextReader reader = null;
@@ -252,8 +230,115 @@ namespace NamelessRogueDataEditor.ViewModels
         }
 
         protected override void FillDataFromSave(ItemTemplateData data)
+        {         
+            Id = data.Id;
+            Name = data.Name;
+            Description = data.Description;
+            Price = data.Price;
+            ItemType = data.ItemType;
+            ItemQuality = data.ItemQuality;
+
+            PossibleSlots.Clear();
+            if (data.PossibleSlots != null)
+            {
+                foreach (var slot in data.PossibleSlots)
+                {
+                    PossibleSlots.Add(slot);
+                }
+            }
+          
+            WeaponTemplateData = data.WeaponTemplateData != null
+                ? CloneWeaponTemplateData(data.WeaponTemplateData)
+                : new WeaponTemplateData();
+
+            ArmorTemplateData = data.ArmorTemplateData != null
+                ? CloneArmorTemplateData(data.ArmorTemplateData)
+                : new ArmorTemplateData();
+
+            ConsumableItemTemplateData = data.ConsumableItemTemplateData != null
+                ? CloneConsumableItemTemplateData(data.ConsumableItemTemplateData)
+                : new ConsumableItemTemplateData();
+   
+            AssociatedBuffs.Clear();
+            if (data.AssociatedBuffs != null)
+            {
+                foreach (var buff in data.AssociatedBuffs)
+                {
+                    AssociatedBuffs.Add(buff);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(data.IconPath))
+            {
+                var resolved = data.IconPath;
+                try
+                {
+                    if (!Path.IsPathFullyQualified(resolved))
+                    {
+                        var baseDir = string.IsNullOrEmpty(editorPath) ? Directory.GetCurrentDirectory() : editorPath;
+                        resolved = Path.GetFullPath(Path.Combine(baseDir, data.IconPath));
+                    }
+                }
+                catch
+                {
+                    resolved = data.IconPath;
+                }
+
+                IconPath = resolved;
+            }
+            else
+            {
+                IconPath = string.Empty;
+            }
+        }
+
+        [RelayCommand]
+        public void AddSlot(Slot slot)
         {
-            throw new NotImplementedException();
+            if (!PossibleSlots.Contains(slot))
+            {
+                PossibleSlots.Add(slot);
+            }
+        }
+        [RelayCommand]
+        public void RemoveSlot(Slot slot)
+        {
+            PossibleSlots.Remove(slot);
+        }
+
+        [RelayCommand]
+        private void AddAssociatedBuff()
+        {
+            var file = this._selectFile("*.nrbf", "Select a buff to associate");
+            if (!string.IsNullOrEmpty(file) && File.Exists(file))
+            {
+                string buffId;
+                var serializer = new System.Xml.Serialization.XmlSerializer(typeof(BuffTemplateData));
+                using (FileStream fs = new(file, FileMode.Open))
+                {
+                    buffId = ((BuffTemplateData)serializer.Deserialize(fs)).Id ?? string.Empty;
+                }
+
+                var relativePath = Path.GetRelativePath(editorPath, file);
+                AssociatedBuffs.Add(new FileReference { Id = buffId, Path = relativePath });
+
+            }
+        }
+
+        [RelayCommand]
+        public virtual void RemoveAssociatedBuff()
+        {
+            if (!AssociatedBuffs.Any())
+            {
+                return;
+            }
+            var selectedFile = AssociatedBuffs[SelectedAssociatedBuffIndex];
+            AssociatedBuffs.Remove(selectedFile);
+            if (!AssociatedBuffs.Any() && SelectedAssociatedBuffIndex > 0)
+            {
+                SelectedAssociatedBuffIndex--;
+            }
+
         }
     }
 }

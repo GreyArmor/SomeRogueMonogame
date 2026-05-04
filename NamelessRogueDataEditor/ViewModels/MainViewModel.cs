@@ -27,7 +27,7 @@ namespace NamelessRogueDataEditor.ViewModels
             TabItems = new ObservableCollection<object> {
             new BuffEditorViewModel { HeaderName = "Buff" },
             new AbilityTemplateEditorViewModel { HeaderName = "Ability" },
-            new ItemEditorViewModel(new NamelessRogue.Engine.Generation.Editor.ItemTemplateData()) { HeaderName = "Item" },
+            new ItemEditorViewModel() { HeaderName = "Item" },
             new CharacterViewModel { HeaderName = "Character" },
     
         };
