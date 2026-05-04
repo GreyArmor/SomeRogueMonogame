@@ -134,22 +134,22 @@ namespace NamelessRogueDataEditor.ViewModels
             switch (itemType)
             {
                 case ItemType.Weapon:
-                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Weapons\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "GameObjects\\Weapons\\";
                     break;
                 case ItemType.Armor:
-                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Armor\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "GameObjects\\Armor\\";
                     break;
                 case ItemType.Consumable:
-                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Consumable\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "GameObjects\\Consumable\\";
                     break;
                 case ItemType.Supplies:
-                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Supplies\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "GameObjects\\Supplies\\";
                     break;
                 case ItemType.Ammo:
-                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Ammo\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "GameObjects\\Ammo\\";
                     break;
                 case ItemType.Misc:
-                    directory = ContentDirectoryHelper.contentDirectoryPath + "\\GameObjects\\Misc\\";
+                    directory = ContentDirectoryHelper.contentDirectoryPath + "GameObjects\\Misc\\";
                     break;
             }
             return directory;
@@ -210,12 +210,12 @@ namespace NamelessRogueDataEditor.ViewModels
             }
 
             var iconFileName = Path.GetFileName(iconPath);
-            if (!Directory.Exists(directory + "\\Icons\\"))
+            if (!Directory.Exists(directory + "Icons\\"))
             {
-                Directory.CreateDirectory(directory + "\\Icons\\");
+                Directory.CreateDirectory(directory + "Icons\\");
             }
             //move icon to local directory
-            var newIconLocation = directory + "\\Icons\\" + iconFileName;
+            var newIconLocation = directory + "Icons\\" + iconFileName;
 
             if (Path.IsPathFullyQualified(iconPath))
             {
@@ -224,13 +224,17 @@ namespace NamelessRogueDataEditor.ViewModels
                     File.Copy(iconPath, newIconLocation, true);
                 }
             }
+            data.IconPath = Path.GetRelativePath(directory, directory + "Icons\\" + iconFileName);
+            IconPath = newIconLocation;
 
             data.AssociatedBuffs = AssociatedBuffs.ToList();
             return data;
         }
 
         protected override void FillDataFromSave(ItemTemplateData data)
-        {         
+        {
+            var directory = GetItemDirectory();
+
             Id = data.Id;
             Name = data.Name;
             Description = data.Description;
@@ -275,7 +279,7 @@ namespace NamelessRogueDataEditor.ViewModels
                 {
                     if (!Path.IsPathFullyQualified(resolved))
                     {
-                        var baseDir = string.IsNullOrEmpty(editorPath) ? Directory.GetCurrentDirectory() : editorPath;
+                        var baseDir = directory;
                         resolved = Path.GetFullPath(Path.Combine(baseDir, data.IconPath));
                     }
                 }

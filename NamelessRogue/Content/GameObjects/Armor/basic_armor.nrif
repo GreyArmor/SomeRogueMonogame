@@ -4,6 +4,7 @@
   <Name>Basic armor</Name>
   <Description>"Protection"</Description>
   <Price>20</Price>
+  <IconPath>Icons\helmet.png</IconPath>
   <ItemType>Armor</ItemType>
   <ItemQuality>Terrible</ItemQuality>
   <PossibleSlots>

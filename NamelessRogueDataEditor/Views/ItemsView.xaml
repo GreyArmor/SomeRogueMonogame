@@ -8,7 +8,7 @@
              xmlns:vm="clr-namespace:NamelessRogueDataEditor.ViewModels"
              xmlns:itemComp ="clr-namespace:NamelessRogue.Engine.Components.ItemComponents;assembly=NamelessRogue"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
