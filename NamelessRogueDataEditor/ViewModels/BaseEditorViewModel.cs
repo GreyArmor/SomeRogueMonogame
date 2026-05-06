@@ -28,7 +28,7 @@ namespace NamelessRogueDataEditor.ViewModels
 
         protected List<string> editorFiles;
         [ObservableProperty]
-        public  List<string> editorFileNames;
+        public List<string> editorFileNames;
         [ObservableProperty]
         public int selectedFileIndex;
         public string editorPath;
@@ -46,7 +46,7 @@ namespace NamelessRogueDataEditor.ViewModels
         /// <param name="filesDirectory">Example: "Buffs" will work with "NamelessRogue\\Content\\GameObjects\\Buffs</param>
         public BaseEditorViewModel(string fileType, string filesDirectory)
         {
-            ReloadFiles(fileType, filesDirectory);  
+            ReloadFiles(fileType, filesDirectory);
         }
 
         protected void ReloadFiles(string fileType, string filesDirectory)
@@ -58,13 +58,16 @@ namespace NamelessRogueDataEditor.ViewModels
             FilesDirectory = filesDirectory;
         }
 
-        protected string _selectFile(string extensions = "*.png;*.jpg", string title = "Select a file")
+        protected string _selectFile(string extensions = "*.png;*.jpg", string title = "Select a file", string directory = "")
         {
             var result = string.Empty;
             OpenFileDialog fileDialog = new OpenFileDialog();
-            var dir = ContentDirectoryHelper.contentDirectoryPath;
-            Directory.CreateDirectory(dir);
-            fileDialog.InitialDirectory = dir;
+            if (directory == null || directory == string.Empty)
+            {
+                directory = ContentDirectoryHelper.contentDirectoryPath;
+            }           
+            Directory.CreateDirectory(directory);
+            fileDialog.InitialDirectory = directory;
             fileDialog.Filter = "Files|"+ extensions;
             fileDialog.Title = title;
 

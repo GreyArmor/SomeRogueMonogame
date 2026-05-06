@@ -1,11 +1,11 @@
 ﻿<UserControl x:Class="NamelessRogueDataEditor.Views.CharacterView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:NamelessRogueDataEditor"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:NamelessRogueDataEditor.ViewModels"
+             mc:Ignorable="d"
+             Height="Auto" Width="Auto">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,12 +13,135 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <local:CharacterViewModel/>
+    </UserControl.DataContext>
+
     <Grid>
-        <StackPanel>
-            <Button>Test</Button>
-            <Button>Test</Button>
-            <Button>Test</Button>
-            <Button>Test</Button>
-        </StackPanel>
+        <ScrollViewer VerticalAlignment="Top" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="16,0,0,0">
+                    <Button Style="{StaticResource DefaultButtonStyle}" Content="Save" IsEnabled="{Binding CanSave}" Command="{Binding SaveCommand}" Margin="0,16,0,0" Height="32"/>
+                    <Button Style="{StaticResource DefaultButtonStyle}" Content="Load" Command="{Binding LoadCommand}" Margin="8,16,0,0" Height="32"/>
+                    <Button Style="{StaticResource DefaultButtonStyle}" Content="Delete" Command="{Binding DeleteCommand}" Margin="8,16,0,0" Height="32"/>
+                </StackPanel>
+
+                <Grid Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox Header="Properties" Grid.Column="0" Margin="8">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                            <StackPanel Margin="8">
+                                <TextBlock Text="Id:"/>
+                                <TextBox Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Text="Name:" Margin="0,6,0,0"/>
+                                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Text="Description:" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="60" TextWrapping="Wrap"/>
+
+                                <TextBlock Text="Sprite Path:" Margin="0,8,0,0"/>
+                                <Label Content="{Binding SpritePath, UpdateSourceTrigger=PropertyChanged}" />
+                                <Button Content="Select Sprite" Command="{Binding SelectSpriteCommand}" Margin="0,4,0,0" />
+                                <Image Source="{Binding SpritePath}" Height="96" Margin="0,4,0,0" />
+
+                                <WrapPanel Margin="0,8,0,0">
+                                    <StackPanel Width="200">
+                                        <TextBlock Text="Health:" />
+                                        <TextBox Text="{Binding Health, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+
+                                    <StackPanel Width="200" Margin="12,0,0,0">
+                                        <TextBlock Text="Energy:" />
+                                        <TextBox Text="{Binding Energy, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                </WrapPanel>
+
+                                <WrapPanel Margin="0,8,0,0">
+                                    <StackPanel Width="200">
+                                        <TextBlock Text="Movement Speed:" />
+                                        <TextBox Text="{Binding MovementSpeed, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+
+                                    <StackPanel Width="200" Margin="12,0,0,0">
+                                        <TextBlock Text="Vision Range:" />
+                                        <TextBox Text="{Binding VisionRange, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                </WrapPanel>
+
+                                <TextBlock Text="Faction Id:" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding FactionId, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <CheckBox Content="Casts Shadow" IsChecked="{Binding CastsShadow}" Margin="0,0,12,0"/>
+                                    <CheckBox Content="Immobile" IsChecked="{Binding Immobile}" Margin="0,0,12,0"/>
+                                    <CheckBox Content="Is Flying" IsChecked="{Binding IsFlying}" />
+                                </StackPanel>
+
+                                <TextBlock Text="Weapon:" Margin="0,8,0,0"/>
+                                <Label Content="{Binding WeaponTemplateData}" />
+                                <Button Content="Edit Weapon" Command="{Binding EditWeaponCommand}" Margin="0,4,0,0" />
+
+                                <TextBlock Text="Armor:" Margin="0,8,0,0"/>
+                                <Label Content="{Binding ArmorTemplateData}" />
+                                <Button Content="Edit Armor" Command="{Binding EditArmorCommand}" Margin="0,4,0,0" />
+
+                                <TextBlock Text="Dialog Data Id:" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding DialogDataId, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="Dialog File Path:" Margin="0,8,0,0"/>
+                                <Label Content="{Binding DialogFilePath}" />
+                                <Button Content="Select Dialog File" Command="{Binding SelectDialogCommand}" Margin="0,4,0,0" />
+
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <CheckBox Content="Random Name" IsChecked="{Binding RandomName}" Margin="0,0,12,0"/>
+                                    <CheckBox Content="Random Vendor Items" IsChecked="{Binding RandomVendorAvailableItems}" Margin="0,0,12,0"/>
+                                    <CheckBox Content="Random Dropped Items" IsChecked="{Binding RandomDroppedItems}" />
+                                </StackPanel>
+
+                                <TextBlock Text="Dropped Items:" Margin="0,8,0,0"/>
+                                <ListBox ItemsSource="{Binding DroppedItems}" SelectedIndex="{Binding SelectedDroppedItemIndex}" Height="120">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" />
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Add" Margin="0,2,8,0" Command="{Binding AddDroppedItemCommand}" />
+                                    <Button Content="Remove" Margin="0,2,0,0" Command="{Binding RemoveDroppedItemCommand}" />
+                                </StackPanel>
+
+                                <TextBlock Text="Vendor Items:" Margin="0,8,0,0"/>
+                                <ListBox ItemsSource="{Binding VendorItems}" SelectedIndex="{Binding SelectedVendorItemIndex}" Height="120">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" />
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Add" Margin="0,2,8,0" Command="{Binding AddVendorItemCommand}" />
+                                    <Button Content="Remove" Margin="0,2,0,0" Command="{Binding RemoveVendorItemCommand}" />
+                                </StackPanel>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </GroupBox>
+
+                    <ScrollViewer Grid.Column="1" Margin="8">
+                        <GroupBox Header="Files" Margin="0,0,0,10">
+                            <StackPanel>
+                                <ListBox ItemsSource="{Binding EditorFileNames}" SelectedIndex="{Binding SelectedFileIndex, Mode=TwoWay}" Height="300"></ListBox>
+                            </StackPanel>
+                        </GroupBox>
+                    </ScrollViewer>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

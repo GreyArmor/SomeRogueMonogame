@@ -19,10 +19,7 @@ namespace NamelessRogueDataEditor.ViewModels
         
         [ObservableProperty]
         private string description = string.Empty;
-        
-        [ObservableProperty]
-        private string iconPath = string.Empty;
-        
+                
         [ObservableProperty]
         private int actionPointsCost;
         
