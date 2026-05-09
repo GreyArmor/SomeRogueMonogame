@@ -34,7 +34,6 @@
                     </Grid.ColumnDefinitions>
 
                     <GroupBox Header="Properties" Grid.Column="0" Margin="8">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                             <StackPanel Margin="8">
                                 <TextBlock Text="Id:"/>
                                 <TextBox Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
@@ -107,30 +106,27 @@
                                 <ListBox ItemsSource="{Binding DroppedItems}" SelectedIndex="{Binding SelectedDroppedItemIndex}" Height="120">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding}" />
-                                        </DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Path}" />
+                                            <Button Content="-" Margin="20,0,20,0" Width="30" Command="{Binding DataContext.RemoveDroppedItemCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
+                                        </StackPanel>                                       
+                                    </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Content="Add" Margin="0,2,8,0" Command="{Binding AddDroppedItemCommand}" />
-                                    <Button Content="Remove" Margin="0,2,0,0" Command="{Binding RemoveDroppedItemCommand}" />
-                                </StackPanel>
-
-                                <TextBlock Text="Vendor Items:" Margin="0,8,0,0"/>
-                                <ListBox ItemsSource="{Binding VendorItems}" SelectedIndex="{Binding SelectedVendorItemIndex}" Height="120">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" />
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Content="Add" Margin="0,2,8,0" Command="{Binding AddVendorItemCommand}" />
-                                    <Button Content="Remove" Margin="0,2,0,0" Command="{Binding RemoveVendorItemCommand}" />
-                                </StackPanel>
-
-                            </StackPanel>
-                        </ScrollViewer>
+                            <Button Content="Add" Margin="0,2,8,0" Command="{Binding AddDroppedItemCommand}" />
+                            <TextBlock Text="Vendor Items:" Margin="0,8,0,0"/>
+                            <ListBox ItemsSource="{Binding VendorItems}" SelectedIndex="{Binding SelectedVendorItemIndex}" Height="120">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Path}" />
+                                            <Button Content="-" Margin="20,0,20,0" Width="30" Command="{Binding DataContext.RemoveVendorItemCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"  CommandParameter="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <Button Content="Add" Margin="0,2,8,0" Command="{Binding AddVendorItemCommand}" />
+                        </StackPanel>
                     </GroupBox>
 
                     <ScrollViewer Grid.Column="1" Margin="8">

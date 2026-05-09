@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using NamelessRogue.Engine.Generation.Editor;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace NamelessRogueDataEditor.ViewModels
 {
@@ -132,6 +134,88 @@ namespace NamelessRogueDataEditor.ViewModels
             RandomName = data.RandomName;
             RandomVendorAvailableItems = data.RandomVendorAvailableItems;
             RandomDroppedItems = data.RandomDroppedItems;
+        }
+
+        [RelayCommand]
+        public void SelectSprite()
+        {
+            var selectedFile = _selectFile("*.ase", "Select Sprite");
+            if (!string.IsNullOrEmpty(selectedFile))
+            {
+                SpritePath = selectedFile;
+            }
+        }
+
+        [RelayCommand]
+        public void SelectDialogFile()
+        {
+            var selectedFile = _selectFile("*.nrdl", "Select Dialog File");
+            if (!string.IsNullOrEmpty(selectedFile))
+            {
+                DialogFilePath = selectedFile;
+            }
+        }
+        [RelayCommand]
+        public void AddDroppedItem()
+        {
+            var file = _selectFile("*.nrif", "Select Dropped Item File");
+            if (!string.IsNullOrEmpty(file))
+            {
+
+                var serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemTemplateData));
+                ItemTemplateData item;
+                using (FileStream fs = new(file, FileMode.Open))
+                {
+                    item = (ItemTemplateData)serializer.Deserialize(fs);
+                }
+
+                var newItem = new DroppedItemTemplate
+                {
+                    ItemId = item.Id ?? string.Empty,
+                    Path = file,
+                    Probability = 100
+                };
+                DroppedItems.Add(newItem);
+            }
+        }
+        [RelayCommand]
+        public void RemoveDroppedItem(DroppedItemTemplate item)
+        {
+            if (DroppedItems.Contains(item))
+            {
+                DroppedItems.Remove(item);
+            }
+        }
+        [RelayCommand]
+        public void AddVendorItem()
+        {
+            var file = _selectFile("*.nrif", "Select Dropped Item File");
+            if (!string.IsNullOrEmpty(file))
+            {
+
+                var serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemTemplateData));
+                ItemTemplateData item;
+                using (FileStream fs = new(file, FileMode.Open))
+                {
+                    item = (ItemTemplateData)serializer.Deserialize(fs);
+                }
+
+                var newItem = new DroppedItemTemplate
+                {
+                    ItemId = item.Id ?? string.Empty,
+                    Path = file,
+                    Probability = 100
+                };
+                VendorItems.Add(newItem);
+            }
+        }
+        [RelayCommand]
+        public void RemoveVendorItem(DroppedItemTemplate item)
+        {
+            if (VendorItems.Contains(item))
+            {
+                VendorItems.Remove(item);
+            }
         }
     }
 }
