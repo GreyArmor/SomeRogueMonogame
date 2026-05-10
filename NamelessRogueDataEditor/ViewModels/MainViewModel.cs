@@ -29,7 +29,8 @@ namespace NamelessRogueDataEditor.ViewModels
             new AbilityTemplateEditorViewModel { HeaderName = "Ability" },
             new ItemEditorViewModel() { HeaderName = "Item" },
             new CharacterViewModel { HeaderName = "Character" },
-    
+             new DialogEditorViewModel { HeaderName = "Dialog" },
+
         };
             SelectedTab = TabItems[0]; // Set default tab
         }

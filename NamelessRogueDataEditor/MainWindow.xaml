@@ -30,6 +30,10 @@
             <DataTemplate DataType="{x:Type vm:BuffEditorViewModel}">
                 <v:BuffTemplateDataEditorView></v:BuffTemplateDataEditorView>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:DialogEditorViewModel}">
+                <v:DialogEditorView></v:DialogEditorView>
+            </DataTemplate>
         </ResourceDictionary>      
     </Window.Resources>
     <Window.DataContext>
