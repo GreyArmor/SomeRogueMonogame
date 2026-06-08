@@ -24,5 +24,10 @@ namespace NamelessRogueDataEditor.Views
         {
             InitializeComponent();
         }
+
+        private void OptionsTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            SelectedItemHelper.Content = e.NewValue;
+        }
     }
 }

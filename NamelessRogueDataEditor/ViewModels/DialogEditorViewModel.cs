@@ -24,6 +24,9 @@ namespace NamelessRogueDataEditor.ViewModels
         [ObservableProperty]
         private DialogOption selectedOption;
 
+        [ObservableProperty]
+        private object selectedOptionObject;
+
         public DialogEditorViewModel() : base("*.nrdl", "Dialogs")
         {
             dialog = new DialogData();
@@ -31,6 +34,11 @@ namespace NamelessRogueDataEditor.ViewModels
             PropertyChanged += (s, e) =>
             {
                 CanSave = !string.IsNullOrEmpty(Id) && !string.IsNullOrEmpty(Response);
+
+                if(e.PropertyName == "SelectedOptionObject")
+                {
+                    SelectedOption = (DialogOption)selectedOptionObject;                    
+                }
             };
         }
 

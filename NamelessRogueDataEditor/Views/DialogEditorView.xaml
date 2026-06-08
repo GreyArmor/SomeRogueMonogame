@@ -57,8 +57,8 @@
                     <Button Content="Add Child" Command="{Binding AddChildOptionCommand}" />
                     <Button Content="Remove Child" Command="{Binding RemoveChildOptionCommand}" />
                 </StackPanel>
-
-                <TreeView Grid.Row="1" ItemsSource="{Binding Options}" Name="OptionsTree" Margin="4">
+                <ContentControl x:Name="SelectedItemHelper" Content="{Binding SelectedOptionObject, Mode=OneWayToSource}" Visibility="Collapsed"/>
+                <TreeView Grid.Row="1" ItemsSource="{Binding Options}" Name="OptionsTree" Margin="4" SelectedItemChanged="OptionsTree_SelectedItemChanged">
                     <TreeView.Resources>
                         <HierarchicalDataTemplate DataType="{x:Type editorClasses:DialogOption}" ItemsSource="{Binding DialogData.Options}">
                             <StackPanel Orientation="Horizontal" Margin="2">
