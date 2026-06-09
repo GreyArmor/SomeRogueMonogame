@@ -220,9 +220,24 @@ namespace NamelessRogue.Engine.Factories
                             if (hasCharacter)
                             {
                                 var gameTile = worldProvider.GetTile(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, floorZ);
-                                var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
-                                namelessGame.AddEntity(character);
-                                gameTile.AddEntity(character);
+
+                                if (characterData.RandomName)
+                                {
+                                    var randomValue = namelessGame.CurrentGame.GlobalRandom.Next(0, 100);
+                                    if (randomValue < 5)
+                                    {
+                                        var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
+                                        namelessGame.AddEntity(character);
+                                        gameTile.AddEntity(character);
+                                    }
+
+                                }
+                                else
+                                {
+                                    var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
+                                    namelessGame.AddEntity(character);
+                                    gameTile.AddEntity(character);
+                                }
                             }
                         }
                         else if (tileObject.Type == TiledObjectType.Rectangular)

@@ -1,40 +1,41 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using log4net;
 using log4net.Config;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
+using NamelessRogue.Engine.Components._3D;
+using NamelessRogue.Engine.Components.AI.Pathfinder;
+using NamelessRogue.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Context;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation;
+using NamelessRogue.Engine.Generation.Editor;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Serialization;
+using NamelessRogue.Engine.Sounds;
 using NamelessRogue.Engine.Systems;
 using NamelessRogue.Engine.Systems.Ingame;
-using NamelessRogue.Engine.Utility;
-using Color = Microsoft.Xna.Framework.Color;
-using NamelessRogue.Engine.Serialization;
 using NamelessRogue.Engine.UI;
-using System.Runtime.InteropServices;
-using NamelessRogue.Engine.Sounds;
-using Microsoft.Xna.Framework.Audio;
-using NamelessRogue.Engine.Components._3D;
-using System.Xml.Serialization;
-using Microsoft.Xna.Framework.Media;
-using NamelessRogue.Engine.Components.Interaction;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using NamelessRogue.Engine.Utility;
 using SharpDX.MediaFoundation;
-using NamelessRogue.Engine.Generation.Editor;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using NamelessRogue.Engine.Components.ChunksAndTiles;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Xml.Serialization;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace NamelessRogue.shell
 {
@@ -80,9 +81,10 @@ namespace NamelessRogue.shell
 
         public Commander Commander { get; set; }
 
+        public FlowFieldController FlowFieldController {get; private set; }
 
-		// this lookup is very expensive, avoid using in loops
-		public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
+        // this lookup is very expensive, avoid using in loops
+        public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
 		{
 			List<IEntity> results = EntityInfrastructureManager.Entities.Where(v => v.GetComponentOfType<T>() != null).ToList();
 			return results;
@@ -245,6 +247,7 @@ namespace NamelessRogue.shell
 
             AbilityLogicLibrary.Init(this);
 
+         
 
             IsInitialized = true;
 
@@ -387,6 +390,7 @@ namespace NamelessRogue.shell
             CursorEntity = GameInitializer.CreateCursor();
             TargeterEntity = GameInitializer.CreateTargeter();
             WorldMapCameraEntity = GameInitializer.CreateWorldMapCamera();
+            FlowFieldController = new FlowFieldController(this, WorldProvider);
         }
 
         MusicPack musicPack;

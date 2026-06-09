@@ -1,4 +1,5 @@
-﻿using NamelessRogue.Engine.Components.ItemComponents;
+﻿using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
+using NamelessRogue.Engine.Components.ItemComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,9 @@ namespace NamelessRogue.Engine.Generation.Editor
 
         [XmlElement]
         public string SpritePath { get; set; }
+
+        [XmlElement]
+        public AIType AiType { get; set; } = AIType.Idle;
 
         [XmlElement]
         public bool CastsShadow { get; set; }

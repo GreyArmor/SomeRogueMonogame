@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
+using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
@@ -14,6 +11,10 @@ using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -66,11 +67,46 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         FollowPlayerAi basicAi = entity.GetComponentOfType<FollowPlayerAi>();
                         HostileTurretAI hostileTurretAI = entity.GetComponentOfType<HostileTurretAI>();
                         FollowShootPlayerAi followShootPlayerAi = entity.GetComponentOfType<FollowShootPlayerAi>();
-
+                        OscillatorMovementAI oscillatorMovementAI = entity.GetComponentOfType<OscillatorMovementAI>();
                         Position playerPosition = namelessGame.PlayerEntity
                             .GetComponentOfType<Position>();
 
 
+                        if (oscillatorMovementAI != null)
+                        {
+                            Point toPoint = oscillatorMovementAI.To.ToPoint();
+                            Point fromPoint = oscillatorMovementAI.From.ToPoint();
+                            var entityPos = entity.GetComponentOfType<Position>().Point;
+                            var flowMoveComponent = entity.GetComponentOfType<FlowMoveComponent>();
+                            if (flowMoveComponent.FinishedMoving)
+                            {
+                                entity.GetComponentOfType<ActionPoints>().Points = -200;
+                                var pathId = oscillatorMovementAI.MovesToTarget ?
+                                    namelessGame.FlowFieldController.CalculateTo(toPoint, fromPoint) :
+                                    namelessGame.FlowFieldController.CalculateTo(fromPoint, toPoint);
+                                if (pathId > -1)
+                                {
+                                    flowMoveComponent.To = oscillatorMovementAI.MovesToTarget ? toPoint : fromPoint;
+                                    flowMoveComponent.PathId = pathId;
+                                    flowMoveComponent.FinishedMoving = false;
+                                  
+                                }
+                            }
+                            if (!flowMoveComponent.FinishedMoving)
+                            {
+                                var nextPoint = namelessGame.FlowFieldController.GetNextPoint(flowMoveComponent.PathId, entityPos.ToPoint());
+                                if (flowMoveComponent.To == nextPoint)
+                                {
+                                    flowMoveComponent.FinishedMoving = true;
+                                    oscillatorMovementAI.MovesToTarget = !oscillatorMovementAI.MovesToTarget;
+                                    //continue;
+                                }
+                                namelessGame.WorldProvider.MoveEntity(entity,
+                                  nextPoint.X, nextPoint.Y, 0);
+                                entity.GetComponentOfType<ActionPoints>().Points = -200;
+                            }
+                        }
+                        else
                         if (basicAi != null)
                         {
                             switch (basicAi.State)
@@ -113,7 +149,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     {
                                         var targetPos = hostileTurretAI.Target.GetComponentOfType<Position>().Point;
                                         var entityPos = entity.GetComponentOfType<Position>().Point;
-                                        var visible = TargetingHelper.IsTargetVisible(worldProvider, targetPos, entityPos,  npcStats);
+                                        var visible = TargetingHelper.IsTargetVisible(worldProvider, targetPos, entityPos, npcStats);
                                         if (visible)
                                         {
                                             FireWeaponCommand command = new FireWeaponCommand(entity, targetPos);

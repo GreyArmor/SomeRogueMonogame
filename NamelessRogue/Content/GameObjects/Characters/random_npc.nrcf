@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>ba29fb6c-dd89-49a5-a320-a35258f270ed</Id>
+  <Name>random_npc</Name>
+  <Description>random npc</Description>
+  <SpritePath>Sprites\wastelander.ase</SpritePath>
+  <CastsShadow>true</CastsShadow>
+  <Immobile>false</Immobile>
+  <Health>10</Health>
+  <Energy>0</Energy>
+  <MovementSpeed>50</MovementSpeed>
+  <VisionRange>10</VisionRange>
+  <DroppedItems>
+    <DroppedItemTemplate>
+      <ItemId>73d98712-785b-462c-8195-544943a7e581</ItemId>
+      <Path>..\Armor\Work gloves.nrif</Path>
+      <Probability>0</Probability>
+    </DroppedItemTemplate>
+  </DroppedItems>
+  <VendorItems />
+  <WeaponTemplateData>
+    <MinimumDamage>0</MinimumDamage>
+    <MaximumDamage>10</MaximumDamage>
+    <Range>1</Range>
+    <AttackType>Close</AttackType>
+    <DamageType>Physical</DamageType>
+    <AmmoType>LowCaliber</AmmoType>
+    <AmmoInClip>0</AmmoInClip>
+  </WeaponTemplateData>
+  <ArmorTemplateData>
+    <DamageType>Physical</DamageType>
+    <ArmorValue>10</ArmorValue>
+    <ResistType>Physical</ResistType>
+    <ResistValue>10</ResistValue>
+  </ArmorTemplateData>
+  <IsFlying>false</IsFlying>
+  <DialogDataId>486a9f87-daed-4210-8fc4-536ff0649b26</DialogDataId>
+  <DialogFilePath>..\..\..\bin\Debug\Dialogs\random_npc_dialog.nrdf</DialogFilePath>
+  <RandomName>true</RandomName>
+  <RandomVendorAvailableItems>false</RandomVendorAvailableItems>
+  <RandomDroppedItems>true</RandomDroppedItems>
+</CharacterTemplateData>

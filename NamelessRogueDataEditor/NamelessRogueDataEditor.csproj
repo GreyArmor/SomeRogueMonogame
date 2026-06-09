@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Util\**" />
+    <EmbeddedResource Remove="Util\**" />
+    <None Remove="Util\**" />
+    <Page Remove="Util\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="screwdriver.ico" />
   </ItemGroup>
 
@@ -20,10 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NamelessRogue\NamelessRogue.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Util\" />
   </ItemGroup>
 
 </Project>

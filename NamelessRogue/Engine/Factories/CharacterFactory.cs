@@ -129,8 +129,8 @@ namespace NamelessRogue.Engine.Factories
             if(isRandomName)
             {
                 description.Name = CharacterNameGenerators.GetName(GeneratorName.English, true);
+                character.AddComponent(new OscillatorMovementAI(new Vector3Int(pos.X, pos.Y, pos.Z), new Vector3Int(pos.X + 15, pos.Y, pos.Z)));
             }
-
             character.AddComponent(description);
             var holder = new ItemsHolder();
             character.AddComponent(holder);

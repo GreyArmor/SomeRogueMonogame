@@ -49,8 +49,14 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			//{
 			//	return true;
 			//}
+			var key = new Point((int)coord.X, (int)coord.Y);
 
-			var chunk = _worlldProvider.GetChunks()[new Point((int)coord.X, (int)coord.Y)];
+            if (!_worlldProvider.GetChunks().ContainsKey(key))
+			{
+                return true;
+            }
+
+            var chunk = _worlldProvider.GetChunks()[key];
 			if (chunk.NonGroundPassable)
 			{
 				return true;
@@ -84,7 +90,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 		public FlowFieldPathModel FullPath { get; set; }
 	}
 
-	internal class FlowFieldModel
+	public class FlowFieldController
 	{
 
 		Point flowFieldWorldPosition;
@@ -95,7 +101,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		//FlowFieldRegion[,] flowFieldRegions = null;
 
-		public FlowFieldModel(NamelessGame game, IWorldProvider world)
+		public FlowFieldController(NamelessGame game, IWorldProvider world)
 		{
 			this.game = game;
 			this.world = world;
@@ -113,16 +119,20 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 		}
 		TileNavigator navigator;
 		//returns path id
-		public int ClaculateTo(Point to, Point from)
+		public int CalculateTo(Point to, Point from)
 		{
 
 
-			//ResetNodes();
+            var realitychunks = world.GetRealityBubbleChunks();
 
-			var toWorldPos = (to.ToVector2() / Constants.ChunkSize).ToPoint();
+            //ResetNodes();
+
+            var toWorldPos = (to.ToVector2() / Constants.ChunkSize).ToPoint();
 			var fromWorldPos = (from.ToVector2() / Constants.ChunkSize).ToPoint();
 
 			var path = navigator.Navigate(new Tile(fromWorldPos.X, fromWorldPos.Y), new Tile(toWorldPos.X, toWorldPos.Y));
+
+			
 
 			if (path == null)
 			{
@@ -131,7 +141,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 			var pathOfPoints = path.Select(t => new Point((int)t.X, (int)t.Y)).ToList();
 
-			var shortPathOfPoints = pathOfPoints.Take(3).ToList(); ;
+            var shortPathOfPoints = pathOfPoints.Take(3).ToList(); ;
 
 			foreach (var point in pathOfPoints.ToList())
 			{
@@ -191,8 +201,18 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				closestShortPoint.Y * Constants.ChunkSize + (Constants.ChunkSize / 2)
 				);
 
-			//calculate long path asychronously
-			var fullPath = new FlowFieldPathModel(game, pathOfPoints, world, flowFieldWorldPosition);
+
+
+            foreach (var point in pathOfPoints.ToList())
+            {
+                if (!realitychunks.ContainsKey(point))
+                {
+                    return -1;
+                }
+            }
+
+            //calculate long path asychronously
+            var fullPath = new FlowFieldPathModel(game, pathOfPoints, world, flowFieldWorldPosition);
 
 			var shortPath = new FlowFieldPathModel(game, shortPathOfPoints, world, flowFieldWorldPosition);
 

@@ -3,6 +3,14 @@
 namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
 {
 
+    public enum AIType : int
+    {
+        Idle,
+        Pedestrian,
+        Guard,
+        Shopkeeper,
+        AggressiveAttacker,
+    }
     public enum Affinity
     {
         Neutral, 

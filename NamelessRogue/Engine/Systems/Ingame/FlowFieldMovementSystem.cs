@@ -22,21 +22,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			typeof(FlowMoveComponent), typeof(GroupTag)
 		};
 
-		bool init = true;
 		double moveDelayMilisecends = 0.01;
 		double milisecondsCounter = 0;
-		public static FlowFieldModel flowField;
 		public override void Update(GameTime gameTime, NamelessGame namelessGame)
 		{
-			if (init)
-			{
-				flowField = new FlowFieldModel(namelessGame, namelessGame.WorldProvider);
-				init = false;
-			}
-
 			while (namelessGame.Commander.DequeueCommand(out FlowFieldMoveCommand mc))
 			{
-				var pathId = flowField.ClaculateTo(mc.To, mc.From);
+				var pathId = namelessGame.FlowFieldController.CalculateTo(mc.To, mc.From);
 
 				if (pathId > -1)
 				{
@@ -58,7 +50,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
 					if (!flowMoveComponent.FinishedMoving && position.X > 0 && position.Y > 0)
 					{
-						var nextPoint = flowField.GetNextPoint(flowMoveComponent.PathId, position.Point.ToPoint());
+						var nextPoint = namelessGame.FlowFieldController.GetNextPoint(flowMoveComponent.PathId, position.Point.ToPoint());
 
 						if (flowMoveComponent.To == nextPoint)
 						{
