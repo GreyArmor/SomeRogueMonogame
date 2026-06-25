@@ -124,7 +124,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 var closestLocation = namelessGame.MacroNavigator.Locations
                                     .Where(x => x.Nodes.Any())
-                                    .OrderBy(l => (l.RealityPosition - entityPos).Length());
+                                    .OrderBy(l => (l.RealityPosition - entityPos).Length()).FirstOrDefault();
 
                                 //if(!closestLocation.Nodes.Any())
                                 //{
