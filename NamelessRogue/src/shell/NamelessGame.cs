@@ -10,6 +10,7 @@ using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
@@ -67,7 +68,7 @@ namespace NamelessRogue.shell
 		public IEntity PlayerEntity { get; set; }
 
         public IEntity InputEntity { get; set; }
-        public IEntity TimelineEntity { get; set; }
+        public IEntity WorldTemplateEntity { get; set; }
 
 		public IEntity FollowedByCameraEntity { get; set; }
 
@@ -82,6 +83,7 @@ namespace NamelessRogue.shell
         public Commander Commander { get; set; }
 
         public FlowFieldController FlowFieldController {get; private set; }
+        public MacroNavigator MacroNavigator { get; private set; }
 
         // this lookup is very expensive, avoid using in loops
         public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
@@ -105,7 +107,7 @@ namespace NamelessRogue.shell
 		{
 			get
 			{
-				return TimelineEntity.GetComponentOfType<WorldTemplate>().WorldMap.Chunks;
+				return WorldTemplateEntity.GetComponentOfType<WorldTemplate>().WorldMap.Chunks;
 			}
 		}
 
@@ -258,17 +260,19 @@ namespace NamelessRogue.shell
 			GameTime zero = new GameTime();
 			this.CurrentGame = gameInstance;
 
+         
+
             Entity worldTemplateEntity = new Entity();
             worldTemplateEntity.AddComponent(worldTemplate);
-            TimelineEntity = worldTemplateEntity; //TimelineFactory.CreateTimeline(this);       
+            WorldTemplateEntity = worldTemplateEntity; //TimelineFactory.CreateTimeline(this);       
 
             ChunkData chunkData = new ChunkData(CurrentGame, worldTemplate.WorldMap);
             worldTemplate.WorldMap.Chunks = chunkData;
 
             int x, y;
 			//alpha world start zone
-            x = 5;
-            y = 9;
+            x = 1;
+            y = 1;
 
 
 
@@ -345,7 +349,11 @@ namespace NamelessRogue.shell
                 binding++;
             }
 
-			for (int worldX = 0; worldX < worldTemplate.WorldSize.X; worldX++)
+
+
+            FlowFieldController = new FlowFieldController(this, WorldProvider);
+			MacroNavigator = new MacroNavigator();
+            for (int worldX = 0; worldX < worldTemplate.WorldSize.X; worldX++)
 			{
 				for (int worldY = 0; worldY < worldTemplate.WorldSize.Y; worldY++)
 				{
@@ -357,8 +365,8 @@ namespace NamelessRogue.shell
 						var buildingData = BuildingLibrary.Data.FirstOrDefault(x=>x.Name == buildingName);
 						if (buildingData!=null)
 						{
-							BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(worldX, worldY), buildingData);
-						}
+							var buildingEntity = BuildingLibrary.CreateBuildingFromData(this, new System.Drawing.Point(worldX, worldY), buildingData);
+                        }
                     }
                 }
 			}
@@ -389,8 +397,7 @@ namespace NamelessRogue.shell
             FollowedByCameraEntity = player;
             CursorEntity = GameInitializer.CreateCursor();
             TargeterEntity = GameInitializer.CreateTargeter();
-            WorldMapCameraEntity = GameInitializer.CreateWorldMapCamera();
-            FlowFieldController = new FlowFieldController(this, WorldProvider);
+            WorldMapCameraEntity = GameInitializer.CreateWorldMapCamera();          
         }
 
         MusicPack musicPack;

@@ -27,7 +27,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            IEntity worldEntity = namelessGame.TimelineEntity;
+            IEntity worldEntity = namelessGame.WorldTemplateEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {

@@ -223,9 +223,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             if(objectId.Contains("window"))
                             {
                                 objectId.ToString();
+                            }   
+                            if(objectId == "southDir")
+                            {
+                                    objectId.ToString();
                             }
                             if (!characterToTileDictionary.TryGetValue(objectId, out tileData))
                             {
+                            
                                 characterToTileDictionary.TryGetValue("Nothingness", out tileData);
                             }
 
@@ -283,7 +288,10 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 continue;
                             }
-
+                            if(drawable.ObjectID == "southDir")
+                            {
+                                drawable.ToString();
+                            }
                             if (drawable != null && sprited == null)
                             {
                                 ScreenBuffer[x, y].AddObject(drawable.ObjectID + tileToDraw.TilesetPosition, ScreenObjectSource.Tileset, drawable.CharColor, drawable.CastsShadow, drawable.IsFlying);
@@ -434,6 +442,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             var atlasTileData = new AtlasTileData(8, 9);
             characterToTileDictionary = new Dictionary<string, AtlasTileData>();
+
+            characterToTileDictionary.Add("middleDir", new AtlasTileData(11, 19));
+            characterToTileDictionary.Add("northDir", new AtlasTileData(12, 19));
+            characterToTileDictionary.Add("southDir", new AtlasTileData(13, 19));
+            characterToTileDictionary.Add("westDir", new AtlasTileData(14, 19));
+            characterToTileDictionary.Add("eastDir", new AtlasTileData(15, 19));
+            characterToTileDictionary.Add("nwDir", new AtlasTileData(16, 19));
+            characterToTileDictionary.Add("neDir", new AtlasTileData(17, 19));
+            characterToTileDictionary.Add("swDir", new AtlasTileData(18, 19));
+            characterToTileDictionary.Add("seDir", new AtlasTileData(19, 19));
+
             characterToTileDictionary.Add("Nothingness", atlasTileData);
             characterToTileDictionary.Add("Dirt", new AtlasTileData(2, 4));
             characterToTileDictionary.Add("Character", new AtlasTileData(0, 7));
@@ -569,7 +588,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
 
 
-            IEntity worldEntity = game.TimelineEntity;
+            IEntity worldEntity = game.WorldTemplateEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {

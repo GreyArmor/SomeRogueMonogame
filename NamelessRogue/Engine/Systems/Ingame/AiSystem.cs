@@ -3,6 +3,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Stats;
@@ -43,11 +44,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
             //    }
             //}
 
-            IEntity worldEntity = namelessGame.TimelineEntity;
+            IEntity worldEntity = namelessGame.WorldTemplateEntity;          
             IWorldProvider worldProvider = null;
+            WorldTemplate worldTemplate = null;
             if (worldEntity != null)
             {
-                worldProvider = worldEntity.GetComponentOfType<WorldTemplate>().WorldMap.Chunks;
+                worldTemplate = worldEntity.GetComponentOfType<WorldTemplate>();
+                worldProvider = worldTemplate.WorldMap.Chunks;               
             }
 
             if (worldProvider != null)
@@ -68,6 +71,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         HostileTurretAI hostileTurretAI = entity.GetComponentOfType<HostileTurretAI>();
                         FollowShootPlayerAi followShootPlayerAi = entity.GetComponentOfType<FollowShootPlayerAi>();
                         OscillatorMovementAI oscillatorMovementAI = entity.GetComponentOfType<OscillatorMovementAI>();
+                        PedestrianMovementAi pedestrianMovementAI = entity.GetComponentOfType<PedestrianMovementAi>();
                         Position playerPosition = namelessGame.PlayerEntity
                             .GetComponentOfType<Position>();
 
@@ -88,8 +92,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 {
                                     flowMoveComponent.To = oscillatorMovementAI.MovesToTarget ? toPoint : fromPoint;
                                     flowMoveComponent.PathId = pathId;
-                                    flowMoveComponent.FinishedMoving = false;
-                                  
+                                    flowMoveComponent.FinishedMoving = false;                                  
                                 }
                             }
                             if (!flowMoveComponent.FinishedMoving)
@@ -107,135 +110,181 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             }
                         }
                         else
-                        if (basicAi != null)
+                        if (pedestrianMovementAI != null && namelessGame.MacroNavigator.Locations.Any())
                         {
-                            switch (basicAi.State)
-                            {
-                                case BasicAiStates.Idle:
-                                case BasicAiStates.Moving:
-                                    var pPos = playerPosition.Point;
-                                    MoveTo(entity, namelessGame, new Point(pPos.X, pPos.Y), true, basicAi);
-                                    var route = basicAi.Route;
-                                    if (route.Count == 0)
-                                    {
-                                        basicAi.State = (BasicAiStates.Idle);
-                                    }
-                                    break;
-                                default:
-                                    break;
 
+                         
+
+                            var entityPos = entity.GetComponentOfType<Position>().Point;
+                            var chunkPos = new Vector3Int(entityPos.X / Constants.ChunkSize, entityPos.Y / Constants.ChunkSize, 0);
+                            
+                        
+                            var flowMoveComponent = entity.GetComponentOfType<FlowMoveComponent>();
+                            if (flowMoveComponent.FinishedMoving)
+                            {
+                                var closestLocation = namelessGame.MacroNavigator.Locations
+                                    .Where(x => x.Nodes.Any())
+                                    .OrderBy(l => (l.RealityPosition - entityPos).Length());
+
+                                //if(!closestLocation.Nodes.Any())
+                                //{
+                                //    continue;
+                                //}
+                                entity.GetComponentOfType<ActionPoints>().Points = -200;
+
+                                var waypoints = closestLocation.Nodes;
+                                var closestWaypoint = waypoints.Where(x=>x.RealityPosition!=entityPos).OrderBy(w => (w.RealityPosition - entityPos).Length()).FirstOrDefault();
+                                var pathId = closestWaypoint.FlowFieldId;
+                                if (pathId > -1)
+                                {
+                                    flowMoveComponent.To = closestWaypoint.RealityPosition.ToPoint();
+                                    flowMoveComponent.PathId = pathId;
+                                    flowMoveComponent.FinishedMoving = false;
+                                }
+                                                                }
+                            if (!flowMoveComponent.FinishedMoving)
+                            {
+                                var nextPoint = namelessGame.FlowFieldController.GetNextPoint(flowMoveComponent.PathId, entityPos.ToPoint());
+                                if (flowMoveComponent.To == nextPoint)
+                                {
+                                    flowMoveComponent.FinishedMoving = true;
+                                    //continue;
+                                }
+                                namelessGame.WorldProvider.MoveEntity(entity,
+                                  nextPoint.X, nextPoint.Y, 0);
+                                entity.GetComponentOfType<ActionPoints>().Points = -200;
                             }
                         }
-                        else if (hostileTurretAI != null)
-                        {
-                            switch (hostileTurretAI.State)
-                            {
-                                case HostileTurretState.Idle:
-                                    {
-                                        var pPos = playerPosition.Point;
-                                        var entityPos = entity.GetComponentOfType<Position>().Point;
-                                        var distance = (pPos - entityPos).Length();
+                        //else
+                        //if (basicAi != null)
+                        //{
+                        //    switch (basicAi.State)
+                        //    {
+                        //        case BasicAiStates.Idle:
+                        //        case BasicAiStates.Moving:
+                        //            var pPos = playerPosition.Point;
+                        //            MoveTo(entity, namelessGame, new Point(pPos.X, pPos.Y), true, basicAi);
+                        //            var route = basicAi.Route;
+                        //            if (route.Count == 0)
+                        //            {
+                        //                basicAi.State = (BasicAiStates.Idle);
+                        //            }
+                        //            break;
+                        //        default:
+                        //            break;
 
-                                        var visionRange = 6;
-                                        if (distance <= visionRange)
-                                        {
-                                            hostileTurretAI.Target = playerEntity;
-                                            hostileTurretAI.State = HostileTurretState.Attacking;
-                                            goto case HostileTurretState.Attacking;
-                                        }
-                                    }
-                                    break;
-                                case HostileTurretState.Attacking:
-                                    {
-                                        var targetPos = hostileTurretAI.Target.GetComponentOfType<Position>().Point;
-                                        var entityPos = entity.GetComponentOfType<Position>().Point;
-                                        var visible = TargetingHelper.IsTargetVisible(worldProvider, targetPos, entityPos, npcStats);
-                                        if (visible)
-                                        {
-                                            FireWeaponCommand command = new FireWeaponCommand(entity, targetPos);
-                                            namelessGame.Commander.EnqueueCommand(command);
+                        //    }
+                        //}
+                        //else if (hostileTurretAI != null)
+                        //{
+                        //    switch (hostileTurretAI.State)
+                        //    {
+                        //        case HostileTurretState.Idle:
+                        //            {
+                        //                var pPos = playerPosition.Point;
+                        //                var entityPos = entity.GetComponentOfType<Position>().Point;
+                        //                var distance = (pPos - entityPos).Length();
 
-                                            entity.GetComponentOfType<ActionPoints>().Points = -100;
-                                        }
+                        //                var visionRange = 6;
+                        //                if (distance <= visionRange)
+                        //                {
+                        //                    hostileTurretAI.Target = playerEntity;
+                        //                    hostileTurretAI.State = HostileTurretState.Attacking;
+                        //                    goto case HostileTurretState.Attacking;
+                        //                }
+                        //            }
+                        //            break;
+                        //        case HostileTurretState.Attacking:
+                        //            {
+                        //                var targetPos = hostileTurretAI.Target.GetComponentOfType<Position>().Point;
+                        //                var entityPos = entity.GetComponentOfType<Position>().Point;
+                        //                var visible = TargetingHelper.IsTargetVisible(worldProvider, targetPos, entityPos, npcStats);
+                        //                if (visible)
+                        //                {
+                        //                    FireWeaponCommand command = new FireWeaponCommand(entity, targetPos);
+                        //                    namelessGame.Commander.EnqueueCommand(command);
 
-                                    }
-                                    break;
-                            }
-                        }
+                        //                    entity.GetComponentOfType<ActionPoints>().Points = -100;
+                        //                }
 
-                        else if (followShootPlayerAi != null)
-                        {
-                            switch (followShootPlayerAi.State)
-                            {
-                                case ShooterAiStates.Idle:
-                                    {
-                                        var pPos = playerPosition.Point;
-                                        var entityPos = entity.GetComponentOfType<Position>().Point;
-                                        var visible = TargetingHelper.IsTargetVisible(worldProvider, pPos, entityPos, npcStats);
-                                        if (visible)
-                                        {
-                                            followShootPlayerAi.Target = playerEntity;
-                                            followShootPlayerAi.State = ShooterAiStates.Aiming;
-                                            namelessGame.Commander.EnqueueCommand(new PlayCharacterAnimationForNumberOfLoopsCommand(entity, AnimationType.TakeAim, 1));
-                                            namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Aiming));
-                                            goto case ShooterAiStates.Aiming;
-                                        }
-                                    }
-                                    break;
-                                case ShooterAiStates.Aiming:
-                                    {
-                                        var targetPos = followShootPlayerAi.Target.GetComponentOfType<Position>().Point;
-                                        var entityPos = entity.GetComponentOfType<Position>().Point;
-                                        var visible = TargetingHelper.IsTargetVisible(worldProvider, targetPos, entityPos, npcStats);
-                                        var distance = (targetPos - entityPos).Length();
+                        //            }
+                        //            break;
+                        //    }
+                        //}
 
-                                        if (!visible)
-                                        {
+                        //else if (followShootPlayerAi != null)
+                        //{
+                        //    switch (followShootPlayerAi.State)
+                        //    {
+                        //        case ShooterAiStates.Idle:
+                        //            {
+                        //                var pPos = playerPosition.Point;
+                        //                var entityPos = entity.GetComponentOfType<Position>().Point;
+                        //                var visible = TargetingHelper.IsTargetVisible(worldProvider, pPos, entityPos, npcStats);
+                        //                if (visible)
+                        //                {
+                        //                    followShootPlayerAi.Target = playerEntity;
+                        //                    followShootPlayerAi.State = ShooterAiStates.Aiming;
+                        //                    namelessGame.Commander.EnqueueCommand(new PlayCharacterAnimationForNumberOfLoopsCommand(entity, AnimationType.TakeAim, 1));
+                        //                    namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Aiming));
+                        //                    goto case ShooterAiStates.Aiming;
+                        //                }
+                        //            }
+                        //            break;
+                        //        case ShooterAiStates.Aiming:
+                        //            {
+                        //                var targetPos = followShootPlayerAi.Target.GetComponentOfType<Position>().Point;
+                        //                var entityPos = entity.GetComponentOfType<Position>().Point;
+                        //                var visible = TargetingHelper.IsTargetVisible(worldProvider, targetPos, entityPos, npcStats);
+                        //                var distance = (targetPos - entityPos).Length();
 
-                                            MoveTo(entity, namelessGame, new Point(targetPos.X, targetPos.Y), true, followShootPlayerAi);
-                                            var route = followShootPlayerAi.Route;
-                                            if (route.Count == 0)
-                                            {
-                                                followShootPlayerAi.State = ShooterAiStates.Idle;
-                                            }
+                        //                if (!visible)
+                        //                {
 
-                                            //followShootPlayerAi.State = ShooterAiStates.Idle;
-                                            //followShootPlayerAi.ShootingTarget = targetPos;
-                                            namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Aiming));
-                                        }
-                                        else
-                                        {
-                                            var weaponRange = npcStats.WeaponStats[0].Range;
-                                            if (distance <= weaponRange)
-                                            {
-                                                followShootPlayerAi.State = ShooterAiStates.Shooting;
-                                                followShootPlayerAi.ShootingTarget = targetPos;
-                                            }
-                                            else
-                                            {
-                                                MoveTo(entity, namelessGame, new Point(targetPos.X, targetPos.Y), true, followShootPlayerAi);
-                                                var route = followShootPlayerAi.Route;
-                                                if (route.Count == 0)
-                                                {
-                                                    followShootPlayerAi.State = ShooterAiStates.Idle;
-                                                }
-                                            }
-                                        }
+                        //                    MoveTo(entity, namelessGame, new Point(targetPos.X, targetPos.Y), true, followShootPlayerAi);
+                        //                    var route = followShootPlayerAi.Route;
+                        //                    if (route.Count == 0)
+                        //                    {
+                        //                        followShootPlayerAi.State = ShooterAiStates.Idle;
+                        //                    }
 
-                                        entity.GetComponentOfType<ActionPoints>().Points = -200;
-                                    }
-                                    break;
-                                case ShooterAiStates.Shooting:
-                                    {
-                                        FireWeaponCommand command = new FireWeaponCommand(entity, followShootPlayerAi.ShootingTarget);
-                                        namelessGame.Commander.EnqueueCommand(command);
+                        //                    //followShootPlayerAi.State = ShooterAiStates.Idle;
+                        //                    //followShootPlayerAi.ShootingTarget = targetPos;
+                        //                    namelessGame.Commander.EnqueueCommand(new LockIdleAnimationCommand(entity, AnimationType.Aiming));
+                        //                }
+                        //                else
+                        //                {
+                        //                    var weaponRange = npcStats.WeaponStats[0].Range;
+                        //                    if (distance <= weaponRange)
+                        //                    {
+                        //                        followShootPlayerAi.State = ShooterAiStates.Shooting;
+                        //                        followShootPlayerAi.ShootingTarget = targetPos;
+                        //                    }
+                        //                    else
+                        //                    {
+                        //                        MoveTo(entity, namelessGame, new Point(targetPos.X, targetPos.Y), true, followShootPlayerAi);
+                        //                        var route = followShootPlayerAi.Route;
+                        //                        if (route.Count == 0)
+                        //                        {
+                        //                            followShootPlayerAi.State = ShooterAiStates.Idle;
+                        //                        }
+                        //                    }
+                        //                }
 
-                                        entity.GetComponentOfType<ActionPoints>().Points = -100;
-                                        followShootPlayerAi.State = ShooterAiStates.Aiming;
-                                    }
-                                    break;
-                            }
-                        }
+                        //                entity.GetComponentOfType<ActionPoints>().Points = -200;
+                        //            }
+                        //            break;
+                        //        case ShooterAiStates.Shooting:
+                        //            {
+                        //                FireWeaponCommand command = new FireWeaponCommand(entity, followShootPlayerAi.ShootingTarget);
+                        //                namelessGame.Commander.EnqueueCommand(command);
+
+                        //                entity.GetComponentOfType<ActionPoints>().Points = -100;
+                        //                followShootPlayerAi.State = ShooterAiStates.Aiming;
+                        //            }
+                        //            break;
+                        //    }
+                        //}
                     }
                 }
             }
@@ -246,7 +295,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides, IRounteContainingAI aiComponent)
         {
-            IEntity worldEntity = namelessGame.TimelineEntity;
+            IEntity worldEntity = namelessGame.WorldTemplateEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {

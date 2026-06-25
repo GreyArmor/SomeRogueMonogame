@@ -53,7 +53,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var deathanimationCommand = new PlayCharacterAnimationForNumberOfLoopsCommand(entityToKill, AnimationType.Death, 6);
                 namelessGame.Commander.EnqueueCommand(deathanimationCommand);
 
-                IEntity worldEntity = namelessGame.TimelineEntity;
+                IEntity worldEntity = namelessGame.WorldTemplateEntity;
                 IWorldProvider worldProvider = null;
                 if (worldEntity != null)
                 {

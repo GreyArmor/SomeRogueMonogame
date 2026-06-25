@@ -44,7 +44,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     continue;
                 }
 
-                IEntity worldEntity = namelessGame.TimelineEntity;
+                IEntity worldEntity = namelessGame.WorldTemplateEntity;
                 IWorldProvider worldProvider = null;
                 if (worldEntity != null)
                 {

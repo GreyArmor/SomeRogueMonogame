@@ -250,7 +250,7 @@ namespace NamelessRogue.Engine.Serialization
                 game.CameraEntity = game.GetEntityByComponentClass<ConsoleCamera>();
                 game.Commander = game.GetEntityByComponentClass<Commander>().GetComponentOfType<Commander>();
                 game.PlayerEntity = game.GetEntityByComponentClass<Player>();
-                game.TimelineEntity = entity;
+                game.WorldTemplateEntity = entity;
                 game.CursorEntity = game.GetEntityByComponentClass<Cursor>();
                 game.FollowedByCameraEntity = game.GetEntityByComponentClass<FollowedByCamera>();
             }

@@ -8,6 +8,7 @@ using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.Timers;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Interaction;
@@ -33,10 +34,10 @@ namespace NamelessRogue.Engine.Factories
 
         public static Entity CreateDoor(int x, int y, int z, string objectId)
         {
-            Entity door  = new Entity();
+            Entity door = new Entity();
             door.AddComponent(new Position(x, y, z));
-            door.AddComponent(new Drawable("closed_"+objectId, new Engine.Utility.Color(1f, 1f, 1f)));
-            door.AddComponent(new Description("Door",""));
+            door.AddComponent(new Drawable("closed_" + objectId, new Engine.Utility.Color(1f, 1f, 1f)));
+            door.AddComponent(new Description("Door", ""));
             door.AddComponent(new Door(objectId, false));
             door.AddComponent(new SimpleSwitch(true));
             door.AddComponent(new Interactable());
@@ -48,10 +49,10 @@ namespace NamelessRogue.Engine.Factories
 
         public static Entity CreateWindow(int x, int y, int z, string tileObjectType)
         {
-            Entity window  = new Entity();
+            Entity window = new Entity();
             window.AddComponent(new Position(x, y, z));
             window.AddComponent(new Drawable(tileObjectType, new Engine.Utility.Color(1f, 1f, 1f), new Engine.Utility.Color()));
-            window.AddComponent(new Description("Window",""));
+            window.AddComponent(new Description("Window", ""));
             window.AddComponent(new OccupiesTile());
             window.AddComponent(new Furniture());
             return window;
@@ -65,13 +66,21 @@ namespace NamelessRogue.Engine.Factories
             var diagonalNeighbors = new DiagonalNeighborProviderSelfIncluded();
             var straightNeighbors = new StraightNeighborProviderSelfIncluded();
 
-            IEntity worldEntity = namelessGame.TimelineEntity;
+            IEntity worldEntity = namelessGame.WorldTemplateEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
                 worldProvider = worldEntity.GetComponentOfType<WorldTemplate>().WorldMap.Chunks;
             }
-   
+            var macroLocation = new MacroLocation()
+            {
+                Id = data.Id,
+                ChunkPosition = new Vector3Int(worldSpaceX, worldSpaceY, 0),
+                RealityPosition = new Vector3Int(realSpaceX, realSpaceY, 0),
+                BoundingBox = new Microsoft.Xna.Framework.BoundingBox(new Vector3(realSpaceX, realSpaceY, 0), new Vector3(realSpaceX + data.Size.X, realSpaceY + data.Size.Y, 0)),
+            };
+            namelessGame.MacroNavigator.Locations.Add(macroLocation);
+
             IEntity building = new Entity();
 
             building.AddComponent(new Description(data.Name, data.Description));
@@ -84,8 +93,9 @@ namespace NamelessRogue.Engine.Factories
                 //var map = new TiledMap("Content\\Buildings\\ApartmentBlockFloor.tmx");
 
                 var floorZ = buildingfloor.Floor;
+                Vector3Int floorChunkPosition = new Vector3Int(worldSpaceX, worldSpaceY, floorZ);
                 var mapPath = "Content\\" + buildingfloor.TiledFilePath.Path;
-                var map = new TiledMap(mapPath);              
+                var map = new TiledMap(mapPath);
 
                 // Retrieving objects or layers can be done using Linq or a for loop
                 var mainLayer = map.Layers.First(l => l.Name == "main");
@@ -96,8 +106,8 @@ namespace NamelessRogue.Engine.Factories
                 int buildingSize = map.Width;
 
                 bool hasCache = buildingCreationCache.TryGetValue(mapPath, out var buildingCache);
-                
-                if(!hasCache)
+
+                if (!hasCache)
                 {
                     var newCache = new BuildingDataCache();
                     newCache.CalculateCache(buildingSize, realSpaceX, realSpaceY, floorZ, worldProvider, mainLayer, tileset);
@@ -105,14 +115,14 @@ namespace NamelessRogue.Engine.Factories
                     buildingCache = newCache;
                 }
                 ////first determine which walls are corners and intersections
-            
+
                 for (int loopY = 0; loopY < buildingSize; loopY++)
                 {
                     for (int loopX = 0; loopX < buildingSize; loopX++)
                     {
-                        var gameTile = worldProvider.GetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ);                      
+                        var gameTile = worldProvider.GetTile(realSpaceX + loopX, realSpaceY + loopY, floorZ);
 
-                        if(terrainLayer!=null)
+                        if (terrainLayer != null)
                         {
                             var tileId = terrainLayer.Data[loopX + (loopY * buildingSize)];
                             if (tileId != 0)
@@ -138,16 +148,16 @@ namespace NamelessRogue.Engine.Factories
                             if (tileId != 0)
                             {
                                 var tile = tileset.Tiles.First(x => x.Id == tileId - 1);
-                                var tileObjectType = tile.Properties[0].Value;                           
-                               
+                                var tileObjectType = tile.Properties[0].Value;
+
                                 gameTile.TilesetPosition = buildingCache.tilesetPositions[loopY, loopX];
                                 switch (tileObjectType)
                                 {
-                                      case "nothingness":
+                                    case "nothingness":
                                         gameTile.Terrain = TerrainTypes.Nothingness;
                                         gameTile.Biome = Biomes.None;
                                         break;
-                                      default:
+                                    default:
                                         {
                                             if (tileObjectType.Contains("window"))
                                             {
@@ -159,7 +169,7 @@ namespace NamelessRogue.Engine.Factories
                                                 var entity = CreateDoor(realSpaceX + loopX, realSpaceY + loopY, floorZ, tileObjectType);
                                                 gameTile.AddEntity(entity);
 
-                                                if(tileObjectType.Contains("chainlink"))
+                                                if (tileObjectType.Contains("chainlink"))
                                                 {
                                                     entity.RemoveComponentOfType<BlocksVision>();
                                                     entity.GetComponentOfType<Door>().IsTranslucent = true;
@@ -212,8 +222,60 @@ namespace NamelessRogue.Engine.Factories
                     foreach (var tileObject in objects)
                     {
                         var tilePosition = tileObject.Position / tilemapTileSize;
+
+
+
+                        if (tileObject.Type == TiledObjectType.Polygon && tileObject.Class == "pedestrianMovementPolygon")
+                        {
+                           // if (onlyOnePath)
+                            {
+                             //   onlyOnePath = false;
+                                List<MacroNode> waypoinMacroNodetList = new List<MacroNode>();
+                                //create nodes
+                                for (int i = 0; i < tileObject.Polygon.Points.Count(); i++)
+                                {
+                                    var point = (tileObject.Polygon.Points[i] + tileObject.Position) / tilemapTileSize;
+                                    waypoinMacroNodetList.Add(new MacroNode()
+                                    {
+                                        Id = $@"pedestrianWaypoint{i}_x{realSpaceX}_y{realSpaceY}",
+                                        RealityPosition = new Vector3Int(realSpaceX + (int)point.X, realSpaceY + (int)point.Y, floorZ),
+                                    });
+                                  //  break;
+                                }
+
+                               // link them in a loop
+                                //for (int i = 0; i < waypoinMacroNodetList.Count(); i++)
+                                //{
+                                //    var currentNode = waypoinMacroNodetList[i];
+                                //    var nextNode = waypoinMacroNodetList[(i + 1) % waypoinMacroNodetList.Count()];
+                                //    var previousNode = waypoinMacroNodetList[(i - 1 + waypoinMacroNodetList.Count()) % waypoinMacroNodetList.Count()];
+                                //    currentNode.Neighbors = new List<MacroNode>() { previousNode, nextNode };
+                                //}
+                                for (int i = 0; i < tileObject.Polygon.Points.Count(); i++)
+                                {
+                                    var point = (tileObject.Polygon.Points[i] + tileObject.Position) / tilemapTileSize;
+                                    var waypoint = new Position(realSpaceX + (int)point.X, realSpaceY + (int)point.Y, floorZ);
+                                    //hack to calculate flow field to waypoint
+                                    var chunkCornerNW = new Position(realSpaceX, realSpaceY, floorZ);
+                                    var chunkCornerSE = new Position(realSpaceX + (int)data.Size.X, realSpaceY + (int)data.Size.Y, floorZ);
+                                    var fromPoint = waypoint.Point == chunkCornerNW.Point ? chunkCornerSE : chunkCornerNW;
+                                    //
+                                    var waypointId = ("waypoint" + waypoint.Point.ToPoint());
+                                    var flowId = namelessGame.FlowFieldController.CalculateToWaypoint(waypointId, waypoint.Point.ToPoint(), fromPoint.Point.ToPoint());
+                                    waypoinMacroNodetList[i].FlowFieldId = flowId;
+                                 //   break;
+                                }
+
+                                macroLocation.Nodes.AddRange(waypoinMacroNodetList);
+                            }
+                        }
+
                         if (tileObject.Type == TiledObjectType.Point)
-                        {                           
+                        {
+                            if (tileObject.Class == "waypoint")
+                            {
+
+                            }
                             var npc_id = tileObject.Properties[0].Value;
                             var hasCharacter = CharacterFactory.CharacterDataById.TryGetValue(npc_id, out var characterData);
 
@@ -223,14 +285,15 @@ namespace NamelessRogue.Engine.Factories
 
                                 if (characterData.RandomName)
                                 {
-                                    var randomValue = namelessGame.CurrentGame.GlobalRandom.Next(0, 100);
-                                    if (randomValue < 5)
+                                    if (BuildingFactory.onlyOne)
                                     {
-                                        var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
-                                        namelessGame.AddEntity(character);
-                                        gameTile.AddEntity(character);
+                                        BuildingFactory.onlyOne = false;
+                                        var randomValue = namelessGame.CurrentGame.GlobalRandom.Next(0, 100);
+                                    //    if (randomValue < 5)
+                                        {
+                                            var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
+                                        }
                                     }
-
                                 }
                                 else
                                 {
@@ -244,7 +307,7 @@ namespace NamelessRogue.Engine.Factories
                         {
                             var rectZise = tileObject.Size / tilemapTileSize;
                             var isRandomizer = tileObject.Name == "TerrainRandomizer";
-                            if(isRandomizer)
+                            if (isRandomizer)
                             {
                                 var randomizerRect = new Rectangle((int)tilePosition.X + realSpaceX, (int)tilePosition.Y + realSpaceY, (int)rectZise.X, (int)rectZise.Y);
                                 apartmentBlockShopsRandomizer.Randomize(worldProvider, randomizerRect, floorZ, namelessGame.CurrentGame.GlobalRandom);
@@ -256,6 +319,9 @@ namespace NamelessRogue.Engine.Factories
             building.AddComponent(buildingComponent);
             return building;
 
-        }
+        }   
+
+        public static bool onlyOne = true;
+        public static bool onlyOnePath = true;
     }
 }

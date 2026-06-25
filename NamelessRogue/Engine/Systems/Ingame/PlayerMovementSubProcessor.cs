@@ -108,7 +108,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                         if (actionPoints.Points >= 100)
                         {
-                            IEntity worldEntity = namelessGame.TimelineEntity;
+                            IEntity worldEntity = namelessGame.WorldTemplateEntity;
                             IWorldProvider worldProvider = null;
                             if (worldEntity != null)
                             {

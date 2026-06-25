@@ -55,4 +55,6 @@ namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
             };
         }
     }
+    public class PedestrianMovementAi : Component
+    { }
 }

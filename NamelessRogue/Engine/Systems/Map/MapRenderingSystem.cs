@@ -116,7 +116,7 @@ namespace NamelessRogue.Engine.Systems.Map
             game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
 
-            IEntity timeline = game.TimelineEntity;
+            IEntity timeline = game.WorldTemplateEntity;
             WorldMap worldProvider = null;
             if (timeline != null)
             {

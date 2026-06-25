@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using NamelessRogue.Engine.Abstraction;
 
 namespace NamelessRogue.Engine.Generation.World.BoardPieces
 {

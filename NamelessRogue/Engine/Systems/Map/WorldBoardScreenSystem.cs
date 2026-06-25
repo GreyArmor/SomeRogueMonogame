@@ -25,7 +25,7 @@ namespace NamelessRogue.Engine.Systems.Map
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
             ConsoleCamera camera = namelessGame.CameraEntity?.GetComponentOfType<ConsoleCamera>();
-            WorldTemplate timeline = namelessGame.TimelineEntity?.GetComponentOfType<WorldTemplate>();
+            WorldTemplate timeline = namelessGame.WorldTemplateEntity?.GetComponentOfType<WorldTemplate>();
             var tilePosition = camera.GetMouseTilePosition(namelessGame);
             var settings = namelessGame.WorldSettings;
 			var mapScreen = UIContainer.Instance.MapScreen;

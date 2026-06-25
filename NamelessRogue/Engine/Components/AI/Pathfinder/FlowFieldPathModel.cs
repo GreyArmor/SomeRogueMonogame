@@ -1,9 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using NamelessRogue.Engine.Components.Environment;
+using NamelessRogue.Engine.Components.Physical;
+using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
+using NamelessRogue.Engine.Systems.Ingame;
+using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,34 +33,33 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			return _key(p.X, p.Y);
 		}
 
-		Point flowFieldWorldPosition;
-		//used as the cost map
-		IWorldProvider world;
-		private int minX;
+        private NamelessGame game;
+
+        //used as the cost map
+        IWorldProvider world;
+        private readonly List<Chunk> chunks;
+        private int minX;
 		private int minY;
 		Dictionary<Point, FlowNode> Nodes;
 		bool[,] avalabilityArray;
 		int boolsWidth, boolsHeight;
-		BoundingBox chunksBox;
+		Microsoft.Xna.Framework.BoundingBox chunksBox;
 
 		public bool IsCalculated { get; internal set; }
 
-		public FlowFieldPathModel(NamelessGame game, IEnumerable<Point> chunkPath, IWorldProvider worldProvider, Point worldPosition)
+		public FlowFieldPathModel(NamelessGame game, IEnumerable<Point> chunkPath, IWorldProvider worldProvider)
 		{
+			this.game = game;
 			world = worldProvider;
-			this.flowFieldWorldPosition = worldPosition;
-
-			var chunks = new List<Chunk>();
+			chunks = new List<Chunk>();
 			var realitychunks = worldProvider.GetRealityBubbleChunks();
 
 			foreach (var chunkCoord in chunkPath)
 			{
 				chunks.Add(realitychunks[chunkCoord]);
-			}
+			}		
 
-		
-
-			chunksBox = chunks.Select(x => x.Bounds).Aggregate((a, b) => { return BoundingBox.CreateMerged(a, b); });
+			chunksBox = chunks.Select(x => x.Bounds).Aggregate((a, b) => { return Microsoft.Xna.Framework.BoundingBox.CreateMerged(a, b); });
 
 			boolsWidth = (int)(chunksBox.Max.X - chunksBox.Min.X);
 			boolsHeight = (int)(chunksBox.Max.Y - chunksBox.Min.Y);
@@ -93,10 +100,12 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 					{
 						var coordX = location.X + i;
 						var coordY = location.Y + j;
-						Nodes.Add(new Point(coordX, coordY), new FlowNode()
+						var tile = world.GetTile(coordX, coordY, 0);
+
+                        Nodes.Add(new Point(coordX, coordY), new FlowNode()
 						{
 							Coordinate = new Point(coordX, coordY),
-							Occupied = /* !world.GetTile(coordX, coordY).IsPassableIgnoringCharacters() ||*/ world.GetTile(coordX, coordY, 0).Terrain == TerrainTypes.Water,
+							Occupied = !tile.IsPassableIgnoringCharacters() || tile.Terrain == TerrainTypes.Water,
 							IntegrationValue = int.MaxValue
 						});
 
@@ -121,14 +130,14 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		public void ClaculateTo(Point to)
 		{
-			var toWorldPos = to;
+            var toRealityPos = to;
 			Queue<Point> openPoints = new Queue<Point>();
-			openPoints.Enqueue(toWorldPos);
+			openPoints.Enqueue(toRealityPos);
 			//destination
-			Nodes[toWorldPos] = new FlowNode() { IntegrationValue = 0, Cost = 0, Coordinate = toWorldPos };
+			Nodes[toRealityPos] = new FlowNode() { IntegrationValue = 0, Cost = 0, Coordinate = toRealityPos };
 
 
-			bool _insodeBoundsOfArea(int arrayX, int arrayY)
+			bool _insideBoundsOfArea(int arrayX, int arrayY)
 			{
 				return arrayX > 0 && arrayY > 0 && arrayX < boolsWidth && arrayY < boolsHeight;
 			}
@@ -142,7 +151,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				{
 					var arrayX = neighborP.X - minX + 1;
 					var arrayY = neighborP.Y - minY + 1;
-					if (avalabilityArray[arrayX, arrayY])
+					if (boolsWidth > arrayX && boolsHeight > arrayY && avalabilityArray[arrayX, arrayY])
 					{
 						var neighborNode = Nodes[neighborP];
 						if (!neighborNode.Occupied)
@@ -168,7 +177,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				{
 					var arrayX = neighborP.X - minX + 1;
 					var arrayY = neighborP.Y - minY + 1;
-					if (avalabilityArray[arrayX, arrayY])
+					if (boolsWidth > arrayX && boolsHeight > arrayY && avalabilityArray[arrayX, arrayY])
 					{
 						var neighborNode = Nodes[neighborP];
 
@@ -186,115 +195,223 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				Nodes[point].Next = bestCostFlowNode;
 			}
 
-			Nodes[toWorldPos] = new FlowNode() { IntegrationValue = 0, Cost = 0, Coordinate = toWorldPos };
+			Nodes[toRealityPos] = new FlowNode() { IntegrationValue = 0, Cost = 0, Coordinate = toRealityPos };
+
+
+
 
 			IsCalculated = true;
 		}
 
+		List<IEntity> debugEntitiesFurniture = new List<IEntity>();
+        List<IEntity> debugEntities = new List<IEntity>();
+        public void DrawDebug()
+		{
+            void _addFurniture(string id, string descriptionName, bool occupiesTile, bool blocksVision)
+            {
+                Entity entity = new Entity();
 
-		//public void ClaculateToV1(Point to)
-		//{
+                entity.AddComponent(new Drawable(id, new Engine.Utility.Color(1f)));
 
-		//	//	ResetNodes();
+                entity.AddComponent(new Description(descriptionName, ""));
+                if (occupiesTile)
+                {
+                    entity.AddComponent(new OccupiesTile());
+                }
+                if (blocksVision)
+                {
+                    entity.AddComponent(new BlocksVision());
+                }
+                entity.AddComponent(new Furniture());
+                entity.AddComponent(new PhantomEntity());
+                //FurnitureDictionary.Add(id, entity);
+                debugEntitiesFurniture.Add(entity);
+            }
+			if (debugEntitiesFurniture.Count == 0)
+			{
+				_addFurniture("middleDir", "Middle Direction", false, false);
+				_addFurniture("northDir", "North Direction", false, false);
+				_addFurniture("southDir", "South Direction", false, false);
+				_addFurniture("westDir", "West Direction", false, false);
+				_addFurniture("eastDir", "East Direction", false, false);
+				_addFurniture("nwDir", "Northwest Direction", false, false);
+				_addFurniture("neDir", "Northeast Direction", false, false);
+				_addFurniture("swDir", "Southwest Direction", false, false);
+				_addFurniture("seDir", "Southeast Direction", false, false);
+			}
 
-		//	var toWorldPos = to;
-		//	Queue<Point> openPoints = new Queue<Point>();
-		//	openPoints.Enqueue(toWorldPos);
+			foreach(var node in Nodes)
+			{
+				var point = node.Value.Coordinate;
+				var next = node.Value.Next;
+				if (next != null)
+				{
+					var direction = next.Coordinate - point;
+					string furnitureId = "middleDir";
+                    if (direction.X == 0 && direction.Y == 0)
+                    {
+                        furnitureId = "middleDir";
+                    }
+                    if (direction.X == 0 && direction.Y == 1)
+					{					
+                        furnitureId = "southDir";
+                    }
+					else if (direction.X == 0 && direction.Y == -1)
+					{
+                        furnitureId = "northDir";
+                    }
+					else if (direction.X == -1 && direction.Y == 0)
+					{
+						furnitureId = "westDir";
+					}
+					else if (direction.X == 1 && direction.Y == 0)
+					{
+						furnitureId = "eastDir";
+					}
+					else if (direction.X == -1 && direction.Y == 1)
+					{
+						furnitureId = "swDir";
+					}
+					else if (direction.X == 1 && direction.Y == 1)
+					{
+						furnitureId = "seDir";
+					}
+					else if (direction.X == -1 && direction.Y == -1)
+					{
+						furnitureId = "nwDir";
+					}
+					else if (direction.X == 1 && direction.Y == -1)
+					{
+						furnitureId = "neDir";
+					}
+					var entity = debugEntitiesFurniture.First(x => x.GetComponentOfType<Drawable>().ObjectID == furnitureId);
+					var entityClone = entity.CloneEntity();
+					entityClone.AddComponent(new Position(point.X,point.Y, 0));
+					
+					debugEntities.Add(entityClone);
+					//game.AddEntity(entityClone);
+					var gameTile = world.GetTile(point.X, point.Y, 0);
+                    gameTile.AddEntity((Entity)entityClone);
+                }
+            }
+
+			foreach (var chunk in chunks)
+			{
+				game.Commander.EnqueueCommand(new UpdateVisualChunkCommand(new Vector3Int(chunk.ChunkWorldMapLocationPoint.X, chunk.ChunkWorldMapLocationPoint.Y, 0)));
+			}
+        }
+
+		public void ClearDebug()
+		{
+			foreach (var entity in debugEntities)
+			{
+				game.RemoveEntity(entity);
+            }
+        }
+
+        //public void ClaculateToV1(Point to)
+        //{
+
+        //	//	ResetNodes();
+
+        //	var toWorldPos = to;
+        //	Queue<Point> openPoints = new Queue<Point>();
+        //	openPoints.Enqueue(toWorldPos);
 
 
-		//	//add impassable and cost Here
+        //	//add impassable and cost Here
 
-		//	//destination
-		//	Nodes[_keyP(toWorldPos)] = new FlowNode() { IntegrationValue = 0, Cost = 0, Coordinate = toWorldPos };
-
-
-		//	bool _insodeBoundsOfArea(int arrayX, int arrayY)
-		//	{
-		//		return arrayX > 0 && arrayY > 0 && arrayX < boolsWidth && arrayY < boolsHeight;
-		//	}
-
-		//	while (openPoints.Any())
-		//	{
-		//		var point = openPoints.Dequeue();
-		//		var currentFlowNode = Nodes[_keyP(point)];
-
-		//		var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
-		//		foreach (var neighborP in neighbors)
-		//		{
-
-		//			var arrayX = neighborP.X - minX;
-		//			var arrayY = neighborP.Y - minY;
-		//			if (_insodeBoundsOfArea(arrayX, arrayY))
-		//			{
-		//				if (avalabilityArray[arrayX, arrayY])
-		//				{   //if (!Nodes.ContainsKey(_keyP(neighborP)))
-		//					//{
-		//					//	continue;
-		//					//}
-		//					var neighborNode = Nodes[_keyP(neighborP)];
-		//					if (!neighborNode.Occupied)
-		//					{
-		//						var integrationValue = neighborNode.Cost + currentFlowNode.IntegrationValue;
-
-		//						if (integrationValue < neighborNode.IntegrationValue)
-		//						{
-		//							neighborNode.IntegrationValue = integrationValue;
-		//							openPoints.Enqueue(neighborP);
-		//						}
-		//					}
-		//				}
-		//			}
-		//		}
-		//	}
-
-		//	foreach (var node in Nodes)
-		//	{
-		//		var point = node.Value.Coordinate;
-
-		//		if (point == toWorldPos)
-		//		{
-		//			continue;
-		//		}
-
-		//		var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
-		//		FlowNode bestCostFlowNode = null;
-
-		//		foreach (var neighborP in neighbors)
-		//		{
-		//			var arrayX = neighborP.X - minX;
-		//			var arrayY = neighborP.Y - minY;
-		//			if (_insodeBoundsOfArea(arrayX, arrayY))
-		//			{
-		//				if (avalabilityArray[arrayX, arrayY])
-		//				{
-		//					var neighborNode = Nodes[_keyP(neighborP)];
-
-		//					if (neighborNode.Occupied)
-		//					{
-		//						continue;
-		//					}
-
-		//					if (bestCostFlowNode == null || (bestCostFlowNode.IntegrationValue > neighborNode.IntegrationValue))
-		//					{
-		//						bestCostFlowNode = neighborNode;
-		//					}
-		//				}
-		//			}
-		//		}
-		//		//	if (bestCostFlowNode != null)
-		//		//{
-		//		Nodes[_keyP(point)].Next = bestCostFlowNode;
-		//		//	}
-		//		//else
-		//		//{
-		//		//	Nodes.ToString();
-		//		//}
-		//	}
-		//	IsCalculated = true;
-		//}
+        //	//destination
+        //	Nodes[_keyP(toWorldPos)] = new FlowNode() { IntegrationValue = 0, Cost = 0, Coordinate = toWorldPos };
 
 
-		public Point GetNextPoint(Point from)
+        //	bool _insodeBoundsOfArea(int arrayX, int arrayY)
+        //	{
+        //		return arrayX > 0 && arrayY > 0 && arrayX < boolsWidth && arrayY < boolsHeight;
+        //	}
+
+        //	while (openPoints.Any())
+        //	{
+        //		var point = openPoints.Dequeue();
+        //		var currentFlowNode = Nodes[_keyP(point)];
+
+        //		var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
+        //		foreach (var neighborP in neighbors)
+        //		{
+
+        //			var arrayX = neighborP.X - minX;
+        //			var arrayY = neighborP.Y - minY;
+        //			if (_insodeBoundsOfArea(arrayX, arrayY))
+        //			{
+        //				if (avalabilityArray[arrayX, arrayY])
+        //				{   //if (!Nodes.ContainsKey(_keyP(neighborP)))
+        //					//{
+        //					//	continue;
+        //					//}
+        //					var neighborNode = Nodes[_keyP(neighborP)];
+        //					if (!neighborNode.Occupied)
+        //					{
+        //						var integrationValue = neighborNode.Cost + currentFlowNode.IntegrationValue;
+
+        //						if (integrationValue < neighborNode.IntegrationValue)
+        //						{
+        //							neighborNode.IntegrationValue = integrationValue;
+        //							openPoints.Enqueue(neighborP);
+        //						}
+        //					}
+        //				}
+        //			}
+        //		}
+        //	}
+
+        //	foreach (var node in Nodes)
+        //	{
+        //		var point = node.Value.Coordinate;
+
+        //		if (point == toWorldPos)
+        //		{
+        //			continue;
+        //		}
+
+        //		var neighbors = DiagonalNeighborProviderFlowfield.GetNeighbors(point);
+        //		FlowNode bestCostFlowNode = null;
+
+        //		foreach (var neighborP in neighbors)
+        //		{
+        //			var arrayX = neighborP.X - minX;
+        //			var arrayY = neighborP.Y - minY;
+        //			if (_insodeBoundsOfArea(arrayX, arrayY))
+        //			{
+        //				if (avalabilityArray[arrayX, arrayY])
+        //				{
+        //					var neighborNode = Nodes[_keyP(neighborP)];
+
+        //					if (neighborNode.Occupied)
+        //					{
+        //						continue;
+        //					}
+
+        //					if (bestCostFlowNode == null || (bestCostFlowNode.IntegrationValue > neighborNode.IntegrationValue))
+        //					{
+        //						bestCostFlowNode = neighborNode;
+        //					}
+        //				}
+        //			}
+        //		}
+        //		//	if (bestCostFlowNode != null)
+        //		//{
+        //		Nodes[_keyP(point)].Next = bestCostFlowNode;
+        //		//	}
+        //		//else
+        //		//{
+        //		//	Nodes.ToString();
+        //		//}
+        //	}
+        //	IsCalculated = true;
+        //}
+
+
+        public Point GetNextPoint(Point from)
 		{
 			//var s = Stopwatch.StartNew();
 			//var position = from - flowFieldWorldPosition;
