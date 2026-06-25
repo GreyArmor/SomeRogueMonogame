@@ -305,7 +305,10 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 		{
 			foreach (var entity in debugEntities)
 			{
-				game.RemoveEntity(entity);
+				var pos = entity.GetComponentOfType<Position>();
+				var tile = world.GetTile(pos.X, pos.Y, pos.Z);
+				tile.RemoveEntity((Entity)entity);
+                game.RemoveEntity(entity);
             }
         }
 

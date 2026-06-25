@@ -94,7 +94,9 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			this.world = world;
 		}
 
-	
+        internal Dictionary<int, FlowPathTuple> CurrentPathModels { get => currentPathModels; set => currentPathModels = value; }
+
+
         //returns path id
         public int CalculateTo(Point to, Point from)
 		{
@@ -220,8 +222,8 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			//{
 				fullPath.ClaculateTo(to);
 				fullPath.IsCalculated = true;
-				fullPath.ClearDebug();
-				fullPath.DrawDebug();
+				//fullPath.ClearDebug();
+				//fullPath.DrawDebug();
             //});
 
             idCounter++;

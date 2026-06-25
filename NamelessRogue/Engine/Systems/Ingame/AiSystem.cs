@@ -133,7 +133,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 entity.GetComponentOfType<ActionPoints>().Points = -200;
 
                                 var waypoints = closestLocation.Nodes;
-                                var closestWaypoint = waypoints.Where(x=>x.RealityPosition!=entityPos).OrderBy(w => (w.RealityPosition - entityPos).Length()).FirstOrDefault();
+                                var closestWaypoint = waypoints.Where(x => x.RealityPosition != entityPos).OrderBy(w => (w.RealityPosition - entityPos).Length()).FirstOrDefault();
                                 var pathId = closestWaypoint.FlowFieldId;
                                 if (pathId > -1)
                                 {
@@ -141,13 +141,18 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     flowMoveComponent.PathId = pathId;
                                     flowMoveComponent.FinishedMoving = false;
                                 }
-                                                                }
+
+                                namelessGame.FlowFieldController.CurrentPathModels[flowMoveComponent.PathId].FullPath.ClearDebug();
+                                namelessGame.FlowFieldController.CurrentPathModels[flowMoveComponent.PathId].FullPath.DrawDebug();
+
+                            }
                             if (!flowMoveComponent.FinishedMoving)
                             {
                                 var nextPoint = namelessGame.FlowFieldController.GetNextPoint(flowMoveComponent.PathId, entityPos.ToPoint());
                                 if (flowMoveComponent.To == nextPoint)
                                 {
                                     flowMoveComponent.FinishedMoving = true;
+                                    namelessGame.FlowFieldController.CurrentPathModels[flowMoveComponent.PathId].FullPath.ClearDebug();
                                     //continue;
                                 }
                                 namelessGame.WorldProvider.MoveEntity(entity,
