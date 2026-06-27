@@ -2,6 +2,7 @@ using Assimp;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Generation;
 using NamelessRogue.Engine.Generation.World;
@@ -177,5 +178,56 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 
 			return false;
 		}
-	}
+
+        public bool MoveEntitySwapCharacters(IEntity entity, Vector3Int moveTo)
+        {
+            return MoveEntitySwapCharacters(entity, moveTo.X, moveTo.Y, moveTo.Z);
+        }
+
+        public bool MoveEntitySwapCharacters(IEntity entity, int x, int y, int z)
+        {
+            Position position = entity.GetComponentOfType<Position>();
+            if (position != null)
+            {
+                IWorldProvider worldProvider = this;
+
+                Tile oldTile = worldProvider.GetTile(position.Point.X, position.Point.Y, position.Point.Z);
+                Tile newTile = worldProvider.GetTile(x, y, z);
+
+                if (newTile.IsPassable())
+                {
+                    oldTile.RemoveEntity((Entity)entity);
+                    newTile.AddEntity((Entity)entity);
+                    position.Point = new Vector3Int(x, y, z);
+                    return true;
+                }
+				else if(newTile.IsPassableIgnoringCharacters())
+                {
+					var newTileEntities = newTile.GetEntities();
+
+					foreach (var otherEntity in newTileEntities)
+					{
+						var isCharacter = otherEntity.GetComponentOfType<Character>() != null;
+						if (isCharacter)
+						{
+                            newTile.RemoveEntity((Entity)otherEntity);
+							oldTile.AddEntity((Entity)otherEntity);
+							var otherPosition = otherEntity.GetComponentOfType<Position>();
+							if (otherPosition != null)
+							{
+								otherPosition.Point = new Vector3Int(position.Point.X, position.Point.Y, position.Point.Z);
+                            }
+                        }
+					}
+
+                    oldTile.RemoveEntity((Entity)entity);
+                    newTile.AddEntity((Entity)entity);
+                    position.Point = new Vector3Int(x, y, z);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
 }

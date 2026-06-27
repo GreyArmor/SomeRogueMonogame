@@ -118,8 +118,6 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
             var path = navigator.Navigate(new Tile(fromWorldPos.X, fromWorldPos.Y), new Tile(toWorldPos.X, toWorldPos.Y));
 
-			
-
 			if (path == null)
 			{
 				return -1;
@@ -135,11 +133,11 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				pathOfPoints.AddRange(neighbors);
 			}
 
-			//foreach (var point in pathOfPoints.ToList())
-			//{
-			//	var neighbors = AllNeighborProviderFlowfield.GetNeighbors(point);
-			//	pathOfPoints.AddRange(neighbors);
-			//}
+			foreach (var point in pathOfPoints.ToList())
+			{
+				var neighbors = AllNeighborProviderFlowfield.GetNeighbors(point);
+				pathOfPoints.AddRange(neighbors);
+			}
 
 
 			foreach (var point in shortPathOfPoints.ToList())
@@ -148,11 +146,11 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				shortPathOfPoints.AddRange(neighbors);
 			}
 
-			//foreach (var point in shortPathOfPoints.ToList())
-			//{
-			//	var neighbors = AllNeighborProviderFlowfield.GetNeighbors(point);
-			//	shortPathOfPoints.AddRange(neighbors);
-			//}
+			foreach (var point in shortPathOfPoints.ToList())
+			{
+				var neighbors = AllNeighborProviderFlowfield.GetNeighbors(point);
+				shortPathOfPoints.AddRange(neighbors);
+			}
 
 
 			pathOfPoints = pathOfPoints.Distinct().ToList();
@@ -218,20 +216,54 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			stopwatch.Stop();
 			stopwatch.ToString();
 
-			//Task.Factory.StartNew(() =>
-			//{
+			Task.Factory.StartNew(() =>
+			{
 				fullPath.ClaculateTo(to);
 				fullPath.IsCalculated = true;
-				//fullPath.ClearDebug();
-				//fullPath.DrawDebug();
-            //});
+			});
 
-            idCounter++;
+			idCounter++;
 			currentPathModels.Add(idCounter, new FlowPathTuple() { FullPath = fullPath, ShortPath = shortPath });
 			return idCounter;
 		}
-		
-		public int CalculateToWaypoint(string waypointId, Point to, Point from)
+
+        public int CalculateToForArea(Point to, Point min, Point max)
+        {
+            var realitychunks = world.GetRealityBubbleChunks();
+
+
+            var toWorldPos = (to.ToVector2() / Constants.ChunkSize).ToPoint();			
+
+
+            List<Point> pathOfPoints = new List<Point>();
+			for (int x = min.X; x <= max.X; x++)
+			{
+				for (int y = min.Y; y <= max.Y; y++)
+				{
+					pathOfPoints.Add(new Point(x, y));
+                }
+            }
+
+
+            pathOfPoints = pathOfPoints.Where(p => realitychunks.ContainsKey(p)).ToList();
+
+			if(pathOfPoints.Count==0)
+			{
+				return -1;
+			}	
+
+            var fullPath = new FlowFieldPathModel(game, pathOfPoints, world);
+
+            fullPath.ClaculateTo(to);
+            fullPath.IsCalculated = true;
+
+			var shortPath = fullPath;
+            idCounter++;
+            currentPathModels.Add(idCounter, new FlowPathTuple() { FullPath = fullPath, ShortPath = shortPath });
+            return idCounter;
+        }
+
+        public int CalculateToWaypoint(string waypointId, Point to, Point from)
 		{
             var pathId = CalculateTo(to, from);
 			waypointIdToPathId[waypointId] = pathId;

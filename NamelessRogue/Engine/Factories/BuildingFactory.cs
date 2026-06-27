@@ -243,25 +243,28 @@ namespace NamelessRogue.Engine.Factories
                                   //  break;
                                 }
 
-                               // link them in a loop
-                                //for (int i = 0; i < waypoinMacroNodetList.Count(); i++)
-                                //{
-                                //    var currentNode = waypoinMacroNodetList[i];
-                                //    var nextNode = waypoinMacroNodetList[(i + 1) % waypoinMacroNodetList.Count()];
-                                //    var previousNode = waypoinMacroNodetList[(i - 1 + waypoinMacroNodetList.Count()) % waypoinMacroNodetList.Count()];
-                                //    currentNode.Neighbors = new List<MacroNode>() { previousNode, nextNode };
-                                //}
+                                //link them in a loop
+                                for (int i = 0; i < waypoinMacroNodetList.Count(); i++)
+                                {
+                                    var currentNode = waypoinMacroNodetList[i];
+                                    var nextNode = waypoinMacroNodetList[(i + 1) % waypoinMacroNodetList.Count()];
+                                    var previousNode = waypoinMacroNodetList[(i - 1 + waypoinMacroNodetList.Count()) % waypoinMacroNodetList.Count()];
+                                    currentNode.Neighbors = new List<MacroNode>() { previousNode, nextNode };
+                                }
                                 for (int i = 0; i < tileObject.Polygon.Points.Count(); i++)
                                 {
                                     var point = (tileObject.Polygon.Points[i] + tileObject.Position) / tilemapTileSize;
                                     var waypoint = new Position(realSpaceX + (int)point.X, realSpaceY + (int)point.Y, floorZ);
-                                    //hack to calculate flow field to waypoint
-                                    var chunkCornerNW = new Position(realSpaceX, realSpaceY, floorZ);
-                                    var chunkCornerSE = new Position(realSpaceX + (int)data.Size.X, realSpaceY + (int)data.Size.Y, floorZ);
-                                    var fromPoint = waypoint.Point == chunkCornerNW.Point ? chunkCornerSE : chunkCornerNW;
-                                    //
+
+                                    var oppositeWaypoint = waypoinMacroNodetList.Except(waypoinMacroNodetList[i].Neighbors).FirstOrDefault();
+
                                     var waypointId = ("waypoint" + waypoint.Point.ToPoint());
-                                    var flowId = namelessGame.FlowFieldController.CalculateToWaypoint(waypointId, waypoint.Point.ToPoint(), fromPoint.Point.ToPoint());
+
+                                    var buildingMin = new Point(worldSpaceX-1, worldSpaceY-1);
+                                    var buildingMax = new Point((worldSpaceX + (int)(data.Size.X / Constants.ChunkSize)+1), (worldSpaceY + (int)(data.Size.Y / Constants.ChunkSize)+1));
+
+
+                                    var flowId = namelessGame.FlowFieldController.CalculateToForArea(waypoint.Point.ToPoint(), buildingMin, buildingMax);
                                     waypoinMacroNodetList[i].FlowFieldId = flowId;
                                  //   break;
                                 }
@@ -285,11 +288,11 @@ namespace NamelessRogue.Engine.Factories
 
                                 if (characterData.RandomName)
                                 {
-                                    if (BuildingFactory.onlyOne)
+                                  //  if (BuildingFactory.onlyOne)
                                     {
-                                        BuildingFactory.onlyOne = false;
+                                     //   BuildingFactory.onlyOne = false;
                                         var randomValue = namelessGame.CurrentGame.GlobalRandom.Next(0, 100);
-                                    //    if (randomValue < 5)
+                                        if (randomValue < 50)
                                         {
                                             var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
                                         }
@@ -321,7 +324,7 @@ namespace NamelessRogue.Engine.Factories
 
         }   
 
-        public static bool onlyOne = true;
-        public static bool onlyOnePath = true;
+        //public static bool onlyOne = true;
+        //public static bool onlyOnePath = true;
     }
 }

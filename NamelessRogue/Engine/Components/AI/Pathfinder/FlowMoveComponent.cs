@@ -19,5 +19,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 		public int PathId { get; set; }
 		public Point To { get; set; }
 		public bool FinishedMoving { get; set; } = true;
-	}
+
+		public MacroNode CurrentMacroNode { get; set; } = null;
+    }
 }

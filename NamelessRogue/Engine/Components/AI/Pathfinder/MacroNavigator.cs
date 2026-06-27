@@ -24,6 +24,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
         public string Id { get; set; }
         public Vector3Int RealityPosition { get; set; } = Vector3Int.Zero;
         public int FlowFieldId { get; internal set; }
+        public List<MacroNode> Neighbors { get; internal set; }
     }
     public class MacroNavigator
     {

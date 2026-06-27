@@ -310,6 +310,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 				tile.RemoveEntity((Entity)entity);
                 game.RemoveEntity(entity);
             }
+			debugEntities.Clear();
         }
 
         //public void ClaculateToV1(Point to)
