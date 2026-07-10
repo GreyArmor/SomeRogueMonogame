@@ -227,14 +227,39 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			return idCounter;
 		}
 
-        public int CalculateToForArea(Point to, Point min, Point max)
+
+        public int SetDirectionForArea(FlowFieldDirection direction, Point min, Point max)
         {
             var realitychunks = world.GetRealityBubbleChunks();
 
+            List<Point> pathOfPoints = new List<Point>();
+            for (int x = min.X; x <= max.X; x++)
+            {
+                for (int y = min.Y; y <= max.Y; y++)
+                {
+                    pathOfPoints.Add(new Point(x, y));
+                }
+            }
 
-            var toWorldPos = (to.ToVector2() / Constants.ChunkSize).ToPoint();			
+            pathOfPoints = pathOfPoints.Where(p => realitychunks.ContainsKey(p)).ToList();
 
+            if (pathOfPoints.Count == 0)
+            {
+                return -1;
+            }
 
+            var fullPath = new FlowFieldPathModel(game, pathOfPoints, world);
+            fullPath.PaintWith(direction);
+
+            var shortPath = fullPath;
+            idCounter++;
+            currentPathModels.Add(idCounter, new FlowPathTuple() { FullPath = fullPath, ShortPath = shortPath });
+            return idCounter;
+        }
+
+        public int CalculateToForArea(Point to, Point min, Point max)
+        {
+            var toWorldPos = (to.ToVector2() / Constants.ChunkSize).ToPoint();
             List<Point> pathOfPoints = new List<Point>();
 			for (int x = min.X; x <= max.X; x++)
 			{
@@ -243,21 +268,49 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 					pathOfPoints.Add(new Point(x, y));
                 }
             }
+            return CalculateForChunks(to, pathOfPoints);
+        }
+
+        public int CalculateToForAreas(Point to, List<Rectangle> areas)
+        {
+            var toWorldPos = (to.ToVector2() / Constants.ChunkSize).ToPoint();
+            List<Point> pathOfPoints = new List<Point>();
+            foreach (var area in areas)
+            {
+				for (int x = area.Left; x <= area.Right; x++)
+				{
+					for (int y = area.Top; y <= area.Bottom; y++)
+					{
+						pathOfPoints.Add(new Point(x, y));
+					}
+				}
+            }
+            return CalculateForChunks(to, pathOfPoints);
+        }
 
 
-            pathOfPoints = pathOfPoints.Where(p => realitychunks.ContainsKey(p)).ToList();
+        public int CalculateForChunks(Point to, List<Point> chunks)
+        {
+            var realityChunks = world.GetRealityBubbleChunks();
 
-			if(pathOfPoints.Count==0)
-			{
-				return -1;
-			}	
+            var toWorldPos = (to.ToVector2() / Constants.ChunkSize).ToPoint();
+
+
+			List<Point> pathOfPoints = chunks;
+
+            pathOfPoints = pathOfPoints.Where(p => realityChunks.ContainsKey(p)).ToList();
+
+            if (pathOfPoints.Count == 0)
+            {
+                return -1;
+            }
 
             var fullPath = new FlowFieldPathModel(game, pathOfPoints, world);
 
             fullPath.ClaculateTo(to);
             fullPath.IsCalculated = true;
 
-			var shortPath = fullPath;
+            var shortPath = fullPath;
             idCounter++;
             currentPathModels.Add(idCounter, new FlowPathTuple() { FullPath = fullPath, ShortPath = shortPath });
             return idCounter;

@@ -21,9 +21,35 @@ using System.Windows.Forms;
 using Constants = NamelessRogue.Engine.Infrastructure.Constants;
 namespace NamelessRogue.Engine.Components.AI.Pathfinder
 {
-	internal class FlowFieldPathModel
+	public enum FlowFieldDirection : byte
 	{
-		string _key(int x, int y)
+		None,
+		North,
+		South,
+		East,
+		West,
+		NorthEast,
+		NorthWest,
+		SouthEast,
+		SouthWest
+    }
+
+    internal class FlowFieldPathModel
+	{
+		public static Dictionary<FlowFieldDirection, Point> Directions = new Dictionary<FlowFieldDirection, Point>()
+		{
+			{ FlowFieldDirection.None, new Point(0,0) },
+			{ FlowFieldDirection.North, new Point(0,-1) },
+			{ FlowFieldDirection.South, new Point(0,1) },
+			{ FlowFieldDirection.East, new Point(1,0) },
+			{ FlowFieldDirection.West, new Point(-1,0) },
+			{ FlowFieldDirection.NorthEast, new Point(1,-1) },
+			{ FlowFieldDirection.NorthWest, new Point(-1,-1) },
+			{ FlowFieldDirection.SouthEast, new Point(1,1) },
+			{ FlowFieldDirection.SouthWest, new Point(-1,1) }
+		};
+
+        string _key(int x, int y)
 		{
 			return x.ToString() + ':' + y.ToString();
 		}
@@ -47,7 +73,12 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
 		public bool IsCalculated { get; internal set; }
 
-		public FlowFieldPathModel(NamelessGame game, IEnumerable<Point> chunkPath, IWorldProvider worldProvider)
+        bool _insideBoundsOfArea(int arrayX, int arrayY)
+        {
+            return arrayX > 0 && arrayY > 0 && arrayX < boolsWidth && arrayY < boolsHeight;
+        }
+
+        public FlowFieldPathModel(NamelessGame game, IEnumerable<Point> chunkPath, IWorldProvider worldProvider)
 		{
 			this.game = game;
 			world = worldProvider;
@@ -128,6 +159,18 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			}
 		}
 
+
+		public void PaintWith(FlowFieldDirection direction)
+		{
+			foreach (var node in Nodes)
+			{
+				var point = node.Value.Coordinate;
+				var next = point + Directions[direction];
+				node.Value.Next = Nodes.ContainsKey(next) ? Nodes[next] : null;
+            }
+            IsCalculated = true;
+        }
+
 		public void ClaculateTo(Point to)
 		{
             var toRealityPos = to;
@@ -135,12 +178,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 			openPoints.Enqueue(toRealityPos);
 			//destination
 			Nodes[toRealityPos] = new FlowNode() { IntegrationValue = 0, Cost = 0, Coordinate = toRealityPos };
-
-
-			bool _insideBoundsOfArea(int arrayX, int arrayY)
-			{
-				return arrayX > 0 && arrayY > 0 && arrayX < boolsWidth && arrayY < boolsHeight;
-			}
+						
 			while (openPoints.Any())
 			{
 				var point = openPoints.Dequeue();

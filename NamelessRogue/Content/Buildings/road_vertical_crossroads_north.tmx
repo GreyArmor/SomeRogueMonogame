@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="4">
  <tileset firstgid="1" source="tileset2.tsx"/>
  <layer id="7" name="terrain" width="16" height="16">
   <data encoding="csv">
@@ -61,4 +61,11 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="8" name="objects">
+  <object id="1" name="sidewalk" type="pedestrian_crossing" x="13.3333" y="298.667" width="485.333" height="205.333">
+   <properties>
+    <property name="direction" value="horizontal"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

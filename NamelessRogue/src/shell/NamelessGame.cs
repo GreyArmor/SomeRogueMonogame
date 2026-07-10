@@ -352,7 +352,7 @@ namespace NamelessRogue.shell
 
 
             FlowFieldController = new FlowFieldController(this, WorldProvider);
-			MacroNavigator = new MacroNavigator();
+			MacroNavigator = new MacroNavigator(this);
             for (int worldX = 0; worldX < worldTemplate.WorldSize.X; worldX++)
 			{
 				for (int worldY = 0; worldY < worldTemplate.WorldSize.Y; worldY++)
@@ -397,7 +397,8 @@ namespace NamelessRogue.shell
             FollowedByCameraEntity = player;
             CursorEntity = GameInitializer.CreateCursor();
             TargeterEntity = GameInitializer.CreateTargeter();
-            WorldMapCameraEntity = GameInitializer.CreateWorldMapCamera();          
+            WorldMapCameraEntity = GameInitializer.CreateWorldMapCamera();
+			MacroNavigator.AnalyzeAndConnectLocations();
         }
 
         MusicPack musicPack;

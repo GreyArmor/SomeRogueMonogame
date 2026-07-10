@@ -139,14 +139,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 else
                                 {
                                     var closestLocation = namelessGame.MacroNavigator.Locations.Where(l => l.BoundingBox.Contains(new Vector3(entityPos.X, entityPos.Y, 0)) != ContainmentType.Disjoint).
-                                        FirstOrDefault(x=>x.Nodes.Any());
+                                        FirstOrDefault(x=>x.InternalNodes.Any());
 
-                                    if (closestLocation == null || closestLocation.Nodes.Count == 0)
+                                    if (closestLocation == null || closestLocation.InternalNodes.Count == 0)
                                     {
                                         entity.RemoveComponentOfType<AIControlled>();
                                         continue;
                                     }
-                                    var waypoints = closestLocation.Nodes;                                  
+                                    var waypoints = closestLocation.InternalNodes;                                  
                                     var closestWaypoint = waypoints.Where(x => x.RealityPosition != entityPos).OrderBy(w => (w.RealityPosition - entityPos).Length()).FirstOrDefault();
                                     var pathId = closestWaypoint.FlowFieldId;
                                     if (pathId > -1)
