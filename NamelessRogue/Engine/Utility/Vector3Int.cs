@@ -1088,5 +1088,10 @@ namespace NamelessRogue.Engine.Utility
         {
             return new Point(X, Y);
         }
+
+        public Microsoft.Xna.Framework.Vector3 ToVector3()
+        {
+            return new Microsoft.Xna.Framework.Vector3(X, Y, Z);
+        }
     }
 }

@@ -51,15 +51,17 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
 					if (!flowMoveComponent.FinishedMoving && position.X > 0 && position.Y > 0)
 					{
-						var nextPoint = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathId, position.Point.ToPoint());
-
-						if (flowMoveComponent.To == nextPoint)
+						var hasNext = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathId, position.Point.ToPoint(), out Point? nextPoint);
+						if (hasNext)
 						{
-							flowMoveComponent.FinishedMoving = true;
-							//continue;
+							if (flowMoveComponent.To == nextPoint.Value)
+							{
+								flowMoveComponent.FinishedMoving = true;
+								//continue;
+							}
+							namelessGame.WorldProvider.MoveEntity(movableEntity,
+							  nextPoint.Value.X, nextPoint.Value.Y, 0);
 						}
-						namelessGame.WorldProvider.MoveEntity(movableEntity,
-						  nextPoint.X, nextPoint.Y, 0);
 					}
 				}
 			}

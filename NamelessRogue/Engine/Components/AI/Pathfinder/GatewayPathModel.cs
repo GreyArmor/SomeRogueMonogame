@@ -37,21 +37,24 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
         public void DrawDebug()
         {}
 
-        public Point GetNextPoint(Point from)
+        public bool GetNextPoint(Point from, out Point? nextPoint)
         {            
             if(from == PointA)
             {
-                return PointB;
+                nextPoint = PointB;
+                return true;
             }
             else if (from == PointB)
             {
-                return PointA;
+                nextPoint =  PointA;
+                return true;
             }
             else
             {
-                throw new ArgumentException("The 'from' point must be either PointA or PointB.");
+                nextPoint = null;
+                return false;
             }
-        }
+        }        
 
         public void PaintWith(FlowFieldDirection direction)
         {

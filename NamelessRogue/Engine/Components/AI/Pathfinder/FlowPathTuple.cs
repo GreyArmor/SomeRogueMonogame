@@ -24,16 +24,16 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             FullPath.DrawDebug();
         }
 
-        public Point GetNextPoint(Point from)
+        public bool GetNextPoint(Point from, out Point? nextPoint)
         {
 
             if (FullPath.IsCalculated)
             {
-                return FullPath.GetNextPoint(from);
+                return FullPath.GetNextPoint(from, out nextPoint);
             }
             else
             {
-                return ShortPath.GetNextPoint(from);
+                return ShortPath.GetNextPoint(from, out nextPoint);
             }
         }
 

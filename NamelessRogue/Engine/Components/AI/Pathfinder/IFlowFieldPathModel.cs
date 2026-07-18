@@ -6,7 +6,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
     {
         bool IsCalculated { get; }
         void CalculateTo(Point to);
-        Point GetNextPoint(Point from);
+        bool GetNextPoint(Point from, out Point? nextPoint);
         void PaintWith(FlowFieldDirection direction);
     }
 }

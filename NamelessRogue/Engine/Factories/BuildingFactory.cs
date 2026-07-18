@@ -238,7 +238,7 @@ namespace NamelessRogue.Engine.Factories
                                 {
                                     var point = (tileObject.Polygon.Points[i] + tileObject.Position) / tilemapTileSize;
 
-                                    point = point + new System.Numerics.Vector2(macroLocation.RealityPosition.X, macroLocation.RealityPosition.Y);
+                                  //  point = point + new System.Numerics.Vector2(macroLocation.RealityPosition.X, macroLocation.RealityPosition.Y);
 
                                     var macroNodeType = nodeTypes[i];
                                                                      
@@ -261,8 +261,8 @@ namespace NamelessRogue.Engine.Factories
 
                                 //    var waypointId = ("waypoint" + waypoint.Point.ToPoint());
 
-                                //    var buildingMin = new Point(worldSpaceX - 1, worldSpaceY - 1);
-                                //    var buildingMax = new Point((worldSpaceX + (int)(data.Size.X / Constants.ChunkSize) + 1), (worldSpaceY + (int)(data.Size.Y / Constants.ChunkSize) + 1));
+                                   //var buildingMin = new Point(worldSpaceX - 1, worldSpaceY - 1);
+                                   //var buildingMax = new Point((worldSpaceX + (int)(data.Size.X / Constants.ChunkSize) + 1), (worldSpaceY + (int)(data.Size.Y / Constants.ChunkSize) + 1));
 
 
                                 //    var flowId = namelessGame.FlowFieldController.CalculateToForArea(waypoint.Point.ToPoint(), buildingMin, buildingMax);
@@ -290,9 +290,9 @@ namespace NamelessRogue.Engine.Factories
 
                                 if (characterData.RandomName)
                                 {
-                                  //  if (BuildingFactory.onlyOne)
+                                    //if (BuildingFactory.onlyOne)
                                     {
-                                     //   BuildingFactory.onlyOne = false;
+                                      //  BuildingFactory.onlyOne = false;
                                         var randomValue = namelessGame.CurrentGame.GlobalRandom.Next(0, 100);
                                         if (randomValue < 50)
                                         {
@@ -392,7 +392,7 @@ namespace NamelessRogue.Engine.Factories
 
         }   
 
-        //public static bool onlyOne = true;
+        public static bool onlyOne = true;
         //public static bool onlyOnePath = true;
     }
 }

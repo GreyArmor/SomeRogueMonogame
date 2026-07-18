@@ -17,7 +17,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
     {
 
         public List<Point> Points { get; set; } = new List<Point>();
-        int currentPointIndex = 0;
+        Dictionary<Point, Point> Nodes = new Dictionary<Point, Point>();
         private readonly IWorldProvider world;
         private readonly NamelessGame game;
 
@@ -36,6 +36,13 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             To = to;
             AStarPathfinderSimple aStarPathfinderSimple = new AStarPathfinderSimple();
             Points = aStarPathfinderSimple.FindPath(From, to, world, game);
+            Points.Insert(0, From);
+            for (int i = 0; i < Points.Count - 1; i++)
+            {
+                Point point = Points[i];
+                Nodes[point] = Points[i+1];
+            }
+            Nodes[Points[Points.Count - 1]] = Points[Points.Count - 1]; // Last point points to itself
         }
 
         public void ClearDebug()
@@ -48,18 +55,15 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
            // throw new NotImplementedException();
         }
 
-        public Point GetNextPoint(Point from)
+        public bool GetNextPoint(Point from, out Point? nextPoint)
         {
-            if (currentPointIndex < Points.Count)
+            if (Nodes.TryGetValue(from, out Point next))
             {
-                var nextPoint = Points[currentPointIndex];
-                currentPointIndex++;
-                return nextPoint;
+                nextPoint = next;
+                return true;
             }
-            else
-            {
-                return from; // No more points, return the current position
-            }
+            nextPoint = null;
+            return false;
         }
 
         public void PaintWith(FlowFieldDirection direction)

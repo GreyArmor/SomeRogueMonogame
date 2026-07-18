@@ -453,21 +453,28 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
         //}
 
 
-        public Point GetNextPoint(Point from)
+        public bool GetNextPoint(Point from, out Point? nextPoint)
         {
             //var s = Stopwatch.StartNew();
             //var position = from - flowFieldWorldPosition;
-            var next = Nodes[from].Next;
+            var fromExists = Nodes.TryGetValue(from, out FlowNode fromNode);
 
-            //TODO probably incorrect to do this, but for debug purposes leaving it like this
-            if (next == null)
+            if (!fromExists)
             {
-                return from;
+                nextPoint = null;
+                return false;
+            }
+
+            if (fromNode.Next == null)
+            {
+                nextPoint = fromNode.Coordinate;
+                return true;
             }
 
             //s.Stop();
             //Debug.WriteLine(s.ElapsedMilliseconds);
-            return new Point(next.Coordinate.X, next.Coordinate.Y);
+            nextPoint = new Point(fromNode.Next.Coordinate.X, fromNode.Next.Coordinate.Y);
+            return true;
         }
     }
 

@@ -98,16 +98,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             }
                             if (!flowMoveComponent.FinishedMoving)
                             {
-                                var nextPoint = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathChain[flowMoveComponent.CurrentPathIndex], entityPos.ToPoint());
+                                var hasNext = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathChain[flowMoveComponent.CurrentPathIndex], entityPos.ToPoint(), out Point? nextPoint);
                                 if (flowMoveComponent.To == nextPoint)
                                 {
                                     flowMoveComponent.FinishedMoving = true;
                                     oscillatorMovementAI.MovesToTarget = !oscillatorMovementAI.MovesToTarget;
                                     //continue;
                                 }
-                                namelessGame.WorldProvider.MoveEntity(entity,
-                                  nextPoint.X, nextPoint.Y, 0);
-                                entity.GetComponentOfType<ActionPoints>().Points = -200;
+                                if (hasNext && nextPoint.HasValue)
+                                {
+                                    namelessGame.WorldProvider.MoveEntity(entity,
+                                      nextPoint.Value.X, nextPoint.Value.Y, 0);
+                                    entity.GetComponentOfType<ActionPoints>().Points = -200;
+                                }
                             }
                         }
                         else
@@ -126,16 +129,16 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 entity.GetComponentOfType<ActionPoints>().Points = -200;
                                 if (flowMoveComponent.CurrentMacroNode != null)
                                 {
-                                    var waypoints = flowMoveComponent.CurrentMacroNode.Neighbors;
-                                    var closestWaypoint = waypoints[Random.Shared.Next(waypoints.Count)];
-                                    var pathId = closestWaypoint.FlowFieldId;
+                                    var waypoints = flowMoveComponent.CurrentMacroNode.NeighborConnectionPaths;
+                                    var closestWaypoint = waypoints.ToList()[Random.Shared.Next(waypoints.Count)];
+                                    var pathId = closestWaypoint.Value;
                                     if (pathId > -1)
                                     {
-                                        flowMoveComponent.To = closestWaypoint.RealityPosition.ToPoint();
+                                        flowMoveComponent.To = closestWaypoint.Key.RealityPosition.ToPoint();
                                         flowMoveComponent.PathChain = new List<int>() { pathId };
                                         flowMoveComponent.CurrentPathIndex = 0; 
                                         flowMoveComponent.FinishedMoving = false;
-                                        flowMoveComponent.CurrentMacroNode = closestWaypoint;
+                                        flowMoveComponent.CurrentMacroNode = closestWaypoint.Key;
                                     }
                                 }
                                 else
@@ -150,7 +153,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     }
                                     var waypoints = closestLocation.InternalNodes;                                  
                                     var closestWaypoint = waypoints.Where(x => x.RealityPosition != entityPos).OrderBy(w => (w.RealityPosition - entityPos).Length()).FirstOrDefault();
-                                    var pathId = closestWaypoint.FlowFieldId;
+                                    var pathId = closestWaypoint.LocationPathId;
                                     if (pathId > -1)
                                     {
                                         flowMoveComponent.To = closestWaypoint.RealityPosition.ToPoint();
@@ -167,29 +170,38 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             }
                             else
                             if (!flowMoveComponent.FinishedMoving)
-                            {
- 
+                            { 
                                 try
                                 {
-                                    var nextPoint = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathId, entityPos.ToPoint());
-                                    if (flowMoveComponent.To == nextPoint)
+                                    var hasNext = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathId, entityPos.ToPoint(), out Point? nextPoint);
+                                    if (hasNext && nextPoint.HasValue)
                                     {
-                                        flowMoveComponent.FinishedMoving = true;
-                                        //namelessGame.FlowFieldController.CurrentPathModels[flowMoveComponent.PathId].FullPath.ClearDebug();
-                                        //continue;
+                                        if (flowMoveComponent.To == nextPoint.Value)
+                                        {
+                                            flowMoveComponent.FinishedMoving = true;
+                                            //namelessGame.FlowFieldController.CurrentPathModels[flowMoveComponent.PathId].FullPath.ClearDebug();
+                                            //continue;
+                                        }
+                                        namelessGame.WorldProvider.MoveEntitySwapCharacters(entity,
+                                          nextPoint.Value.X, nextPoint.Value.Y, 0);
                                     }
-                                    namelessGame.WorldProvider.MoveEntitySwapCharacters(entity,
-                                      nextPoint.X, nextPoint.Y, 0);
+                                    else
+                                    {                                         
+                                        flowMoveComponent.FinishedMoving = true;
+                                        flowMoveComponent.CurrentMacroNode = null;
+                                        //namelessGame.FlowFieldController.CurrentPathModels[flowMoveComponent.PathId].FullPath.ClearDebug();
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
                                     Debug.WriteLine($"Error moving entity {entity.Id}: {ex.Message}");
                                     Debug.WriteLine($"entityPos {entityPos}");
                                     Debug.WriteLine($"flowMoveComponent.To {flowMoveComponent.To}");
-                                    Debug.WriteLine($"flowMoveComponent.CurrentMacroNode.FlowFieldId {flowMoveComponent.CurrentMacroNode.FlowFieldId}");
+                                    Debug.WriteLine($"flowMoveComponent.CurrentMacroNode.FlowFieldId {flowMoveComponent.CurrentMacroNode.LocationPathId}");
                                     Debug.WriteLine($"flowMoveComponent.CurrentMacroNode.RealityPosition {flowMoveComponent.CurrentMacroNode.RealityPosition}");
                                     flowMoveComponent.FinishedMoving = true;
-                                    entity.RemoveComponentOfType<AIControlled>();
+                                    flowMoveComponent.CurrentMacroNode = null;
+                                    // entity.RemoveComponentOfType<AIControlled>();
                                 }
                                 entity.GetComponentOfType<ActionPoints>().Points = -200;
                             }

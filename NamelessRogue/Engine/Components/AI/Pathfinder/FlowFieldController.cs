@@ -266,6 +266,15 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             return CalculateForChunks(to, pathOfPoints);
         }
 
+        public int CalculateToPointAStar(Point from, Point to)
+        {
+            AStarListPath aStarListPath = new AStarListPath(from, game.WorldProvider, game);
+            aStarListPath.CalculateTo(to);
+			            idCounter++;
+            currentPathModels.Add(idCounter, aStarListPath);
+            return idCounter;
+        }
+
         public int CalculateToForAreas(Point to, List<Rectangle> areas)
         {
             var toWorldPos = (to.ToVector2() / Constants.ChunkSize).ToPoint();
@@ -318,9 +327,9 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             return pathId;
         }
 
-        public Point GetNextPoint(int pathId, Point from)
+        public bool GetNextPoint(int pathId, Point from, out Point? nextPoint)
 		{
-            return currentPathModels[pathId].GetNextPoint(from);
+            return currentPathModels[pathId].GetNextPoint(from, out nextPoint);
 		}
 	}
 }
