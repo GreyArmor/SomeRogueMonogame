@@ -77,63 +77,51 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
         {
             foreach (var location in Locations)
             {
-                foreach (var otherLocation in Locations)
+                //link them in a loop
+                for (int i = 0; i < location.InternalNodes.Count(); i++)
                 {
-                    if (location == otherLocation) continue;
-                    if (location.BoundingBox.Intersects(otherLocation.BoundingBox))
-                    {
-                        // Check if the locations have complementary node types
-                        foreach (var node in location.InternalNodes)
-                        {
-                            //if (nodeTypeMappings.TryGetValue(node.Type, out NodeType complementaryType))
-                            //{
-                            //    var matchingNode = otherLocation.InternalNodes.FirstOrDefault(n => n.Type == complementaryType);
-                            //    if (matchingNode != null)
-                            //    {
-                            //        // Connect the nodes
-                            //        node.Neighbors.Add(matchingNode);
-                            //        matchingNode.Neighbors.Add(node);
-                            //    }
-                            //}
-                        }
-                    }
+                    var currentNode = location.InternalNodes[i];
+                    var nextNode = location.InternalNodes[(i + 1) % location.InternalNodes.Count()];
+                    var previousNode = location.InternalNodes[(i - 1 + location.InternalNodes.Count()) % location.InternalNodes.Count()];
+                    currentNode.Neighbors = new List<MacroNode>() { previousNode, nextNode };
                 }
+
             }
 
-            foreach (var crossing in Crossings)
-            {
-                List<MacroLocation> overlappingLocations = new List<MacroLocation>();
-                foreach (var otherLocation in Locations)
-                {
-                    if (crossing == otherLocation) continue;
-                    if (crossing.BoundingBox.Intersects(otherLocation.BoundingBox))
-                    {
-                        if (otherLocation.InternalNodes.Any())
-                        {
-                            overlappingLocations.Add(otherLocation);
-                        }
-                    }
-                }
-                // Connect the crossing to the overlapping locations
-                foreach (var overlappingLocation in overlappingLocations)
-                {
-                    foreach (var node in overlappingLocation.InternalNodes)
-                    {
-                        var nodeTypeMappings = crossing.Type == LocationType.CrossingVertical ? nodeTypeMappingsVertical : nodeTypeMappingsHorizontal;
+            //foreach (var crossing in Crossings)
+            //{
+            //    List<MacroLocation> overlappingLocations = new List<MacroLocation>();
+            //    foreach (var otherLocation in Locations)
+            //    {
+            //        if (crossing == otherLocation) continue;
+            //        if (crossing.BoundingBox.Intersects(otherLocation.BoundingBox))
+            //        {
+            //            if (otherLocation.InternalNodes.Any())
+            //            {
+            //                overlappingLocations.Add(otherLocation);
+            //            }
+            //        }
+            //    }
+            //    // Connect the crossing to the overlapping locations
+            //    foreach (var overlappingLocation in overlappingLocations)
+            //    {
+            //        foreach (var node in overlappingLocation.InternalNodes)
+            //        {
+            //            var nodeTypeMappings = crossing.Type == LocationType.CrossingVertical ? nodeTypeMappingsVertical : nodeTypeMappingsHorizontal;
 
-                        if (nodeTypeMappings.TryGetValue(node.Type, out NodeType complementaryType))
-                        {
-                            var matchingNode = overlappingLocation.InternalNodes.FirstOrDefault(n => n.Type == complementaryType);
-                            if (matchingNode != null)
-                            {
-                                // Connect the nodes
-                                node.Neighbors.Add(matchingNode);
-                                matchingNode.Neighbors.Add(node);
-                            }
-                        }
-                    }
-                }
-            }
+            //            if (nodeTypeMappings.TryGetValue(node.Type, out NodeType complementaryType))
+            //            {
+            //                var matchingNode = overlappingLocation.InternalNodes.FirstOrDefault(n => n.Type == complementaryType);
+            //                if (matchingNode != null)
+            //                {
+            //                    // Connect the nodes
+            //                    node.Neighbors.Add(matchingNode);
+            //                    matchingNode.Neighbors.Add(node);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
             foreach (var location in Locations)
             {
@@ -142,10 +130,10 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
                     if (node.Neighbors.Any())
                     {
                         var chSize = Constants.ChunkSize;
-                        var boundingBox = Microsoft.Xna.Framework.BoundingBox.CreateFromPoints(node.Neighbors.Select(x=>new Vector3(x.RealityPosition.X, x.RealityPosition.Y, 0)));
-                        var min = new Point((int)boundingBox.Min.X/ chSize, (int)boundingBox.Min.Y / chSize);
-                        var max = new Point((int)boundingBox.Max.X / chSize, (int)boundingBox.Max.Y / chSize);
-                        var flowId = game.FlowFieldController.CalculateToForArea(node.RealityPosition.ToPoint(), min, max);
+                        var boundingBox = location.BoundingBox;
+                        var min = new Point((int)(boundingBox.Min.X/ chSize), (int)(boundingBox.Min.Y / chSize));
+                        var max = new Point((int)(boundingBox.Max.X / chSize), (int)(boundingBox.Max.Y / chSize));
+                        var flowId = game.PathfindingController.CalculateToForArea(node.RealityPosition.ToPoint(), min, max);
                         node.FlowFieldId = flowId;
                     }
                 }

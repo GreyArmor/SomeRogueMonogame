@@ -28,7 +28,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 		{
 			while (namelessGame.Commander.DequeueCommand(out FlowFieldMoveCommand mc))
 			{
-				var pathId = namelessGame.FlowFieldController.CalculateTo(mc.To, mc.From);
+				var pathId = namelessGame.PathfindingController.CalculateTo(mc.To, mc.From);
 
 				if (pathId > -1)
 				{
@@ -36,8 +36,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					{
 						var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
 						flowMoveComponent.To = mc.To;
-						flowMoveComponent.PathId = pathId;
-						flowMoveComponent.FinishedMoving = false;
+						flowMoveComponent.PathChain = new List<int>() { pathId };
+						flowMoveComponent.CurrentPathIndex = 0;
+                        flowMoveComponent.FinishedMoving = false;
 					}
 				}
 			}
@@ -50,7 +51,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 					var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
 					if (!flowMoveComponent.FinishedMoving && position.X > 0 && position.Y > 0)
 					{
-						var nextPoint = namelessGame.FlowFieldController.GetNextPoint(flowMoveComponent.PathId, position.Point.ToPoint());
+						var nextPoint = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathId, position.Point.ToPoint());
 
 						if (flowMoveComponent.To == nextPoint)
 						{

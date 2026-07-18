@@ -86,18 +86,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             {
                                 entity.GetComponentOfType<ActionPoints>().Points = -200;
                                 var pathId = oscillatorMovementAI.MovesToTarget ?
-                                    namelessGame.FlowFieldController.CalculateTo(toPoint, fromPoint) :
-                                    namelessGame.FlowFieldController.CalculateTo(fromPoint, toPoint);
+                                    namelessGame.PathfindingController.CalculateTo(toPoint, fromPoint) :
+                                    namelessGame.PathfindingController.CalculateTo(fromPoint, toPoint);
                                 if (pathId > -1)
                                 {
                                     flowMoveComponent.To = oscillatorMovementAI.MovesToTarget ? toPoint : fromPoint;
-                                    flowMoveComponent.PathId = pathId;
+                                    flowMoveComponent.PathChain = new List<int>() { pathId };
+                                    flowMoveComponent.CurrentPathIndex = 0;
                                     flowMoveComponent.FinishedMoving = false;                                  
                                 }
                             }
                             if (!flowMoveComponent.FinishedMoving)
                             {
-                                var nextPoint = namelessGame.FlowFieldController.GetNextPoint(flowMoveComponent.PathId, entityPos.ToPoint());
+                                var nextPoint = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathChain[flowMoveComponent.CurrentPathIndex], entityPos.ToPoint());
                                 if (flowMoveComponent.To == nextPoint)
                                 {
                                     flowMoveComponent.FinishedMoving = true;
@@ -131,7 +132,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     if (pathId > -1)
                                     {
                                         flowMoveComponent.To = closestWaypoint.RealityPosition.ToPoint();
-                                        flowMoveComponent.PathId = pathId;
+                                        flowMoveComponent.PathChain = new List<int>() { pathId };
+                                        flowMoveComponent.CurrentPathIndex = 0; 
                                         flowMoveComponent.FinishedMoving = false;
                                         flowMoveComponent.CurrentMacroNode = closestWaypoint;
                                     }
@@ -152,7 +154,8 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     if (pathId > -1)
                                     {
                                         flowMoveComponent.To = closestWaypoint.RealityPosition.ToPoint();
-                                        flowMoveComponent.PathId = pathId;
+                                        flowMoveComponent.PathChain = new List<int>() { pathId };
+                                        flowMoveComponent.CurrentPathIndex = 0;
                                         flowMoveComponent.FinishedMoving = false;
                                         flowMoveComponent.CurrentMacroNode = closestWaypoint;
                                     }
@@ -168,11 +171,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
  
                                 try
                                 {
-                                    var nextPoint = namelessGame.FlowFieldController.GetNextPoint(flowMoveComponent.PathId, entityPos.ToPoint());
+                                    var nextPoint = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathId, entityPos.ToPoint());
                                     if (flowMoveComponent.To == nextPoint)
                                     {
                                         flowMoveComponent.FinishedMoving = true;
-                                        namelessGame.FlowFieldController.CurrentPathModels[flowMoveComponent.PathId].FullPath.ClearDebug();
+                                        //namelessGame.FlowFieldController.CurrentPathModels[flowMoveComponent.PathId].FullPath.ClearDebug();
                                         //continue;
                                     }
                                     namelessGame.WorldProvider.MoveEntitySwapCharacters(entity,

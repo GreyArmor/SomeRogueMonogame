@@ -232,6 +232,7 @@ namespace NamelessRogue.Engine.Factories
                             {
                              //   onlyOnePath = false;
                                 List<MacroNode> waypoinMacroNodetList = new List<MacroNode>();
+                                NodeType[] nodeTypes = new NodeType[] { NodeType.PedestrianEntranceNW, NodeType.PedestrianEntranceNE, NodeType.PedestrianEntranceSE, NodeType.PedestrianEntranceSW, };
                                 //create nodes
                                 for (int i = 0; i < tileObject.Polygon.Points.Count(); i++)
                                 {
@@ -239,38 +240,8 @@ namespace NamelessRogue.Engine.Factories
 
                                     point = point + new System.Numerics.Vector2(macroLocation.RealityPosition.X, macroLocation.RealityPosition.Y);
 
-                                    var macroNodeType = NodeType.None;
-
-                                    var boundingBox = macroLocation.BoundingBox;
-                                    var min = new Microsoft.Xna.Framework.Vector2((int)boundingBox.Min.X, (int)boundingBox.Min.Y);
-                                    var max = new Microsoft.Xna.Framework.Vector2((int)boundingBox.Max.X, (int)boundingBox.Max.Y);
-                                    var topRight = new Microsoft.Xna.Framework.Vector2((int)boundingBox.Max.X, (int)boundingBox.Min.Y);
-                                    var bottomLeft = new Microsoft.Xna.Framework.Vector2((int)boundingBox.Min.X, (int)boundingBox.Max.Y);
-
-                                    var distToMin = Microsoft.Xna.Framework.Vector2.Distance(point, min);
-                                    var distToMax = Microsoft.Xna.Framework.Vector2.Distance(point, max);
-                                    var distToTopRight = Microsoft.Xna.Framework.Vector2.Distance(point, topRight);
-                                    var distToBottomLeft = Microsoft.Xna.Framework.Vector2.Distance(point, bottomLeft);
-
-                                    List<float> distances = new List<float>() { distToMin, distToMax, distToTopRight, distToBottomLeft };
-
-                                    int indexOfClosest = distances.IndexOf(distances.Min());
-                                    if (indexOfClosest == 0)
-                                    {
-                                        macroNodeType = NodeType.PedestrianEntranceNW;
-                                    }
-                                    else if (indexOfClosest == 1)
-                                    {
-                                        macroNodeType = NodeType.PedestrianEntranceSE;
-                                    }
-                                    else if (indexOfClosest == 2)
-                                    {
-                                        macroNodeType = NodeType.PedestrianEntranceNE;
-                                    }
-                                    else if (indexOfClosest == 3)
-                                    {
-                                        macroNodeType = NodeType.PedestrianEntranceSW;
-                                    }
+                                    var macroNodeType = nodeTypes[i];
+                                                                     
                                     waypoinMacroNodetList.Add(new MacroNode()
                                     {
                                         Id = $@"pedestrianWaypoint{i}_x{realSpaceX}_y{realSpaceY}",
@@ -280,30 +251,23 @@ namespace NamelessRogue.Engine.Factories
                                   //  break;
                                 }
 
-                                //link them in a loop
-                                for (int i = 0; i < waypoinMacroNodetList.Count(); i++)
-                                {
-                                    var currentNode = waypoinMacroNodetList[i];
-                                    var nextNode = waypoinMacroNodetList[(i + 1) % waypoinMacroNodetList.Count()];
-                                    var previousNode = waypoinMacroNodetList[(i - 1 + waypoinMacroNodetList.Count()) % waypoinMacroNodetList.Count()];
-                                    currentNode.Neighbors = new List<MacroNode>() { previousNode, nextNode };
-                                }
+
                                 //for (int i = 0; i < tileObject.Polygon.Points.Count(); i++)
                                 //{
                                 //    var point = (tileObject.Polygon.Points[i] + tileObject.Position) / tilemapTileSize;
                                 //    var waypoint = new Position(realSpaceX + (int)point.X, realSpaceY + (int)point.Y, floorZ);
 
-                                //    var oppositeWaypoint = waypoinMacroNodetList.Except(waypoinMacroNodetList[i].Neighbors).FirstOrDefault();
+                                //   // var oppositeWaypoint = waypoinMacroNodetList.Except(waypoinMacroNodetList[i].Neighbors).FirstOrDefault();
 
                                 //    var waypointId = ("waypoint" + waypoint.Point.ToPoint());
 
-                                //    var buildingMin = new Point(worldSpaceX-1, worldSpaceY-1);
-                                //    var buildingMax = new Point((worldSpaceX + (int)(data.Size.X / Constants.ChunkSize)+1), (worldSpaceY + (int)(data.Size.Y / Constants.ChunkSize)+1));
+                                //    var buildingMin = new Point(worldSpaceX - 1, worldSpaceY - 1);
+                                //    var buildingMax = new Point((worldSpaceX + (int)(data.Size.X / Constants.ChunkSize) + 1), (worldSpaceY + (int)(data.Size.Y / Constants.ChunkSize) + 1));
 
 
                                 //    var flowId = namelessGame.FlowFieldController.CalculateToForArea(waypoint.Point.ToPoint(), buildingMin, buildingMax);
                                 //    waypoinMacroNodetList[i].FlowFieldId = flowId;
-                                // //   break;
+                                //    //   break;
                                 //}
 
                                 macroLocation.InternalNodes.AddRange(waypoinMacroNodetList);

@@ -82,7 +82,7 @@ namespace NamelessRogue.shell
 
         public Commander Commander { get; set; }
 
-        public FlowFieldController FlowFieldController {get; private set; }
+        public PathfindingController PathfindingController {get; private set; }
         public MacroNavigator MacroNavigator { get; private set; }
 
         // this lookup is very expensive, avoid using in loops
@@ -351,7 +351,7 @@ namespace NamelessRogue.shell
 
 
 
-            FlowFieldController = new FlowFieldController(this, WorldProvider);
+            PathfindingController = new PathfindingController(this, WorldProvider);
 			MacroNavigator = new MacroNavigator(this);
             for (int worldX = 0; worldX < worldTemplate.WorldSize.X; worldX++)
 			{
