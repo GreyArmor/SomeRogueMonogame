@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" class="waypoint" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="158">
+<map version="1.10" tiledversion="1.11.0" class="waypoint" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="167">
  <tileset firstgid="1" source="tileset2.tsx"/>
  <layer id="6" name="terrain" width="64" height="64">
   <data encoding="csv">
@@ -214,408 +214,420 @@
   <object id="21" name="ReservedTiles" type="TileReserver" x="900" y="364" width="234" height="12"/>
   <object id="22" name="ReservedTiles" type="TileReserver" x="361" y="1138" width="234" height="12" rotation="-90"/>
   <object id="23" name="ReservedTiles" type="TileReserver" x="1675" y="1140" width="234" height="12" rotation="-90"/>
-  <object id="24" name="ReservedTiles" type="TileReserver" x="569.667" y="918" width="115.333" height="12" rotation="-180"/>
-  <object id="25" name="ReservedTiles" type="TileReserver" x="1602.33" y="1144.67" width="115.333" height="12" rotation="-180"/>
+  <object id="24" name="ReservedTiles" type="random_npc" x="569.667" y="918" width="115.333" height="12" rotation="-180"/>
+  <object id="25" name="ReservedTiles" type="random_npc" x="1602.33" y="1144.67" width="115.333" height="12" rotation="-180"/>
   <object id="26" name="ReservedTiles" type="TileReserver" x="1141" y="450" width="115.333" height="12" rotation="90"/>
   <object id="28" name="ReservedTiles" type="TileReserver" x="915.667" y="1383.33" width="115.333" height="12" rotation="90"/>
-  <object id="29" name="random_npc" x="18.6667" y="186.667">
+  <object id="29" name="random_npc" type="random_npc" x="18.6667" y="186.667">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="30" name="random_npc" x="45.3333" y="317.333">
+  <object id="30" name="random_npc" type="random_npc" x="45.3333" y="317.333">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="31" name="random_npc" x="49.3333" y="545.333">
+  <object id="31" name="random_npc" type="random_npc" x="49.3333" y="545.333">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="32" name="random_npc" x="24" y="434.667">
+  <object id="32" name="random_npc" type="random_npc" x="24" y="434.667">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="33" name="random_npc" x="17.3334" y="680">
+  <object id="33" name="random_npc" type="random_npc" x="17.3334" y="680">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="34" name="random_npc" x="44" y="810.666">
+  <object id="34" name="random_npc" type="random_npc" x="44" y="810.666">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="35" name="random_npc" x="48" y="1038.67">
+  <object id="35" name="random_npc" type="random_npc" x="48" y="1038.67">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="36" name="random_npc" x="22.6667" y="928">
+  <object id="36" name="random_npc" type="random_npc" x="22.6667" y="928">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="37" name="random_npc" x="18.6667" y="1160">
+  <object id="37" name="random_npc" type="random_npc" x="18.6667" y="1160">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="38" name="random_npc" x="45.3333" y="1290.67">
+  <object id="38" name="random_npc" type="random_npc" x="45.3333" y="1290.67">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="39" name="random_npc" x="49.3333" y="1518.67">
+  <object id="39" name="random_npc" type="random_npc" x="49.3333" y="1518.67">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="40" name="random_npc" x="24" y="1408">
+  <object id="40" name="random_npc" type="random_npc" x="24" y="1408">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="41" name="random_npc" x="18.6667" y="1680">
+  <object id="41" name="random_npc" type="random_npc" x="18.6667" y="1680">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="42" name="random_npc" x="45.3333" y="1810.67">
+  <object id="42" name="random_npc" type="random_npc" x="45.3333" y="1810.67">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="43" name="random_npc" x="49.3333" y="2038.67">
+  <object id="43" name="random_npc" type="random_npc" x="49.3333" y="2038.67">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="44" name="random_npc" x="24" y="1928">
+  <object id="44" name="random_npc" type="random_npc" x="24" y="1928">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="61" name="random_npc" x="1994.67" y="152.606">
+  <object id="61" name="random_npc" type="random_npc" x="1994.67" y="152.606">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="62" name="random_npc" x="2021.33" y="283.272">
+  <object id="62" name="random_npc" type="random_npc" x="2021.33" y="283.272">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="63" name="random_npc" x="2025.33" y="511.272">
+  <object id="63" name="random_npc" type="random_npc" x="2025.33" y="511.272">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="64" name="random_npc" x="2000" y="400.606">
+  <object id="64" name="random_npc" type="random_npc" x="2000" y="400.606">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="65" name="random_npc" x="1993.33" y="645.939">
+  <object id="65" name="random_npc" type="random_npc" x="1993.33" y="645.939">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="66" name="random_npc" x="2020" y="776.605">
+  <object id="66" name="random_npc" type="random_npc" x="2020" y="776.605">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="67" name="random_npc" x="2024" y="1004.61">
+  <object id="67" name="random_npc" type="random_npc" x="2024" y="1004.61">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="68" name="random_npc" x="1998.67" y="893.939">
+  <object id="68" name="random_npc" type="random_npc" x="1998.67" y="893.939">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="69" name="random_npc" x="1994.67" y="1125.94">
+  <object id="69" name="random_npc" type="random_npc" x="1994.67" y="1125.94">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="70" name="random_npc" x="2021.33" y="1256.61">
+  <object id="70" name="random_npc" type="random_npc" x="2021.33" y="1256.61">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="71" name="random_npc" x="2025.33" y="1484.61">
+  <object id="71" name="random_npc" type="random_npc" x="2025.33" y="1484.61">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="72" name="random_npc" x="2000" y="1373.94">
+  <object id="72" name="random_npc" type="random_npc" x="2000" y="1373.94">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="73" name="random_npc" x="1994.67" y="1645.94">
+  <object id="73" name="random_npc" type="random_npc" x="1994.67" y="1645.94">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="74" name="random_npc" x="2021.33" y="1776.61">
+  <object id="74" name="random_npc" type="random_npc" x="2021.33" y="1776.61">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="75" name="random_npc" x="2012.33" y="1978.61">
+  <object id="75" name="random_npc" type="random_npc" x="2012.33" y="1978.61">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="76" name="random_npc" x="2000" y="1893.94">
+  <object id="76" name="random_npc" type="random_npc" x="2000" y="1893.94">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="93" name="random_npc" x="1820.06" y="2040.36">
+  <object id="93" name="random_npc" type="random_npc" x="1820.06" y="2040.36">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="94" name="random_npc" x="1573" y="2044">
+  <object id="94" name="random_npc" type="random_npc" x="1573" y="2044">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="95" name="random_npc" x="1934" y="2018">
+  <object id="95" name="random_npc" type="random_npc" x="1934" y="2018">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="96" name="random_npc" x="1686" y="2011">
+  <object id="96" name="random_npc" type="random_npc" x="1686" y="2011">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="97" name="random_npc" x="1403.06" y="2029.36">
+  <object id="97" name="random_npc" type="random_npc" x="1403.06" y="2029.36">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="98" name="random_npc" x="1155" y="2032">
+  <object id="98" name="random_npc" type="random_npc" x="1155" y="2032">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="99" name="random_npc" x="1504" y="1997">
+  <object id="99" name="random_npc" type="random_npc" x="1504" y="1997">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="100" name="random_npc" x="1262" y="2000">
+  <object id="100" name="random_npc" type="random_npc" x="1262" y="2000">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="101" name="random_npc" x="957.06" y="2033.36">
+  <object id="101" name="random_npc" type="random_npc" x="957.06" y="2033.36">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="102" name="random_npc" x="709" y="2036">
+  <object id="102" name="random_npc" type="random_npc" x="709" y="2036">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="103" name="random_npc" x="1058" y="2001">
+  <object id="103" name="random_npc" type="random_npc" x="1058" y="2001">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="104" name="random_npc" x="816" y="2004">
+  <object id="104" name="random_npc" type="random_npc" x="816" y="2004">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="105" name="random_npc" x="423.06" y="2031.36">
+  <object id="105" name="random_npc" type="random_npc" x="423.06" y="2031.36">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="106" name="random_npc" x="175" y="2034">
+  <object id="106" name="random_npc" type="random_npc" x="175" y="2034">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="107" name="random_npc" x="524" y="1999">
+  <object id="107" name="random_npc" type="random_npc" x="524" y="1999">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="108" name="random_npc" x="282" y="2002">
+  <object id="108" name="random_npc" type="random_npc" x="282" y="2002">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="109" name="random_npc" x="1772.12" y="56.7236">
+  <object id="109" name="random_npc" type="random_npc" x="1772.12" y="56.7236">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="110" name="random_npc" x="1525.06" y="60.3636">
+  <object id="110" name="random_npc" type="random_npc" x="1525.06" y="60.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="111" name="random_npc" x="1886.06" y="34.3636">
+  <object id="111" name="random_npc" type="random_npc" x="1886.06" y="34.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="112" name="random_npc" x="1638.06" y="27.3636">
+  <object id="112" name="random_npc" type="random_npc" x="1638.06" y="27.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="113" name="random_npc" x="1355.12" y="45.7236">
+  <object id="113" name="random_npc" type="random_npc" x="1355.12" y="45.7236">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="114" name="random_npc" x="1107.06" y="48.3636">
+  <object id="114" name="random_npc" type="random_npc" x="1107.06" y="48.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="115" name="random_npc" x="1456.06" y="13.3636">
+  <object id="115" name="random_npc" type="random_npc" x="1456.06" y="13.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="116" name="random_npc" x="1214.06" y="16.3636">
+  <object id="116" name="random_npc" type="random_npc" x="1214.06" y="16.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="117" name="random_npc" x="909.121" y="49.7236">
+  <object id="117" name="random_npc" type="random_npc" x="909.121" y="49.7236">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="118" name="random_npc" x="661.061" y="52.3636">
+  <object id="118" name="random_npc" type="random_npc" x="661.061" y="52.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="119" name="random_npc" x="1010.06" y="17.3636">
+  <object id="119" name="random_npc" type="random_npc" x="1010.06" y="17.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="120" name="random_npc" x="768.061" y="20.3636">
+  <object id="120" name="random_npc" type="random_npc" x="768.061" y="20.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="121" name="random_npc" x="375.121" y="47.7236">
+  <object id="121" name="random_npc" type="random_npc" x="375.121" y="47.7236">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="122" name="random_npc" x="127.061" y="50.3636">
+  <object id="122" name="random_npc" type="random_npc" x="127.061" y="50.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="123" name="random_npc" x="476.061" y="15.3636">
+  <object id="123" name="random_npc" type="random_npc" x="476.061" y="15.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="124" name="random_npc" x="234.061" y="18.3636">
+  <object id="124" name="random_npc" type="random_npc" x="234.061" y="18.3636">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="125" name="random_npc" x="1990" y="44">
+  <object id="125" name="random_npc" type="random_npc" x="1990" y="44">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="126" name="random_npc" x="20.6667" y="88.6667">
+  <object id="126" name="random_npc" type="random_npc" x="20.6667" y="88.6667">
    <properties>
     <property name="NPC_id" value="ba29fb6c-dd89-49a5-a320-a35258f270ed"/>
    </properties>
    <point/>
   </object>
-  <object id="157" name="pedestrianMovementPolygon" type="pedestrianMovementPolygon" x="16" y="15.5">
-   <polygon points="0,0 2015,5.5 2018,2014.5 -2,2014.5"/>
+  <object id="157" name="pedestrianMovementPolygon" type="pedestrianMovementPolygon" x="17.995" y="46.5">
+   <polygon points="0,0 2010.01,5.34438 2013,1957.5 -1.99505,1957.5"/>
+  </object>
+  <object id="162" name="streetlight" type="streetlight" x="2030.5" y="2033">
+   <point/>
+  </object>
+  <object id="164" name="streetlight" type="streetlight" x="16.5" y="2031.5">
+   <point/>
+  </object>
+  <object id="165" name="streetlight" type="streetlight" x="16" y="17">
+   <point/>
+  </object>
+  <object id="166" name="streetlight" type="streetlight" x="2031" y="17.5">
+   <point/>
   </object>
  </objectgroup>
 </map>

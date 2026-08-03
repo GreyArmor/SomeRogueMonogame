@@ -232,7 +232,7 @@ namespace NamelessRogue.Engine.Factories
                             {
                              //   onlyOnePath = false;
                                 List<MacroNode> waypoinMacroNodetList = new List<MacroNode>();
-                                NodeType[] nodeTypes = new NodeType[] { NodeType.PedestrianEntranceNW, NodeType.PedestrianEntranceNE, NodeType.PedestrianEntranceSE, NodeType.PedestrianEntranceSW, };
+                                //NodeType[] nodeTypes = new NodeType[] { NodeType., NodeType.PedestrianEntranceNE, NodeType.PedestrianEntranceSE, NodeType.PedestrianEntranceSW, };
                                 //create nodes
                                 for (int i = 0; i < tileObject.Polygon.Points.Count(); i++)
                                 {
@@ -240,13 +240,13 @@ namespace NamelessRogue.Engine.Factories
 
                                   //  point = point + new System.Numerics.Vector2(macroLocation.RealityPosition.X, macroLocation.RealityPosition.Y);
 
-                                    var macroNodeType = nodeTypes[i];
+                                    //var macroNodeType = nodeTypes[i];
                                                                      
                                     waypoinMacroNodetList.Add(new MacroNode()
                                     {
                                         Id = $@"pedestrianWaypoint{i}_x{realSpaceX}_y{realSpaceY}",
                                         RealityPosition = new Vector3Int(realSpaceX + (int)point.X, realSpaceY + (int)point.Y, floorZ),   
-                                        Type = macroNodeType
+                                      //  Type = macroNodeType
                                     });
                                   //  break;
                                 }
@@ -281,30 +281,33 @@ namespace NamelessRogue.Engine.Factories
                             {
 
                             }
-                            var npc_id = tileObject.Properties[0].Value;
-                            var hasCharacter = CharacterFactory.CharacterDataById.TryGetValue(npc_id, out var characterData);
-
-                            if (hasCharacter)
+                            if (tileObject.Class == "random_npc")
                             {
-                                var gameTile = worldProvider.GetTile(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, floorZ);
+                                var npc_id = tileObject.Properties[0].Value;
+                                var hasCharacter = CharacterFactory.CharacterDataById.TryGetValue(npc_id, out var characterData);
 
-                                if (characterData.RandomName)
+                                if (hasCharacter)
                                 {
-                                    //if (BuildingFactory.onlyOne)
+                                    var gameTile = worldProvider.GetTile(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, floorZ);
+
+                                    if (characterData.RandomName)
                                     {
-                                      //  BuildingFactory.onlyOne = false;
-                                        var randomValue = namelessGame.CurrentGame.GlobalRandom.Next(0, 100);
-                                        if (randomValue < 50)
+                                        //if (BuildingFactory.onlyOne)
                                         {
-                                            var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
+                                            //  BuildingFactory.onlyOne = false;
+                                            var randomValue = namelessGame.CurrentGame.GlobalRandom.Next(0, 100);
+                                            if (randomValue < 50)
+                                            {
+                                                var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
+                                            }
                                         }
                                     }
-                                }
-                                else
-                                {
-                                    var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
-                                    namelessGame.AddEntity(character);
-                                    gameTile.AddEntity(character);
+                                    else
+                                    {
+                                        var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, 0), characterData);
+                                        namelessGame.AddEntity(character);
+                                        gameTile.AddEntity(character);
+                                    }
                                 }
                             }
                         }
@@ -331,55 +334,133 @@ namespace NamelessRogue.Engine.Factories
 
                                 namelessGame.MacroNavigator.Crossings.Add(macroLocation);
 
+                                var topLeft = new Vector3Int(rect.Left, rect.Top, floorZ);
+                                var topRight = new Vector3Int(rect.Right, rect.Top, floorZ);
+                                var bottomRight = new Vector3Int(rect.Right, rect.Bottom, floorZ);
+                                var bottomLeft = new Vector3Int(rect.Left, rect.Bottom, floorZ);
+
                                 bool vertical = tileObject.Properties.FirstOrDefault(x=>x.Name == "direction").Value == "vertical";
-                                if(vertical)
+                                if (vertical)
                                 {
-                                    //var centerTop = new Vector3Int(rect.Center.X, rect.Top, floorZ);
-                                    //var centerBottom = new Vector3Int(rect.Center.X, rect.Bottom, floorZ);
+                                    List<MacroNode> topNodes = new List<MacroNode>();
+                                    List<MacroNode> bottomNodes = new List<MacroNode>();
+                                    for (int x = rect.Left; x < rect.Right; x++)
+                                    {
+                                        var centerTop = new Vector3Int(x, rect.Top, floorZ);
+                                        // var flowIdTop = namelessGame.PathfindingController.;
+                                        topNodes.Add(new MacroNode()
+                                        {
+                                            Id = $@"pedestrian_crossing_top_x{realSpaceX}_y{realSpaceY}_x{x}",
+                                            RealityPosition = centerTop,
+                                            LocationPathId = -1,
+                                            Type = NodeType.CrossingTop
+                                        });
+                                    }
 
-                                    //var flowIdTop = namelessGame.FlowFieldController.SetDirectionForArea(FlowFieldDirection.North, rect.Location, rect.Location + rect.Size);
-                                    //var flowIdBottom = namelessGame.FlowFieldController.SetDirectionForArea(FlowFieldDirection.South, rect.Location, rect.Location + rect.Size);
+                                    for (int x = rect.Left; x < rect.Right; x++)
+                                    {
+                                        var centerBottom = new Vector3Int(x, rect.Bottom, floorZ);
+                                        //var flowIdBottom = namelessGame.PathfindingController.;
+                                        bottomNodes.Add(new MacroNode()
+                                        {
+                                            Id = $@"pedestrian_crossing_bottom_x{realSpaceX}_y{realSpaceY}_x{x}",
+                                            RealityPosition = centerBottom,
+                                            LocationPathId = -1,
+                                            Type = NodeType.CrossingBottom
+                                        });
+                                    }
 
-                                    //waypointMacroNodesList.Add(new MacroNode()
-                                    //{
-                                    //    Id = $@"pedestrian_crossing_top_x{realSpaceX}_y{realSpaceY}",
-                                    //    RealityPosition = centerTop,
-                                    //    FlowFieldId = flowIdTop
-                                    //});
-
-                                    //waypointMacroNodesList.Add(new MacroNode()
-                                    //{
-                                    //    Id = $@"pedestrian_crossing_bottom_x{realSpaceX}_y{realSpaceY}",
-                                    //    RealityPosition = centerBottom,
-                                    //    FlowFieldId = flowIdBottom
-                                    //});
-
-
+                                    for (int i = 0; i < topNodes.Count; i++)
+                                    {
+                                        var topNode = topNodes[i];
+                                        var bottomNode = bottomNodes[i];
+                                        //from bottom to top
+                                        var flowIdTop = namelessGame.PathfindingController.CalculateToPointAStar(bottomNode.RealityPosition.ToPoint(), topNode.RealityPosition.ToPoint());
+                                        //from top to bottom
+                                        var flowIdBottom = namelessGame.PathfindingController.CalculateToPointAStar(topNode.RealityPosition.ToPoint(), bottomNode.RealityPosition.ToPoint());
+                                        topNode.LocationPathId = flowIdTop;
+                                        bottomNode.LocationPathId = flowIdBottom;
+                                        waypointMacroNodesList.Add(topNode);
+                                        waypointMacroNodesList.Add(bottomNode);
+                                        var distance = Vector3Int.Distance(topNode.RealityPosition, bottomNode.RealityPosition);
+                                        topNode.NeighborConnectionPaths.Add(new MacroConnection()
+                                        {
+                                            Node = bottomNode,
+                                            PathId = flowIdTop,
+                                            Distance = distance
+                                        });
+                                        bottomNode.NeighborConnectionPaths.Add(new MacroConnection()
+                                        {
+                                            Node = topNode,
+                                            PathId = flowIdBottom,
+                                            Distance = distance
+                                        });
+                                    }
                                     macroLocation.Type = LocationType.CrossingVertical;
-
+                                    macroLocation.InternalNodes.AddRange(topNodes);
+                                    macroLocation.InternalNodes.AddRange(bottomNodes);
                                 }
                                 else
                                 {
-                                    //var centerLeft = new Vector3Int(rect.Left, rect.Center.Y, floorZ);
-                                    //var centerRight = new Vector3Int(rect.Right, rect.Center.Y, floorZ);
-                                    //var flowIdLeft = namelessGame.FlowFieldController.SetDirectionForArea(FlowFieldDirection.West, rect.Location, rect.Location + rect.Size);
-                                    //var flowIdRight = namelessGame.FlowFieldController.SetDirectionForArea(FlowFieldDirection.East, rect.Location, rect.Location + rect.Size);
-                                    //waypointMacroNodesList.Add(new MacroNode()
-                                    //{
-                                    //    Id = $@"pedestrian_crossing_left_x{realSpaceX}_y{realSpaceY}",
-                                    //    RealityPosition = centerLeft,
-                                    //    FlowFieldId = flowIdLeft
-                                    //});
-                                    //waypointMacroNodesList.Add(new MacroNode()
-                                    //{
-                                    //    Id = $@"pedestrian_crossing_right_x{realSpaceX}_y{realSpaceY}",
-                                    //    RealityPosition = centerRight,
-                                    //    FlowFieldId = flowIdRight,
-                                    //});
+                                    List<MacroNode> leftNodes = new List<MacroNode>();
+                                    List<MacroNode> rightNodes = new List<MacroNode>();
+                                    for (int y = rect.Top; y < rect.Bottom; y++)
+                                    {
+                                        var centerLeft = new Vector3Int(rect.Left, y, floorZ);
+                                        // var flowIdLeft = namelessGame.PathfindingController.;
+                                        leftNodes.Add(new MacroNode()
+                                        {
+                                            Id = $@"pedestrian_crossing_left_x{realSpaceX}_y{realSpaceY}_y{y}",
+                                            RealityPosition = centerLeft,
+                                            LocationPathId = -1,
+                                            Type = NodeType.CrossingLeft
+                                        });
+                                    }
+
+                                    for (int y = rect.Top; y < rect.Bottom; y++)
+                                    {
+                                        var centerRight = new Vector3Int(rect.Right, y, floorZ);
+                                        //var flowIdRight = namelessGame.PathfindingController.;
+                                        rightNodes.Add(new MacroNode()
+                                        {
+                                            Id = $@"pedestrian_crossing_right_x{realSpaceX}_y{realSpaceY}_y{y}",
+                                            RealityPosition = centerRight,
+                                            LocationPathId = -1,
+                                            Type = NodeType.CrossingRight
+                                        });
+                                    }
+
+                                    for (int i = 0; i < leftNodes.Count; i++)
+                                    {
+                                        var leftNode = leftNodes[i];
+                                        var rightNode = rightNodes[i];
+                                        //from left to right
+                                        var flowIdLeft = namelessGame.PathfindingController.CalculateToPointAStar(leftNode.RealityPosition.ToPoint(), rightNode.RealityPosition.ToPoint());
+                                        //from top to bottom
+                                        var flowIdRight = namelessGame.PathfindingController.CalculateToPointAStar(rightNode.RealityPosition.ToPoint(), leftNode.RealityPosition.ToPoint());
+                                        leftNode.LocationPathId = flowIdLeft;
+                                        rightNode.LocationPathId = flowIdRight;
+                                        waypointMacroNodesList.Add(leftNode);
+                                        waypointMacroNodesList.Add(rightNode);
+                                        var distance = Vector3Int.Distance(leftNode.RealityPosition, rightNode.RealityPosition);
+                                        leftNode.NeighborConnectionPaths.Add(new MacroConnection()
+                                        {
+                                            Node = rightNode,
+                                            PathId = flowIdLeft,
+                                            Distance = distance
+                                        });
+                                        rightNode.NeighborConnectionPaths.Add(new MacroConnection()
+                                        {
+                                            Node = leftNode,
+                                            PathId = flowIdRight,
+                                            Distance = distance
+                                        });
+                                    }
 
                                     macroLocation.Type = LocationType.CrossingHorizontal;
-                                }
-                              
+                                    macroLocation.InternalNodes.AddRange(leftNodes);
+                                    macroLocation.InternalNodes.AddRange(rightNodes);
+                                }                              
                             }
                         }
                        
