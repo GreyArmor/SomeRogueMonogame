@@ -83,7 +83,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             var chSize = Constants.ChunkSize;
 
             //first connect the internal nodes of locations to each other
-            ConnectLocationIntialInternalNodes(chSize);
+            ConnectLocationInitialInternalNodes(chSize);
 
             //then connect crossings to each other
             ConnectCrossings();
@@ -193,7 +193,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
         }
 
         //nodes before we connect them to crossings
-        private void ConnectLocationIntialInternalNodes(int chSize)
+        private void ConnectLocationInitialInternalNodes(int chSize)
         {
             foreach (var location in Locations)
             {
@@ -306,10 +306,30 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             {
                 foreach (var nodeB in locationB.InternalNodes)
                 {
+
+                    if(!nodeA.IsCrossingNode() || !nodeB.IsCrossingNode())
+                    {
+                        continue;
+                    }
                     //we use float specifically here because we want only to connect nodes that are aligned on grid
                     var distance = Vector3.Distance(nodeA.RealityPosition.ToVector3(), nodeB.RealityPosition.ToVector3());
                     if (distance == 1)
                     {
+                        //skip if not aligned properly
+                        if (nodeA.Type == NodeType.CrossingLeft && nodeA.Type == NodeType.CrossingRight)
+                        {
+                            if(nodeA.RealityPosition.Y != nodeB.RealityPosition.Y)
+                            {
+                                continue;
+                            }                           
+                        }
+                        else if(nodeA.Type == NodeType.CrossingTop && nodeA.Type == NodeType.CrossingBottom)
+                        {
+                            if(nodeA.RealityPosition.X != nodeB.RealityPosition.X)
+                            {
+                                continue;
+                            }
+                        }
                         var pathId = game.PathfindingController.CalculateToPointAStar(nodeA.RealityPosition.ToPoint(), nodeB.RealityPosition.ToPoint());
                         nodeA.NeighborConnectionPaths.Add(new MacroConnection { Node = nodeB, PathId = pathId, Distance = (int)distance });
                     }
