@@ -1,4 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using AStarNavigator;
+using AStarNavigator.Algorithms;
+using AStarNavigator.Providers;
+using Microsoft.CodeAnalysis;
+using Microsoft.Xna.Framework;
+using MonoGame.Extended.ECS;
+using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
@@ -8,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+using static NamelessRogue.Engine.Components.AI.NonPlayerCharacter.AStarPathfinderSimple;
 
 namespace NamelessRogue.Engine.Components.AI.Pathfinder
 {
@@ -44,15 +50,29 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
     public class MacroNode
     {
+        public MacroNode(MacroLocation parent) {
+            ParentLocation = parent;
+        }
         public string Id { get; set; }
         public Vector3Int RealityPosition { get; set; } = Vector3Int.Zero;
         public int LocationPathId { get; internal set; }
         public List<MacroConnection> NeighborConnectionPaths { get; internal set; } = new List<MacroConnection>();
         public NodeType Type { get; set; } = NodeType.None;
+        public MacroLocation ParentLocation { get; set; }
 
         public bool IsCrossingNode()
         {
             return Type == NodeType.CrossingTop || Type == NodeType.CrossingBottom || Type == NodeType.CrossingLeft || Type == NodeType.CrossingRight;
+        }
+
+        public bool IsCrossingNodeVertical()
+        {
+            return Type == NodeType.CrossingTop || Type == NodeType.CrossingBottom;
+        }
+
+        public bool IsCrossingNodeHorizontal()
+        {
+            return Type == NodeType.CrossingLeft || Type == NodeType.CrossingRight;
         }
 
         public List<MacroConnection> GetCrossingConnections()
@@ -117,76 +137,77 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
                 var crossingCenter = (crossing.BoundingBox.Min + crossing.BoundingBox.Max) / 2;
 
-                if (crossing.Type == LocationType.CrossingHorizontal)
+                foreach (var overlappingLocation in overlappingLocations)
                 {
-                    foreach (var overlappingLocation in overlappingLocations)
+                    //first, we pick nodes to copy from the crossing, based on the location's position relative to the crossing
+                    var locationCenter = (overlappingLocation.BoundingBox.Min + overlappingLocation.BoundingBox.Max) / 2;
+                    var displacementVector = new Point();
+                    var crossingNodes = new List<MacroNode>();
+                    string connectionId = "";
+                    NodeType connectionType = NodeType.None;
+                    if (crossing.Type == LocationType.CrossingHorizontal)
                     {
-                        //first, we pick nodes to copy from the crossing, based on the location's position relative to the crossing
-                        var locationCentre = (overlappingLocation.BoundingBox.Min + overlappingLocation.BoundingBox.Max) / 2;
-                        var displacementVector = new Point();
-                        var crossingNodes = new List<MacroNode>();
-                        string connectionId;
-                        if (crossing.Type == LocationType.CrossingHorizontal)
+                        //if location is left of crossing, connect right side of location to left side of crossing
+                        if (locationCenter.X < crossingCenter.X)
                         {
-                            //if location is left of crossing, connect right side of location to left side of crossing
-                            if (locationCentre.X < crossingCenter.X)
-                            {
-                                displacementVector = new Point(-1, 0);
-                                crossingNodes = crossing.InternalNodes.Where(x => x.Type == NodeType.CrossingLeft).ToList();
-                                connectionId = "crossingConnectorLeft";
-                            }
-                            else
-                            {
-                                displacementVector = new Point(1, 0);
-                                crossingNodes = crossing.InternalNodes.Where(x => x.Type == NodeType.CrossingRight).ToList();
-                                connectionId = "crossingConnectorRight";
-                            }
+                            displacementVector = new Point(-1, 0);
+                            crossingNodes = crossing.InternalNodes.Where(x => x.Type == NodeType.CrossingLeft).ToList();
+                            connectionId = "crossingConnectorLeft";
+                            connectionType = NodeType.CrossingLeft;
                         }
-                        else if (crossing.Type == LocationType.CrossingVertical)
+                        else
                         {
-                            //if location is above crossing, connect bottom side of location to top side of crossing
-                            if (locationCentre.Y < crossingCenter.Y)
-                            {
-                                displacementVector = new Point(0, -1);
-                                crossingNodes = crossing.InternalNodes.Where(x => x.Type == NodeType.CrossingTop).ToList();
-                                connectionId = "crossingConnectorTop";
-                            }
-                            else
-                            {
-                                displacementVector = new Point(0, 1);
-                                crossingNodes = crossing.InternalNodes.Where(x => x.Type == NodeType.CrossingBottom).ToList();
-                                connectionId = "crossingConnectorBottom";
-                            }
+                            displacementVector = new Point(1, 0);
+                            crossingNodes = crossing.InternalNodes.Where(x => x.Type == NodeType.CrossingRight).ToList();
+                            connectionId = "crossingConnectorRight";
+                            connectionType = NodeType.CrossingRight;
                         }
-                        //then each node is copied to the building, and a connection is made between the copied node and the original node in the crossing
-                        var newLocationNodes = new List<MacroNode>();
-                        foreach (var crossingNode in crossingNodes)
+                    }
+                    else if (crossing.Type == LocationType.CrossingVertical)
+                    {
+                        //if location is above crossing, connect bottom side of location to top side of crossing
+                        if (locationCenter.Y < crossingCenter.Y)
                         {
-                            var newLocationNode = new MacroNode
-                            {
-                                Id = "crossingConnectorLeft",
-                                //move to the left
-                                RealityPosition = new Vector3Int(crossingNode.RealityPosition.X + displacementVector.X, crossingNode.RealityPosition.Y, crossingNode.RealityPosition.Z),
-                                Type = NodeType.CrossingLeft
-                            };
-
-                            newLocationNodes.Add(newLocationNode);
-
-                            crossingNode.NeighborConnectionPaths.Add(new MacroConnection
-                            {
-                                Node = newLocationNode,
-                                PathId = game.PathfindingController.CalculateToPointAStar(crossingNode.RealityPosition.ToPoint(), newLocationNode.RealityPosition.ToPoint()),
-                                Distance = 1
-                            });
-
-                            newLocationNode.NeighborConnectionPaths.Add(new MacroConnection
-                            {
-                                Node = crossingNode,
-                                PathId = game.PathfindingController.CalculateToPointAStar(newLocationNode.RealityPosition.ToPoint(), crossingNode.RealityPosition.ToPoint()),
-                                Distance = 1
-                            });
-                            overlappingLocation.InternalNodes.Add(newLocationNode);
+                            displacementVector = new Point(0, -1);
+                            crossingNodes = crossing.InternalNodes.Where(x => x.Type == NodeType.CrossingTop).ToList();
+                            connectionId = "crossingConnectorTop";
+                            connectionType = NodeType.CrossingTop;
                         }
+                        else
+                        {
+                            displacementVector = new Point(0, 1);
+                            crossingNodes = crossing.InternalNodes.Where(x => x.Type == NodeType.CrossingBottom).ToList();
+                            connectionId = "crossingConnectorBottom";
+                            connectionType = NodeType.CrossingBottom;
+                        }
+                    }
+                    //then each node is copied to the building, and a connection is made between the copied node and the original node in the crossing
+                    var newLocationNodes = new List<MacroNode>();
+                    foreach (var crossingNode in crossingNodes)
+                    {
+                        var newLocationNode = new MacroNode(overlappingLocation)
+                        {
+                            Id = connectionId,
+                            RealityPosition = new Vector3Int(crossingNode.RealityPosition.X + displacementVector.X, crossingNode.RealityPosition.Y + displacementVector.Y, crossingNode.RealityPosition.Z),
+                            Type = connectionType
+                        };
+
+                        newLocationNodes.Add(newLocationNode);
+
+                        crossingNode.NeighborConnectionPaths.Add(new MacroConnection
+                        {
+                            Node = newLocationNode,
+                            PathId = game.PathfindingController.CalculateToPointStraightLine(crossingNode.RealityPosition.ToPoint(), newLocationNode.RealityPosition.ToPoint()),
+                            Distance = 1
+                        });
+
+                        newLocationNode.NeighborConnectionPaths.Add(new MacroConnection
+                        {
+                            Node = crossingNode,
+                            PathId = game.PathfindingController.CalculateToPointStraightLine(newLocationNode.RealityPosition.ToPoint(), crossingNode.RealityPosition.ToPoint()),
+                            Distance = 1
+                        });
+                        overlappingLocation.InternalNodes.Add(newLocationNode);
                     }
                 }
             }
@@ -256,7 +277,11 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
                 foreach (var overlappingCrossing in overlappingCrossings)
                 {
-                    if (crossing.Type == LocationType.CrossingHorizontal && overlappingCrossing.Type == LocationType.CrossingHorizontal)
+                    if (crossing.Type == LocationType.CrossingHorizontal && overlappingCrossing.Type == LocationType.CrossingHorizontal)                  
+                    {
+                        ConnectCrossingPair(crossing, overlappingCrossing);
+                    }
+                    if (crossing.Type == LocationType.CrossingVertical && overlappingCrossing.Type == LocationType.CrossingVertical)
                     {
                         ConnectCrossingPair(crossing, overlappingCrossing);
                     }
@@ -291,7 +316,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
                             if (distance <= 2)
                             {
-                                var pathId = game.PathfindingController.CalculateToPointAStar(node.RealityPosition.ToPoint(), overlappingNode.RealityPosition.ToPoint());
+                                var pathId = game.PathfindingController.CalculateToPointStraightLine(node.RealityPosition.ToPoint(), overlappingNode.RealityPosition.ToPoint());
                                 node.NeighborConnectionPaths.Add(new MacroConnection { Node = overlappingNode, PathId = pathId, Distance = distance });
                             }
                         }
@@ -315,26 +340,18 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
                     var distance = Vector3.Distance(nodeA.RealityPosition.ToVector3(), nodeB.RealityPosition.ToVector3());
                     if (distance == 1)
                     {
-                        //skip if not aligned properly
-                        if (nodeA.Type == NodeType.CrossingLeft && nodeA.Type == NodeType.CrossingRight)
-                        {
-                            if(nodeA.RealityPosition.Y != nodeB.RealityPosition.Y)
-                            {
-                                continue;
-                            }                           
-                        }
-                        else if(nodeA.Type == NodeType.CrossingTop && nodeA.Type == NodeType.CrossingBottom)
-                        {
-                            if(nodeA.RealityPosition.X != nodeB.RealityPosition.X)
-                            {
-                                continue;
-                            }
-                        }
-                        var pathId = game.PathfindingController.CalculateToPointAStar(nodeA.RealityPosition.ToPoint(), nodeB.RealityPosition.ToPoint());
+                        var pathId = game.PathfindingController.CalculateToPointStraightLine(nodeA.RealityPosition.ToPoint(), nodeB.RealityPosition.ToPoint());
                         nodeA.NeighborConnectionPaths.Add(new MacroConnection { Node = nodeB, PathId = pathId, Distance = (int)distance });
                     }
                 }
             }
+        }
+
+
+        public List<MacroNode> Plot(MacroNode from, MacroNode to)
+        {
+            List<MacroNode> path = new List<MacroNode>();
+               return path;
         }
 
         private void ConnectLocationPair(MacroLocation locationA, MacroLocation locationB)
@@ -346,7 +363,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
                     var distance = Vector3Int.Distance(nodeA.RealityPosition, nodeB.RealityPosition);
                     if (distance <= 2)
                     {
-                        var pathId = game.PathfindingController.CalculateToPointAStar(nodeA.RealityPosition.ToPoint(), nodeB.RealityPosition.ToPoint());
+                        var pathId = game.PathfindingController.CalculateToPointStraightLine(nodeA.RealityPosition.ToPoint(), nodeB.RealityPosition.ToPoint());
                         nodeA.NeighborConnectionPaths.Add(new MacroConnection { Node = nodeB, PathId = pathId, Distance = distance });
                     }
                 }

@@ -242,7 +242,7 @@ namespace NamelessRogue.Engine.Factories
 
                                     //var macroNodeType = nodeTypes[i];
                                                                      
-                                    waypoinMacroNodetList.Add(new MacroNode()
+                                    waypoinMacroNodetList.Add(new MacroNode(macroLocation)
                                     {
                                         Id = $@"pedestrianWaypoint{i}_x{realSpaceX}_y{realSpaceY}",
                                         RealityPosition = new Vector3Int(realSpaceX + (int)point.X, realSpaceY + (int)point.Y, floorZ),   
@@ -282,6 +282,7 @@ namespace NamelessRogue.Engine.Factories
 
                             }
                             if (tileObject.Class == "random_npc")
+                            //if(false)
                             {
                                 var npc_id = tileObject.Properties[0].Value;
                                 var hasCharacter = CharacterFactory.CharacterDataById.TryGetValue(npc_id, out var characterData);
@@ -292,7 +293,7 @@ namespace NamelessRogue.Engine.Factories
 
                                     if (characterData.RandomName)
                                     {
-                                        //if (BuildingFactory.onlyOne)
+                                       //if (BuildingFactory.onlyOne)
                                         {
                                             //  BuildingFactory.onlyOne = false;
                                             var randomValue = namelessGame.CurrentGame.GlobalRandom.Next(0, 100);
@@ -333,6 +334,7 @@ namespace NamelessRogue.Engine.Factories
                                     (int)(tileObject.Size.Y / tilemapTileSize));
 
                                 namelessGame.MacroNavigator.Crossings.Add(macroLocation);
+                                namelessGame.MacroNavigator.Locations.Remove(macroLocation);
 
                                 var topLeft = new Vector3Int(rect.Left, rect.Top, floorZ);
                                 var topRight = new Vector3Int(rect.Right, rect.Top, floorZ);
@@ -347,8 +349,7 @@ namespace NamelessRogue.Engine.Factories
                                     for (int x = rect.Left; x < rect.Right; x++)
                                     {
                                         var centerTop = new Vector3Int(x, rect.Top, floorZ);
-                                        // var flowIdTop = namelessGame.PathfindingController.;
-                                        topNodes.Add(new MacroNode()
+                                        topNodes.Add(new MacroNode(macroLocation)
                                         {
                                             Id = $@"pedestrian_crossing_top_x{realSpaceX}_y{realSpaceY}_x{x}",
                                             RealityPosition = centerTop,
@@ -360,8 +361,7 @@ namespace NamelessRogue.Engine.Factories
                                     for (int x = rect.Left; x < rect.Right; x++)
                                     {
                                         var centerBottom = new Vector3Int(x, rect.Bottom, floorZ);
-                                        //var flowIdBottom = namelessGame.PathfindingController.;
-                                        bottomNodes.Add(new MacroNode()
+                                        bottomNodes.Add(new MacroNode(macroLocation)
                                         {
                                             Id = $@"pedestrian_crossing_bottom_x{realSpaceX}_y{realSpaceY}_x{x}",
                                             RealityPosition = centerBottom,
@@ -375,9 +375,9 @@ namespace NamelessRogue.Engine.Factories
                                         var topNode = topNodes[i];
                                         var bottomNode = bottomNodes[i];
                                         //from bottom to top
-                                        var flowIdTop = namelessGame.PathfindingController.CalculateToPointAStar(bottomNode.RealityPosition.ToPoint(), topNode.RealityPosition.ToPoint());
+                                        var flowIdTop = namelessGame.PathfindingController.CalculateToPointStraightLine(bottomNode.RealityPosition.ToPoint(), topNode.RealityPosition.ToPoint());
                                         //from top to bottom
-                                        var flowIdBottom = namelessGame.PathfindingController.CalculateToPointAStar(topNode.RealityPosition.ToPoint(), bottomNode.RealityPosition.ToPoint());
+                                        var flowIdBottom = namelessGame.PathfindingController.CalculateToPointStraightLine(topNode.RealityPosition.ToPoint(), bottomNode.RealityPosition.ToPoint());
                                         topNode.LocationPathId = flowIdTop;
                                         bottomNode.LocationPathId = flowIdBottom;
                                         waypointMacroNodesList.Add(topNode);
@@ -408,7 +408,7 @@ namespace NamelessRogue.Engine.Factories
                                     {
                                         var centerLeft = new Vector3Int(rect.Left, y, floorZ);
                                         // var flowIdLeft = namelessGame.PathfindingController.;
-                                        leftNodes.Add(new MacroNode()
+                                        leftNodes.Add(new MacroNode(macroLocation)
                                         {
                                             Id = $@"pedestrian_crossing_left_x{realSpaceX}_y{realSpaceY}_y{y}",
                                             RealityPosition = centerLeft,
@@ -421,7 +421,7 @@ namespace NamelessRogue.Engine.Factories
                                     {
                                         var centerRight = new Vector3Int(rect.Right, y, floorZ);
                                         //var flowIdRight = namelessGame.PathfindingController.;
-                                        rightNodes.Add(new MacroNode()
+                                        rightNodes.Add(new MacroNode(macroLocation)
                                         {
                                             Id = $@"pedestrian_crossing_right_x{realSpaceX}_y{realSpaceY}_y{y}",
                                             RealityPosition = centerRight,
@@ -435,9 +435,9 @@ namespace NamelessRogue.Engine.Factories
                                         var leftNode = leftNodes[i];
                                         var rightNode = rightNodes[i];
                                         //from left to right
-                                        var flowIdLeft = namelessGame.PathfindingController.CalculateToPointAStar(leftNode.RealityPosition.ToPoint(), rightNode.RealityPosition.ToPoint());
+                                        var flowIdLeft = namelessGame.PathfindingController.CalculateToPointStraightLine(leftNode.RealityPosition.ToPoint(), rightNode.RealityPosition.ToPoint());
                                         //from top to bottom
-                                        var flowIdRight = namelessGame.PathfindingController.CalculateToPointAStar(rightNode.RealityPosition.ToPoint(), leftNode.RealityPosition.ToPoint());
+                                        var flowIdRight = namelessGame.PathfindingController.CalculateToPointStraightLine(rightNode.RealityPosition.ToPoint(), leftNode.RealityPosition.ToPoint());
                                         leftNode.LocationPathId = flowIdLeft;
                                         rightNode.LocationPathId = flowIdRight;
                                         waypointMacroNodesList.Add(leftNode);

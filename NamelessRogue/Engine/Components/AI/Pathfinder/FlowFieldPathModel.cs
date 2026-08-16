@@ -73,6 +73,8 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
         public bool IsCalculated { get; internal set; }
 
+        public Point FinalPoint { get;private set; }
+
         bool _insideBoundsOfArea(int arrayX, int arrayY)
         {
             return arrayX > 0 && arrayY > 0 && arrayX < boolsWidth && arrayY < boolsHeight;
@@ -173,6 +175,8 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
         public void CalculateTo(Point to)
         {
+            FinalPoint = to;
+
             var toRealityPos = to;
             Queue<Point> openPoints = new Queue<Point>();
             openPoints.Enqueue(toRealityPos);

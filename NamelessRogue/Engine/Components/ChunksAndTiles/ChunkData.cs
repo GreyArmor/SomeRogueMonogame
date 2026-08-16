@@ -179,13 +179,14 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 			return false;
 		}
 
-        public bool MoveEntitySwapCharacters(IEntity entity, Vector3Int moveTo)
+        public bool MoveEntitySwapCharacters(IEntity entity, Vector3Int moveTo, out IEntity swapped)
         {
-            return MoveEntitySwapCharacters(entity, moveTo.X, moveTo.Y, moveTo.Z);
+            return MoveEntitySwapCharacters(entity, moveTo.X, moveTo.Y, moveTo.Z, out swapped);
         }
 
-        public bool MoveEntitySwapCharacters(IEntity entity, int x, int y, int z)
+        public bool MoveEntitySwapCharacters(IEntity entity, int x, int y, int z, out IEntity swapped)
         {
+			swapped = null;
             Position position = entity.GetComponentOfType<Position>();
             if (position != null)
             {
@@ -217,9 +218,32 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 							{
 								otherPosition.Point = new Vector3Int(position.Point.X, position.Point.Y, position.Point.Z);
                             }
+							swapped = otherEntity;
                         }
 					}
 
+                    oldTile.RemoveEntity((Entity)entity);
+                    newTile.AddEntity((Entity)entity);
+                    position.Point = new Vector3Int(x, y, z);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool MoveEntityIgnoreCharacters(IEntity entity, int x, int y, int z)
+        {
+            Position position = entity.GetComponentOfType<Position>();
+            if (position != null)
+            {
+                IWorldProvider worldProvider = this;
+
+                Tile oldTile = worldProvider.GetTile(position.Point.X, position.Point.Y, position.Point.Z);
+                Tile newTile = worldProvider.GetTile(x, y, z);
+
+                if (newTile.IsPassableIgnoringCharacters())
+                {
                     oldTile.RemoveEntity((Entity)entity);
                     newTile.AddEntity((Entity)entity);
                     position.Point = new Vector3Int(x, y, z);

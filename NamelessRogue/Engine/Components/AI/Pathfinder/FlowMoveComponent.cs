@@ -18,10 +18,12 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 		//this id is received after calculation
 		public int CurrentPathIndex { get; set; }
 		public List<int> PathChain {get; set;} = new List<int>();
-		public int PathId { get { return PathChain.Count > 0 ? PathChain[CurrentPathIndex] : -1; } }
+		public int PathId { get { return PathChain.Count > 0 && CurrentPathIndex < PathChain.Count ? PathChain[CurrentPathIndex] : -1; } }
         public Point To { get; set; }
 		public bool FinishedMoving { get; set; } = true;
 
-		public MacroNode CurrentMacroNode { get; set; } = null;
+        public int TurnsToWait { get; set; } = 0;
+
+        public MacroNode CurrentMacroNode { get; set; } = null;
     }
 }

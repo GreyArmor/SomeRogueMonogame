@@ -1,4 +1,6 @@
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended.ECS;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
@@ -8,19 +10,24 @@ using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.Status;
+using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
+using SharpDX.Direct2D1.Effects;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Entity = NamelessRogue.Engine.Infrastructure.Entity;
+using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
     public class AiSystem : BaseSystem
     {
+        private bool first = true;
 
         public AiSystem()
         {
@@ -34,6 +41,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
+
+           
+
             var playerEntity = namelessGame.PlayerEntity;
             //if (namelessGame.TurnUpdated)
             //{
@@ -55,6 +65,23 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             if (worldProvider != null)
             {
+                ////debug code;
+                //if (first)
+                //{
+                //    first = false;
+                //    CharacterFactory.CharacterDataById.TryGetValue("ba29fb6c-dd89-49a5-a320-a35258f270ed", out var characterData);
+                //    var location = namelessGame.MacroNavigator.Locations.First(x => x.InternalNodes.Any() && x.Type != LocationType.CrossingVertical && x.Type != LocationType.CrossingHorizontal && x.InternalNodes.Any(x => x.IsCrossingNode()));
+
+                //    var waypoint = location.InternalNodes.First(x => x.IsCrossingNode());
+                //    var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(waypoint.RealityPosition.X, waypoint.RealityPosition.Y, 0), characterData);
+                //    var gameTile = worldProvider.GetTile(waypoint.RealityPosition.X, waypoint.RealityPosition.Y, 0);
+                //    namelessGame.AddEntity(character);
+                //    gameTile.AddEntity(character);
+
+                //    namelessGame.WorldProvider.MoveEntity(namelessGame.PlayerEntity,
+                //                 waypoint.RealityPosition.X - 1, waypoint.RealityPosition.Y, 0);
+                //}
+
                 foreach (IEntity entity in this.RegisteredEntities)
                 {
                     AIControlled ac = entity.GetComponentOfType<AIControlled>();
@@ -115,7 +142,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         }
                         else
                         if (pedestrianMovementAI != null && namelessGame.MacroNavigator.Locations.Any())
-                        {                        
+                        {                       
 
                             var entityPos = entity.GetComponentOfType<Position>().Point;
                             var chunkPos = new Vector3Int(entityPos.X / Constants.ChunkSize, entityPos.Y / Constants.ChunkSize, 0);
@@ -142,22 +169,29 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                         continue;
                                     }
                                     var waypoints = closestLocation.InternalNodes;
-                                    closestWaypoint = waypoints.Where(x => x.RealityPosition != entityPos).OrderBy(w => (w.RealityPosition - entityPos).Length()).FirstOrDefault();
-
+                                    closestWaypoint = waypoints.ToList()[Random.Shared.Next(waypoints.Count)];
                                 }
 
                                 if (closestWaypoint.IsCrossingNode())
                                 {
+                                    var closestWaypointRealityPosition = closestWaypoint.RealityPosition;
                                     List<MacroConnection> crossingConnections = new List<MacroConnection>();
                                     var nextCrossingConnection = closestWaypoint.GetCrossingConnections().FirstOrDefault();
                                     crossingConnections.Add(nextCrossingConnection);
                                     while (nextCrossingConnection!=null)
                                     {
-                                        var next = nextCrossingConnection.Node.GetCrossingConnections().Where(x=>x.Node!= closestWaypoint).Except(crossingConnections).FirstOrDefault();
-                                        if(next!=null)
+                                        //we want to move away from the closest waypoint
+                                        var notVisited = nextCrossingConnection.Node.GetCrossingConnections().Where(x => x.Node != closestWaypoint).Except(crossingConnections);
+                                       
+                                        var next = notVisited.OrderByDescending(x=>Vector3Int.Distance(closestWaypointRealityPosition, x.Node.RealityPosition)).FirstOrDefault();
+                                        if (next!=null)
                                         {
                                             crossingConnections.Add(next);
                                             nextCrossingConnection = next;
+                                            if (next.Node.ParentLocation.Type == LocationType.None)
+                                            { 
+                                                break;
+                                            }
                                         }
                                         else
                                         {
@@ -192,6 +226,12 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             else
                             if (!flowMoveComponent.FinishedMoving)
                             { 
+                                if(flowMoveComponent.TurnsToWait > 0)
+                                {
+                                    flowMoveComponent.TurnsToWait--;
+                                    entity.GetComponentOfType<ActionPoints>().Points = -200;
+                                    continue;
+                                }
                                 try
                                 {
                                     var hasNext = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathId, entityPos.ToPoint(), out Point? nextPoint);
@@ -199,15 +239,27 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     {
                                         if (flowMoveComponent.To == nextPoint.Value)
                                         {
-                                            flowMoveComponent.FinishedMoving = true;
+                                            flowMoveComponent.CurrentPathIndex++;
+                                            if (flowMoveComponent.PathId==-1)
+                                            {
+                                                flowMoveComponent.FinishedMoving = true;
+                                                flowMoveComponent.CurrentMacroNode = null;
+                                            }
+                                            else
+                                            {
+                                                flowMoveComponent.To = namelessGame.PathfindingController.GetPathEndPoint(flowMoveComponent.PathChain[flowMoveComponent.CurrentPathIndex]);
+                                            }
                                             //namelessGame.FlowFieldController.CurrentPathModels[flowMoveComponent.PathId].FullPath.ClearDebug();
                                             //continue;
                                         }
-                                        namelessGame.WorldProvider.MoveEntitySwapCharacters(entity,
-                                          nextPoint.Value.X, nextPoint.Value.Y, 0);
+                                        //MoveEntitySwapCharacters(entity, worldProvider, namelessGame,
+                                        //  nextPoint.Value.X, nextPoint.Value.Y, 0);
+                                        namelessGame.WorldProvider.MoveEntityIgnoreCharacters(entity,
+                                        nextPoint.Value.X, nextPoint.Value.Y, 0);
+
                                     }
                                     else
-                                    {                                         
+                                    {                                        
                                         flowMoveComponent.FinishedMoving = true;
                                         flowMoveComponent.CurrentMacroNode = null;
                                         //namelessGame.FlowFieldController.CurrentPathModels[flowMoveComponent.PathId].FullPath.ClearDebug();
@@ -442,6 +494,66 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var ap = movableEntity.GetComponentOfType<ActionPoints>();
                 ap.Points -= 200;
             }
+        }
+
+        public bool MoveEntitySwapCharacters(IEntity entity, IWorldProvider worldProvider, NamelessGame game, int x, int y, int z)
+        {
+            Position position = entity.GetComponentOfType<Position>();
+            var flowMoveComponent = entity.GetComponentOfType<FlowMoveComponent>();
+            if (position != null)
+            {          
+
+                Tile oldTile = worldProvider.GetTile(position.Point.X, position.Point.Y, position.Point.Z);
+                Tile newTile = worldProvider.GetTile(x, y, z);
+
+                if (newTile.IsPassable())
+                {
+                    oldTile.RemoveEntity((Entity)entity);
+                    newTile.AddEntity((Entity)entity);
+                    position.Point = new Vector3Int(x, y, z);
+                    return true;
+                }
+                else if (newTile.IsPassableIgnoringCharacters())
+                {
+                    var newTileEntities = newTile.GetEntities();
+
+                    foreach (var otherEntity in newTileEntities)
+                    {
+                        var isCharacter = otherEntity.GetComponentOfType<Character>() != null;
+                        if (isCharacter)
+                        {
+                            var otherFlowMoveComponent = otherEntity.GetComponentOfType<FlowMoveComponent>();
+
+                            if(otherFlowMoveComponent == null)
+                            {
+                                return false;
+                            }
+                            if (otherFlowMoveComponent.TurnsToWait == 0)
+                            {
+                                flowMoveComponent.TurnsToWait++; 
+                                return false;
+                            }
+                            else
+                            {
+                                newTile.RemoveEntity((Entity)otherEntity);
+                                oldTile.AddEntity((Entity)otherEntity);
+                                var otherPosition = otherEntity.GetComponentOfType<Position>();
+                                if (otherPosition != null)
+                                {
+                                    otherPosition.Point = new Vector3Int(position.Point.X, position.Point.Y, position.Point.Z);
+                                }
+                                oldTile.RemoveEntity((Entity)entity);
+                                newTile.AddEntity((Entity)entity);
+                                position.Point = new Vector3Int(x, y, z);
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -9,6 +9,8 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 
         public bool IsCalculated => FullPath.IsCalculated;
 
+        public Point FinalPoint { get { if(FullPath.IsCalculated) { return FullPath.FinalPoint; } else { return ShortPath.FinalPoint; } } }
+
         public void CalculateTo(Point to)
         {
            // throw new System.NotImplementedException();

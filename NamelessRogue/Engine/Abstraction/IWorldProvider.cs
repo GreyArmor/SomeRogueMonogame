@@ -23,8 +23,11 @@ namespace NamelessRogue.Engine.Abstraction
         bool MoveEntity(IEntity entity, int x, int y, int z);
         bool MoveEntity(IEntity entity, Vector3Int moveTo);
 
-        bool MoveEntitySwapCharacters(IEntity entity, int x, int y, int z);
-        bool MoveEntitySwapCharacters(IEntity entity, Vector3Int moveTo);
+        bool MoveEntityIgnoreCharacters(IEntity entity, int x, int y, int z);
+
+        //swapped entity is null if no entity was swapped
+        bool MoveEntitySwapCharacters(IEntity entity, int x, int y, int z, out IEntity swappedEntity);
+        bool MoveEntitySwapCharacters(IEntity entity, Vector3Int moveTo, out IEntity swappedEntity);
         void AddEntityToNewLocation(IEntity entity, int x, int y, int z);
     }
 }

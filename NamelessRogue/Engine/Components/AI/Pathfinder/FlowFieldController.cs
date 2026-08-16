@@ -4,6 +4,7 @@ using AStarNavigator.Providers;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.shell;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -275,6 +276,15 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             return idCounter;
         }
 
+		public int CalculateToPointStraightLine(Point from, Point to)
+        {	
+            StraightLinePath straightLinePath = new StraightLinePath(from, game.WorldProvider, game);
+            straightLinePath.CalculateTo(to);
+            idCounter++;
+            currentPathModels.Add(idCounter, straightLinePath);
+            return idCounter;
+        }
+
         public int CalculateToForAreas(Point to, List<Rectangle> areas)
         {
             var toWorldPos = (to.ToVector2() / Constants.ChunkSize).ToPoint();
@@ -331,5 +341,10 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 		{
             return currentPathModels[pathId].GetNextPoint(from, out nextPoint);
 		}
-	}
+
+        internal Point GetPathEndPoint(int pathId)
+        {
+			return currentPathModels[pathId].FinalPoint;
+        }
+    }
 }

@@ -26,6 +26,8 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
         public Point PointA { get; }
         public Point PointB { get; }
 
+        public Point FinalPoint => throw new NotImplementedException();
+
         public void CalculateTo(Point to)
         {
             // No calculation needed for GatewayPathModel
