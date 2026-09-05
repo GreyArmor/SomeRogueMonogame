@@ -39,7 +39,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             }
         }
 
-        public void PaintWith(FlowFieldDirection direction)
+        public void PaintWith(Direction direction)
         {
            FullPath.PaintWith(direction);
         }

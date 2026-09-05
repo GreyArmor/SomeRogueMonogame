@@ -49,8 +49,8 @@
     <PackageReference Include="MonoGame.Aseprite" Version="6.2.0" />
     <PackageReference Include="MonoGame.Extended" Version="4.1.0" />
     <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="4.1.0" />
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4" />
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.5.1" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.5.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RogueSharp" Version="4.2.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />

@@ -224,7 +224,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 		}
 
 
-        public int SetDirectionForArea(FlowFieldDirection direction, Point min, Point max)
+        public int SetDirectionForArea(Direction direction, Point min, Point max)
         {
             var realityChunks = world.GetRealityBubbleChunks();
 

@@ -21,33 +21,8 @@ using System.Windows.Forms;
 using Constants = NamelessRogue.Engine.Infrastructure.Constants;
 namespace NamelessRogue.Engine.Components.AI.Pathfinder
 {
-	public enum FlowFieldDirection : byte
-	{
-		None,
-		North,
-		South,
-		East,
-		West,
-		NorthEast,
-		NorthWest,
-		SouthEast,
-		SouthWest
-    }
-
     internal class FlowFieldPathModel : IPathModel
     {
-        public static Dictionary<FlowFieldDirection, Point> Directions = new Dictionary<FlowFieldDirection, Point>()
-        {
-            { FlowFieldDirection.None, new Point(0,0) },
-            { FlowFieldDirection.North, new Point(0,-1) },
-            { FlowFieldDirection.South, new Point(0,1) },
-            { FlowFieldDirection.East, new Point(1,0) },
-            { FlowFieldDirection.West, new Point(-1,0) },
-            { FlowFieldDirection.NorthEast, new Point(1,-1) },
-            { FlowFieldDirection.NorthWest, new Point(-1,-1) },
-            { FlowFieldDirection.SouthEast, new Point(1,1) },
-            { FlowFieldDirection.SouthWest, new Point(-1,1) }
-        };
 
         string _key(int x, int y)
         {
@@ -162,12 +137,12 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
         }
 
 
-        public void PaintWith(FlowFieldDirection direction)
+        public void PaintWith(Direction direction)
         {
             foreach (var node in Nodes)
             {
                 var point = node.Value.Coordinate;
-                var next = point + Directions[direction];
+                var next = point + MathUtil.DirectionPoints[direction];
                 node.Value.Next = Nodes.ContainsKey(next) ? Nodes[next] : null;
             }
             IsCalculated = true;
@@ -249,6 +224,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
         List<IEntity> debugEntities = new List<IEntity>();
         public void DrawDebug()
         {
+            return;
             void _addFurniture(string id, string descriptionName, bool occupiesTile, bool blocksVision)
             {
                 Entity entity = new Entity();

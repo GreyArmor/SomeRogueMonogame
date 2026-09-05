@@ -68,7 +68,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             return false;
         }
 
-        public void PaintWith(FlowFieldDirection direction)
+        public void PaintWith(Direction direction)
         {
             //throw new NotImplementedException();
         }

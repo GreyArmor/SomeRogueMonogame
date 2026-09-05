@@ -66,21 +66,21 @@ namespace NamelessRogue.Engine.Systems.Ingame
             if (worldProvider != null)
             {
                 ////debug code;
-                //if (first)
-                //{
-                //    first = false;
-                //    CharacterFactory.CharacterDataById.TryGetValue("ba29fb6c-dd89-49a5-a320-a35258f270ed", out var characterData);
-                //    var location = namelessGame.MacroNavigator.Locations.First(x => x.InternalNodes.Any() && x.Type != LocationType.CrossingVertical && x.Type != LocationType.CrossingHorizontal && x.InternalNodes.Any(x => x.IsCrossingNode()));
+                if (first)
+                {
+                    first = false;
+                    CharacterFactory.CharacterDataById.TryGetValue("ba29fb6c-dd89-49a5-a320-a35258f270ed", out var characterData);
+                    var location = namelessGame.MacroNavigator.Locations.First(x => x.InternalNodes.Any() && x.Type != LocationType.CrossingVertical && x.Type != LocationType.CrossingHorizontal && x.InternalNodes.Any(x => x.IsCrossingNode()));
 
-                //    var waypoint = location.InternalNodes.First(x => x.IsCrossingNode());
-                //    var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(waypoint.RealityPosition.X, waypoint.RealityPosition.Y, 0), characterData);
-                //    var gameTile = worldProvider.GetTile(waypoint.RealityPosition.X, waypoint.RealityPosition.Y, 0);
-                //    namelessGame.AddEntity(character);
-                //    gameTile.AddEntity(character);
+                    var waypoint = location.InternalNodes.First(x => x.IsCrossingNode());
+                    var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(waypoint.RealityPosition.X, waypoint.RealityPosition.Y, 0), characterData);
+                    var gameTile = worldProvider.GetTile(waypoint.RealityPosition.X, waypoint.RealityPosition.Y, 0);
+                    namelessGame.AddEntity(character);
+                    gameTile.AddEntity(character);
 
-                //    namelessGame.WorldProvider.MoveEntity(namelessGame.PlayerEntity,
-                //                 waypoint.RealityPosition.X - 1, waypoint.RealityPosition.Y, 0);
-                //}
+                    namelessGame.WorldProvider.MoveEntity(namelessGame.PlayerEntity,
+                                 waypoint.RealityPosition.X - 1, waypoint.RealityPosition.Y, 0);
+                }
 
                 foreach (IEntity entity in this.RegisteredEntities)
                 {
@@ -145,8 +145,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         {                       
 
                             var entityPos = entity.GetComponentOfType<Position>().Point;
-                            var chunkPos = new Vector3Int(entityPos.X / Constants.ChunkSize, entityPos.Y / Constants.ChunkSize, 0);
-                            
+                            var chunkPos = new Vector3Int(entityPos.X / Constants.ChunkSize, entityPos.Y / Constants.ChunkSize, 0);                            
                         
                             var flowMoveComponent = entity.GetComponentOfType<FlowMoveComponent>();
                             if (flowMoveComponent.FinishedMoving)
@@ -160,7 +159,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 }
                                 else
                                 {
-                                    var closestLocation = namelessGame.MacroNavigator.Locations.Where(l => l.BoundingBox.Contains(new Vector3(entityPos.X, entityPos.Y, 0)) != ContainmentType.Disjoint).
+                                    var closestLocation = namelessGame.MacroNavigator.Locations.Where(l => l.BoundingBox.IsPointInside(entityPos.X, entityPos.Y)).
                                         FirstOrDefault(x => x.InternalNodes.Any());
 
                                     if (closestLocation == null || closestLocation.InternalNodes.Count == 0)
@@ -175,36 +174,21 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 if (closestWaypoint.IsCrossingNode())
                                 {
                                     var closestWaypointRealityPosition = closestWaypoint.RealityPosition;
-                                    List<MacroConnection> crossingConnections = new List<MacroConnection>();
                                     var nextCrossingConnection = closestWaypoint.GetCrossingConnections().FirstOrDefault();
-                                    crossingConnections.Add(nextCrossingConnection);
-                                    while (nextCrossingConnection!=null)
-                                    {
-                                        //we want to move away from the closest waypoint
-                                        var notVisited = nextCrossingConnection.Node.GetCrossingConnections().Where(x => x.Node != closestWaypoint).Except(crossingConnections);
-                                       
-                                        var next = notVisited.OrderByDescending(x=>Vector3Int.Distance(closestWaypointRealityPosition, x.Node.RealityPosition)).FirstOrDefault();
-                                        if (next!=null)
-                                        {
-                                            crossingConnections.Add(next);
-                                            nextCrossingConnection = next;
-                                            if (next.Node.ParentLocation.Type == LocationType.None)
-                                            { 
-                                                break;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            nextCrossingConnection = null;
-                                        }
-                                    }
-                                    var pathChain = crossingConnections.Select(x => x.PathId).ToList();
-                                    pathChain.Insert(0, closestWaypoint.LocationPathId);
+                                    var pathChain = new List<int>() { closestWaypoint.LocationPathId, nextCrossingConnection.PathId };
+                                 //   pathChain.Reverse();
                                     flowMoveComponent.To = closestWaypoint.RealityPosition.ToPoint();
                                     flowMoveComponent.PathChain = pathChain;
                                     flowMoveComponent.CurrentPathIndex = 0;
                                     flowMoveComponent.FinishedMoving = false;
                                     flowMoveComponent.CurrentMacroNode = closestWaypoint;
+
+                                    foreach(var pathid in pathChain)
+                                    {
+                                       // namelessGame.PathfindingController.CurrentPathModels[pathid].ClearDebug();
+                                       //  namelessGame.PathfindingController.CurrentPathModels[pathid].DrawDebug();
+                                    }
+
                                 }
                                 else
                                 {

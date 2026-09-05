@@ -1,7 +1,8 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
+using SharpDX.Direct3D9;
+using System;
+using System.Collections.Generic;
 
 namespace NamelessRogue.Engine.Utility
 {
@@ -11,6 +12,10 @@ namespace NamelessRogue.Engine.Utility
         private Point min;
         private Point max;
         Chunk leaf;
+
+        public Point Min { get { return min; } set { min = value; } }
+        public Point Max { get { return max; } set { max = value; } }
+
         Point getMin()
         {
             return min;
@@ -60,13 +65,39 @@ namespace NamelessRogue.Engine.Utility
             }
             return new BoundingBox(new Point(minX, minY), new Point(maxX, maxY));
         }
-
+        public BoundingBox GetExpanded(int expansionValue)
+        {
+            return new BoundingBox(new Point(min.X - expansionValue, min.Y - expansionValue), new Point(max.X + expansionValue, max.Y + expansionValue));
+        }
         public bool Intersects(BoundingBox other)
         {
             return !(other.max.X < this.min.X ||
                      other.min.X > this.max.X ||
                      other.max.Y < this.min.Y ||
                      other.min.Y > this.max.Y);
+        }
+
+        public bool Neighboring(BoundingBox other)
+        {
+            var expanded = this.GetExpanded(1);
+            other = other.GetExpanded(1);
+            return expanded.Intersects(other);
+        }
+        internal static BoundingBox CreateMerged(BoundingBox mergedBounds, BoundingBox boundingBox)
+        {
+            int minX = Math.Min(mergedBounds.min.X, boundingBox.min.X);
+            int minY = Math.Min(mergedBounds.min.Y, boundingBox.min.Y);
+            int maxX = Math.Max(mergedBounds.max.X, boundingBox.max.X);
+            int maxY = Math.Max(mergedBounds.max.Y, boundingBox.max.Y);
+            return new BoundingBox(new Point(minX, minY), new Point(maxX, maxY));
+        }
+        public Rectangle ToRectangle()
+        {
+            int x = Min.X;
+            int y = Min.Y;
+            int width = Max.X - Min.X;
+            int height = Max.Y - Min.Y;
+            return new Rectangle(x, y, width, height);
         }
     }
 }

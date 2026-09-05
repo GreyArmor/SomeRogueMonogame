@@ -62,7 +62,7 @@
 </data>
  </layer>
  <objectgroup id="7" name="objects">
-  <object id="1" name="sidewalk" type="pedestrian_crossing" x="329.956" y="15.5696" width="177.254" height="485.651">
+  <object id="1" name="sidewalk" type="pedestrian_crossing" x="327.561" y="11.9766" width="177.254" height="485.651">
    <properties>
     <property name="direction" value="vertical"/>
    </properties>

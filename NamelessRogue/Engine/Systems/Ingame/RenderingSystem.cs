@@ -1,53 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RogueSharp.Random;
+﻿using AsepriteDotNet;
+using AsepriteDotNet.Common;
+using Microsoft.VisualBasic.Logging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Aseprite;
+using MonoGame.Extended;
+using MonoGame.Extended.ECS;
+using MonoGame.Extended.Graphics;
+using MonoGame.Extended.Particles;
+using MonoGame.Extended.Particles.Modifiers;
+using MonoGame.Extended.Particles.Modifiers.Containers;
+using MonoGame.Extended.Particles.Modifiers.Interpolators;
+using MonoGame.Extended.Particles.Profiles;
+using MonoGame.Extended.Shapes;
+using MonoGame.Extended.Timers;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Components.Status;
 using NamelessRogue.Engine.Generation.World;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.FieldOfView;
 using NamelessRogue.shell;
-
+using RogueSharp.Random;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
+using static Assimp.Metadata;
+using static log4net.Appender.ColoredConsoleAppender;
+using static NamelessRogue.Engine.Systems.Ingame.RenderingSystem;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
 using Color = NamelessRogue.Engine.Utility.Color;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using MonoGame.Extended.Graphics;
-using MonoGame.Extended.ECS;
-using static Assimp.Metadata;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Drawing;
 using Point = Microsoft.Xna.Framework.Point;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using NamelessRogue.Engine.Components.ItemComponents;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
-using NamelessRogue.Engine.Components.Status;
-using MonoGame.Aseprite;
-using MonoGame.Extended;
-using MonoGame.Extended.Particles;
-using MonoGame.Extended.Shapes;
-using Microsoft.VisualBasic.Logging;
-using AsepriteDotNet;
-using MonoGame.Extended.Particles.Modifiers.Containers;
-using MonoGame.Extended.Particles.Modifiers.Interpolators;
-using MonoGame.Extended.Particles.Modifiers;
-using MonoGame.Extended.Particles.Profiles;
-using System.Reflection.Metadata;
 using XNAColor = Microsoft.Xna.Framework.Color;
-using AsepriteDotNet.Common;
-using MonoGame.Extended.Timers;
-using static NamelessRogue.Engine.Systems.Ingame.RenderingSystem;
-using static log4net.Appender.ColoredConsoleAppender;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -741,6 +740,25 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 RenderSpriteScreen(game, camera, game.GetSettings(), gameTime);
                 RenderCursor(game, screen, camera, game.GetSettings(), gameTime);
+                game.Batch.End();
+
+                game.Batch.Begin(samplerState: SamplerState.PointClamp);
+
+                foreach (var location in game.MacroNavigator.Locations.Where(x=>x.InternalNodes.Any(x=>x.Type == Components.AI.Pathfinder.NodeType.CrossingRight)))
+                {
+                    var rect = location.BoundingBox.ToRectangle();
+                    game.Batch.Draw(pixel, rect, XNAColor.Red);
+                   // break;
+                }
+
+
+                foreach (var location in game.MacroNavigator.Crossings)
+                {
+                    var rect = location.BoundingBox.ToRectangle();
+                    game.Batch.Draw(pixel, rect, XNAColor.Blue);
+                }
+
+
                 game.Batch.End();
             }
 
