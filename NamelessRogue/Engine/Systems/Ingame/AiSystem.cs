@@ -65,22 +65,22 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
             if (worldProvider != null)
             {
-                ////debug code;
-                if (first)
-                {
-                    first = false;
-                    CharacterFactory.CharacterDataById.TryGetValue("ba29fb6c-dd89-49a5-a320-a35258f270ed", out var characterData);
-                    var location = namelessGame.MacroNavigator.Locations.First(x => x.InternalNodes.Any() && x.Type != LocationType.CrossingVertical && x.Type != LocationType.CrossingHorizontal && x.InternalNodes.Any(x => x.IsCrossingNode()));
+                //////debug code;
+                //if (first)
+                //{
+                //    first = false;
+                //    CharacterFactory.CharacterDataById.TryGetValue("ba29fb6c-dd89-49a5-a320-a35258f270ed", out var characterData);
+                //    var location = namelessGame.MacroNavigator.Locations.First(x => x.InternalNodes.Any() && x.Type != LocationType.CrossingVertical && x.Type != LocationType.CrossingHorizontal && x.InternalNodes.Any(x => x.IsCrossingNode()));
 
-                    var waypoint = location.InternalNodes.First(x => x.IsCrossingNode());
-                    var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(waypoint.RealityPosition.X, waypoint.RealityPosition.Y, 0), characterData);
-                    var gameTile = worldProvider.GetTile(waypoint.RealityPosition.X, waypoint.RealityPosition.Y, 0);
-                    namelessGame.AddEntity(character);
-                    gameTile.AddEntity(character);
+                //    var waypoint = location.InternalNodes.First(x => x.IsCrossingNode());
+                //    var character = CharacterFactory.CreateCharacterFromData(namelessGame, new Vector3Int(waypoint.RealityPosition.X, waypoint.RealityPosition.Y, 0), characterData);
+                //    var gameTile = worldProvider.GetTile(waypoint.RealityPosition.X, waypoint.RealityPosition.Y, 0);
+                //    namelessGame.AddEntity(character);
+                //    gameTile.AddEntity(character);
 
-                    namelessGame.WorldProvider.MoveEntity(namelessGame.PlayerEntity,
-                                 waypoint.RealityPosition.X - 1, waypoint.RealityPosition.Y, 0);
-                }
+                //    namelessGame.WorldProvider.MoveEntity(namelessGame.PlayerEntity,
+                //                 waypoint.RealityPosition.X - 1, waypoint.RealityPosition.Y, 0);
+                //}
 
                 foreach (IEntity entity in this.RegisteredEntities)
                 {
@@ -176,18 +176,18 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                     var closestWaypointRealityPosition = closestWaypoint.RealityPosition;
                                     var nextCrossingConnection = closestWaypoint.GetCrossingConnections().FirstOrDefault();
                                     var pathChain = new List<int>() { closestWaypoint.LocationPathId, nextCrossingConnection.PathId };
-                                 //   pathChain.Reverse();
+                                   //pathChain.Reverse();
                                     flowMoveComponent.To = closestWaypoint.RealityPosition.ToPoint();
                                     flowMoveComponent.PathChain = pathChain;
                                     flowMoveComponent.CurrentPathIndex = 0;
                                     flowMoveComponent.FinishedMoving = false;
                                     flowMoveComponent.CurrentMacroNode = closestWaypoint;
 
-                                    foreach(var pathid in pathChain)
-                                    {
+                                    //foreach(var pathid in pathChain)
+                                    //{
                                        // namelessGame.PathfindingController.CurrentPathModels[pathid].ClearDebug();
                                        //  namelessGame.PathfindingController.CurrentPathModels[pathid].DrawDebug();
-                                    }
+                                    //}
 
                                 }
                                 else

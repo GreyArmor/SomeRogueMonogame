@@ -712,14 +712,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 foreach (var entity in RegisteredEntities)
                 {
-
-                    var projectile = entity.GetComponentOfType<ProjectileComponent>();
+					var position = entity.GetComponentOfType<Position>();
+					var projectile = entity.GetComponentOfType<ProjectileComponent>();
                     if (projectile != null)
                     {
                         continue;
-                    }
+                    }				
 
-                    var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
+					var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
                     sprited.CurrentAnimationTimeLeft -= gameTime.ElapsedGameTime.Microseconds;
 
                     if (sprited.InfinteAnimation)
@@ -741,9 +741,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 RenderSpriteScreen(game, camera, game.GetSettings(), gameTime);
                 RenderCursor(game, screen, camera, game.GetSettings(), gameTime);
                 game.Batch.End();
-
-                game.Batch.Begin(samplerState: SamplerState.PointClamp);
-
+				//debug draw for pathfinding crossings
+                /*
+				game.Batch.Begin(samplerState: SamplerState.PointClamp);
                 foreach (var location in game.MacroNavigator.Locations.Where(x=>x.InternalNodes.Any(x=>x.Type == Components.AI.Pathfinder.NodeType.CrossingRight)))
                 {
                     var rect = location.BoundingBox.ToRectangle();
@@ -757,9 +757,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     var rect = location.BoundingBox.ToRectangle();
                     game.Batch.Draw(pixel, rect, XNAColor.Blue);
                 }
-
-
-                game.Batch.End();
+                game.Batch.End();*/
             }
 
             previousPlayerPosition = playerPosition.Point;
@@ -957,14 +955,21 @@ namespace NamelessRogue.Engine.Systems.Ingame
             foreach (var entity in RegisteredEntities)
             {
 
-                var projectile = entity.GetComponentOfType<ProjectileComponent>();
+				var playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
+				var position = entity.GetComponentOfType<Position>();
+				var distance = (position.Point.ToPoint() - playerPosition.Point.ToPoint()).ToVector2().Length();
+
+				if (distance > Constants.DebugVisionRangePlusOne)
+				{ continue; }
+
+				var projectile = entity.GetComponentOfType<ProjectileComponent>();
                 if (projectile != null)
                 {
                     continue;
                 }
 
                 var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
-                var position = entity.GetComponentOfType<Position>();
+               
 
                 if(position.Z != playerPosZ)
                 { continue; }
@@ -987,15 +992,22 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             foreach (var entity in RegisteredEntities)
             {
+                var playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
+				var position = entity.GetComponentOfType<Position>();
+				var distance = (position.Point.ToPoint() - playerPosition.Point.ToPoint()).ToVector2().Length();
 
-                var projectile = entity.GetComponentOfType<ProjectileComponent>();
+                if (distance > Constants.DebugVisionRangePlusOne)
+                {
+                    continue;
+                }
+
+				var projectile = entity.GetComponentOfType<ProjectileComponent>();
                 if (projectile != null)
                 {
                     continue;
                 }
 
                 var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
-                var position = entity.GetComponentOfType<Position>();
                 Point screenPoint = camera.PointToScreen(position.X, position.Y);
                 var spriteId = sprited;
                 int tileHeight = game.GetSettings().GetFontSizeZoomed();

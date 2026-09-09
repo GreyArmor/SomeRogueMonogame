@@ -13,6 +13,7 @@ using SharpDX.Direct2D1.Effects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using TiledCSPlus;
@@ -463,17 +464,20 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
                         leftNode.NeighborConnectionPaths.Add(new MacroConnection()
                         {
                             Node = rightNode,
-                            PathId = flowIdRight,
+                            PathId = flowIdLeft,
                             Distance = distance
                         });
                         rightNode.NeighborConnectionPaths.Add(new MacroConnection()
                         {
                             Node = leftNode,
-                            PathId = flowIdLeft,
+                            PathId = flowIdRight,
                             Distance = distance
                         });
-                    }
-                }
+
+						crossing.InternalNodes.Add(leftNode);
+						crossing.InternalNodes.Add(rightNode);
+					}					
+				}
             }
         }
 

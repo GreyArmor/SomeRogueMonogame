@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file describes a SpriteFont to the MonoGame Content pipeline.
+Add it to your Content project (e.g. Content/NeonFont.spritefont),
+then it will compile automatically when you build via MGCB.
+
+Load it in code with: Content.Load<SpriteFont>("NeonFont")
+
+Pick a bold, rounded, or script-style font for the best neon look —
+something like "Segoe UI Black", "Impact", "Pacifico" (if installed),
+or any bold sans/script font you have on your system.
+-->
+<XnaContent xmlns:Graphics="Microsoft.Xna.Framework.Content.Pipeline.Graphics">
+  <Asset Type="Graphics:FontDescription">
+
+    <!-- Font family name as installed on your system -->
+    <FontName>Segoe UI Black</FontName>
+
+    <!-- Size in points -->
+    <Size>48</Size>
+
+    <!-- Spacing between characters -->
+    <Spacing>0</Spacing>
+
+    <!-- Use bold style if the font supports it -->
+    <Style>Bold</Style>
+
+    <!-- Character range to include -->
+    <CharacterRegions>
+      <CharacterRegion>
+        <Start>&#32;</Start>
+        <End>&#126;</End>
+      </CharacterRegion>
+    </CharacterRegions>
+
+  </Asset>
+</XnaContent>

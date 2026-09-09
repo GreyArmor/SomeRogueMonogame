@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualBasic;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended.ECS;
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Physical;
@@ -61,7 +62,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var player = game.PlayerEntity;
             var pos = player.GetComponentOfType<Position>();
             playerPosZ = pos.Z;
-            fov.Compute(pos.Point.ToPoint(), 40);
+            fov.Compute(pos.Point.ToPoint(), NamelessRogue.Engine.Infrastructure.Constants.DebugVisionRange);
         }
     }
 }

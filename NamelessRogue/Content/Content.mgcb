@@ -45,11 +45,28 @@
 /processorParam:DebugMode=Auto
 /build:Light.fx
 
+#begin NeonFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:NeonFont.spritefont
+
 #begin ObjectsShader.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:ObjectsShader.fx
+
+#begin ryga.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:ryga.spritefont
+
+#begin Ryga.ttf
+/copy:Ryga.ttf
 
 #begin Segoe_UI_15_Bold.spritefont
 /importer:FontDescriptionImporter

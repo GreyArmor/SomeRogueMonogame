@@ -20,7 +20,9 @@ namespace NamelessRogue.Engine.Infrastructure
         public static int CitySlotDimensions { get; } = 20;
         public static int CitySquare { get; } = 300;
 
-        public const string GameObjectRelativePath = "\\Content\\GameObjects\\";
+        public static int DebugVisionRange { get; } = 40;
+        public static int DebugVisionRangePlusOne { get; } = DebugVisionRange + 1;
+		public const string GameObjectRelativePath = "\\Content\\GameObjects\\";
         public static readonly int[] WorldMapZoomValues = [1, 2, 4, 8, 16, 32, 64];
 
     }
