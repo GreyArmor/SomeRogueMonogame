@@ -80,7 +80,9 @@ namespace NamelessRogue.shell
 
         public IEntity WorldMapCameraEntity { get; set; }
 
-        public Commander Commander { get; set; }
+		public IEntity StreetLightsKeeper { get; set; }
+
+		public Commander Commander { get; set; }
 
         public PathfindingController PathfindingController {get; private set; }
         public MacroNavigator MacroNavigator { get; private set; }
@@ -398,6 +400,7 @@ namespace NamelessRogue.shell
             CursorEntity = GameInitializer.CreateCursor();
             TargeterEntity = GameInitializer.CreateTargeter();
             WorldMapCameraEntity = GameInitializer.CreateWorldMapCamera();
+			StreetLightsKeeper = GameInitializer.CreateStreetlightsStatusKeeper();
 			MacroNavigator.AnalyzeAndConnectLocations();
         }
 

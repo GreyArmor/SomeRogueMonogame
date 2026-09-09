@@ -1,4 +1,5 @@
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
@@ -38,5 +39,12 @@ namespace NamelessRogue.Engine.Factories
             cameraEntity.AddComponent(new WorldMapCameraComponent(new System.Numerics.Vector2(), 64));
             return cameraEntity;
         }
-    }
+
+		internal static IEntity CreateStreetlightsStatusKeeper()
+		{
+			Entity streetLightKeeper = new Entity();
+			streetLightKeeper.AddComponent(new StreetlightsStatusKeeper(){ VerticalMovementAllowed = true} );
+			return streetLightKeeper;
+		}
+	}
 }

@@ -277,7 +277,18 @@ namespace NamelessRogue.Engine.Factories
 
                         if (tileObject.Type == TiledObjectType.Point)
                         {
-                            if (tileObject.Class == "waypoint")
+                            if(tileObject.Class == "streetlight")
+							{
+								var streetlight = new Entity();
+								streetlight.AddComponent(new Position(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, floorZ));
+								streetlight.AddComponent(new Drawable("streetlight", new Engine.Utility.Color(1f, 1f, 1f)));
+								streetlight.AddComponent(new Description("Streetlight", ""));
+                                streetlight.AddComponent(new Streetlight());
+								var tile = worldProvider.GetTile(realSpaceX + (int)tilePosition.X, realSpaceY + (int)tilePosition.Y, floorZ);
+								tile.AddEntity(streetlight);
+							}
+
+							if (tileObject.Class == "waypoint")
                             {
 
                             }

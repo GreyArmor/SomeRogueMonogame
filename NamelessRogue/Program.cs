@@ -37,7 +37,7 @@ namespace NamelessRogue
             SaveManager.Init();
             SaveManager.BuildAndSaveAlphaWorld();
             //// return;
-            using (var game = new NeonDemo())
+            using (var game = new NamelessGame())
             {
                 game.Run();
             }

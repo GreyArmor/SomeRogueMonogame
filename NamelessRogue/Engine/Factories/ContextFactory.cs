@@ -54,6 +54,7 @@ namespace NamelessRogue.Engine.Factories
                 ingameLogicSystems.Add(new FireWeaponSystem());
                 ingameLogicSystems.Add(new ProjectileSystem());
 				ingameLogicSystems.Add(new TurnManagementSystem());
+                ingameLogicSystems.Add(new StreetlightsSystem());
                 ingameLogicSystems.Add(new AiSystem());
                 ingameLogicSystems.Add(new FlowFieldMovementSystem());
                 ingameLogicSystems.Add(new ConsumableSystem());
@@ -76,6 +77,7 @@ namespace NamelessRogue.Engine.Factories
                 ingameRenderSystems.Add(uiSystem);
                 ingameRenderSystems.Add(new HudElementsRenderingSystem(game.Settings));
                 ingameRenderSystems.Add(new ProjectileRendringSystem());
+                ingameRenderSystems.Add(new StreetlightsRenderingSystem());
                 ingameRenderSystems.Add(new SFXSystem());
 
 				IngameContext = new GameContext(ingameLogicSystems.ToList(), ingameRenderSystems, UIContainer.Instance.HudScreen, "InGame");
