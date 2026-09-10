@@ -25,7 +25,7 @@ namespace NamelessRogue.Engine.Infrastructure
 		public const string GameObjectRelativePath = "\\Content\\GameObjects\\";
         public static readonly int[] WorldMapZoomValues = [1, 2, 4, 8, 16, 32, 64];
 
-        public static readonly int StreetLightChangeIntervalTurns = 60;
+        public static readonly int StreetLightChangeIntervalTurns = 100;
 
     }
 }

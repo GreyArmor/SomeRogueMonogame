@@ -38,7 +38,6 @@ namespace NamelessRogue.Engine.Systems.Ingame
 						flowMoveComponent.To = mc.To;
 						flowMoveComponent.PathChain = new List<int>() { pathId };
 						flowMoveComponent.CurrentPathIndex = 0;
-                        flowMoveComponent.FinishedMoving = false;
 					}
 				}
 			}
@@ -49,20 +48,20 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				{
 					Position position = movableEntity.GetComponentOfType<Position>();
 					var flowMoveComponent = movableEntity.GetComponentOfType<FlowMoveComponent>();
-					if (!flowMoveComponent.FinishedMoving && position.X > 0 && position.Y > 0)
-					{
-						var hasNext = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathId, position.Point.ToPoint(), out Point? nextPoint);
-						if (hasNext)
-						{
-							if (flowMoveComponent.To == nextPoint.Value)
-							{
-								flowMoveComponent.FinishedMoving = true;
-								//continue;
-							}
-							namelessGame.WorldProvider.MoveEntity(movableEntity,
-							  nextPoint.Value.X, nextPoint.Value.Y, 0);
-						}
-					}
+					//if (!flowMoveComponent.FinishedMoving && position.X > 0 && position.Y > 0)
+					//{
+					//	var hasNext = namelessGame.PathfindingController.GetNextPoint(flowMoveComponent.PathId, position.Point.ToPoint(), out Point? nextPoint);
+					//	if (hasNext)
+					//	{
+					//		if (flowMoveComponent.To == nextPoint.Value)
+					//		{
+					//			flowMoveComponent.FinishedMoving = true;
+					//			//continue;
+					//		}
+					//		namelessGame.WorldProvider.MoveEntity(movableEntity,
+					//		  nextPoint.Value.X, nextPoint.Value.Y, 0);
+					//	}
+					//}
 				}
 			}
 
