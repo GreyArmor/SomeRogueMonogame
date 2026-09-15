@@ -102,8 +102,8 @@ namespace NamelessRogue.Engine.Factories
                 var animatedLayer = map.Layers.First(l => l.Name == "animated");
                 var terrainLayer = map.Layers.FirstOrDefault(l => l.Name == "terrain");
                 var objects = map.Layers.FirstOrDefault(l => l.Name == "objects")?.Objects;
-
-                int buildingSize = map.Width;
+                var lockedTilesLayer = map.Layers.FirstOrDefault(l => l.Name == "lockedTiles");
+				int buildingSize = map.Width;
 
                 bool hasCache = buildingCreationCache.TryGetValue(mapPath, out var buildingCache);
 
@@ -216,62 +216,50 @@ namespace NamelessRogue.Engine.Factories
                         }
                     }
                 }
-                var apartmentBlockShopsRandomizer = new ApartmentShopsTerrainRandomizer();
-                if (objects != null)
+
+                List<Point> lockedTiles = new List<Point>();
+                if (lockedTilesLayer != null)
                 {
-                    foreach (var tileObject in objects)
+                    for (int loopY = 0; loopY < buildingSize; loopY++)
+                    {
+                        for (int loopX = 0; loopX < buildingSize; loopX++)
+                        {
+							var tileId = lockedTilesLayer.Data[loopX + (loopY * buildingSize)];
+                            if (tileId != 0)
+                            {
+								lockedTiles.Add(new Point(realSpaceX + loopX, realSpaceY + loopY));
+							}
+						}
+                    }
+                }
+
+
+				var apartmentBlockShopsRandomizer = new ApartmentShopsTerrainRandomizer();
+                if (objects != null)
+                {             
+					foreach (var tileObject in objects)
                     {
                         var tilePosition = tileObject.Position / tilemapTileSize;
 
-
-
                         if (tileObject.Type == TiledObjectType.Polygon && tileObject.Class == "pedestrianMovementPolygon")
                         {
-                          //  macroLocation.Type = LocationType.Building;
-                           // if (onlyOnePath)
+                            //  macroLocation.Type = LocationType.Building;
+                            // if (onlyOnePath)
                             {
-                             //   onlyOnePath = false;
+                                //   onlyOnePath = false;
                                 List<MacroNode> waypoinMacroNodetList = new List<MacroNode>();
-                                //NodeType[] nodeTypes = new NodeType[] { NodeType., NodeType.PedestrianEntranceNE, NodeType.PedestrianEntranceSE, NodeType.PedestrianEntranceSW, };
-                                //create nodes
                                 for (int i = 0; i < tileObject.Polygon.Points.Count(); i++)
                                 {
                                     var point = (tileObject.Polygon.Points[i] + tileObject.Position) / tilemapTileSize;
 
-                                  //  point = point + new System.Numerics.Vector2(macroLocation.RealityPosition.X, macroLocation.RealityPosition.Y);
 
-                                    //var macroNodeType = nodeTypes[i];
-                                                                     
                                     waypoinMacroNodetList.Add(new MacroNode(macroLocation)
                                     {
                                         Id = $@"pedestrianWaypoint{i}_x{realSpaceX}_y{realSpaceY}",
-                                        RealityPosition = new Vector3Int(realSpaceX + (int)point.X, realSpaceY + (int)point.Y, floorZ),   
-                                      //  Type = macroNodeType
+                                        RealityPosition = new Vector3Int(realSpaceX + (int)point.X, realSpaceY + (int)point.Y, floorZ),
                                     });
-                                  //  break;
                                 }
-
-
-                                //for (int i = 0; i < tileObject.Polygon.Points.Count(); i++)
-                                //{
-                                //    var point = (tileObject.Polygon.Points[i] + tileObject.Position) / tilemapTileSize;
-                                //    var waypoint = new Position(realSpaceX + (int)point.X, realSpaceY + (int)point.Y, floorZ);
-
-                                //   // var oppositeWaypoint = waypoinMacroNodetList.Except(waypoinMacroNodetList[i].Neighbors).FirstOrDefault();
-
-                                //    var waypointId = ("waypoint" + waypoint.Point.ToPoint());
-
-                                   //var buildingMin = new Point(worldSpaceX - 1, worldSpaceY - 1);
-                                   //var buildingMax = new Point((worldSpaceX + (int)(data.Size.X / Constants.ChunkSize) + 1), (worldSpaceY + (int)(data.Size.Y / Constants.ChunkSize) + 1));
-
-
-                                //    var flowId = namelessGame.FlowFieldController.CalculateToForArea(waypoint.Point.ToPoint(), buildingMin, buildingMax);
-                                //    waypoinMacroNodetList[i].FlowFieldId = flowId;
-                                //    //   break;
-                                //}
-
                                 macroLocation.InternalNodes.AddRange(waypoinMacroNodetList);
-                               // macroLocation.Entrances.AddRange(waypoinMacroNodetList);
                             }
                         }
 
@@ -332,7 +320,7 @@ namespace NamelessRogue.Engine.Factories
                             if (isRandomizer)
                             {
                                 var randomizerRect = new Rectangle((int)tilePosition.X + realSpaceX, (int)tilePosition.Y + realSpaceY, (int)rectZise.X, (int)rectZise.Y);
-                                apartmentBlockShopsRandomizer.Randomize(worldProvider, randomizerRect, floorZ, namelessGame.CurrentGame.GlobalRandom);
+                                apartmentBlockShopsRandomizer.Randomize(worldProvider, randomizerRect, lockedTiles, floorZ, namelessGame.CurrentGame.GlobalRandom);
                             }
                             //if(false)
                             else if (tileObject.Class == "pedestrian_crossing")

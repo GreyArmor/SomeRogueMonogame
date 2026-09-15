@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using MonoGame.Extended.ECS;
 using MonoGame.Extended.Timers;
 using NamelessRogue.Engine.Abstraction;
@@ -18,25 +19,28 @@ namespace NamelessRogue.Engine.Factories
 {
     public abstract class TerrainRandomizer
     {
-        public abstract void Randomize(IWorldProvider world, Rectangle rectangle, int zLevel, InternalRandom random);
+        public abstract void Randomize(IWorldProvider world, Rectangle rectangle, List<Point> lockedTiles, int zLevel, InternalRandom random);
     }
 
     public class ApartmentShopsTerrainRandomizer : TerrainRandomizer
     {        
         private enum RoomWallType { Concrete, Brick, Glass, }
         Array roomWallTypes = Enum.GetValues(typeof(RoomWallType));
-        public override void Randomize(IWorldProvider world, Rectangle rectangle, int zLevel, InternalRandom random)
+        const int windowProbability = 33;
+        public override void Randomize(IWorldProvider world, Rectangle rectangle, List<Point> lockedTiles, int zLevel, InternalRandom random)
         {
-            var wallFurniture = TerrainFurnitureFactory.GetFurniture("wall_glass");
- 
-             const int roomOffset = 5;
+            var wallFurniture = TerrainFurnitureFactory.GetFurniture("wall");
+			var windowFurniture = TerrainFurnitureFactory.GetFurniture("window");
+
+			const int roomOffset = 5;
 
             var centerX = random.Next(rectangle.Left + roomOffset, rectangle.Right - roomOffset);
             var centerY = random.Next(rectangle.Top + roomOffset, rectangle.Bottom - roomOffset);                      
 
             var rooms = RectangleUtility.SplitRectangle(rectangle, new Point(centerX, centerY));
-
-            for (int i = 0; i < 4; i++)
+            var cornersOfRooms = rooms.SelectMany(x => x.GetCorners());
+		
+			for (int i = 0; i < 4; i++)
             {
                 var roomWallType = (RoomWallType)roomWallTypes.GetValue(random.Next(roomWallTypes.Length));
                 var room = rooms[i];
@@ -46,17 +50,33 @@ namespace NamelessRogue.Engine.Factories
 
                 foreach(var point in rectangleOutline)
                 {
-                    var tile = world.GetTile(point.X, point.Y, zLevel);
+                    var furniture = wallFurniture;
+
+                    var isCorner = cornersOfRooms.Contains(point);
+                    var isOnEdge = IsTileOnEdge(rectangle, point.X,point.Y);
+                    var isReserved = lockedTiles.Contains(point);
+					if (!isReserved && !isCorner && isOnEdge)
+                    {
+                        furniture = random.Next(100) <= windowProbability ? windowFurniture : wallFurniture;
+                    }
+
+					var tile = world.GetTile(point.X, point.Y, zLevel);
                     tile.ClearEntities();
-                    tile.AddEntity(wallFurniture);
+                    
+                    tile.AddEntity(furniture);
                 }
 
                 foreach (var wallCenter in roomWallCenters)
                 {
-                    var tile = world.GetTile(wallCenter.X, wallCenter.Y, zLevel);
+					var isReserved = lockedTiles.Contains(wallCenter);
+					if (cornersOfRooms.Contains(wallCenter) || isReserved)
+					{
+						continue;
+					}
+					var tile = world.GetTile(wallCenter.X, wallCenter.Y, zLevel);
                     tile.ClearEntities();
-
-                    var doorFurniture = BuildingFactory.CreateDoor(wallCenter.X, wallCenter.Y, zLevel, "door_glass");
+				
+					var doorFurniture = BuildingFactory.CreateDoor(wallCenter.X, wallCenter.Y, zLevel, "door");
                     tile.AddEntity(doorFurniture);
                 }
             }
@@ -73,5 +93,18 @@ namespace NamelessRogue.Engine.Factories
             }
 
         }
-    }
+
+		public bool IsTileOnEdge(Rectangle rect, int tileX, int tileY)
+		{
+			if (tileX < rect.Left || tileX >= rect.Right || tileY < rect.Top || tileY >= rect.Bottom)
+			{
+				return false;
+			}
+			return tileX == rect.Left ||
+				   tileX == rect.Right - 1 ||
+				   tileY == rect.Top ||
+				   tileY == rect.Bottom - 1;
+		}
+
+	}
 }
