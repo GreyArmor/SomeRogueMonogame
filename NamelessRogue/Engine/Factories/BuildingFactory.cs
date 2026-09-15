@@ -320,7 +320,7 @@ namespace NamelessRogue.Engine.Factories
                             if (isRandomizer)
                             {
                                 var randomizerRect = new Rectangle((int)tilePosition.X + realSpaceX, (int)tilePosition.Y + realSpaceY, (int)rectZise.X, (int)rectZise.Y);
-                                apartmentBlockShopsRandomizer.Randomize(worldProvider, randomizerRect, lockedTiles, floorZ, namelessGame.CurrentGame.GlobalRandom);
+                                apartmentBlockShopsRandomizer.Randomize(namelessGame, worldProvider, randomizerRect, lockedTiles, floorZ, namelessGame.CurrentGame.GlobalRandom);
                             }
                             //if(false)
                             else if (tileObject.Class == "pedestrian_crossing")

@@ -126,8 +126,15 @@ namespace NamelessRogue.Engine.Factories
 
             _addFurniture("air_conditioner", "Air conditioner", true, true);
 
+			_addFurniture("displayCaseWeapons_1", "Weapons display case", true, false);
+			_addFurniture("displayCaseWeapons_2", "Weapons display case", true, false);
+			_addFurniture("displayCaseWeapons_3", "Weapons display case", true, false);
 
-            var railingLadderDown = _addFurniture("railing_stairs_down", "Ladder down", false, false);
+			_addFurniture("displayCaseMedical_1", "Medical display case", true, false);
+			_addFurniture("displayCaseMedical_2", "Medical display case", true, false);
+			_addFurniture("displayCaseMedical_3", "Medical display case", true, false);
+
+			var railingLadderDown = _addFurniture("railing_stairs_down", "Ladder down", false, false);
             railingLadderDown.AddComponent(new StairsComponent());
             var railingLadderUp =  _addFurniture("railing_stairs_up", "Ladder up", false, false);
             railingLadderUp.AddComponent(new StairsComponent());

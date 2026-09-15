@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Id>weapons_merchant</Id>
-  <Name>Weapon's merchant</Name>
+  <Id>meds_merchant</Id>
+  <Name>Meds merchant</Name>
   <Description />
   <SpritePath>Sprites\wastelander.ase</SpritePath>
   <AiType>Idle</AiType>
@@ -11,52 +11,26 @@
   <Energy>0</Energy>
   <MovementSpeed>50</MovementSpeed>
   <VisionRange>10</VisionRange>
-  <DroppedItems>
-    <DroppedItemTemplate>
-      <ItemId>7f907c43-047a-4ee8-bb95-65efa66ee146</ItemId>
-      <Path>..\Weapons\Red gun.nrif</Path>
-      <Probability>1</Probability>
-    </DroppedItemTemplate>
-    <DroppedItemTemplate>
-      <ItemId>59ace243-ebd9-45cd-9e1e-bac783ea0a60</ItemId>
-      <Path>..\Weapons\Simple gun.nrif</Path>
-      <Probability>2</Probability>
-    </DroppedItemTemplate>
-    <DroppedItemTemplate>
-      <ItemId>01bf611a-3489-4fc1-ace4-7e2dfd8ec095</ItemId>
-      <Path>..\Weapons\Toxic knife.nrif</Path>
-      <Probability>1</Probability>
-    </DroppedItemTemplate>
-  </DroppedItems>
+  <DroppedItems />
   <VendorItems>
     <DroppedItemTemplate>
-      <ItemId>7f907c43-047a-4ee8-bb95-65efa66ee146</ItemId>
-      <Path>..\Weapons\Red gun.nrif</Path>
+      <ItemId>1586eec3-e2b6-45e0-aa4d-9e3e3305fe59</ItemId>
+      <Path>..\Consumable\Battery.nrif</Path>
       <Probability>0</Probability>
     </DroppedItemTemplate>
     <DroppedItemTemplate>
-      <ItemId>59ace243-ebd9-45cd-9e1e-bac783ea0a60</ItemId>
-      <Path>..\Weapons\Simple gun.nrif</Path>
+      <ItemId>cc5a9c20-4fe7-437b-8496-a017ea1a9636</ItemId>
+      <Path>..\Consumable\MedKit.nrif</Path>
       <Probability>0</Probability>
     </DroppedItemTemplate>
     <DroppedItemTemplate>
-      <ItemId>01bf611a-3489-4fc1-ace4-7e2dfd8ec095</ItemId>
-      <Path>..\Weapons\Toxic knife.nrif</Path>
+      <ItemId>ad4f9a93-ca18-45ab-99f5-7edc43edae2d</ItemId>
+      <Path>..\Consumable\Rusting beaker.nrif</Path>
       <Probability>0</Probability>
     </DroppedItemTemplate>
     <DroppedItemTemplate>
-      <ItemId>7f907c43-047a-4ee8-bb95-65efa66ee146</ItemId>
-      <Path>..\Weapons\Red gun.nrif</Path>
-      <Probability>0</Probability>
-    </DroppedItemTemplate>
-    <DroppedItemTemplate>
-      <ItemId>7f907c43-047a-4ee8-bb95-65efa66ee146</ItemId>
-      <Path>..\Weapons\Red gun.nrif</Path>
-      <Probability>0</Probability>
-    </DroppedItemTemplate>
-    <DroppedItemTemplate>
-      <ItemId>7f907c43-047a-4ee8-bb95-65efa66ee146</ItemId>
-      <Path>..\Weapons\Red gun.nrif</Path>
+      <ItemId>3609652b-170a-4309-b4a7-a71c8e50917b</ItemId>
+      <Path>..\Consumable\Toxic beaker.nrif</Path>
       <Probability>0</Probability>
     </DroppedItemTemplate>
   </VendorItems>

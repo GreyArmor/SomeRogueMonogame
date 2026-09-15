@@ -503,7 +503,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
             characterToTileDictionary.Add("toilet", new AtlasTileData(3, 8));
             characterToTileDictionary.Add("shower", new AtlasTileData(0, 8));
 
-            BindWallPositions(0, 0, "wall", "closed_door", "open_door", "window");
+			characterToTileDictionary.Add("displayCaseWeapons_1", new AtlasTileData(0, 18));
+			characterToTileDictionary.Add("displayCaseWeapons_2", new AtlasTileData(1, 18));
+			characterToTileDictionary.Add("displayCaseWeapons_3", new AtlasTileData(2, 18));
+			characterToTileDictionary.Add("displayCaseMedical_1", new AtlasTileData(0, 19));
+			characterToTileDictionary.Add("displayCaseMedical_2", new AtlasTileData(1, 19));
+			characterToTileDictionary.Add("displayCaseMedical_3", new AtlasTileData(2, 19));
+
+			BindWallPositions(0, 0, "wall", "closed_door", "open_door", "window");
             BindWallPositions(10, 0, "wall_brick", "closed_door_brick", "open_door_brick", "window_brick");
             BindWallPositions(10, 3, "chainlink", "closed_door_chainlink", "open_door_chainlink", "window_chainlink");
             BindWallPositions(10, 6, "tent_wall", "closed_door_tent", "open_door_tent", "window_tent");

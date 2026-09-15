@@ -71,5 +71,20 @@ namespace NamelessRogue.Engine.Utility
 
             return points;
         }
-    }
+
+		public static Point GetRandomPointInRectangle(Rectangle rect, InternalRandom random)
+		{
+
+			int x = random.Next(rect.Left, rect.Right);
+			int y = random.Next(rect.Top, rect.Bottom);
+
+			return new Point(x, y);
+		}
+
+		public static Rectangle GetExpanded(Rectangle rect, int expansionValue)
+		{
+			//not sure about rect.Size.X-1, but this is how i wanted it to work
+			return new Rectangle(new Point(rect.Left - expansionValue, rect.Top - expansionValue), new Point((rect.Size.X-1) + expansionValue, (rect.Size.Y-1) + expansionValue));
+		}
+	}
 }
