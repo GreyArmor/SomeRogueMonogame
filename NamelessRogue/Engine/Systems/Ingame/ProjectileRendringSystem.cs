@@ -24,7 +24,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var cameraEntity = game.CameraEntity;
             ConsoleCamera camera = cameraEntity.GetComponentOfType<ConsoleCamera>();
             game.Batch.Begin();
-            foreach (IEntity entity in RegisteredEntities)
+            foreach (Entity entity in RegisteredEntities)
             {
                 var projectileComponent = entity.GetComponentOfType<ProjectileComponent>();
                 if (projectileComponent != null)

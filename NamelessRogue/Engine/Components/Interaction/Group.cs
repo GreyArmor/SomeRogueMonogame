@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {
@@ -13,8 +14,8 @@ namespace NamelessRogue.Engine.Components.Interaction
 			TextId = testId;
 		}
 		public string TextId { get; set; }
-		public List<IEntity> EntitiesInGroup { get; set; } = new List<IEntity>();
+		public List<Entity> EntitiesInGroup { get; set; } = new List<Entity>();
 		public bool FormationMaintained { get; set; } = true;
-		public IEntity FlagbearerId { get; internal set; }
+		public Entity FlagbearerId { get; internal set; }
 	}
 }

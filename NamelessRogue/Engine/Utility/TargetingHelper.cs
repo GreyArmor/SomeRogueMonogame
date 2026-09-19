@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Utility
 {
@@ -42,9 +43,9 @@ namespace NamelessRogue.Engine.Utility
         /// <param name="pointA"></param>
         /// <param name="pointB"></param>
         /// <returns>returns all characters and furniture on path</returns>
-        public static List<Tuple<Point,IEntity>> GetCharactersAndFurnitureAlongPath(IWorldProvider worldProvider, Vector3Int pointA, Vector3Int pointB, bool skipFirstTile = true)
+        public static List<Tuple<Point,Entity>> GetCharactersAndFurnitureAlongPath(IWorldProvider worldProvider, Vector3Int pointA, Vector3Int pointB, bool skipFirstTile = true)
         {
-            List<Tuple<Point, IEntity>> entities = new List<Tuple<Point, IEntity>>();
+            List<Tuple<Point, Entity>> entities = new List<Tuple<Point, Entity>>();
             List<Point> line = PointUtil.getLine(pointA.ToPoint(), pointB.ToPoint());
             if(skipFirstTile)
             {
@@ -62,7 +63,7 @@ namespace NamelessRogue.Engine.Utility
                         var blocksPath = tileEntity.GetComponentOfType<OccupiesTile>();
                         if(blocksPath != null)
                         {
-                            entities.Add(new Tuple<Point, IEntity>(point, tileEntity));
+                            entities.Add(new Tuple<Point, Entity>(point, tileEntity));
                             continue;
                         }
                     }
@@ -70,7 +71,7 @@ namespace NamelessRogue.Engine.Utility
                     var character = tileEntity.GetComponentOfType<Character>();
                     if(character!=null)
                     {
-                        entities.Add(new Tuple<Point, IEntity>(point, tileEntity));
+                        entities.Add(new Tuple<Point, Entity>(point, tileEntity));
                     }
                 }
             }

@@ -48,7 +48,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     }
                     if (abilityBuffs != null)
                     {
-                        IEntity target = GetTargetOnSite(namelessGame, cursorPos);
+                        Entity target = GetTargetOnSite(namelessGame, cursorPos);
                         if (target != null)
                         {
                             var modifiers = target.GetComponentOfType<ModifiersCollection>();
@@ -84,7 +84,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                     if (abilityBuffs != null)
                     {
-                        IEntity target = command.Source;
+                        Entity target = command.Source;
                         foreach (string id in abilityBuffs.BuffIds)
                         {
                             var buff = BuffLibrary.CreateBuffFromData(namelessGame, BuffLibrary.DataById[id]);
@@ -117,7 +117,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     break;
                 case AbilityAction.AttackTargetMelee:
                 case AbilityAction.AttackTargetRanged:
-                    IEntity entityThatOccupiedTile = null;
+                    Entity entityThatOccupiedTile = null;
                     entityThatOccupiedTile = GetTargetOnSite(namelessGame, targetPosition);
                     if (entityThatOccupiedTile != null)
                     {
@@ -146,11 +146,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        private static IEntity GetTargetOnSite(NamelessGame namelessGame, Position cursorPos)
+        private static Entity GetTargetOnSite(NamelessGame namelessGame, Position cursorPos)
         {
-            IEntity entityThatOccupiedTile = null;
+            Entity entityThatOccupiedTile = null;
             Tile tile = namelessGame.WorldProvider.GetTile(cursorPos.Point.X, cursorPos.Point.Y, cursorPos.Point.Z);
-            foreach (IEntity tileEntity in tile.GetEntities())
+            foreach (Entity tileEntity in tile.GetEntities())
             {
                 OccupiesTile occupiesTile = tileEntity.GetComponentOfType<OccupiesTile>();
 

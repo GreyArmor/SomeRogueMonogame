@@ -1,13 +1,12 @@
 ﻿using NamelessRogue.Engine.Abstraction;
 using System.Collections.Generic;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {
     public class TradeTransationCommand : ICommand
     {
-
-
-        public TradeTransationCommand(IEntity rightEntity, IEntity leftEntity,  List<IEntity> itemsToGiveToLeftentity, List<IEntity> itemsToGiveToRight, int cashToTransferFromLeftToRight)
+        public TradeTransationCommand(Entity rightEntity, Entity leftEntity,  List<Entity> itemsToGiveToLeftentity, List<Entity> itemsToGiveToRight, int cashToTransferFromLeftToRight)
         {
             RightEntity = rightEntity;
             LeftEntity = leftEntity;
@@ -16,10 +15,10 @@ namespace NamelessRogue.Engine.Components.Interaction
             CashToTransferFromLeftToRight = cashToTransferFromLeftToRight;
         }
 
-        public IEntity RightEntity { get; }
-        public IEntity LeftEntity { get; }
-        public List<IEntity> ItemsToGiveToLeftEntity { get; }
-        public List<IEntity> ItemsToGiveToRightEntity { get; }
+        public Entity RightEntity { get; }
+        public Entity LeftEntity { get; }
+        public List<Entity> ItemsToGiveToLeftEntity { get; }
+        public List<Entity> ItemsToGiveToRightEntity { get; }
         public int CashToTransferFromLeftToRight { get; }
     }
 

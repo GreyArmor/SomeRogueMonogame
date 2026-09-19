@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 {
 	public class PedestrianAiProcessor
     {
-        public void ProcessPedestrianAi(IEntity entity, NamelessGame game)
+        public void ProcessPedestrianAi(Entity entity, NamelessGame game)
         {
             var flowMoveComponent = entity.GetComponentOfType<FlowMoveComponent>();
             if (flowMoveComponent != null)
@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
             }
         }
-        Dictionary<PedestrianAiState, Action<IEntity, FlowMoveComponent, NamelessGame>> pedestrianAiStateActions = new Dictionary<PedestrianAiState, Action<IEntity, FlowMoveComponent, NamelessGame>>()
+        Dictionary<PedestrianAiState, Action<Entity, FlowMoveComponent, NamelessGame>> pedestrianAiStateActions = new Dictionary<PedestrianAiState, Action<Entity, FlowMoveComponent, NamelessGame>>()
         {
             { PedestrianAiState.Start, HandleStartState },
             { PedestrianAiState.Wait, HandleWaitState },
@@ -40,7 +40,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             { PedestrianAiState.Finished, HandleFinishedState }
         };
 
-		private static void HandleStartState(IEntity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
+		private static void HandleStartState(Entity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
 		{
 			flowMoveComponent.Log += "start->";
 			var entityPos = entity.GetComponentOfType<Position>().Point;
@@ -92,7 +92,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			}
 		}
 
-		private static void HandleFinishedState(IEntity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
+		private static void HandleFinishedState(Entity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
         {
 			flowMoveComponent.Log += "finished->";
 			var entityPos = entity.GetComponentOfType<Position>().Point;
@@ -114,7 +114,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			flowMoveComponent.CurrentState = PedestrianAiState.Move;
 		}
 
-        private static void HandleCrossingMoveState(IEntity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
+        private static void HandleCrossingMoveState(Entity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
         {
 			flowMoveComponent.Log += "crossingmove->";
 			var entityPos = entity.GetComponentOfType<Position>().Point;
@@ -169,7 +169,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			entity.GetComponentOfType<ActionPoints>().Points = -200;
 		}
 
-        private static void HandleWaitForCrossingState(IEntity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
+        private static void HandleWaitForCrossingState(Entity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
         {
 			flowMoveComponent.Log += "crossingwait->";
 			var verticalCrossingEnabled = game.StreetLightsKeeper.GetComponentOfType<StreetlightsStatusKeeper>().VerticalMovementAllowed;
@@ -193,7 +193,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			entity.GetComponentOfType<ActionPoints>().Points = -200;
 		}
 
-        private static void HandleMoveState(IEntity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
+        private static void HandleMoveState(Entity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
         {
 			flowMoveComponent.Log += "move->";
 			var entityPos = entity.GetComponentOfType<Position>().Point;
@@ -246,7 +246,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			entity.GetComponentOfType<ActionPoints>().Points = -200;
 		}
 
-        private static void HandleWaitState(IEntity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
+        private static void HandleWaitState(Entity entity, FlowMoveComponent flowMoveComponent, NamelessGame game)
         {
             throw new NotImplementedException();
         }

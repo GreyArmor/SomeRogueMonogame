@@ -38,7 +38,7 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
 
             UIController.PickUpItemsScreen.Actions.Clear();
 
-            foreach (IEntity entity in RegisteredEntities)
+            foreach (Entity entity in RegisteredEntities)
             {
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)

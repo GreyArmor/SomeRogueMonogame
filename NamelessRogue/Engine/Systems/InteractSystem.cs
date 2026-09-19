@@ -104,7 +104,7 @@ namespace NamelessRogue.Engine.Systems
                 {
                     var tile = namelessGame.WorldProvider.GetTile(interactionEntityPosition.X, interactionEntityPosition.Y, interactionEntityPosition.Z);
                     var tileEntities = tile.GetEntities();
-                    var tileItems = new List<IEntity>();
+                    var tileItems = new List<Entity>();
                     foreach (var tileEntity in tileEntities)
                     {
                         var interactionItem = tileEntity.GetComponentOfType<Item>();

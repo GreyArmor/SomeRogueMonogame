@@ -16,7 +16,7 @@ namespace NamelessRogue.Engine.Infrastructure
         {
             Game = game;
         }
-        public static void Jump(IEntity jumpingEntity, Vector3Int destination)
+        public static void Jump(Entity jumpingEntity, Vector3Int destination)
         {
             var tile = Game.WorldProvider.GetTile(destination.X, destination.Y, destination.Z);
             if (tile != null)

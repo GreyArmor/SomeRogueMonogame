@@ -1,10 +1,11 @@
 ﻿using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
     internal interface IActivatedAbilityCommand
     {
-        IEntity Ability { get; }
-        IEntity Source { get; }
+        Entity Ability { get; }
+        Entity Source { get; }
     }
 }

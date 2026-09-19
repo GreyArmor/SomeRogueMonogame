@@ -44,7 +44,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     continue;
                 }
 
-                IEntity worldEntity = namelessGame.WorldTemplateEntity;
+                Entity worldEntity = namelessGame.WorldTemplateEntity;
                 IWorldProvider worldProvider = null;
                 if (worldEntity != null)
                 {
@@ -55,7 +55,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 {
                     Tile playerTile = worldProvider.GetTile(position.X, position.Y, position.Z);
                     StairsComponent stairs = null;
-                    foreach (IEntity tileEntity in playerTile.GetEntities())
+                    foreach (Entity tileEntity in playerTile.GetEntities())
                     {
                         stairs = tileEntity.GetComponentOfType<StairsComponent>();
                         if (stairs != null)
@@ -76,7 +76,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 }
 
                 InteractionSelectorLink interactionSelectorLink = null;
-                foreach (IEntity tileEntity in tileToMoveTo.GetEntities())
+                foreach (Entity tileEntity in tileToMoveTo.GetEntities())
                 {
                     OccupiesTile occupiesTile =
                         tileEntity.GetComponentOfType<OccupiesTile>();
@@ -97,9 +97,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     continue;
                 }
 
-                IEntity entityThatOccupiedTile = null;
+                Entity entityThatOccupiedTile = null;
 
-                foreach (IEntity tileEntity in tileToMoveTo.GetEntities())
+                foreach (Entity tileEntity in tileToMoveTo.GetEntities())
                 {
                     OccupiesTile occupiesTile =
                         tileEntity.GetComponentOfType<OccupiesTile>();

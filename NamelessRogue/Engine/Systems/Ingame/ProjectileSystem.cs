@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoGame.Extended.ECS;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Physical;
@@ -29,7 +29,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 //projectileEntity.AddComponent(new SpritedObject(true));
                 projectileEntity.AddComponent(new Position(command.From.X, command.From.Y, command.From.Z));
             }
-            var projectileToRemove = new List<IEntity>();
+            var projectileToRemove = new List<Entity>();
             foreach (var entity in RegisteredEntities) {
                 var projectileComponent = entity.GetComponentOfType<ProjectileComponent>();
                 if(projectileComponent.CurrentFrame < projectileComponent.FramesToReachDestination)

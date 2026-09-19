@@ -58,7 +58,7 @@ namespace NamelessRogue.Engine.Factories
             return window;
         }
 
-        public static IEntity CreateBuilding(int worldSpaceX, int worldSpaceY, BuildingTemplateData data, NamelessGame namelessGame)
+        public static Entity CreateBuilding(int worldSpaceX, int worldSpaceY, BuildingTemplateData data, NamelessGame namelessGame)
         {
             var realSpaceX = Constants.ChunkSize * worldSpaceX;
             var realSpaceY = Constants.ChunkSize * worldSpaceY;
@@ -66,7 +66,7 @@ namespace NamelessRogue.Engine.Factories
             var diagonalNeighbors = new DiagonalNeighborProviderSelfIncluded();
             var straightNeighbors = new StraightNeighborProviderSelfIncluded();
 
-            IEntity worldEntity = namelessGame.WorldTemplateEntity;
+            Entity worldEntity = namelessGame.WorldTemplateEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -81,7 +81,7 @@ namespace NamelessRogue.Engine.Factories
             };
             namelessGame.MacroNavigator.Locations.Add(macroLocation);
 
-            IEntity building = new Entity();
+            Entity building = new Entity();
 
             building.AddComponent(new Description(data.Name, data.Description));
             building.AddComponent(new Position(realSpaceX, realSpaceY, 0));

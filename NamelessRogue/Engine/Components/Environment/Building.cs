@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Components.Environment
 {
     public class Building : Component {
-        private List<IEntity> buildingParts = new List<IEntity>();
+        private List<Entity> buildingParts = new List<Entity>();
 
-        public void setBuildingParts(List<IEntity> buildingParts) {
+        public void setBuildingParts(List<Entity> buildingParts) {
             this.buildingParts = buildingParts;
         }
 
-        public List<IEntity> getBuildingParts() {
+        public List<Entity> getBuildingParts() {
             return buildingParts;
         }
 

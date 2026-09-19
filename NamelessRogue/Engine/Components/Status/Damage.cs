@@ -1,12 +1,13 @@
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Stats;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Components.Status
 {
     public class Damage {
 
         public Damage() { } 
-		public Damage(IEntity source, IEntity target, int damage, DamageType damageType)
+		public Damage(Entity source, Entity target, int damage, DamageType damageType)
         {
             Source = source;
             Target = target;
@@ -14,8 +15,8 @@ namespace NamelessRogue.Engine.Components.Status
             DamageType = damageType;
         }
 
-		public IEntity Source { get; set; }
-        public IEntity Target { get; }
+		public Entity Source { get; set; }
+        public Entity Target { get; }
         public int DamageValue { get; set; }
 
         public DamageType DamageType { get; set; }

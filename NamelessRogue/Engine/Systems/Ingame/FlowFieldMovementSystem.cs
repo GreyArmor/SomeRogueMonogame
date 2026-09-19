@@ -71,7 +71,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 	{
 		public Point From;
 		public Point To;
-		public FlowFieldMoveCommand(Point from, Point to, params IEntity[] entitiesToMove)
+		public FlowFieldMoveCommand(Point from, Point to, params Entity[] entitiesToMove)
 		{
 			//Debug.WriteLine("FlowFieldMoveCommand");
 			From = from;
@@ -79,7 +79,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			EntitiesToMove = entitiesToMove.ToList();
 		}
 
-		public List<IEntity> EntitiesToMove { get; }
+		public List<Entity> EntitiesToMove { get; }
 	}
 
 }

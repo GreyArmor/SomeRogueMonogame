@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite;
 using MonoGame.Extended;
-using MonoGame.Extended.ECS;
+
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Particles;
 using MonoGame.Extended.Particles.Modifiers;
@@ -43,6 +43,7 @@ using static NamelessRogue.Engine.Systems.Ingame.RenderingSystem;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using BoundingBox = NamelessRogue.Engine.Utility.BoundingBox;
 using Color = NamelessRogue.Engine.Utility.Color;
+using Entity = NamelessRogue.Engine.Infrastructure.Entity;
 using Point = Microsoft.Xna.Framework.Point;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Tile = NamelessRogue.Engine.Components.ChunksAndTiles.Tile;
@@ -594,7 +595,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
 
 
-            IEntity worldEntity = game.WorldTemplateEntity;
+            Entity worldEntity = game.WorldTemplateEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -775,7 +776,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
 
-        private static Screen UpdateZoom(NamelessGame game, Commander commander, IEntity cameraEntity, Screen screen, out bool zoomUpdate)
+        private static Screen UpdateZoom(NamelessGame game, Commander commander, Entity cameraEntity, Screen screen, out bool zoomUpdate)
         {
             zoomUpdate = false;
             if (commander.DequeueCommand(out ZoomCommand zoom))

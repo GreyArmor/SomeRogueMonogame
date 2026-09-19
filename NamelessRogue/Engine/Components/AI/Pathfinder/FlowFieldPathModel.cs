@@ -220,8 +220,8 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             IsCalculated = true;
         }
 
-        List<IEntity> debugEntitiesFurniture = new List<IEntity>();
-        List<IEntity> debugEntities = new List<IEntity>();
+        List<Entity> debugEntitiesFurniture = new List<Entity>();
+        List<Entity> debugEntities = new List<Entity>();
         public void DrawDebug()
         {
             return;

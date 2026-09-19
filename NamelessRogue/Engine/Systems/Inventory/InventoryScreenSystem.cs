@@ -17,6 +17,7 @@ using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
 using SharpDX.DirectWrite;
 using Point = System.Drawing.Point;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Systems.Inventory
 {
@@ -28,7 +29,7 @@ namespace NamelessRogue.Engine.Systems.Inventory
             Signature.Add(typeof(InputComponent));
         }
 
-        public override bool IsEntityMatchesSignature(IEntity entity)
+        public override bool IsEntityMatchesSignature(Entity entity)
         {
             var entityComponentTypes = new HashSet<Type>(entity.GetAllComponents().Select(x => x.GetType()));
 

@@ -12,19 +12,9 @@ namespace NamelessRogue.Engine.Serialization.CustomSerializationClasses
 	public class EntityStorage : IStorage<Entity>
 	{
 		[FlatBufferItem(0)] public string Id { get; set; }
-		public void FillFrom(IEntity component)
-		{
-			Id = component.Id.ToString();
-		}
-
 		public void FillFrom(Entity component)
 		{
 			Id = component.Id.ToString();
-		}
-
-		public void FillTo(IEntity component)
-		{
-			component.Id = new Guid(Id);
 		}
 
 		public void FillTo(Entity component)

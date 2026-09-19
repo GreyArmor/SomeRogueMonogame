@@ -8,12 +8,13 @@ using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.ECS;
+
 using System.Linq;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Factories;
 using NamelessRogue.Engine.Components.Status;
+using Entity = NamelessRogue.Engine.Infrastructure.Entity;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -100,7 +101,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        private CharacterStats GetAccumulatedStats(IEntity entity)
+        private CharacterStats GetAccumulatedStats(Entity entity)
         {
             var stats = entity.GetComponentOfType<CharacterStats>();
             var modifiers = entity.GetComponentOfType<ModifiersCollection>();
@@ -109,7 +110,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             return accumulatedStats;
         }
 
-        private List<string> GetOnHitBuffIds(IEntity entity, NamelessGame game)
+        private List<string> GetOnHitBuffIds(Entity entity, NamelessGame game)
         {
 
             var equipment = entity.GetComponentOfType<EquipmentSlots>();

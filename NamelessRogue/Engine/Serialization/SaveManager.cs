@@ -209,7 +209,7 @@ namespace NamelessRogue.Engine.Serialization
 
                 foreach (var typePair in saveFile.ComponentTypeToStorge)
                 {
-                    if (typePair.Key == typeof(Entity) || typePair.Key == typeof(IEntity))
+                    if (typePair.Key == typeof(Entity) || typePair.Key == typeof(Entity))
                     {
                         continue;
                     }

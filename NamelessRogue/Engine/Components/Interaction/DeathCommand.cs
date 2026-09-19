@@ -1,22 +1,23 @@
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {
     public class DeathCommand : ICommand
     {
-        private IEntity toKill;
+        private Entity toKill;
 
-        public DeathCommand(IEntity toKill)
+        public DeathCommand(Entity toKill)
         {
             this.toKill = toKill;
         }
 
-        public void setToKill(IEntity toKill) {
+        public void setToKill(Entity toKill) {
             this.toKill = toKill;
         }
 
-        public IEntity getToKill() {
+        public Entity getToKill() {
             return toKill;
         }
     }

@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {
     public class InteractionSelectorCommand : ICommand
     {
-        public List<IEntity> InteractableEntities { get; } 
-        public InteractionSelectorCommand(IEnumerable<IEntity> interactableEntities)
+        public List<Entity> InteractableEntities { get; } 
+        public InteractionSelectorCommand(IEnumerable<Entity> interactableEntities)
         {
-            InteractableEntities = new List<IEntity>(interactableEntities);
+            InteractableEntities = new List<Entity>(interactableEntities);
         }
     }
 

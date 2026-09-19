@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using MonoGame.Extended.ECS;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components;
 using static Assimp.Metadata;
@@ -12,7 +12,7 @@ namespace NamelessRogue.Engine.Infrastructure
 {
     public class EntityInfrastructureManager {
         const int defaultCapacity = 256000;
-        static List<IEntity> entities;
+        static List<Entity> entities;
         static Queue<int> freeIndexes;
         static Dictionary<Type, List<IComponent>> components;
         static LinkedList<ISystem> systems;
@@ -25,10 +25,10 @@ namespace NamelessRogue.Engine.Infrastructure
 
 		public static Dictionary<Type, List<IComponent>> Components { get { return components; } }
 
-		public static List<IEntity> Entities { get { return entities; } }
+		public static List<Entity> Entities { get { return entities; } }
 
 		static EntityInfrastructureManager() {
-            entities = new List<IEntity>(new IEntity[defaultCapacity]);
+            entities = new List<Entity>(new Entity[defaultCapacity]);
             freeIndexes = new Queue<int>();
             for(int i = 0; i < defaultCapacity; i++)
             {
@@ -38,11 +38,11 @@ namespace NamelessRogue.Engine.Infrastructure
             systems = new LinkedList<ISystem>();
         }
 
-        public static IEntity GetEntity(Guid id)
+        public static Entity GetEntity(Guid id)
         {
             return entities.FirstOrDefault(x=>x.Id == id);
         }
-        public static void AddEntity(IEntity entity)
+        public static void AddEntity(Entity entity)
         {
             if (entity.Index == -1)
             {
@@ -62,7 +62,7 @@ namespace NamelessRogue.Engine.Infrastructure
         }
 
 
-        public static void AddComponent<ComponentType>(IEntity entity, ComponentType component) where ComponentType : IComponent
+        public static void AddComponent<ComponentType>(Entity entity, ComponentType component) where ComponentType : IComponent
         {
             components.TryGetValue(component.GetType(), out var componentsOfType);
             if (componentsOfType == null)
@@ -83,7 +83,7 @@ namespace NamelessRogue.Engine.Infrastructure
             }
         }
 
-        public static void RemoveComponent<ComponentType>(IEntity entity) where ComponentType : IComponent
+        public static void RemoveComponent<ComponentType>(Entity entity) where ComponentType : IComponent
         {
             components.TryGetValue(typeof(ComponentType), out var componentsOfType);
             if (componentsOfType != null) {
@@ -101,7 +101,7 @@ namespace NamelessRogue.Engine.Infrastructure
             }
         }
 
-        public static void RemoveComponent(IComponent component, IEntity entity)
+        public static void RemoveComponent(IComponent component, Entity entity)
         {
             components.TryGetValue(component.GetType(), out var componentsOfType);
             if (componentsOfType != null)
@@ -119,7 +119,7 @@ namespace NamelessRogue.Engine.Infrastructure
 
         }
 
-        public static ComponentType GetComponentByEntity<ComponentType>(IEntity entity) where ComponentType : IComponent
+        public static ComponentType GetComponentByEntity<ComponentType>(Entity entity) where ComponentType : IComponent
         {
             components.TryGetValue(typeof(ComponentType), out var componentsOfType);
             if (componentsOfType != null) {
@@ -128,7 +128,7 @@ namespace NamelessRogue.Engine.Infrastructure
         return default(ComponentType);
     }
 
-        internal static List<IComponent> GetAllComponents(IEntity entity)
+        internal static List<IComponent> GetAllComponents(Entity entity)
         {
             List<IComponent> componentsOfEntity = new List<IComponent>();
             foreach (var keyValuePair in components)
@@ -157,7 +157,7 @@ namespace NamelessRogue.Engine.Infrastructure
             return default(ComponentType);
         }
 
-        public static void RemoveEntity(IEntity entity) {
+        public static void RemoveEntity(Entity entity) {
             foreach (var componentList in components.Values) {
                 componentList[entity.Index] = null;
             }

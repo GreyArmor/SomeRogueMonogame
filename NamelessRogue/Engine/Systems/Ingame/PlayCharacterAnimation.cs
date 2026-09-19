@@ -12,40 +12,40 @@ namespace NamelessRogue.Engine.Systems.Ingame
 {
     internal class PlayCharacterAnimationForATimeCommand : ICommand
     {
-        public PlayCharacterAnimationForATimeCommand(IEntity entity, AnimationType type, int durationMilisecods) {
+        public PlayCharacterAnimationForATimeCommand(Entity entity, AnimationType type, int durationMilisecods) {
             Entity = entity;
             Type = type;
             DurationMilisecods = durationMilisecods;
         }
 
-        public IEntity Entity { get; }
+        public Entity Entity { get; }
         public AnimationType Type { get; }
         public int DurationMilisecods { get; }
     }
 
     internal class PlayCharacterAnimationForNumberOfLoopsCommand : ICommand
     {
-        public PlayCharacterAnimationForNumberOfLoopsCommand(IEntity entity, AnimationType type, int numberOfLoops)
+        public PlayCharacterAnimationForNumberOfLoopsCommand(Entity entity, AnimationType type, int numberOfLoops)
         {
             Entity = entity;
             Type = type;
             LoopsCount = numberOfLoops;
         }
 
-        public IEntity Entity { get; }
+        public Entity Entity { get; }
         public AnimationType Type { get; }
         public int LoopsCount { get; }
     }
 
     internal class LockIdleAnimationCommand : ICommand
     {
-        public LockIdleAnimationCommand(IEntity entity, AnimationType type)
+        public LockIdleAnimationCommand(Entity entity, AnimationType type)
         {
             Entity = entity;
             Type = type;
         }
 
-        public IEntity Entity { get; }
+        public Entity Entity { get; }
         public AnimationType Type { get; }
         public int DurationMilisecods { get; }
     }

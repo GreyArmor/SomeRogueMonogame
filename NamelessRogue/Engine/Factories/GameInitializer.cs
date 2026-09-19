@@ -13,7 +13,7 @@ namespace NamelessRogue.Engine.Factories
 {
     public class GameInitializer {
 
-        public static IEntity CreateCursor()
+        public static Entity CreateCursor()
         {
             Entity cursor = new Entity();
             cursor.AddComponent(new Cursor());
@@ -26,21 +26,21 @@ namespace NamelessRogue.Engine.Factories
             return cursor;
         }
 
-        public static IEntity CreateTargeter()
+        public static Entity CreateTargeter()
         {
             Entity cursor = new Entity();
             cursor.AddComponent(new TergeterComponent());
             return cursor;
         }
 
-        internal static IEntity CreateWorldMapCamera()
+        internal static Entity CreateWorldMapCamera()
         {
             Entity cameraEntity = new Entity();
             cameraEntity.AddComponent(new WorldMapCameraComponent(new System.Numerics.Vector2(), 64));
             return cameraEntity;
         }
 
-		internal static IEntity CreateStreetlightsStatusKeeper()
+		internal static Entity CreateStreetlightsStatusKeeper()
 		{
 			Entity streetLightKeeper = new Entity();
 			streetLightKeeper.AddComponent(new StreetlightsStatusKeeper(){ VerticalMovementAllowed = true} );

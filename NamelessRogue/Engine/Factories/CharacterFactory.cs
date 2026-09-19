@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.ECS;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;

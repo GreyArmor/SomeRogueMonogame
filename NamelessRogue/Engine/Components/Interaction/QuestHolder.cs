@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {
@@ -37,9 +38,9 @@ namespace NamelessRogue.Engine.Components.Interaction
         public string Description { get; set; }
         public QuestType ProgressCondition { get; set; }
         public List<QuestNode> ChildNodes { get; set; }
-        public List<IEntity> Items { get; set; }
-        public List<IEntity> NPCs { get; set; }
-        public List<IEntity> Locations { get; set; }
+        public List<Entity> Items { get; set; }
+        public List<Entity> NPCs { get; set; }
+        public List<Entity> Locations { get; set; }
     }
 
 }

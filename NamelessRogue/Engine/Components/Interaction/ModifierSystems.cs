@@ -6,6 +6,7 @@ using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.Status;
 using NamelessRogue.Engine.Components.UI;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems;
 using NamelessRogue.shell;
 using System;
@@ -35,7 +36,7 @@ namespace NamelessRogue.Engine.Components.Interaction
                 var entitStats = entity.GetComponentOfType<CharacterStats>();
 
 
-                List<IEntity> modifiersToRemove = new List<IEntity>();
+                List<Entity> modifiersToRemove = new List<Entity>();
                 foreach (var modifier in modifiers.ModifierEntities)
                 {
                     var modifierDescription = modifier.GetComponentOfType<Description>();

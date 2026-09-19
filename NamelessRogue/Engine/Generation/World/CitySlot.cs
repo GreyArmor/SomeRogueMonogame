@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Generation.World
 {
@@ -25,6 +26,6 @@ namespace NamelessRogue.Engine.Generation.World
         }
         public BoundingBox Placement { get; set; }
         public bool Occupied { get; set; }
-        public IEntity OccupiedBy { get; set; }
+        public Entity OccupiedBy { get; set; }
     }
 }

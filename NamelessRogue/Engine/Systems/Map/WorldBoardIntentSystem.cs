@@ -6,6 +6,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.shell;
 
@@ -22,7 +23,7 @@ namespace NamelessRogue.Engine.Systems.Map
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
-            foreach (IEntity entity in RegisteredEntities)
+            foreach (Entity entity in RegisteredEntities)
             {
                 InputComponent inputComponent = entity.GetComponentOfType<InputComponent>();
                 if (inputComponent != null)

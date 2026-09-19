@@ -2,10 +2,10 @@
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
-using MonoGame.Extended.ECS;
 using MonoGame.Extended.Timers;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using NamelessRogue.shell;
 using SharpDX.Direct2D1.Effects;
@@ -37,12 +37,12 @@ namespace NamelessRogue.Engine.Factories
 			var windowFurniture = TerrainFurnitureFactory.GetFurniture("window");
 			
 
-			var weaponDisplayCases = new IEntity[] {
+			var weaponDisplayCases = new Entity[] {
 				TerrainFurnitureFactory.GetFurniture("displayCaseWeapons_1"),
 				TerrainFurnitureFactory.GetFurniture("displayCaseWeapons_2"),
 				TerrainFurnitureFactory.GetFurniture("displayCaseWeapons_2") };
 
-			var medicalDisplayCases = new IEntity[] {
+			var medicalDisplayCases = new Entity[] {
 				TerrainFurnitureFactory.GetFurniture("displayCaseMedical_1"),
 				TerrainFurnitureFactory.GetFurniture("displayCaseMedical_2"),
 				TerrainFurnitureFactory.GetFurniture("displayCaseMedical_2") };
@@ -60,7 +60,7 @@ namespace NamelessRogue.Engine.Factories
 			GenerateDecorationsAndVendor(game, world, zLevel, random, weaponDisplayCases, medicalDisplayCases, rooms, doorSurroundingTiles);
 		}
 
-		private static void GenerateDecorationsAndVendor(NamelessGame game, IWorldProvider world, int zLevel, InternalRandom random, IEntity[] weaponDisplayCases, IEntity[] medicalDisplayCases, Rectangle[] rooms, List<Point> doorSurroundingTiles)
+		private static void GenerateDecorationsAndVendor(NamelessGame game, IWorldProvider world, int zLevel, InternalRandom random, Entity[] weaponDisplayCases, Entity[] medicalDisplayCases, Rectangle[] rooms, List<Point> doorSurroundingTiles)
 		{
 			var tableFurniture = TerrainFurnitureFactory.GetFurniture("table");
 			var largestRoom = rooms.OrderByDescending(x => (x.Width * x.Height)).First();

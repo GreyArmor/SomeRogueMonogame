@@ -1,4 +1,4 @@
-﻿using MonoGame.Extended.ECS;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +13,11 @@ namespace NamelessRogue.Engine.Components.Interaction
 {
     public class InteractionSelectorLink : Component
     {
-        public InteractionSelectorLink(IEntity linkedEntity)
+        public InteractionSelectorLink(Entity linkedEntity)
         {
             LinkedEntity = linkedEntity;
         }
 
-        public IEntity LinkedEntity { get; }
+        public Entity LinkedEntity { get; }
     }
 }

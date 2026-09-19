@@ -29,7 +29,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
 
-            foreach (IEntity entity in RegisteredEntities)
+            foreach (Entity entity in RegisteredEntities)
             {                 
                 Player player = entity.GetComponentOfType<Player>();
                 var stats = entity.GetComponentOfType<CharacterStats>();

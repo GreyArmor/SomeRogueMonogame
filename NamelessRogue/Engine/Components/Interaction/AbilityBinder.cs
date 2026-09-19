@@ -1,4 +1,5 @@
 ﻿using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace NamelessRogue.Engine.Components.Interaction
         public AbilityBinder()
         {}
 
-        public Dictionary<int, IEntity> AbilityBindings { get; set; } = new Dictionary<int, IEntity>();
+        public Dictionary<int, Entity> AbilityBindings { get; set; } = new Dictionary<int, Entity>();
     }
 }

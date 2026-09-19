@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.ECS;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
 using NamelessRogue.Engine.Components.Status;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
@@ -24,7 +25,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
      
         public override HashSet<Type> Signature { get; } = new HashSet<Type>() { typeof(AIControlled) };
 
-        IEntity AttachedTarget { get; set; }
+        Entity AttachedTarget { get; set; }
         bool IsAttached { get; set; }
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
@@ -38,7 +39,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     State = TargetingState.Targeting;
                     InputReceiver receiver = new InputReceiver();
 
-                    IEntity cursorEntity = namelessGame.CursorEntity;
+                    Entity cursorEntity = namelessGame.CursorEntity;
 
                     var playerReceiver = playerEntity.GetComponentOfType<InputReceiver>();
                     playerEntity.RemoveComponentOfType<InputReceiver>();
@@ -57,7 +58,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                         switch (command.TargetingMode)
                         {
                             case TargetingMode.Enemies:
-                                List<IEntity> hostileEntities = new List<IEntity>();
+                                List<Entity> hostileEntities = new List<Entity>();
                                 foreach (var npc in RegisteredEntities)
                                 {
                                     var aiControlled = npc.GetComponentOfType<AIControlled>();
@@ -78,7 +79,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                                 break;
                             case TargetingMode.Friends:
                                 //TODO: copypaste, can be steamlined with proper filtering;
-                                List<IEntity> friendlyEntities = new List<IEntity>();
+                                List<Entity> friendlyEntities = new List<Entity>();
                                 foreach (var npc in RegisteredEntities)
                                 {
                                     var aiControlled = npc.GetComponentOfType<AIControlled>();
@@ -129,7 +130,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     var playerEntity = namelessGame.PlayerEntity;
                     State = TargetingState.NotTargeting;
                     InputReceiver receiver = new InputReceiver();
-                    IEntity cursorEntity = namelessGame.CursorEntity;
+                    Entity cursorEntity = namelessGame.CursorEntity;
                     var playerReceiver = playerEntity.GetComponentOfType<InputReceiver>();
                     var cursorReceiver = namelessGame.CursorEntity.GetComponentOfType<InputReceiver>();
                     playerEntity.RemoveComponentOfType<InputReceiver>();
@@ -190,7 +191,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     TabTargeting(namelessGame, targeter);
                 }
 
-                IEntity cursorEntity = namelessGame.CursorEntity;
+                Entity cursorEntity = namelessGame.CursorEntity;
                 Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
                 
                 var targetPosition = AttachedTarget.GetComponentOfType<Position>();
@@ -205,7 +206,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             if (targeter.Targets.Count > 0)
             {
-                IEntity cursorEntity = namelessGame.CursorEntity;
+                Entity cursorEntity = namelessGame.CursorEntity;
                 Position cursorPosition = cursorEntity.GetComponentOfType<Position>();
                 targeter.TabulationIndex++;
                 if (targeter.TabulationIndex >= targeter.Targets.Count)

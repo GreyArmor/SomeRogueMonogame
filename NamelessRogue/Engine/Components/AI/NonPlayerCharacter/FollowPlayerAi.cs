@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 
 namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
@@ -70,7 +71,7 @@ namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
             set { state = value; }
         }
 
-        public IEntity Target { get; set; }
+        public Entity Target { get; set; }
 
         public Point DestinationPoint { get; set; }
         public Vector3Int ShootingTarget { get; set; }

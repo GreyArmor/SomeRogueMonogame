@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             while (namelessGame.Commander.DequeueCommand(out DeathCommand command))
             {
 
-                IEntity entityToKill = command.getToKill();
+                Entity entityToKill = command.getToKill();
 
                 if (entityToKill == namelessGame.PlayerEntity)
                 {
@@ -53,7 +53,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 var deathanimationCommand = new PlayCharacterAnimationForNumberOfLoopsCommand(entityToKill, AnimationType.Death, 6);
                 namelessGame.Commander.EnqueueCommand(deathanimationCommand);
 
-                IEntity worldEntity = namelessGame.WorldTemplateEntity;
+                Entity worldEntity = namelessGame.WorldTemplateEntity;
                 IWorldProvider worldProvider = null;
                 if (worldEntity != null)
                 {

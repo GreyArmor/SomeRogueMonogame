@@ -4,6 +4,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Rendering;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.shell;
 
@@ -30,7 +31,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         var cursorReceiver = namelessGame.CursorEntity.GetComponentOfType<InputReceiver>();
 
-                        IEntity entityToMove = null;
+                        Entity entityToMove = null;
 
                         Position position = null;
                         if (cursorReceiver != null)

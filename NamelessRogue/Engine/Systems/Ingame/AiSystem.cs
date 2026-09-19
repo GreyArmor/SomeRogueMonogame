@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.ECS;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
@@ -48,14 +48,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
             var playerEntity = namelessGame.PlayerEntity;
             //if (namelessGame.TurnUpdated)
             //{
-            //    foreach (IEntity entity in this.RegisteredEntities)
+            //    foreach (Entity entity in this.RegisteredEntities)
             //    {
             //        var npcAP = entity.GetComponentOfType<ActionPoints>();
             //        npcAP.Points = 100;
             //    }
             //}
 
-            IEntity worldEntity = namelessGame.WorldTemplateEntity;
+            Entity worldEntity = namelessGame.WorldTemplateEntity;
             IWorldProvider worldProvider = null;
             WorldTemplate worldTemplate = null;
             if (worldEntity != null)
@@ -83,7 +83,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 //                 waypoint.RealityPosition.X - 1, waypoint.RealityPosition.Y, 0);
                 //}
 
-                foreach (IEntity entity in this.RegisteredEntities)
+                foreach (Entity entity in this.RegisteredEntities)
                 {
                     AIControlled ac = entity.GetComponentOfType<AIControlled>();
                     Dead dead = entity.GetComponentOfType<Dead>();
@@ -286,9 +286,9 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
 
 
-        public void MoveTo(IEntity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides, IRounteContainingAI aiComponent)
+        public void MoveTo(Entity movableEntity, NamelessGame namelessGame, Point destination, bool moveBesides, IRounteContainingAI aiComponent)
         {
-            IEntity worldEntity = namelessGame.WorldTemplateEntity;
+            Entity worldEntity = namelessGame.WorldTemplateEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -365,7 +365,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        public bool MoveEntitySwapCharacters(IEntity entity, IWorldProvider worldProvider, NamelessGame game, int x, int y, int z)
+        public bool MoveEntitySwapCharacters(Entity entity, IWorldProvider worldProvider, NamelessGame game, int x, int y, int z)
         {
             Position position = entity.GetComponentOfType<Position>();
             var flowMoveComponent = entity.GetComponentOfType<FlowMoveComponent>();

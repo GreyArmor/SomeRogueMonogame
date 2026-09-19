@@ -30,12 +30,12 @@ namespace NamelessRogue.Engine.UI
         TradeScreenTableModel currentTable = null;
        
         TradeCursorMode cursorMode = TradeCursorMode.LeftTable;
-        private IEntity rightTableEntity;
-        private IEntity leftTableEntity;
+        private Entity rightTableEntity;
+        private Entity leftTableEntity;
 
         public TradeCursorMode CursorMode { get => cursorMode; private set => cursorMode = value; }
-        public IEntity RightTableEntity { get => rightTableEntity; set => rightTableEntity = value; }
-        public IEntity LeftTableEntity { get => leftTableEntity; set => leftTableEntity = value; }       
+        public Entity RightTableEntity { get => rightTableEntity; set => rightTableEntity = value; }
+        public Entity LeftTableEntity { get => leftTableEntity; set => leftTableEntity = value; }       
 
         public TradeScreen(NamelessGame game) : base(game)
         {
@@ -172,8 +172,8 @@ namespace NamelessRogue.Engine.UI
 
         public void CreateTrade(int total)
         {
-            List<IEntity> leftSelectedentities = leftTable.Items.Where(x => x.selectedForTrade).Select(item => item.entityReference).ToList();
-            List<IEntity> rightSelectedentities = rightTable.Items.Where(x => x.selectedForTrade).Select(item => item.entityReference).ToList();
+            List<Entity> leftSelectedentities = leftTable.Items.Where(x => x.selectedForTrade).Select(item => item.entityReference).ToList();
+            List<Entity> rightSelectedentities = rightTable.Items.Where(x => x.selectedForTrade).Select(item => item.entityReference).ToList();
 
             var tradeCommand = new TradeTransationCommand(RightTableEntity, LeftTableEntity, rightSelectedentities, leftSelectedentities, total);
             game.Commander.EnqueueCommand(tradeCommand);
@@ -297,7 +297,7 @@ namespace NamelessRogue.Engine.UI
 
         }
 
-        public void FillTables(IEntity leftTableEntity, IEntity rightTableEntity)
+        public void FillTables(Entity leftTableEntity, Entity rightTableEntity)
         {           
             rightTable.Fill(rightTableEntity, rightTable.Filters);
             leftTable.Fill(leftTableEntity, leftTable.Filters);
@@ -481,7 +481,7 @@ namespace NamelessRogue.Engine.UI
 
     public class TradeScreenItem
     {
-        public IEntity entityReference;
+        public Entity entityReference;
         public bool selectedForTrade;
     }
 
@@ -502,9 +502,9 @@ namespace NamelessRogue.Engine.UI
         public List<ItemType> Filters { get; set; } = new List<ItemType>();
 
         public int SelectedItem;
-        public IEntity TableEntity { get; set; }
+        public Entity TableEntity { get; set; }
 
-        public void Fill(IEntity itemsHolderEntity, List<ItemType> filters)
+        public void Fill(Entity itemsHolderEntity, List<ItemType> filters)
         {
             SelectedItem = 0;
             TableEntity = itemsHolderEntity;

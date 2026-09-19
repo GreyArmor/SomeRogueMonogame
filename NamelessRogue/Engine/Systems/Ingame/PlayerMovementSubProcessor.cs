@@ -36,7 +36,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         var playerReceiver = playerEntity.GetComponentOfType<InputReceiver>();
 
-                        IEntity entityToMove = null;
+                        Entity entityToMove = null;
 
                         Position position = null;
 
@@ -73,7 +73,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                     {
                         InputReceiver receiver = new InputReceiver();
 
-                        IEntity cursorEntity = namelessGame.CursorEntity;
+                        Entity cursorEntity = namelessGame.CursorEntity;
 
                         var playerReceiver = playerEntity.GetComponentOfType<InputReceiver>();
                         var cursorReceiver = namelessGame.CursorEntity.GetComponentOfType<InputReceiver>();
@@ -108,7 +108,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                         if (actionPoints.Points >= 100)
                         {
-                            IEntity worldEntity = namelessGame.WorldTemplateEntity;
+                            Entity worldEntity = namelessGame.WorldTemplateEntity;
                             IWorldProvider worldProvider = null;
                             if (worldEntity != null)
                             {
@@ -121,7 +121,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var itemHolder = playerEntity.GetComponentOfType<ItemsHolder>();
                             var tile = worldProvider.GetTile(position.X, position.Y, position.Z);
 
-                            List<IEntity> itemsToPickUp = new List<IEntity>();
+                            List<Entity> itemsToPickUp = new List<Entity>();
                             foreach (var entityOnTIle in tile.GetEntities())
                             {
                                 var itemComponent = entityOnTIle.GetComponentOfType<Item>();

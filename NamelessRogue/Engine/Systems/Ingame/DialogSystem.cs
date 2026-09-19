@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
@@ -19,7 +20,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
     {
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
         private DialogData currentDialogData;
-        private IEntity currentDialogEntity;
+        private Entity currentDialogEntity;
 
 
         public override void Update(GameTime gameTime, NamelessGame namelessGame)

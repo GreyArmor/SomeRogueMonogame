@@ -4,17 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {
     public class TergeterComponent : Component
     {
         public int TabulationIndex { get; set; } = -1;
-        public List<IEntity> Targets { get; set; } = new List<IEntity>();
+        public List<Entity> Targets { get; set; } = new List<Entity>();
 
         public int CurrentTargetingRange { get; set; } = 0;
 
-        internal void RemoveEntity(IEntity entity)
+        internal void RemoveEntity(Entity entity)
         {
             if(Targets.Contains(entity))
             {

@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Components.ItemComponents
 {
     public class ItemsHolder : Component {
 
-        private List<IEntity> items;
+        private List<Entity> items;
         public ItemsHolder()
         {
-            items = new List<IEntity>();
+            items = new List<Entity>();
         }
 
-		public List<IEntity> Items { get { return items; } set { items = value; } }
+		public List<Entity> Items { get { return items; } set { items = value; } }
 
 		public override IComponent Clone()
         {

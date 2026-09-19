@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoGame.Extended.ECS;
+
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.Environment;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Components.Status;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.shell;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             if (namelessGame.TurnUpdated)
             {
-                var removalList = new List<IEntity>();
+                var removalList = new List<Entity>();
                 foreach (var fireEntity in RegisteredEntities)
                 {
                     var fireComponent = fireEntity.GetComponentOfType<Fire>();

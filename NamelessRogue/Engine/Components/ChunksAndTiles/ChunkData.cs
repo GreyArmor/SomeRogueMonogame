@@ -140,7 +140,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 			return Id;
 		}
 
-		public void AddEntityToNewLocation(IEntity entity, int x, int y, int z)
+		public void AddEntityToNewLocation(Entity entity, int x, int y, int z)
 		{
 
 			Position position = entity.GetComponentOfType<Position>();
@@ -151,12 +151,12 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 				position.Point = new Vector3Int(x, y, z);
 			}
 		}
-        public bool MoveEntity(IEntity entity, Vector3Int moveTo)
+        public bool MoveEntity(Entity entity, Vector3Int moveTo)
 		{
 			return MoveEntity(entity, moveTo.X, moveTo.Y, moveTo.Z);
         }
 
-        public bool MoveEntity(IEntity entity, int x, int y, int z)
+        public bool MoveEntity(Entity entity, int x, int y, int z)
 		{
 			Position position = entity.GetComponentOfType<Position>();
 			if (position != null)
@@ -179,12 +179,12 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
 			return false;
 		}
 
-        public bool MoveEntitySwapCharacters(IEntity entity, Vector3Int moveTo, out IEntity swapped)
+        public bool MoveEntitySwapCharacters(Entity entity, Vector3Int moveTo, out Entity swapped)
         {
             return MoveEntitySwapCharacters(entity, moveTo.X, moveTo.Y, moveTo.Z, out swapped);
         }
 
-        public bool MoveEntitySwapCharacters(IEntity entity, int x, int y, int z, out IEntity swapped)
+        public bool MoveEntitySwapCharacters(Entity entity, int x, int y, int z, out Entity swapped)
         {
 			swapped = null;
             Position position = entity.GetComponentOfType<Position>();
@@ -232,7 +232,7 @@ namespace NamelessRogue.Engine.Components.ChunksAndTiles
             return false;
         }
 
-        public bool MoveEntityIgnoreCharacters(IEntity entity, int x, int y, int z)
+        public bool MoveEntityIgnoreCharacters(Entity entity, int x, int y, int z)
         {
             Position position = entity.GetComponentOfType<Position>();
             if (position != null)

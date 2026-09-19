@@ -32,7 +32,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 			var playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
 			game.Batch.Begin();
 			var zoomedSize = StreeLightSize / zoom;
-			foreach (IEntity entity in RegisteredEntities)
+			foreach (Entity entity in RegisteredEntities)
 			{
                 var position = entity.GetComponentOfType<Position>();
 				

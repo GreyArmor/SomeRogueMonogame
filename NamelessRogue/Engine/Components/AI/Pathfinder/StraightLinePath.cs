@@ -60,8 +60,8 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
             Nodes[Points[Points.Count - 1]] = Points[Points.Count - 1]; // Last point points to itself
         }
 
-        List<IEntity> debugEntitiesFurniture = new List<IEntity>();
-        List<IEntity> debugEntities = new List<IEntity>();
+        List<Entity> debugEntitiesFurniture = new List<Entity>();
+        List<Entity> debugEntities = new List<Entity>();
         public void DrawDebug()
         {
             void _addFurniture(string id, string descriptionName, bool occupiesTile, bool blocksVision)

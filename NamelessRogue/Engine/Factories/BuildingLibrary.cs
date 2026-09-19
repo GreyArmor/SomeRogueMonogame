@@ -34,7 +34,7 @@ namespace NamelessRogue.Engine.Factories
             DataById.Clear();
         }
 
-        public static IEntity CreateBuildingFromData(NamelessGame game, Point worldCoordinate, BuildingTemplateData data)
+        public static Entity CreateBuildingFromData(NamelessGame game, Point worldCoordinate, BuildingTemplateData data)
         {
            return BuildingFactory.CreateBuilding(worldCoordinate.X, worldCoordinate.Y, data, game);
         }

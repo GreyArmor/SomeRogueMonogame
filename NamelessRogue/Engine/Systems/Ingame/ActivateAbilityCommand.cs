@@ -5,31 +5,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
     internal class ActivateTargetedAbilityCommand : Abstraction.ICommand, IActivatedAbilityCommand
     {
-        public ActivateTargetedAbilityCommand(IEntity source, IEntity ability)
+        public ActivateTargetedAbilityCommand(Entity source, Entity ability)
         {
             Source = source;
             Ability = ability;
         }
 
-        public IEntity Source { get; }
-        public IEntity Ability { get; }
+        public Entity Source { get; }
+        public Entity Ability { get; }
     }
 
     internal class ActivateSelfAbilityCommand : Abstraction.ICommand, IActivatedAbilityCommand
     {
-        public ActivateSelfAbilityCommand(IEntity source, IEntity ability)
+        public ActivateSelfAbilityCommand(Entity source, Entity ability)
         {
             Source = source;
             Ability = ability;
         }
 
-        public IEntity Source { get; }
-        public IEntity Ability { get; }
+        public Entity Source { get; }
+        public Entity Ability { get; }
     }
 
 }

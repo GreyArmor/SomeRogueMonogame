@@ -11,7 +11,7 @@ namespace NamelessRogue.Engine.Infrastructure
 {
 
     [SkipClassGeneration]
-    public class Entity : IEntity
+    public class Entity
     {
         public Entity(params IComponent[] components)
         {
@@ -61,7 +61,7 @@ namespace NamelessRogue.Engine.Infrastructure
             return EntityInfrastructureManager.GetAllComponents(this);
         }
 
-        public IEntity CloneEntity()
+        public Entity CloneEntity()
         {
             var newEntity = new Entity();
             var components = GetAllComponents();

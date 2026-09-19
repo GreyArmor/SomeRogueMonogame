@@ -49,38 +49,38 @@ namespace NamelessRogue.shell
 
 		public static GraphicsDevice DebugDevice;
 
-		public IEntity GetEntity(Guid id)
+		public Entity GetEntity(Guid id)
 		{
 			return EntityInfrastructureManager.GetEntity(id);
 		}
 
-		public void AddEntity(IEntity entity)
+		public void AddEntity(Entity entity)
 		{
 			EntityInfrastructureManager.AddEntity(entity);
 		}
 
-		public void RemoveEntity(IEntity entity)
+		public void RemoveEntity(Entity entity)
 		{
 			EntityInfrastructureManager.RemoveEntity(entity);
 		}
 
 		public Position TestMapPosition { get; private set; }
-		public IEntity PlayerEntity { get; set; }
+		public Entity PlayerEntity { get; set; }
 
-        public IEntity InputEntity { get; set; }
-        public IEntity WorldTemplateEntity { get; set; }
+        public Entity InputEntity { get; set; }
+        public Entity WorldTemplateEntity { get; set; }
 
-		public IEntity FollowedByCameraEntity { get; set; }
+		public Entity FollowedByCameraEntity { get; set; }
 
-		public IEntity CameraEntity { get; set; }
+		public Entity CameraEntity { get; set; }
 
-		public IEntity CursorEntity { get; set; }
+		public Entity CursorEntity { get; set; }
 
-        public IEntity TargeterEntity { get; set; }
+        public Entity TargeterEntity { get; set; }
 
-        public IEntity WorldMapCameraEntity { get; set; }
+        public Entity WorldMapCameraEntity { get; set; }
 
-		public IEntity StreetLightsKeeper { get; set; }
+		public Entity StreetLightsKeeper { get; set; }
 
 		public Commander Commander { get; set; }
 
@@ -88,14 +88,14 @@ namespace NamelessRogue.shell
         public MacroNavigator MacroNavigator { get; private set; }
 
         // this lookup is very expensive, avoid using in loops
-        public List<IEntity> GetEntitiesByComponentClass<T>() where T : IComponent
+        public List<Entity> GetEntitiesByComponentClass<T>() where T : IComponent
 		{
-			List<IEntity> results = EntityInfrastructureManager.Entities.Where(v => v.GetComponentOfType<T>() != null).ToList();
+			List<Entity> results = EntityInfrastructureManager.Entities.Where(v => v.GetComponentOfType<T>() != null).ToList();
 			return results;
 		}
 
 		//this lookup is very expensive, avoid using in loops
-		public IEntity GetEntityByComponentClass<T>() where T : IComponent
+		public Entity GetEntityByComponentClass<T>() where T : IComponent
 		{
 			return GetEntitiesByComponentClass<T>().FirstOrDefault();
 		}
@@ -461,8 +461,8 @@ namespace NamelessRogue.shell
 		public GameSettings Settings { get => settings; set => settings = value; }
         public bool TurnUpdated { get; internal set; }
 
-        //public List<IEntity> EntitiesToAdd { get => entitiesToAdd; set => entitiesToAdd = value; }
-        //public List<IEntity> EntitiesToRemove { get => entitiesToRemove; set => entitiesToRemove = value; }
+        //public List<Entity> EntitiesToAdd { get => entitiesToAdd; set => entitiesToAdd = value; }
+        //public List<Entity> EntitiesToRemove { get => entitiesToRemove; set => entitiesToRemove = value; }
 
 
         /// <summary>

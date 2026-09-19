@@ -17,7 +17,7 @@ using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.shell;
 using Color = NamelessRogue.Engine.Utility.Color;
 using NamelessRogue.Engine.Utility;
-using MonoGame.Extended.ECS;
+
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using NamelessRogue.Engine.Generation.World.TerrainFeatures;
 using NamelessRogue.Engine.Factories;
@@ -116,7 +116,7 @@ namespace NamelessRogue.Engine.Systems.Map
             game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
 
-            IEntity timeline = game.WorldTemplateEntity;
+            Entity timeline = game.WorldTemplateEntity;
             WorldMap worldProvider = null;
             if (timeline != null)
             {

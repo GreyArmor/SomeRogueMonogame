@@ -78,7 +78,7 @@ namespace NamelessRogue.Engine.UI
         {
             Pages.Clear();
 
-            var itemQueue = new Queue<IEntity>(holder.Items.Where(entity => filters.Contains(entity.GetComponentOfType<Item>().Type)));
+            var itemQueue = new Queue<Entity>(holder.Items.Where(entity => filters.Contains(entity.GetComponentOfType<Item>().Type)));
             int pageIndex = 0;
             while (itemQueue.Count > 0)
             {

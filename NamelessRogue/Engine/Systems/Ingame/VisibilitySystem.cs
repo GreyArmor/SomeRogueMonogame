@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.ECS;
+
 using NamelessRogue.Engine.Components.ChunksAndTiles;
 using NamelessRogue.Engine.Components.Physical;
 using NamelessRogue.Engine.Utility;

@@ -25,7 +25,7 @@ namespace NamelessRogue.Engine.Components.Interaction
             this.Accumulator = accumulator;
         }
         public Entity Accumulator { get; set; }
-        public List<IEntity> ModifierEntities { get; set; } = new List<IEntity>();
+        public List<Entity> ModifierEntities { get; set; } = new List<Entity>();
 
         public override IComponent Clone()
         {

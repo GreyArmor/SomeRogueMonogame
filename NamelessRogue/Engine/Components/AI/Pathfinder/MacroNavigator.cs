@@ -3,7 +3,7 @@ using AStarNavigator.Algorithms;
 using AStarNavigator.Providers;
 using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.ECS;
+
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
 using NamelessRogue.Engine.Infrastructure;

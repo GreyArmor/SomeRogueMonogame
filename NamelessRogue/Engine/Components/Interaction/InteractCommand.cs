@@ -1,5 +1,6 @@
-﻿using MonoGame.Extended.ECS;
+﻿
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,10 @@ namespace NamelessRogue.Engine.Components.Interaction
 {
     public class InteractCommand : ICommand
     {
-        public InteractCommand(IEntity interactableEntity) {
+        public InteractCommand(Entity interactableEntity) {
             InteractableEntity = interactableEntity;
         }
 
-        public IEntity InteractableEntity { get; }
+        public Entity InteractableEntity { get; }
     }
 }

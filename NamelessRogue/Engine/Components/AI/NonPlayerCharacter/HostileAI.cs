@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoGame.Extended.ECS;
+
 using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Utility;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace NamelessRogue.Engine.Components.AI.NonPlayerCharacter
         public HostileTurretAI()
         {
         }
-        public IEntity Target { get; set; }
+        public Entity Target { get; set; }
 
         public HostileTurretState State { get; set; }
 

@@ -7,16 +7,16 @@ using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Abstraction;
-
+using NamelessRogue.Engine.Infrastructure;
 namespace NamelessRogue.Engine.Components.Interaction
 {
     public class DropItemCommand : ICommand
     {
-        public IEnumerable<IEntity> Items { get; }
+        public IEnumerable<Entity> Items { get; }
         public ItemsHolder Holder { get; }
         public Point WhereToDrop { get; }
 
-        public DropItemCommand(IEnumerable<IEntity> items, ItemsHolder holder, Point whereToDrop)
+        public DropItemCommand(IEnumerable<Entity> items, ItemsHolder holder, Point whereToDrop)
         {
             Items = items;
             Holder = holder;

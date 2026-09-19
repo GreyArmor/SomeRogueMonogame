@@ -4,6 +4,7 @@ using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Factories;
+using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.shell;
 using System;
@@ -22,21 +23,21 @@ namespace NamelessRogue.Engine.Systems.Ingame
         {
             while (namelessGame.Commander.DequeueCommand(out PickOptionDialogOptionCommand command))
             {
-                List<IEntity> itemsToPickup = new List<IEntity>();
+                List<Entity> itemsToPickup = new List<Entity>();
 
                 foreach (var option in command.DialogPickOptions)
                 {
-                    itemsToPickup.Add(option.OptionData as IEntity);
+                    itemsToPickup.Add(option.OptionData as Entity);
                     UIContainer.Instance.PickOptionDialogScreen.Options.Remove(option);
                 }
 
                 if(itemsToPickup.Contains(null))
                 {
-                    itemsToPickup = new List<IEntity>();
+                    itemsToPickup = new List<Entity>();
 
                     foreach(var option in UIContainer.Instance.PickOptionDialogScreen.Options)
                     {
-                        itemsToPickup.Add(option.OptionData as IEntity);
+                        itemsToPickup.Add(option.OptionData as Entity);
                     }                 
                     UIContainer.Instance.PickOptionDialogScreen.Options.Clear();
                 }

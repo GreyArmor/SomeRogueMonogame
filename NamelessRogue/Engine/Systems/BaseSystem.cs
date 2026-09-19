@@ -12,7 +12,7 @@ namespace NamelessRogue.Engine.Systems
 {
     public abstract class BaseSystem : ISystem
     {
-        private HashSet<IEntity> _registeredEntities = new HashSet<IEntity>();
+        private HashSet<Entity> _registeredEntities = new HashSet<Entity>();
 
         public BaseSystem()
         {
@@ -20,11 +20,11 @@ namespace NamelessRogue.Engine.Systems
         }
 
         public abstract HashSet<Type> Signature { get; }
-        protected List<IEntity> RegisteredEntities
+        protected List<Entity> RegisteredEntities
         {
             get => _registeredEntities.ToList();
         }
-        public virtual bool IsEntityMatchesSignature(IEntity entity)
+        public virtual bool IsEntityMatchesSignature(Entity entity)
         {
             if (Signature == null || Signature.Count == 0)
             {
@@ -43,7 +43,7 @@ namespace NamelessRogue.Engine.Systems
             return true;
         }
 
-        public void AddEntity(IEntity entity)
+        public void AddEntity(Entity entity)
         {
             if (!RegisteredEntities.Contains(entity))
             {
@@ -51,7 +51,7 @@ namespace NamelessRogue.Engine.Systems
             }
         }
 
-        public void RemoveEntity(IEntity entity)
+        public void RemoveEntity(Entity entity)
         {
             _registeredEntities.Remove(entity);
         }

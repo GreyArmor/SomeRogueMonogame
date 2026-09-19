@@ -22,7 +22,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
         public override void Update(GameTime gameTime, NamelessGame namelessGame)
         {
 
-            IEntity worldEntity = namelessGame.WorldTemplateEntity;
+            Entity worldEntity = namelessGame.WorldTemplateEntity;
             IWorldProvider worldProvider = null;
             if (worldEntity != null)
             {
@@ -30,7 +30,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
 
 
-            IEntity playerentity = namelessGame.PlayerEntity;
+            Entity playerentity = namelessGame.PlayerEntity;
             Position playerPosition = namelessGame.TestMapPosition;
             //look for current chunk
             var playerChunkPositon = new Point(playerPosition.Point.X / Constants.ChunkSize, playerPosition.Point.Y / Constants.ChunkSize);
