@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.ECS;
+using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components._3D;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
 using NamelessRogue.Engine.Components.AI.Pathfinder;
@@ -109,9 +110,7 @@ namespace NamelessRogue.Engine.Factories
         public static Entity CreateCharacterFromData(NamelessGame game, Vector3Int position, CharacterTemplateData data)
         {
 
-            var isRandomName = data.RandomName;
-
-            
+            var isRandomName = data.RandomName;            
 
             var spritePath = "Content\\GameObjects\\Characters\\" + data.SpritePath;
             var spriteFileName = Path.GetFileName(spritePath);
@@ -170,8 +169,22 @@ namespace NamelessRogue.Engine.Factories
 
 
             character.AddComponent(new DroppedItemsComponent(data.DroppedItems.Select(x => new DroppedItem() { ItemId = x.ItemId, Probability = x.Probability})));
+			var vendorItems = data.VendorItems;
+			if (vendorItems != null && vendorItems.Any())
+			{
+				foreach (var vendorItem in vendorItems)
+				{
+					bool itemExists = ItemLibrary.ItemDataById.TryGetValue(vendorItem.ItemId, out var item);
+					if (itemExists)
+					{
+						var itemEntity = ItemLibrary.CreateItemFromData(game, item);
+						holder.Items.Add(itemEntity);
+					}
+				}
+			}
 
-            Entity accumulatorEntiry = new Entity();
+
+			Entity accumulatorEntiry = new Entity();
             accumulatorEntiry.AddComponent(new CharacterStats());
 
             character.AddComponent(new ModifiersCollection(accumulatorEntiry));
