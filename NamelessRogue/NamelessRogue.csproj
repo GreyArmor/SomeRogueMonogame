@@ -43,7 +43,10 @@
     <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="FbxSharp" Version="0.9.0" />
     <PackageReference Include="FlatSharp" Version="6.3.5" />
+    <PackageReference Include="Gum.MonoGame" Version="2026.9.2.1" />
     <PackageReference Include="ImGui.NET" Version="1.89.4" />
+    <PackageReference Include="KernSmith.GumCommon" Version="2026.9.2.1" />
+    <PackageReference Include="KernSmith.MonoGameGum" Version="2026.9.2.1" />
     <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="Markov" Version="2.0.0" />
     <PackageReference Include="MonoGame.Aseprite" Version="6.2.0" />
@@ -218,11 +221,18 @@
 	  <None Remove="Engine\_3DUtility\**" />
 	  <None Remove="NewFolder\**" />
 	</ItemGroup>
-	
-  <ItemGroup>
+
+    <ItemGroup>
+        <None Update="Content\GumScreens\**\*.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
     <Folder Include="Content\GameObjects\Misc\" />
     <Folder Include="Content\obj\Windows\AnimatedCharacters\" />
     <Folder Include="Engine\Generation\Editor\" />
+    <Folder Include="Content\GumScreens\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

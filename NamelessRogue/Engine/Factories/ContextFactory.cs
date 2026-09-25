@@ -72,15 +72,15 @@ namespace NamelessRogue.Engine.Factories
                 ingameRenderSystems = new List<ISystem>();
                 var renderingSystem = new RenderingSystem(game.GetSettings());
                 var uiSystem = new UIRenderSystem(game);
-
-                ingameRenderSystems.Add(renderingSystem);
+				ingameRenderSystems.Add(renderingSystem);
                 ingameRenderSystems.Add(uiSystem);
+
                 ingameRenderSystems.Add(new HudElementsRenderingSystem(game.Settings));
                 ingameRenderSystems.Add(new ProjectileRendringSystem());
                 ingameRenderSystems.Add(new StreetlightsRenderingSystem());
                 ingameRenderSystems.Add(new SFXSystem());
 
-				IngameContext = new GameContext(ingameLogicSystems.ToList(), ingameRenderSystems, UIContainer.Instance.HudScreen, "InGame");
+                IngameContext = new GameContext(ingameLogicSystems.ToList(), ingameRenderSystems, UIContainer.Instance.HudScreen, "InGame");
                 ingameLogicSystems.Remove(ingameIntentSystem);
                 return IngameContext;
             }
@@ -355,9 +355,12 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
                 systems.Add(new WorldGenerationSystem());
                 systems.Add(new SoundPlaySystem());
-                var uiSystem = new UIRenderSystem(game);
+                //var uiSystem = new UIRenderSystem(game);
 
-                worldGenContext = new GameContext(systems, new List<ISystem>() { uiSystem }, UIContainer.Instance.WorldGenScreen, "NewWorld");
+				var gumUI = new GumUiRenderingSystem(game);
+				ingameRenderSystems.Add(gumUI);
+
+				worldGenContext = new GameContext(systems, new List<ISystem>() { gumUI}, UIContainer.Instance.WorldGenScreen, "NewWorld");
                 return worldGenContext;
             }
         }

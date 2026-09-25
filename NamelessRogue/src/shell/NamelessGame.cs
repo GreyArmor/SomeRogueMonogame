@@ -26,10 +26,12 @@ using NamelessRogue.Engine.Systems;
 using NamelessRogue.Engine.Systems.Ingame;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.Engine.Utility;
+using RenderingLibrary;
 using SharpDX.MediaFoundation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -163,7 +165,10 @@ namespace NamelessRogue.shell
 		/// </summary>
 		protected override void Initialize()
         {
-            var assembly = Assembly.GetExecutingAssembly();
+
+			
+
+			var assembly = Assembly.GetExecutingAssembly();
             var resourceName = "NamelessRogue.log4net.config";
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
@@ -214,10 +219,10 @@ namespace NamelessRogue.shell
 
             graphics.ApplyChanges();
 
-           
+		
 
 
-            ModelsLibrary.Initialize(this);
+			ModelsLibrary.Initialize(this);
             spriteBatch = new SpriteBatch(GraphicsDevice);
             SpriteLibrary.Initialize(this);
             new UIContainer(this);
