@@ -232,7 +232,6 @@
     <Folder Include="Content\GameObjects\Misc\" />
     <Folder Include="Content\obj\Windows\AnimatedCharacters\" />
     <Folder Include="Engine\Generation\Editor\" />
-    <Folder Include="Content\GumScreens\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

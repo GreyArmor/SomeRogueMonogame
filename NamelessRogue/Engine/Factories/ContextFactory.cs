@@ -159,9 +159,9 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
                 var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
-			
+				var gumUI = new GumUiRenderingSystem(game, worldGenContext, "MainScreen");
 				// create and init the UI manager
-				mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, uiSystem }, UIContainer.Instance.MainMenu, "MainMenu");
+				mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, gumUI }, UIContainer.Instance.MainMenu, "MainMenu");
                 return mainMenuContext;
             }
         }
@@ -355,12 +355,11 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new InputSystem(new MainMenuKeyIntentTranslator(), game));
                 systems.Add(new WorldGenerationSystem());
                 systems.Add(new SoundPlaySystem());
-                //var uiSystem = new UIRenderSystem(game);
+                var uiSystem = new UIRenderSystem(game);
 
-				var gumUI = new GumUiRenderingSystem(game);
-				ingameRenderSystems.Add(gumUI);
 
-				worldGenContext = new GameContext(systems, new List<ISystem>() { gumUI}, UIContainer.Instance.WorldGenScreen, "NewWorld");
+
+				worldGenContext = new GameContext(systems, new List<ISystem>() { uiSystem}, UIContainer.Instance.WorldGenScreen, "NewWorld");
                 return worldGenContext;
             }
         }

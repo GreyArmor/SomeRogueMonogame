@@ -2,7 +2,15 @@
   "TreeViewState": {
     "ExpandedNodes": [
       "Screens",
-      "Screens/Neon"
+      "Screens/Neon",
+      "Screens/Neon/DemoScreenGum",
+      "Screens/MainScreen",
+      "Screens/MainScreen/ContainerInstance",
+      "Screens/MainScreen/ContainerInstance/LoadGameButton",
+      "Components",
+      "Components/Neon",
+      "Components/Neon/Controls",
+      "Behaviors"
     ]
   }
 }

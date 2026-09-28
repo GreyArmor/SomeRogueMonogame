@@ -3,6 +3,121 @@
   <Name>MainScreen</Name>
   <State>
     <Name>Default</Name>
+    <Variable Type="float" Name="EditorsButton.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="string" Name="EditorsButton.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">ContainerInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="EditorsButton.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Editors</Value>
+    </Variable>
+    <Variable Type="float" Name="EditorsButton.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">200</Value>
+    </Variable>
+    <Variable Type="ChildrenLayout" Name="ContainerInstance.ChildrenLayout" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+    <Variable Type="float" Name="ContainerInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="ContainerInstance.HeightUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">4</Value>
+    </Variable>
+    <Variable Type="float" Name="ContainerInstance.StackSpacing" SetsValue="true">
+      <Value xsi:type="xsd:float">10</Value>
+    </Variable>
+    <Variable Type="float" Name="ContainerInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="ContainerInstance.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">4</Value>
+    </Variable>
+    <Variable Type="float" Name="ContainerInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="ContainerInstance.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ContainerInstance.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="float" Name="ContainerInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">-50</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="ContainerInstance.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ContainerInstance.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">5</Value>
+    </Variable>
+    <Variable Type="float" Name="ExitButton.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="string" Name="ExitButton.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">ContainerInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="ExitButton.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Exit</Value>
+    </Variable>
+    <Variable Type="float" Name="ExitButton.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">200</Value>
+    </Variable>
+    <Variable Type="float" Name="LoadGameButton.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="string" Name="LoadGameButton.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">ContainerInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="LoadGameButton.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Load game</Value>
+    </Variable>
+    <Variable Type="float" Name="LoadGameButton.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">200</Value>
+    </Variable>
+    <Variable Type="float" Name="NewGameButton.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="string" Name="NewGameButton.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">ContainerInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="NewGameButton.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">New game</Value>
+    </Variable>
+    <Variable Type="float" Name="NewGameButton.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">200</Value>
+    </Variable>
+    <Variable Type="float" Name="OptionsButton.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="string" Name="OptionsButton.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">ContainerInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="OptionsButton.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Options</Value>
+    </Variable>
+    <Variable Type="float" Name="OptionsButton.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">200</Value>
+    </Variable>
+    <Variable Type="float" Name="WorldGenButton.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="string" Name="WorldGenButton.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">ContainerInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="WorldGenButton.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">World Generation </Value>
+    </Variable>
+    <Variable Type="float" Name="WorldGenButton.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">200</Value>
+    </Variable>
   </State>
+  <Instance Name="ContainerInstance" BaseType="Container" />
+  <Instance Name="NewGameButton" BaseType="Neon/Controls/Button" />
+  <Instance Name="LoadGameButton" BaseType="Neon/Controls/Button" />
+  <Instance Name="WorldGenButton" BaseType="Neon/Controls/Button" />
+  <Instance Name="OptionsButton" BaseType="Neon/Controls/Button" />
+  <Instance Name="EditorsButton" BaseType="Neon/Controls/Button" />
+  <Instance Name="ExitButton" BaseType="Neon/Controls/Button" />
   <Behaviors />
 </ScreenSave>

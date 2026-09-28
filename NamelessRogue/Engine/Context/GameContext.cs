@@ -14,14 +14,15 @@ namespace NamelessRogue.Engine.Context
     public class GameContext
     {
         public List<IBaseGuiScreen> ContextScreens { get; } = new List<IBaseGuiScreen>();
+        public string GumUiScreenId { get; set; }
         public HashSet<ISystem> Systems { get; } = new HashSet<ISystem>();
         public HashSet<ISystem> RenderingSystems { get; } = new HashSet<ISystem>();
         public string MusicThemeId { get; set; }
-        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, BaseScreen contextScreen, string musicThemeId)
-            : this(systems, renderingSystems, new List<IBaseGuiScreen>() { contextScreen }, musicThemeId)
+        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, BaseScreen contextScreen, string musicThemeId, string gumUiScreenId = null)
+            : this(systems, renderingSystems, new List<IBaseGuiScreen>() { contextScreen }, musicThemeId, gumUiScreenId)
         {        }
 
-        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, List<IBaseGuiScreen> contextScreens, string musicThemeId)
+        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, List<IBaseGuiScreen> contextScreens, string musicThemeId, string gumUiScreenId = null)
         {
             if (systems != null && systems.Any())
             {
