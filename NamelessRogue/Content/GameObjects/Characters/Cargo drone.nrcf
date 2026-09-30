@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CharacterTemplateData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>cargo_drone</Id>
+  <Name>Cargo drone</Name>
+  <Description />
+  <SpritePath>Sprites\cargo_drone.ase</SpritePath>
+  <AiType>Idle</AiType>
+  <CastsShadow>true</CastsShadow>
+  <Immobile>false</Immobile>
+  <Health>10</Health>
+  <Energy>10</Energy>
+  <MovementSpeed>49</MovementSpeed>
+  <VisionRange>10</VisionRange>
+  <DroppedItems>
+    <DroppedItemTemplate>
+      <ItemId>1586eec3-e2b6-45e0-aa4d-9e3e3305fe59</ItemId>
+      <Path>..\Consumable\Battery.nrif</Path>
+      <Probability>100</Probability>
+    </DroppedItemTemplate>
+    <DroppedItemTemplate>
+      <ItemId>ad4f9a93-ca18-45ab-99f5-7edc43edae2d</ItemId>
+      <Path>..\Consumable\MedKit.nrif</Path>
+      <Probability>100</Probability>
+    </DroppedItemTemplate>
+  </DroppedItems>
+  <VendorItems />
+  <WeaponTemplateData>
+    <MinimumDamage>0</MinimumDamage>
+    <MaximumDamage>9</MaximumDamage>
+    <Range>1</Range>
+    <AttackType>Close</AttackType>
+    <DamageType>Physical</DamageType>
+    <AmmoType>LowCaliber</AmmoType>
+    <AmmoInClip>0</AmmoInClip>
+  </WeaponTemplateData>
+  <ArmorTemplateData>
+    <DamageType>Physical</DamageType>
+    <ArmorValue>1</ArmorValue>
+    <ResistType>Physical</ResistType>
+    <ResistValue>10</ResistValue>
+  </ArmorTemplateData>
+  <IsFlying>true</IsFlying>
+  <DialogDataId>a5cf103d-2b4a-40e8-a8a1-6f6165906740</DialogDataId>
+  <DialogFilePath>..\..\..\bin\Debug\Dialogs\Wastelander 1.nrdf</DialogFilePath>
+  <RandomName>false</RandomName>
+  <RandomVendorAvailableItems>false</RandomVendorAvailableItems>
+  <RandomDroppedItems>false</RandomDroppedItems>
+</CharacterTemplateData>
