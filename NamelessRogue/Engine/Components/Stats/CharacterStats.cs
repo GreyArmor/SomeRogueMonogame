@@ -21,8 +21,9 @@ namespace NamelessRogue.Engine.Components.Stats
      
         public List<WeaponStats> WeaponStats { get; set; } = new List<WeaponStats> ();
         public List<ResistanceStat> Resistances { get; set; } = new List<ResistanceStat>();
-        public List<ArmorStats> Armor { get; set;} = new List<ArmorStats> { }; 
-        public int Money { get; set; } = 0;
+        public List<ArmorStats> Armor { get; set;} = new List<ArmorStats> { };
+		public SimpleStat NeuralLoad { get; set; } = new SimpleStat(0, 0, 999);
+		public int Money { get; set; } = 0;
 
         public bool Immobile { get; set; } = false;
         public string FactionId { get; set; }

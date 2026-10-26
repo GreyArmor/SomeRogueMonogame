@@ -35,7 +35,8 @@ namespace NamelessRogue.Engine.Input
         QuickBarPress,
         Chat,
         Trade,
-    }
+		OpenStatScreen,
+	}
 
     public class Intent
     {

@@ -1,9 +1,11 @@
 ﻿using Gum.Forms.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameGum;
 using NamelessRogue.Content.GumScreens.GumViewModels;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
+using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Context;
 using NamelessRogue.Engine.Input;
 using NamelessRogue.Engine.Systems;
@@ -559,6 +561,33 @@ namespace NamelessRogue.Engine.Factories
 
 				OptionsScreenContext = new GameContext(systems, new List<ISystem>() { uiSystem, gumUI }, new List<IBaseGuiScreen>(), "Options", screen);
 				return OptionsScreenContext;
+			}
+		}
+
+		private static GameContext CharacterStatsScreenContext;
+		public static GameContext GetCharacterStatsScreenContext(NamelessGame game)
+		{
+
+			if (CharacterStatsScreenContext != null)
+			{
+				return CharacterStatsScreenContext;
+			}
+			else
+			{
+				var systems = new List<ISystem>();
+				systems.Add(new InputSystem(new CharacterstatsScreenItentTranslator(), game));
+				systems.Add(new CharactersStatsScreeIntentSystem());
+				systems.Add(new CharacterStatsScreenSystem());
+				systems.Add(new SoundPlaySystem());
+				var uiSystem = new UIRenderSystem(game);
+
+				var screen = new CharacterStatsScreen();
+				var viewModel = new CharacterStatsScreenViewModel(game, screen);
+				var gumUI = new GumUiRenderingSystem(game, worldGenContext, screen, viewModel);
+              
+
+				CharacterStatsScreenContext = new GameContext(systems, new List<ISystem>() { uiSystem, gumUI }, new List<IBaseGuiScreen>(), "Stats", screen);
+				return CharacterStatsScreenContext;
 			}
 		}
 

@@ -55,6 +55,7 @@
   <Guides />
   <ShowLocalizationInGum>true</ShowLocalizationInGum>
   <CurrentLanguageIndex>0</CurrentLanguageIndex>
+  <ScreenReference Name="CharacterStatsScreen" />
   <ScreenReference Name="MainScreen" />
   <ScreenReference Name="Neon/DemoScreenGum" />
   <ScreenReference Name="OptionsScreen" />

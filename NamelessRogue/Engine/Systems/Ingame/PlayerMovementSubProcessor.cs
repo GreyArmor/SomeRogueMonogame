@@ -377,10 +377,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
                             var chatCommand = new StartDialogCommand(interactableEntities.First());
                             namelessGame.Commander.EnqueueCommand(chatCommand);
                             namelessGame.ContextToSwitch = ContextFactory.GetDialogContext(namelessGame);
-                        }
-                 
+                        }                
 
                     }
+                    break;
+                case IntentEnum.OpenStatScreen:
+                    {
+						namelessGame.ContextToSwitch = ContextFactory.GetCharacterStatsScreenContext(namelessGame);
+					}
                     break;
                 default:
                     break;

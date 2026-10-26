@@ -508,10 +508,10 @@ namespace NamelessRogue.shell
 		{
 			if (ContextToSwitch != null)
 			{
-				CurrentContext.GumScreen.RemoveFromRoot();
+				CurrentContext.GumScreen?.RemoveFromRoot();
 				CurrentContext = ContextToSwitch;
 				Commander.EnqueueCommand(new PlaySoundCommand(CurrentContext.MusicThemeId, true, 0, true));
-				CurrentContext.GumScreen.AddToRoot();
+				CurrentContext.GumScreen?.AddToRoot();
 				ContextToSwitch = null;
 			}
 

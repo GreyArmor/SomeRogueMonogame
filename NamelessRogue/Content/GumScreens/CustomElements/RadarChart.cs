@@ -1,0 +1,88 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Gum.GueDeriving;
+using Gum.Wireframe;
+using Microsoft.Xna.Framework;
+using Vector2 = System.Numerics.Vector2;
+
+//vibecoded
+public class RadarChart : ContainerRuntime
+{
+	readonly string[] _labels;
+	readonly float _radius;
+	readonly float _max;
+	readonly PolygonRuntime _dataShape;
+
+	public RadarChart(string[] labels, float radius = 120, float max = 100, int rings = 4)
+	{
+		_labels = labels;
+		_radius = radius;
+		_max = max;
+
+		// Container is a square centered on the chart
+		Width = Height = (radius + 50) * 2;
+		WidthUnits = HeightUnits = Gum.DataTypes.DimensionUnitType.Absolute;
+
+		// Grid rings
+		for (int r = 1; r <= rings; r++)
+			AddPolygon(Ring(radius * r / rings), new Color(255, 255, 255, 70), close: true);
+
+		// Axes + labels
+		for (int i = 0; i < labels.Length; i++)
+		{
+			AddPolygon(new List<Vector2> { Vector2.Zero, Point(i, radius) },
+		   new Color(255, 255, 255, 70), close: false);
+
+			var label = new TextRuntime { Text = labels[i], Color = Color.White };
+			label.XUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
+			label.YUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
+			label.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Center;
+			label.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Center;
+			var p = Point(i, radius + 22);
+			label.X = p.X; label.Y = p.Y;
+			Children.Add(label);
+		}
+
+		// Data polygon (updated by SetValues)
+		_dataShape = AddPolygon(Ring(0), new Color(80, 170, 255), close: true);
+	}
+	// Axis 0 points straight up, going clockwise
+	Vector2 Point(int i, float r)
+	{
+		float a = -MathHelper.PiOver2 + MathHelper.TwoPi * i / _labels.Length;
+		return new Vector2(MathF.Cos(a), MathF.Sin(a)) * r;
+	}
+
+	List<Vector2> Ring(float r)
+	{
+		var pts = new List<Vector2>();
+		for (int i = 0; i < _labels.Length; i++) pts.Add(Point(i, r));
+		return pts;
+	}
+
+	public void SetValues(float[] values)
+	{
+		var pts = new List<Vector2>();
+		for (int i = 0; i < values.Length; i++)
+			pts.Add(Point(i, _radius * MathHelper.Clamp(values[i] / _max, 0, 1)));
+
+		pts.Add(pts[0]);               // repeat first point to close
+		_dataShape.SetPoints(pts);
+	}
+
+	PolygonRuntime AddPolygon(List<Vector2> pts, Color color, bool close)
+	{
+		var poly = new PolygonRuntime();
+		poly.XUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
+		poly.YUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
+		poly.Color = color;
+
+		if (close && pts.Count > 0)
+			pts = new List<Vector2>(pts) { pts[0] };   // repeat first point
+
+		poly.SetPoints(pts);
+		Children.Add(poly);
+		return poly;
+	}
+}

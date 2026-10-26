@@ -101,7 +101,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        private CharacterStats GetAccumulatedStats(Entity entity)
+        internal static CharacterStats GetAccumulatedStats(Entity entity)
         {
             var stats = entity.GetComponentOfType<CharacterStats>();
             var modifiers = entity.GetComponentOfType<ModifiersCollection>();

@@ -71,7 +71,10 @@ namespace NamelessRogue.Engine.Input
                         case Keys.F9:
                             intent.Intention = IntentEnum.Quickload;
                             break;
-                        case Keys.Z:
+                        case Keys.F1:
+                            intent.Intention = IntentEnum.OpenStatScreen;
+							break;
+						case Keys.Z:
                             if (lastCommand == 'z')
                             {
                                 intent.Intention = IntentEnum.ZoomOut;

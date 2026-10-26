@@ -11,4 +11,13 @@ namespace NamelessRogue.Engine.Input
 			return result;
 		}
 	}
+
+	public class CharacterstatsScreenItentTranslator : IKeyIntentTraslator
+	{
+		public virtual List<Intent> Translate(Keys[] keyCodes, char lastCommand, MouseState mouseState)
+		{
+			List<Intent> result = new List<Intent>();
+			return result;
+		}
+	}
 }
