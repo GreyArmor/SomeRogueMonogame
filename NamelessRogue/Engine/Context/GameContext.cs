@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Gum.Forms.Controls;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.UI;
@@ -18,11 +18,13 @@ namespace NamelessRogue.Engine.Context
         public HashSet<ISystem> Systems { get; } = new HashSet<ISystem>();
         public HashSet<ISystem> RenderingSystems { get; } = new HashSet<ISystem>();
         public string MusicThemeId { get; set; }
-        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, BaseScreen contextScreen, string musicThemeId, string gumUiScreenId = null)
-            : this(systems, renderingSystems, new List<IBaseGuiScreen>() { contextScreen }, musicThemeId, gumUiScreenId)
+
+        public FrameworkElement GumScreen { get; set; } = null;
+        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, BaseScreen contextScreen, string musicThemeId, FrameworkElement screen = null)
+            : this(systems, renderingSystems, new List<IBaseGuiScreen>() { contextScreen }, musicThemeId, screen)
         {        }
 
-        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, List<IBaseGuiScreen> contextScreens, string musicThemeId, string gumUiScreenId = null)
+        public GameContext(IEnumerable<ISystem> systems, IEnumerable<ISystem> renderingSystems, List<IBaseGuiScreen> contextScreens, string musicThemeId, FrameworkElement screen = null)
         {
             if (systems != null && systems.Any())
             {
@@ -41,7 +43,9 @@ namespace NamelessRogue.Engine.Context
 
             ContextScreens.AddRange(contextScreens);
             MusicThemeId = musicThemeId;
-        }
+			GumScreen = screen;
+
+		}
 
         public void Update(GameTime gameTime, NamelessGame namelessGame)
         {

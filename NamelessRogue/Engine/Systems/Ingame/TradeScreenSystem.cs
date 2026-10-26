@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Systems.Ingame
 {
-    public class TradeScreenSystem : BaseSystem
+	public class TradeScreenSystem : BaseSystem
     {
         public override HashSet<Type> Signature { get; } = new HashSet<Type>();
 

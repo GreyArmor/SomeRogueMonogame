@@ -57,6 +57,7 @@
   <CurrentLanguageIndex>0</CurrentLanguageIndex>
   <ScreenReference Name="MainScreen" />
   <ScreenReference Name="Neon/DemoScreenGum" />
+  <ScreenReference Name="OptionsScreen" />
   <ComponentReference Name="Neon/Controls/Button" />
   <ComponentReference Name="Neon/Controls/ButtonIcon" />
   <ComponentReference Name="Neon/Controls/CheckBox" />

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScreenSave xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>OptionsScreen</Name>
+  <State>
+    <Name>Default</Name>
+    <Variable Type="string" Name="BackButton.Parent" SetsValue="true" />
+    <Variable Type="string" Name="BackButton.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Back</Value>
+    </Variable>
+    <Variable Type="float" Name="BackButton.X" SetsValue="true">
+      <Value xsi:type="xsd:float">20</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="BackButton.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="BackButton.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="float" Name="BackButton.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">-20</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="BackButton.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="BackButton.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">5</Value>
+    </Variable>
+    <Variable Type="string" Name="CheckBoxInstance.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuItems</Value>
+    </Variable>
+    <Variable Type="string" Name="CheckBoxInstance.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Windowed</Value>
+    </Variable>
+    <Variable Type="string" Name="CheckBoxInstance1.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuItems</Value>
+    </Variable>
+    <Variable Type="string" Name="CheckBoxInstance1.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Detect resolution</Value>
+    </Variable>
+    <Variable Type="float" Name="CheckBoxInstance1.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">10</Value>
+    </Variable>
+    <Variable Type="string" Name="ComboBoxInstance.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuItems</Value>
+    </Variable>
+    <Variable Type="string" Name="FullScreenCheckbox.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuItems</Value>
+    </Variable>
+    <Variable Type="string" Name="FullScreenCheckbox.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Fullscreen</Value>
+    </Variable>
+    <Variable Type="float" Name="FullScreenCheckbox.X" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="float" Name="FullScreenCheckbox.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="string" Name="MasterVolumeLabel.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuItems</Value>
+    </Variable>
+    <Variable Type="string" Name="MasterVolumeLabel.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Master Volume</Value>
+    </Variable>
+    <Variable Type="string" Name="MasterVolumeSlider.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuItems</Value>
+    </Variable>
+    <Variable Type="float" Name="MasterVolumeSlider.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="MasterVolumeSlider.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+    <Variable Type="ChildrenLayout" Name="MenuItems.ChildrenLayout" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="float" Name="MenuItems.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="MenuItems.HeightUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">4</Value>
+    </Variable>
+    <Variable Type="float" Name="MenuItems.StackSpacing" SetsValue="true">
+      <Value xsi:type="xsd:float">10</Value>
+    </Variable>
+    <Variable Type="float" Name="MenuItems.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">-16</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="MenuItems.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+    <Variable Type="float" Name="MenuItems.X" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="MenuItems.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="MenuItems.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="float" Name="MenuItems.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="MenuItems.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="MenuItems.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+    <Variable Type="string" Name="MusicLabel.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuItems</Value>
+    </Variable>
+    <Variable Type="string" Name="MusicLabel.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Music Volume</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="MusicLabel.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="float" Name="MusicLabel.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">8</Value>
+    </Variable>
+    <Variable Type="string" Name="MusicSlider.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuItems</Value>
+    </Variable>
+    <Variable Type="float" Name="MusicSlider.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="MusicSlider.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+    <Variable Type="string" Name="SFXLabel.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuItems</Value>
+    </Variable>
+    <Variable Type="string" Name="SFXLabel.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">SFX Volume</Value>
+    </Variable>
+    <Variable Type="float" Name="SFXLabel.X" SetsValue="true">
+      <Value xsi:type="xsd:float">2</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="SFXLabel.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="float" Name="SFXLabel.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="string" Name="SFXSlider.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuItems</Value>
+    </Variable>
+    <Variable Type="float" Name="SFXSlider.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="SFXSlider.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+  </State>
+  <Instance Name="CheckBoxInstance1" BaseType="Neon/Controls/CheckBox" />
+  <Instance Name="ComboBoxInstance" BaseType="Neon/Controls/ComboBox" />
+  <Instance Name="FullScreenCheckbox" BaseType="Neon/Controls/CheckBox" />
+  <Instance Name="CheckBoxInstance" BaseType="Neon/Controls/CheckBox" />
+  <Instance Name="MasterVolumeLabel" BaseType="Neon/Controls/Label" />
+  <Instance Name="MasterVolumeSlider" BaseType="Neon/Controls/Slider" />
+  <Instance Name="MusicLabel" BaseType="Neon/Controls/Label" />
+  <Instance Name="MusicSlider" BaseType="Neon/Controls/Slider" />
+  <Instance Name="SFXLabel" BaseType="Neon/Controls/Label" />
+  <Instance Name="SFXSlider" BaseType="Neon/Controls/Slider" />
+  <Instance Name="MenuItems" BaseType="Container" />
+  <Instance Name="BackButton" BaseType="Neon/Controls/Button" />
+  <Behaviors />
+</ScreenSave>

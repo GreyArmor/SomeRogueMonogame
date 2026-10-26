@@ -39,7 +39,13 @@ using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using Color = Microsoft.Xna.Framework.Color;
-
+using Gum;
+using Gum.DataTypes;
+using Gum.Forms;
+using Gum.Forms.Controls;
+using Gum.Managers;
+using Gum.Mvvm;
+using Gum.Wireframe;
 namespace NamelessRogue.shell
 {
 	public class NamelessGame : Game
@@ -88,8 +94,7 @@ namespace NamelessRogue.shell
 
         public PathfindingController PathfindingController {get; private set; }
         public MacroNavigator MacroNavigator { get; private set; }
-
-        // this lookup is very expensive, avoid using in loops
+		// this lookup is very expensive, avoid using in loops
         public List<Entity> GetEntitiesByComponentClass<T>() where T : IComponent
 		{
 			List<Entity> results = EntityInfrastructureManager.Entities.Where(v => v.GetComponentOfType<T>() != null).ToList();
@@ -106,6 +111,8 @@ namespace NamelessRogue.shell
 		public GameContext ContextToSwitch { get; set; } = null;
 
 		private GameSettings settings;
+
+		GumService GumUI => GumService.Default;
 
 		public IWorldProvider WorldProvider
 		{
@@ -198,11 +205,14 @@ namespace NamelessRogue.shell
             int height = 15;
 
             Commander = new Commander();
-         
-            settings = new GameSettings(width, height);
 
-            graphics.PreferredBackBufferWidth = (int)(GetActualCharacterWidth() + settings.HudWidth);
-            graphics.PreferredBackBufferHeight = GetActualCharacterHeight();
+			
+
+
+			settings = new GameSettings(width, height);
+
+			graphics.PreferredBackBufferWidth = (int)(GetActualCharacterWidth() + settings.HudWidth);
+			graphics.PreferredBackBufferHeight = GetActualCharacterHeight();
 
             graphics.IsFullScreen = false;
             graphics.PreferMultiSampling = true;
@@ -219,8 +229,8 @@ namespace NamelessRogue.shell
 
             graphics.ApplyChanges();
 
-		
 
+			GumUI.Initialize(this, $@"GumScreens/GameScreens.gumx");
 
 			ModelsLibrary.Initialize(this);
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -249,7 +259,8 @@ namespace NamelessRogue.shell
 
 
             CurrentContext = ContextFactory.GetMainMenuContext(this);
-            this.IsMouseVisible = true;
+			CurrentContext.GumScreen.AddToRoot();
+			this.IsMouseVisible = true;
 
             InitSound();
             PlayMainMenuTheme();
@@ -497,10 +508,10 @@ namespace NamelessRogue.shell
 		{
 			if (ContextToSwitch != null)
 			{
+				CurrentContext.GumScreen.RemoveFromRoot();
 				CurrentContext = ContextToSwitch;
-
 				Commander.EnqueueCommand(new PlaySoundCommand(CurrentContext.MusicThemeId, true, 0, true));
-
+				CurrentContext.GumScreen.AddToRoot();
 				ContextToSwitch = null;
 			}
 

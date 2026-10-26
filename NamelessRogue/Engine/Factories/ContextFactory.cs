@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Gum.Forms.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NamelessRogue.Content.GumScreens.GumViewModels;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Context;
@@ -18,7 +15,13 @@ using NamelessRogue.Engine.Systems.Map;
 using NamelessRogue.Engine.Systems.PickUpItems;
 using NamelessRogue.Engine.Systems.WorldGen;
 using NamelessRogue.Engine.UI;
+using NamelessRogue.Screens;
 using NamelessRogue.shell;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Factories
 {
@@ -159,9 +162,12 @@ namespace NamelessRogue.Engine.Factories
                 systems.Add(new SoundPlaySystem());
                 var uiSystem = new UIRenderSystem(game);
                 var backgroundSystem = new MainMenuBackgroundRenderingSystem(game);
-				var gumUI = new GumUiRenderingSystem(game, worldGenContext, "MainScreen");
+
+				var screen = new MainScreen();
+                var mainScreenViewModel = new MainMenuViewModel(game, screen);
+				var gumUI = new GumUiRenderingSystem(game, worldGenContext, screen, mainScreenViewModel);
 				// create and init the UI manager
-				mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, gumUI }, UIContainer.Instance.MainMenu, "MainMenu");
+				mainMenuContext = new GameContext(systems, new List<ISystem>() { backgroundSystem, gumUI }, UIContainer.Instance.MainMenu, "MainMenu", screen);
                 return mainMenuContext;
             }
         }
@@ -529,7 +535,34 @@ namespace NamelessRogue.Engine.Factories
             }
         }
 
-        private static GameContext editorLocationContext;
+
+		private static GameContext OptionsScreenContext;
+		public static GameContext GetOptionsScreenContext(NamelessGame game)
+		{
+
+			if (OptionsScreenContext != null)
+			{
+				return OptionsScreenContext;
+			}
+			else
+			{
+				var systems = new List<ISystem>();
+				systems.Add(new InputSystem(new OptionsIntentTranslator(), game));
+				systems.Add(new OptionsIntentSystem());
+				systems.Add(new OptionsScreenSystem());
+				systems.Add(new SoundPlaySystem());
+				var uiSystem = new UIRenderSystem(game);
+
+				var screen = new OptionsScreen();
+				var mainScreenViewModel = new OptionsScreenViewModel(game, screen);
+				var gumUI = new GumUiRenderingSystem(game, worldGenContext, screen, mainScreenViewModel);
+
+				OptionsScreenContext = new GameContext(systems, new List<ISystem>() { uiSystem, gumUI }, new List<IBaseGuiScreen>(), "Options", screen);
+				return OptionsScreenContext;
+			}
+		}
+
+		private static GameContext editorLocationContext;
         public static GameContext GetEditorLocationContext(NamelessGame game)
         {
 

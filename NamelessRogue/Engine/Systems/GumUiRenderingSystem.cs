@@ -1,10 +1,15 @@
 ﻿using Gum;
 using Gum.DataTypes;
+using Gum.Forms;
 using Gum.Forms.Controls;
 using Gum.Managers;
+using Gum.Mvvm;
 using Gum.Wireframe;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended.Screens;
+using NamelessRogue.Components.Neon.Controls;
 using NamelessRogue.Content.GumScreens.GumViewModels;
+using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Context;
 using NamelessRogue.Engine.UI;
 using NamelessRogue.Screens;
@@ -16,6 +21,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Button = Gum.Forms.Controls.Button;
 
 namespace NamelessRogue.Engine.Systems
 {
@@ -24,17 +30,20 @@ namespace NamelessRogue.Engine.Systems
 		NamelessGame game;
 		GumService GumUI => GumService.Default;
 
-		public GumUiRenderingSystem(NamelessGame game, GameContext context, string gumUiScreenId)
+		public GumUiRenderingSystem(NamelessGame game, GameContext context, FrameworkElement screen, ViewModel viewModel)
 		{
 			Context = context;
-			this.game = game;
-			var gumProject = GumUI.Initialize(game, $@"GumScreens/GameScreens.gumx");
+			this.game = game;			
+			screen.BindingContext = viewModel;
 
-			var screen = new MainScreen();
-			screen.AddToRoot();
+			foreach (var child in screen.Descendants())
+			{
+				if (child is Button button)
+				{
+					button.Click += (_,_)=> { game.Commander.EnqueueCommand(new PlaySoundCommand("ButtonClick", false, 0.5f)); };
+				}
+			}
 
-			MainMenuViewModel mainMenuViewModel = new MainMenuViewModel(game, screen);
-			screen.BindingContext = mainMenuViewModel;
 		}
 
 		public override HashSet<Type> Signature { get; } = new HashSet<Type>();
@@ -44,7 +53,6 @@ namespace NamelessRogue.Engine.Systems
 		{
 			GumUI.Update(gameTime);
 			GumUI.Draw();
-
 		}
 	}
 }

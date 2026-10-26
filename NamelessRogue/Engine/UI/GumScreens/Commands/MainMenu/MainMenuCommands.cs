@@ -13,4 +13,6 @@ namespace NamelessRogue.Engine.UI.GumScreens.Commands.MainMenu
 	internal class MainMenuEditorsCommand : ICommand { }
 	internal class MainMenuWorldGenCommand : ICommand { }
 	internal class MainMenuLoadGameCommand : ICommand { }
+
+	internal class OptionsScreenBackCommand : ICommand { }
 }

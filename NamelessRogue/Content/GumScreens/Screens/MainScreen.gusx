@@ -3,18 +3,6 @@
   <Name>MainScreen</Name>
   <State>
     <Name>Default</Name>
-    <Variable Type="float" Name="EditorsButton.Height" SetsValue="true">
-      <Value xsi:type="xsd:float">50</Value>
-    </Variable>
-    <Variable Type="string" Name="EditorsButton.Parent" SetsValue="true">
-      <Value xsi:type="xsd:string">ContainerInstance</Value>
-    </Variable>
-    <Variable Type="string" Name="EditorsButton.Text" SetsValue="true">
-      <Value xsi:type="xsd:string">Editors</Value>
-    </Variable>
-    <Variable Type="float" Name="EditorsButton.Width" SetsValue="true">
-      <Value xsi:type="xsd:float">200</Value>
-    </Variable>
     <Variable Type="ChildrenLayout" Name="ContainerInstance.ChildrenLayout" SetsValue="true">
       <Value xsi:type="xsd:int">2</Value>
     </Variable>
@@ -50,6 +38,18 @@
     </Variable>
     <Variable Type="PositionUnitType" Name="ContainerInstance.YUnits" SetsValue="true">
       <Value xsi:type="xsd:int">5</Value>
+    </Variable>
+    <Variable Type="float" Name="EditorsButton.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="string" Name="EditorsButton.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">ContainerInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="EditorsButton.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Editors</Value>
+    </Variable>
+    <Variable Type="float" Name="EditorsButton.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">200</Value>
     </Variable>
     <Variable Type="float" Name="ExitButton.Height" SetsValue="true">
       <Value xsi:type="xsd:float">50</Value>

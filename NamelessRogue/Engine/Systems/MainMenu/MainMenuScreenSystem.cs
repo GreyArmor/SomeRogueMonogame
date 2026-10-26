@@ -43,7 +43,7 @@ namespace NamelessRogue.Engine.Systems.MainMenu
             if (game.Commander.DequeueCommand(out MainMenuNewGameCommand _)) { game.ContextToSwitch = ContextFactory.GetNewGamePickWorldContext(game); }
             if (game.Commander.DequeueCommand(out MainMenuWorldGenCommand _)) { game.ContextToSwitch = ContextFactory.GetWorldGenContext(game); }
 			if (game.Commander.DequeueCommand(out MainMenuLoadGameCommand _)) { /**/ }
-			if (game.Commander.DequeueCommand(out MainMenuOptionCommand _)) { /**/ }
+			if (game.Commander.DequeueCommand(out MainMenuOptionCommand _)) { game.ContextToSwitch = ContextFactory.GetOptionsScreenContext(game); }
 			if (game.Commander.DequeueCommand(out MainMenuEditorsCommand _)) { game.ContextToSwitch = ContextFactory.GetEditorsPickerContext(game); }
 			if (game.Commander.DequeueCommand(out MainMenuExitCommand _)) { game.Exit(); }
 

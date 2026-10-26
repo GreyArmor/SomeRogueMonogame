@@ -4,13 +4,21 @@
       "Screens",
       "Screens/Neon",
       "Screens/Neon/DemoScreenGum",
+      "Screens/Neon/DemoScreenGum/DemoSettingsMenu",
+      "Screens/Neon/DemoScreenGum/DemoSettingsMenu/MenuItems",
+      "Screens/Neon/DemoScreenGum/DemoSettingsMenu/MenuItems/ButtonContainer",
       "Screens/MainScreen",
       "Screens/MainScreen/ContainerInstance",
-      "Screens/MainScreen/ContainerInstance/LoadGameButton",
+      "Screens/OptionsScreen",
+      "Screens/OptionsScreen/MenuItems",
+      "Screens/OptionsScreen/MenuItems/ComboBoxInstance",
+      "Screens/OptionsScreen/MenuItems/SFXSlider",
       "Components",
       "Components/Neon",
       "Components/Neon/Controls",
-      "Behaviors"
+      "Components/Neon/Controls/Button",
+      "Behaviors",
+      "Behaviors/ButtonBehavior"
     ]
   }
 }
