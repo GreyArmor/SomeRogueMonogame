@@ -739,14 +739,14 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 }
 
-                RenderSpriteShadows(game, camera, game.GetSettings(), gameTime);
+                RenderSpriteShadows(game, screen, camera, game.GetSettings(), gameTime);
 
                 game.Batch.Begin(samplerState: SamplerState.PointClamp);
 
                 var screenActualWidth = game.Settings.GetWidthZoomed() * game.Settings.GetFontSizeZoomed();
                 game.Batch.Draw(pixel, new Rectangle(screenActualWidth, 0, game.GetActualWidth() - screenActualWidth, game.GetActualHeight()), XNAColor.Black);
 
-                RenderSpriteScreen(game, camera, game.GetSettings(), gameTime);
+                RenderSpriteScreen(game, screen, camera, game.GetSettings(), gameTime);
                 RenderCursor(game, screen, camera, game.GetSettings(), gameTime);
                 game.Batch.End();
 				//debug draw for pathfinding crossings
@@ -958,7 +958,7 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
         }
 
-         private void RenderSpriteScreen(NamelessGame game, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
+         private void RenderSpriteScreen(NamelessGame game, Screen screen, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
         {
             foreach (var entity in RegisteredEntities)
             {
@@ -983,7 +983,21 @@ namespace NamelessRogue.Engine.Systems.Ingame
                 { continue; }
 
                 Point screenPoint = camera.PointToScreen(position.X, position.Y);
-                int tileHeight = game.GetSettings().GetFontSizeZoomed();
+
+				if (screenPoint.X >= screen.Width || screenPoint.Y >= screen.Height || screenPoint.X < 0 || screenPoint.Y < 0)
+				{
+					continue;
+				}
+
+				var isVisible = screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible;
+
+				if (!isVisible)
+				{
+					continue;
+				}
+
+
+				int tileHeight = game.GetSettings().GetFontSizeZoomed();
                 int tileWidth = game.GetSettings().GetFontSizeZoomed();
 
                 var animation = sprited.CurrentAnimation;
@@ -996,11 +1010,13 @@ namespace NamelessRogue.Engine.Systems.Ingame
             }
         }
 
-        private void RenderSpriteShadows(NamelessGame game, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
+        private void RenderSpriteShadows(NamelessGame game, Screen screen, ConsoleCamera camera, GameSettings settings, GameTime gameTime)
         {
             foreach (var entity in RegisteredEntities)
             {
-                var playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
+				
+
+				var playerPosition = game.PlayerEntity.GetComponentOfType<Position>();
 				var position = entity.GetComponentOfType<Position>();
 				var distance = (position.Point.ToPoint() - playerPosition.Point.ToPoint()).ToVector2().Length();
 
@@ -1017,7 +1033,19 @@ namespace NamelessRogue.Engine.Systems.Ingame
 
                 var sprited = entity.GetComponentOfType<AnimatedSpriteObject>();
                 Point screenPoint = camera.PointToScreen(position.X, position.Y);
-                var spriteId = sprited;
+                if (screenPoint.X >= screen.Width || screenPoint.Y >= screen.Height || screenPoint.X < 0 || screenPoint.Y < 0)
+                {
+					continue;
+				}
+
+				var isVisible = screen.ScreenBuffer[screenPoint.X, screenPoint.Y].isVisible;
+
+                if (!isVisible)
+                {
+                    continue;
+                }
+
+				var spriteId = sprited;
                 int tileHeight = game.GetSettings().GetFontSizeZoomed();
                 int tileWidth = game.GetSettings().GetFontSizeZoomed();
 
