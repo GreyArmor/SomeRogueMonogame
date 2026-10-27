@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Input;
+using NamelessRogue.Engine.UI.GumScreens.Commands.MainMenu;
 using NamelessRogue.shell;
 
 namespace NamelessRogue.Engine.Systems.Ingame
@@ -48,6 +49,11 @@ namespace NamelessRogue.Engine.Systems.Ingame
 				{
 					switch (intent.Intention)
 					{
+						case IntentEnum.Escape:
+							namelessGame.Commander.EnqueueCommand(new CharacterStatsScreenBackCommand());
+							break;
+						default:
+							break;
 					}
 				}
 				inputComponent.Intents.Clear();

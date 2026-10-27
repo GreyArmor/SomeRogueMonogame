@@ -39,9 +39,16 @@ partial class CharacterStatsScreen : global::Gum.Forms.Controls.FrameworkElement
     public ContainerRuntime RightContainer { get; protected set; }
     public ContainerRuntime ArmorContainer { get; protected set; }
     public ContainerRuntime ResistancesContainer { get; protected set; }
+    public ContainerRuntime DamageContainer { get; protected set; }
     public StackPanel StackPanelInstance { get; protected set; }
+    public Label CharacterNameLabel { get; protected set; }
     public Label HealthLabel { get; protected set; }
     public Label EnergyLabel { get; protected set; }
+    public Label SpeedLevel { get; protected set; }
+    public Label MoveSpeedLabel { get; protected set; }
+    public Label NeuralLoadLabel { get; protected set; }
+    public Label MoneyLabel { get; protected set; }
+    public Label VisionRangeLabel { get; protected set; }
 
     public CharacterStatsScreen(InteractiveGue visual) : base(visual)
     {
@@ -60,9 +67,16 @@ partial class CharacterStatsScreen : global::Gum.Forms.Controls.FrameworkElement
         RightContainer = this.Visual?.GetGraphicalUiElementByName("RightContainer") as global::Gum.GueDeriving.ContainerRuntime;
         ArmorContainer = this.Visual?.GetGraphicalUiElementByName("ArmorContainer") as global::Gum.GueDeriving.ContainerRuntime;
         ResistancesContainer = this.Visual?.GetGraphicalUiElementByName("ResistancesContainer") as global::Gum.GueDeriving.ContainerRuntime;
+        DamageContainer = this.Visual?.GetGraphicalUiElementByName("DamageContainer") as global::Gum.GueDeriving.ContainerRuntime;
         StackPanelInstance = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<StackPanel>(this.Visual,"StackPanelInstance");
+        CharacterNameLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"CharacterNameLabel");
         HealthLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"HealthLabel");
         EnergyLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"EnergyLabel");
+        SpeedLevel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"SpeedLevel");
+        MoveSpeedLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"MoveSpeedLabel");
+        NeuralLoadLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"NeuralLoadLabel");
+        MoneyLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"MoneyLabel");
+        VisionRangeLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"VisionRangeLabel");
         CustomInitialize();
     }
     //Not assigning variables because Object Instantiation Type is set to By Name rather than Fully In Code

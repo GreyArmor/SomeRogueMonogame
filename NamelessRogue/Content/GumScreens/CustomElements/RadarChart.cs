@@ -1,38 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Gum.GueDeriving;
+﻿using Gum.GueDeriving;
 using Gum.Wireframe;
 using Microsoft.Xna.Framework;
+using SharpDX.DirectWrite;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Vector2 = System.Numerics.Vector2;
 
-//vibecoded
+//partially vibecoded
 public class RadarChart : ContainerRuntime
 {
 	readonly string[] _labels;
+	readonly List<TextRuntime> _labelTexts = new();
 	readonly float _radius;
 	readonly float _max;
 	readonly PolygonRuntime _dataShape;
 
-	public RadarChart(string[] labels, float radius = 120, float max = 100, int rings = 4)
+	readonly TextRuntime _title;
+	readonly float _inner;
+	public RadarChart(string title, string[] labels, float radius = 120, float max = 100,
+				  int rings = 4, float baseline = 20)
 	{
 		_labels = labels;
 		_radius = radius;
 		_max = max;
+		_inner = radius * baseline / max;      // radius where value 0 sits
 
 		// Container is a square centered on the chart
-		Width = Height = (radius + 50) * 2;
+		Width = (radius + 50) * 2;
+		Height = (radius + 50) * 2 + 30;
 		WidthUnits = HeightUnits = Gum.DataTypes.DimensionUnitType.Absolute;
 
-		// Grid rings
-		for (int r = 1; r <= rings; r++)
-			AddPolygon(Ring(radius * r / rings), new Color(255, 255, 255, 70), close: true);
+		Y += 15;
 
+		// Grid rings: ring 0 is the zero ring, the last ring is the max ring
+		for (int r = 0; r <= rings; r++)
+			AddPolygon(Ring(_inner + (radius - _inner) * r / rings),
+					   new Color(255, 255, 255, 70));
 		// Axes + labels
 		for (int i = 0; i < labels.Length; i++)
 		{
-			AddPolygon(new List<Vector2> { Vector2.Zero, Point(i, radius) },
-		   new Color(255, 255, 255, 70), close: false);
+			AddPolygon(new List<Vector2> { Point(i, _inner), Point(i, radius) },
+					   new Color(255, 255, 255, 70));
 
 			var label = new TextRuntime { Text = labels[i], Color = Color.White };
 			label.XUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
@@ -42,10 +52,20 @@ public class RadarChart : ContainerRuntime
 			var p = Point(i, radius + 22);
 			label.X = p.X; label.Y = p.Y;
 			Children.Add(label);
+			_labelTexts.Add(label);
 		}
 
 		// Data polygon (updated by SetValues)
-		_dataShape = AddPolygon(Ring(0), new Color(80, 170, 255), close: true);
+		_dataShape = AddPolygon(Ring(_inner), new Color(80, 170, 255));
+
+
+		_title = new TextRuntime { Text = title, Color = Color.White };
+		_title.XUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
+		_title.YUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
+		_title.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Center;
+		_title.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Center;
+		_title.Y = -(radius + 65);     // above the top axis label (which sits near radius + 22, two lines tall)
+		Children.Add(_title);
 	}
 	// Axis 0 points straight up, going clockwise
 	Vector2 Point(int i, float r)
@@ -60,27 +80,29 @@ public class RadarChart : ContainerRuntime
 		for (int i = 0; i < _labels.Length; i++) pts.Add(Point(i, r));
 		return pts;
 	}
-
+	// Value -> distance from center
+	float RadiusFor(float value) =>
+		_inner + (_radius - _inner) * MathHelper.Clamp(value / _max, 0, 1);
 	public void SetValues(float[] values)
 	{
 		var pts = new List<Vector2>();
 		for (int i = 0; i < values.Length; i++)
-			pts.Add(Point(i, _radius * MathHelper.Clamp(values[i] / _max, 0, 1)));
+		{
+			pts.Add(Point(i, RadiusFor(values[i])));
+			_labelTexts[i].Text = $"{_labels[i]}\n{values[i]:0}";
+		}
 
-		pts.Add(pts[0]);               // repeat first point to close
+		pts.Add(pts[0]);
 		_dataShape.SetPoints(pts);
 	}
 
-	PolygonRuntime AddPolygon(List<Vector2> pts, Color color, bool close)
+	PolygonRuntime AddPolygon(List<Vector2> pts, Color color)
 	{
 		var poly = new PolygonRuntime();
 		poly.XUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
 		poly.YUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
 		poly.Color = color;
-
-		if (close && pts.Count > 0)
-			pts = new List<Vector2>(pts) { pts[0] };   // repeat first point
-
+		pts = new List<Vector2>(pts) { pts[0] };
 		poly.SetPoints(pts);
 		Children.Add(poly);
 		return poly;

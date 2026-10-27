@@ -574,16 +574,19 @@ namespace NamelessRogue.Engine.Factories
 			}
 			else
 			{
-				var systems = new List<ISystem>();
-				systems.Add(new InputSystem(new CharacterstatsScreenItentTranslator(), game));
-				systems.Add(new CharactersStatsScreeIntentSystem());
-				systems.Add(new CharacterStatsScreenSystem());
-				systems.Add(new SoundPlaySystem());
-				var uiSystem = new UIRenderSystem(game);
 
 				var screen = new CharacterStatsScreen();
 				var viewModel = new CharacterStatsScreenViewModel(game, screen);
 				var gumUI = new GumUiRenderingSystem(game, worldGenContext, screen, viewModel);
+
+				var systems = new List<ISystem>();
+				systems.Add(new InputSystem(new CharacterstatsScreenItentTranslator(), game));
+				systems.Add(new CharactersStatsScreeIntentSystem());
+				systems.Add(new CharacterStatsScreenSystem(viewModel));
+				systems.Add(new SoundPlaySystem());
+				var uiSystem = new UIRenderSystem(game);
+
+				
               
 
 				CharacterStatsScreenContext = new GameContext(systems, new List<ISystem>() { uiSystem, gumUI }, new List<IBaseGuiScreen>(), "Stats", screen);
