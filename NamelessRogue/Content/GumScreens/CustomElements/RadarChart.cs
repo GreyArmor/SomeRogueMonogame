@@ -13,6 +13,7 @@ public class RadarChart : ContainerRuntime
 {
 	readonly string[] _labels;
 	readonly List<TextRuntime> _labelTexts = new();
+	readonly List<TextRuntime> _valueLabels = new();
 	readonly float _radius;
 	readonly float _max;
 	readonly PolygonRuntime _dataShape;
@@ -53,6 +54,17 @@ public class RadarChart : ContainerRuntime
 			label.X = p.X; label.Y = p.Y;
 			Children.Add(label);
 			_labelTexts.Add(label);
+
+			var valueLabel = new TextRuntime { Text = labels[i], Color = Color.White };
+			valueLabel.XUnits = Gum.Converters.GeneralUnitType.Percentage;
+			valueLabel.YUnits = Gum.Converters.GeneralUnitType.Percentage;
+			valueLabel.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Center;
+			valueLabel.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Bottom;
+			valueLabel.X = 50;
+			valueLabel.Y = 0;
+			label.Children.Add(valueLabel);
+			
+			_valueLabels.Add(label);
 		}
 
 		// Data polygon (updated by SetValues)
@@ -89,7 +101,7 @@ public class RadarChart : ContainerRuntime
 		for (int i = 0; i < values.Length; i++)
 		{
 			pts.Add(Point(i, RadiusFor(values[i])));
-			_labelTexts[i].Text = $"{_labels[i]}\n{values[i]:0}";
+			_valueLabels[i].Text = $"{values[i]:0}";
 		}
 
 		pts.Add(pts[0]);

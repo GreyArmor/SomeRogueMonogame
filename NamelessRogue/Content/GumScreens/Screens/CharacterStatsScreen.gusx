@@ -80,13 +80,13 @@
       <Value xsi:type="xsd:int">6</Value>
     </Variable>
     <Variable Type="float" Name="CharacterNameLabel.Y" SetsValue="true">
-      <Value xsi:type="xsd:float">0</Value>
+      <Value xsi:type="xsd:float">20</Value>
     </Variable>
     <Variable Type="VerticalAlignment" Name="CharacterNameLabel.YOrigin" SetsValue="true">
       <Value xsi:type="xsd:int">0</Value>
     </Variable>
     <Variable Type="PositionUnitType" Name="CharacterNameLabel.YUnits" SetsValue="true">
-      <Value xsi:type="xsd:int">1</Value>
+      <Value xsi:type="xsd:int">3</Value>
     </Variable>
     <Variable Type="float" Name="ContainerInstance.Height" SetsValue="true">
       <Value xsi:type="xsd:float">0</Value>
