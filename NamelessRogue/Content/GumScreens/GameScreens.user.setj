@@ -10,9 +10,12 @@
       "Screens/Neon/DemoScreenGum/DemoSettingsMenu/MenuItems/ButtonContainer",
       "Screens/CharacterStatsScreen",
       "Screens/CharacterStatsScreen/LeftContainer",
-      "Screens/CharacterStatsScreen/LeftContainer/StackPanelInstance",
-      "Screens/CharacterStatsScreen/LeftContainer/StackPanelInstance/EnergyLabel",
-      "Screens/CharacterStatsScreen/LeftContainer/StackPanelInstance/SpeedLevel",
+      "Screens/CharacterStatsScreen/LeftContainer/LeftContainerTop",
+      "Screens/CharacterStatsScreen/LeftContainer/LeftContainerTop/StackPanelInstance",
+      "Screens/CharacterStatsScreen/LeftContainer/LeftContainerTop/StackPanelInstance/EnergyLabel",
+      "Screens/CharacterStatsScreen/LeftContainer/LeftContainerTop/StackPanelInstance/SpeedLevel",
+      "Screens/CharacterStatsScreen/LeftContainer/LeftCountainerBot",
+      "Screens/CharacterStatsScreen/LeftContainer/LeftCountainerBot/AbilityListContainer",
       "Screens/CharacterStatsScreen/RightContainer",
       "Screens/CharacterStatsScreen/RightContainer/ArmorContainer",
       "Screens/CharacterStatsScreen/RightContainer/ResistancesContainer",
@@ -21,8 +24,7 @@
       "Screens/MainScreen/ContainerInstance",
       "Components",
       "Components/Neon",
-      "Behaviors",
-      "Behaviors/ButtonBehavior"
+      "Components/Neon/Controls"
     ]
   }
 }

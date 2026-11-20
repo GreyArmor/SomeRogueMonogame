@@ -1,6 +1,8 @@
 ﻿using Gum.Mvvm;
 using Microsoft.Xna.Framework;
+using NamelessRogue.Components.Neon.Controls;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
+using NamelessRogue.Engine.Components.Interaction;
 using NamelessRogue.Engine.Components.Stats;
 using NamelessRogue.Engine.Components.UI;
 using NamelessRogue.Engine.Systems.Ingame;
@@ -44,7 +46,8 @@ namespace NamelessRogue.Content.GumScreens.GumViewModels
 			var characterComponent = game.PlayerEntity.GetComponentOfType<Character>();
 			var description = game.PlayerEntity.GetComponentOfType<Description>();
 			var stats = CombatSystem.GetAccumulatedStats(game.PlayerEntity);
-
+			var abilities = game.PlayerEntity.GetComponentOfType<AbilityHolder>();
+			var abilityBinder = game.PlayerEntity.GetComponentOfType<AbilityBinder>();
 			var damageTypes = Enum.GetValues(typeof(DamageType));
 			var labels = Enum.GetNames(typeof(DamageType)).ToArray();
 			var values = labels.Select(x => 0f).ToArray();
@@ -80,6 +83,21 @@ namespace NamelessRogue.Content.GumScreens.GumViewModels
 			screen.MoveSpeedLabel.Text = $@"Movement speed:{stats.MovementSpeed.Value}";
 			screen.NeuralLoadLabel.Text = $@"Neural load:{stats.NeuralLoad.Value}";
 			screen.VisionRangeLabel.Text = $@"Vision range:{stats.VisionRange.Value}";
+
+			screen.AbilityItemsControlInstance.Items.Clear();
+			int abilityIndex = 0;
+			foreach (var ability in abilities.Abilities)
+			{
+				var stackPanel = new StackPanel();
+				stackPanel.Orientation = Gum.Forms.Controls.Orientation.Horizontal;
+				stackPanel.AddChild(new Label() { Text = $@"{abilityIndex})" });
+				var abilityDesc = ability.GetComponentOfType<Description>();
+				var button = new Button();
+				button.Text = abilityDesc.Name;
+				stackPanel.AddChild(button);
+				screen.AbilityItemsControlInstance.Items.Add(stackPanel);
+				abilityIndex++;
+			}
 		}
 	}
 }

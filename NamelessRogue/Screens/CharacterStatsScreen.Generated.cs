@@ -40,7 +40,6 @@ partial class CharacterStatsScreen : global::Gum.Forms.Controls.FrameworkElement
     public ContainerRuntime ArmorContainer { get; protected set; }
     public ContainerRuntime ResistancesContainer { get; protected set; }
     public ContainerRuntime DamageContainer { get; protected set; }
-    public StackPanel StackPanelInstance { get; protected set; }
     public Label CharacterNameLabel { get; protected set; }
     public Label HealthLabel { get; protected set; }
     public Label EnergyLabel { get; protected set; }
@@ -49,6 +48,12 @@ partial class CharacterStatsScreen : global::Gum.Forms.Controls.FrameworkElement
     public Label NeuralLoadLabel { get; protected set; }
     public Label MoneyLabel { get; protected set; }
     public Label VisionRangeLabel { get; protected set; }
+    public ContainerRuntime LeftContainerTop { get; protected set; }
+    public StackPanel StackPanelInstance { get; protected set; }
+    public ContainerRuntime LeftCountainerBot { get; protected set; }
+    public ContainerRuntime AbilityListContainer { get; protected set; }
+    public ItemsControl AbilityItemsControlInstance { get; protected set; }
+    public ContainerRuntime AbilityBindingStack { get; protected set; }
 
     public CharacterStatsScreen(InteractiveGue visual) : base(visual)
     {
@@ -68,7 +73,6 @@ partial class CharacterStatsScreen : global::Gum.Forms.Controls.FrameworkElement
         ArmorContainer = this.Visual?.GetGraphicalUiElementByName("ArmorContainer") as global::Gum.GueDeriving.ContainerRuntime;
         ResistancesContainer = this.Visual?.GetGraphicalUiElementByName("ResistancesContainer") as global::Gum.GueDeriving.ContainerRuntime;
         DamageContainer = this.Visual?.GetGraphicalUiElementByName("DamageContainer") as global::Gum.GueDeriving.ContainerRuntime;
-        StackPanelInstance = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<StackPanel>(this.Visual,"StackPanelInstance");
         CharacterNameLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"CharacterNameLabel");
         HealthLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"HealthLabel");
         EnergyLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"EnergyLabel");
@@ -77,6 +81,12 @@ partial class CharacterStatsScreen : global::Gum.Forms.Controls.FrameworkElement
         NeuralLoadLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"NeuralLoadLabel");
         MoneyLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"MoneyLabel");
         VisionRangeLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"VisionRangeLabel");
+        LeftContainerTop = this.Visual?.GetGraphicalUiElementByName("LeftContainerTop") as global::Gum.GueDeriving.ContainerRuntime;
+        StackPanelInstance = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<StackPanel>(this.Visual,"StackPanelInstance");
+        LeftCountainerBot = this.Visual?.GetGraphicalUiElementByName("LeftCountainerBot") as global::Gum.GueDeriving.ContainerRuntime;
+        AbilityListContainer = this.Visual?.GetGraphicalUiElementByName("AbilityListContainer") as global::Gum.GueDeriving.ContainerRuntime;
+        AbilityItemsControlInstance = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<ItemsControl>(this.Visual,"AbilityItemsControlInstance");
+        AbilityBindingStack = this.Visual?.GetGraphicalUiElementByName("AbilityBindingStack") as global::Gum.GueDeriving.ContainerRuntime;
         CustomInitialize();
     }
     //Not assigning variables because Object Instantiation Type is set to By Name rather than Fully In Code

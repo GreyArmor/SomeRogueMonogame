@@ -9,6 +9,8 @@ namespace NamelessRogue.Engine.Components.ItemComponents
         Consumable,
         Supplies,
         Ammo,
+        Data,
+        Cyberware,
         Misc,
     }
 

@@ -3,6 +3,75 @@
   <Name>CharacterStatsScreen</Name>
   <State>
     <Name>Default</Name>
+    <Variable Type="float" Name="AbilityBindingStack.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">40</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="AbilityBindingStack.HeightUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="string" Name="AbilityBindingStack.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">LeftCountainerBot</Value>
+    </Variable>
+    <Variable Type="float" Name="AbilityBindingStack.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">100</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="AbilityBindingStack.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="float" Name="AbilityBindingStack.X" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="AbilityBindingStack.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="AbilityBindingStack.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="float" Name="AbilityBindingStack.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="AbilityBindingStack.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="AbilityBindingStack.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">5</Value>
+    </Variable>
+    <Variable Type="float" Name="AbilityItemsControlInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">100</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="AbilityItemsControlInstance.HeightUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="string" Name="AbilityItemsControlInstance.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">AbilityListContainer</Value>
+    </Variable>
+    <Variable Type="float" Name="AbilityItemsControlInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">100</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="AbilityItemsControlInstance.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="float" Name="AbilityItemsControlInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="float" Name="AbilityItemsControlInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="float" Name="AbilityListContainer.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">60</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="AbilityListContainer.HeightUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="string" Name="AbilityListContainer.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">LeftCountainerBot</Value>
+    </Variable>
+    <Variable Type="float" Name="AbilityListContainer.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">100</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="AbilityListContainer.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
     <Variable Type="float" Name="ArmorContainer.Height" SetsValue="true">
       <Value xsi:type="xsd:float">50</Value>
     </Variable>
@@ -40,7 +109,7 @@
       <Value xsi:type="xsd:float">1</Value>
     </Variable>
     <Variable Type="float" Name="CharacterNameLabel.Height" SetsValue="true">
-      <Value xsi:type="xsd:float">20</Value>
+      <Value xsi:type="xsd:float">10</Value>
     </Variable>
     <Variable Type="DimensionUnitType" Name="CharacterNameLabel.HeightUnits" SetsValue="true">
       <Value xsi:type="xsd:int">4</Value>
@@ -80,7 +149,7 @@
       <Value xsi:type="xsd:int">6</Value>
     </Variable>
     <Variable Type="float" Name="CharacterNameLabel.Y" SetsValue="true">
-      <Value xsi:type="xsd:float">20</Value>
+      <Value xsi:type="xsd:float">5</Value>
     </Variable>
     <Variable Type="VerticalAlignment" Name="CharacterNameLabel.YOrigin" SetsValue="true">
       <Value xsi:type="xsd:int">0</Value>
@@ -155,7 +224,7 @@
       <Value xsi:type="xsd:float">1</Value>
     </Variable>
     <Variable Type="float" Name="EnergyLabel.Height" SetsValue="true">
-      <Value xsi:type="xsd:float">20</Value>
+      <Value xsi:type="xsd:float">10</Value>
     </Variable>
     <Variable Type="DimensionUnitType" Name="EnergyLabel.HeightUnits" SetsValue="true">
       <Value xsi:type="xsd:int">4</Value>
@@ -203,7 +272,7 @@
       <Value xsi:type="xsd:float">1</Value>
     </Variable>
     <Variable Type="float" Name="HealthLabel.Height" SetsValue="true">
-      <Value xsi:type="xsd:float">20</Value>
+      <Value xsi:type="xsd:float">10</Value>
     </Variable>
     <Variable Type="DimensionUnitType" Name="HealthLabel.HeightUnits" SetsValue="true">
       <Value xsi:type="xsd:int">4</Value>
@@ -242,7 +311,7 @@
       <Value xsi:type="xsd:int">6</Value>
     </Variable>
     <Variable Type="float" Name="HealthLabel.Y" SetsValue="true">
-      <Value xsi:type="xsd:float">0</Value>
+      <Value xsi:type="xsd:float">-9</Value>
     </Variable>
     <Variable Type="VerticalAlignment" Name="HealthLabel.YOrigin" SetsValue="true">
       <Value xsi:type="xsd:int">0</Value>
@@ -280,11 +349,59 @@
     <Variable Type="PositionUnitType" Name="LeftContainer.YUnits" SetsValue="true">
       <Value xsi:type="xsd:int">7</Value>
     </Variable>
+    <Variable Type="float" Name="LeftContainerTop.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="LeftContainerTop.HeightUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="string" Name="LeftContainerTop.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">LeftContainer</Value>
+    </Variable>
+    <Variable Type="float" Name="LeftContainerTop.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">100</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="LeftContainerTop.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="float" Name="LeftCountainerBot.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="LeftCountainerBot.HeightUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="string" Name="LeftCountainerBot.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">LeftContainer</Value>
+    </Variable>
+    <Variable Type="float" Name="LeftCountainerBot.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">100</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="LeftCountainerBot.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="float" Name="LeftCountainerBot.X" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="LeftCountainerBot.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="LeftCountainerBot.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="float" Name="LeftCountainerBot.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="LeftCountainerBot.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="LeftCountainerBot.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">5</Value>
+    </Variable>
     <Variable Type="float" Name="MoneyLabel.FontScale" SetsValue="true">
       <Value xsi:type="xsd:float">1</Value>
     </Variable>
     <Variable Type="float" Name="MoneyLabel.Height" SetsValue="true">
-      <Value xsi:type="xsd:float">20</Value>
+      <Value xsi:type="xsd:float">10</Value>
     </Variable>
     <Variable Type="DimensionUnitType" Name="MoneyLabel.HeightUnits" SetsValue="true">
       <Value xsi:type="xsd:int">4</Value>
@@ -336,7 +453,7 @@
       <Value xsi:type="xsd:float">1</Value>
     </Variable>
     <Variable Type="float" Name="MoveSpeedLabel.Height" SetsValue="true">
-      <Value xsi:type="xsd:float">20</Value>
+      <Value xsi:type="xsd:float">10</Value>
     </Variable>
     <Variable Type="DimensionUnitType" Name="MoveSpeedLabel.HeightUnits" SetsValue="true">
       <Value xsi:type="xsd:int">4</Value>
@@ -388,7 +505,7 @@
       <Value xsi:type="xsd:float">1</Value>
     </Variable>
     <Variable Type="float" Name="NeuralLoadLabel.Height" SetsValue="true">
-      <Value xsi:type="xsd:float">20</Value>
+      <Value xsi:type="xsd:float">10</Value>
     </Variable>
     <Variable Type="DimensionUnitType" Name="NeuralLoadLabel.HeightUnits" SetsValue="true">
       <Value xsi:type="xsd:int">4</Value>
@@ -503,7 +620,7 @@
       <Value xsi:type="xsd:float">1</Value>
     </Variable>
     <Variable Type="float" Name="SpeedLevel.Height" SetsValue="true">
-      <Value xsi:type="xsd:float">20</Value>
+      <Value xsi:type="xsd:float">10</Value>
     </Variable>
     <Variable Type="DimensionUnitType" Name="SpeedLevel.HeightUnits" SetsValue="true">
       <Value xsi:type="xsd:int">4</Value>
@@ -558,7 +675,7 @@
       <Value xsi:type="xsd:int">1</Value>
     </Variable>
     <Variable Type="string" Name="StackPanelInstance.Parent" SetsValue="true">
-      <Value xsi:type="xsd:string">LeftContainer</Value>
+      <Value xsi:type="xsd:string">LeftContainerTop</Value>
     </Variable>
     <Variable Type="float" Name="StackPanelInstance.Width" SetsValue="true">
       <Value xsi:type="xsd:float">100</Value>
@@ -570,7 +687,7 @@
       <Value xsi:type="xsd:float">1</Value>
     </Variable>
     <Variable Type="float" Name="VisionRangeLabel.Height" SetsValue="true">
-      <Value xsi:type="xsd:float">20</Value>
+      <Value xsi:type="xsd:float">10</Value>
     </Variable>
     <Variable Type="DimensionUnitType" Name="VisionRangeLabel.HeightUnits" SetsValue="true">
       <Value xsi:type="xsd:int">4</Value>
@@ -625,7 +742,6 @@
   <Instance Name="ArmorContainer" BaseType="Container" />
   <Instance Name="ResistancesContainer" BaseType="Container" />
   <Instance Name="DamageContainer" BaseType="Container" />
-  <Instance Name="StackPanelInstance" BaseType="Neon/Controls/StackPanel" />
   <Instance Name="CharacterNameLabel" BaseType="Neon/Controls/Label" />
   <Instance Name="HealthLabel" BaseType="Neon/Controls/Label" />
   <Instance Name="EnergyLabel" BaseType="Neon/Controls/Label" />
@@ -634,5 +750,11 @@
   <Instance Name="NeuralLoadLabel" BaseType="Neon/Controls/Label" />
   <Instance Name="MoneyLabel" BaseType="Neon/Controls/Label" />
   <Instance Name="VisionRangeLabel" BaseType="Neon/Controls/Label" />
+  <Instance Name="LeftContainerTop" BaseType="Container" />
+  <Instance Name="StackPanelInstance" BaseType="Neon/Controls/StackPanel" />
+  <Instance Name="LeftCountainerBot" BaseType="Container" />
+  <Instance Name="AbilityListContainer" BaseType="Container" />
+  <Instance Name="AbilityItemsControlInstance" BaseType="Neon/Controls/ItemsControl" />
+  <Instance Name="AbilityBindingStack" BaseType="Container" />
   <Behaviors />
 </ScreenSave>
