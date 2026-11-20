@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+﻿
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Particles.Modifiers;
 using NamelessRogue.Engine.Abstraction;

@@ -70,7 +70,7 @@ namespace NamelessRogue.Engine.Systems.PickUpItems
 
             while (game.Commander.DequeueCommand(out GenerateWorldFinishedCommand command))
             {
-                SaveManager.SaveWorldTemplate("Worlds", @$"{command.WorldTemplate.Name}.nrwf", command.WorldTemplate);
+                // SaveManager.SaveWorldTemplate("Worlds", @$"{command.WorldTemplate.Name}.nrwf", command.WorldTemplate); // FlatSharp removed
                 game.ContextToSwitch = ContextFactory.GetWorldGenContext(game);
             }
         }

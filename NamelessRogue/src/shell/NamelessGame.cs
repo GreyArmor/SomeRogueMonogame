@@ -520,7 +520,7 @@ namespace NamelessRogue.shell
 			if (saveScheduled)
 			{
 				saveScheduled = false;
-				SaveManager.SaveGame("", this);
+				// SaveManager.SaveGame("", this); // FlatSharp removed
 			}
 
 			if (loadScheduled)
@@ -532,7 +532,7 @@ namespace NamelessRogue.shell
 				ContextFactory.ReleaseAllContexts(this);
 				ContextFactory.InitAllContexts(this);
 
-				SaveManager.LoadGame("", this);
+				// SaveManager.LoadGame("", this); // FlatSharp removed
 
 				ContextToSwitch = ContextFactory.GetIngameContext(this);
 				skipNextFrame = true;

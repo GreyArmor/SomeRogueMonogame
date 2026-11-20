@@ -1,7 +1,7 @@
 ﻿using AStarNavigator;
 using AStarNavigator.Algorithms;
 using AStarNavigator.Providers;
-using Microsoft.CodeAnalysis;
+
 using Microsoft.Xna.Framework;
 
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;

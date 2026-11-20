@@ -42,7 +42,7 @@
   <ItemGroup>
     <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="FbxSharp" Version="0.9.0" />
-    <PackageReference Include="FlatSharp" Version="6.3.5" />
+
     <PackageReference Include="Gum.MonoGame" Version="2026.9.2.1" />
     <PackageReference Include="ImGui.NET" Version="1.89.4" />
     <PackageReference Include="KernSmith.GumCommon" Version="2026.9.2.1" />

@@ -17,7 +17,7 @@ using RogueSharp;
 using NamelessRogue.Engine.Components.ItemComponents;
 using NamelessRogue.Engine.Infrastructure;
 using NamelessRogue.Engine.Systems;
-using Microsoft.CodeAnalysis.Options;
+
 using NamelessRogue.Engine.Components.Stats;
 
 namespace NamelessRogue.Engine.UI

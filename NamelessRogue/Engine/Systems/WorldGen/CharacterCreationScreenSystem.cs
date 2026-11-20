@@ -29,7 +29,7 @@ namespace NamelessRogue.Engine.Systems.WorldGen
             while (namelessGame.Commander.DequeueCommand(out StartNewGameInAWorldCommand command))
             {
                 var worldFile = command.WorldPath;
-                currentWorldTemplate = SaveManager.LoadWorldTemplate("Worlds", Path.GetFileName(worldFile));
+                // currentWorldTemplate = SaveManager.LoadWorldTemplate("Worlds", Path.GetFileName(worldFile)); // FlatSharp removed
             }
 
             while (namelessGame.Commander.DequeueCommand(out StartNewGameWithThisCharacterCommand command))

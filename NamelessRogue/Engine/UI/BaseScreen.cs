@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.Interaction;

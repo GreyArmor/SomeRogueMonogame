@@ -1,5 +1,4 @@
 using Assimp;
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Abstraction;
 using NamelessRogue.Engine.Components.AI.NonPlayerCharacter;
