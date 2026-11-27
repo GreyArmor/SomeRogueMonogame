@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.4.33205.214
+# Visual Studio Version 18
+VisualStudioVersion = 18.12.12412.261 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AstarNavigatorNetCore", "AstarNavigatorNetCore\AstarNavigatorNetCore.csproj", "{8280F796-C9CF-4188-842E-84662D1FB266}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamelessRogueDataEditor", "NamelessRogueDataEditor\NamelessRogueDataEditor.csproj", "{CD2754CB-D5B8-4407-A738-BE62F118256D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamelessRogueEditorDataTypes", "NamelessRogueEditorDataTypes\NamelessRogueEditorDataTypes.csproj", "{9516E89B-8879-4C37-8737-6B34C8494287}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamelessRogue.Serialization", "NamelessRogue.Serialization\NamelessRogue.Serialization.csproj", "{9B5116C5-955A-5E00-C5B6-EF9B019ADF2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{9516E89B-8879-4C37-8737-6B34C8494287}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9516E89B-8879-4C37-8737-6B34C8494287}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9516E89B-8879-4C37-8737-6B34C8494287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B5116C5-955A-5E00-C5B6-EF9B019ADF2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B5116C5-955A-5E00-C5B6-EF9B019ADF2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B5116C5-955A-5E00-C5B6-EF9B019ADF2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B5116C5-955A-5E00-C5B6-EF9B019ADF2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
