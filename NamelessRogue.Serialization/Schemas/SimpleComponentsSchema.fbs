@@ -1,7 +1,16 @@
-// FlatSharp 7.9.0 schema for Phase 2 - Simple Components (Scalar + String + Enum)
+﻿// FlatSharp 7.9.0 schema for Phase 2 - Simple Components (Scalar + String + Enum)
 attribute "fs_serializer";
 
 namespace NamelessRogue.Serialization.Schemas;
+
+// ============================================================================
+// Entity Reference (used by multiple schemas)
+// ============================================================================
+
+table EntityRef (fs_serializer) {
+    EntityIndex: ulong;
+    ComponentTypeHash: ulong;
+}
 
 // ============================================================================
 // Enums (Phase 2)
@@ -108,7 +117,7 @@ table Consumable {
 	BuffIds: [string];
 }
 
-table WeaponStats {
+table WeaponStats (fs_serializer) {
 	MinimumDamage: int;
 	MaximumDamage: int;
 	Range: int;
@@ -119,12 +128,12 @@ table WeaponStats {
 	CurrentAmmo: int;
 }
 
-table ArmorStats {
+table ArmorStats (fs_serializer) {
 	DamageType: DamageType;
 	Value: SimpleStat;
 }
 
-table ResistanceStat {
+table ResistanceStat (fs_serializer) {
 	DamageType: DamageType;
 	Value: SimpleStat;
 }
@@ -262,3 +271,154 @@ table WorldMapCameraComponent {
 	PositionY: float;
 	Zoom: int;
 }
+// ============================================================================
+// Phase 3 - Collection Components (List, Dictionary, Nested)
+// ============================================================================
+
+enum QuestStatus : int {
+    InProgress = 0,
+    Finished = 1,
+    Failed = 2,
+}
+
+enum QuestType : int {
+    None = 0,
+}
+
+table QuestNode (fs_serializer) {
+    Id: string;
+    Name: string;
+    DescriptionText: string;
+    ProgressCondition: QuestType;
+    ChildNodes: [QuestNode];
+    Items: [EntityRef];
+    NPCs: [EntityRef];
+    Locations: [EntityRef];
+}
+
+table Quest (fs_serializer) {
+    Status: QuestStatus;
+    Milestones: [string];
+    RootNode: QuestNode;
+    CurrentNode: QuestNode;
+}
+
+table DroppedItem (fs_serializer) {
+    ItemId: string;
+    Probability: int;
+}
+
+enum Slot : int {
+    Head = 0,
+    Face = 1,
+    Torso = 2,
+    Back = 3,
+    LefHand = 4,
+    RightHand = 5,
+    Hands = 6,
+    Legs = 7,
+    Feet = 8,
+}
+
+table EquipmentSlot (fs_serializer) {
+    SlotType: Slot;
+    EquipmentEntityRef: EntityRef;
+}
+
+table CharacterStatsCollection (fs_serializer) {
+    Health: SimpleStat;
+    Energy: SimpleStat;
+    Speed: SimpleStat;
+    MovementSpeed: SimpleStat;
+    VisionRange: SimpleStat;
+    Weight: SimpleStat;
+    NeuralLoad: SimpleStat;
+    Money: int;
+    Immobile: bool;
+    FactionId: string;
+    WeaponStatsList: [WeaponStats];
+    ResistancesList: [ResistanceStat];
+    ArmorList: [ArmorStats];
+}
+
+table AssociatedBuffsCollection (fs_serializer) {
+    BuffIds: [string];
+}
+
+table ItemsHolderCollection (fs_serializer) {
+    ItemRefs: [EntityRef];
+}
+
+table EquipmentSlotsCollection (fs_serializer) {
+    Slots: [EquipmentSlot];
+    HolderRef: EntityRef;
+}
+
+table EquipmentCollection (fs_serializer) {
+    PossibleSlots: [Slot];
+}
+
+table QuestHolderCollection (fs_serializer) {
+    Quests: [Quest];
+}
+
+table GroupCollection (fs_serializer) {
+    TextId: string;
+    EntitiesInGroup: [EntityRef];
+    FormationMaintained: bool;
+    FlagbearerId: EntityRef;
+}
+
+table GroupTagCollection (fs_serializer) {
+    GroupId: string;
+    IsInFormation: bool;
+    FormationPositionDisplacementX: int;
+    FormationPositionDisplacementY: int;
+}
+
+table ModifiersCollectionTable (fs_serializer) {
+    AccumulatorRef: EntityRef;
+    ModifierEntities: [EntityRef];
+}
+
+table TimedModifierTable (fs_serializer) {
+    TurnsToLast: int;
+}
+
+table ModifierComponentTable (fs_serializer) {
+    // Marker component - no fields
+}
+
+table BuildingCollection (fs_serializer) {
+    BuildingParts: [EntityRef];
+}
+
+table DroppedItemsComponentTable (fs_serializer) {
+    DroppedItems: [DroppedItem];
+}
+
+table CharacterCollection (fs_serializer) {
+    FactionId: string;
+    FactionRelationsKeys: [string];
+    FactionRelationsValues: [int];
+}
+
+// FlatSharp 7.9.0 schema for NamelessRogue serialization
+attribute "fs_serializer";
+
+namespace NamelessRogue.Serialization.Schemas;
+
+table SerializedEntity (fs_serializer) {
+    EntityIdLow: ulong;
+    EntityIdHigh: ulong;
+    Components: [EntityRef];
+}
+
+table SerializedGame (fs_serializer) {
+    SchemaVersion: uint;
+    Seed: int;
+    Turn: int;
+    Entities: [SerializedEntity];
+}
+
+

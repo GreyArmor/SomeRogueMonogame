@@ -1,0 +1,140 @@
+﻿    private static void MapCharacterStats(object table, Component component, SerializationContext context)
+    {
+        var t = (Schemas.CharacterStatsCollection)table;
+        var cs = (NamelessRogue.Engine.Components.Stats.CharacterStats)component;
+        cs.Health = new NamelessRogue.Engine.Components.Stats.SimpleStat(t.Health.Value, t.Health.MinValue, t.Health.MaxValue);
+        cs.Energy = new NamelessRogue.Engine.Components.Stats.SimpleStat(t.Energy.Value, t.Energy.MinValue, t.Energy.MaxValue);
+        cs.Speed = new NamelessRogue.Engine.Components.Stats.SimpleStat(t.Speed.Value, t.Speed.MinValue, t.Speed.MaxValue);
+        cs.MovementSpeed = new NamelessRogue.Engine.Components.Stats.SimpleStat(t.MovementSpeed.Value, t.MovementSpeed.MinValue, t.MovementSpeed.MaxValue);
+        cs.VisionRange = new NamelessRogue.Engine.Components.Stats.SimpleStat(t.VisionRange.Value, t.VisionRange.MinValue, t.VisionRange.MaxValue);
+        cs.Weight = new NamelessRogue.Engine.Components.Stats.SimpleStat(t.Weight.Value, t.Weight.MinValue, t.Weight.MaxValue);
+        cs.NeuralLoad = new NamelessRogue.Engine.Components.Stats.SimpleStat(t.NeuralLoad.Value, t.NeuralLoad.MinValue, t.NeuralLoad.MaxValue);
+        cs.Money = t.Money; cs.Immobile = t.Immobile; cs.FactionId = t.FactionId;
+        cs.WeaponStats.Clear();
+        foreach (var ws in t.WeaponStatsList)
+            cs.WeaponStats.Add(new NamelessRogue.Engine.Components.ItemComponents.WeaponStats { MinimumDamage = ws.MinimumDamage, MaximumDamage = ws.MaximumDamage, Range = ws.Range, AttackType = (NamelessRogue.Engine.Components.ItemComponents.AttackType)ws.AttackType, DamageType = (NamelessRogue.Engine.Components.Stats.DamageType)ws.DamageType, AmmoType = (NamelessRogue.Engine.Components.ItemComponents.AmmoType)ws.AmmoType, AmmoInClip = ws.AmmoInClip, CurrentAmmo = ws.CurrentAmmo });
+        cs.Resistances.Clear();
+        foreach (var rs in t.ResistancesList)
+            cs.Resistances.Add(new NamelessRogue.Engine.Components.Stats.ResistanceStat { DamageType = (NamelessRogue.Engine.Components.Stats.DamageType)rs.DamageType, Value = new NamelessRogue.Engine.Components.Stats.SimpleStat(rs.Value.Value, rs.Value.MinValue, rs.Value.MaxValue) });
+        cs.Armor.Clear();
+        foreach (var as2 in t.ArmorList)
+            cs.Armor.Add(new NamelessRogue.Engine.Components.ItemComponents.ArmorStats { DamageType = (NamelessRogue.Engine.Components.Stats.DamageType)as2.DamageType, Value = new NamelessRogue.Engine.Components.Stats.SimpleStat(as2.Value.Value, as2.Value.MinValue, as2.Value.MaxValue) });
+    }
+
+    private static void MapAssociatedBuffs(object table, Component component)
+    {
+        var t = (Schemas.AssociatedBuffsCollection)table;
+        var ab = (AssociatedBuffs)component;
+        ab.BuffIds.Clear();
+        foreach (var id in t.BuffIds) ab.BuffIds.Add(id);
+    }
+
+    private static void MapItemsHolder(object table, Component component, SerializationContext context)
+    {
+        var ih = (ItemsHolder)component;
+        ih.Items.Clear();
+    }
+
+    private static void MapEquipmentSlots(object table, Component component, SerializationContext context)
+    {
+        var t = (Schemas.EquipmentSlotsCollection)table;
+        var es = (EquipmentSlots)component;
+        es.Slots.Clear();
+        foreach (var slot in t.Slots)
+            es.Slots.Add(new Tuple<Slot, EquipmentSlot>((Slot)slot.SlotType, new EquipmentSlot((Slot)slot.SlotType)));
+    }
+
+    private static void MapEquipment(object table, Component component)
+    {
+        var t = (Schemas.EquipmentCollection)table;
+        var eq = (Equipment)component;
+        eq.PossibleSlots.Clear();
+        foreach (var slot in t.PossibleSlots) eq.PossibleSlots.Add((Slot)slot);
+    }
+
+    private static void MapQuestHolder(object table, Component component, SerializationContext context)
+    {
+        var t = (Schemas.QuestHolderCollection)table;
+        var qh = (QuestHolder)component;
+        qh.Quests = new List<Quest>();
+        foreach (var q in t.Quests)
+        {
+            var quest = new Quest { Status = (QuestStatus)q.Status, Milestones = new List<string>(q.Milestones), RooNode = DeserializeQuestNode(q.RootNode, context), CurrentNode = DeserializeQuestNode(q.CurrentNode, context) };
+            qh.Quests.Add(quest);
+        }
+    }
+
+    private static QuestNode DeserializeQuestNode(Schemas.QuestNode tableNode, SerializationContext context)
+    {
+        if (tableNode == null) return null;
+        var node = new QuestNode { Id = tableNode.Id, Name = tableNode.Name, Description = tableNode.Description, ProgressCondition = (QuestType)tableNode.ProgressCondition, ChildNodes = new List<QuestNode>(), Items = new List<Entity>(), NPCs = new List<Entity>(), Locations = new List<Entity>() };
+        foreach (var child in tableNode.ChildNodes) node.ChildNodes.Add(DeserializeQuestNode(child, context));
+        foreach (var ref2 in tableNode.Items) { var e = ResolveEntityReference(ref2, context); if (e != null) node.Items.Add(e); }
+        foreach (var ref2 in tableNode.NPCs) { var e = ResolveEntityReference(ref2, context); if (e != null) node.NPCs.Add(e); }
+        foreach (var ref2 in tableNode.Locations) { var e = ResolveEntityReference(ref2, context); if (e != null) node.Locations.Add(e); }
+        return node;
+    }
+
+    private static void MapGroup(object table, Component component, SerializationContext context)
+    {
+        var t = (Schemas.GroupCollection)table;
+        var g = (Group)component;
+        g.TextId = t.TextId; g.FormationMaintained = t.FormationMaintained;
+        g.EntitiesInGroup.Clear();
+        foreach (var ref2 in t.EntitiesInGroup) { var e = ResolveEntityReference(ref2, context); if (e != null) g.EntitiesInGroup.Add(e); }
+        if (t.FlagbearerId.EntityIndex > 0) { var fb = ResolveEntityReference(t.FlagbearerId, context); if (fb != null) g.FlagbearerId = fb; }
+    }
+
+    private static void MapGroupTag(object table, Component component)
+    {
+        var t = (Schemas.GroupTagCollection)table;
+        var gt = (GroupTag)component;
+        gt.GroupId = t.GroupId; gt.IsInFormation = t.IsInFormation;
+        gt.FormationPositionDisplacement = new Microsoft.Xna.Framework.Point(t.FormationPositionDisplacementX, t.FormationPositionDisplacementY);
+    }
+
+    private static void MapModifiersCollection(object table, Component component, SerializationContext context)
+    {
+        var t = (Schemas.ModifiersCollectionTable)table;
+        var mc = (ModifiersCollection)component;
+        if (t.AccumulatorRef.EntityIndex > 0) { var a = ResolveEntityReference(t.AccumulatorRef, context); if (a != null) mc.Accumulator = a; }
+        mc.ModifierEntities.Clear();
+        foreach (var ref2 in t.ModifierEntities) { var e = ResolveEntityReference(ref2, context); if (e != null) mc.ModifierEntities.Add(e); }
+    }
+
+    private static void MapTimedModifier(object table, Component component)
+    {
+        var t = (Schemas.TimedModifierTable)table;
+        var tm = (TimedModifier)component;
+        tm.TurnsToLast = t.TurnsToLast;
+    }
+
+    private static void MapModifierComponent(object table, Component component) { }
+
+    private static void MapBuilding(object table, Component component, SerializationContext context)
+    {
+        var t = (Schemas.BuildingCollection)table;
+        var b = (Building)component;
+        var parts = new List<Entity>();
+        foreach (var ref2 in t.BuildingParts) { var e = ResolveEntityReference(ref2, context); if (e != null) parts.Add(e); }
+        b.setBuildingParts(parts);
+    }
+
+    private static void MapDroppedItemsComponent(object table, Component component)
+    {
+        var t = (Schemas.DroppedItemsComponentTable)table;
+        var dic = (DroppedItemsComponent)component;
+        var items = t.DroppedItems.Select(di => new DroppedItem { ItemId = di.ItemId, Probability = di.Probability }).ToList();
+        var field = typeof(DroppedItemsComponent).GetField("_droppedItems", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (field != null) field.SetValue(dic, items);
+    }
+
+    private static void MapCharacter(object table, Component component)
+    {
+        var t = (Schemas.CharacterCollection)table;
+        var c = (Character)component;
+        c.FactionId = t.FactionId;
+        c.FactionRelations = new Dictionary<string, int>();
+        for (int i = 0; i < t.FactionRelationsKeys.Count; i++)
+            c.FactionRelations[t.FactionRelationsKeys[i]] = t.FactionRelationsValues[i];
+    }

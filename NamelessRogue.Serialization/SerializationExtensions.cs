@@ -29,7 +29,8 @@ public static class SerializationExtensions
     {
         if (component is Component comp)
         {
-            return ComponentMapper.SerializeComponent(comp);
+            var context = new SerializationContext();
+            return ComponentMapper.SerializeComponent(comp, context);
         }
         return null;
     }
@@ -41,11 +42,10 @@ public static class SerializationExtensions
     {
         if (data == null)
             throw new ArgumentNullException(nameof(data));
-
-        var deserialized = ComponentMapper.DeserializeComponent(data, component.GetType());
+        var context = new SerializationContext();
+        var deserialized = ComponentMapper.DeserializeComponent(data, component.GetType(), context);
         if (deserialized != null)
         {
-            // Copy deserialized property values back to the original component
             CopyComponentState(deserialized, component);
         }
     }
@@ -60,7 +60,7 @@ public static class SerializationExtensions
         if (context == null)
             throw new ArgumentNullException(nameof(data));
 
-        var deserialized = ComponentMapper.DeserializeComponent(data, component.GetType());
+        var deserialized = ComponentMapper.DeserializeComponent(data, component.GetType(), context);
         if (deserialized != null)
         {
             CopyComponentState(deserialized, component);
