@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace NamelessRogue.Engine.Components.AI.Pathfinder
 	{
 		Start, Wait, Move, WaitForCrossing, CrossingMove, Finished
 	}
-	internal class FlowMoveComponent : Component
+	public class FlowMoveComponent : Component
 	{
 		private int currentPathIndex;
 

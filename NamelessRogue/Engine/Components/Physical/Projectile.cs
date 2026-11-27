@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using NamelessRogue.Engine.Utility;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Components.Physical
 {
-    internal class ProjectileComponent : Component
+    public class ProjectileComponent : Component
     {
         public ProjectileComponent(Vector3Int from, Vector3Int to, float speed)
         {

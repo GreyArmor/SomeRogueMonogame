@@ -1,0 +1,264 @@
+// FlatSharp 7.9.0 schema for Phase 2 - Simple Components (Scalar + String + Enum)
+attribute "fs_serializer";
+
+namespace NamelessRogue.Serialization.Schemas;
+
+// ============================================================================
+// Enums (Phase 2)
+// ============================================================================
+
+enum DamageType : int {
+	Physical = 0,
+	Ballistic = 1,
+	Flame = 2,
+	Toxin = 3,
+	Corrosive = 4,
+	Electrical = 5,
+}
+
+enum ItemType : int {
+	Weapon = 0,
+	Armor = 1,
+	Consumable = 2,
+	Supplies = 3,
+	Ammo = 4,
+	Data = 5,
+	Cyberware = 6,
+	Misc = 7,
+}
+
+enum ItemQuality : int {
+	Terrible = 0,
+	Poor = 1,
+	Shoddy = 2,
+	Normal = 3,
+	Good = 4,
+	Excellent = 5,
+	Superb = 6,
+}
+
+enum AmmoType : int {
+	LowCaliber = 0,
+	MediumCaliber = 1,
+	LargeCaliber = 2,
+	FlammableTank = 3,
+	CorrosiveTank = 4,
+	ToxinTank = 5,
+	ElectricitySource = 6,
+}
+
+enum AttackType : int {
+	Close = 0,
+	Ranged = 1,
+}
+
+enum TargetMode : int {
+	None = 0,
+	Self = 1,
+	Targeted = 2,
+	TargetEnemies = 3,
+	TargetFriends = 4,
+}
+
+enum ActivationMode : int {
+	Passive = 0,
+	Toggle = 1,
+	Activatable = 2,
+}
+
+enum Category : int {
+	Generic = 0,
+	Improvisation = 1,
+	Hacking = 2,
+	Tech = 3,
+	StreetSmarts = 4,
+}
+
+// ============================================================================
+// Simple Component Tables (Phase 2)
+// ============================================================================
+
+table Position {
+	X: int;
+	Y: int;
+	Z: int;
+}
+
+table SimpleStat {
+	Value: int;
+	MinValue: int;
+	MaxValue: int;
+}
+
+table Item {
+	Weight: float;
+	Type: ItemType;
+	Quality: ItemQuality;
+	Amount: int;
+	Level: int;
+	Author: string;
+	Price: int;
+}
+
+table Ammo {
+	Type: AmmoType;
+}
+
+table Consumable {
+	BuffIds: [string];
+}
+
+table WeaponStats {
+	MinimumDamage: int;
+	MaximumDamage: int;
+	Range: int;
+	AttackType: AttackType;
+	DamageType: DamageType;
+	AmmoType: AmmoType;
+	AmmoInClip: int;
+	CurrentAmmo: int;
+}
+
+table ArmorStats {
+	DamageType: DamageType;
+	Value: SimpleStat;
+}
+
+table ResistanceStat {
+	DamageType: DamageType;
+	Value: SimpleStat;
+}
+
+table Buff {
+	Health: int;
+	Energy: int;
+	Damage: int;
+	Armor: int;
+	Resistance: int;
+	Duration: int;
+	PermanentModifier: bool;
+	IsAppliedImmediately: bool;
+	IsDamageOverTime: bool;
+}
+
+table Drawable {
+	BackgroundColorR: byte;
+	BackgroundColorG: byte;
+	BackgroundColorB: byte;
+	BackgroundColorA: byte;
+	ObjectID: string;
+	Visible: bool;
+	CharColorR: byte;
+	CharColorG: byte;
+	CharColorB: byte;
+	CharColorA: byte;
+	CastsShadow: bool;
+	IsFlying: bool;
+}
+
+table FollowedByCamera {
+	// Marker component - no fields
+}
+
+table LineToPlayer {
+	// Marker component - no fields
+}
+
+table UiIconComponent {
+	IconId: string;
+}
+
+table Dead {
+	// Marker component - no fields
+}
+
+table GameSettings {
+	WidthChars: int;
+	HeightChars: int;
+	FontSize: int;
+	Zoom: int;
+}
+
+table Description {
+	Name: string;
+	Text: string;
+}
+
+table Cursor {
+	// Marker component - no fields
+}
+
+table Player {
+	// Marker component - no fields
+}
+
+table Movable {
+	// Marker component - no fields
+}
+
+table Selectable {
+	// Marker component - no fields
+}
+
+table BlocksVision {
+	// Marker component - no fields
+}
+
+table OccupiesTile {
+	// Marker component - no fields
+}
+
+table StairsComponent {
+	// Marker component - no fields
+}
+
+table ActionPoints {
+	Points: int;
+}
+
+table AbilityParameters {
+	TargetMode: TargetMode;
+	ActivationMode: ActivationMode;
+	AreaOfEffect: int;
+	IsActive: bool;
+	Range: int;
+	CooldownTurns: int;
+	CooldownTurnsRemaining: int;
+	EnergyCost: int;
+	ActionPointsCost: int;
+	Category: Category;
+}
+
+table Streetlight {
+	// Marker component - no fields
+}
+
+table SimpleSwitch {
+	SwitchActive: bool;
+}
+
+table Fire {
+	StartTurn: int;
+	Duration: int;
+}
+
+table Door {
+	DoorId: string;
+	IsTranslucent: bool;
+}
+
+table WorldBoardPlayer {
+	// Marker component - no fields
+}
+
+table ConsoleCamera {
+	PositionX: int;
+	PositionY: int;
+}
+
+table WorldMapCameraComponent {
+	ZoomIndex: int;
+	PositionX: float;
+	PositionY: float;
+	Zoom: int;
+}

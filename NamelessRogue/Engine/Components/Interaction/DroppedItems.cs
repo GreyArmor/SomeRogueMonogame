@@ -1,4 +1,4 @@
-﻿using NamelessRogue.Engine.Generation.Editor;
+using NamelessRogue.Engine.Generation.Editor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace NamelessRogue.Engine.Components.Interaction
         public string ItemId { get; set; } 
         public int Probability { get; set; } = 0;
     }
-    internal class DroppedItemsComponent : Component
+    public class DroppedItemsComponent : Component
     {
         public DroppedItemsComponent(IEnumerable<DroppedItem> droppedItems)
         {

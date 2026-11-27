@@ -10,51 +10,51 @@
 
 ---
 
-## Phase 0 - Foundation: FlatSharp Schema Project
+## Phase 0 - Foundation: FlatSharp Schema Project ✅ **COMPLETED**
 
 **Goal**: Create a dedicated schema project with FlatSharp-generated types for all serializable components.
 
 **Tasks**:
-1. Create new project NamelessRogue.Serialization (net8.0, class library)
-2. Add FlatSharp 7.9.0 NuGet package
-3. Define base schema types:
+1. ✅ Create new project NamelessRogue.Serialization (net8.0, class library)
+2. ✅ Add FlatSharp 7.9.0 NuGet package (FlatSharp.Compiler + FlatSharp.Runtime)
+3. ✅ Define base schema types:
    - EntityRef table (stores ulong entity index + ulong component type hash)
    - ComponentType enum mapping to component classes
    - SerializedEntity table (entity GUID + list of component refs)
    - SerializedGame table (game metadata + list of entities)
-4. Define FlatSharp .fbs schema files organized by component category
-5. Configure FlatSharp source generator or build-time codegen
-6. Create SerializationContext class for entity lookup tables during deserialization
-7. Update .csproj to reference NamelessRogue project
+4. ✅ Define FlatSharp .fbs schema files organized by component category (GameSchema.fbs, SimpleComponentsSchema.fbs)
+5. ✅ Configure FlatSharp build-time codegen via FlatSharpSchema MSBuild item
+6. ✅ Create SerializationContext class for entity lookup tables during deserialization
+7. ✅ Update .csproj to reference NamelessRogue project
 
-**Deliverable**: Compiling schema project with generated FlatBuffers types, no runtime code yet.
+**Deliverable**: ✅ Compiling schema project with generated FlatBuffers types, runtime code present.
 
 ---
 
-## Phase 1 - Serialization Infrastructure
+## Phase 1 - Serialization Infrastructure ✅ **COMPLETED**
 
 **Goal**: Core serialization/deserialization engine in NamelessRogue.Serialization.
 
 **Tasks**:
-1. Create ComponentSerializer static class with:
+1. ✅ Create ComponentSerializer static class with:
    - SerializeEntity(Entity entity) -> byte[]
    - DeserializeEntity(byte[] data, SerializationContext ctx) -> Entity
    - SerializeGameInstance(GameInstance instance) -> byte[]
    - DeserializeGameInstance(byte[] data) -> GameInstance
-2. Create SerializationContext with:
+2. ✅ Create SerializationContext with:
    - Entity GUID -> index lookup dictionary
    - Component type name -> type resolver
    - Reuse pool for deserialized objects (avoid GC pressure)
-3. Implement ComponentType enum auto-registration (scan NamelessRogue.Engine.Components assembly)
-4. Handle SkipClassGeneration attribute - skip those types
-5. Create SerializationExtensions for Entity and IComponent
-6. Wire up IComponent.Serialize() / DeSerialize() to call into the FlatSharp engine
+3. ✅ Implement ComponentType enum auto-registration (scan NamelessRogue.Engine.Components assembly)
+4. ✅ Handle SkipClassGeneration attribute - skip those types
+5. ✅ Create SerializationExtensions for Entity and IComponent
+6. ✅ Wire up IComponent.Serialize() / DeSerialize() to call into the FlatSharp engine
 
-**Deliverable**: Can serialize/deserialize a single entity with simple components.
+**Deliverable**: ✅ Can serialize/deserialize a single entity with simple components.
 
 ---
 
-## Phase 2 - Simple Components (Scalar + String + Enum)
+## Phase 2 - Simple Components (Scalar + String + Enum) ✅ **COMPLETED**
 
 **Goal**: Serialize components with only primitive types, strings, enums, and simple structs.
 
@@ -71,15 +71,17 @@
 - WorldBoardPlayer, WorldMapCameraComponent
 
 **Tasks**:
-1. Map each component to a FlatSharp [FlatBufferTable] type
-2. Handle Vector3Int - serialize X/Y/Z as three int fields (FlatBuffers supports signed int32 natively)
-3. Handle enums - FlatSharp enum mapping
-4. Handle Guid - serialize as two ulong fields (Low + High)
-5. Handle float/double - direct mapping
-6. Handle string - FlatBuffers string type
-7. Handle bool, int, uint, long, byte - direct mapping
+1. ✅ Map each component to a FlatSharp table type (25+ tables in SimpleComponentsSchema.fbs)
+2. ✅ Handle Vector3Int - serialize X/Y/Z as three int fields (FlatBuffers supports signed int32 natively)
+3. ✅ Handle enums - FlatSharp enum mapping (DamageType, ItemType, ItemQuality, AmmoType, AttackType, TargetMode, ActivationMode, Category)
+4. ✅ Handle Guid - serialize as two ulong fields (Low + High) - already in GameSchema
+5. ✅ Handle float/double - direct mapping
+6. ✅ Handle string - FlatBuffers string type
+7. ✅ Handle bool, int, uint, long, byte - direct mapping
+8. ✅ Handle Color - decompose to R/G/B/A byte fields
+9. ✅ Update ComponentMapper with Vector3Int and Color decomposition/reconstruction logic
 
-**Deliverable**: All simple components serialize/deserialize correctly.
+**Deliverable**: ✅ All simple components serialize/deserialize correctly. Build compiles successfully.
 
 ---
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NamelessRogue.Engine.Components.Environment
 {
-	internal class StreetlightsStatusKeeper : Component
+	public class StreetlightsStatusKeeper : Component
 	{
 		public bool VerticalMovementAllowed { get; set; } = false;
 

@@ -1,4 +1,4 @@
-﻿using NamelessRogue.Engine.Abstraction;
+using NamelessRogue.Engine.Abstraction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using NamelessRogue.Engine.Infrastructure;
 
 namespace NamelessRogue.Engine.Components.Interaction
 {
-	internal class Group : Component
+	public class Group : Component
 	{
 		public Group(string testId) {
 			TextId = testId;

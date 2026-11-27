@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace NamelessRogue.Engine.Components._3D
 		Shoot,
 	}
 
-	internal class SpriteModel3D : Component
+	public class SpriteModel3D : Component
 	{
 		public bool IdleOnly { get; set; }
 		public AnimatedSprite Sprite { get; set; }

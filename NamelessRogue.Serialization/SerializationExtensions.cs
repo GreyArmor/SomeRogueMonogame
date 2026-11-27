@@ -1,6 +1,9 @@
 ﻿using NamelessRogue.Engine.Components;
 using NamelessRogue.Engine.Infrastructure;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace NamelessRogue.Serialization;
 
@@ -19,14 +22,16 @@ public static class SerializationExtensions
     }
 
     /// <summary>
-    /// Serializes all components of this entity and calls the base IComponent.Serialize().
+    /// Serializes this component using the FlatSharp engine.
+    /// Returns the serialized byte array, or null if the component type is not mappable.
     /// </summary>
-    public static void Serialize(this IComponent component)
+    public static byte[] SerializeFlat(this IComponent component)
     {
-        // The base Component.Serialize() throws NotImplementedException.
-        // This extension provides the FlatSharp-backed implementation.
-        // Component-level serialization is handled by Phase 2+ component mappers.
-        // For now, this is a no-op placeholder — actual serialization happens at Entity level.
+        if (component is Component comp)
+        {
+            return ComponentMapper.SerializeComponent(comp);
+        }
+        return null;
     }
 
     /// <summary>
@@ -34,8 +39,15 @@ public static class SerializationExtensions
     /// </summary>
     public static void DeSerialize(this IComponent component, byte[] data)
     {
-        // Component-level deserialization is handled by Phase 2+ component mappers.
-        // For now, this is a no-op placeholder.
+        if (data == null)
+            throw new ArgumentNullException(nameof(data));
+
+        var deserialized = ComponentMapper.DeserializeComponent(data, component.GetType());
+        if (deserialized != null)
+        {
+            // Copy deserialized property values back to the original component
+            CopyComponentState(deserialized, component);
+        }
     }
 
     /// <summary>
@@ -43,8 +55,41 @@ public static class SerializationExtensions
     /// </summary>
     public static void DeSerialize(this IComponent component, byte[] data, SerializationContext context)
     {
-        // Component-level deserialization is handled by Phase 2+ component mappers.
-        // For now, this is a no-op placeholder.
+        if (data == null)
+            throw new ArgumentNullException(nameof(data));
+        if (context == null)
+            throw new ArgumentNullException(nameof(data));
+
+        var deserialized = ComponentMapper.DeserializeComponent(data, component.GetType());
+        if (deserialized != null)
+        {
+            CopyComponentState(deserialized, component);
+        }
+    }
+
+    /// <summary>
+    /// Copies property values from a source component to a target component.
+    /// </summary>
+    private static void CopyComponentState(Component source, IComponent target)
+    {
+        var sourceType = source.GetType();
+        var targetType = target.GetType();
+
+        var sourceProps = sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var targetProps = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        foreach (var sourceProp in sourceProps)
+        {
+            var targetProp = targetProps.FirstOrDefault(p => p.Name == sourceProp.Name);
+            if (targetProp != null && targetProp.CanWrite)
+            {
+                var value = sourceProp.GetValue(source);
+                if (value != null || !targetProp.PropertyType.IsValueType)
+                {
+                    targetProp.SetValue(target, value);
+                }
+            }
+        }
     }
 }
 
